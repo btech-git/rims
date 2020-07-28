@@ -1,5 +1,5 @@
 <ul class="right clearfix">
-	<li class="mdropdown"><a href="#">FRONT DESKkkk</a>
+	<li class="mdropdown"><a href="#">FRONT DESK</a>
 		<?php $this->widget('zii.widgets.CMenu',array(
 				'items'=>array(
 					array('label'=>'Customer Vehicle Registration', 'url'=>array('/frontDesk/registrationTransaction/admin'), 'visible'=>Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.Admin')),
