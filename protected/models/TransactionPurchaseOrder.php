@@ -1,0 +1,263 @@
+<?php
+
+/**
+ * This is the model class for table "{{transaction_purchase_order}}".
+ *
+ * The followings are the available columns in table '{{transaction_purchase_order}}':
+ * @property integer $id
+ * @property string $purchase_order_no
+ * @property string $purchase_order_date
+ * @property string $status_document
+ * @property integer $supplier_id
+ * @property string $payment_type
+ * @property string $estimate_date_arrival
+ * @property integer $requester_id
+ * @property integer $main_branch_id
+ * @property integer $approved_id
+ * @property integer $total_quantity
+ * @property string $price_before_discount
+ * @property string $discount
+ * @property string $subtotal
+ * @property integer $ppn
+ * @property string $ppn_price
+ * @property string $total_price
+ * @property string $payment_amount
+ * @property string $payment_left
+ * @property integer $company_bank_id
+ * @property string $payment_status
+ * @property integer $coa_id
+ * @property string $estimate_payment_date
+ * @property integer $purchase_type
+ *
+ * The followings are the available model relations:
+ * @property PaymentOut[] $paymentOuts
+ * @property Supplier $supplier
+ * @property CompanyBank $companyBank
+ * @property Coa $coa
+ * @property TransactionPurchaseOrderApproval[] $transactionPurchaseOrderApprovals
+ * @property TransactionPurchaseOrderDetail[] $transactionPurchaseOrderDetails
+ * @property TransactionReceiveItem[] $transactionReceiveItems
+ * @property TransactionReturnOrder[] $transactionReturnOrders
+ */
+class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord
+{
+    const CONSTANT = 'PO';
+	/**
+	 * @return string the associated database table name
+	 */
+	public $supplier_name;
+	public $coa_name;
+	public $coa_supplier;
+	public $main_branch_name;
+	public $approved_name;
+	public $requester_name;
+
+    const SPAREPART = 1;
+    const TIRE = 2;
+    const GENERAL = 3;
+
+    const SPAREPART_LITERAL = 'Spare Part';
+    const TIRE_LITERAL = 'Ban';
+    const GENERAL_LITERAL = 'Umum / Oli';
+	
+	public function tableName()
+	{
+		return '{{transaction_purchase_order}}';
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('purchase_order_no, purchase_order_date, status_document, payment_type, estimate_payment_date, purchase_type', 'required'),
+			array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type', 'numerical', 'integerOnly'=>true),
+			array('purchase_order_no, status_document', 'length', 'max'=>30),
+			array('payment_type', 'length', 'max'=>20),
+			array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max'=>18),
+			array('estimate_date_arrival', 'safe'),
+			array('payment_status', 'length', 'max'=>50),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, estimate_payment_date, main_branch_name, approved_name, requester_name, purchase_type', 'safe', 'on'=>'search'),
+		);
+	}
+
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'paymentOuts' => array(self::HAS_MANY, 'PaymentOut', 'purchase_order_id'),
+			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+			'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
+			//'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
+			'transactionPurchaseOrderApprovals' => array(self::HAS_MANY, 'TransactionPurchaseOrderApproval', 'purchase_order_id'),
+			'transactionPurchaseOrderDetails' => array(self::HAS_MANY, 'TransactionPurchaseOrderDetail', 'purchase_order_id'),
+			'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'purchase_order_id'),
+			'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'purchase_order_id'),
+			'user' => array(self::BELONGS_TO, 'User', 'requester_id'),
+			'approval' => array(self::BELONGS_TO, 'User', 'approved_id'),
+			'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
+			'requesterBranch' => array(self::BELONGS_TO, 'Branch', 'requester_branch_id'),
+		);
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return array(
+			'id' => 'ID',
+			'purchase_order_no' => 'Purchase Order No',
+			'purchase_order_date' => 'Purchase Order Date',
+			'status_document' => 'Status Document',
+			'supplier_id' => 'Supplier',
+			'payment_type' => 'Payment Type',
+			'estimate_date_arrival' => 'Estimate Date Arrival',
+			'requester_id' => 'Requester',
+			'main_branch_id' => 'Main Branch',
+			'approved_id' => 'Approved',
+			'total_quantity' => 'Total Quantity',
+			'price_before_discount' => 'Price Before Discount',
+			'discount' => 'Discount',
+			'subtotal' => 'Subtotal',
+			'ppn' => 'Ppn',
+			'ppn_price' => 'Ppn Price',
+			'total_price' => 'Total Price',
+			'payment_amount' => 'Payment Amount',
+			'payment_left' => 'Payment Left',
+			'company_bank_id' => 'Company Bank',
+			'payment_status' => 'Payment Status',
+			'estimate_payment_date' => 'Estimate Payment Date',
+            'purchase_type' => 'Purchase Type',
+			//'coa_id' => 'Coa',
+		);
+	}
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('id',$this->id);
+		$criteria->compare('purchase_order_no',$this->purchase_order_no,true);
+		$criteria->compare('purchase_order_date',$this->purchase_order_date,true);
+		$criteria->compare('status_document',$this->status_document,true);
+		$criteria->compare('supplier_id',$this->supplier_id);
+		$criteria->compare('payment_type',$this->payment_type,true);
+		$criteria->compare('estimate_date_arrival',$this->estimate_date_arrival,true);
+		$criteria->compare('requester_id',$this->requester_id);
+		$criteria->compare('main_branch_id',$this->main_branch_id);
+		$criteria->compare('approved_id',$this->approved_id);
+		$criteria->compare('total_quantity',$this->total_quantity);
+		$criteria->compare('price_before_discount',$this->price_before_discount,true);
+		$criteria->compare('discount',$this->discount,true);
+		$criteria->compare('subtotal',$this->subtotal,true);
+		$criteria->compare('ppn',$this->ppn);
+		$criteria->compare('ppn_price',$this->ppn_price,true);
+		$criteria->compare('total_price',$this->total_price,true);
+		$criteria->compare('payment_amount',$this->payment_amount,true);
+		$criteria->compare('payment_left',$this->payment_left,true);
+		$criteria->compare('company_bank_id',$this->company_bank_id);
+		$criteria->compare('payment_status',$this->payment_status,true);
+		$criteria->compare('estimate_payment_date',$this->estimate_payment_date,true);
+		$criteria->compare('purchase_type',$this->purchase_type,true);
+		//$criteria->compare('coa_id',$this->coa_id);
+
+		$criteria->together = 'true';
+		$criteria->with = array('supplier');
+		$criteria->compare('supplier.name', $this->supplier_name, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'sort' => array(
+	            'defaultOrder' => 'purchase_order_date DESC',
+	        ),
+	        'pagination' => array(
+	            'pageSize' => 10,
+	        ),
+
+		));
+	}
+
+	/**
+	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * @param string $className active record class name.
+	 * @return TransactionPurchaseOrder the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+    
+	public function searchByReceive()
+	{
+		//search purchase header which purchased quantity is not fully received yet
+		$criteria = new CDbCriteria;
+		
+		$criteria->condition = "EXISTS (
+			SELECT COALESCE(SUM(d.purchase_order_quantity_left), 0) AS quantity_remaining
+			FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
+			WHERE t.id = d.purchase_order_id
+			GROUP BY d.purchase_order_id
+			HAVING quantity_remaining > 0
+		)";
+		
+		$criteria->compare('id',$this->id);
+		$criteria->compare('purchase_order_date',$this->purchase_order_date,true);
+		$criteria->compare('supplier_id',$this->supplier_id);
+		$criteria->compare('purchase_order_no',$this->purchase_order_no.'%',true,'AND', false);
+		$criteria->addCondition("status_document = 'Approved'");
+        
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'sort' => array(
+    	        'defaultOrder' => 'purchase_order_date DESC',
+    	    ),
+	        'pagination' => array(
+	            'pageSize' => 10,
+	        ),
+		));
+	}
+    
+    public function getPurchaseStatus($status) {
+        switch ($status) {
+            case self::SPAREPART: return self::SPAREPART_LITERAL;
+            case self::TIRE: return self::TIRE_LITERAL;
+            case self::GENERAL: return self::GENERAL_LITERAL;
+            default: return '';
+        }
+    }
+    
+    public function getTotalRemainingQuantityReceived() {
+        $totalRemaining = 0;
+        
+        foreach ($this->transactionPurchaseOrderDetails as $detail) {
+            $totalRemaining += $detail->totalQuantityReceived;
+        }
+        
+        return ($totalRemaining = $this->total_quantity) ? 'Partial' : 'Pending';
+    }
+}

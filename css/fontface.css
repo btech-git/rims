@@ -1,0 +1,22 @@
+/*
+Name : Font Face Stylesheet
+Author : Ervandra Halim
+Author URL : http://www.vanjz.net/
+*/
+@font-face {
+    font-family: 'OpenSans';
+    src: url('fonts/opensans-regular.eot');
+    src: url('fonts/opensans-regular.eot') format('embedded-opentype'),
+         url('fonts/opensans-regular.woff') format('woff'),
+         url('fonts/opensans-regular.ttf') format('truetype'),
+         url('fonts/opensans-regular.svg#OpenSans') format('svg');
+}
+
+@font-face {
+    font-family: 'Cagliostro';
+    src: url('fonts/cagliostro-regular.eot');
+    src: url('fonts/cagliostro-regular.eot') format('embedded-opentype'),
+         url('fonts/cagliostro-regular.woff') format('woff'),
+         url('fonts/cagliostro-regular.ttf') format('truetype'),
+         url('fonts/cagliostro-regular.svg#Cagliostro') format('svg');
+}

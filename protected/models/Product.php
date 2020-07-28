@@ -1,0 +1,422 @@
+<?php
+
+/**
+ * This is the model class for table "{{product}}".
+ *
+ * The followings are the available columns in table '{{product}}':
+ * @property integer $id
+ * @property string $code
+ * @property string $manufacturer_code
+ * @property string $barcode
+ * @property string $name
+ * @property string $description
+ * @property integer $production_year
+ * @property integer $brand_id
+ * @property integer $sub_brand_id
+ * @property integer $sub_brand_series_id
+ * @property string $extension
+ * @property integer $product_master_category_id
+ * @property integer $product_sub_master_category_id
+ * @property integer $product_sub_category_id
+ * @property integer $vehicle_car_make_id
+ * @property integer $vehicle_car_model_id
+ * @property string $purchase_price
+ * @property string $recommended_selling_price
+ * @property string $hpp
+ * @property string $retail_price
+ * @property integer $stock
+ * @property integer $minimum_stock
+ * @property integer $margin_type
+ * @property integer $margin_amount
+ * @property string $is_usable
+ * @property string $status
+ * @property integer $unit_id
+ * @property integer $user_id
+ * @property string $date_posting
+ *
+ * The followings are the available model relations:
+ * @property ConsignmentInDetail[] $consignmentInDetails
+ * @property ConsignmentOutDetail[] $consignmentOutDetails
+ * @property Inventory[] $inventories
+ * @property InventoryDetail[] $inventoryDetails
+ * @property MovementInDetail[] $movementInDetails
+ * @property MovementOutDetail[] $movementOutDetails
+ * @property Brand $brand
+ * @property ProductMasterCategory $productMasterCategory
+ * @property ProductSubMasterCategory $productSubMasterCategory
+ * @property ProductSubCategory $productSubCategory
+ * @property VehicleCarMake $vehicleCarMake
+ * @property VehicleCarModel $vehicleCarModel
+ * @property SubBrand $subBrand
+ * @property SubBrandSeries $subBrandSeries
+ * @property ProductComplement[] $productComplements
+ * @property ProductComplement[] $productComplements1
+ * @property ProductPrice[] $productPrices
+ * @property ProductSpecificationBattery[] $productSpecificationBatteries
+ * @property ProductSpecificationOil[] $productSpecificationOils
+ * @property ProductSpecificationTire[] $productSpecificationTires
+ * @property ProductSubstitute[] $productSubstitutes
+ * @property ProductSubstitute[] $productSubstitutes1
+ * @property ProductUnit[] $productUnits
+ * @property ProductVehicle[] $productVehicles
+ * @property ServiceMaterialUsage[] $serviceMaterialUsages
+ * @property ServiceProduct[] $serviceProducts
+ * @property RegistrationDamage[] $registrationDamages
+ * @property SupplierProduct[] $supplierProducts
+ * @property TransactionDeliveryOrderDetail[] $transactionDeliveryOrderDetails
+ * @property TransactionPurchaseOrderDetail[] $transactionPurchaseOrderDetails
+ * @property TransactionReceiveOrderDetail[] $transactionReceiveOrderDetails
+ * @property TransactionRequestOrderDetail[] $transactionRequestOrderDetails
+ * @property TransactionRequestTransfer[] $transactionRequestTransfers
+ * @property TransactionReturnItemDetail[] $transactionReturnItemDetails
+ * @property TransactionReturnOrderDetail[] $transactionReturnOrderDetails
+ * @property TransactionSalesOrderDetail[] $transactionSalesOrderDetails
+ * @property TransactionSentRequestDetail[] $transactionSentRequestDetails
+ * @property TransactionTransferRequestDetail[] $transactionTransferRequestDetails
+ * @property Unit $unit
+ */
+class Product extends CActiveRecord
+{
+	public $product_master_category_code;
+	public $product_master_category_name;
+	public $product_sub_master_category_code;
+	public $product_sub_master_category_id;
+	public $product_sub_master_category_name;
+	public $product_sub_category_code;
+	public $product_sub_category_name;
+	public $product_brand_name;
+	public $product_sub_brand_name;
+	public $product_sub_brand_series_name;
+	public $product_purchase_price;
+	public $product_supplier;
+    public $findkeyword;
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return '{{product}}';
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('code, manufacturer_code, name, production_year, brand_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id', 'required'),
+			array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id', 'numerical', 'integerOnly'=>true),
+			array('code', 'length', 'max'=>20),
+			array('manufacturer_code, barcode, extension', 'length', 'max'=>50),
+			array('manufacturer_code','unique', 'on' => 'insert'),
+			array('name', 'length', 'max'=>30),
+			array('purchase_price, recommended_selling_price, hpp, retail_price, status', 'length', 'max'=>10),
+			array('is_usable', 'length', 'max'=>5),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, code, manufacturer_code, barcode, name, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id', 'safe', 'on'=>'search'),
+		);
+	}
+
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'inventories' => array(self::HAS_MANY, 'Inventory', 'product_id'),
+			'inventoryDetails' => array(self::HAS_MANY, 'InventoryDetail', 'product_id'),
+			'productMasterCategory' => array(self::BELONGS_TO, 'ProductMasterCategory', 'product_master_category_id'),
+			'productSubMasterCategory' => array(self::BELONGS_TO, 'ProductSubMasterCategory', 'product_sub_master_category_id'),
+			'productSubCategory' => array(self::BELONGS_TO, 'ProductSubCategory', 'product_sub_category_id'),
+			'vehicleCarMake' => array(self::BELONGS_TO, 'VehicleCarMake', 'vehicle_car_make_id'),
+			'vehicleCarModel' => array(self::BELONGS_TO, 'VehicleCarModel', 'vehicle_car_model_id'),
+			'brand' => array(self::BELONGS_TO, 'Brand', 'brand_id'),
+			'subBrand' => array(self::BELONGS_TO, 'SubBrand', 'sub_brand_id'),
+			'subBrandSeries' => array(self::BELONGS_TO, 'SubBrandSeries', 'sub_brand_series_id'),
+			'productComplements' => array(self::HAS_MANY, 'ProductComplement', 'product_id'),
+			'productComplements1' => array(self::HAS_MANY, 'ProductComplement', 'product_complement_id'),
+			'productPrices' => array(self::HAS_MANY, 'ProductPrice', 'product_id'),
+			'productSpecificationBatteries' => array(self::HAS_MANY, 'ProductSpecificationBattery', 'product_id'),
+			'productSpecificationBattery' => array(self::HAS_ONE, 'ProductSpecificationBattery', 'product_id'),
+			'productSpecificationOils' => array(self::HAS_MANY, 'ProductSpecificationOil', 'product_id'),
+			'productSpecificationOil' => array(self::HAS_ONE, 'ProductSpecificationOil', 'product_id'),
+			'productSpecificationTires' => array(self::HAS_MANY, 'ProductSpecificationTire', 'product_id'),
+			'productSpecificationTire' => array(self::HAS_ONE, 'ProductSpecificationTire', 'product_id'),
+			'productSubstitutes' => array(self::HAS_MANY, 'ProductSubstitute', 'product_id'),
+			'productSubstitutes1' => array(self::HAS_MANY, 'ProductSubstitute', 'product_substitute_id'),
+			'productUnits' => array(self::HAS_MANY, 'ProductUnit', 'product_id'),
+			'productVehicles' => array(self::HAS_MANY, 'ProductVehicle', 'product_id'),
+			'serviceMaterialUsages' => array(self::HAS_MANY, 'ServiceMaterialUsage', 'product_id'),
+			'serviceProducts' => array(self::HAS_MANY, 'ServiceProduct', 'product_id'),
+			'supplierProducts' => array(self::HAS_MANY, 'SupplierProduct', 'product_id'),
+			'transactionPurchaseOrderDetails' => array(self::HAS_MANY, 'TransactionPurchaseOrderDetail', 'product_id'),
+			'transactionReceiveOrderDetails' => array(self::HAS_MANY, 'TransactionReceiveOrderDetail', 'product_id'),
+			'transactionRequestOrderDetails' => array(self::HAS_MANY, 'TransactionRequestOrderDetail', 'product_id'),
+			'transactionReturnItemDetails' => array(self::HAS_MANY, 'TransactionReturnItemDetail', 'product_id'),
+			'warehouseSections' => array(self::HAS_MANY, 'WarehouseSection', 'product_id'),
+			'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
+			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+		);
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return array(
+			'id' => 'ID',
+			'code' => 'Code',
+			'manufacturer_code' => 'Manufacturer Code',
+			'barcode' => 'Barcode',
+			'name' => 'Name',
+			'description' => 'Description',
+			'production_year' => 'Production Year',
+			'brand_id' => 'Brand',
+			'sub_brand_id'=>'Sub Brand',
+			'sub_brand_series_id'=>'Sub Series Brand',
+			'extension' => 'Extension',
+			'product_master_category_id' => 'Product Master Category',
+			'product_sub_master_category_id' => 'Product Sub Master Category',
+			'product_sub_category_id' => 'Product Sub Category',
+			'vehicle_car_make_id' => 'Vehicle Car Make',
+			'vehicle_car_model_id' => 'Vehicle Car Model',
+			'purchase_price' => 'Purchase Price',
+			'recommended_selling_price' => 'Recommended Selling Price',
+			'hpp' => 'Hpp',
+			'retail_price' => 'Retail Price',
+			'stock' => 'Stock',
+			'minimum_stock' => 'Minimum Stock',
+			'margin_type' => 'Margin Type',
+			'margin_amount' => 'Margin Amount',
+			'is_usable' => 'Is Usable',
+			'status' => 'Status',
+			'findkeyword' => 'Find By Keyword',
+			'ppn' => 'Ppn',
+            'unit_id' => 'Satuan', 
+            'user_id' => 'User', 
+            'date_posting' => 'Tanggal', 
+		);
+	}
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('id',$this->id);
+		$criteria->compare('t.code',$this->code,true);
+		$criteria->compare('t.manufacturer_code',$this->manufacturer_code,true);
+		$criteria->compare('barcode',$this->barcode,true);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('production_year',$this->production_year);
+		$criteria->compare('t.brand_id',$this->brand_id);
+		$criteria->compare('t.sub_brand_id',$this->sub_brand_id);
+		$criteria->compare('t.sub_brand_series_id',$this->sub_brand_series_id);
+		$criteria->compare('extension',$this->extension,true);
+		$criteria->compare('t.product_master_category_id',$this->product_master_category_id);
+		$criteria->compare('t.product_sub_master_category_id',$this->product_sub_master_category_id);
+		$criteria->compare('t.product_sub_category_id',$this->product_sub_category_id);
+		$criteria->compare('t.vehicle_car_make_id',$this->vehicle_car_make_id);
+		$criteria->compare('t.vehicle_car_model_id',$this->vehicle_car_model_id);
+		$criteria->compare('purchase_price',$this->purchase_price,true);
+		$criteria->compare('recommended_selling_price',$this->recommended_selling_price,true);
+		$criteria->compare('hpp',$this->hpp,true);
+		$criteria->compare('retail_price',$this->retail_price,true);
+		$criteria->compare('stock',$this->stock);
+		$criteria->compare('minimum_stock',$this->minimum_stock);
+		$criteria->compare('margin_type',$this->margin_type);
+		$criteria->compare('margin_amount',$this->margin_amount);
+		$criteria->compare('is_usable',$this->is_usable,true);
+		$criteria->compare('LOWER(t.status)', strtolower($this->status),FALSE);
+		$criteria->compare('ppn',$this->ppn);
+		$criteria->compare('t.unit_id',$this->unit_id);
+		$criteria->compare('t.user_id',$this->user_id);
+		$criteria->compare('t.date_posting',$this->date_posting);
+
+		$criteria->together=true;
+		$criteria->with = array('productSubMasterCategory','productMasterCategory','productSubCategory','brand', 'subBrand', 'subBrandSeries');
+		$criteria->compare('productMasterCategory.code',$this->product_master_category_code,true);
+		$criteria->compare('productMasterCategory.name',$this->product_master_category_name,true);
+		$criteria->compare('productSubMasterCategory.code',$this->product_sub_master_category_code,true);
+		$criteria->compare('productSubMasterCategory.name',$this->product_sub_master_category_name,true);
+		$criteria->compare('productSubCategory.code',$this->product_sub_category_code,true);
+		$criteria->compare('productSubCategory.name',$this->product_sub_category_name,true);
+		$criteria->compare('brand.name',$this->product_brand_name,true);
+		$criteria->compare('subBrand.name',$this->product_sub_brand_name,true);
+		$criteria->compare('subBrandSeries.name',$this->product_sub_brand_series_name,true);
+
+        $explodeKeyword = explode(" ", $this->findkeyword);
+
+        foreach ($explodeKeyword as $key) {
+
+	        $criteria->compare('t.code',$key,true,'OR');
+	        $criteria->compare('production_year',$key,true,'OR');
+	        $criteria->compare('manufacturer_code',$key,true,'OR');
+	        $criteria->compare('barcode',$key,true,'OR');
+	        $criteria->compare('t.name',$key,true,'OR');
+	        $criteria->compare('t.description',$key,true,'OR');
+	        $criteria->compare('extension',$key, true, 'OR');
+
+			$criteria->compare('productMasterCategory.code',$key,true,'OR');
+			$criteria->compare('productMasterCategory.name',$key,true,'OR');
+			$criteria->compare('productSubMasterCategory.code',$key,true,'OR');
+			$criteria->compare('productSubMasterCategory.name',$key,true,'OR');
+			// $criteria->compare('productSubCategory.code',$key,true,'OR');
+			// $criteria->compare('productSubCategory.name',$key,true,'OR');
+
+			$criteria->compare('brand.name',$key,true,'OR');
+
+		}
+		// $criteria->compare('productSubCategory.code',$this->findkeyword,true,'OR');
+		// $criteria->compare('productSubCategory.name',$this->findkeyword,true,'OR');
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'sort' => array(
+				/*"defaultOrder"=>"t.product_master_category_id DESC, product_sub_master_category_id ASC, product_sub_category_id ASC, production_year DESC",*/
+				"defaultOrder"=>"t.status ASC, t.name ASC",
+				'attributes' => array(
+					'product_master_category_code' => array(
+						'asc' => 'productMasterCategory.code',
+						'desc' => 'productMasterCategory.code DESC'
+					),
+					'product_master_category_name' => array(
+						'asc' => 'productMasterCategory.name',
+						'desc' => 'productMasterCategory.name DESC'
+					),
+					'product_sub_master_category_code' => array(
+						'asc' => 'productSubMasterCategory.code',
+						'desc' => 'productSubMasterCategory.code DESC'
+					),
+					'product_sub_master_category_name' => array(
+						'asc' => 'productSubMasterCategory.name',
+						'desc' => 'productSubMasterCategory.name DESC'
+					),
+					'product_sub_category_code' => array(
+						'asc' => 'productSubMasterCategory.code',
+						'desc' => 'productSubMasterCategory.code DESC'
+					),
+					// 'product_sub_category_name' => array(
+					// 	'asc' => 'productSubCategory.name',
+					// 	'desc' => 'productSubCategory.name DESC'
+					// ),
+					'*'
+				)
+			),
+		));
+	}
+
+	/**
+	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * @param string $className active record class name.
+	 * @return Product the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+    
+	public function getSuppliers() 
+	{
+		$supplierList = "";
+		$supplierProducts = $this->supplierProducts;
+		foreach ($supplierProducts as $key => $supplierProduct) {
+			$supplierList .= $supplierProduct->supplier_id;
+		}
+		return $supplierList;
+	}
+    
+	public function getLocalStock($warehouseId)
+	{
+		$sql = "SELECT COALESCE(total_stock, 0) 
+				FROM " . Inventory::model()->tableName() . " 
+				WHERE product_id = :product_id AND warehouse_id = :warehouse_id";
+
+		$value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+			':product_id' => $this->id,
+			':warehouse_id' => $warehouseId,
+        ));
+
+		return ($value === false) ? 0 : $value;
+	}
+    
+    public function searchByStockCheck($pageNumber) {
+        
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.code',$this->code,true);
+		$criteria->compare('t.manufacturer_code',$this->manufacturer_code,true);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.brand_id',$this->brand_id);
+		$criteria->compare('t.sub_brand_id',$this->sub_brand_id);
+		$criteria->compare('t.sub_brand_series_id',$this->sub_brand_series_id);
+		$criteria->compare('t.product_master_category_id',$this->product_master_category_id);
+		$criteria->compare('t.product_sub_master_category_id',$this->product_sub_master_category_id);
+		$criteria->compare('t.product_sub_category_id',$this->product_sub_category_id);
+		$criteria->compare('t.unit_id',$this->unit_id);
+  
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination' => array(
+				'pageSize' => 50,
+				'currentPage' => $pageNumber - 1,
+			),
+		));
+    }
+    
+    public function getInventoryTotalQuantities() {
+        $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
+                FROM " . Inventory::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE i.product_id = :product_id 
+                GROUP BY w.branch_id";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
+        
+        return $resultSet;
+    }
+    
+    public function getRetailPriceTax() {
+        return $this->retail_price * 10 / 100;
+    }
+    
+    public function getRetailPriceAfterTax() {
+        return $this->retail_price + $this->retailPriceTax;
+    }
+    
+    public function getRecommendedSellingPrice() {
+        $marginAmount = ($this->margin_type == 1) ? $this->retailPriceAfterTax * $this->margin_amount / 100 : $this->margin_amount;
+        
+        return $this->retailPriceAfterTax + $marginAmount;
+    }
+    
+    public function getMasterSubCategoryCode() {
+        $masterCategoryCode = empty($this->productMasterCategory) ? '' : $this->productMasterCategory->code;
+        $subMasterCategory = empty($this->productSubMasterCategory) ? '' : $this->productSubMasterCategory->code;
+        $subCategoryCode = empty($this->productSubCategory) ? '' : $this->productSubCategory->code;
+        
+        return $masterCategoryCode . $subMasterCategory . $subCategoryCode;
+    }
+}

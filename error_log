@@ -1,0 +1,10 @@
+[01-Nov-2018 16:10:45 Asia/Jakarta] PHP Parse error:  syntax error, unexpected 'array' (T_ARRAY), expecting ')' in /home/raperind/public_html/app/protected/modules/user/models/RegistrationForm.php on line 18
+[01-Nov-2018 16:10:50 Asia/Jakarta] PHP Parse error:  syntax error, unexpected 'array' (T_ARRAY), expecting ')' in /home/raperind/public_html/app/protected/modules/user/models/RegistrationForm.php on line 18
+[01-Nov-2018 16:10:55 Asia/Jakarta] PHP Parse error:  syntax error, unexpected 'array' (T_ARRAY), expecting ')' in /home/raperind/public_html/app/protected/modules/user/models/RegistrationForm.php on line 18
+[01-Nov-2018 16:11:02 Asia/Jakarta] PHP Parse error:  syntax error, unexpected 'array' (T_ARRAY), expecting ')' in /home/raperind/public_html/app/protected/modules/user/models/RegistrationForm.php on line 18
+[07-Nov-2018 11:44:28 Asia/Jakarta] PHP Fatal error:  Call to a member function hasErrors() on null in /home/raperind/yii/framework/web/helpers/CHtml.php on line 2453
+[09-Nov-2018 14:33:12 Asia/Jakarta] PHP Fatal error:  Call to a member function getAttribute() on null in /home/raperind/public_html/app/protected/modules/user/views/admin/view.php on line 34
+[09-Nov-2018 14:33:23 Asia/Jakarta] PHP Fatal error:  Call to a member function getErrors() on null in /home/raperind/yii/framework/web/helpers/CHtml.php on line 2200
+[14-Nov-2018 12:25:30 Asia/Jakarta] PHP Fatal error:  Call to a member function getErrors() on null in /home/raperind/yii/framework/web/helpers/CHtml.php on line 2200
+[14-Nov-2018 12:25:40 Asia/Jakarta] PHP Fatal error:  Call to a member function getErrors() on null in /home/raperind/yii/framework/web/helpers/CHtml.php on line 2200
+[14-Nov-2018 12:26:10 Asia/Jakarta] PHP Fatal error:  Call to a member function getErrors() on null in /home/raperind/yii/framework/web/helpers/CHtml.php on line 2200
