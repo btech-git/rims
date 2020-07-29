@@ -50,7 +50,7 @@ class LoginController extends Controller
             'date' => date('y-m-d')
         ));
 
-        if ($attendance->login_time == '00:00:00') {
+        if ($attendance->login_time == '0000-00-00 00:00:00') {
             $attendance->login_time = date('H:i:s');
             $attendance->save(false);
         }
