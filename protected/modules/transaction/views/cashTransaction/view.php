@@ -28,7 +28,7 @@ $this->menu=array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/cashTransaction/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.cashTransaction.update"))) ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/cashTransaction/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.cashTransaction.updateApproval"))) ?>
 		<?php endif ?>
-		<h1>View CashTransaction #<?php echo $model->id; ?></h1>
+		<h1>View Cash Transaction #<?php echo $model->id; ?></h1>
 
 		 <?php //$this->widget('zii.widgets.CDetailView', array(
 		// 	'data'=>$model,

@@ -18,7 +18,8 @@ class LoginController extends Controller
                 // validate user input and redirect to previous page if valid
                 if ($model->validate()) {
                     $this->lastViset();
-                    $this->attendance();
+//                    $this->attendance();
+                    
                     if (Yii::app()->user->returnUrl == '/index.php') {
                         $this->redirect(Yii::app()->controller->module->returnUrl);
                     } else {
