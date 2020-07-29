@@ -37,7 +37,7 @@ class LoginController extends Controller
     private function lastViset()
     {
         $lastVisit = User::model()->notsafe()->findByPk(Yii::app()->user->id);
-        $lastVisit->lastvisit_at = date('H:i:s');
+        $lastVisit->lastvisit_at = date('Y-m-d H:i:s');
         $lastVisit->save();
     }
 
@@ -51,7 +51,7 @@ class LoginController extends Controller
         ));
 
         if ($attendance->login_time == '00:00:00') {
-            $attendance->login_time = date('Y-m-d H:i:s');
+            $attendance->login_time = date('H:i:s');
             $attendance->save(false);
         }
 
