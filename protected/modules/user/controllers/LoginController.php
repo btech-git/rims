@@ -17,7 +17,7 @@ class LoginController extends Controller
                 $model->attributes = $_POST['UserLogin'];
                 // validate user input and redirect to previous page if valid
                 if ($model->validate()) {
-                    $this->lastViset();
+//                    $this->lastViset();
 //                    $this->attendance();
                     
                     if (Yii::app()->user->returnUrl == '/index.php') {
