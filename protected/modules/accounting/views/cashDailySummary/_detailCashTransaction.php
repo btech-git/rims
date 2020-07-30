@@ -24,7 +24,7 @@
                         <?php echo CHtml::encode(CHtml::value($detail, 'coa.name')); ?>
                     </td>
                     <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0',  $AmountIn)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0',  $amountIn)); ?>
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountOut)); ?>
@@ -33,7 +33,7 @@
                         <?php echo CHtml::encode(CHtml::value($detail, 'notes')); ?>
                     </td>
                 </tr>
-                <?php $totalIn += $AmountIn; $totalOut += $amountOut; ?>
+                <?php $totalIn += $amountIn; $totalOut += $amountOut; ?>
             <?php endforeach; ?>
         <?php endforeach; ?>
     </tbody>
