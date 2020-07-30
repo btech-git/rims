@@ -11,7 +11,7 @@
         <?php foreach ($paymentInRetailDataProvider->data as $data): ?>
             <?php $totalAmount = $data['total_amount']; ?>
             <tr>
-                <td style="text-align: center">
+                <td>
                     <?php echo CHtml::encode($data['branch_name']); ?>
                 </td>
                 <td style="text-align: center">

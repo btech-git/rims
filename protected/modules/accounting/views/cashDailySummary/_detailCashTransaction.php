@@ -17,7 +17,7 @@
                 $amountOut = ($header->transaction_type == 'Out') ? CHtml::value($detail, 'amount') : 0.00;
                 ?>
                 <tr>
-                    <td style="text-align: right">
+                    <td>
                         <?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?>
                     </td>
                     <td style="text-align: right">
