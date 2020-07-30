@@ -11,12 +11,15 @@ $this->breadcrumbs=array(
 
 <div id="maincontent">
     <div class="clearfix page-action">
-            <?php $ccontroller = Yii::app()->controller->id; ?>
-            <?php $ccaction = Yii::app()->controller->action->id; ?>
-            <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/master/supplier/admin';?>"><span class="fa fa-th-list"></span>Manage Supplier</a>
+        <?php $ccontroller = Yii::app()->controller->id; ?>
+        <?php $ccaction = Yii::app()->controller->action->id; ?>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/master/supplier/admin';?>"><span class="fa fa-th-list"></span>Manage Supplier</a>
         <?php if (Yii::app()->user->checkAccess("master.supplier.update")) { ?>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/'.$ccontroller.'/update', array('id'=>$model->id));?>"><span class="fa fa-edit"></span>edit</a>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addProduct', array('id' => $model->id)); ?>"><span class="fa fa-plus"></span>Add Product</a>
+        <?php } ?>
+        <?php if (empty($model->coa_id) || empty($model->coa_outstanding_order)) { ?>
+            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addCoa', array('id' => $model->id));?>"><span class="fa fa-plus"></span>Add COA</a>
         <?php } ?>
         <?php if (Yii::app()->user->checkAccess("master.consignmentInHeader.create")) { ?>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/transaction/consignmentInHeader/create');?>"><span class="fa fa-plus"></span>Consignment In</a>
@@ -29,10 +32,8 @@ $this->breadcrumbs=array(
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data'=>$model,
             'attributes'=>array(
-                //'id',
                 'date',
                 'code',
-                //'name',
                 'company',
                 'person_in_charge',
                 'phone',

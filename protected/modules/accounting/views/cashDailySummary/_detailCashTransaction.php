@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th style="text-align: center">Branch</th>
             <th style="text-align: center">Account</th>
             <th style="text-align: center">In</th>
             <th style="text-align: center">Out</th>
@@ -16,6 +17,9 @@
                 $amountOut = ($header->transaction_type == 'Out') ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($cashTransaction, 'amount'))) : 0.00;
                 ?>
                 <tr>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?>
+                    </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(CHtml::value($detail, 'account.name')); ?>
                     </td>
@@ -35,7 +39,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right">TOTAL</td>
+            <td style="text-align: right" colspan="2">TOTAL</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalIn)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalOut)); ?></td>
             <td>&nbsp;</td>

@@ -93,7 +93,6 @@
                                                         <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'work_order_number'); ?></label>
                                                     </div>
                                                     <div class="small-8 columns">
-
                                                         <?php echo $form->textField($bodyRepairRegistration->header,'work_order_number'); ?>
                                                         <?php echo $form->error($bodyRepairRegistration->header,'work_order_number'); ?>
                                                     </div>
@@ -169,7 +168,7 @@
                                                 <label class="prefix">Insurance Company</label>
                                             </div>
                                             <div class="small-8 columns">
-												<?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAll(),'id','name'),array(
+                                                <?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAll(),'id','name'),array(
                                                     'prompt'=>'-- Tanpa Asuransi --',
                                                 )); ?>
                                             </div>
@@ -210,8 +209,8 @@
 </div>
 
 <?php
-	Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
-	Yii::app()->clientScript->registerScript('myjavascript', '
-		$(".numbers").number( true,2, ".", ",");
+    Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
+    Yii::app()->clientScript->registerScript('myjavascript', '
+            $(".numbers").number( true,2, ".", ",");
     ', CClientScript::POS_END);
 ?>

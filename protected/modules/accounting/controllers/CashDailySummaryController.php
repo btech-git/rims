@@ -17,10 +17,8 @@ class CashDailySummaryController extends Controller {
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
 //        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
 //        $paymentTypes = PaymentType::model()->findAll(); 
-        
 //        $branch = Search::bind(new Branch(), isset($_GET['Branch']) ? $_GET['Branch'] : '');
 //        $branchDataProvider = $branch->searchByDailyTransaction($pageNumber);
-        
 //        $paymentInRetail = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
 //        $paymentInRetailDataProvider = $paymentInRetail->searchByDailyCashReport();
 //        $paymentInRetailDataProvider->criteria->select = 'paymentType.name AS payment_type, SUM(t.payment_amount) AS total_payment';
@@ -31,15 +29,16 @@ class CashDailySummaryController extends Controller {
 //		$paymentInRetailDataProvider->criteria->compare('t.branch_id', $branchId);
 //		$paymentInRetailDataProvider->criteria->order = 't.payment_type_id ASC';
 //		$paymentInRetailDataProvider->criteria->group = 't.payment_date, t.branch_id, t.payment_type_id';
-        
-        $sql = "SELECT pt.name as payment_type, coalesce(sum(payment_amount), 0) as total_amount, pi.payment_number AS payment_number, pi.notes AS notes
-				FROM " . PaymentIn::model()->tableName() . " pi
-				INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
-				WHERE pi.payment_date = :payment_date AND pi.branch_id = :branch_id
-				GROUP BY pi.payment_date, pi.branch_id, pi.payment_type_id";
+
+        $sql = "SELECT pt.name as payment_type, b.name as branch_name, coalesce(sum(payment_amount), 0) as total_amount, pi.payment_number AS payment_number, pi.notes AS notes
+                FROM " . PaymentIn::model()->tableName() . " pi
+                INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
+                WHERE pi.payment_date = :payment_date 
+                GROUP BY pi.payment_date, pi.branch_id, pi.payment_type_id";
         $params = array(
             ':payment_date' => $transactionDate,
-            ':branch_id' => $branchId,
+//            ':branch_id' => $branchId,
         );
 
         $paymentInRetailDataProvider = new CSqlDataProvider($sql, array(
@@ -58,22 +57,22 @@ class CashDailySummaryController extends Controller {
         $paymentInWholesaleDataProvider->criteria->together = 'true';
         $paymentInWholesaleDataProvider->criteria->with = array('invoice');
         $paymentInWholesaleDataProvider->criteria->addCondition("invoice.sales_order_id IS NOT NULL");
-		$paymentInWholesaleDataProvider->criteria->compare('t.payment_date', $transactionDate);
-		$paymentInWholesaleDataProvider->criteria->compare('t.branch_id', $branchId);
-        
+        $paymentInWholesaleDataProvider->criteria->compare('t.payment_date', $transactionDate);
+        $paymentInWholesaleDataProvider->criteria->compare('t.branch_id', $branchId);
+
         $paymentOut = Search::bind(new PaymentOut(), isset($_GET['PaymentOut']) ? $_GET['PaymentOut'] : '');
         $paymentOutDataProvider = $paymentOut->searchByDailyCashReport();
-		$paymentOutDataProvider->criteria->compare('t.payment_date', $transactionDate);
-		$paymentOutDataProvider->criteria->compare('t.branch_id', $branchId);
-        
+        $paymentOutDataProvider->criteria->compare('t.payment_date', $transactionDate);
+        $paymentOutDataProvider->criteria->compare('t.branch_id', $branchId);
+
         $cashTransaction = Search::bind(new CashTransaction(), isset($_GET['CashTransaction']) ? $_GET['CashTransaction'] : '');
         $cashTransactionDataProvider = $cashTransaction->search();
-		$cashTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate);
-		$cashTransactionDataProvider->criteria->compare('t.branch_id', $branchId);        
-        
-		if (isset($_POST['CashDailySummary'])) {
-			$cashDailySummary->attributes = $_POST['CashDailySummary'];
-            
+        $cashTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate);
+        $cashTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
+
+        if (isset($_POST['CashDailySummary'])) {
+            $cashDailySummary->attributes = $_POST['CashDailySummary'];
+
             if ($cashDailySummary->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $cashDailySummary->id));
             }
@@ -125,8 +124,8 @@ class CashDailySummaryController extends Controller {
         $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
         $transferCriteria->addCondition("status_document = 'Approved'");
         $transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
-                    'criteria' => $transferCriteria,
-                ));
+            'criteria' => $transferCriteria,
+        ));
 
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
@@ -137,8 +136,8 @@ class CashDailySummaryController extends Controller {
         $sentCriteria->compare('sent_request_no', $sent->sent_request_no . '%', true, 'AND', false);
         $sentCriteria->addCondition("status_document = 'Approved'");
         $sentDataProvider = new CActiveDataProvider('TransactionSentRequest', array(
-                    'criteria' => $sentCriteria,
-                ));
+            'criteria' => $sentCriteria,
+        ));
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
         if (isset($_GET['TransactionSalesOrder']))
@@ -148,8 +147,8 @@ class CashDailySummaryController extends Controller {
         $salesCriteria->compare('sale_order_no', $sales->sale_order_no . '%', true, 'AND', false);
         $salesCriteria->addCondition("status_document = 'Approved'");
         $salesDataProvider = new CActiveDataProvider('TransactionSalesOrder', array(
-                    'criteria' => $salesCriteria,
-                ));
+            'criteria' => $salesCriteria,
+        ));
 
         $consignment = new ConsignmentOutHeader('search');
         $consignment->unsetAttributes();  // clear any default values
@@ -160,8 +159,8 @@ class CashDailySummaryController extends Controller {
         $consignmentCriteria->compare('consignment_out_no', $consignment->consignment_out_no . '%', true, 'AND', false);
         $consignmentCriteria->addCondition("status = 'Approved'");
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentOutHeader', array(
-                    'criteria' => $consignmentCriteria,
-                ));
+            'criteria' => $consignmentCriteria,
+        ));
 
         $deliveryOrder = $this->instantiate($id);
 
@@ -232,8 +231,8 @@ class CashDailySummaryController extends Controller {
         $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
         $transferCriteria->addCondition("status_document = 'Approved'");
         $transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
-                    'criteria' => $transferCriteria,
-                ));
+            'criteria' => $transferCriteria,
+        ));
 
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
@@ -244,8 +243,8 @@ class CashDailySummaryController extends Controller {
         $sentCriteria->compare('sent_request_no', $sent->sent_request_no . '%', true, 'AND', false);
         $sentCriteria->addCondition("status_document = 'Approved'");
         $sentDataProvider = new CActiveDataProvider('TransactionSentRequest', array(
-                    'criteria' => $sentCriteria,
-                ));
+            'criteria' => $sentCriteria,
+        ));
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
@@ -256,8 +255,8 @@ class CashDailySummaryController extends Controller {
         $salesCriteria->compare('sale_order_no', $sales->sale_order_no . '%', true, 'AND', false);
         $salesCriteria->addCondition("status_document = 'Approved'");
         $salesDataProvider = new CActiveDataProvider('TransactionSalesOrder', array(
-                    'criteria' => $salesCriteria,
-                ));
+            'criteria' => $salesCriteria,
+        ));
 
         $consignment = new ConsignmentOutHeader('search');
         $consignment->unsetAttributes();  // clear any default values
@@ -268,8 +267,8 @@ class CashDailySummaryController extends Controller {
         $consignmentCriteria->compare('consignment_out_no', $consignment->consignment_out_no . '%', true, 'AND', false);
         $consignmentCriteria->addCondition("status = 'Approved'");
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentOutHeader', array(
-                    'criteria' => $consignmentCriteria,
-                ));
+            'criteria' => $consignmentCriteria,
+        ));
 
         $this->render('admin', array(
             'model' => $model,
