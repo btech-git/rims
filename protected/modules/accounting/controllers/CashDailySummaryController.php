@@ -35,7 +35,7 @@ class CashDailySummaryController extends Controller {
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
                 WHERE pi.payment_date = :payment_date 
-                GROUP BY pi.payment_date, pi.branch_id, pi.payment_type_id";
+                GROUP BY pi.payment_date, pi.branch_id, pi.payment_type_id, pi.payment_number, pi.notes";
         $params = array(
             ':payment_date' => $transactionDate,
 //            ':branch_id' => $branchId,
