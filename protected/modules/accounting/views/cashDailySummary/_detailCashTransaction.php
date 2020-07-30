@@ -13,21 +13,21 @@
         <?php foreach ($cashTransactionDataProvider->data as $header): ?>
             <?php foreach ($header->cashTransactionDetails as $detail): ?>
                 <?php 
-                $amountIn = ($header->transaction_type == 'In') ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($cashTransaction, 'amount'))) : 0.00; 
-                $amountOut = ($header->transaction_type == 'Out') ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($cashTransaction, 'amount'))) : 0.00;
+                $amountIn = ($header->transaction_type == 'In') ? CHtml::value($detail, 'amount') : 0.00; 
+                $amountOut = ($header->transaction_type == 'Out') ? CHtml::value($detail, 'amount') : 0.00;
                 ?>
                 <tr>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?>
                     </td>
                     <td style="text-align: right">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'account.name')); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'coa.name')); ?>
                     </td>
                     <td style="text-align: right">
-                        <?php echo $AmountIn; ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0',  $AmountIn)); ?>
                     </td>
                     <td style="text-align: right">
-                        <?php echo $amountOut; ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountOut)); ?>
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(CHtml::value($detail, 'notes')); ?>

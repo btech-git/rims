@@ -30,6 +30,7 @@
             <td style="text-align: right; border-top: 1px solid">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
             </td>
+            <td colspan="2" style="border-top: 1px solid">&nbsp;</td>
         </tr>
     </tfoot>
 </table>
