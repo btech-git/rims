@@ -1,7 +1,7 @@
 <div id="maincontent">
     <div class="clearfix page-action">
         <div class="form">
-            <?php echo CHtml::beginForm(); ?>
+            <?php echo CHtml::beginForm(array(''), 'get'); ?>
 
             <p class="note">Fields with <span class="required">*</span> are required.</p>
 
