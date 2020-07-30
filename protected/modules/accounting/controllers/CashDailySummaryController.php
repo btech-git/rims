@@ -30,7 +30,7 @@ class CashDailySummaryController extends Controller {
 //		$paymentInRetailDataProvider->criteria->order = 't.payment_type_id ASC';
 //		$paymentInRetailDataProvider->criteria->group = 't.payment_date, t.branch_id, t.payment_type_id';
 
-        $sql = "SELECT pt.name as payment_type, b.name as branch_name, coalesce(sum(payment_amount), 0) as total_amount, pi.payment_number AS payment_number, pi.notes AS notes
+        $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount, pt.name as payment_type, b.name as branch_name, pi.payment_number AS payment_number, pi.notes AS notes
                 FROM " . PaymentIn::model()->tableName() . " pi
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
