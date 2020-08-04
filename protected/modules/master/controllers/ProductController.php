@@ -50,8 +50,19 @@ class ProductController extends Controller {
      */
     public function actionView($id) {
         $productPrices = ProductPrice::model()->findAllByAttributes(array('product_id' => $id));
+        $model = $this->loadModel($id);
+        
+        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
+            $model->is_approved = 1;
+            $model->user_id_approval = Yii::app()->user->getId();
+            if ($model->save(true, array('is_approved', 'user_id_approval')))
+                Yii::app()->user->setFlash('confirm', 'Your Order has been approved!!!');
+            else
+                Yii::app()->user->setFlash('error', 'Your Order failed to approved!!!');
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
             'productPrices' => $productPrices,
         ));
     }

@@ -17,12 +17,12 @@ $this->menu=array(
 
 <?php echo $this->renderPartial('_form', array(
 //    'cashDailySummary' => $cashDailySummary,
-//    'paymentTypes' => $paymentTypes,
+    'paymentTypes' => $paymentTypes,
 //    'pageNumber' => $pageNumber,
-//    'branch' => $branch,
-//    'branchDataProvider' => $branchDataProvider,
+    'branch' => $branch,
+    'branchDataProvider' => $branchDataProvider,
 //    'paymentInRetail' => $paymentInRetail,
-    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
+//    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
     'paymentInWholesale' => $paymentInWholesale,
     'paymentInWholesaleDataProvider' => $paymentInWholesaleDataProvider,
     'paymentOut' => $paymentOut,

@@ -20,11 +20,13 @@ class LoginController extends Controller
 //                    $this->lastViset();
 //                    $this->attendance();
                     
-                    if (Yii::app()->user->returnUrl == '/index.php') {
-                        $this->redirect(Yii::app()->controller->module->returnUrl);
-                    } else {
-                        $this->redirect(Yii::app()->user->returnUrl);
-                    }
+                    $this->redirect(array('/site/index'));
+                    
+//                    if (Yii::app()->user->returnUrl == '/index.php') {
+//                        $this->redirect(Yii::app()->controller->module->returnUrl);
+//                    } else {
+//                        $this->redirect(Yii::app()->user->returnUrl);
+//                    }
                 }
             }
             // display the login form

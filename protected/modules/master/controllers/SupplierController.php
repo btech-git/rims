@@ -271,20 +271,38 @@ class SupplierController extends Controller {
     public function actionAddCoa($id) {
         $model = $this->loadModel($id);
 
-        $coa = new Coa;
+        $coaReceivable = new Coa;
+        $coaReceivable->coa_sub_category_id = 15;
 
+        $coaOutstanding = new Coa;
+        $coaOutstanding->coa_sub_category_id = 16;
+        
         if (isset($_POST['Coa'])) {
-            $coa->attributes = $_POST['Coa'];
-            $coa->coa_category_id = $coa->coaSubCategory->coa_category_id;
-            $coa->getCodeNumber($coa->coa_sub_category_id);
 
-            if ($coa->save()) {
-                $this->redirect(array('view', 'id' => $model->id));
+            $coaReceivable->attributes = $_POST['Coa'];
+            $coaReceivable->coa_category_id = $coaReceivable->coaSubCategory->coa_category_id;
+            $coaReceivable->getCodeNumber($coaReceivable->coa_sub_category_id);
+
+            if ($coaReceivable->save()) {
+                $coaOutstanding->attributes = $_POST['Coa'];
+                $coaOutstanding->coa_category_id = $coaOutstanding->coaSubCategory->coa_category_id;
+                $coaOutstanding->getCodeNumber($coaOutstanding->coa_sub_category_id);
+                
+                if ($coaOutstanding->save()) {
+                    $model->coa_id = $coaReceivable->id;
+                    $model->coa_outstanding_order = $coaOutstanding->id;
+                    
+                    if ($model->save()) {
+                        $this->redirect(array('view', 'id' => $model->id));
+                    }
+                }
             }
         }
 
-        $this->render('create', array(
+        $this->render('addCoa', array(
             'model' => $model,
+            'coaReceivable' => $coaReceivable,
+            'coaOutstanding' => $coaOutstanding,
         ));
     }
 

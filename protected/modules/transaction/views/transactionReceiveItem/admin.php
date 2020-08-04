@@ -73,7 +73,8 @@ Yii::app()->clientScript->registerScript('search', "
                 'columns'=>array(
                     array(
                         'name'=>'receive_item_no', 
-                        'value'=>'CHTml::link($data->receive_item_no, array("view", "id"=>$data->id))', 'type'=>'raw'
+                        'value'=>'CHTml::link($data->receive_item_no, array("view", "id"=>$data->id))', 
+                        'type'=>'raw',
                     ),
                     'receive_item_date',
                     'arrival_date',

@@ -102,7 +102,9 @@
 		<?php  $this->widget('zii.widgets.CMenu',array(
             'items'=>array(
                 array('label'=>'Laporan Pembelian', 'url'=>array('/transaction/transactionPurchaseOrder/laporanPembelian'), 'visible'=>Yii::app()->user->checkAccess('purchaseReport')),
+                array('label'=>'Laporan Pembelian Summary', 'url'=>array('/report/purchaseSummary/summary'), 'visible'=>Yii::app()->user->checkAccess('purchaseReport')),
                 array('label'=>'Laporan Penjualan', 'url'=>array('/transaction/transactionSalesOrder/laporanPenjualan'), 'visible'=>Yii::app()->user->checkAccess('salesReport')),
+                array('label'=>'Laporan Penjualan Summary', 'url'=>array('/report/saleInvoiceSummary/summary'), 'visible'=>Yii::app()->user->checkAccess('salesReport')),
                 array('label'=>'Laporan Body Repair', 'url'=>array('/report/bodyRepair/index'), 'visible'=>Yii::app()->user->checkAccess('bodyRepairReport')),
                 array('label'=>'Laporan Penjualan Registration', 'url'=>array('/frontDesk/RegistrationTransaction/laporanPenjualan'), 'visible'=>Yii::app()->user->checkAccess('salesRegistrationReport')),
                 array('label'=>'Laporan Hutang Pembelian', 'url'=>array('/transaction/transactionPurchaseOrder/laporanOutstanding'), 'visible'=>Yii::app()->user->checkAccess('accountPayableReport')),
@@ -113,6 +115,8 @@
                 array('label'=>'Laporan Stok', 'url'=>array('/report/laporanPenjualan/index'), 'visible'=>Yii::app()->user->checkAccess('stockReport')),
                 array('label'=>'Laporan Bulanan Tahunan', 'url'=>array('/frontDesk/registrationTransaction/monthlyYearly'), 'visible'=>Yii::app()->user->checkAccess('monthlyYearlyReport')),
                 array('label'=>'Laporan Pendapatan', 'url'=>array('/report/revenueRecap/index'), 'visible'=>Yii::app()->user->checkAccess('revenueRecapReport')),
+                array('label'=>'Laporan Hutang Supplier', 'url'=>array('/report/payable/summary'), 'visible'=>Yii::app()->user->checkAccess('accountPayableReport')),
+                array('label'=>'Laporan Piutang Customer', 'url'=>array('/report/receivable/summary'), 'visible'=>Yii::app()->user->checkAccess('accountReceivableReport')),
             ),
         )); ?>
 	</li>

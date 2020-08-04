@@ -227,11 +227,8 @@ Yii::app()->clientScript->registerScript('report', '
                 url: "' . CController::createUrl('ajaxSupplier', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
                 data: $("form").serialize(),
                 success: function(data) {
-                    
                     $("#supplier_id").val(data.id);
                     $("#supplier_name").val(data.name);
-                   
-                    
                 },
             });
             $("#supplier-grid").find("tr.selected").each(function(){

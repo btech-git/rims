@@ -16,41 +16,48 @@ class CashDailySummaryController extends Controller {
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
 //        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
-//        $paymentTypes = PaymentType::model()->findAll(); 
-//        $branch = Search::bind(new Branch(), isset($_GET['Branch']) ? $_GET['Branch'] : '');
-//        $branchDataProvider = $branch->searchByDailyTransaction($pageNumber);
+        $paymentTypes = PaymentType::model()->findAll(); 
+        
+        $branch = Search::bind(new Branch(), isset($_GET['Branch']) ? $_GET['Branch'] : '');
+        $branchDataProvider = $branch->searchByDailyTransaction();
+        $branchDataProvider->criteria->together = 'true';
+        $branchDataProvider->criteria->with = array('paymentIns');
+        $branchDataProvider->criteria->order = 't.code ASC';
+//        $branchDataProvider->criteria->compare('paymentIns.payment_date', $transactionDate);
+
+        
 //        $paymentInRetail = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
 //        $paymentInRetailDataProvider = $paymentInRetail->searchByDailyCashReport();
 //        $paymentInRetailDataProvider->criteria->select = 'paymentType.name AS payment_type, SUM(t.payment_amount) AS total_payment';
 //        $paymentInRetailDataProvider->criteria->together = 'true';
 //        $paymentInRetailDataProvider->criteria->with = array('invoice', 'paymentType');
 //        $paymentInRetailDataProvider->criteria->addCondition("invoice.registration_transaction_id IS NOT NULL");
-//		$paymentInRetailDataProvider->criteria->compare('t.payment_date', $transactionDate);
-//		$paymentInRetailDataProvider->criteria->compare('t.branch_id', $branchId);
-//		$paymentInRetailDataProvider->criteria->order = 't.payment_type_id ASC';
-//		$paymentInRetailDataProvider->criteria->group = 't.payment_date, t.branch_id, t.payment_type_id';
+//        $paymentInRetailDataProvider->criteria->compare('t.payment_date', $transactionDate);
+//        $paymentInRetailDataProvider->criteria->compare('t.branch_id', $branchId);
+//        $paymentInRetailDataProvider->criteria->order = 't.payment_type_id ASC';
+//        $paymentInRetailDataProvider->criteria->group = 't.payment_date, t.branch_id, t.payment_type_id';
 
-        $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount, pt.name as payment_type, b.name as branch_name, pi.payment_number AS payment_number, pi.notes AS notes
-                FROM " . PaymentIn::model()->tableName() . " pi
-                INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
-                WHERE pi.payment_date = :payment_date 
-                GROUP BY pi.payment_date, pi.branch_id, pi.payment_type_id";
-        $params = array(
-            ':payment_date' => $transactionDate,
+//        $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount, pt.name as payment_type, b.name as branch_name, pi.payment_number AS payment_number, pi.notes AS notes
+//                FROM " . PaymentIn::model()->tableName() . " pi
+//                INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
+//                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
+//                WHERE pi.payment_date = :payment_date 
+//                GROUP BY pi.payment_date, pi.branch_id, pi.payment_type_id";
+//        $params = array(
+//            ':payment_date' => $transactionDate,
 //            ':branch_id' => $branchId,
-        );
-
-        $paymentInRetailDataProvider = new CSqlDataProvider($sql, array(
-            'db' => CActiveRecord::$db,
-            'params' => $params,
+//        );
+//
+//        $paymentInRetailDataProvider = new CSqlDataProvider($sql, array(
+//            'db' => CActiveRecord::$db,
+//            'params' => $params,
 //            'totalItemCount' => CActiveRecord::$db->createCommand($sql)->queryScalar($params),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
 
         $paymentInWholesale = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
         $paymentInWholesaleDataProvider = $paymentInWholesale->searchByDailyCashReport();
@@ -81,11 +88,11 @@ class CashDailySummaryController extends Controller {
         $this->render('create', array(
 //            'cashDailySummary' => $cashDailySummary,
 //            'pageNumber' => $pageNumber,
-//            'paymentTypes' => $paymentTypes,
-//            'branch' => $branch,
-//            'branchDataProvider' => $branchDataProvider,
+            'paymentTypes' => $paymentTypes,
+            'branch' => $branch,
+            'branchDataProvider' => $branchDataProvider,
 //            'paymentInRetail' => $paymentInRetail,
-            'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
+//            'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
             'paymentInWholesale' => $paymentInWholesale,
             'paymentInWholesaleDataProvider' => $paymentInWholesaleDataProvider,
             'paymentOut' => $paymentOut,

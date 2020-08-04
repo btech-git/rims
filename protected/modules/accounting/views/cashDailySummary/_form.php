@@ -34,6 +34,10 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- END COLUMN 6-->
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -46,24 +50,9 @@
                             </div>
                         </div>
 
-                        <!-- END COLUMN 6-->
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix">User</label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::hiddenField($cashDailySummary,'user_id'); ?>
-                                        <?php echo CHtml::encode(Users::model()->findByPk(Yii::app()->user->id)->username); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div>
-                            <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                             <?php echo CHtml::resetButton('Clear'); ?>
+                            <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         </div>
 
                     </div>
@@ -76,10 +65,13 @@
                 <p><h2>Payment In Retail</h2></p>
                 <?php $this->renderPartial('_detailPaymentInRetail', array(
 //                    'cashDailySummary' => $cashDailySummary,
-//                    'paymentTypes' => $paymentTypes,
+                    'paymentTypes' => $paymentTypes,
+//                    'branches' => $branches,
 //                    'paymentInRetail' => $paymentInRetail,
-                    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
+//                    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
                     'branchId' => $branchId,
+                    'branch' => $branch,
+                    'branchDataProvider' => $branchDataProvider,
                     'transactionDate' => $transactionDate,
                 )); ?>
             </div>

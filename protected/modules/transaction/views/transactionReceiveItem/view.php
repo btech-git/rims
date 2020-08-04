@@ -72,7 +72,7 @@ $this->menu = array(
                             <label for="label">PO no</label>
                         </div>
                         <div class="small-8 columns">
-                            <label for="label"><?php echo $model->purchase_order_id == NULL ? '-' : $model->purchaseOrder->purchase_order_no; ?></label>
+                            <label for="label"><?php echo $model->purchase_order_id == NULL ? '-' : CHTml::link($model->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$model->purchaseOrder->id)); ?></label>
                         </div>
                     </div>
                 </div>
