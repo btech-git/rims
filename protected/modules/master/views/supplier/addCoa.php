@@ -29,7 +29,7 @@
                         <?php echo CHtml::label('COA Name', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeTextField($coaReceivable, 'name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo CHtml::textField('ReceivableName', $coaReceivable->name, array('size' => 50, 'maxlength' => 50)); ?>
                         <?php echo CHtml::error($coaReceivable, 'name'); ?>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                         <?php echo CHtml::label('COA Name', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeTextField($coaOutstanding, 'name', array('size' => 50, 'maxlength' => 50)); ?>
+                        <?php echo CHtml::textField('OutstandingName', $coaOutstanding->name, array('size' => 50, 'maxlength' => 50)); ?>
                         <?php echo CHtml::error($coaOutstanding, 'name'); ?>
                     </div>
                 </div>

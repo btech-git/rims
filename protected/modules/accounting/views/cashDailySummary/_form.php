@@ -21,6 +21,7 @@
                                         <?php //echo CHtml::textField('TransactionDate', $transactionDate); ?>
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'TransactionDate',
+                                            'value' => $transactionDate,
                                             // additional javascript options for the date picker plugin
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
@@ -70,9 +71,11 @@
 //                    'paymentInRetail' => $paymentInRetail,
 //                    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
                     'branchId' => $branchId,
-                    'branch' => $branch,
-                    'branchDataProvider' => $branchDataProvider,
+//                    'branch' => $branch,
+//                    'branchDataProvider' => $branchDataProvider,
                     'transactionDate' => $transactionDate,
+                    'paymentInRetailResultSet' => $paymentInRetailResultSet,
+                    'paymentInRetailList' => $paymentInRetailList,
                 )); ?>
             </div>
             

@@ -65,12 +65,12 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                             //echo $yesterday;
                             $debitTotal = $creditTotal = 0;
                             foreach ($allJurnals as $key => $allJurnal) {
-                                if($allJurnal->debet_kredit == "D")
+                                if ($allJurnal->debet_kredit == "D")
                                     $debitTotal += $allJurnal->total;
                                 else
                                     $creditTotal += $allJurnal->total;
                             }
-                            if($coaDetail->normal_balance=="DEBET"){
+                            if ($coaDetail->normal_balance=="DEBET"){
                                 $count = $coaDetail->opening_balance + $debitTotal - $creditTotal;
                             }
                             else{
@@ -108,8 +108,8 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                             <tr>
                                 <th rowspan="2" >TANGGAL</th>
                                 <th rowspan="2" >KODE TRANSAKSI</th>
-                                <th rowspan="2" >KODE</th>
-                                <th rowspan="2" >NAMA</th>
+                                <th rowspan="2" >BRANCH</th>
+                                <th rowspan="2" >KETERANGAN</th>
                                 <th rowspan="2" >DEBET</th>
                                 <th rowspan="2" >KREDIT</th>
                                 <th colspan="2">Saldo</th>
@@ -125,14 +125,10 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                         </tr>
                         <?php foreach ($coaJurnals as $key => $jurnal): ?>
                             <tr>
-                                <td>
-                                    <?php echo $jurnal->tanggal_posting; ?>
-                                </td>
-                                <td>
-                                    <?php echo $jurnal->kode_transaksi; ?>
-                                </td>
-                                <td><?php echo $jurnal->branchAccountCode; ?></td>
-                                <td><?php echo $jurnal->coa->name ?></td>
+                                <td><?php echo $jurnal->tanggal_posting; ?></td>
+                                <td><?php echo $jurnal->kode_transaksi; ?></td>
+                                <td><?php echo $jurnal->branch->name; ?></td>
+                                <td><?php echo $jurnal->transaction_subject ?></td>
                                 <td><?php echo $jurnal->debet_kredit == 'D'? number_format($jurnal->total,2) : '' ?></td>
                                 <td><?php echo $jurnal->debet_kredit == 'K'? number_format($jurnal->total,2) : '' ?></td>
                                 <?php if ($key == 0) {

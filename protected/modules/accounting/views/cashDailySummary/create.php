@@ -19,8 +19,8 @@ $this->menu=array(
 //    'cashDailySummary' => $cashDailySummary,
     'paymentTypes' => $paymentTypes,
 //    'pageNumber' => $pageNumber,
-    'branch' => $branch,
-    'branchDataProvider' => $branchDataProvider,
+//    'branch' => $branch,
+//    'branchDataProvider' => $branchDataProvider,
 //    'paymentInRetail' => $paymentInRetail,
 //    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
     'paymentInWholesale' => $paymentInWholesale,
@@ -31,4 +31,6 @@ $this->menu=array(
     'cashTransactionDataProvider' => $cashTransactionDataProvider,
     'branchId' => $branchId,
     'transactionDate' => $transactionDate,
+    'paymentInRetailResultSet' => $paymentInRetailResultSet,
+    'paymentInRetailList' => $paymentInRetailList,
 )); ?>

@@ -187,14 +187,14 @@
                                     'name' => 'Detail',
                                     'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
                                     'onclick' => '$("#product-dialog").dialog("open"); return false;
-									jQuery.ajax({
-										type: "POST",
-										url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
-										data: jQuery("form").serialize(),
-										success: function(html) {
-											jQuery("#detail").html(html);
-										},
-									});'
+                                        jQuery.ajax({
+                                                type: "POST",
+                                                url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
+                                                data: jQuery("form").serialize(),
+                                                success: function(html) {
+                                                        jQuery("#detail").html(html);
+                                                },
+                                        });'
                                 )
                             ); ?>
 
@@ -253,9 +253,9 @@
                         </div>
                         <?php if ($purchaseOrder->header->isNewRecord): ?>
                         <div class="small-2 columns">
-                            <a class="button expand"
-                               href="<?php echo Yii::app()->baseUrl . '/master/supplier/create'; ?>"><span
-                                        class="fa fa-plus"></span>Add</a>
+                            <a class="button expand" href="<?php echo Yii::app()->baseUrl . '/master/supplier/create'; ?>">
+                                <span class="fa fa-plus"></span>Add
+                            </a>
                         </div>
                         <div class="small-6 columns">
                             <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'supplier_id'); ?>
@@ -618,7 +618,7 @@
                         $("#estimate_payment_date").html(data.estimate_payment_date_label);
                         $("#term_of_payment").html(data.tenor);		
                         $("#detail-button").attr("disabled", false);
-                        $.fn.yiiGridView.update("product-grid", {data: {Product: {product_supplier: $.fn.yiiGridView.getSelection(id)} } });   
+//                        $.fn.yiiGridView.update("product-grid", {data: {Product: {product_supplier: $.fn.yiiGridView.getSelection(id)} } });   
                         if(data.coa == ""){
                             $("#payment_text").show();
                             $("#payment_ddl").hide();

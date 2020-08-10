@@ -277,25 +277,32 @@ class SupplierController extends Controller {
         $coaOutstanding = new Coa;
         $coaOutstanding->coa_sub_category_id = 16;
         
-        if (isset($_POST['Coa'])) {
-
-            $coaReceivable->attributes = $_POST['Coa'];
-            $coaReceivable->coa_category_id = $coaReceivable->coaSubCategory->coa_category_id;
-            $coaReceivable->getCodeNumber($coaReceivable->coa_sub_category_id);
-
-            if ($coaReceivable->save()) {
-                $coaOutstanding->attributes = $_POST['Coa'];
+        if (isset($_POST['ReceivableName']) && isset($_POST['OutstandingName'])) {
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $coaReceivable->name = $_POST['ReceivableName'];
+                $coaReceivable->coa_category_id = $coaReceivable->coaSubCategory->coa_category_id;
+                $coaReceivable->getCodeNumber($coaReceivable->coa_sub_category_id);
+                
+                $coaOutstanding->name = $_POST['OutstandingName'];
                 $coaOutstanding->coa_category_id = $coaOutstanding->coaSubCategory->coa_category_id;
                 $coaOutstanding->getCodeNumber($coaOutstanding->coa_sub_category_id);
-                
-                if ($coaOutstanding->save()) {
+
+                if ($coaReceivable->save() && $coaOutstanding->save()) {
                     $model->coa_id = $coaReceivable->id;
                     $model->coa_outstanding_order = $coaOutstanding->id;
                     
                     if ($model->save()) {
+                        $dbTransaction->commit();
                         $this->redirect(array('view', 'id' => $model->id));
+                    } else {
+                        $dbTransaction->rollback();
                     }
+                } else {
+                    $dbTransaction->rollback();
                 }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
             }
         }
 

@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <td colspan="3">&nbsp;</td>
                         <td><?php echo  empty($jurnal->coa) ? "" : $jurnal->branchAccountCode; ?></td>
-                        <td><?php echo  empty($jurnal->coa) ? "" : $jurnal->coa->name ?></td>
+                        <td><?php echo  empty($jurnal->coa) ? "" : $jurnal->branchAccountName ?></td>
                         <td><?php echo $jurnal->debet_kredit == 'D'? number_format($jurnal->total,2) : '' ?></td>
                         <td><?php echo $jurnal->debet_kredit == 'K'? number_format($jurnal->total,2) : '' ?></td>
                         <?php if ($jurnal->debet_kredit == 'D') {

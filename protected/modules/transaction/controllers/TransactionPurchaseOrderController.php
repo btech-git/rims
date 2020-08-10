@@ -143,7 +143,7 @@ class TransactionPurchaseOrderController extends Controller {
         $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
         $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
         $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
-        $productCriteria->compare('supplierProducts.supplier_id', $product->product_supplier);
+//        $productCriteria->compare('supplierProducts.supplier_id', $product->product_supplier);
 //        $productCriteria->together = true;
 //        $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.company as product_supplier';
 //        $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';

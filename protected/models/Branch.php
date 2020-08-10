@@ -238,35 +238,35 @@ class Branch extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function searchByDailyTransaction() {
+//    public function searchByDailyTransaction() {
+//
+//        $criteria = new CDbCriteria;
+//
+//        $criteria->compare('id', $this->id);
+//        $criteria->compare('t.code', $this->code, true);
+//        $criteria->compare('t.name', $this->name, true);
+//        $criteria->compare('company_id', $this->company_id);
+//
+//        return new CActiveDataProvider($this, array(
+//            'criteria' => $criteria,
+//            'pagination' => array(
+//                'pageSize' => 50,
+////                'currentPage' => $pageNumber - 1,
+//            ),
+//        ));
+//    }
 
-        $criteria = new CDbCriteria;
-
-        $criteria->compare('id', $this->id);
-        $criteria->compare('t.code', $this->code, true);
-        $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('company_id', $this->company_id);
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => 50,
-//                'currentPage' => $pageNumber - 1,
-            ),
-        ));
-    }
-
-    public function getPaymentInRetailTotalAmounts() {
-        $sql = "SELECT p.payment_type_id, COALESCE(SUM(p.payment_amount), 0) AS total_amount
-                FROM " . PaymentIn::model()->tableName() . " p 
-                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = p.invoice_id
-                WHERE p.branch_id = :branch_id AND i.sales_order_id IS NULL
-                GROUP BY p.payment_type_id";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':branch_id' => $this->id));
-        
-        return $resultSet;
-    }
+//    public function getPaymentInRetailTotalAmounts() {
+//        $sql = "SELECT p.payment_type_id, COALESCE(SUM(p.payment_amount), 0) AS total_amount
+//                FROM " . PaymentIn::model()->tableName() . " p 
+//                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = p.invoice_id
+//                WHERE p.branch_id = :branch_id AND i.sales_order_id IS NULL
+//                GROUP BY p.payment_type_id";
+//        
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':branch_id' => $this->id));
+//        
+//        return $resultSet;
+//    }
      
 //    public function getPaymentOutTotalAmount() {
 //        $sql = "SELECT payment_type_id, COALESCE(SUM(payment_amount), 0) AS total_amount
