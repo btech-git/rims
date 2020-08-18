@@ -58,24 +58,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'transaction_date',
-                            array('class' => 'prefix')); ?>
+                        <?php echo $form->labelEx($cashTransaction->header, 'transaction_date', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->textField($cashTransaction->header, 'transaction_date', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
-                        <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                            'model' => $cashTransaction->header,
-                            'attribute' => "transaction_date",
-                            // additional javascript options for the date picker plugin
-                            'options' => array(
-                                'dateFormat' => 'yy-mm-dd',
-                                'changeMonth' => true,
-                                'changeYear' => true,
-                                'yearRange' => '1900:2020'
-                            ),
-                            'htmlOptions' => array(//'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
-                            ),
-                        ));*/ ?>
                         <?php echo $form->error($cashTransaction->header, 'transaction_date'); ?>
                     </div>
                 </div>
@@ -89,6 +75,7 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->hiddenField($cashTransaction->header, 'coa_id'); ?>
+                        <?php echo CHtml::encode(CHtml::value($cashTransaction, 'branch.code')); ?>
                         <?php echo $form->textField($cashTransaction->header, 'coa_name', array(
                             'size' => 20,
                             'maxlength' => 20,
@@ -114,9 +101,9 @@
                         <?php echo $form->labelEx($cashTransaction->header, 'branch_id', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($cashTransaction->header, 'branch_id',
-                            CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'),
-                            array('prompt' => '[--Select Branch--]')); ?>
+                        <?php echo $form->dropDownlist($cashTransaction->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
+                            'prompt' => '[--Select Branch--]'
+                        )); ?>
                         <?php echo $form->error($cashTransaction->header, 'branch_id'); ?>
                     </div>
                 </div>
@@ -172,7 +159,7 @@
                                     <label for="" class="prefix">COA Code</label>
                                 </div>
                                 <div class="small-8 columns">
-
+                                    <?php echo CHtml::encode(CHtml::value($cashTransaction, 'branch.code')); ?>
                                     <?php echo $form->textField($cashTransaction->header, 'coa_code', array(
                                         'size' => 20,
                                         'maxlength' => 20,

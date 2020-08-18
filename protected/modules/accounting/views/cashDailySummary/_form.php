@@ -65,14 +65,8 @@
             <div class="row">
                 <p><h2>Payment In Retail</h2></p>
                 <?php $this->renderPartial('_detailPaymentInRetail', array(
-//                    'cashDailySummary' => $cashDailySummary,
                     'paymentTypes' => $paymentTypes,
-//                    'branches' => $branches,
-//                    'paymentInRetail' => $paymentInRetail,
-//                    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
                     'branchId' => $branchId,
-//                    'branch' => $branch,
-//                    'branchDataProvider' => $branchDataProvider,
                     'transactionDate' => $transactionDate,
                     'paymentInRetailResultSet' => $paymentInRetailResultSet,
                     'paymentInRetailList' => $paymentInRetailList,
@@ -82,8 +76,6 @@
             <div class="row">
                 <p><h2>Payment In Non Retail</h2></p>
                 <?php $this->renderPartial('_detailPaymentInWholesale', array(
-//                    'cashDailySummary' => $cashDailySummary,
-//                    'paymentTypes' => $paymentTypes,
                     'paymentInWholesale' => $paymentInWholesale,
                     'paymentInWholesaleDataProvider' => $paymentInWholesaleDataProvider,
                     'branchId' => $branchId,
@@ -94,9 +86,6 @@
             <div class="row">
                 <p><h2>Payment Out</h2></p>
                 <?php $this->renderPartial('_detailPaymentOut', array(
-//                    'cashDailySummary' => $cashDailySummary,
-//                    'paymentTypes' => $paymentTypes,
-//                    'pageNumber' => $pageNumber,
                     'paymentOut' => $paymentOut,
                     'paymentOutDataProvider' => $paymentOutDataProvider,
                     'branchId' => $branchId,
@@ -105,12 +94,20 @@
             </div>
             
             <div class="row">
-                <p><h2>Cash Transaction</h2></p>
-                <?php $this->renderPartial('_detailCashTransaction', array(
-//                    'cashDailySummary' => $cashDailySummary,
-//                    'pageNumber' => $pageNumber,
+                <p><h2>Cash Transaction In</h2></p>
+                <?php $this->renderPartial('_detailCashTransactionIn', array(
                     'cashTransaction' => $cashTransaction,
-                    'cashTransactionDataProvider' => $cashTransactionDataProvider,
+                    'cashTransactionInDataProvider' => $cashTransactionInDataProvider,
+                    'branchId' => $branchId,
+                    'transactionDate' => $transactionDate,
+                )); ?>
+            </div>
+            
+            <div class="row">
+                <p><h2>Cash Transaction Out</h2></p>
+                <?php $this->renderPartial('_detailCashTransactionOut', array(
+                    'cashTransaction' => $cashTransaction,
+                    'cashTransactionOutDataProvider' => $cashTransactionOutDataProvider,
                     'branchId' => $branchId,
                     'transactionDate' => $transactionDate,
                 )); ?>

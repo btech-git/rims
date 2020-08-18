@@ -29,10 +29,11 @@
         <th class="width1-7">Grand Total</th>
         <th class="width1-8">Payment</th>
         <th class="width1-9">Remaining</th>
+        <th class="width1-10">Approved By</th>
 
     </tr>
     <tr id="header2">
-        <td colspan="9">&nbsp;</td>
+        <td colspan="10">&nbsp;</td>
     </tr>
     <?php foreach ($purchaseSummary->dataProvider->data as $header): ?>
         <tr class="items1">
@@ -45,9 +46,10 @@
             <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($header->total_price))); ?></td>
             <td class="width1-8" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($header->payment_amount))); ?></td>
             <td class="width1-9" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($header->payment_left))); ?></td>
+            <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'approval.username')); ?></td>
         </tr>
         <tr class="items2">
-            <td colspan="9">&nbsp;</td>
+            <td colspan="10">&nbsp;</td>
         </tr>
     <?php endforeach; ?>
     <tr id="header1">

@@ -69,12 +69,12 @@
                         <?php echo CHtml::activeDropDownlist($model, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
                             'prompt' => '[--Select Payment Type--]',
                             'onchange' => '
-                                if ($(this).val() == 6) {
-                                    $("#' . CHtml::activeId($model, 'nomor_giro') . '").prop("readonly", false);
-                                    $("#' . CHtml::activeId($model, 'bank_id') . '").prop("readonly", true);
+                                if ($(this).val() == 1) {
+                                    $(".giro").hide();
+                                    $(".bank").hide();
                                 } else {
-                                    $("#' . CHtml::activeId($model, 'nomor_giro') . '").prop("readonly", true);
-                                    $("#' . CHtml::activeId($model, 'bank_id') . '").prop("readonly", false);
+                                    $(".bank").show();
+                                    $(".giro").show();
                                 }
                             '
                         )); ?>
@@ -83,7 +83,7 @@
                 </div>
             </div>
 
-<!--            <div class="giro">-->
+            <div class="giro">
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                 </div>
-<!--            </div>-->
+            </div>
 
             <div class="cash">
                 <div class="field">
@@ -104,7 +104,11 @@
                             <?php echo $form->labelEx($model, 'cash_payment_type'); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownlist($model, 'cash_payment_type', array('1' => 'Cash', '2' => 'Debit', '3' => 'Credit Card'), array('prompt' => '[--Select Cash Payment Type--]',
+                            <?php echo $form->dropDownlist($model, 'cash_payment_type', array(
+                                '1' => 'Cash', 
+                                '2' => 'Debit', 
+                                '3' => 'Credit Card'
+                            ), array('prompt' => '[--Select Cash Payment Type--]',
                                 'onchange' => '
                                 $("#PaymentOut_bank_id").val("");
                                 if($(this).val() == "1") {
@@ -121,7 +125,7 @@
                 </div>
             </div>
 
-<!--            <div class="bank">-->
+            <div class="bank">
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -133,7 +137,7 @@
                         </div>
                     </div>
                 </div>
-<!--            </div>-->
+            </div>
         
             <div class="field">
                 <div class="row collapse">
@@ -147,6 +151,7 @@
                 </div>
             </div>	
         </div>
+        
         <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
@@ -214,30 +219,6 @@
                     </div>
                 </div>
             </div>	
-
-            <!-- <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-            <?php //echo $form->labelEx($model,'ppn');  ?>
-                    </div>
-                    <div class="small-8 columns">
-            <?php
-            //echo $form->dropDownList($model, 'ppn', array('1'=>'PPN','2' => 'Non PPN'),array('onchange'=>
-            // 'jQuery.ajax({
-            // type: "POST",
-            // dataType: "JSON",
-            // url: "' . CController::createUrl('ajaxPpn', array('id'=> '')) . '" +$("#PaymentOut_purchase_order_id").val()+"&ppn="+$(this).val(),
-            // data: $("form").serialize(),
-            // success: function(data) {
-            // 	$("#Purchase_total_price").val(data.total);
-            // }})'
-            //)); 
-            ?>
-<?php //echo $form->error($model,'ppn');  ?>
-                    </div>
-                </div>
-            </div> -->	
-
         </div>
     </div>
 
@@ -353,7 +334,7 @@
                                 </tbody>
                             </table>
                         </fieldset>
-            </div>
+                    </div>
                     <div id="product">
                         <fieldset>
                             <legend>Product</legend>
@@ -401,26 +382,25 @@
                         <?php
                         echo $form->textField($model, 'payment_amount', array('size' => 18, 'maxlength' => 18, 'readonly' => $model->isNewRecord ? false : true,
                             'onchange' => '
-								var relCount = $("#PaymentOut_purchase_order_id").attr("rel");
-								var count = 0;
-								var paymentAmount = $("#PaymentOut_payment_amount").val();
-								var purchaseAmount = $("#Purchase_total_price").val();
-								var purchaseLeft = $("#Purchase_payment_left").val();
-								console.log(paymentAmount);
-								console.log(purchaseAmount);
-								console.log(purchaseLeft);
-								if(relCount == 1)
-									count = purchaseAmount - paymentAmount;
-								else
-									count = purchaseLeft - paymentAmount;
-								console.log(count);
-								if(count < 0)
-								{
-									alert("Payment Amount could not be higher than Invoice Amount");
-									$("#PaymentOut_payment_amount").val("");
-								}
+                            var relCount = $("#PaymentOut_purchase_order_id").attr("rel");
+                            var count = 0;
+                            var paymentAmount = $("#PaymentOut_payment_amount").val();
+                            var purchaseAmount = $("#Purchase_total_price").val();
+                            var purchaseLeft = $("#Purchase_payment_left").val();
+                            console.log(paymentAmount);
+                            console.log(purchaseAmount);
+                            console.log(purchaseLeft);
+                            if(relCount == 1)
+                                    count = purchaseAmount - paymentAmount;
+                            else
+                                    count = purchaseLeft - paymentAmount;
+                            console.log(count);
+                            if (count < 0) {
+                                alert("Payment Amount could not be higher than Invoice Amount");
+                                $("#PaymentOut_payment_amount").val("");
+                            }
 
-								'
+                            '
                         ));
                         ?>
                         <?php echo $form->error($model, 'payment_amount'); ?>
@@ -463,29 +443,17 @@
                         <?php else:
                             if ($allowedImages != 0): ?>
                                 <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                                <?php
-                                $this->widget('CMultiFileUpload', array(
+                                <?php $this->widget('CMultiFileUpload', array(
                                     'model' => $model,
                                     'attribute' => 'images',
                                     'accept' => 'jpg|jpeg|png|gif',
                                     'denied' => 'Only jpg, jpeg, png and gif are allowed',
                                     'max' => 10,
                                     'remove' => 'x',
-                                        //'duplicate' => 'Already Selected',
-                                ));
-                                ?>
+                                )); ?>
                             <?php endif;
 
                             if ($postImages !== null): ?>
-                                <?php
-                                //$criteria = new CDbCriteria;
-                                //$criteria->select = 'max(`order`) AS max_order';
-                                //$row = ArticlesImages::model()->findByAttributes(array('article_id' => $model->id, 'status' => 1));
-                                //$count_banners = count($restaurantImages);
-                                //$down = SKINS . 'arrow_down.png';
-                                //$up = SKINS . 'arrow_up.png';
-                                ?>
-                                <?php //print_r($postImages); ?>
                                 <?php
                                 foreach ($postImages as $postImage):
                                     $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename;
@@ -525,22 +493,18 @@
 
 </div><!-- form -->
 
-<?php
-$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'purchase-order-dialog',
     'options' => array(
         'title' => 'Purchase Order',
         'autoOpen' => false,
         'width' => 'auto',
         'modal' => true,
-    ),)
-);
-?>
+    ),
+)); ?>
 
-<?php
-$this->widget('zii.widgets.grid.CGridView', array(
+<?php $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'purchase-order-grid',
-    // 'dataProvider'=>$vehicleDataProvider,
     'dataProvider' => $purchaseOrderDataProvider,
     'filter' => $purchaseOrder,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -629,9 +593,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => 'number_format($data->total_price, 2)',
         )
     ),
-        )
-);
-?>
+)); ?>
 
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 <script>
@@ -647,7 +609,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     $("#supplier").show();
 
     }
-    if ($("#PaymentOut_payment_type").val()== "Giro") {
+    if ($("#PaymentOut_payment_type_id").val()== "6") {
     $(".giro").show();
     $(".cash").hide();
     //$(".bank").hide();
@@ -658,7 +620,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     $(".bank").show();
 
     }
-    else if($("#PaymentOut_payment_type").val()== "Cash"){
+    else if($("#PaymentOut_payment_type_id").val()== 1){
     $(".giro").hide();
     $(".cash").show();
     //$(".bank").hide();
@@ -684,7 +646,5 @@ $this->widget('zii.widgets.grid.CGridView', array(
 
 <?php
 Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
-Yii::app()->clientScript->registerScript('myjavascript', '
-		$(".numbers").number( true,2, ".", ",");
-    ', CClientScript::POS_END);
+Yii::app()->clientScript->registerScript('myjavascript', '$(".numbers").number( true,2, ".", ","); ', CClientScript::POS_END);
 ?>

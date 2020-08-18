@@ -31,10 +31,13 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
         <?php endif; ?>
 
+        <?php if ($model->request_type != 'Internal Delivery Order' && empty($model->invoice_number)): ?>
+            <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Invoice', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
+        <?php endif; ?>
+
         <h1>View Transaction Receive Item #<?php echo $model->id; ?></h1>
 
-        <?php
-        $this->widget('zii.widgets.CDetailView', array(
+        <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
                 'id',
@@ -54,16 +57,14 @@ $this->menu = array(
                 'request_type',
                 'estimate_arrival_date',
             ),
-        ));
-        ?>
-
+        )); ?>
     </div>
 </div>
-<div class="detail">
 
-    <hr>
+<div class="detail">
+    <hr />
     <h3>Details</h3>
-<?php if ($model->request_type == 'Purchase Order'): ?>
+    <?php if ($model->request_type == 'Purchase Order'): ?>
         <div class="row">
             <div class="small-12 columns">
                 <div class="field">
@@ -120,7 +121,7 @@ $this->menu = array(
 
         </div>
 
-<?php elseif ($model->request_type == 'Internal Delivery Order') : ?>
+    <?php elseif ($model->request_type == 'Internal Delivery Order') : ?>
         <div class="row">
             <div class="small-12 columns">
                 <div class="field">
@@ -145,7 +146,7 @@ $this->menu = array(
                 </div>
             </div>
         </div>
-<?php elseif ($model->request_type == 'Consignment In') : ?>
+    <?php elseif ($model->request_type == 'Consignment In') : ?>
         <div class="row">
             <div class="small-12 columns">
                 <div class="field">
@@ -191,7 +192,7 @@ $this->menu = array(
                 </div>
             </div>
         </div>
-<?php elseif ($model->request_type == 'Retail Sales') : ?>
+    <?php elseif ($model->request_type == 'Retail Sales') : ?>
         <div class="row">
             <div class="small-12 columns">
                 <div class="field">
@@ -217,8 +218,8 @@ $this->menu = array(
             </div>
         </div>	
     <?php endif ?>
-    <br>
-<?php if (count($recieveDetails) > 0): ?>
+    <br />
+    <?php if (count($recieveDetails) > 0): ?>
         <table>
             <thead>
                 <tr>
@@ -230,10 +231,10 @@ $this->menu = array(
                     <td>Sub Brand Series</td>
                     <td>QTY Request</td>
                     <td>QTY Received</td>
-    <?php if ($model->delivery_order_id != ""): ?>
+                    <?php if ($model->delivery_order_id != ""): ?>
                         <td>QTY Delivered</td>
                         <td>QTY Delivered Left</td>
-    <?php endif ?>
+                    <?php endif; ?>
                     <td>QTY Movement</td>
                     <td>QTY Movement Left</td>
                     <td>QTY Request Left</td>
@@ -242,7 +243,7 @@ $this->menu = array(
                 </tr>
             </thead>
             <tbody>
-    <?php foreach ($recieveDetails as $key => $recieveDetail): ?>
+                <?php foreach ($recieveDetails as $key => $recieveDetail): ?>
                     <tr>
                         <td><?php echo $recieveDetail->product_id == NULL ? '-' : $recieveDetail->product->name; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.manufacturer_code')); ?></td>
@@ -252,23 +253,23 @@ $this->menu = array(
                         <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrandSeries.name')); ?></td>
                         <td><?php echo $recieveDetail->qty_request; ?></td>
                         <td><?php echo $recieveDetail->qty_received; ?></td>
-        <?php if ($recieveDetail->delivery_order_detail_id != ""): ?>
+                        <?php if ($recieveDetail->delivery_order_detail_id != ""): ?>
                             <td><?php echo $recieveDetail->quantity_delivered; ?></td>
                             <td><?php echo $recieveDetail->quantity_delivered_left; ?></td>
-        <?php endif ?>
+                        <?php endif; ?>
                         <td><?php echo $recieveDetail->quantity_movement; ?></td>
                         <td><?php echo $recieveDetail->quantity_movement_left; ?></td>
                         <td><?php echo $recieveDetail->qty_request_left; ?></td>
                         <td><?php echo $recieveDetail->note == NULL ? '-' : $recieveDetail->note; ?></td>
                         <td><?php echo $recieveDetail->barcode_product == NULL ? '-' : $recieveDetail->barcode_product; ?></td>
                     </tr>
-    <?php endforeach ?>
+                <?php endforeach; ?>
             </tbody>
         </table>	
     <?php else: ?>
         <?php echo 'No Details Available'; ?>
     <?php endif ?>
-    <hr>
+    <hr />
     <?php
     if ($model->request_type == 'Purchase Order') {
         $itemHeaders = TransactionReceiveItem::model()->findAllByAttributes(array('purchase_order_id' => $model->purchase_order_id));
@@ -278,7 +279,7 @@ $this->menu = array(
     <?php }else
         $itemHeaders = array(); ?>
 
-<?php if (count($itemHeaders) != 0): ?>
+    <?php if (count($itemHeaders) != 0): ?>
         <table>
             <caption>History</caption>
             <thead>

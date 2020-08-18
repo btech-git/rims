@@ -73,7 +73,7 @@ class TransactionPurchaseOrderController extends Controller {
      */
     public function actionView($id) {
         $purchaseOrderDetails = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
-        
+
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'purchaseOrderDetails' => $purchaseOrderDetails,
@@ -133,8 +133,8 @@ class TransactionPurchaseOrderController extends Controller {
         }
 
         $productCriteria = new CDbCriteria;
-        $productCriteria->together = true;
-        $productCriteria->with = array('supplierProducts');
+//        $productCriteria->together = true;
+//        $productCriteria->with = array('supplierProducts');
         $productCriteria->compare('t.name', $product->name, true);
         $productCriteria->compare('t.manufacturer_code', $product->manufacturer_code, true);
         $productCriteria->compare('t.brand_id', $product->brand_id);
@@ -236,11 +236,11 @@ class TransactionPurchaseOrderController extends Controller {
         $productCriteria->compare('supplierProducts.supplier_id', $product->product_supplier);
 
         $productDataProvider = new CActiveDataProvider('Product', array(
-                    'criteria' => $productCriteria,
-                    'sort' => array(
-                        "defaultOrder" => "t.status ASC, t.name ASC",
-                    ),
-                ));
+            'criteria' => $productCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
+        ));
 
         $price = new ProductPrice('search');
         $price->unsetAttributes();  // clear any default values
@@ -257,8 +257,8 @@ class TransactionPurchaseOrderController extends Controller {
         $priceCriteria->compare('product.name', $price->product_name, true);
         $priceCriteria->compare('supplier.name', $price->supplier_name, true);
         $priceDataProvider = new CActiveDataProvider('ProductPrice', array(
-                    'criteria' => $priceCriteria,
-                ));
+            'criteria' => $priceCriteria,
+        ));
 
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
@@ -344,14 +344,13 @@ class TransactionPurchaseOrderController extends Controller {
         $requestCriteria->compare('request_order_date', $request->request_order_date . '%', true, 'AND', false);
         $requestCriteria->addCondition("status_document = 'Approved' AND 
             t.id NOT IN (
-				SELECT purchase_request_id
-				FROM " . TransactionPurchaseOrderDetailRequest::model()->tableName() . "
-			)"
+                SELECT purchase_request_id
+                FROM " . TransactionPurchaseOrderDetailRequest::model()->tableName() . "
+            )"
         );
         $requestDataProvider = new CActiveDataProvider('TransactionRequestOrder', array(
-                    'criteria' => $requestCriteria,
-                ));
-
+            'criteria' => $requestCriteria,
+        ));
 
         $this->render('admin', array(
             'model' => $model,
@@ -1056,8 +1055,7 @@ class TransactionPurchaseOrderController extends Controller {
             //print_r("test");
         } else {
             $purchaseOrderModel = $this->loadModel($id);
-            $purchaseOrder = new PurchaseOrders($purchaseOrderModel,
-                            $purchaseOrderModel->transactionPurchaseOrderDetails);
+            $purchaseOrder = new PurchaseOrders($purchaseOrderModel, $purchaseOrderModel->transactionPurchaseOrderDetails);
             //print_r("test");
         }
         return $purchaseOrder;
@@ -1111,8 +1109,8 @@ class TransactionPurchaseOrderController extends Controller {
             $productCriteria->compare('rims_supplier.name', $product->product_supplier, true);
             $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
             $productDataProvider = new CActiveDataProvider('Product', array(
-                        'criteria' => $productCriteria,
-                    ));
+                'criteria' => $productCriteria,
+            ));
             //$supplierId = $purchaseOrder->header->supplier_id;
             $purchaseOrder->addDetail($productId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -1233,7 +1231,7 @@ class TransactionPurchaseOrderController extends Controller {
             $productUnit = ProductUnit::model()->findByAttributes(array(
                 'product_id' => $product->id,
                 'unit_type' => 'Main'
-                    ));
+            ));
 
             $object = array(
                 //'id' => $product->id,
@@ -1513,8 +1511,8 @@ class TransactionPurchaseOrderController extends Controller {
 
 
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
-                    'criteria' => $supplierCriteria,
-                ));
+            'criteria' => $supplierCriteria,
+        ));
         //print_r($jurnals);
 
         if (isset($_GET['SaveExcel'])) {
@@ -1833,8 +1831,8 @@ class TransactionPurchaseOrderController extends Controller {
 
 
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
-                    'criteria' => $supplierCriteria,
-                ));
+            'criteria' => $supplierCriteria,
+        ));
         //print_r($jurnals);
 
         if (isset($_GET['SaveExcel'])) {

@@ -4,6 +4,7 @@ Yii::app()->clientScript->registerScript('report', '
 
 	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
+	$("#PlateNumber").val("' . $plateNumber . '");
 	$("#PageSize").val("' . $saleInvoiceSummary->dataProvider->pagination->pageSize . '");
 	$("#CurrentPage").val("' . ($saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
@@ -21,13 +22,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="medium-12 columns">
                     <div class="row">
                         <div class="medium-6 columns">
-                            <div class="field">
+<!--                            <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <label class="prefix">Customer</label>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($invoiceHeader, 'customer_id', array(
+                                        <?php /*echo CHtml::activeTextField($invoiceHeader, 'customer_id', array(
                                             'readonly' => true,
                                             'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
@@ -86,11 +87,47 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
                                         <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
+                                        <?php echo CHtml::closeTag('span');*/ ?>    
+                                    </div>
+                                </div>
+                            </div>-->
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix">Customer</label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('CustomerName', $customerName, array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
-
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix">Type</label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
+                                            'INDIVIDUAL' => 'INDIVIDUAL', 
+                                            'COMPANY' => 'COMPANY'
+                                        ), array('empty' => '-- All Type --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix">Vehicle Plate #</label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('PlateNumber', $plateNumber, array('size' => 3)); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -119,9 +156,39 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
 
                         <div class="medium-6 columns">
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch </span>
+                                    </div>
+                                     <div class="small-8 columns">
+                                          <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Status</span>
+                                    </div>
+                                     <div class="small-8 columns">
+                                          <?php echo CHtml::activeDropDownlist($invoiceHeader, 'status', array(
+                                              'INVOICING' => 'INVOICING',
+                                              'NOT PAID' => 'NOT PAID',
+                                              'PARTIALLY PAID' => 'PARTIALLY PAID',
+                                              'PAID' => 'PAID',
+                                              'CLEAR' => 'CLEAR',
+                                          ), array('empty'=>'-- All Status --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -140,17 +207,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                     <div class="small-8 columns">
                                         <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
-                                    </div>
-                                     <div class="small-8 columns">
-                                          <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +243,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <?php $this->renderPartial('_summary', array(
                 'saleInvoiceSummary' => $saleInvoiceSummary, 
                 'startDate' => $startDate, 
-                'endDate' => $endDate
+                'endDate' => $endDate,
+                'plateNumber' => $plateNumber,
             )); ?>
         </div>
 

@@ -287,9 +287,17 @@ class CashTransactionController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['CashTransaction']))
             $model->attributes = $_GET['CashTransaction'];
+        
+        $cashInTransactionDataProvider = $model->search();
+        $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In" ');        
+
+        $cashOutTransactionDataProvider = $model->search();
+        $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out" ');        
 
         $this->render('admin', array(
             'model' => $model,
+            'cashInTransactionDataProvider' => $cashInTransactionDataProvider,
+            'cashOutTransactionDataProvider' => $cashOutTransactionDataProvider,
         ));
     }
 

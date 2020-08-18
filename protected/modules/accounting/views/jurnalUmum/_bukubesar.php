@@ -13,7 +13,7 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
     <div>PT RATU PERDANA INDAH JAYA</div>
     <div>BUKU BESAR</div>
     <div>Periode: <?php echo $tanggal_mulai .' s/d '.$tanggal_sampai; ?></div>
-    <div>Branch: <?php echo $branch; ?></div>
+    <div>Branch: <?php echo empty($branch) ? 'All Branch' : Branch::model()->findByPk($branch)->name; ?></div>
     <span></span><br>
     <div>Tanggal Cetak: <?php echo date('d/m/Y'); ?></div>
     <?php 
@@ -62,7 +62,7 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
 
                             $JurnalCriteria->addBetweenCondition('tanggal_transaksi', $coaDetail->date, $tanggal_mulai);
                             $allJurnals = JurnalUmum::model()->findAll($JurnalCriteria);
-                            //echo $yesterday;
+
                             $debitTotal = $creditTotal = 0;
                             foreach ($allJurnals as $key => $allJurnal) {
                                 if ($allJurnal->debet_kredit == "D")
@@ -72,8 +72,7 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                             }
                             if ($coaDetail->normal_balance=="DEBET"){
                                 $count = $coaDetail->opening_balance + $debitTotal - $creditTotal;
-                            }
-                            else{
+                            } else {
                                 $count = $coaDetail->opening_balance + $creditTotal - $debitTotal;
                             }
                             // echo "DEBIT TOTAL = ".$debitTotal;
@@ -91,8 +90,7 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                                 }
                                 if ($branch != "") {
                                     $criteria->addCondition("branch_id = ".$branch);
-                                }
-                                else{
+                                } else {
                                     $criteria->addInCondition('branch_id',$arrBranch);
                                 }
                             }
@@ -112,16 +110,16 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                                 <th rowspan="2" >KETERANGAN</th>
                                 <th rowspan="2" >DEBET</th>
                                 <th rowspan="2" >KREDIT</th>
-                                <th colspan="2">Saldo</th>
+                                <th rowspan="2">SALDO</th>
                             </tr>
-                            <tr><th>Debet</th><th>Kredit</th></tr>
+                            <!--<tr><th>Debet</th><th>Kredit</th></tr>-->
                         </thead>
                         <tr>
-                            <td></td>
-                            <td>SALDO AWAL</td>
-                            <td colspan="4"></td>
-                            <td><?php echo $coaDetail->normal_balance == 'DEBET'? $count :'' ?></td>
-                            <td><?php echo $coaDetail->normal_balance == 'KREDIT'? $count :'' ?></td>
+                            <td style="text-align: right; font-weight: bold" colspan="6">SALDO AWAL</td>
+                            <td style="text-align: right; font-weight: bold">
+                                <?php $beginningBalance = $coaDetail->getReportBeginningBalanceDebit($coaDetail->id, $tanggal_mulai, $branch) - $coaDetail->getReportBeginningBalanceCredit($coaDetail->id, $tanggal_mulai, $branch); ?>
+                                <?php echo CHtml::encode(number_format($beginningBalance, 0)); ?>
+                            </td>
                         </tr>
                         <?php foreach ($coaJurnals as $key => $jurnal): ?>
                             <tr>
@@ -129,8 +127,19 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                                 <td><?php echo $jurnal->kode_transaksi; ?></td>
                                 <td><?php echo $jurnal->branch->name; ?></td>
                                 <td><?php echo $jurnal->transaction_subject ?></td>
-                                <td><?php echo $jurnal->debet_kredit == 'D'? number_format($jurnal->total,2) : '' ?></td>
-                                <td><?php echo $jurnal->debet_kredit == 'K'? number_format($jurnal->total,2) : '' ?></td>
+                                <td style="text-align: right">
+                                    <?php $totalDebit = $jurnal->debet_kredit == 'D'? $jurnal->total : 0; ?>
+                                    <?php echo number_format($totalDebit, 0); ?>
+                                </td>
+                                <td style="text-align: right">
+                                    <?php $totalCredit = $jurnal->debet_kredit == 'K'? $jurnal->total : 0; ?>
+                                    <?php echo number_format($totalCredit, 0); ?>
+                                </td>
+                                <td style="text-align: right">
+                                    <?php $balance = $beginningBalance + $totalCredit - $totalDebit; ?>
+                                    <?php echo number_format($balance, 0); ?>
+                                </td>
+                                
                                 <?php if ($key == 0) {
                                     $lastcount = $jurnal->debet_kredit == "D" ? $count + $jurnal->total : $count - $jurnal->total;
                                 } 
@@ -138,8 +147,8 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                                     $lastcount = $jurnal->debet_kredit == "D" ? $lastcount + $jurnal->total : $lastcount - $jurnal->total;
                                 }
                                 ?>
-                                <td><?php echo $coaDetail->normal_balance == 'DEBET'? number_format($lastcount,2):'-' ?></td>
-                                <td><?php echo $coaDetail->normal_balance == 'KREDIT'?  number_format($lastcount,2):'-' ?></td>
+<!--                                <td style="text-align: right"><?php /*echo $coaDetail->normal_balance == 'DEBET'? number_format($lastcount,2):'-' ?></td>
+                                <td style="text-align: right"><?php echo $coaDetail->normal_balance == 'KREDIT'?  number_format($lastcount,2):'-'*/ ?></td>-->
                                 <?php if ($jurnal->debet_kredit == 'D') {
                                     $totalDebet += $jurnal->total;
                                 } ?>
@@ -152,8 +161,9 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                         <?php endforeach; ?>
                         <tr>
                             <td colspan="4">&nbsp;</td>
-                            <td><b><?php echo number_format($totalDebet,2); ?></b></td>
-                            <td><b><?php echo number_format($totalkredit,2); ?></b></td>
+                            <td style="text-align: right"><b><?php echo number_format($totalDebet,2); ?></b></td>
+                            <td style="text-align: right"><b><?php echo number_format($totalkredit,2); ?></b></td>
+                            <td>&nbsp;</td>
                         </tr>
                     </table>
                 </td>

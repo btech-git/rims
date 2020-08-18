@@ -56,71 +56,9 @@ $this->menu=array(
 </div>
 
 <br />
-
-<!--<div class="row">
-    <div class="large-6 columns">
-        <div class="field">
-            <div class="row collapse">
-                <div class="small-4 columns">
-                    <span class="prefix">PPN</span>
-                </div>
-                <div class="small-5 columns">
-                    <input type="text" readonly="true" value="<?php /*echo $model->ppn==1?"PPN":"No PPN"; ?>"> 
-                </div>
-                <div class="small-3 columns">
-                    <?php /*if ($model->ppn == 1): ?>
-                        <?php echo CHtml::link('NO PPN<span class="fa fa-question"></span>', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/ppn?id=' . $model->id .'&ppn_type=2', array('class'=>'button cbutton left','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionPurchaseOrder.ppn"))) ?>
-                    <?php else: ?>
-                        <?php echo CHtml::link('PPN<span class="fa fa-question"></span>', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/ppn?id=' . $model->id. '&ppn_type=1', array('class'=>'button cbutton left','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionPurchaseOrder.ppn"))) ?>
-                    <?php endif ?>
-                </div>
-            </div>
-        </div>
-        <div class="field">
-            <div class="row collapse">
-                <div class="small-4 columns">
-                    <span class="prefix">Sub Total</span>
-                </div>
-                <div class="small-8 columns">
-                    <input type="text" readonly="true" value="<?php echo $this->format_money($model->subtotal); ?>">
-                </div>
-            </div>
-        </div>
-        <div class="field">
-            <div class="row collapse">
-                <div class="small-4 columns">
-                    <span class="prefix">Total Price</span>
-                </div>
-                <div class="small-8 columns">
-                    <input type="text" readonly="true" value="<?php echo Yii::app()->numberFormatter->format('#,##0.00', $model->total_price); ?>">
-                </div>
-            </div>
-        </div>
-        <div class="field">
-            <div class="row collapse">
-                <div class="small-4 columns">
-                    <span class="prefix">PPN price</span>
-                </div>
-                <div class="small-8 columns">
-                    <input type="text" readonly="true" value="<?php echo $this->format_money($model->ppn_price); ?>">
-                </div>
-            </div>
-        </div>
-        <div class="field">
-            <div class="row collapse">
-                <div class="small-4 columns">
-                    <span class="prefix">Total Quantity</span>
-                </div>
-                <div class="small-8 columns">
-                    <input type="text" readonly="true" value="<?php echo $model->total_quantity;*/ ?>"> 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
-                    
+              
 <div class="detail">
-	<?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(
             'Detail Item'=>array(
                 'id'=>'test1',
@@ -139,6 +77,13 @@ $this->menu=array(
             'Detail Receive'=>array(
                 'id'=>'test3',
                 'content'=>$this->renderPartial('_viewDetailReceive', array(
+                    'purchaseOrderDetails'=>$purchaseOrderDetails,
+                    'model'=>$model
+                ),TRUE)
+            ),
+            'Detail Invoice'=>array(
+                'id'=>'test4',
+                'content'=>$this->renderPartial('_viewDetailInvoice', array(
                     'purchaseOrderDetails'=>$purchaseOrderDetails,
                     'model'=>$model
                 ),TRUE)

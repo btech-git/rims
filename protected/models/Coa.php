@@ -215,4 +215,54 @@ class Coa extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getReportBeginningBalanceDebit($coaId, $startDate, $branchId) {
+        $coaConditionSql = '';
+        $branchConditionSql = '';
+        $params = array(
+            ':start_date' => $startDate,
+        );
+        if (!empty($coaId)) {
+            $coaConditionSql = ' AND dc.coa_id = :coa_id';
+            $params[':coa_id'] = $coaId;
+        }
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND dc.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
+                FROM " . JurnalUmum::model()->tableName() . " dc
+                INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
+                WHERE dc.tanggal_transaksi < :start_date " . $coaConditionSql . $branchConditionSql . " AND debet_kredit = 'D'";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+        
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public static function getReportBeginningBalanceCredit($coaId, $startDate, $branchId) {
+        $coaConditionSql = '';
+        $branchConditionSql = '';
+        $params = array(
+            ':start_date' => $startDate,
+        );
+        if (!empty($coaId)) {
+            $coaConditionSql = ' AND dc.coa_id = :coa_id';
+            $params[':coa_id'] = $coaId;
+        }
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND dc.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
+                FROM " . JurnalUmum::model()->tableName() . " dc
+                INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
+                WHERE dc.tanggal_transaksi < :start_date " . $coaConditionSql . $branchConditionSql . " AND debet_kredit = 'K'";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+        
+        return ($value === false) ? 0 : $value;
+    }
 }

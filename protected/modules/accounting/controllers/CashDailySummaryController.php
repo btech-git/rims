@@ -9,13 +9,10 @@ class CashDailySummaryController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-//        $cashDailySummary = new CashDailySummary();
-//        $cashDailySummary->user_id = 1;
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 10;
         $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
-//        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         $paymentTypes = PaymentType::model()->findAll(); 
         
         $branchConditionSql = '';
@@ -37,36 +34,6 @@ class CashDailySummaryController extends Controller {
         
         $paymentInRetailResultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
-//        $branch = Search::bind(new Branch(), isset($_GET['Branch']) ? $_GET['Branch'] : '');
-//        $branchDataProvider = $branch->searchByDailyTransaction();
-//        $branchDataProvider->criteria->compare('t.id', $branchId);
-//        $branchDataProvider->criteria->together = 'true';
-//        $branchDataProvider->criteria->with = array('paymentIns');
-//        $branchDataProvider->criteria->order = 't.code ASC';
-//        $branchDataProvider->criteria->compare('paymentIns.payment_date', $transactionDate);
-
-//        $paymentInRetail = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
-//        $paymentInRetailDataProvider = $paymentInRetail->searchByDailyCashReport();
-//        $paymentInRetailDataProvider->criteria->select = 'paymentType.name AS payment_type, SUM(t.payment_amount) AS total_payment';
-//        $paymentInRetailDataProvider->criteria->together = 'true';
-//        $paymentInRetailDataProvider->criteria->with = array('invoice', 'paymentType');
-//        $paymentInRetailDataProvider->criteria->addCondition("invoice.registration_transaction_id IS NOT NULL");
-//        $paymentInRetailDataProvider->criteria->compare('t.payment_date', $transactionDate);
-//        $paymentInRetailDataProvider->criteria->compare('t.branch_id', $branchId);
-//        $paymentInRetailDataProvider->criteria->order = 't.payment_type_id ASC';
-//        $paymentInRetailDataProvider->criteria->group = 't.payment_date, t.branch_id, t.payment_type_id';
-
-//        $paymentInRetailDataProvider = new CSqlDataProvider($sql, array(
-//            'db' => CActiveRecord::$db,
-//            'params' => $params,
-//            'totalItemCount' => CActiveRecord::$db->createCommand($sql)->queryScalar($params),
-//            'pagination' => array(
-//                'pageVar' => 'CurrentPage',
-//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-//                'currentPage' => $currentPage,
-//            ),
-//        ));
-
         $paymentInWholesale = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
         $paymentInWholesaleDataProvider = $paymentInWholesale->searchByDailyCashReport();
         $paymentInWholesaleDataProvider->criteria->together = 'true';
@@ -81,9 +48,16 @@ class CashDailySummaryController extends Controller {
         $paymentOutDataProvider->criteria->compare('t.branch_id', $branchId);
 
         $cashTransaction = Search::bind(new CashTransaction(), isset($_GET['CashTransaction']) ? $_GET['CashTransaction'] : '');
-        $cashTransactionDataProvider = $cashTransaction->search();
-        $cashTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate);
-        $cashTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
+        
+        $cashTransactionInDataProvider = $cashTransaction->search();
+        $cashTransactionInDataProvider->criteria->compare('t.transaction_date', $transactionDate);
+        $cashTransactionInDataProvider->criteria->compare('t.branch_id', $branchId);
+        $cashTransactionInDataProvider->criteria->addCondition('t.transaction_type = "In" AND t.status = "Approved" ');
+        
+        $cashTransactionOutDataProvider = $cashTransaction->search();
+        $cashTransactionOutDataProvider->criteria->compare('t.transaction_date', $transactionDate);
+        $cashTransactionOutDataProvider->criteria->compare('t.branch_id', $branchId);
+        $cashTransactionOutDataProvider->criteria->addCondition('t.transaction_type = "Out" AND t.status = "Approved" ');
         
         $paymentTypeIdList = array();
         foreach ($paymentTypes as $paymentType) {
@@ -112,19 +86,14 @@ class CashDailySummaryController extends Controller {
         }
 
         $this->render('create', array(
-//            'cashDailySummary' => $cashDailySummary,
-//            'pageNumber' => $pageNumber,
             'paymentTypes' => $paymentTypes,
-//            'branch' => $branch,
-//            'branchDataProvider' => $branchDataProvider,
-//            'paymentInRetail' => $paymentInRetail,
-//            'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
             'paymentInWholesale' => $paymentInWholesale,
             'paymentInWholesaleDataProvider' => $paymentInWholesaleDataProvider,
             'paymentOut' => $paymentOut,
             'paymentOutDataProvider' => $paymentOutDataProvider,
             'cashTransaction' => $cashTransaction,
-            'cashTransactionDataProvider' => $cashTransactionDataProvider,
+            'cashTransactionInDataProvider' => $cashTransactionInDataProvider,
+            'cashTransactionOutDataProvider' => $cashTransactionOutDataProvider,
             'branchId' => $branchId,
             'transactionDate' => $transactionDate,
             'paymentInRetailResultSet' => $paymentInRetailResultSet,

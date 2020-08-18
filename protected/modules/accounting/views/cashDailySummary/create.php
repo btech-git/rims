@@ -16,19 +16,14 @@ $this->menu=array(
 <h1>Cash Daily Summary</h1>
 
 <?php echo $this->renderPartial('_form', array(
-//    'cashDailySummary' => $cashDailySummary,
     'paymentTypes' => $paymentTypes,
-//    'pageNumber' => $pageNumber,
-//    'branch' => $branch,
-//    'branchDataProvider' => $branchDataProvider,
-//    'paymentInRetail' => $paymentInRetail,
-//    'paymentInRetailDataProvider' => $paymentInRetailDataProvider,
     'paymentInWholesale' => $paymentInWholesale,
     'paymentInWholesaleDataProvider' => $paymentInWholesaleDataProvider,
     'paymentOut' => $paymentOut,
     'paymentOutDataProvider' => $paymentOutDataProvider,
     'cashTransaction' => $cashTransaction,
-    'cashTransactionDataProvider' => $cashTransactionDataProvider,
+    'cashTransactionInDataProvider' => $cashTransactionInDataProvider,
+    'cashTransactionOutDataProvider' => $cashTransactionOutDataProvider,
     'branchId' => $branchId,
     'transactionDate' => $transactionDate,
     'paymentInRetailResultSet' => $paymentInRetailResultSet,

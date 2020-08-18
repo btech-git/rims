@@ -14,7 +14,7 @@ Yii::app()->clientScript->registerScript('report', '
 			<div>
 				<div class="myForm">
                     <h1>Buku Besar</h1>
-					<?php echo CHtml::beginForm(array(''), 'get'); ?>
+                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
                      <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">

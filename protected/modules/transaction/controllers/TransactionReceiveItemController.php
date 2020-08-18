@@ -253,6 +253,27 @@ class TransactionReceiveItemController extends Controller {
             'deliveryDataProvider' => $deliveryDataProvider,
         ));
     }
+    
+    public function actionAddInvoice($id) {
+        $receiveItem = $this->loadModel($id);
+        $receiveItem->invoice_date = date('Y-m-d');
+        $this->performAjaxValidation($receiveItem);
+
+        if (isset($_POST['Cancel']))
+            $this->redirect(array('admin'));
+
+        if (isset($_POST['TransactionReceiveItem'])) {
+            $receiveItem->attributes = $_POST['TransactionReceiveItem'];
+            
+            if ($receiveItem->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $receiveItem->id));
+            }
+        }
+
+        $this->render('addInvoice', array(
+            'receiveItem' => $receiveItem,
+        ));
+    }
 
     /**
      * Deletes a particular model.

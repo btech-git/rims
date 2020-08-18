@@ -6,11 +6,18 @@
         <table>
             <tr>
                 <td width="15%">Receive Item No</td>
-                <td><?php echo $receiveHeader->receive_item_no; ?></td>
+                <td><?php echo CHTml::link($receiveHeader->receive_item_no, array("/transaction/transactionReceiveItem/view", "id"=>$receiveHeader->id)); ?></td>
             </tr>
             <tr>
                 <td width="15%">Tanggal</td>
                 <td><?php echo $receiveHeader->receive_item_date; ?></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <?php if ($receiveHeader->request_type != 'Internal Delivery Order' && empty($receiveHeader->invoice_number)): ?>
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Invoice', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $receiveHeader->id, array('visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
+                    <?php endif; ?>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">

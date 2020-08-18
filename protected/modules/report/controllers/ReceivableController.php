@@ -27,6 +27,9 @@ class ReceivableController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? '2019-01-01' : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -38,11 +41,15 @@ class ReceivableController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'plateNumber' => $plateNumber,
+            'customerName' => $customerName,
+            'customerType' => $customerType,
         );
         $saleInvoiceSummary->setupFilter($filters);
 
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
+        $customerDataProvider->criteria->addCondition('t.customer_type = "Company" '); 
 
         if (isset($_POST['SaveToExcel'])) {
             $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate);
@@ -54,6 +61,9 @@ class ReceivableController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'plateNumber' => $plateNumber,
+            'customerName' => $customerName,
+            'customerType' => $customerType,
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
         ));

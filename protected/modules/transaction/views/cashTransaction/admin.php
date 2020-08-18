@@ -2,15 +2,15 @@
 /* @var $this CashTransactionController */
 /* @var $model CashTransaction */
 
-$this->breadcrumbs=array(
-	'Cash Transactions'=>array('index'),
-	'Manage',
+$this->breadcrumbs = array(
+    'Cash Transactions' => array('index'),
+    'Manage',
 );
 
-/*$this->menu=array(
-	array('label'=>'List CashTransaction', 'url'=>array('index')),
-	array('label'=>'Create CashTransaction', 'url'=>array('create')),
-);*/
+/* $this->menu=array(
+  array('label'=>'List CashTransaction', 'url'=>array('index')),
+  array('label'=>'Create CashTransaction', 'url'=>array('create')),
+  ); */
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -33,77 +33,156 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<!--<h1>Manage Cash Transactions</h1>-->
-
-
 <div id="maincontent">
-	<div class="row">
-		<div class="small-12 columns">
-			<div class="clearfix page-action">
-				<?php echo CHtml::link('<span class="fa fa-plus"></span>New Cash Transaction', Yii::app()->baseUrl.'/transaction/cashTransaction/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.cashTransaction.create"))) ?>
-				<h2>Manage Cash Transactions</h2>
-			</div>
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="clearfix page-action">
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Cash Transaction', Yii::app()->baseUrl . '/transaction/cashTransaction/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.create"))) ?>
+                <h2>Manage Cash Transactions</h2>
+            </div>
 
-			<div class="search-bar">
-				<div class="clearfix button-bar">
-		  			<!--<div class="left clearfix bulk-action">
-		         		<span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-		         		<input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-		         		<input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-		         	</div>-->
-					<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button right button cbutton secondary')); ?>					<div class="clearfix"></div>
-					<div class="search-form" style="display:none">
-					<?php $this->renderPartial('_search',array(
-						'model'=>$model,
-					)); ?>
-					</div><!-- search-form -->
-		        </div>
-		    </div>
-        	
-        	<div class="grid-view">
-				<?php $this->widget('zii.widgets.grid.CGridView', array(
-					'id'=>'cash-transaction-grid',
-					'dataProvider'=>$model->search(),
-					'filter'=>$model,
-					// 'summaryText'=>'',
-					'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-					'pager'=>array(
-					   'cssFile'=>false,
-					   'header'=>'',
-					),
-					'columns'=>array(
-						//'id',
-						//'transaction_number',
-						array('name'=>'transaction_number', 'value'=>'CHTml::link($data->transaction_number, array("view", "id"=>$data->id))', 'type'=>'raw'),
-						'transaction_date',
-						'transaction_type',
-						//'coa_id',
-						array('name'=>'coa_name','value'=>'$data->coa!=""?$data->coa->name:""'),
-						'debit_amount',
-						'credit_amount',
-						'status',
-						//'branch_id',
-						array('name'=>'branch_id','value'=>'$data->branch!=""?$data->branch->name:""'),
-//						array('name'=>'user_id','value'=>'$data->user!=""?$data->user->username:""'),
-						//'user_id',
+            <div class="search-bar">
+                <div class="clearfix button-bar">
+                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					<div class="clearfix"></div>
+                    <div class="search-form" style="display:none">
+                        <?php $this->renderPartial('_search', array(
+                            'model' => $model,
+                        )); ?>
+                    </div><!-- search-form -->
+                </div>
+            </div>
 
-						array(
-								'class'=>'CButtonColumn',
-								'template'=>'{edit}',
-								'buttons'=>array
-								(
-									'edit' => array
-									(
-										'label'=>'edit',
-										'url'=>'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-										'visible'=>'$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.cashTransaction.update")',
-										
-										),
-									),
-								),
-							),
-							)); ?>
-			</div>
-		</div>
-	</div> <!-- end row -->
+            <div class="grid-view">
+                <h2>TRANSACTION IN</h2>
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'cash-transaction-grid',
+                    'dataProvider' => $cashInTransactionDataProvider,
+                    'filter' => $model,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array( 
+                            'name' => 'transaction_number', 
+                            'value' => 'CHTml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                            'type' => 'raw'
+                        ),
+                        'transaction_date',
+//                        'transaction_type',
+                        array(
+                            'header' => 'COA Credit',
+                            'name' => 'coa_name', 
+                            'value' => '$data->coa != "" ? $data->coa->name : "" '
+                        ),
+                        array(
+                            'name' => 'credit_amount',
+                            'value' => 'number_format($data->credit_amount, 0)',
+                            'htmlOptions' => array(
+                                'style' => 'text-align: right',
+                            ),
+                        ),
+                        array(
+                            'header' => 'COA Debit',
+                            'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->coa->name'
+                        ),
+                        array(
+                            'header' => 'Debit Amount',
+                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->cashTransactionDetails[0]->amount, 0)',
+                            'htmlOptions' => array(
+                                'style' => 'text-align: right',
+                            ),
+                        ),
+                        'status',
+                        array(
+                            'name' => 'branch_id', 
+                            'value' => '$data->branch != "" ? $data->branch->name : "" '
+                        ),
+                        array(
+                            'header' => 'Approved By',
+                            'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
+                        ),
+                        array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{edit}',
+                            'buttons' => array(
+                                'edit' => array(
+                                    'label' => 'edit',
+                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
+                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.cashTransaction.update")',
+                                ),
+                            ),
+                        ),
+                    ),
+                )); ?>
+            </div>
+
+            <div class="grid-view">
+                <h2>TRANSACTION OUT</h2>
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'cash-transaction-grid',
+                    'dataProvider' => $cashOutTransactionDataProvider,
+                    'filter' => $model,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array( 
+                            'name' => 'transaction_number', 
+                            'value' => 'CHTml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                            'type' => 'raw'
+                        ),
+                        'transaction_date',
+//                        'transaction_type',
+                        array(
+                            'header' => 'COA Debit',
+                            'name' => 'coa_name', 
+                            'value' => '$data->coa != "" ? $data->coa->name : "" '
+                        ),
+                        array(
+                            'name' => 'debit_amount',
+                            'value' => 'number_format($data->debit_amount, 0)',
+                            'htmlOptions' => array(
+                                'style' => 'text-align: right',
+                            ),
+                        ),
+                        array(
+                            'header' => 'COA Credit',
+                            'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->coa->name'
+                        ),
+                        array(
+                            'header' => 'Credit Amount',
+                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->cashTransactionDetails[0]->amount, 0)',
+                            'htmlOptions' => array(
+                                'style' => 'text-align: right',
+                            ),
+                        ),
+                        'status',
+                        array(
+                            'name' => 'branch_id', 
+                            'value' => '$data->branch != "" ? $data->branch->name : "" '
+                        ),
+                        array(
+                            'header' => 'Approved By',
+                            'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
+                        ),
+                        array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{edit}',
+                            'buttons' => array(
+                                'edit' => array(
+                                    'label' => 'edit',
+                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
+                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.cashTransaction.update")',
+                                ),
+                            ),
+                        ),
+                    ),
+                )); ?>
+            </div>
+        </div>
+    </div> <!-- end row -->
 </div> <!-- end maintenance -->

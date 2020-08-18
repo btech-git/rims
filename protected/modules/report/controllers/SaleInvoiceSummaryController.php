@@ -27,6 +27,9 @@ class SaleInvoiceSummaryController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? '2019-01-01' : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -38,6 +41,9 @@ class SaleInvoiceSummaryController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'plateNumber' => $plateNumber,
+            'customerName' => $customerName,
+            'customerType' => $customerType,
         );
         $saleInvoiceSummary->setupFilter($filters);
 
@@ -54,6 +60,9 @@ class SaleInvoiceSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'plateNumber' => $plateNumber,
+            'customerName' => $customerName,
+            'customerType' => $customerType,
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
         ));
