@@ -104,7 +104,7 @@ class PaymentOutImages extends CActiveRecord
 	}
 
 	public function getFilename() {
-    	return $this->payment_out_id . '-' . $this->payment_out_id . '-realization.' . $this->extension;
+    	return $this->id . '-realization.' . $this->extension;
    	}
 
    	public function getThumbname() {

@@ -218,19 +218,19 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    public function getTotalAmountWholesale($branchId, $transactionDate) {
-        $sql = "SELECT payment_date, branch_id, customer_id, COALESCE(SUM(payment_amount), 0) AS total_amount
-                FROM " . PaymentIn::model()->tableName() . "
-                WHERE branch_id = :branch_id AND payment_date = :payment_date
-                GROUP BY payment_date, branch_id, customer_id";
-
-        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':branch_id' => $branchId,
-            ':payment_date' => $transactionDate,
-        ));
-
-        return ($value === false) ? 0 : $value;
-    }
+//    public function getTotalAmountWholesale($branchId, $transactionDate) {
+//        $sql = "SELECT payment_date, branch_id, customer_id, COALESCE(SUM(payment_amount), 0) AS total_amount
+//                FROM " . PaymentIn::model()->tableName() . "
+//                WHERE branch_id = :branch_id AND payment_date = :payment_date
+//                GROUP BY payment_date, branch_id, customer_id";
+//
+//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+//            ':branch_id' => $branchId,
+//            ':payment_date' => $transactionDate,
+//        ));
+//
+//        return ($value === false) ? 0 : $value;
+//    }
 
 //    public function getTotalAmountRetail($transactionDate) {
 //        $sql = "SELECT payment_date, branch_id, payment_type_id, COALESCE(SUM(payment_amount), 0) AS total_amount

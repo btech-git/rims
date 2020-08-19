@@ -1,5 +1,5 @@
 <div class="form">
-    <?php echo CHtml::beginForm(); ?>
+    <?php echo CHtml::beginForm(array(), 'POST', array('enctype' => 'multipart/form-data')); ?>
     <?php echo CHtml::errorSummary($paymentOut->header); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
@@ -299,9 +299,9 @@
                     'accept' => 'jpg|jpeg|png|gif',
                     'denied' => 'Only jpg, jpeg, png and gif are allowed',
                     'max' => 10,
-                    'remove' => 'x',
+                    'remove' => '[x]',
+                    'duplicate' => 'Already Selected',
                 )); ?>
-                <?php echo CHtml::error($paymentOut->header, 'images'); ?>
             </div>
         </div>
     </div>

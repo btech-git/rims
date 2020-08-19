@@ -5,7 +5,7 @@
 
 
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/transaction/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.admin"))) ?>
+    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.admin"))) ?>
 </div>
 
 <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>
@@ -91,3 +91,30 @@
         </td>
     </tr>
 </table>
+
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <fieldset>
+            <legend>Attached Images</legend>
+
+            <?php foreach ($postImages as $postImage):
+                $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $postImage->filename;
+                $src = Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $postImage->filename;
+            ?>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <div style="margin-bottom:.5rem">
+                            <?php echo CHtml::image($src, $paymentOut->payment_number . "Image"); ?>
+                        </div>
+                    </div>
+                    <div class="small-8 columns">
+                        <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
+                            <?php //echo (Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $postImage->filename); ?>
+                        </div>
+                    </div>
+
+                </div>
+            <?php endforeach; ?>
+        </fieldset>
+    </div>
+</div>

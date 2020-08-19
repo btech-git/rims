@@ -12,7 +12,7 @@
     <tbody>
         <?php $grandTotal = 0; ?>
         <?php foreach ($paymentInWholesaleDataProvider->data as $paymentIn): ?>
-            <?php $totalAmount = $paymentIn->getTotalAmountWholesale($branchId, $transactionDate); ?>
+            <?php $totalAmount = $paymentIn->total_amount; ?>
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'branch.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'customer.name')); ?></td>

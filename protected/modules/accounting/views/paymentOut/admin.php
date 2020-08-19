@@ -53,9 +53,16 @@
             'filter' => CHtml::textField('SupplierName', $supplierName),
             'value' => 'CHtml::value($data, "supplier.name")',
         ),
-        'paymentType.name',
+        'paymentType.name: Payment Type',
+        array(
+            'name' => 'payment_amount', 
+            'value' => 'number_format($data->payment_amount, 0)',
+            'htmlOptions' => array(
+                'style' => 'text-align: right'         
+            ),
+        ),
         'notes',
-        'branch.name',
+        'branch.name: Branch',
         array(
             'class' => 'CButtonColumn',
             'template' => '{view}{update}{delete}',
@@ -64,3 +71,43 @@
     ),
 )); ?>
 <?php echo CHtml::endForm(); ?>
+
+<div id="maincontent">
+    <div class="row">
+        <div class="small-12 columns">
+            <fieldset>
+                <legend>PO Pending Payment</legend>
+                <div class="grid-view">
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'id' => 'purchase-order-grid',
+                        // 'dataProvider'=>$vehicleDataProvider,
+                        'dataProvider' => $purchaseOrderDataProvider,
+                        'filter' => $purchaseOrder,
+                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                        'pager'=>array(
+                           'cssFile'=>false,
+                           'header'=>'',
+                        ),
+                        'columns' => array(
+                            array(
+                                'name' => 'purchase_order_no',
+                                'value' => 'CHTml::link($data->purchase_order_no, array("transactionPurchaseOrder/view", "id"=>$data->id))',
+                                'type' => 'raw'
+                            ),
+                            'purchase_order_date',
+                            'status_document',
+                            array('name' => 'supplier_name', 'value' => '$data->supplier->name'),
+                            array(
+                                'name' => 'total_price', 
+                                'value' => 'AppHelper::formatMoney($data->total_price)',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: right'         
+                                ),
+                            ),
+                        ),
+                    )); ?>
+                </div>
+            </fieldset>
+        </div>
+    </div> <!-- end row -->
+</div>

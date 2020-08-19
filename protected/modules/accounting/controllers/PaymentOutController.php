@@ -66,44 +66,13 @@ class PaymentOutController extends Controller {
             $receiveItemDataProvider->criteria->params[':purchase_order_id'] = $purchaseOrderId;
         }
         
-        $images = $paymentOut->header->images = CUploadedFile::getInstances($paymentOut->header, 'images');
-
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
 
-            if ($paymentOut->save(Yii::app()->db)) {
-                if (isset($images) && !empty($images)) {
-                    foreach ($paymentOut->header->images as $i => $image) {
-                        $postImage = new PaymentOutImages;
-                        $postImage->payment_out_id = $paymentOut->header->id;
-                        $postImage->is_inactive = 0;
-                        $postImage->extension = $image->extensionName;
-
-                        if ($postImage->save()) {
-                            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $paymentOut->header->id;
-
-                            if (!file_exists($dir)) {
-                                mkdir($dir, 0777, true);
-                            }
-                            $path = $dir . '/' . $postImage->filename;
-                            $image->saveAs($path);
-                            $picture = Yii::app()->image->load($path);
-                            $picture->save();
-
-                            $thumb = Yii::app()->image->load($path);
-                            $thumb_path = $dir . '/' . $postImage->thumbname;
-                            $thumb->save($thumb_path);
-
-                            $square = Yii::app()->image->load($path);
-                            $square_path = $dir . '/' . $postImage->squarename;
-                            $square->save($square_path);
-                        }
-                    }
-                }
-                
+            if ($paymentOut->save(Yii::app()->db)) {                
                 $this->redirect(array('view', 'id' => $paymentOut->header->id));
             }
         }
@@ -162,9 +131,15 @@ class PaymentOutController extends Controller {
             'criteria' => $criteria,
         ));
 
+        $postImages = PaymentOutImages::model()->findAllByAttributes(array(
+            'payment_out_id' => $paymentOut->id,
+            'is_inactive' => $paymentOut::STATUS_ACTIVE
+        ));
+        
         $this->render('view', array(
             'paymentOut' => $paymentOut,
             'detailsDataProvider' => $detailsDataProvider,
+            'postImages' => $postImages,
         ));
     }
 
@@ -207,10 +182,38 @@ class PaymentOutController extends Controller {
 
         $dataProvider->criteria->order = 't.id DESC';
 
+        $purchaseOrder = new TransactionPurchaseOrder('search');
+        $purchaseOrder->unsetAttributes();
+        
+        if (isset($_GET['TransactionPurchaseOrder'])) {
+            $purchaseOrder->attributes = $_GET['TransactionPurchaseOrder'];
+        }
+        
+        $purchaseOrderCriteria = new CDbCriteria;
+        $purchaseOrderCriteria->addCondition('t.payment_status != "PAID"');
+        $purchaseOrderCriteria->addCondition('t.status_document = "Approved"');
+        $purchaseOrderCriteria->compare('purchase_order_no', $purchaseOrder->purchase_order_no, true);
+        $purchaseOrderCriteria->compare('purchase_order_date', $purchaseOrder->purchase_order_date, true);
+        $purchaseOrderCriteria->compare('total_price', $purchaseOrder->total_price, true);
+        $purchaseOrderCriteria->together = true;
+        $purchaseOrderCriteria->with = array('supplier');
+        $purchaseOrderCriteria->compare('supplier.name', $purchaseOrder->supplier_name, true);
+        $purchaseOrderDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
+            'criteria' => $purchaseOrderCriteria,
+            'sort' => array(
+                'defaultOrder' => 'purchase_order_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            )
+        ));
+
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
             'dataProvider' => $dataProvider,
             'supplierName' => $supplierName,
+            'purchaseOrder' => $purchaseOrder,
+            'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
         ));
     }
 
@@ -248,10 +251,10 @@ class PaymentOutController extends Controller {
 
     public function instantiate($id) {
         if (empty($id))
-            $paymentOut = new PaymentOutComponent(new PaymentOut(), array());
+            $paymentOut = new PaymentOutComponent(new PaymentOut(), array(), new PaymentOutImages());
         else {
             $paymentOutHeader = $this->loadModel($id);
-            $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->paymentOutDetails);
+            $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->paymentOutDetails, new PaymentOutImage());
         }
 
         return $paymentOut;
@@ -285,5 +288,7 @@ class PaymentOutController extends Controller {
                 array_splice($paymentOut->details, $i + 1);
         } else
             $paymentOut->details = array();
+        
+        $paymentOut->header->images = CUploadedFile::getInstances($paymentOut->header, 'images');
     }
 }

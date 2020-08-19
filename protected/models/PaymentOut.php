@@ -230,18 +230,28 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         return $total;
     }
 
-    public function getTotalAmount($branchId, $transactionDate) {
-        $sql = "SELECT payment_date, branch_id, supplier_id, COALESCE(SUM(payment_amount), 0) AS total_amount
-                FROM " . PaymentOut::model()->tableName() . "
-                WHERE branch_id = :branch_id AND payment_date = :payment_date
-                GROUP BY payment_date, branch_id, supplier_id";
-
-        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':branch_id' => $branchId,
-            ':payment_date' => $transactionDate,
-        ));
-
-        return ($value === false) ? 0 : $value;
+//    public function getTotalAmount($branchId, $transactionDate) {
+//        
+//        $branchConditionSql = '';
+//        $params = array(
+//            ':payment_date' => $transactionDate,
+//        );
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        $sql = "SELECT payment_number, COALESCE(SUM(payment_amount), 0) AS total_amount
+//                FROM " . PaymentOut::model()->tableName() . "
+//                WHERE payment_date = :payment_date " . $branchConditionSql . "    
+//                GROUP BY payment_number";
+//
+//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+//
+//        return ($value === false) ? 0 : $value;
+//    }
+	
+    public function getFilename() {
+        
+        return $this->id . '.' . $this->extension;
     }
-
 }

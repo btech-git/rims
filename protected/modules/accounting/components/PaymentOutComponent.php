@@ -4,10 +4,12 @@ class PaymentOutComponent extends CComponent {
 
     public $header;
     public $details;
+    public $image;
 
-    public function __construct($header, array $details) {
+    public function __construct($header, array $details, $image) {
         $this->header = $header;
         $this->details = $details;
+        $this->image = $image;
     }
 
     public function addInvoice($invoiceId) {
@@ -139,6 +141,35 @@ class PaymentOutComponent extends CComponent {
             $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
             $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
             $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+        }
+
+        foreach ($this->header->images as $file) {
+            $contentImage = new PaymentOutImages();
+            $contentImage->payment_out_id = $this->header->id;
+            $contentImage->is_inactive = PaymentOut::STATUS_ACTIVE;
+            $contentImage->extension = $file->extensionName;
+            $valid = $contentImage->save(false) && $valid;
+
+            $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $contentImage->filename;
+            $file->saveAs($originalPath);
+
+//            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $this->header->id;
+//
+//            if (!file_exists($dir)) {
+//                mkdir($dir, 0777, true);
+//            }
+//            $path = $dir . '/' . $contentImage->filename;
+//            $file->saveAs($path);
+//            $picture = Yii::app()->image->load($path);
+//            $picture->save();
+
+//            $thumb = Yii::app()->image->load($path);
+//            $thumb_path = $dir . '/' . $contentImage->thumbname;
+//            $thumb->save($thumb_path);
+//
+//            $square = Yii::app()->image->load($path);
+//            $square_path = $dir . '/' . $contentImage->squarename;
+//            $square->save($square_path);
         }
 
         return $valid;
