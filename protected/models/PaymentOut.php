@@ -63,7 +63,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             array('payment_type, status', 'length', 'max' => 30),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id', 'safe', 'on' => 'search'),
+            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images', 'safe', 'on' => 'search'),
         );
     }
 
@@ -230,26 +230,6 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         return $total;
     }
 
-//    public function getTotalAmount($branchId, $transactionDate) {
-//        
-//        $branchConditionSql = '';
-//        $params = array(
-//            ':payment_date' => $transactionDate,
-//        );
-//        if (!empty($branchId)) {
-//            $branchConditionSql = ' AND branch_id = :branch_id';
-//            $params[':branch_id'] = $branchId;
-//        }
-//        $sql = "SELECT payment_number, COALESCE(SUM(payment_amount), 0) AS total_amount
-//                FROM " . PaymentOut::model()->tableName() . "
-//                WHERE payment_date = :payment_date " . $branchConditionSql . "    
-//                GROUP BY payment_number";
-//
-//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
-//
-//        return ($value === false) ? 0 : $value;
-//    }
-	
     public function getFilename() {
         
         return $this->id . '.' . $this->extension;

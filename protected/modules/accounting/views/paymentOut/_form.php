@@ -290,7 +290,7 @@
     <div class="field">
         <div class="row collapse">
             <div class="small-4 columns">
-                <?php echo CHtml::label('Images', ''); ?>
+                <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
             </div>
             <div class="small-8 columns">
                 <?php $this->widget('CMultiFileUpload', array(
@@ -301,6 +301,16 @@
                     'max' => 10,
                     'remove' => '[x]',
                     'duplicate' => 'Already Selected',
+                    'options' => array(
+                        'afterFileSelect' => 'function(e ,v ,m){
+                            var fileSize = e.files[0].size;
+                            if (fileSize > 2*1024*1024){
+                                alert("Exceeds file upload limit 2MB");
+                                $(".MultiFile-remove").click();
+                            }                      
+                            return true;
+                        }',
+                    ),
                 )); ?>
             </div>
         </div>
@@ -330,6 +340,10 @@
     'id' => 'purchase-invoice-grid',
     'dataProvider' => $receiveItemDataProvider,
     'filter' => $receiveItem,
+    'pager' => array(
+        'cssFile' => false,
+        'header' => '',
+    ),
     'columns' => array(
         array(
             'id' => 'selectedIds',

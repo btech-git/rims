@@ -46,7 +46,9 @@ $('.search-form form').submit(function(){
     </div>
     <div class="clearfix"></div>
 </div>
+
 <br />
+
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'registration-transaction-grid',

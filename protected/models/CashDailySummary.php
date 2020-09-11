@@ -5,111 +5,113 @@
  *
  * The followings are the available columns in table '{{cash_daily_summary}}':
  * @property integer $id
- * @property string $transaction_datetime
+ * @property string $transaction_date
  * @property string $amount
- * @property string $filename
  * @property string $memo
- * @property integer $coa_id
  * @property integer $branch_id
  * @property integer $user_id
+ * @property string $input_datetime
+ * @property integer $payment_type_id
  *
  * The followings are the available model relations:
- * @property Users $user
- * @property Coa $coa
+ * @property CashDailyImages[] $cashDailyImages
+ * @property PaymentType $paymentType
  * @property Branch $branch
+ * @property Users $user
  */
-class CashDailySummary extends CActiveRecord
-{
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return CashDailySummary the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+class CashDailySummary extends CActiveRecord {
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{cash_daily_summary}}';
-	}
+    public $images;
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('transaction_datetime, coa_id, branch_id, user_id', 'required'),
-			array('coa_id, branch_id, user_id', 'numerical', 'integerOnly'=>true),
-			array('amount', 'length', 'max'=>18),
-			array('filename', 'length', 'max'=>60),
-			array('memo', 'length', 'max'=>100),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, transaction_datetime, amount, filename, memo, coa_id, branch_id, user_id', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * Returns the static model of the specified AR class.
+     * @param string $className active record class name.
+     * @return CashDailySummary the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-			'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
-			'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return '{{cash_daily_summary}}';
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'transaction_datetime' => 'Transaction Datetime',
-			'amount' => 'Amount',
-			'filename' => 'Filename',
-			'memo' => 'Memo',
-			'coa_id' => 'Coa',
-			'branch_id' => 'Branch',
-			'user_id' => 'User',
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('transaction_date, branch_id, user_id, payment_type_id', 'required'),
+            array('branch_id, user_id, payment_type_id', 'numerical', 'integerOnly' => true),
+            array('amount', 'length', 'max' => 18),
+            array('memo', 'length', 'max' => 100),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, transaction_date, amount, memo, branch_id, user_id, input_datetime, payment_type_id, images', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'cashDailyImages' => array(self::HAS_MANY, 'CashDailyImages', 'cash_daily_summary_id'),
+            'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
+            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+        );
+    }
 
-		$criteria=new CDbCriteria;
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'transaction_date' => 'Transaction Date',
+            'amount' => 'Amount',
+            'memo' => 'Memo',
+            'branch_id' => 'Branch',
+            'user_id' => 'User',
+            'input_datetime' => 'Input Datetime',
+            'payment_type_id' => 'Payment Type',
+        );
+    }
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('transaction_datetime',$this->transaction_datetime,true);
-		$criteria->compare('amount',$this->amount,true);
-		$criteria->compare('filename',$this->filename,true);
-		$criteria->compare('memo',$this->memo,true);
-		$criteria->compare('coa_id',$this->coa_id);
-		$criteria->compare('branch_id',$this->branch_id);
-		$criteria->compare('user_id',$this->user_id);
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function search() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('amount', $this->amount, true);
+        $criteria->compare('memo', $this->memo, true);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('input_datetime', $this->input_datetime, true);
+        $criteria->compare('payment_type_id', $this->payment_type_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    public function getFilename() {
+        
+        return $this->id . '.' . $this->extension;
+    }
 }

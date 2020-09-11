@@ -107,12 +107,6 @@
                             <?php echo CHtml::image($src, $paymentOut->payment_number . "Image"); ?>
                         </div>
                     </div>
-                    <div class="small-8 columns">
-                        <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-                            <?php //echo (Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $postImage->filename); ?>
-                        </div>
-                    </div>
-
                 </div>
             <?php endforeach; ?>
         </fieldset>

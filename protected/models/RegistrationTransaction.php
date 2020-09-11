@@ -67,338 +67,328 @@
  * @property Customer $customer
  * @property Vehicle $vehicle
  */
-class RegistrationTransaction extends MonthlyTransactionActiveRecord
-{
+class RegistrationTransaction extends MonthlyTransactionActiveRecord {
+
     const CONSTANT = 'RG';
     const CONSTANT_WORK_ORDER = 'WO';
     const CONSTANT_SALE_ORDER = 'SL';
-    
     const PRIORITY_HIGH = 1;
     const PRIORITY_MEDIUM = 2;
     const PRIORITY_LOW = 3;
-    
     const PRIORITY_HIGH_LITERAL = 'HIGH';
     const PRIORITY_MEDIUM_LITERAL = 'Medium';
     const PRIORITY_LOW_LITERAL = 'low';
-    
-	/**
-	 * @return string the associated database table name
-	 */
-	public $customer_name;
-	public $customer_type;
-	public $pic_name;
-	public $choice;
-	public $plate_number;
-	public $branch_name;
-	public $car_make_code;
-	public $car_model_code;
-	public $car_color;
-	public $invoice_number;
-	public $search_service;
-	public $transaction_date_from;
-	public $transaction_date_to;
-	public function tableName()
-	{
-		return '{{registration_transaction}}';
-	}
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('customer_id, vehicle_id, service_status', 'required'),
-			array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed', 'numerical', 'integerOnly'=>true),
-			array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number', 'length', 'max'=>30),
-			array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, down_payment_amount', 'length', 'max'=>18),
-			array('total_product, subtotal, ppn_price, pph_price', 'length', 'max'=>10),
-			array('status', 'length', 'max'=>50),
-			array('transaction_date, problem, work_order_date, sales_order_date, note, customer_type', 'safe'),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public $customer_name;
+    public $customer_type;
+    public $pic_name;
+    public $choice;
+    public $plate_number;
+    public $branch_name;
+    public $car_make_code;
+    public $car_model_code;
+    public $car_color;
+    public $invoice_number;
+    public $search_service;
+    public $transaction_date_from;
+    public $transaction_date_to;
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'invoiceHeaders' => array(self::HAS_MANY, 'InvoiceHeader', 'registration_transaction_id'),
-			'movementOutHeaders' => array(self::HAS_MANY, 'MovementOutHeader', 'registration_transaction_id'),
-			'registrationDamages' => array(self::HAS_MANY, 'RegistrationDamage', 'registration_transaction_id'),
-			'registrationInsuranceDatas' => array(self::HAS_MANY, 'RegistrationInsuranceData', 'registration_transaction_id'),
-			'registrationPayments' => array(self::HAS_MANY, 'RegistrationPayment', 'registration_transaction_id'),
-			'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'registration_transaction_id'),
-			'registrationQuickServices' => array(self::HAS_MANY, 'RegistrationQuickService', 'registration_transaction_id'),
+    public function tableName() {
+        return '{{registration_transaction}}';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('customer_id, vehicle_id, service_status', 'required'),
+            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed', 'numerical', 'integerOnly' => true),
+            array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number', 'length', 'max' => 30),
+            array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, down_payment_amount', 'length', 'max' => 18),
+            array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
+            array('status', 'length', 'max' => 50),
+            array('transaction_date, problem, work_order_date, sales_order_date, note, customer_type', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level', 'safe', 'on' => 'search'),
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'invoiceHeaders' => array(self::HAS_MANY, 'InvoiceHeader', 'registration_transaction_id'),
+            'movementOutHeaders' => array(self::HAS_MANY, 'MovementOutHeader', 'registration_transaction_id'),
+            'registrationDamages' => array(self::HAS_MANY, 'RegistrationDamage', 'registration_transaction_id'),
+            'registrationInsuranceDatas' => array(self::HAS_MANY, 'RegistrationInsuranceData', 'registration_transaction_id'),
+            'registrationPayments' => array(self::HAS_MANY, 'RegistrationPayment', 'registration_transaction_id'),
+            'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'registration_transaction_id'),
+            'registrationQuickServices' => array(self::HAS_MANY, 'RegistrationQuickService', 'registration_transaction_id'),
             'registrationMemos' => array(self::HAS_MANY, 'RegistrationMemo', 'registration_transaction_id'),
-			'registrationRealizationProcesses' => array(self::HAS_MANY, 'RegistrationRealizationProcess', 'registration_transaction_id'),
-			'registrationServices' => array(self::HAS_MANY, 'RegistrationService', 'registration_transaction_id'),
-			'registrationBodyRepairDetails' => array(self::HAS_MANY, 'RegistrationBodyRepairDetail', 'registration_transaction_id'),
-			'pic' => array(self::BELONGS_TO, 'CustomerPic', 'pic_id'),
-			'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
-			'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
-			'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-			'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
-			'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
-		);
-	}
+            'registrationRealizationProcesses' => array(self::HAS_MANY, 'RegistrationRealizationProcess', 'registration_transaction_id'),
+            'registrationServices' => array(self::HAS_MANY, 'RegistrationService', 'registration_transaction_id'),
+            'registrationBodyRepairDetails' => array(self::HAS_MANY, 'RegistrationBodyRepairDetail', 'registration_transaction_id'),
+            'pic' => array(self::BELONGS_TO, 'CustomerPic', 'pic_id'),
+            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
+            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
+            'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
+        );
+    }
 
-	public function behaviors()
-	{
-	    return array(
-	        'dateRangeSearch'=>array(
-	            'class'=>'application.components.behaviors.EDateRangeSearchBehavior',
-	        ),
-	    );
-	}
+    public function behaviors() {
+        return array(
+            'dateRangeSearch' => array(
+                'class' => 'application.components.behaviors.EDateRangeSearchBehavior',
+            ),
+        );
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'transaction_number' => 'Transaction Number',
-			'transaction_date' => 'Transaction Date',
-			'repair_type' => 'Repair Type',
-			'problem' => 'Problem',
-			'customer_id' => 'Customer',
-			'pic_id' => 'Pic',
-			'vehicle_id' => 'Vehicle',
-			'branch_id' => 'Branch',
-			'user_id' => 'User',
-			'total_quickservice' => 'Total Quickservice',
-			'total_quickservice_price' => 'Total Quickservice Price',
-			'total_service' => 'Total Service',
-			'subtotal_service' => 'Subtotal Service',
-			'discount_service' => 'Discount Service',
-			'total_service_price' => 'Total Service Price',
-			'total_product' => 'Total Product',
-			'subtotal_product' => 'Subtotal Product',
-			'discount_product' => 'Discount Product',
-			'total_product_price' => 'Total Product Price',
-			'is_quick_service' => 'Is Quick Service',
-			'is_insurance' => 'Is Insurance',
-			'insurance_company_id' => 'Insurance Company',
-			'grand_total' => 'Grand Total',
-			'work_order_number' => 'Work Order Number',
-			'work_order_date' => 'Work Order Date',
-			'status' => 'Status',
-			'payment_status' => 'Payment Status',
-			'payment_type' => 'Payment Type',
-			'down_payment_amount' => 'Down Payment Amount',
-			'laststatusupdate_by' => 'Laststatusupdate By',
-			'sales_order_number' => 'Sales Order Number',
-			'sales_order_date' => 'Sales Order Date',
-			'ppn' => 'Ppn',
-			'pph' => 'Pph',
-			'subtotal' => 'Subtotal',
-			'ppn_price' => 'Ppn Price',
-			'pph_price' => 'Pph Price',
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'transaction_number' => 'Transaction Number',
+            'transaction_date' => 'Transaction Date',
+            'repair_type' => 'Repair Type',
+            'problem' => 'Problem',
+            'customer_id' => 'Customer',
+            'pic_id' => 'Pic',
+            'vehicle_id' => 'Vehicle',
+            'branch_id' => 'Branch',
+            'user_id' => 'User',
+            'total_quickservice' => 'Total Quickservice',
+            'total_quickservice_price' => 'Total Quickservice Price',
+            'total_service' => 'Total Service',
+            'subtotal_service' => 'Subtotal Service',
+            'discount_service' => 'Discount Service',
+            'total_service_price' => 'Total Service Price',
+            'total_product' => 'Total Product',
+            'subtotal_product' => 'Subtotal Product',
+            'discount_product' => 'Discount Product',
+            'total_product_price' => 'Total Product Price',
+            'is_quick_service' => 'Is Quick Service',
+            'is_insurance' => 'Is Insurance',
+            'insurance_company_id' => 'Insurance Company',
+            'grand_total' => 'Grand Total',
+            'work_order_number' => 'Work Order Number',
+            'work_order_date' => 'Work Order Date',
+            'status' => 'Status',
+            'payment_status' => 'Payment Status',
+            'payment_type' => 'Payment Type',
+            'down_payment_amount' => 'Down Payment Amount',
+            'laststatusupdate_by' => 'Laststatusupdate By',
+            'sales_order_number' => 'Sales Order Number',
+            'sales_order_date' => 'Sales Order Date',
+            'ppn' => 'Ppn',
+            'pph' => 'Pph',
+            'subtotal' => 'Subtotal',
+            'ppn_price' => 'Ppn Price',
+            'pph_price' => 'Pph Price',
             'vehicle_mileage' => 'KM',
-			'note' => 'Catatan',
-			'is_passed' => 'Quality Control',
-			'total_time' => 'Total Time',
+            'note' => 'Catatan',
+            'is_passed' => 'Quality Control',
+            'total_time' => 'Total Time',
             'service_status' => 'Service Status',
             'priority_level' => 'Priority Level'
-		);
-	}
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
+        $criteria = new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('transaction_number',$this->transaction_number,true);
-		$criteria->compare('transaction_date',$this->transaction_date,true);
-		$criteria->compare('repair_type',$this->repair_type,true);
-		$criteria->compare('problem',$this->problem,true);
-		$criteria->compare('t.customer_id',$this->customer_id);
-		$criteria->compare('pic_id',$this->pic_id);
-		$criteria->compare('vehicle_id',$this->vehicle_id);
-		$criteria->compare('branch_id',$this->branch_id);
-		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('total_quickservice',$this->total_quickservice);
-		$criteria->compare('total_quickservice_price',$this->total_quickservice_price,true);
-		$criteria->compare('total_service',$this->total_service);
-		$criteria->compare('subtotal_service',$this->subtotal_service,true);
-		$criteria->compare('discount_service',$this->discount_service,true);
-		$criteria->compare('total_service_price',$this->total_service_price,true);
-		$criteria->compare('total_product',$this->total_product,true);
-		$criteria->compare('subtotal_product',$this->subtotal_product,true);
-		$criteria->compare('discount_product',$this->discount_product,true);
-		$criteria->compare('total_product_price',$this->total_product_price,true);
-		$criteria->compare('is_quick_service',$this->is_quick_service);
-		$criteria->compare('is_insurance',$this->is_insurance);
-		$criteria->compare('insurance_company_id',$this->insurance_company_id);
-		$criteria->compare('grand_total',$this->grand_total,true);
-		$criteria->compare('t.work_order_number',$this->work_order_number,true);
-		$criteria->compare('t.work_order_date',$this->work_order_date,true);
-		$criteria->compare('t.status',$this->status,true);
-		$criteria->compare('payment_status',$this->payment_status,true);
-		$criteria->compare('payment_type',$this->payment_type,true);
-		$criteria->compare('down_payment_amount',$this->down_payment_amount,true);
-		$criteria->compare('laststatusupdate_by',$this->laststatusupdate_by);
-		$criteria->compare('sales_order_number',$this->sales_order_number,true);
-		$criteria->compare('sales_order_date',$this->sales_order_date,true);
-		$criteria->compare('ppn',$this->ppn);
-		$criteria->compare('pph',$this->pph);
-		$criteria->compare('subtotal',$this->subtotal,true);
-		$criteria->compare('ppn_price',$this->ppn_price,true);
-		$criteria->compare('pph_price',$this->pph_price,true);
-		$criteria->compare('vehicle_mileage',$this->vehicle_mileage,true);
-		$criteria->compare('note',$this->note,true);
-		$criteria->compare('is_passed',$this->is_passed);
-		$criteria->compare('total_time',$this->total_time);
-		$criteria->compare('priority_level',$this->priority_level);
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('pic_id', $this->pic_id);
+        $criteria->compare('vehicle_id', $this->vehicle_id);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('total_quickservice', $this->total_quickservice);
+        $criteria->compare('total_quickservice_price', $this->total_quickservice_price, true);
+        $criteria->compare('total_service', $this->total_service);
+        $criteria->compare('subtotal_service', $this->subtotal_service, true);
+        $criteria->compare('discount_service', $this->discount_service, true);
+        $criteria->compare('total_service_price', $this->total_service_price, true);
+        $criteria->compare('total_product', $this->total_product, true);
+        $criteria->compare('subtotal_product', $this->subtotal_product, true);
+        $criteria->compare('discount_product', $this->discount_product, true);
+        $criteria->compare('total_product_price', $this->total_product_price, true);
+        $criteria->compare('is_quick_service', $this->is_quick_service);
+        $criteria->compare('is_insurance', $this->is_insurance);
+        $criteria->compare('insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('grand_total', $this->grand_total, true);
+        $criteria->compare('t.work_order_number', $this->work_order_number, true);
+        $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('payment_status', $this->payment_status, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('down_payment_amount', $this->down_payment_amount, true);
+        $criteria->compare('laststatusupdate_by', $this->laststatusupdate_by);
+        $criteria->compare('sales_order_number', $this->sales_order_number, true);
+        $criteria->compare('sales_order_date', $this->sales_order_date, true);
+        $criteria->compare('ppn', $this->ppn);
+        $criteria->compare('pph', $this->pph);
+        $criteria->compare('subtotal', $this->subtotal, true);
+        $criteria->compare('ppn_price', $this->ppn_price, true);
+        $criteria->compare('pph_price', $this->pph_price, true);
+        $criteria->compare('vehicle_mileage', $this->vehicle_mileage, true);
+        $criteria->compare('note', $this->note, true);
+        $criteria->compare('is_passed', $this->is_passed);
+        $criteria->compare('total_time', $this->total_time);
+        $criteria->compare('priority_level', $this->priority_level);
 
-		$arrayTransactionDate = array($this->transaction_date_from,$this->transaction_date_to);
-		$criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate)); 
+        $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
+        $criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate));
 
-		$criteria->together = 'true';
-		$criteria->with = array(
+        $criteria->together = 'true';
+        $criteria->with = array(
             'vehicle' => array(
-                'with'=>array(
-                    'carMake','carModel','color'
+                'with' => array(
+                    'carMake', 'carModel', 'color'
                 ),
-            ),'customer','pic'
+            ), 'customer', 'pic'
         );
 
-		$criteria->compare('vehicle.plate_number', $this->plate_number, true);
-		$criteria->compare('customer.name', $this->customer_name, true);
-		$criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
-		$criteria->addSearchCondition('pic.name', $this->pic_name, true);
-		$criteria->compare('carMake.name', $this->car_make_code, true);
-		$criteria->compare('carModel.name', $this->car_model_code, true);
-		$criteria->compare('vehicle.color_id', $this->car_color, true);
+        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+        $criteria->compare('customer.name', $this->customer_name, true);
+        $criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
+        $criteria->addSearchCondition('pic.name', $this->pic_name, true);
+        $criteria->compare('carMake.name', $this->car_make_code, true);
+        $criteria->compare('carModel.name', $this->car_model_code, true);
+        $criteria->compare('vehicle.color_id', $this->car_color, true);
 
-		if ($this->search_service != NULL) {
-			$criteria->with = array('registrationServices'=>array('together'=>true, 'with'=>array('service')));
-			$criteria->compare('service.name', $this->search_service, true);
-		}
+        if ($this->search_service != NULL) {
+            $criteria->with = array('registrationServices' => array('together' => true, 'with' => array('service')));
+            $criteria->compare('service.name', $this->search_service, true);
+        }
 
-		return new CActiveDataProvider($this, array(
-            'criteria'=>$criteria,
-			'sort' => array(
-            'defaultOrder' => 'transaction_date DESC',
-            'attributes' => array(
-	                // 'plate_number' => array(
-	                //     'asc' => 'vehicle.plate_number ASC',
-	                //     'desc' => 'vehicle.plate_number DESC',
-	                // ),
-	                // 'customer_name' => array(
-	                //     'asc' => 'customer.name ASC',
-	                //     'desc' => 'customer.name DESC',
-	                // ),
-	                // 'car_make_code' => array(
-	                //     'asc' => 'carMake.name ASC',
-	                //     'desc' => 'carMake.name DESC',
-	                // ),
-	                // 'car_model_code' => array(
-	                //     'asc' => 'carModel.name ASC',
-	                //     'desc' => 'carModel.name DESC',
-	                // ),
-	                // 'car_color' => array(
-	                //     'asc' => 'color.name ASC',
-	                //     'desc' => 'color.name DESC',
-	                // ),
-	                // 'pic_name' => array(
-	                //     'asc' => 'pic.name ASC',
-	                //     'desc' => 'pic.name DESC',
-	                // ),
-	                // 'search_service' => array(
-	                //     'asc' => 'service.name ASC',
-	                //     'desc' => 'service.name DESC',
-	                // ),
-	                '*',
-	            ),
-	        ),
-	        'pagination' => array(
-	            'pageSize' => 10,
-	        ),
-		));
-	}
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transaction_date DESC',
+                'attributes' => array(
+                    // 'plate_number' => array(
+                    //     'asc' => 'vehicle.plate_number ASC',
+                    //     'desc' => 'vehicle.plate_number DESC',
+                    // ),
+                    // 'customer_name' => array(
+                    //     'asc' => 'customer.name ASC',
+                    //     'desc' => 'customer.name DESC',
+                    // ),
+                    // 'car_make_code' => array(
+                    //     'asc' => 'carMake.name ASC',
+                    //     'desc' => 'carMake.name DESC',
+                    // ),
+                    // 'car_model_code' => array(
+                    //     'asc' => 'carModel.name ASC',
+                    //     'desc' => 'carModel.name DESC',
+                    // ),
+                    // 'car_color' => array(
+                    //     'asc' => 'color.name ASC',
+                    //     'desc' => 'color.name DESC',
+                    // ),
+                    // 'pic_name' => array(
+                    //     'asc' => 'pic.name ASC',
+                    //     'desc' => 'pic.name DESC',
+                    // ),
+                    // 'search_service' => array(
+                    //     'asc' => 'service.name ASC',
+                    //     'desc' => 'service.name DESC',
+                    // ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+    }
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return RegistrationTransaction the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return RegistrationTransaction the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
 
-	function getInvoice($data, $row) {
-		$invoiceNumber = '';
-		$invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id'=>$data->id));
-		foreach ($invoices as $key => $invoice) {
-			if($invoice->status != 'CANCELLED'){
-				$invoiceNumber = $invoice->invoice_number;
-			}
-		}
-    	return $invoiceNumber;
-	}
+    function getInvoice($data, $row) {
+        $invoiceNumber = '';
+        $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $data->id));
+        foreach ($invoices as $key => $invoice) {
+            if ($invoice->status != 'CANCELLED') {
+                $invoiceNumber = $invoice->invoice_number;
+            }
+        }
+        return $invoiceNumber;
+    }
 
     public function getServices() {
-		$services = array();
+        $services = array();
 
-		if($this->repair_type == 'GR'){
-			foreach ($this->registrationServices as $registrationService) {
-			
-				$services[] = $registrationService->service->name . '<br>';
-			}
-		}
-		else{
-			foreach ($this->registrationServices as $registrationService) {
-				if($registrationService->is_body_repair == 1)
-					$services[] = $registrationService->service->name . '<br>';
-			}
-		}
+        if ($this->repair_type == 'GR') {
+            foreach ($this->registrationServices as $registrationService) {
 
-		return $this->search_service = implode('', $services);
-    }	
-	
+                $services[] = $registrationService->service->name . '<br>';
+            }
+        } else {
+            foreach ($this->registrationServices as $registrationService) {
+                if ($registrationService->is_body_repair == 1)
+                    $services[] = $registrationService->service->name . '<br>';
+            }
+        }
+
+        return $this->search_service = implode('', $services);
+    }
+
     public function getPpnLiteral() {
         return ($this->ppn == 0) ? '0%' : '10%';
     }
-	
+
     public function getPphLiteral() {
         return ($this->ppn == 0) ? '0%' : '2%';
     }
-    
-	public function searchByWorkOrder()
-	{
-		$criteria=new CDbCriteria;
-        
-		$criteria->together = 'true';
+
+    public function searchByWorkOrder() {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
         $criteria->with = array(
-            'vehicle'=> array(
-                'with'=> array(
+            'vehicle' => array(
+                'with' => array(
                     'carMake',
                     'carModel',
                 ),
@@ -406,37 +396,37 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord
             'branch',
             'customer',
         );
-        
-		$criteria->compare('id',$this->id);
-		$criteria->compare('transaction_number',$this->transaction_number,true);
-		$criteria->compare('transaction_date',$this->transaction_date,true);
-		$criteria->compare('repair_type',$this->repair_type,true);
-		$criteria->compare('problem',$this->problem,true);
-		$criteria->compare('t.customer_id',$this->customer_id);
-		$criteria->compare('t.vehicle_id',$this->vehicle_id);
-		$criteria->compare('t.branch_id',$this->branch_id);
-		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('is_quick_service',$this->is_quick_service);
-		$criteria->compare('t.work_order_number',$this->work_order_number,true);
-		$criteria->compare('t.work_order_date',$this->work_order_date,true);
-		$criteria->compare('t.status',$this->status);
-		$criteria->compare('note',$this->note,true);
 
-		$arrayTransactionDate = array($this->transaction_date_from,$this->transaction_date_to);
-		$criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate)); 
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('is_quick_service', $this->is_quick_service);
+        $criteria->compare('t.work_order_number', $this->work_order_number, true);
+        $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('note', $this->note, true);
+
+        $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
+        $criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate));
 
         $criteria->addCondition("t.work_order_number != ''");
-		$criteria->compare('carMake.id', $this->car_make_code, true);
-		$criteria->compare('carModel.id', $this->car_model_code, true);
-		$criteria->compare('vehicle.plate_number', $this->plate_number, true);
-        
+        $criteria->compare('carMake.id', $this->car_make_code, true);
+        $criteria->compare('carModel.id', $this->car_model_code, true);
+        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+
         $criteria->order = 'vehicle.plate_number ASC';
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
-    
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     public function getTotalTimeFormatted() {
         $time = $this->total_time;
         $daysCount = intval($time / (24 * 60 * 60));
@@ -446,7 +436,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord
         $minutesCount = intval($time / 60);
         $time = $time % 60;
         $secondsCount = $time;
-        
+
         $str = '';
         if ($daysCount > 0) {
             $str .= $daysCount . 'd ';
@@ -462,40 +452,39 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord
         }
         return $str;
     }
-    
+
     public function getPriorityLiteral($type) {
-		switch($type)
-		{
-			case self::PRIORITY_HIGH: return self::PRIORITY_HIGH_LITERAL;
-			case self::PRIORITY_MEDIUM: return self::PRIORITY_MEDIUM_LITERAL;
-			case self::PRIORITY_LOW: return self::PRIORITY_LOW_LITERAL;
-			default: return '';
-		}
-	}
-    
-	public function searchByMovementOut()
-	{
-		$criteria=new CDbCriteria;
-        
-		$criteria->compare('id',$this->id);
-		$criteria->compare('transaction_number',$this->transaction_number,true);
-		$criteria->compare('transaction_date',$this->transaction_date,true);
-		$criteria->compare('repair_type',$this->repair_type,true);
-		$criteria->compare('problem',$this->problem,true);
-		$criteria->compare('t.customer_id',$this->customer_id);
-		$criteria->compare('t.vehicle_id',$this->vehicle_id);
-		$criteria->compare('t.branch_id',$this->branch_id);
-		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('is_quick_service',$this->is_quick_service);
-		$criteria->compare('t.work_order_number',$this->work_order_number,true);
-		$criteria->compare('t.work_order_date',$this->work_order_date,true);
-		$criteria->compare('t.status',$this->status);
-		$criteria->compare('note',$this->note,true);
+        switch ($type) {
+            case self::PRIORITY_HIGH: return self::PRIORITY_HIGH_LITERAL;
+            case self::PRIORITY_MEDIUM: return self::PRIORITY_MEDIUM_LITERAL;
+            case self::PRIORITY_LOW: return self::PRIORITY_LOW_LITERAL;
+            default: return '';
+        }
+    }
+
+    public function searchByMovementOut() {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('is_quick_service', $this->is_quick_service);
+        $criteria->compare('t.work_order_number', $this->work_order_number, true);
+        $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('note', $this->note, true);
 
         $criteria->addCondition("t.work_order_number IS NOT NULL");
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
 }

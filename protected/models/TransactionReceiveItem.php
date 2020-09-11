@@ -26,6 +26,8 @@
  * @property string $invoice_sub_total
  * @property string $invoice_tax_nominal
  * @property string $invoice_grand_total
+ * @property string $supplier_delivery_number
+ * @property string $note
  * @property integer $movement_out_id
  *
  * The followings are the available model relations:
@@ -83,12 +85,12 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             array('receive_item_no, receive_item_date', 'required'),
             array('recipient_id, recipient_branch_id, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id', 'numerical', 'integerOnly' => true),
             array('receive_item_no, request_type', 'length', 'max' => 30),
-            array('invoice_number, invoice_tax_number', 'length', 'max' => 50),
+            array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
             array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total', 'length', 'max' => 18),
-            array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no', 'safe'),
+            array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_no, receive_item_date, arrival_date, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total', 'safe', 'on' => 'search'),
+            array('id, receive_item_no, receive_item_date, arrival_date, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number', 'safe', 'on' => 'search'),
         );
     }
 
@@ -142,6 +144,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             'invoice_tax_nominal' => 'PPn',
             'invoice_grand_total' => 'Grand Total',
             'movement_out_id' => 'Movement Out',
+            'note' => 'Catatan',
+            'supplier_delivery_number' => 'SJ #',
         );
     }
 
@@ -174,7 +178,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('invoice_date', $this->invoice_date, true);
         $criteria->compare('invoice_due_date', $this->invoice_due_date, true);
         $criteria->compare('invoice_tax_number', $this->invoice_tax_number, true);
+        $criteria->compare('supplier_delivery_number', $this->supplier_delivery_number, true);
         $criteria->compare('movement_out_id', $this->movement_out_id);
+        $criteria->compare('note', $this->note);
 
         $criteria->together = 'true';
         $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'transferRequest', 'consignmentIn', 'deliveryOrder', 'movementOut');
@@ -269,15 +275,42 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     }
 
     public function searchForPaymentOut() {
-        $dataProvider = $this->search();
+        $criteria = new CDbCriteria;
 
-        $dataProvider->criteria->addCondition('
+        $criteria->condition = " 
             t.id NOT IN (
-                SELECT paymentOutDetail.receive_item_id
-                FROM ' . PaymentOutDetail::model()->tableName() . ' paymentOutDetail
-            ) AND t.invoice_number != ""
-        ');
+                SELECT receive_item_id
+                FROM " . PaymentOutDetail::model()->tableName() . " 
+            ) AND t.invoice_number != '' AND t.invoice_grand_total > 0.00
+        ";
 
-        return $dataProvider;
+        $criteria->compare('id', $this->id);
+        $criteria->compare('receive_item_no', $this->receive_item_no, true);
+        $criteria->compare('receive_item_date', $this->receive_item_date, true);
+        $criteria->compare('arrival_date', $this->arrival_date, true);
+        $criteria->compare('recipient_id', $this->recipient_id);
+        $criteria->compare('recipient_branch_id', $this->recipient_branch_id);
+        $criteria->compare('request_type', $this->request_type, true);
+        $criteria->compare('request_date', $this->request_date, true);
+        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('destination_branch', $this->destination_branch);
+        $criteria->compare('supplier_id', $this->supplier_id);
+        $criteria->compare('purchase_order_id', $this->purchase_order_id);
+        $criteria->compare('transfer_request_id', $this->transfer_request_id);
+        $criteria->compare('consignment_in_id', $this->consignment_in_id);
+        $criteria->compare('delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('invoice_number', $this->invoice_number, true);
+        $criteria->compare('invoice_date', $this->invoice_date, true);
+        $criteria->compare('invoice_due_date', $this->invoice_due_date, true);
+        $criteria->compare('invoice_grand_total', $this->invoice_grand_total, true);
+        $criteria->compare('supplier_delivery_number', $this->supplier_delivery_number, true);
+        $criteria->compare('movement_out_id', $this->movement_out_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'Pagination' => array(
+                'PageSize' => 50
+            ),
+        ));
     }
 }

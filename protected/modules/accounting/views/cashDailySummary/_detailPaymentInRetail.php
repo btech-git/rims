@@ -9,18 +9,24 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($paymentInRetailList as $paymentInRetailItem): ?>
+        <?php foreach ($paymentInRetailList as $paymentInRetailBranchId => $paymentInRetailItem): ?>
             <?php $total = 0.00; ?>
             <tr>
-                <?php foreach ($paymentInRetailItem as $i => $paymentInRetail): ?>
+                <?php foreach ($paymentInRetailItem as $paymentTypeId => $paymentInRetail): ?>
                     <td style="text-align: right">
-                        <?php if ($i > 0): ?>
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail)); ?>
+                        <?php if ($paymentTypeId > 0): ?>
+                            <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail), array('javascript:;'), array(
+                                'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/create', array(
+                                    "transactionDate"=>$transactionDate, 
+                                    "branchId" => $paymentInRetailBranchId, 
+                                    "paymentTypeId" => $paymentTypeId
+                                )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
+                            )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode($paymentInRetail); ?>
                         <?php endif; ?>
                     </td>
-                    <?php if ($i > 0): ?>
+                    <?php if ($paymentTypeId > 0): ?>
                         <?php $total += $paymentInRetail; ?>
                     <?php endif; ?>
                 <?php endforeach; ?>

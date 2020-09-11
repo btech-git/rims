@@ -400,14 +400,14 @@ class BodyRepairRegistrationController extends Controller {
         $days =
             // $duedate = date('Y-m-d', strtotime('+'.$days.' days'));
             // $nextmonth = date('Y-m-d',strtotime('+1 months'));
-        $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
+//        $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
         $invoiceHeader = InvoiceHeader::model()->findAll();
         $count = count($invoiceHeader) + 1;
         $model = new InvoiceHeader();
 //        $model->invoice_number = 'INV_' . $count;
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registration->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registration->transaction_date)), $registration->branch_id);
         $model->invoice_date = date('Y-m-d');
-        $model->due_date = $duedate;
+        $model->due_date = date('Y-m-d');
         $model->reference_type = 2;
         $model->registration_transaction_id = $id;
         $model->customer_id = $registration->customer_id;
@@ -467,6 +467,23 @@ class BodyRepairRegistrationController extends Controller {
                     $modelDetail->save(false);
                 }
             }
+            
+            if ($registration->customer->customer_type == 'Company') {
+                $coaReceivable = Coa::model()->findByAttributes(array('code' => '108.00.000'));
+                $jurnalUmumReceivable = new JurnalUmum;
+                $jurnalUmumReceivable->kode_transaksi = $registration->transaction_number;
+                $jurnalUmumReceivable->tanggal_transaksi = $registration->transaction_date;
+                $jurnalUmumReceivable->coa_id = $coaReceivable->id;
+                $jurnalUmumReceivable->branch_id = $registration->branch_id;
+                $jurnalUmumReceivable->total = $registration->grand_total;
+                $jurnalUmumReceivable->debet_kredit = 'D';
+                $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
+                $jurnalUmumReceivable->transaction_subject = $registration->customer->name;
+                $jurnalUmumReceivable->is_coa_category = 1;
+                $jurnalUmumReceivable->transaction_type = 'RG';
+                $jurnalUmumReceivable->save();
+            }
+            
             /*SAVE TO JOURNAL*/
             $jurnalUmumPiutang = new JurnalUmum;
             $jurnalUmumPiutang->kode_transaksi = $registration->transaction_number;
@@ -483,18 +500,18 @@ class BodyRepairRegistrationController extends Controller {
             
             if ($registration->ppn_price > 0.00) {
                 $coaPpn = Coa::model()->findByAttributes(array('code' => '206.00.000'));
-                $jurnalUmumPph = new JurnalUmum;
-                $jurnalUmumPph->kode_transaksi = $registration->transaction_number;
-                $jurnalUmumPph->tanggal_transaksi = $registration->transaction_date;
-                $jurnalUmumPph->coa_id = $coaPpn->id;
-                $jurnalUmumPph->branch_id = $registration->branch_id;
-                $jurnalUmumPph->total = $registration->ppn_price;
-                $jurnalUmumPph->debet_kredit = 'K';
-                $jurnalUmumPph->tanggal_posting = date('Y-m-d');
-                $jurnalUmumPph->transaction_subject = $registration->customer->name;
-                $jurnalUmumPph->is_coa_category = 0;
-                $jurnalUmumPph->transaction_type = 'RG';
-                $jurnalUmumPph->save();
+                $jurnalUmumPpn = new JurnalUmum;
+                $jurnalUmumPpn->kode_transaksi = $registration->transaction_number;
+                $jurnalUmumPpn->tanggal_transaksi = $registration->transaction_date;
+                $jurnalUmumPpn->coa_id = $coaPpn->id;
+                $jurnalUmumPpn->branch_id = $registration->branch_id;
+                $jurnalUmumPpn->total = $registration->ppn_price;
+                $jurnalUmumPpn->debet_kredit = 'K';
+                $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+                $jurnalUmumPpn->transaction_subject = $registration->customer->name;
+                $jurnalUmumPpn->is_coa_category = 0;
+                $jurnalUmumPpn->transaction_type = 'RG';
+                $jurnalUmumPpn->save();
             }
             
             if ($registration->pph_price > 0.00) {

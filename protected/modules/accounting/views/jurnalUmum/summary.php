@@ -148,10 +148,11 @@
                                 </div>
 
                                 <div class="clear"></div>
+                                
                                 <div class="row buttons">
-                                    <?php echo CHtml::resetButton('Clear'); ?>
-                                    <?php echo CHtml::submitButton('Tampilkan', array('onclick'=>'$("#CurrentSort").val(""); return true;')); ?>
-                                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                                    <?php echo CHtml::submitButton('Clear', array('name' => 'Clear', 'class' => 'button alert')); ?>
+                                    <?php echo CHtml::submitButton('Tampilkan', array('onclick'=>'$("#CurrentSort").val(""); return true;', 'class' => 'button success')); ?>
+                                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel', 'class' => 'button primary')); ?>
                                 </div>
 
                                 <?php echo CHtml::endForm(); ?>

@@ -857,6 +857,20 @@ class TransactionPurchaseOrderController extends Controller {
                     if ($model->approval_type == 'Approved') {
                         $purchaseOrder->approved_id = $model->supervisor_id;
 
+                        $getCoaPayableWithCode = Coa::model()->findByAttributes(array('code' => '201.00.000'));
+                        $jurnalUmumPayable = new JurnalUmum;
+                        $jurnalUmumPayable->kode_transaksi = $purchaseOrder->purchase_order_no;
+                        $jurnalUmumPayable->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                        $jurnalUmumPayable->coa_id = $getCoaPayableWithCode->id;
+                        $jurnalUmumPayable->branch_id = $purchaseOrder->main_branch_id;
+                        $jurnalUmumPayable->total = $purchaseOrder->subtotal;
+                        $jurnalUmumPayable->debet_kredit = 'D';
+                        $jurnalUmumPayable->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumPayable->transaction_subject = $purchaseOrder->supplier->name;
+                        $jurnalUmumPayable->is_coa_category = 1;
+                        $jurnalUmumPayable->transaction_type = 'PO';
+                        $jurnalUmumPayable->save();
+
                         $coaOutstanding = Coa::model()->findByPk($purchaseOrder->supplier->coaOutstandingOrder->id);
                         $getCoaOutstanding = $coaOutstanding->code;
                         $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
@@ -874,9 +888,9 @@ class TransactionPurchaseOrderController extends Controller {
                         $jurnalUmumOutstanding->save();
 
                         if ($purchaseOrder->payment_type == "Cash") {
-                            $coaOutstanding = Coa::model()->findByPk($purchaseOrder->supplier->coaOutstandingOrder->id);
-                            $getCoaOutstanding = $branch->coa_prefix . '.' . $coaOutstanding->code;
-                            $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
+//                            $coaOutstanding = Coa::model()->findByPk($purchaseOrder->supplier->coaOutstandingOrder->id);
+//                            $getCoaOutstanding = $branch->coa_prefix . '.' . $coaOutstanding->code;
+//                            $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
 
                             // $jurnalUmumOutstanding = new JurnalUmum;
                             // $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
@@ -1002,10 +1016,7 @@ class TransactionPurchaseOrderController extends Controller {
         $this->render('updateApproval', array(
             'model' => $model,
             'purchaseOrder' => $purchaseOrder,
-            //'purchaseOrderDetail'=>$purchaseOrderDetail,
             'historis' => $historis,
-                //'jenisPersediaan'=>$jenisPersediaan,
-                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
     }
 

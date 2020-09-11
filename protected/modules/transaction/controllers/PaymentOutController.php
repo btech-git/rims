@@ -169,17 +169,20 @@ class PaymentOutController extends Controller {
                                     mkdir($dir, 0777, true);
                                 }
                                 $path = $dir . '/' . $postImage->filename;
-                                $image->saveAs($path);
+                                
                                 $picture = Yii::app()->image->load($path);
-                                $picture->save();
+                                $picture_path = $dir . '/' . $postImage->filename;
+                                $picture->save($picture_path);
 
-                                $thumb = Yii::app()->image->load($path);
-                                $thumb_path = $dir . '/' . $postImage->thumbname;
-                                $thumb->save($thumb_path);
-
-                                $square = Yii::app()->image->load($path);
-                                $square_path = $dir . '/' . $postImage->squarename;
-                                $square->save($square_path);
+//                                $thumb = Yii::app()->image->load($path);
+//                                $thumb_path = $dir . '/' . $postImage->thumbname;
+//                                $thumb->save($thumb_path);
+//
+//                                $square = Yii::app()->image->load($path);
+//                                $square_path = $dir . '/' . $postImage->squarename;
+//                                $square->save($square_path);
+                                
+                                $image->saveAs($path);
                             }
                         }
                     }

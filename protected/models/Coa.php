@@ -216,16 +216,12 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getReportBeginningBalanceDebit($coaId, $startDate, $branchId) {
-        $coaConditionSql = '';
+    public function getReportBeginningBalanceDebit($startDate, $branchId) {
         $branchConditionSql = '';
         $params = array(
             ':start_date' => $startDate,
+            ':coa_id' => $this->id,
         );
-        if (!empty($coaId)) {
-            $coaConditionSql = ' AND dc.coa_id = :coa_id';
-            $params[':coa_id'] = $coaId;
-        }
         if (!empty($branchId)) {
             $branchConditionSql = ' AND dc.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
@@ -234,23 +230,19 @@ class Coa extends CActiveRecord {
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
-                WHERE dc.tanggal_transaksi < :start_date " . $coaConditionSql . $branchConditionSql . " AND debet_kredit = 'D'";
+                WHERE dc.tanggal_transaksi < :start_date AND dc.coa_id = :coa_id" . $branchConditionSql . " AND debet_kredit = 'D'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
         
         return ($value === false) ? 0 : $value;
     }
     
-    public static function getReportBeginningBalanceCredit($coaId, $startDate, $branchId) {
-        $coaConditionSql = '';
+    public function getReportBeginningBalanceCredit($startDate, $branchId) {
         $branchConditionSql = '';
         $params = array(
             ':start_date' => $startDate,
+            ':coa_id' => $this->id,
         );
-        if (!empty($coaId)) {
-            $coaConditionSql = ' AND dc.coa_id = :coa_id';
-            $params[':coa_id'] = $coaId;
-        }
         if (!empty($branchId)) {
             $branchConditionSql = ' AND dc.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
@@ -259,10 +251,24 @@ class Coa extends CActiveRecord {
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
-                WHERE dc.tanggal_transaksi < :start_date " . $coaConditionSql . $branchConditionSql . " AND debet_kredit = 'K'";
+                WHERE dc.tanggal_transaksi < :start_date AND dc.coa_id = :coa_id" . $branchConditionSql . " AND debet_kredit = 'K'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
         
         return ($value === false) ? 0 : $value;
     }
+    
+    public function getReportForecastData($transactionDate) {
+        $sql = "SELECT transaction_subject, total, debet_kredit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE coa_id = :coa_id AND tanggal_transaksi = :transaction_date";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':coa_id' => $this->id,
+            ':transaction_date' => $transactionDate,
+        ));
+
+        return $resultSet;
+    }
+    
 }

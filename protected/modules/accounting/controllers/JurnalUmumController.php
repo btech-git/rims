@@ -173,8 +173,13 @@ class JurnalUmumController extends Controller {
             'criteria' => $coaCriteria,
         ));
 
-        if (isset($_GET['SaveExcel']))
+        if (isset($_GET['Clear'])) {
+            $this->redirect(array('index'));
+        }
+        
+        if (isset($_GET['SaveExcel'])) {
             $this->getXlsJurnal($jurnals, $tanggal_mulai, $tanggal_sampai);
+        }
 
         $dataProvider = new CActiveDataProvider('JurnalUmum');
 
@@ -243,18 +248,6 @@ class JurnalUmumController extends Controller {
         $coaData = (isset($_GET['coa_id'])) ? $_GET['coa_id'] : '';
         $company = (isset($_GET['company'])) ? $_GET['company'] : '';
         $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
-
-//        $getCoa = "";
-//        $prefix = $branch != "" ? Branch::model()->findByPk($branch)->coa_prefix : '';
-//        if($coaData != ""){
-//        	$coaCode = Coa::model()->findByPk($coaData)->code;
-//		    if ($prefix != "") {
-//		    	$coaPrefix = $prefix.'.'.$coaCode;
-//		    	//var_dump($coaPrefix);
-//		    	$getCoa = Coa::model()->findByAttributes(array('code'=>$coaPrefix))->id;
-//		    	//$getCoa1 = Coa::model()->findByAttributes(array('code'=>$coaPrefix))->code;
-//		    }
-//        }
 
         $criteria = new CDbCriteria;
         if ($company != "") {
@@ -335,6 +328,10 @@ class JurnalUmumController extends Controller {
         $coaCategoryDataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $tanggal_mulai, $tanggal_sampai);
         $coaCategoryDataProvider->pagination->pageSize = 1000;
 
+        if (isset($_GET['Clear'])) {
+            $this->redirect(array('buku'));
+        }
+        
         if (isset($_GET['SaveExcel']))
             $this->getXlsBuku($allCoa, $tanggal_mulai, $tanggal_sampai, $branch, $company);
 

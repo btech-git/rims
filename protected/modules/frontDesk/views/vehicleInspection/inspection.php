@@ -2,15 +2,15 @@
 /* @var $this VehicleInspectionController */
 /* @var $model VehicleInspection */
 
-$this->breadcrumbs=array(
-	'Vehicle Inspections'=>array('admin'),
-	'Manage',
+$this->breadcrumbs = array(
+    'Vehicle Inspections' => array('admin'),
+    'Manage',
 );
 
-/*$this->menu=array(
-	array('label'=>'List VehicleInspection', 'url'=>array('index')),
-	array('label'=>'Create VehicleInspection', 'url'=>array('create')),
-);*/
+/* $this->menu=array(
+  array('label'=>'List VehicleInspection', 'url'=>array('index')),
+  array('label'=>'Create VehicleInspection', 'url'=>array('create')),
+  ); */
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -33,66 +33,61 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-			<div id="maincontent">
-				<div class="clearfix page-action">
-					<?php echo CHtml::link('<span class="fa fa-plus"></span>New Vehicle Inspection', Yii::app()->baseUrl.'/frontDesk/vehicleInspection/create?vehicleId=' . $_GET['vehicleId'] . '&wonumber=' . $_GET['wonumber'], array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("frontDesk.vehicleInspection.create"))) ?>
-					<h1>Manage Vehicle Inspections</h1>
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Vehicle Inspection', Yii::app()->baseUrl . '/frontDesk/vehicleInspection/create?vehicleId=' . $_GET['vehicleId'] . '&wonumber=' . $_GET['wonumber'], array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("frontDesk.vehicleInspection.create"))) ?>
+        <h1>Manage Vehicle Inspections</h1>
 
-					<?php echo $vehicle->customer->name . ' | ' . $vehicle->plate_number . ' | ' . $vehicle->frame_number ?>
+        <?php echo $vehicle->customer->name . ' | ' . $vehicle->plate_number . ' | ' . $vehicle->frame_number ?>
 
-					<div class="search-bar">
-						<div class="clearfix button-bar">
-							<div class="left clearfix bulk-action">
-				      		<span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-				      		<input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-				      		<input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-				   		</div>
-							<a href="#" class="search-button right button cbutton secondary">Advanced Search</a>   
-						</div>
+        <div class="search-bar">
+            <div class="clearfix button-bar">
+                <div class="left clearfix bulk-action">
+                    <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
+                    <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
+                    <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
+                </div>
+                <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>   
+            </div>
 
-						<div class="search-form" style="display:none">
-							<?php /*$this->renderPartial('_search',array(
-								'model'=>$model,
-							));*/ ?>
-						</div><!-- search-form -->
-					</div>
-			
-					<?php $this->widget('zii.widgets.grid.CGridView', array(
-						'id'=>'vehicle-inspection-grid',
-						'dataProvider'=>$vehicleInspectionDataProvider,
-						'filter'=>$vehicleInspection,
-						'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-						'pager'=>array(
-						   'cssFile'=>false,
-						   'header'=>'',
-						),
-						'columns'=>array(
-							'inspection_date',
-							array('name'=>'inspection_id', 'value'=>'$data->inspection->name'),
-							'status',
-							
-							array(
-								'class'=>'CButtonColumn',
-								'template'=>'{view} {update} {delete}',
-								'buttons'=>array
-								(
-									'view' => array
-									(
-										'visible'=>'Yii::app()->user->checkAccess("frontDesk.vehicleInspection.view")'
-									),
-									'update' => array
-									(
-										'label'=>'Update',
-										'url'=>'Yii::app()->createUrl("frontDesk/vehicleInspection/update", array("id"=>$data->id)) . "&vehicleId=$_GET[vehicleId]&wonumber=$_GET[wonumber]"',
-										'visible'=>'Yii::app()->user->checkAccess("frontDesk.vehicleInspection.update")'
-									),
-									'delete' => array
-									(
-										'visible'=>'Yii::app()->user->checkAccess("frontDesk.vehicleInspection.delete")'
-									),
-								),
-							),
-						),
-					)); ?>
-				</div>
-			</div>
+            <div class="search-form" style="display:none">
+                <?php /* $this->renderPartial('_search',array(
+                  'model'=>$model,
+                  )); */ ?>
+            </div><!-- search-form -->
+        </div>
+
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'vehicle-inspection-grid',
+            'dataProvider' => $vehicleInspectionDataProvider,
+            'filter' => $vehicleInspection,
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager' => array(
+                'cssFile' => false,
+                'header' => '',
+            ),
+            'columns' => array(
+                'inspection_date',
+                array('name' => 'inspection_id', 'value' => '$data->inspection->name'),
+                'status',
+                array(
+                    'class' => 'CButtonColumn',
+                    'template' => '{view} {update} {delete}',
+                    'buttons' => array(
+                        'view' => array(
+                            'visible' => 'Yii::app()->user->checkAccess("frontDesk.vehicleInspection.view")'
+                        ),
+                        'update' => array(
+                            'label' => 'Update',
+                            'url' => 'Yii::app()->createUrl("frontDesk/vehicleInspection/update", array("id"=>$data->id)) . "&vehicleId=$_GET[vehicleId]&wonumber=$_GET[wonumber]"',
+                            'visible' => 'Yii::app()->user->checkAccess("frontDesk.vehicleInspection.update")'
+                        ),
+                        'delete' => array(
+                            'visible' => 'Yii::app()->user->checkAccess("frontDesk.vehicleInspection.delete")'
+                        ),
+                    ),
+                ),
+            ),
+        )); ?>
+    </div>
+</div>

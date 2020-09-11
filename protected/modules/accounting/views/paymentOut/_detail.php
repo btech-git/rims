@@ -41,11 +41,6 @@
                                 'update' => '#detail_div',
                             )),
                         )); ?>
-                    <?php else: ?>
-                        <?php echo CHtml::activeDropDownList($detail, "[$i]is_inactive", array(
-                            ActiveRecord::ACTIVE => ActiveRecord::ACTIVE_LITERAL, 
-                            ActiveRecord::INACTIVE => ActiveRecord::INACTIVE_LITERAL
-                        )); ?>
                     <?php endif; ?>
                 </td>
             </tr>

@@ -44,13 +44,13 @@ class GeneralRepairRegistrationController extends Controller {
         if (isset($_POST['Cancel'])) 
             $this->redirect(array('admin'));
 
-        if (isset($_POST['_FormSubmit_'])) {
-            if ($_POST['_FormSubmit_'] === 'Submit') {
+        if (isset($_POST['Submit'])) {
+//            if ($_POST['_FormSubmit_'] === 'Submit') {
                 $this->loadState($generalRepairRegistration);
 
                 if ($generalRepairRegistration->save(Yii::app()->db)) 
                     $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
-            }
+//            }
         }
 
         $this->render('create', array(
@@ -323,14 +323,14 @@ class GeneralRepairRegistrationController extends Controller {
             $invoice->save(false);
         }
         
-        $days = $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
+//        $days = $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
         $invoiceHeader = InvoiceHeader::model()->findAll();
         $count = count($invoiceHeader) + 1;
         
         $model = new InvoiceHeader();
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registration->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registration->transaction_date)), $registration->branch_id);
         $model->invoice_date = date('Y-m-d');
-        $model->due_date = $duedate;
+        $model->due_date = date('Y-m-d');
         $model->reference_type = 2;
         $model->registration_transaction_id = $id;
         $model->customer_id = $registration->customer_id;
@@ -426,7 +426,7 @@ class GeneralRepairRegistrationController extends Controller {
                     $jurnalUmumMasterGroupHpp->save();
 
                     // save product master category coa hpp
-                    $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaHpp->id);
+                    $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coa_hpp);
                     $getCoaMasterHpp = $coaMasterHpp->code;
                     $coaMasterHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterHpp));
                     $jurnalUmumMasterHpp = new JurnalUmum;

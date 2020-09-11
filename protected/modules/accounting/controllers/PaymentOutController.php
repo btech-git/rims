@@ -87,25 +87,14 @@ class PaymentOutController extends Controller {
 
     public function actionUpdate($id) {
         $paymentOut = $this->instantiate($id);
+        $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($paymentOut->header->purchase_order_id);
 
-        $receiveItem = Search::bind(new SaleInvoiceHeader('search'), isset($_GET['SaleInvoiceHeader']) ? $_GET['SaleInvoiceHeader'] : array());
-        $receiveItemDataProvider = $receiveItem->searchForSaleReceipt();
+        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
+        $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
 
-        $purchaseOrderId = isset($_GET['SalePaymentHeader']['customer_id']) ? $_GET['SalePaymentHeader']['customer_id'] : '';
-
-        $receiveItemDataProvider->criteria->with = array(
-            'workOrderCuttingHeader' => array(
-                'with' => array(
-                    'saleHeader' => array(
-                        'with' => 'customer'
-                    ),
-                ),
-            ),
-        );
-
-        if (!empty($purchaseOrderId)) {
-            $receiveItemDataProvider->criteria->addCondition("saleHeader.customer_id = :customer_id");
-            $receiveItemDataProvider->criteria->params[':customer_id'] = $purchaseOrderId;
+        if (!empty($paymentOut->purchase_order_id)) {
+            $receiveItemDataProvider->criteria->addCondition("t.purchase_order_id = :purchase_order_id");
+            $receiveItemDataProvider->criteria->params[':purchase_order_id'] = $paymentOut->purchase_order_id;
         }
 
         if (isset($_POST['Submit'])) {
@@ -116,9 +105,10 @@ class PaymentOutController extends Controller {
         }
 
         $this->render('update', array(
-            'salePayment' => $paymentOut,
-            'saleInvoice' => $receiveItem,
-            'saleInvoiceDataProvider' => $receiveItemDataProvider,
+            'paymentOut' => $paymentOut,
+            'purchaseOrder' => $purchaseOrder,
+            'receiveItem' => $receiveItem,
+            'receiveItemDataProvider' => $receiveItemDataProvider,
         ));
     }
 
@@ -254,7 +244,7 @@ class PaymentOutController extends Controller {
             $paymentOut = new PaymentOutComponent(new PaymentOut(), array(), new PaymentOutImages());
         else {
             $paymentOutHeader = $this->loadModel($id);
-            $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->paymentOutDetails, new PaymentOutImage());
+            $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->paymentOutDetails, $paymentOutHeader->paymentOutImages);
         }
 
         return $paymentOut;

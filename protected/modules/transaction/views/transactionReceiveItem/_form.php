@@ -106,11 +106,11 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-<?php echo $form->labelEx($receiveItem->header, 'recipient_branch_id', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($receiveItem->header, 'recipient_branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-<?php echo $form->dropDownlist($receiveItem->header, 'recipient_branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]')); ?>
-<?php echo $form->error($receiveItem->header, 'recipient_branch_id'); ?>
+                            <?php echo $form->dropDownlist($receiveItem->header, 'recipient_branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]')); ?>
+                            <?php echo $form->error($receiveItem->header, 'recipient_branch_id'); ?>
                         </div>
                     </div>
                 </div>
@@ -121,8 +121,7 @@
                             <?php echo $form->labelEx($receiveItem->header, 'request_type', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php
-                            echo $form->dropDownlist($receiveItem->header, 'request_type', array('Purchase Order' => 'Purchase Order',
+                            <?php echo $form->dropDownlist($receiveItem->header, 'request_type', array('Purchase Order' => 'Purchase Order',
                                 'Internal Delivery Order' => 'Internal Delivery Order', 'Consignment In' => 'Consignment In'), array('prompt' => '[--Select Request Type--]',
                                     //	'onchange' =>'//alert($(this).val());
                                     //   var selection = $(this).val();
@@ -198,26 +197,35 @@
                         </div>
                     </div>
                 </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem->header, 'Supplier S J #', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($receiveItem->header, 'supplier_delivery_number'); ?>
+                            <?php echo $form->error($receiveItem->header, 'supplier_delivery_number'); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
             <div class="small-12 medium-6 columns">		
                 <div id="purchase" >
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-<?php echo $form->labelEx($receiveItem->header, 'purchase_order_id', array('class' => 'prefix')); ?>
+                                <?php echo $form->labelEx($receiveItem->header, 'purchase_order_id', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-<?php echo $form->hiddenField($receiveItem->header, 'purchase_order_id'); ?>
-                                <?php
-                                echo $form->textField($receiveItem->header, 'purchase_order_no', array(
+                                <?php echo $form->hiddenField($receiveItem->header, 'purchase_order_id'); ?>
+                                <?php echo $form->textField($receiveItem->header, 'purchase_order_no', array(
                                     'onclick' => 'jQuery("#purchase-dialog").dialog("open"); return false;',
                                     'value' => $receiveItem->header->purchase_order_id != Null ? $receiveItem->header->purchaseOrder->purchase_order_no : '',
                                     'readonly' => true,
-                                ));
-                                ?>
+                                )); ?>
 
-                                <?php
-                                $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
                                     'id' => 'purchase-dialog',
                                     // additional javascript options for the dialog plugin
                                     'options' => array(
@@ -225,11 +233,10 @@
                                         'autoOpen' => false,
                                         'width' => 'auto',
                                         'modal' => true,
-                                    ),));
-                                ?>
+                                    ),
+                                )); ?>
 
-                                <?php
-                                $this->widget('zii.widgets.grid.CGridView', array(
+                                <?php $this->widget('zii.widgets.grid.CGridView', array(
                                     'id' => 'purchase-grid',
                                     'dataProvider' => $purchaseDataProvider,
                                     'filter' => $purchase,
@@ -239,61 +246,61 @@
                                         'header' => '',
                                     ),
                                     'selectionChanged' => 'js:function(id){
-								$("#TransactionReceiveItem_purchase_order_id").val($.fn.yiiGridView.getSelection(id));
-								$("#purchase-dialog").dialog("close");
-								$.ajax({
-									type: "POST",
-									//dataType: "JSON",
-									url: "' . CController::createUrl('ajaxHtmlRemoveDetailRequest', array('id' => $receiveItem->header->id)) . '",
-									data: $("form").serialize(),
-									success: function(html) {
-										$(".detail").html(html);	
+                                        $("#TransactionReceiveItem_purchase_order_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#purchase-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            //dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxHtmlRemoveDetailRequest', array('id' => $receiveItem->header->id)) . '",
+                                            data: $("form").serialize(),
+                                            success: function(html) {
+                                                $(".detail").html(html);	
+                                            },
+                                        });
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxPurchase', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),	
+                                            success: function(data) {
+                                                $("#TransactionReceiveItem_purchase_order_no").val(data.no);
+                                                $("#TransactionReceiveItem_request_date").val(data.date);
+                                                $("#TransactionReceiveItem_estimate_arrival_date").val(data.eta);
+                                                $("#TransactionReceiveItem_supplier_id").val(data.supplier);
+                                                $("#TransactionReceiveItem_supplier_name").val(data.supplier_name);
+                                                $("#TransactionReceiveItem_coa_id").val(data.coa);
+                                                $("#TransactionReceiveItem_coa_name").val(data.coa_name);
+                                                $("#TransactionReceiveItem_payment_type").val(data.payment_type);
+                                                $("#note").html(data.note);
 										
-									},
-								});
-								$.ajax({
-									type: "POST",
-									dataType: "JSON",
-									url: "' . CController::createUrl('ajaxPurchase', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-									data: $("form").serialize(),	
-									success: function(data) {
-										$("#TransactionReceiveItem_purchase_order_no").val(data.no);
-										$("#TransactionReceiveItem_request_date").val(data.date);
-										$("#TransactionReceiveItem_estimate_arrival_date").val(data.eta);
-										$("#TransactionReceiveItem_supplier_id").val(data.supplier);
-										$("#TransactionReceiveItem_supplier_name").val(data.supplier_name);
-										$("#TransactionReceiveItem_coa_id").val(data.coa);
-										$("#TransactionReceiveItem_coa_name").val(data.coa_name);
-										$("#TransactionReceiveItem_payment_type").val(data.payment_type);
-                                        $("#note").html(data.note);
-										
-										//alert($("#TransactionReceiveItem_request_type").val());
-										var type = $("#TransactionReceiveItem_request_type").val();
-										var request = 0;
+                                                //alert($("#TransactionReceiveItem_request_type").val());
+                                                var type = $("#TransactionReceiveItem_request_type").val();
+                                                var request = 0;
 
-										if(type == "Purchase Order"){
-											request = 1;
-											if(($("#TransactionReceiveItem_payment_type").val() == "Credit") && ($("#TransactionReceiveItem_coa_id").val() == "")){
-												alert("COA could not be empty for payment type Credit!");
-												$("#save").attr("disabled","disabled");
-											}
-											else{
-												$("#save").removeAttr("disabled");
-											}
-										}
-										else if(type== "Transfer Request"){
-											request = 2;
-										}
-										$.ajax({
-												type: "POST",
-												//dataType: "JSON",
-												url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $receiveItem->header->id)) . '&requestType="+1+"&requestId="+ $("#TransactionReceiveItem_purchase_order_id").val(),
-												data: $("form").serialize(),
-												success: function(html) {
-													$(".detail").html(html);	
-												},
-											});
-                                        } });
+                                                if (type == "Purchase Order") {
+                                                    request = 1;
+                                                    if(($("#TransactionReceiveItem_payment_type").val() == "Credit") && ($("#TransactionReceiveItem_coa_id").val() == "")){
+                                                            alert("COA could not be empty for payment type Credit!");
+                                                            $("#save").attr("disabled","disabled");
+                                                    }
+                                                    else{
+                                                            $("#save").removeAttr("disabled");
+                                                    }
+                                                }
+                                                else if (type== "Transfer Request") {
+                                                    request = 2;
+                                                }
+                                                $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $receiveItem->header->id)) . '&requestType="+1+"&requestId="+ $("#TransactionReceiveItem_purchase_order_id").val(),
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $(".detail").html(html);	
+                                                    },
+                                                });
+                                            } 
+                                        });
 
                                         $("#purchase-grid").find("tr.selected").each(function(){
                                             $(this).removeClass( "selected" );
@@ -301,29 +308,26 @@
 
                                     }',
                                     'columns' => array(
-                                        //'id',
-                                        //'code',
                                         'purchase_order_no',
                                         'purchase_order_date',
                                         'supplier.company',
                                     ),
-                                ));
-                                ?>
+                                )); ?>
 
                                 <?php $this->endWidget(); ?>
                                 <?php echo $form->error($receiveItem->header, 'purchase_order_id'); ?>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
                                 <?php echo $form->labelEx($receiveItem->header, 'payment_type', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-
-<?php echo $form->textField($receiveItem->header, 'payment_type', array('readonly' => 'true', 'value' => $receiveItem->header->purchase_order_id == "" ? '' : $receiveItem->header->purchaseOrder->payment_type)); ?>
-<?php echo $form->error($receiveItem->header, 'payment_type'); ?>
+                                <?php echo $form->textField($receiveItem->header, 'payment_type', array('readonly' => 'true', 'value' => $receiveItem->header->purchase_order_id == "" ? '' : $receiveItem->header->purchaseOrder->payment_type)); ?>
+                                <?php echo $form->error($receiveItem->header, 'payment_type'); ?>
                             </div>
                         </div>
                     </div>
@@ -334,7 +338,7 @@
                             </div>
                             <div class="small-8 columns">
                                 <span id="note">
-<?php echo CHtml::encode(CHtml::value($receiveItem->header, 'purchaseOrder.purchaseOrderApprovals[0].note')); ?>                            
+                                    <?php echo CHtml::encode(CHtml::value($receiveItem->header, 'purchaseOrder.purchaseOrderApprovals[0].note')); ?>                            
                                 </span>
                             </div>
                         </div>
@@ -348,13 +352,11 @@
                             </div>
                             <div class="small-8 columns">
                                 <?php echo $form->hiddenField($receiveItem->header, 'consignment_in_id'); ?>
-                                <?php
-                                echo $form->textField($receiveItem->header, 'consignment_in_no', array(
+                                <?php echo $form->textField($receiveItem->header, 'consignment_in_no', array(
                                     'onclick' => 'jQuery("#consignment-dialog").dialog("open"); return false;',
                                     'value' => $receiveItem->header->consignment_in_id != Null ? $receiveItem->header->consignmentIn->consignment_in_number : '',
                                     'readonly' => true,
-                                ));
-                                ?>
+                                )); ?>
 
                                 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
                                     'id' => 'consignment-dialog',
@@ -377,55 +379,50 @@
                                         'header' => '',
                                     ),
                                     'selectionChanged' => 'js:function(id){
-								$("#TransactionReceiveItem_consignment_in_id").val($.fn.yiiGridView.getSelection(id));
-								$("#consignment-dialog").dialog("close");
-								$.ajax({
-									type: "POST",
-									//dataType: "JSON",
-									url: "' . CController::createUrl('ajaxHtmlRemoveDetailRequest', array('id' => $receiveItem->header->id)) . '",
-									data: $("form").serialize(),
-									success: function(html) {
-										$(".detail").html(html);	
-										
-									},
-								});
-								$.ajax({
-									type: "POST",
-									dataType: "JSON",
-									url: "' . CController::createUrl('ajaxConsignment', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-									data: $("form").serialize(),	
-									success: function(data) {
-										$("#TransactionReceiveItem_consignment_in_no").val(data.no);
-										$("#TransactionReceiveItem_request_date").val(data.date);
-										$("#TransactionReceiveItem_estimate_arrival_date").val(data.eta);
-										$("#TransactionReceiveItem_supplier_id").val(data.supplier);
-										$("#TransactionReceiveItem_supplier_name").val(data.supplier_name);
+                                        $("#TransactionReceiveItem_consignment_in_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#consignment-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            //dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxHtmlRemoveDetailRequest', array('id' => $receiveItem->header->id)) . '",
+                                            data: $("form").serialize(),
+                                            success: function(html) {
+                                                $(".detail").html(html);	
+                                            },
+                                        });
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxConsignment', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),	
+                                            success: function(data) {
+                                                $("#TransactionReceiveItem_consignment_in_no").val(data.no);
+                                                $("#TransactionReceiveItem_request_date").val(data.date);
+                                                $("#TransactionReceiveItem_estimate_arrival_date").val(data.eta);
+                                                $("#TransactionReceiveItem_supplier_id").val(data.supplier);
+                                                $("#TransactionReceiveItem_supplier_name").val(data.supplier_name);
 
-										
-										//alert($("#TransactionReceiveItem_request_type").val());
-										var type = $("#TransactionReceiveItem_request_type").val();
-										var request = 0;
+                                                //alert($("#TransactionReceiveItem_request_type").val());
+                                                var type = $("#TransactionReceiveItem_request_type").val();
+                                                var request = 0;
 
-										
-										$.ajax({
-												type: "POST",
-												//dataType: "JSON",
-												url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $receiveItem->header->id)) . '&requestType="+3+"&requestId="+ $("#TransactionReceiveItem_consignment_in_id").val(),
-												data: $("form").serialize(),
-												success: function(html) {
-													$(".detail").html(html);	
-													
-												},
-											});
-										
+                                                $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $receiveItem->header->id)) . '&requestType="+3+"&requestId="+ $("#TransactionReceiveItem_consignment_in_id").val(),
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $(".detail").html(html);	
+                                                    },
+                                                });
+                                            } 
+                                        });
 
-									} });
+                                        $("#consignment-grid").find("tr.selected").each(function(){
+                                            $(this).removeClass( "selected" );
+                                        });
 
-								$("#consignment-grid").find("tr.selected").each(function(){
-				                   	$(this).removeClass( "selected" );
-				                });
-
-							}',
+                                    }',
                                     'columns' => array(
                                         //'id',
                                         //'code',
@@ -539,47 +536,47 @@
                                         'cssFile' => false,
                                         'header' => '',
                                     ),
-                                    'selectionChanged' => 'js:function(id){
-								$("#TransactionReceiveItem_delivery_order_id").val($.fn.yiiGridView.getSelection(id));
-								$("#delivery-dialog").dialog("close");
-								$.ajax({
-									type: "POST",
-									//dataType: "JSON",
-									url: "' . CController::createUrl('ajaxHtmlRemoveDetailRequest', array('id' => $receiveItem->header->id)) . '",
-									data: $("form").serialize(),
-									success: function(html) {
-										$(".detail").html(html);	
-										
-									},
-								});
-								$.ajax({
-									type: "POST",
-									dataType: "JSON",
-									url: "' . CController::createUrl('ajaxDelivery', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-									data: $("form").serialize(),
-									success: function(data) {
-										$("#TransactionReceiveItem_delivery_order_no").val(data.no);
-										$("#TransactionReceiveItem_request_date").val(data.date);
-										$("#TransactionReceiveItem_estimate_arrival_date").val(data.eta);
-										$("#TransactionReceiveItem_destination_branch").val(data.branch);
-										$("#TransactionReceiveItem_destination_branch_name").val(data.branch_name);
-										$.ajax({
+                                    'selectionChanged' => 'js:function(id) {
+                                        $("#TransactionReceiveItem_delivery_order_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#delivery-dialog").dialog("close");
+                                        $.ajax({
                                             type: "POST",
                                             //dataType: "JSON",
-                                            url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $receiveItem->header->id)) . '&requestType="+2+"&requestId="+ $("#TransactionReceiveItem_delivery_order_id").val(),
+                                            url: "' . CController::createUrl('ajaxHtmlRemoveDetailRequest', array('id' => $receiveItem->header->id)) . '",
                                             data: $("form").serialize(),
                                             success: function(html) {
-                                                $(".detail").html(html);	
+                                                    $(".detail").html(html);	
 
                                             },
                                         });
-									} });
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxDelivery', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),
+                                            success: function(data) {
+                                                $("#TransactionReceiveItem_delivery_order_no").val(data.no);
+                                                $("#TransactionReceiveItem_request_date").val(data.date);
+                                                $("#TransactionReceiveItem_estimate_arrival_date").val(data.eta);
+                                                $("#TransactionReceiveItem_destination_branch").val(data.branch);
+                                                $("#TransactionReceiveItem_destination_branch_name").val(data.branch_name);
+                                                $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $receiveItem->header->id)) . '&requestType="+2+"&requestId="+ $("#TransactionReceiveItem_delivery_order_id").val(),
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $(".detail").html(html);	
+                                                    },
+                                                });
+                                            } 
+                                        });
 
-								$("#delivery-grid").find("tr.selected").each(function(){
-				                   	$(this).removeClass( "selected" );
-				                });
+                                        $("#delivery-grid").find("tr.selected").each(function(){
+                                            $(this).removeClass( "selected" );
+                                        });
 
-							}',
+                                    }',
                                     'columns' => array(
                                         'delivery_order_no',
                                         'delivery_date',
@@ -670,12 +667,12 @@
     </div><!-- form -->
     <?php Yii::app()->clientScript->registerScript('myjquery', '
 	// Yii::app()->controller->action->id
-    if($("#TransactionReceiveItem_request_type").val() == "Purchase Order") {
+        if($("#TransactionReceiveItem_request_type").val() == "Purchase Order") {
 		$("#consignmentIn").hide();
 		$("#supplier").show();
 		$("#purchase").show();
 		$("#delivery").hide();
-    }else if($("#TransactionReceiveItem_request_type").val() == "Internal Delivery Order") {
+        } else if ($("#TransactionReceiveItem_request_type").val() == "Internal Delivery Order") {
 		$("#supplier").hide();
 		$("#consignmentIn").hide();
     	$("#delivery").show();

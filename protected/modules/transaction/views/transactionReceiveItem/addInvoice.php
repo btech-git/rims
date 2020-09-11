@@ -119,6 +119,7 @@ $this->breadcrumbs=array(
                         <td>Invoice Date</td>
                         <td>Faktur Pajak #</td>
                         <td>Jatuh Tempo</td>
+                        <td>Memo</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -159,6 +160,10 @@ $this->breadcrumbs=array(
                                 ),
                             )); ?>
                             <?php echo CHtml::error($receiveItem, 'invoice_due_date'); ?>
+                        </td>
+                        <td>
+                            <?php echo CHtml::activeTextField($receiveItem, 'note', array('maxlength' => 50, 'size' => 30)); ?>
+                            <?php echo CHtml::error($receiveItem, 'note'); ?>
                         </td>
                     </tr>
                 </tbody>
