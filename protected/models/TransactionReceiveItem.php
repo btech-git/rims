@@ -281,7 +281,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             t.id NOT IN (
                 SELECT receive_item_id
                 FROM " . PaymentOutDetail::model()->tableName() . " 
-            ) AND t.invoice_number != '' AND t.invoice_grand_total > 0.00
+            ) AND t.invoice_number != '' 
         ";
 
         $criteria->compare('id', $this->id);

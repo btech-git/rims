@@ -19,12 +19,12 @@ $('.search-button').click(function(){
 	$('.search-form').slideToggle(600);
 	$('.bulk-action').toggle();
 	$(this).toggleClass('active');
-	if($(this).hasClass('active')){
-		$(this).text('');
-		$('#Product_findkeyword').hide();
+	if ($(this).hasClass('active')) {
+            $(this).text('');
+            $('#Product_findkeyword').hide();
 	}else {
-		$('#Product_findkeyword').show();
-		$(this).text('Advanced Search');
+            $('#Product_findkeyword').show();
+            $(this).text('Advanced Search');
 	}
 	return false;
 });
@@ -222,13 +222,6 @@ $('form').submit(function(){
                 array(
                     'name' => 'brand_id',
                     'value' => '$data->brand ? $data->brand->name : \'\'',
-//                    'filter' => CHtml::dropDownList('Product[brand_id]', $model->brand_id,
-//                        CHtml::listData(Brand::model()->findAll(), 'id', 'name'),
-//                        array(
-//                            'empty' => '[--Select a Brand--]',
-//                            'style' => 'width:150px !important',
-//                        )
-//                    )
                 ),
                 array(
                     'name' => 'sub_brand_id',
@@ -255,6 +248,7 @@ $('form').submit(function(){
                     'value' => '$data->productSubCategory->name',
                     'filter' => false,
                 ),
+                'date_posting',
                 array(
                     'class' => 'CButtonColumn',
                     'template' => '{price} {edit}',

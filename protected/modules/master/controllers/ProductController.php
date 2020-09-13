@@ -88,6 +88,7 @@ class ProductController extends Controller {
           )); */
 
         $product = $this->instantiate(null);
+        $product->header->date_posting = date('Y-m-d H:i:s');
         $productSpecificationBattery = new ProductSpecificationBattery;
         $productSpecificationOil = new ProductSpecificationOil;
         $productSpecificationTire = new ProductSpecificationTire;

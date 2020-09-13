@@ -98,9 +98,11 @@ class CashTransactionController extends Controller {
         
         $coaDetailCriteria = new CDbCriteria;
 
-        $coaDetailCriteria->addCondition("(coa_sub_category_id IN (2,6,7,10,12,14,15,17,19,20,21,23,24,25,29,30,31,32,33,34,35,36,37,38,39,40,41,42,45,53,54)) ");
+//        $coaDetailCriteria->addCondition("(coa_sub_category_id IN (2,6,7,10,12,14,15,17,19,20,21,23,24,25,29,30,31,32,33,34,35,36,37,38,39,40,41,42,45,53,54)) ");
         $coaDetailCriteria->compare('code', $coaDetail->code . '%', true, 'AND', false);
         $coaDetailCriteria->compare('name', $coaDetail->name, true);
+        $coaDetailCriteria->compare('t.coa_category_id', $coaDetail->coa_category_id);
+        $coaDetailCriteria->compare('t.coa_sub_category_id', $coaDetail->coa_sub_category_id);
         $coaDetailCriteria->compare('normal_balance', $coaDetail->normal_balance, true);
         $coaDetailCriteria->order = 'code ASC';
         $coaDetailDataProvider = new CActiveDataProvider('Coa', array(

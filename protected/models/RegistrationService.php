@@ -232,7 +232,7 @@ class RegistrationService extends CActiveRecord
     
     public function getTotalAmount() {
         
-        $priceAfterDiscount = $this->price; // - $this->discountAmount;
+        $priceAfterDiscount = $this->price - $this->discountAmount;
         $taxNominal = 0;
         
         return $priceAfterDiscount + $taxNominal;

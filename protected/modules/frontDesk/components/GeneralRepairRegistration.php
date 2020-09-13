@@ -101,6 +101,23 @@ class GeneralRepairRegistration extends CComponent {
         $serviceArrays = array();
         $serviceArrays = $this->serviceDetails;
         $checkService = array();
+        $servicePriceRate = 0.00;
+        
+        $service = Service::model()->findByPk($serviceId);
+        $vehicle = Vehicle::model()->findByPk($vehicleId);
+        $vehicleCarMake = VehicleCarMake::model()->findByPk($vehicle->car_make_id);
+        
+        if ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::EASY_VALUE) {
+            $servicePriceRate = $service->price_easy;
+        } elseif ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::MEDIUM_VALUE) {
+            $servicePriceRate = $service->price_medium;
+        } elseif ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::HARD_VALUE) {
+            $servicePriceRate = $service->price_hard;
+        } elseif ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::LUXURY_VALUE) {
+            $servicePriceRate = $service->price_luxury;
+        } else {
+            $servicePriceRate = 0.00;
+        }
 
         foreach ($serviceArrays as $serviceArray) {
             $checkService[] = $serviceArray->service_id;
@@ -108,7 +125,15 @@ class GeneralRepairRegistration extends CComponent {
         if (in_array($serviceId, $checkService)) {
             echo "Please select other Service, this is already added";
         } else {
-            $this->getService($serviceId, $customerId, $custType, $vehicleId, $repair);
+//            $this->getService($serviceId, $customerId, $custType, $vehicleId, $repair);
+            
+            $serviceDetail = new RegistrationService();
+            $serviceDetail->service_id = $serviceId;
+            $serviceDetail->hour = $service->flat_rate_hour;
+            $serviceDetail->claim = "NO";
+            $serviceDetail->price = $servicePriceRate;
+
+            $this->serviceDetails[] = $serviceDetail;
         }
     }
 

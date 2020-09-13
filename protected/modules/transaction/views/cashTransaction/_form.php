@@ -287,51 +287,45 @@
             <fieldset>
                 <legend>Details</legend>
                 <p> <?php echo CHtml::button('Add Details', array(
-                            'id' => 'detail-button',
-                            'name' => 'Detail',
-                            'onclick' => '
-									if($("#CashTransaction_transaction_type").val() == ""){
-							    		alert("Please Select Transaction Type to Proceed.");
-							    	}else{
-							    		jQuery("#coa-detail-dialog").dialog("open"); return false;
-							    	}
-									'
-                        )
-                    ); ?>
+                        'id' => 'detail-button',
+                        'name' => 'Detail',
+                        'onclick' => '
+                            if ($("#CashTransaction_transaction_type").val() == "") {
+                                alert("Please Select Transaction Type to Proceed.");
+                            } else {
+                                jQuery("#coa-detail-dialog").dialog("open"); return false;
+                            }
+                        '
+                    )); ?>
                     <?php echo CHtml::button('Count Total', array(
                         'id' => 'total-button',
                         'name' => 'Total',
                         'style' => 'display:none',
                         'onclick' => '
-									$.ajax({
-					                  type: "POST",
-					                  url: "' . CController::createUrl('ajaxGetTotal',
-                                array('id' => $cashTransaction->header->id,)) . '",
-					                  data: $("form").serialize(),
-					                  dataType: "json",
-					                  success: function(data) {
-					                      //console.log(data.total);
-					                  	//console.log(data.requestType);
-					                  	if($("#CashTransaction_transaction_type").val()=="In"){
-					                  		$("#CashTransaction_credit_amount").val(data.total);
-					                  	}
-					                  	else{
-					                  		$("#CashTransaction_debit_amount").val(data.total);
-					                  	}
-					                    
-					                      
-					                  },
-					                });',
-                    ));
-                    ?>
+                            $.ajax({
+                                type: "POST",
+                                url: "' . CController::createUrl('ajaxGetTotal', array('id' => $cashTransaction->header->id,)) . '",
+                                data: $("form").serialize(),
+                                dataType: "json",
+                                success: function(data) {
+                                    //console.log(data.total);
+                                    //console.log(data.requestType);
+                                    if ($("#CashTransaction_transaction_type").val()=="In") {
+                                        $("#CashTransaction_credit_amount").val(data.total);
+                                    } else {
+                                        $("#CashTransaction_debit_amount").val(data.total);
+                                    }
+                                },
+                            });
+                        ',
+                    )); ?>
                 </p>
                 <div class="row">
                     <div class="large-12 columns">
                         <div class="detail">
                             <?php $this->renderPartial('_detail', array(
                                 'cashTransaction' => $cashTransaction
-                            ));
-                            ?>
+                            )); ?>
                         </div>
                     </div>
                 </div>
@@ -340,59 +334,37 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($cashTransaction->header, 'images',
-                                array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($cashTransaction->header, 'images', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php if ($cashTransaction->header->isNewRecord): ?>
                                 <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                                <?php
-                                $this->widget('CMultiFileUpload', array(
+                                <?php $this->widget('CMultiFileUpload', array(
                                     'model' => $cashTransaction->header,
                                     'attribute' => 'images',
                                     'accept' => 'jpg|jpeg|png|gif',
                                     'denied' => 'Only jpg, jpeg, png and gif are allowed',
                                     'max' => 10,
                                     'remove' => 'x',
-                                    //'duplicate' => 'Already Selected',
-
-
-                                ));
-                                ?>
+                                )); ?>
                             <?php else:
                                 if ($allowedImages != 0): ?>
                                     <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                                    <?php
-                                    $this->widget('CMultiFileUpload', array(
+                                    <?php $this->widget('CMultiFileUpload', array(
                                         'model' => $cashTransaction->header,
                                         'attribute' => 'images',
                                         'accept' => 'jpg|jpeg|png|gif',
                                         'denied' => 'Only jpg, jpeg, png and gif are allowed',
                                         'max' => 10,
                                         'remove' => 'x',
-                                        //'duplicate' => 'Already Selected',
-
-
-                                    ));
-                                    ?>
+                                    )); ?>
                                 <?php endif;
 
                                 if ($postImages !== null): ?>
-                                    <?php
-                                    //$criteria = new CDbCriteria;
-                                    //$criteria->select = 'max(`order`) AS max_order';
-                                    //$row = ArticlesImages::model()->findByAttributes(array('article_id' => $model->id, 'status' => 1));
-
-                                    //$count_banners = count($restaurantImages);
-
-                                    //$down = SKINS . 'arrow_down.png';
-                                    //$up = SKINS . 'arrow_up.png';
-                                    ?>
-                                    <?php //print_r($postImages); ?>
                                     <?php foreach ($postImages as $postImage):
                                         $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $cashTransaction->header->id . '/' . $postImage->filename;
                                         $src = Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $cashTransaction->header->id . '/' . $postImage->filename;
-                                        ?>
+                                    ?>
                                         <div class="row">
                                             <div class="small-3 columns">
                                                 <div style="margin-bottom:.5rem">
@@ -425,14 +397,12 @@
                 </div>
             </div>
 
-
             <div class="field buttons text-center">
                 <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
                 <?php echo CHtml::submitButton($cashTransaction->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
         </div>
     </div>
-
 
     <?php $this->endWidget(); ?>
     <script>
@@ -477,41 +447,36 @@
         'header' => '',
     ),
     'selectionChanged' => 'js:function(id){
-			$("#coa-kas-dialog").dialog("close");
-			$("#coa").show();
-			$.ajax({
-				type: "POST",
-				dataType: "JSON",
-				url: "' . CController::createUrl('ajaxCoa', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-				data: $("form").serialize(),
-				success: function(data) {
-					
-					$("#CashTransaction_coa_id").val(data.id);
-					$("#CashTransaction_coa_code").val(data.code);
-					$("#CashTransaction_coa_name").val(data.name);
-					$("#CashTransaction_coa_opening_balance").val(data.opening_balance);
-					$("#CashTransaction_coa_debit").val(data.debit);
-					$("#CashTransaction_coa_credit").val(data.credit);
-					if($("#CashTransaction_transaction_type").val() == "In"){
-						$("#CashTransaction_debit_amount").val(data.opening_balance);
-					}
-					else{
-						$("#CashTransaction_credit_amount").val(data.opening_balance);
-					}
-					
-				},
-			});
-			$("#coa-kas-grid").find("tr.selected").each(function(){
-               $(this).removeClass( "selected" );
-            });
-		}',
-    'columns' =>
-    //$coumns
-        array(
-            'name',
-            'code',
-            'normal_balance',
-        ),
+        $("#coa-kas-dialog").dialog("close");
+        $("#coa").show();
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: "' . CController::createUrl('ajaxCoa', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+            data: $("form").serialize(),
+            success: function(data) {
+                $("#CashTransaction_coa_id").val(data.id);
+                $("#CashTransaction_coa_code").val(data.code);
+                $("#CashTransaction_coa_name").val(data.name);
+                $("#CashTransaction_coa_opening_balance").val(data.opening_balance);
+                $("#CashTransaction_coa_debit").val(data.debit);
+                $("#CashTransaction_coa_credit").val(data.credit);
+                if ($("#CashTransaction_transaction_type").val() == "In") {
+                    $("#CashTransaction_debit_amount").val(data.opening_balance);
+                } else {
+                    $("#CashTransaction_credit_amount").val(data.opening_balance);
+                }
+            },
+        });
+        $("#coa-kas-grid").find("tr.selected").each(function(){
+           $(this).removeClass( "selected" );
+        });
+    }',
+    'columns' => array(
+        'name',
+        'code',
+        'normal_balance',
+    ),
 )); ?>
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
@@ -525,8 +490,7 @@
         'width' => 'auto',
         'modal' => true,
     ),
-));
-?>
+)); ?>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'coa-detail-grid',
     'dataProvider' => $coaDetailDataProvider,
@@ -536,29 +500,40 @@
         'cssFile' => false,
         'header' => '',
     ),
-    'selectionChanged' => 'js:function(id){
-			$("#coa-detail-dialog").dialog("close");
-			$.ajax({
-				type: "POST",
-				dataType: "html",
-				url: "' . CController::createUrl('ajaxHtmlAddDetail',
-            array('id' => $cashTransaction->header->id, 'coaId' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-				data: $("form").serialize(),
-				success: function(data) {
-					$(".detail").html(data);
-					$("#total-button").show();
-				},
-			});
-			$("#coa-detail-grid").find("tr.selected").each(function(){
-               $(this).removeClass( "selected" );
-            });
-		}',
-    'columns' =>
-    //$coumns
+    'selectionChanged' => 'js:function(id) {
+        $("#coa-detail-dialog").dialog("close");
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $cashTransaction->header->id, 'coaId' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+            data: $("form").serialize(),
+            success: function(data) {
+                $(".detail").html(data);
+                $("#total-button").show();
+            },
+        });
+        $("#coa-detail-grid").find("tr.selected").each(function(){
+           $(this).removeClass( "selected" );
+        });
+    }',
+    'columns' => array(
         array(
-            'name',
-            'code',
-            'normal_balance',
+            'name' => 'name', 
+            'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+            'type' => 'raw'
         ),
+        'code',
+        array(
+            'name' => 'coa_category_id',
+            'filter' => CHtml::activeDropDownList($coaDetail, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+            'value' => '$data->coaCategory!="" ?$data->coaCategory->name:""',
+        ),
+        array(
+            'name' => 'coa_sub_category_id',
+            'filter' => CHtml::activeDropDownList($coaDetail, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+            'value' => '$data->coaSubCategory!="" ?$data->coaSubCategory->name:""'
+        ),
+        'normal_balance',
+    ),
 )); ?>
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>

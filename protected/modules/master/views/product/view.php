@@ -74,6 +74,7 @@ $this->menu=array(
                 'minimum_selling_price',
                 array('name'=>'ppn', 'value'=>$model->ppn == 1 ? 'Include': 'Exclude'),
                 'minimum_stock',
+                'date_posting',
             ),
         )); ?>
     </div>

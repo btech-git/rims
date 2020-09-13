@@ -7,13 +7,15 @@ class Services extends CComponent {
     public $priceDetails;
     public $complementDetails;
     public $productDetails;
+    public $materialDetails;
 
-    public function __construct($header, array $equipmentDetails, array $priceDetails, array $complementDetails, array $productDetails) {
+    public function __construct($header, array $equipmentDetails, array $priceDetails, array $complementDetails, array $productDetails, array $materialDetails) {
         $this->header = $header;
         $this->equipmentDetails = $equipmentDetails;
         $this->priceDetails = $priceDetails;
         $this->complementDetails = $complementDetails;
         $this->productDetails = $productDetails;
+        $this->materialDetails = $materialDetails;
     }
 
     public function addDetail($equipmentId) {
@@ -96,6 +98,18 @@ class Services extends CComponent {
 
     public function removeProductDetailAt($index) {
         array_splice($this->productDetails, $index, 1);
+    }
+
+    public function addMaterialDetail($materialId) {
+
+        $materialDetail = new ServiceMaterial();
+
+        $materialDetail->product_id = $materialId;
+        $this->materialDetails[] = $materialDetail;
+    }
+
+    public function removeMaterialDetailAt($index) {
+        array_splice($this->materialDetails, $index, 1);
     }
 
     public function save($dbConnection) {

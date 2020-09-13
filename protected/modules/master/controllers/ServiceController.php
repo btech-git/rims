@@ -122,22 +122,24 @@ class ServiceController extends Controller {
         // ));
 
         $service = $this->instantiate(null);
+        $service->header->difficulty_level = 1;
 
         $complement = new Service('search');
         $complement->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['Service']))
             $complement->attributes = $_GET['Service'];
 
         $complementCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $complementCriteria->compare('name', $complement->name, true);
 
         $complementDataProvider = new CActiveDataProvider('Service', array(
-                    'criteria' => $complementCriteria,
-                ));
+            'criteria' => $complementCriteria,
+        ));
 
         $equipment = new Equipments('search');
         $equipment->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['Equipments']))
             $equipment->attributes = $_GET['Equipments'];
 
@@ -150,8 +152,8 @@ class ServiceController extends Controller {
         $equipmentCriteria->compare('equipmentSubType.name', $equipment->equipment_sub_type_name, true);
 
         $equipmentDataProvider = new CActiveDataProvider('Equipments', array(
-                    'criteria' => $equipmentCriteria,
-                ));
+            'criteria' => $equipmentCriteria,
+        ));
 
         $material = new Product('search');
         $material->unsetAttributes();  // clear any default values
@@ -163,8 +165,8 @@ class ServiceController extends Controller {
         $materialCriteria->compare('name', $material->name, true);
 
         $materialDataProvider = new CActiveDataProvider('Product', array(
-                    'criteria' => $materialCriteria,
-                ));
+            'criteria' => $materialCriteria,
+        ));
 
         $this->performAjaxValidation($service->header);
 
@@ -174,8 +176,6 @@ class ServiceController extends Controller {
                 $this->redirect(array('view', 'id' => $service->header->id));
             }
         }
-
-
 
         $this->render('create', array(
             //'model'=>$model,
@@ -584,21 +584,20 @@ class ServiceController extends Controller {
 
     public function instantiate($id) {
         if (empty($id)) {
-            $service = new Services(new Service(), array(), array(), array(), array());
-            //print_r("test");
+            $service = new Services(new Service(), array(), array(), array(), array(), array());
         } else {
             $serviceModel = $this->loadModel($id);
-            $service = new Services($serviceModel, $serviceModel->serviceEquipments, $serviceModel->servicePricelists, $serviceModel->serviceComplements, array());
+            $service = new Services($serviceModel, $serviceModel->serviceEquipments, $serviceModel->servicePricelists, $serviceModel->serviceComplements, array(), $serviceModel->serviceMaterials);
         }
         return $service;
     }
 
     public function instantiateProduct($id) {
         if (empty($id)) {
-            $service = new Services(new Service(), array(), array(), array(), array());
+            $service = new Services(new Service(), array(), array(), array(), array(), array());
         } else {
             $serviceModel = $this->loadModel($id);
-            $service = new Services($serviceModel, array(), array(), array(), $serviceModel->serviceProducts);
+            $service = new Services($serviceModel, array(), array(), array(), $serviceModel->serviceProducts, $serviceModel->serviceMaterials);
         }
         return $service;
     }
@@ -671,6 +670,22 @@ class ServiceController extends Controller {
         }
         else
             $service->productDetails = array();
+        
+        if (isset($_POST['ServiceMaterial'])) {
+            foreach ($_POST['ServiceMaterial'] as $i => $item) {
+                if (isset($service->materialDetails[$i]))
+                    $service->materialDetails[$i]->attributes = $item;
+                else {
+                    $detail = new ServiceMaterial();
+                    $detail->attributes = $item;
+                    $service->materialDetails[] = $detail;
+                }
+            }
+            if (count($_POST['ServiceMaterial']) < count($service->materialDetails))
+                array_splice($service->materialDetails, $i + 1);
+        }
+        else
+            $service->materialDetails = array();
     }
 
     public function loadModel($id) {

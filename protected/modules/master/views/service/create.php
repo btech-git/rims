@@ -13,12 +13,13 @@ $this->breadcrumbs=array(
 // );
 ?>
 <div id="maincontent">
-	<?php $this->renderPartial('_form', array('service'=>$service,
-		'equipment'=>$equipment,
-		'equipmentDataProvider'=>$equipmentDataProvider,
-		'complement'=>$complement,
-		'complementDataProvider'=>$complementDataProvider,
-		'material'=>$material,
-		'materialDataProvider'=>$materialDataProvider,
-	)); ?>
+    <?php $this->renderPartial('_form', array(
+        'service'=>$service,
+        'equipment'=>$equipment,
+        'equipmentDataProvider'=>$equipmentDataProvider,
+        'complement'=>$complement,
+        'complementDataProvider'=>$complementDataProvider,
+        'material'=>$material,
+        'materialDataProvider'=>$materialDataProvider,
+    )); ?>
 </div>

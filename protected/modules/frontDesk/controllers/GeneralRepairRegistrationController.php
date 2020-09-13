@@ -3,7 +3,7 @@
 class GeneralRepairRegistrationController extends Controller {
 
     public $layout = '//layouts/column1';
-    
+
     public function filters() {
         return array(
             'access',
@@ -12,15 +12,15 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'generateInvoice' || 
-            $filterChain->action->id === 'generateSalesOrder' || 
-            $filterChain->action->id === 'generateWorkOrder' || 
-            $filterChain->action->id === 'receive' || 
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'showRealization' || 
-            $filterChain->action->id === 'update'
+                $filterChain->action->id === 'admin' ||
+                $filterChain->action->id === 'create' ||
+                $filterChain->action->id === 'generateInvoice' ||
+                $filterChain->action->id === 'generateSalesOrder' ||
+                $filterChain->action->id === 'generateWorkOrder' ||
+                $filterChain->action->id === 'receive' ||
+                $filterChain->action->id === 'view' ||
+                $filterChain->action->id === 'showRealization' ||
+                $filterChain->action->id === 'update'
         ) {
             if (!(Yii::app()->user->checkAccess('frontOfficeStaff')))
                 $this->redirect(array('/site/login'));
@@ -33,7 +33,7 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration = $this->instantiate(null);
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
-        
+
         $generalRepairRegistration->header->transaction_date = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->user_id = Yii::app()->user->id;
         $generalRepairRegistration->header->vehicle_id = $vehicleId;
@@ -41,15 +41,15 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->branch_id = $generalRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $generalRepairRegistration->header->branch_id;
         $generalRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
 
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['Submit'])) {
 //            if ($_POST['_FormSubmit_'] === 'Submit') {
-                $this->loadState($generalRepairRegistration);
+            $this->loadState($generalRepairRegistration);
 
-                if ($generalRepairRegistration->save(Yii::app()->db)) 
-                    $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+            if ($generalRepairRegistration->save(Yii::app()->db))
+                $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
 //            }
         }
 
@@ -64,7 +64,7 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration = $this->instantiate($registrationId);
         $customer = Customer::model()->findByPk($generalRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
-        $branches = Branch::model()->findAll(); 
+        $branches = Branch::model()->findAll();
 
         $qs = new QuickService('search');
         $qs->unsetAttributes();  // clear any default values
@@ -80,7 +80,7 @@ class GeneralRepairRegistrationController extends Controller {
         $qsDataProvider = new CActiveDataProvider('QuickService', array(
             'criteria' => $qsCriteria,
         ));
-        
+
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -96,7 +96,7 @@ class GeneralRepairRegistrationController extends Controller {
         $serviceCriteria->compare('t.service_category_id', $service->service_category_id);
         $serviceCriteria->compare('t.service_type_id', $service->service_type_id);
         $explodeKeyword = explode(" ", $service->findkeyword);
-        
+
         foreach ($explodeKeyword as $key) {
             $serviceCriteria->compare('t.code', $key, true, 'OR');
             $serviceCriteria->compare('t.name', $key, true, 'OR');
@@ -112,26 +112,26 @@ class GeneralRepairRegistrationController extends Controller {
         ));
 
         $serviceArray = array();
-        
+
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
         }
 
         $productDataProvider = $product->search();
 
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel']))
             $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
 
 //        if (isset($_POST['_FormSubmit_'])) {
-            if (isset($_POST['Submit'])) {
-                $this->loadStateDetails($generalRepairRegistration);
+        if (isset($_POST['Submit'])) {
+            $this->loadStateDetails($generalRepairRegistration);
 
-                if ($generalRepairRegistration->saveDetails(Yii::app()->db)) 
-                    $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
-            }
+            if ($generalRepairRegistration->saveDetails(Yii::app()->db))
+                $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+        }
 //        }
 
         $this->render('addProductService', array(
@@ -149,14 +149,13 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $generalRepairRegistration = $this->instantiate($id);
         $generalRepairRegistration->header->setCodeNumberByRevision('transaction_number');
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $type = "";
-        
+
         $qs = new QuickService('search');
         $qs->unsetAttributes();  // clear any default values
         if (isset($_GET['QuickService'])) {
@@ -170,7 +169,7 @@ class GeneralRepairRegistrationController extends Controller {
         $qsDataProvider = new CActiveDataProvider('QuickService', array(
             'criteria' => $qsCriteria,
         ));
-        
+
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -184,7 +183,7 @@ class GeneralRepairRegistrationController extends Controller {
         $serviceCriteria->compare('t.name', $service->name, true);
         $serviceCriteria->compare('t.code', $service->code, true);
         $explodeKeyword = explode(" ", $service->findkeyword);
-        
+
         foreach ($explodeKeyword as $key) {
             $serviceCriteria->compare('t.code', $key, true, 'OR');
             $serviceCriteria->compare('t.name', $key, true, 'OR');
@@ -201,14 +200,14 @@ class GeneralRepairRegistrationController extends Controller {
 
         $serviceChecks = RegistrationService::model()->findAllByAttributes(array('service_id' => $id));
         $serviceArray = array();
-        
+
         foreach ($serviceChecks as $key => $serviceCheck) {
             array_push($serviceArray, $serviceCheck->service_id);
         }
 
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
         }
@@ -237,7 +236,7 @@ class GeneralRepairRegistrationController extends Controller {
                 $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
             }
         }
-        
+
         $this->render('update', array(
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
@@ -253,8 +252,7 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionView($id)
-    {
+    public function actionView($id) {
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
         $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
@@ -272,7 +270,7 @@ class GeneralRepairRegistrationController extends Controller {
             $registrationMemo->user_id = Yii::app()->user->id;
             $registrationMemo->save();
         }
-        
+
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'quickServices' => $quickServices,
@@ -283,17 +281,16 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
-        
+
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
-        
-        if (isset($_GET['RegistrationTransaction'])) 
+
+        if (isset($_GET['RegistrationTransaction']))
             $model->attributes = $_GET['RegistrationTransaction'];
-        
+
         $dataProvider = $model->search();
         $dataProvider->criteria->addCondition("repair_type = 'GR'");
         $dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
@@ -305,14 +302,13 @@ class GeneralRepairRegistrationController extends Controller {
             'endDate' => $endDate,
         ));
     }
-    
-    public function actionGenerateInvoice($id)
-    {
+
+    public function actionGenerateInvoice($id) {
         $registration = RegistrationTransaction::model()->findByPK($id);
         $customer = Customer::model()->findByPk($registration->customer_id);
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $registration->id));
         $branch = Branch::model()->findByPk($registration->branch_id);
-        
+
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $registration->transaction_number,
             'branch_id' => $registration->branch_id,
@@ -322,11 +318,11 @@ class GeneralRepairRegistrationController extends Controller {
             $invoice->status = "CANCELLED";
             $invoice->save(false);
         }
-        
+
 //        $days = $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
         $invoiceHeader = InvoiceHeader::model()->findAll();
         $count = count($invoiceHeader) + 1;
-        
+
         $model = new InvoiceHeader();
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registration->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registration->transaction_date)), $registration->branch_id);
         $model->invoice_date = date('Y-m-d');
@@ -351,7 +347,7 @@ class GeneralRepairRegistrationController extends Controller {
         $model->pph_total = $registration->pph_price;
         $model->ppn = $registration->ppn;
         $model->pph = $registration->pph;
-        
+
         if ($model->save(false)) {
             $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
             if (count($registrationProducts) != 0) {
@@ -364,13 +360,13 @@ class GeneralRepairRegistrationController extends Controller {
                     $modelDetail->total_price = $registrationProduct->total_price;
                     $modelDetail->save(false);
                 }
-            } 
-            
+            }
+
             $registrationServices = RegistrationService::model()->findAllByAttributes(array(
                 'registration_transaction_id' => $id,
                 'is_quick_service' => 0
             ));
-            
+
             if (count($registrationServices) != 0) {
                 foreach ($registrationServices as $registrationService) {
                     $modelDetail = new InvoiceDetail();
@@ -381,7 +377,7 @@ class GeneralRepairRegistrationController extends Controller {
                     $modelDetail->save(false);
                 }
             }
-            
+
             $registrationQuickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
             if (count($registrationQuickServices) != 0) {
                 foreach ($registrationQuickServices as $registrationQuickService) {
@@ -393,8 +389,8 @@ class GeneralRepairRegistrationController extends Controller {
                     $modelDetail->save(false);
                 }
             }
-            
-            /*SAVE TO JOURNAL*/
+
+            /* SAVE TO JOURNAL */
             $jurnalUmumPiutang = new JurnalUmum;
             $jurnalUmumPiutang->kode_transaksi = $registration->transaction_number;
             $jurnalUmumPiutang->tanggal_transaksi = $registration->transaction_date;
@@ -407,7 +403,7 @@ class GeneralRepairRegistrationController extends Controller {
             $jurnalUmumPiutang->is_coa_category = 0;
             $jurnalUmumPiutang->transaction_type = 'RG';
             $jurnalUmumPiutang->save();
-            
+
             if (count($registrationProducts) > 0) {
                 foreach ($registration->registrationProducts as $key => $rProduct) {
 
@@ -663,7 +659,7 @@ class GeneralRepairRegistrationController extends Controller {
                 }
             }
         }// end if model save
-        
+
         if (count($invoices) > 0) {
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $registration->id,
@@ -683,7 +679,6 @@ class GeneralRepairRegistrationController extends Controller {
                 $real->detail = 'Generate Invoice with number #' . $model->invoice_number;
                 $real->save();
             }
-
         } else {
             $real = new RegistrationRealizationProcess();
             $real->registration_transaction_id = $registration->id;
@@ -696,10 +691,9 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
 
-    public function actionGenerateSalesOrder($id)
-    {
+    public function actionGenerateSalesOrder($id) {
         $model = $this->instantiate($id);
-        
+
         $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->sales_order_date = date('Y-m-d');
 
@@ -718,8 +712,7 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
 
-    public function actionGenerateWorkOrder($id)
-    {
+    public function actionGenerateWorkOrder($id) {
         $model = $this->instantiate($id);
 
         $model->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
@@ -738,22 +731,21 @@ class GeneralRepairRegistrationController extends Controller {
 //                $real->detail = 'Update When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
 //                $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
 //            } else {
-                $real = new RegistrationRealizationProcess();
-                $real->registration_transaction_id = $model->header->id;
-                $real->name = 'Work Order';
-                $real->checked = 1;
-                $real->checked_date = date('Y-m-d');
-                $real->checked_by = 1;
-                $real->detail = 'Add When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
-                $real->save();
+            $real = new RegistrationRealizationProcess();
+            $real->registration_transaction_id = $model->header->id;
+            $real->name = 'Work Order';
+            $real->checked = 1;
+            $real->checked_date = date('Y-m-d');
+            $real->checked_by = 1;
+            $real->detail = 'Add When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
+            $real->save();
 //            }
-            
+
             $this->redirect(array('view', 'id' => $id));
         }
     }
 
-    public function actionShowRealization($id)
-    {
+    public function actionShowRealization($id) {
         $head = RegistrationTransaction::model()->findByPk($id);
         $reals = RegistrationRealizationProcess::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $this->render('realization', array(
@@ -762,8 +754,7 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity)
-    {
+    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity) {
         //$quantity = 0;
 
         $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);
@@ -797,7 +788,7 @@ class GeneralRepairRegistrationController extends Controller {
                 $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
 
                 $quantity = 0;
-                
+
                 foreach ($receiveItemDetails as $receiveItemDetail) {
                     $quantity += $receiveItemDetail->qty_received;
                 }
@@ -829,7 +820,7 @@ class GeneralRepairRegistrationController extends Controller {
 
                     $rpDetail->quantity_receive_left = $rpDetail->quantity - ($movementOutDetail->quantity_receive + $mquantity);
                     $rpDetail->quantity_receive = $mquantity + $movementOutDetail->quantity_receive;
-                    
+
                     if ($rpDetail->save(false)) {
                         $registrationRealization = new RegistrationRealizationProcess();
                         $registrationRealization->registration_transaction_id = $registration->id;
@@ -845,69 +836,65 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
 
-    public function actionPdf($id)
-    {
+    public function actionPdf($id) {
         $generalRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
         $customer = Customer::model()->findByPk($generalRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($generalRepairRegistration->branch_id);
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        
+
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
-            'generalRepairRegistration' => $generalRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'generalRepairRegistration' => $generalRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output();
     }
 
-    public function actionPdfSaleOrder($id)
-    {
+    public function actionPdfSaleOrder($id) {
         $generalRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
         $customer = Customer::model()->findByPk($generalRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($generalRepairRegistration->branch_id);
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        
+
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfSaleOrder', array(
-            'generalRepairRegistration' => $generalRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'generalRepairRegistration' => $generalRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output();
     }
 
-    public function actionPdfWorkOrder($id)
-    {
+    public function actionPdfWorkOrder($id) {
         $generalRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
         $customer = Customer::model()->findByPk($generalRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($generalRepairRegistration->branch_id);
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        
+
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfWorkOrder', array(
-            'generalRepairRegistration' => $generalRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'generalRepairRegistration' => $generalRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output();
     }
 
     //Add QuickService
-    public function actionAjaxHtmlAddQuickServiceDetail($id, $quickServiceId)
-    {
+    public function actionAjaxHtmlAddQuickServiceDetail($id, $quickServiceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $generalRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($generalRepairRegistration);
@@ -915,15 +902,14 @@ class GeneralRepairRegistrationController extends Controller {
             $generalRepairRegistration->addQuickServiceDetail($quickServiceId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailQuickService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlAddQsServiceDetail($id, $quickServiceId)
-    {
+    public function actionAjaxHtmlAddQsServiceDetail($id, $quickServiceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $generalRepairRegistration = $this->instantiateProductService($id);
             $this->loadState($generalRepairRegistration);
@@ -931,32 +917,29 @@ class GeneralRepairRegistrationController extends Controller {
             $generalRepairRegistration->addQsServiceDetail($quickServiceId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detailService', array('registrationTransaction' => $generalRepairRegistration), false,
-                true);
+            $this->renderPartial('_detailService', array('registrationTransaction' => $generalRepairRegistration), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveQuickServiceDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveQuickServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $generalRepairRegistration = $this->instantiate($id);
             $this->loadState($generalRepairRegistration);
-            
+
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $generalRepairRegistration->removeQuickServiceDetailAt($index);
-            
+
             $this->renderPartial('_detailQuickService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveQuickServiceDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveQuickServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $generalRepairRegistration = $this->instantiateProductService($id);
@@ -965,16 +948,15 @@ class GeneralRepairRegistrationController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $generalRepairRegistration->removeQuickServiceAll();
-            
+
             $this->renderPartial('_detailQuickService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
 //Add Service
-    public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair)
-    {
+    public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
             $generalRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($generalRepairRegistration);
@@ -983,16 +965,15 @@ class GeneralRepairRegistrationController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveServiceDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $generalRepairRegistration = $this->instantiate($id);
@@ -1002,15 +983,14 @@ class GeneralRepairRegistrationController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $generalRepairRegistration->removeServiceDetailAt($index);
-            
+
             $this->renderPartial('_detailService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveServiceDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $generalRepairRegistration = $this->instantiate($id);
@@ -1019,36 +999,34 @@ class GeneralRepairRegistrationController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $generalRepairRegistration->removeServiceDetailAll();
-            
+
             $this->renderPartial('_detailService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
 //Add Product
-    public function actionAjaxHtmlAddProductDetail($id, $productId)
-    {
+    public function actionAjaxHtmlAddProductDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
             $generalRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($generalRepairRegistration);
-            $branches = Branch::model()->findAll(); 
+            $branches = Branch::model()->findAll();
 
             $generalRepairRegistration->addProductDetail($productId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailProduct', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
                 'branches' => $branches,
-            ), false, true);
+                    ), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveProductDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveProductDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $generalRepairRegistration = $this->instantiate($id);
@@ -1057,109 +1035,103 @@ class GeneralRepairRegistrationController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $generalRepairRegistration->removeProductDetailAt($index);
-            
+
             $this->renderPartial('_detailProduct', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
-	public function actionAjaxJsonTotalService($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$generalRepairRegistration = $this->instantiate($id);
-			$this->loadStateDetails($generalRepairRegistration);
+    public function actionAjaxJsonTotalService($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $generalRepairRegistration = $this->instantiate($id);
+            $this->loadStateDetails($generalRepairRegistration);
 
-			$totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->serviceDetails[$index], 'totalAmount')));
+            $totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->serviceDetails[$index], 'totalAmount')));
             $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $generalRepairRegistration->totalQuantityService));
-			$subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalService));
-			$totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalDiscountService));
-			$grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalService));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
-			$taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
-			$grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
-
-			echo CJSON::encode(array(
-				'totalAmount' => $totalAmount,
-                'totalQuantityService' => $totalQuantityService,
-				'subTotalService' => $subTotalService,
-				'totalDiscountService' => $totalDiscountService,
-				'grandTotalService'=>$grandTotalService,
-                'subTotalTransaction' => $subTotalTransaction,
-                'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
-                'grandTotalTransaction' => $grandTotalTransaction,
-			));
-		}
-	}
-
-	public function actionAjaxJsonTotalProduct($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$generalRepairRegistration = $this->instantiate($id);
-			$this->loadStateDetails($generalRepairRegistration);
-
-			$totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->productDetails[$index], 'totalAmountProduct')));
-            $totalQuantityProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $generalRepairRegistration->totalQuantityProduct));
-			$subTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalProduct));
-			$totalDiscountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalDiscountProduct));
-			$grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalProduct));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
-			$taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
-			$grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
-
-			echo CJSON::encode(array(
-				'totalAmountProduct' => $totalAmountProduct,
-                'totalQuantityProduct' => $totalQuantityProduct,
-				'subTotalProduct' => $subTotalProduct,
-				'totalDiscountProduct' => $totalDiscountProduct,
-				'grandTotalProduct'=>$grandTotalProduct,
-                'subTotalTransaction' => $subTotalTransaction,
-                'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
-                'grandTotalTransaction' => $grandTotalTransaction,
-			));
-		}
-	}
-
-	public function actionAjaxJsonGrandTotal($id)
-	{
-		if (Yii::app()->request->isAjaxRequest) {
-			$generalRepairRegistration = $this->instantiate($id);
-			$this->loadStateDetails($generalRepairRegistration);
-
-			$totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalQuickServiceQuantity));
-			$subTotalQuickService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalQuickService));
-            $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $generalRepairRegistration->totalQuantityService));
-			$subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalService));
-			$totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalDiscountService));
-			$grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalService));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
+            $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalService));
+            $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalDiscountService));
+            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalService));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
             $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
-			$grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
 
-			echo CJSON::encode(array(
+            echo CJSON::encode(array(
+                'totalAmount' => $totalAmount,
+                'totalQuantityService' => $totalQuantityService,
+                'subTotalService' => $subTotalService,
+                'totalDiscountService' => $totalDiscountService,
+                'grandTotalService' => $grandTotalService,
+                'subTotalTransaction' => $subTotalTransaction,
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotalTransaction' => $grandTotalTransaction,
+            ));
+        }
+    }
+
+    public function actionAjaxJsonTotalProduct($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $generalRepairRegistration = $this->instantiate($id);
+            $this->loadStateDetails($generalRepairRegistration);
+
+            $totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->productDetails[$index], 'totalAmountProduct')));
+            $totalQuantityProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $generalRepairRegistration->totalQuantityProduct));
+            $subTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalProduct));
+            $totalDiscountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalDiscountProduct));
+            $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalProduct));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
+            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
+
+            echo CJSON::encode(array(
+                'totalAmountProduct' => $totalAmountProduct,
+                'totalQuantityProduct' => $totalQuantityProduct,
+                'subTotalProduct' => $subTotalProduct,
+                'totalDiscountProduct' => $totalDiscountProduct,
+                'grandTotalProduct' => $grandTotalProduct,
+                'subTotalTransaction' => $subTotalTransaction,
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotalTransaction' => $grandTotalTransaction,
+            ));
+        }
+    }
+
+    public function actionAjaxJsonGrandTotal($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $generalRepairRegistration = $this->instantiate($id);
+            $this->loadStateDetails($generalRepairRegistration);
+
+            $totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalQuickServiceQuantity));
+            $subTotalQuickService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalQuickService));
+            $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $generalRepairRegistration->totalQuantityService));
+            $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalService));
+            $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalDiscountService));
+            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalService));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
+            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
+            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
+
+            echo CJSON::encode(array(
                 'totalQuickServiceQuantity' => $totalQuickServiceQuantity,
                 'subTotalQuickService' => $subTotalQuickService,
                 'totalQuantityService' => $totalQuantityService,
-				'subTotalService' => $subTotalService,
-				'totalDiscountService' => $totalDiscountService,
-				'grandTotalService'=>$grandTotalService,
+                'subTotalService' => $subTotalService,
+                'totalDiscountService' => $totalDiscountService,
+                'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
-				'taxItemAmount' => $taxItemAmount,
-				'taxServiceAmount' => $taxServiceAmount,
-				'grandTotal' => $grandTotal,
-			));
-		}
-	}
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotal' => $grandTotal,
+            ));
+        }
+    }
 
-    public function actionAjaxShowPricelist($index, $serviceId, $customerId, $vehicleId, $insuranceId)
-    {
+    public function actionAjaxShowPricelist($index, $serviceId, $customerId, $vehicleId, $insuranceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $this->renderPartial('_price-dialog', array(
                 'index' => $index,
@@ -1167,12 +1139,11 @@ class GeneralRepairRegistrationController extends Controller {
                 'service' => $serviceId,
                 'vehicle' => $vehicleId,
                 'insurance' => $insuranceId
-            ), false, true);
+                    ), false, true);
         }
     }
 
-	public function actionAjaxHtmlUpdateProductSubBrandSelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
 
@@ -1181,9 +1152,8 @@ class GeneralRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
 
@@ -1192,9 +1162,8 @@ class GeneralRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubMasterCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
 
@@ -1203,9 +1172,8 @@ class GeneralRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
 
@@ -1214,35 +1182,29 @@ class GeneralRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-    public function instantiate($id)
-    {
+
+    public function instantiate($id) {
         if (empty($id)) {
             $generalRepairRegistration = new GeneralRepairRegistration(new RegistrationTransaction(), array(), array(), array());
         } else {
             $generalRepairRegistrationModel = $this->loadModel($id);
-            $generalRepairRegistration = new GeneralRepairRegistration($generalRepairRegistrationModel,
-                $generalRepairRegistrationModel->registrationQuickServices,
-                $generalRepairRegistrationModel->registrationServices,
-                $generalRepairRegistrationModel->registrationProducts
+            $generalRepairRegistration = new GeneralRepairRegistration($generalRepairRegistrationModel, $generalRepairRegistrationModel->registrationQuickServices, $generalRepairRegistrationModel->registrationServices, $generalRepairRegistrationModel->registrationProducts
             );
         }
         return $generalRepairRegistration;
     }
 
-    public function loadState($generalRepairRegistration)
-    {
+    public function loadState($generalRepairRegistration) {
         if (isset($_POST['RegistrationTransaction'])) {
             $generalRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
         }
     }
 
-    public function loadStateDetails($generalRepairRegistration)
-    {
+    public function loadStateDetails($generalRepairRegistration) {
         if (isset($_POST['RegistrationTransaction'])) {
             $generalRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
         }
-        
+
         if (isset($_POST['RegistrationQuickService'])) {
             foreach ($_POST['RegistrationQuickService'] as $i => $item) {
                 if (isset($generalRepairRegistration->quickServiceDetails[$i])) {
@@ -1295,23 +1257,19 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
 
-    public function instantiateRegistrationService($id)
-    {
+    public function instantiateRegistrationService($id) {
         if (empty($id)) {
             $registrationService = new RegistrationServices(new RegistrationService(), array(), array());
             //print_r("test");
         } else {
             //$registrationServiceModel = $this->loadModel($id);
             $registrationServiceModel = RegistrationService::model()->findByAttributes(array('id' => $id));
-            $registrationService = new RegistrationServices($registrationServiceModel,
-                $registrationServiceModel->registrationServiceEmployees,
-                $registrationServiceModel->registrationServiceSupervisors);
+            $registrationService = new RegistrationServices($registrationServiceModel, $registrationServiceModel->registrationServiceEmployees, $registrationServiceModel->registrationServiceSupervisors);
         }
         return $registrationService;
     }
 
-    public function loadStateRegistrationService($registrationService)
-    {
+    public function loadStateRegistrationService($registrationService) {
         if (isset($_POST['RegistrationService'])) {
             $registrationService->header->attributes = $_POST['RegistrationService'];
         }
@@ -1350,12 +1308,12 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
 
-    public function loadModel($id)
-    {
+    public function loadModel($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
-        if ($model === null) 
+        if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
-        
+
         return $model;
     }
+
 }
