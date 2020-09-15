@@ -370,9 +370,9 @@
             </div>
         </div>		
     </div>
+        
     <div class="row">
         <div class="small-12 medium-6 columns">
-
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -390,10 +390,10 @@
                             console.log(paymentAmount);
                             console.log(purchaseAmount);
                             console.log(purchaseLeft);
-                            if(relCount == 1)
-                                    count = purchaseAmount - paymentAmount;
+                            if (relCount == 1)
+                                count = purchaseAmount - paymentAmount;
                             else
-                                    count = purchaseLeft - paymentAmount;
+                                count = purchaseLeft - paymentAmount;
                             console.log(count);
                             if (count < 0) {
                                 alert("Payment Amount could not be higher than Invoice Amount");
@@ -407,8 +407,6 @@
                     </div>
                 </div>
             </div>		
-
-
 
             <div class="field">
                 <div class="row collapse">
@@ -462,16 +460,16 @@
                                     <div class="row">
                                         <div class="small-3 columns">
                                             <div style="margin-bottom:.5rem">
-            <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
+                                                <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
                                             </div>
                                         </div>
                                         <div class="small-8 columns">
                                             <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-            <?php echo (Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename); ?>
+                                                <?php echo (Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename); ?>
                                             </div>
                                         </div>
                                         <div class="small-1 columns">
-            <?php echo CHtml::link('x', array('deleteImage', 'id' => $postImage->id, 'payment_in_id' => $model->id), array('class' => 'deleteImg right', 'confirm' => 'Are you sure you want to delete this image?')); ?>
+                                            <?php echo CHtml::link('x', array('deleteImage', 'id' => $postImage->id, 'payment_in_id' => $model->id), array('class' => 'deleteImg right', 'confirm' => 'Are you sure you want to delete this image?')); ?>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -513,76 +511,72 @@
         'header' => '',
     ),
     'selectionChanged' => 'js:function(id){
-		jQuery("#PaymentOut_purchase_order_id").val(jQuery.fn.yiiGridView.getSelection(id));
-		jQuery("#purchase-order-dialog").dialog("close");
-		jQuery.ajax({
-			type: "POST",
-			dataType: "JSON",
-			url: "' . CController::createUrl('ajaxPurchase', array('id' => '')) . '" + jQuery.fn.yiiGridView.getSelection(id),
-			data: $("form").serialize(),
-			success: function(data) {
-				$("#PaymentOut_purchase_order_id").attr("rel",data.count);
-				jQuery("#PaymentOut_purchase_order_number").val(data.po_number);
-				jQuery("#PaymentOut_supplier_id").val(data.supplier_id);
-				jQuery("#Supplier_company_attribute").val(data.supplier_name);
-				jQuery("#Supplier_email_personal").val(data.email_personal);
-				jQuery("#Supplier_supplier_address").text(data.address+"\n"+data.province+"\n"+data.city );
-				console.log(data.address+"\n"+data.province+"\n"+data.city+"\n"+data.zipcode);
-				$("#Purchase_purchase_order_date").val(data.po_date);
-				$("#Purchase_status_document").val(data.status);
-				$("#Purchase_total_price").val(data.total_price);
-				$("#Purchase_payment_amount").val(data.payment_amount);
-				$("#Purchase_payment_left").val(data.payment_left);
-				$("#Supplier_supplier_name").val(data.supplier_name);
-				$("#Supplier_company").val(data.supplier_name);
-				
-				var phones = data.phones;
-				jQuery("#Supplier_phones").text("");
-				jQuery("#Supplier_mobiles").text("");
-				for (i=0; i < phones.length; i++) { 
-					console.log(phones[i]);
-					var obj = phones[i];
+        jQuery("#PaymentOut_purchase_order_id").val(jQuery.fn.yiiGridView.getSelection(id));
+        jQuery("#purchase-order-dialog").dialog("close");
+        jQuery.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: "' . CController::createUrl('ajaxPurchase', array('id' => '')) . '" + jQuery.fn.yiiGridView.getSelection(id),
+            data: $("form").serialize(),
+            success: function(data) {
+                $("#PaymentOut_purchase_order_id").attr("rel",data.count);
+                jQuery("#PaymentOut_purchase_order_number").val(data.po_number);
+                jQuery("#PaymentOut_supplier_id").val(data.supplier_id);
+                jQuery("#Supplier_company_attribute").val(data.supplier_name);
+                jQuery("#Supplier_email_personal").val(data.email_personal);
+                jQuery("#Supplier_supplier_address").text(data.address+"\n"+data.province+"\n"+data.city );
+                console.log(data.address+"\n"+data.province+"\n"+data.city+"\n"+data.zipcode);
+                $("#Purchase_purchase_order_date").val(data.po_date);
+                $("#Purchase_status_document").val(data.status);
+                $("#Purchase_total_price").val(data.total_price);
+                $("#Purchase_payment_amount").val(data.payment_amount);
+                $("#Purchase_payment_left").val(data.payment_left);
+                $("#Supplier_supplier_name").val(data.supplier_name);
+                $("#Supplier_company").val(data.supplier_name);
 
-					for(var prop in obj){
-						if(obj.hasOwnProperty(prop)){
-							if(prop == "phone_no"){
-								console.log(prop + " = " + obj[prop]);
-							 	jQuery("#Supplier_phones").text(jQuery("#Supplier_phones").val()+"\n"+obj[prop]);
-							}
-							 	
-						}
-					}
-				}
-				var mobiles = data.mobiles;
-				for (i=0; i < mobiles.length; i++) { 
-					console.log(mobiles[i]);
-					var obj = mobiles[i];
-					for(var prop in obj){
-						if(obj.hasOwnProperty(prop)){
-							if(prop == "mobile_no"){
-								console.log(prop + " = " + obj[prop]);
-							 	jQuery("#Supplier_mobiles").text(jQuery("#Supplier_mobiles").val()+"\n"+obj[prop]);
-							}
-							 	
-						}
-					}
-				}
-				if($("#PaymentOut_supplier_id").val() != ""){
-					$(".detail").show();
-					$("#purchase-order-detail").show();
-					$("#supplier").show();
-					
-				}
-				
+                var phones = data.phones;
+                jQuery("#Supplier_phones").text("");
+                jQuery("#Supplier_mobiles").text("");
+                for (i=0; i < phones.length; i++) { 
+                    console.log(phones[i]);
+                    var obj = phones[i];
 
-		
-			},
-		});
+                    for (var prop in obj) {
+                        if (obj.hasOwnProperty(prop)) {
+                            if (prop == "phone_no") {
+                                console.log(prop + " = " + obj[prop]);
+                                jQuery("#Supplier_phones").text(jQuery("#Supplier_phones").val()+"\n"+obj[prop]);
+                            }
 
-		jQuery("#purchase-order-grid").find("tr.selected").each(function(){
-			$(this).removeClass( "selected" );
-		});
-	}',
+                        }
+                    }
+                }
+                var mobiles = data.mobiles;
+                for (i=0; i < mobiles.length; i++) { 
+                    console.log(mobiles[i]);
+                    var obj = mobiles[i];
+                    for (var prop in obj) {
+                        if (obj.hasOwnProperty(prop)) {
+                            if (prop == "mobile_no") {
+                                console.log(prop + " = " + obj[prop]);
+                                jQuery("#Supplier_mobiles").text(jQuery("#Supplier_mobiles").val()+"\n"+obj[prop]);
+                            }
+                        }
+                    }
+                }
+                
+                if ($("#PaymentOut_supplier_id").val() != "") {
+                    $(".detail").show();
+                    $("#purchase-order-detail").show();
+                    $("#supplier").show();
+                }
+            },
+        });
+
+        jQuery("#purchase-order-grid").find("tr.selected").each(function(){
+            $(this).removeClass( "selected" );
+        });
+    }',
     'columns' => array(
         'purchase_order_no',
         'purchase_order_date',

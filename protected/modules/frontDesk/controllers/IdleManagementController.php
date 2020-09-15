@@ -41,20 +41,15 @@ class IdleManagementController extends Controller
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
-        $modelDataProvider = $model->search();
-        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
-        $modelDataProvider->criteria->compare('t.work_order_number',$model->work_order_number,true);
-        $modelDataProvider->criteria->compare('t.branch_id',$model->branch_id);
-        $modelDataProvider->criteria->compare('t.status', $model->status, true);
-        $modelDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC, t.vehicle_id ASC';
+        $modelDataProvider = $model->searchByIdleManagement();
         
         $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
         $registrationServiceDataProvider = $registrationService->search();
         $registrationServiceDataProvider->criteria->together = 'true';
         $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
         $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
-		$registrationServiceDataProvider->criteria->compare('t.start_mechanic_id', Yii::app()->user->id);
-		$registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+        $registrationServiceDataProvider->criteria->compare('t.start_mechanic_id', Yii::app()->user->id);
+        $registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
         $registrationServiceDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $this->render('indexMechanic', array(
@@ -73,19 +68,19 @@ class IdleManagementController extends Controller
         $startMechanic = empty($model->start_mechanic_id) ? '' : Users::model()->findByPk($model->start_mechanic_id);
         
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
-        $modelDataProvider = $model->search();
-        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
-        $modelDataProvider->criteria->compare('t.work_order_number',$model->work_order_number,true);
-        $modelDataProvider->criteria->compare('t.branch_id',$model->branch_id);
-        $modelDataProvider->criteria->compare('t.status', $model->status, true);
-        $modelDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC, t.vehicle_id ASC';
+        $modelDataProvider = $model->searchByIdleManagement();
+//        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
+//        $modelDataProvider->criteria->compare('t.work_order_number',$model->work_order_number,true);
+//        $modelDataProvider->criteria->compare('t.branch_id',$model->branch_id);
+//        $modelDataProvider->criteria->compare('t.status', $model->status, true);
+//        $modelDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC, t.vehicle_id ASC';
         
         $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
         $registrationServiceDataProvider = $registrationService->search();
         $registrationServiceDataProvider->criteria->together = 'true';
         $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
         $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
-		$registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+        $registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
         $registrationServiceDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $employee = Search::bind(new EmployeeBranchDivisionPositionLevel('search'), isset($_GET['EmployeeBranchDivisionPositionLevel']) ? $_GET['EmployeeBranchDivisionPositionLevel'] : '');
@@ -280,14 +275,14 @@ class IdleManagementController extends Controller
         $registrationServiceDataProvider->criteria->together = 'true';
         $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
         $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
-		$registrationServiceDataProvider->criteria->compare('t.finish_mechanic_id', $employeeId);
+        $registrationServiceDataProvider->criteria->compare('t.finish_mechanic_id', $employeeId);
         $registrationServiceDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $registrationServiceAssignmentDataProvider = $registrationService->search();
         $registrationServiceAssignmentDataProvider->criteria->together = 'true';
         $registrationServiceAssignmentDataProvider->criteria->with = array('registrationTransaction');
         $registrationServiceAssignmentDataProvider->criteria->addCondition("registrationTransaction.status != 'Finished' AND registrationTransaction.repair_type = 'GR'");
-		$registrationServiceAssignmentDataProvider->criteria->compare('t.assign_mechanic_id', $employeeId);
+        $registrationServiceAssignmentDataProvider->criteria->compare('t.assign_mechanic_id', $employeeId);
         $registrationServiceAssignmentDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $this->render('viewEmployeeDetail', array(

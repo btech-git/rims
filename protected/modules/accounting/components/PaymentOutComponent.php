@@ -179,7 +179,8 @@ class PaymentOutComponent extends CComponent {
         $total = 0.00;
         
         foreach ($this->details as $detail) {
-            $total += $detail->receiveItem->invoice_grand_total;
+            $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
+            $total += $receiveItem->invoice_grand_total;
         }
         
         return $total;

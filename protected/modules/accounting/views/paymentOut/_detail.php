@@ -13,15 +13,16 @@
         <?php foreach ($paymentOut->details as $i => $detail): ?>
             <tr style="background-color: azure">
                 <td>
+                    <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
                     <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_id"); ?>
-                    <?php echo CHtml::encode($detail->receiveItem->invoice_number); ?>
+                    <?php echo CHtml::encode($receiveItem->invoice_number); ?>
                     <?php echo CHtml::error($detail, 'receive_item_id'); ?>
                 </td>
                 <td>
-                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($detail, 'receiveItem.invoice_date'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?>
                 </td>
                 <td>
-                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($detail, 'receiveItem.invoice_due_date'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_due_date'))); ?>
                 </td>
                 <td style="text-align: right">
                     <?php echo CHtml::activeTextField($detail, "[$i]memo", array('size'=>20, 'maxlength'=>60)); ?>
@@ -29,7 +30,7 @@
                 </td>
                 <td style="text-align: right">
                     <?php echo CHtml::activeHiddenField($detail, "[$i]total_invoice"); ?>
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'receiveItem.invoice_grand_total'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total'))); ?>
                     <?php echo CHtml::error($detail, 'invoice_grand_total'); ?>
                 </td>
                 <td>

@@ -224,7 +224,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $total = 0.00;
         
         foreach ($this->paymentOutDetails as $detail) {
-            $total += $detail->receiveItem->invoice_grand_total;
+            $total += $detail->total_invoice;
         }
         
         return $total;

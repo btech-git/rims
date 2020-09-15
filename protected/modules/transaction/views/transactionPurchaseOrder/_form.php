@@ -49,7 +49,7 @@
                             </label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($purchaseOrder->header, 'purchase_order_date', array('value'=>date('Y-m-d'), 'readonly'=>true)); ?>
+                            <?php echo $form->textField($purchaseOrder->header, 'purchase_order_date', array('value'=>date('Y-m-d H:i:s'), 'readonly'=>true)); ?>
 
                             <?php //echo $form->textField($purchaseOrder->header,'purchase_order_date'); ?>
                             <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(

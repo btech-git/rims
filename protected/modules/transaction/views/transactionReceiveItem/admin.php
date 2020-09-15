@@ -84,7 +84,7 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     array(
                         'name'=>'supplier_name',
-                        'value'=>'empty($data->supplier) ? "" : $data->supplier->name'
+                        'value'=>'empty($data->supplier) ? $data->destinationBranch->name : $data->supplier->name'
                     ),
                     array(
                         'name'=>'recipient_branch_id',

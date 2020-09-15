@@ -49,47 +49,52 @@
 ));
 ?>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'purchase-payment-detail-grid',
-    'dataProvider' => new CArrayDataProvider($paymentOut->paymentOutDetails),
-    'columns' => array(
-        array(
-            'header' => 'Invoice #',
-            'value' => '$data->receiveItem->invoice_number',
-        ),
-        array(
-            'header' => 'Tanggal',
-            'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->receiveItem->invoice_date)',
-        ),
-        array(
-            'header' => 'Jatuh Tempo',
-            'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->receiveItem->invoice_due_date)',
-        ),
-        'memo',
-        array(
-            'header' => 'Amount',
-            'value' => 'number_format($data->total_invoice, 0)',
-            'htmlOptions' => array(
-                'style' => 'text-align: right',
-            ),
-        ),
-    ),
-));
-?>
-
 <table style="background-color: greenyellow">
-    <tr>
-        <td style="width: 80%; text-align: right; font-weight: bold">Total Hutang</td>
-        <td style="width: 20%; text-align: right; font-weight: bold">
-            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
-        </td>
-    </tr>
-    <tr>
-        <td style="width: 80%; text-align: right; font-weight: bold">Pembayaran</td>
-        <td style="width: 20%; text-align: right; font-weight: bold">
-            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'payment_amount'))); ?>
-        </td>
-    </tr>
+    <thead>
+        <tr style="background-color: skyblue">
+            <th style="text-align: center; width: 10%">Invoice #</th>
+            <th style="text-align: center; width: 10%">Tanggal</th>
+            <th style="text-align: center; width: 10%">Jatuh Tempo</th>
+            <th style="text-align: center">Memo</th>
+            <th style="text-align: center; width: 10%">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($paymentOutDetails as $detail): ?>
+            <tr style="background-color: azure">
+                <td>
+                    <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
+                    <?php echo CHtml::encode($receiveItem->invoice_number); ?>
+                </td>
+                <td>
+                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?>
+                </td>
+                <td>
+                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_due_date'))); ?>
+                </td>
+                <td style="text-align: right">
+                    <?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?>
+                </td>
+                <td style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'invoice_grand_total'))); ?>
+                </td>
+            </tr>
+	<?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td style="text-align: right; font-weight: bold" colspan="4">Total Hutang</td>
+            <td style="text-align: right; font-weight: bold">
+                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold" colspan="4">Pembayaran</td>
+            <td style="text-align: right; font-weight: bold">
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'payment_amount'))); ?>
+            </td>
+        </tr>
+    </tfoot>
 </table>
 
 <div id="maincontent">

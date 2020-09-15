@@ -487,4 +487,45 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByIdleManagement() {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationServices',
+//            'branch',
+//            'customer',
+        );
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('is_quick_service', $this->is_quick_service);
+        $criteria->compare('t.work_order_number', $this->work_order_number, true);
+        $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('note', $this->note, true);
+
+        $criteria->addCondition("EXISTS ("
+            . "SELECT registration_transaction_id "
+            . "FROM " . RegistrationService::model()->tableName() . " "
+            . "WHERE t.id = registration_transaction_id"
+            . ") AND t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
+        
+        $criteria->order = 't.priority_level ASC, t.work_order_date DESC, t.vehicle_id ASC';
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+
 }

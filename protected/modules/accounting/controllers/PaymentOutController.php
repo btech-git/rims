@@ -114,13 +114,8 @@ class PaymentOutController extends Controller {
 
     public function actionView($id) {
         $paymentOut = $this->loadModel($id);
-
-        $criteria = new CDbCriteria;
-        $criteria->compare('payment_out_id', $paymentOut->id);
-        $detailsDataProvider = new CActiveDataProvider('PaymentOutDetail', array(
-            'criteria' => $criteria,
-        ));
-
+        $paymentOutDetails = PaymentOutDetail::model()->findAllByAttributes(array('payment_out_id' => $id));
+        
         $postImages = PaymentOutImages::model()->findAllByAttributes(array(
             'payment_out_id' => $paymentOut->id,
             'is_inactive' => $paymentOut::STATUS_ACTIVE
@@ -128,7 +123,7 @@ class PaymentOutController extends Controller {
         
         $this->render('view', array(
             'paymentOut' => $paymentOut,
-            'detailsDataProvider' => $detailsDataProvider,
+            'paymentOutDetails' => $paymentOutDetails,
             'postImages' => $postImages,
         ));
     }

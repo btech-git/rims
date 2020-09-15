@@ -2,15 +2,15 @@
 /* @var $this MovementInHeaderController */
 /* @var $model MovementInHeader */
 
-$this->breadcrumbs=array(
-	'Movement In Headers'=>array('admin'),
-	'Manage',
+$this->breadcrumbs = array(
+    'Movement In Headers' => array('admin'),
+    'Manage',
 );
 
-/*$this->menu=array(
-	array('label'=>'List MovementInHeader', 'url'=>array('index')),
-	array('label'=>'Create MovementInHeader', 'url'=>array('create')),
-);*/
+/* $this->menu=array(
+  array('label'=>'List MovementInHeader', 'url'=>array('index')),
+  array('label'=>'Create MovementInHeader', 'url'=>array('create')),
+  ); */
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -34,97 +34,84 @@ $('.search-form form').submit(function(){
 ?>
 
 <div id="maincontent">
-	<div class="row">
-		<div class="small-12 columns">
-			<div class="clearfix page-action">
-				<?php echo CHtml::link('<span class="fa fa-plus"></span>New Movement In', Yii::app()->baseUrl.'/transaction/movementInHeader/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.movementInHeader.create"))) ?>
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="clearfix page-action">
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Movement In', Yii::app()->baseUrl . '/transaction/movementInHeader/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.create"))) ?>
 
-				<h2>Manage Movement In Headers</h2>
-			</div>
+                <h2>Manage Movement In Headers</h2>
+            </div>
 
-			<div class="search-bar">
-				<div class="clearfix button-bar">
-		  			<!--<div class="left clearfix bulk-action">
-		         		<span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-		         		<input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-		         		<input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-		         	</div>-->
-					<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button right button cbutton secondary')); ?>					<div class="clearfix"></div>
-					<div class="search-form" style="display:none">
-					<?php $this->renderPartial('_search',array(
-						'model'=>$model,
-					)); ?>
-					</div><!-- search-form -->
-		        </div>
-		    </div>
-        	
-        	<div class="grid-view">
+            <div class="search-bar">
+                <div class="clearfix button-bar">
+                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					<div class="clearfix"></div>
+                    <div class="search-form" style="display:none">
+                        <?php $this->renderPartial('_search', array(
+                            'model' => $model,
+                        )); ?>
+                    </div><!-- search-form -->
+                </div>
+            </div>
+
+            <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
-                    'id'=>'movement-in-header-grid',
-                    'dataProvider'=>$model->search(),
-                    'filter'=>$model,
+                    'id' => 'movement-in-header-grid',
+                    'dataProvider' => $model->search(),
+                    'filter' => $model,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-	         		'pager'=>array(
-	         			'cssFile'=>false,
-	         			'header'=>'',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
                     ),
-                    'columns'=>array(
+                    'columns' => array(
                         array(
-                            'name'=>'movement_in_number', 
-                            'value'=>'CHTml::link($data->movement_in_number, array("view", "id"=>$data->id))', 
-                            'type'=>'raw'
+                            'name' => 'movement_in_number',
+                            'value' => 'CHTml::link($data->movement_in_number, array("view", "id"=>$data->id))',
+                            'type' => 'raw'
                         ),
                         'date_posting',
                         array(
-                            'name'=>'branch_id',
+                            'name' => 'branch_id',
                             'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                            'value'=>'$data->branch->name'
+                            'value' => '$data->branch->name'
                         ),
                         array(
-                            'name'=>'receive_item_number',
-                            'value'=>'(!empty($data->receiveItem->receive_item_no)?$data->receiveItem->receive_item_no:"")'
+                            'name' => 'receive_item_number',
+                            'value' => '(!empty($data->receiveItem->receive_item_no)?$data->receiveItem->receive_item_no:"")'
                         ),
                         array(
-                            'name'=>'return_item_number',
-                            'value'=>'(!empty($data->returnItem->return_item_no)?$data->returnItem->return_item_no:"")'
+                            'name' => 'return_item_number',
+                            'value' => '(!empty($data->returnItem->return_item_no)?$data->returnItem->return_item_no:"")'
                         ),
                         'status',
                         array(
-                            'class'=>'CButtonColumn',
-                            'template'=>'{edit}',
-                            'buttons'=>array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{edit}',
+                            'buttons' => array(
                                 'edit' => array(
-                                    'label'=>'edit',
-                                    'url'=>'Yii::app()->createUrl("transaction/movementInHeader/update", array("id"=>$data->id))',
-                                    'visible'=>'($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && Yii::app()->user->checkAccess("transaction.movementInHeader.update")',
+                                    'label' => 'edit',
+                                    'url' => 'Yii::app()->createUrl("transaction/movementInHeader/update", array("id"=>$data->id))',
+                                    'visible' => '($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && Yii::app()->user->checkAccess("transaction.movementInHeader.update")',
                                 ),
                             ),
                         ),
                     ),
                 )); ?>
-			</div>
-			<fieldset>
-				<legend>Pending Orders</legend>
+            </div>
+            <fieldset>
+                <legend>Pending Orders</legend>
                 <div>
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
                             'Receive Item' => array(
-                                'content' => $this->renderPartial(
-                                    '_viewReceive',
-                                    array(
-                                        'receiveItem' => $receiveItem,
-                                    ),
-                                    true
-                                )
+                                'content' => $this->renderPartial('_viewReceive', array(
+                                    'receiveItem' => $receiveItem,
+                                ), true)
                             ),
                             'Return Item' => array(
-                                'content' => $this->renderPartial(
-                                    '_viewReturn',
-                                    array(
-                                        'returnItem' => $returnItem,
-                                    ),
-                                    true
-                                )
+                                'content' => $this->renderPartial('_viewReturn', array(
+                                    'returnItem' => $returnItem,
+                                ), true)
                             ),
                         ),
                         // additional javascript options for the tabs plugin
@@ -135,7 +122,7 @@ $('.search-form form').submit(function(){
                         'id' => 'view_tab',
                     )); ?>
                 </div>
-			</fieldset>
-		</div>
-	</div> <!-- end row -->
+            </fieldset>
+        </div>
+    </div> <!-- end row -->
 </div> <!-- end maintenance -->

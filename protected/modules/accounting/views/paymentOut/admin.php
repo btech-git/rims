@@ -91,7 +91,7 @@
                         'columns' => array(
                             array(
                                 'name' => 'purchase_order_no',
-                                'value' => 'CHTml::link($data->purchase_order_no, array("transactionPurchaseOrder/view", "id"=>$data->id))',
+                                'value' => 'CHTml::link($data->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->id))',
                                 'type' => 'raw'
                             ),
                             'purchase_order_date',
