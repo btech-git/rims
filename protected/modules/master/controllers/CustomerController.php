@@ -1,1280 +1,1126 @@
 <?php
 
-class CustomerController extends Controller
-{
-	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
-	 */
-	public $layout='//layouts/backend';
+class CustomerController extends Controller {
 
-	/**
-	 * @return array action filters
-	 */
-	/* public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
-	}
+    /**
+     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
+     * using two-column layout. See 'protected/views/layouts/column2.php'.
+     */
+    public $layout = '//layouts/backend';
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','ajaxGetCity','ajaxHtmlAddPhoneDetail','ajaxHtmlRemoveDetail','ajaxHtmlAddMobileDetail','ajaxHtmlRemoveMobileDetail','ajaxHtmlAddPicDetail','ajaxHtmlRemovePicDetail','ajaxHtmlAddVehicleDetail','ajaxHtmlRemoveVehicleDetail', 'ajaxGetModel', 'ajaxGetSubModel','updatePic','updateVehicle','ajaxGetCityPic','ajaxGetCityPicIndex','ajaxHtmlAddServiceDetail','ajaxHtmlRemoveServiceDetail','ajaxGetServiceCategory','ajaxGetService','updatePrice' ,'ajaxGetSubModelDetails','ajaxGetChasisCode','ajaxGetFuelPower','ajaxGetTransmissionFuel','ajaxGetTransmissionPower','ajaxGetCarMake','ajaxGetModelPrice','ajaxGetSubModelPrice'),
-				'users'=>array('Admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
+    /**
+     * @return array action filters
+     */
+    /* public function filters()
+      {
+      return array(
+      'accessControl', // perform access control for CRUD operations
+      'postOnly + delete', // we only allow deletion via POST request
+      );
+      }
 
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id)
-	{
-		$picDetails = CustomerPic::model()->findAllByAttributes(array('customer_id'=>$id));
-		$vehicleDetails = Vehicle::model()->findAllByAttributes(array('customer_id'=>$id));
-		$rateDetails = CustomerServiceRate::model()->findAllByAttributes(array('customer_id'=>$id));
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-			'picDetails'=> $picDetails,
-			'vehicleDetails'=>$vehicleDetails,
-			'rateDetails'=>$rateDetails,
-		));
-	}
-
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		// $model=new Customer;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		// if(isset($_POST['Customer']))
-		// {
-			// $model->attributes=$_POST['Customer'];
-			// $model->status='Active';
-			// if($model->save())
-			// 	$this->redirect(array('admin'));
-				//$this->redirect(array('view','id'=>$model->id));
-		// }
-		$coa = new Coa('search');
-      	$coa->unsetAttributes();  // clear any default values
-      	if (isset($_GET['Coa']))
-        	$coa->attributes = $_GET['Coa'];
-
-		$coaCriteria = new CDbCriteria;
-		$coaCriteria->addCondition("coa_sub_category_id = 8 AND coa_id = 346");
-		$coaCriteria->compare('code',$coa->code.'%',true,'AND', false);
-		$coaCriteria->compare('name',$coa->name,true);
-
-
-	  	$coaDataProvider = new CActiveDataProvider('Coa', array(
-	    	'criteria'=>$coaCriteria,
-	  	));	
-		$customer = $this->instantiate(null);
-		$service = new Service('search');
-      	$service->unsetAttributes();  // clear any default values
-      	if (isset($_GET['Service']))
-        	$service->attributes = $_GET['Service'];
-
-		$serviceCriteria = new CDbCriteria;
-		//$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
-		$serviceCriteria->together = 'true';
-		$serviceCriteria->with = array('serviceCategory','serviceType');
-
-		$serviceCriteria->compare('t.name',$service->name,true);
-		$serviceCriteria->compare('t.code',$service->code,true);
-
-		$serviceCriteria->compare('serviceCategory.name', $service->service_category_name == NULL ? $service->service_category_name : $service->service_category_name , true);
-		$serviceCriteria->compare('serviceType.name', $service->service_type_name == NULL ? $service->service_type_name : $service->service_type_name, true);
-		$explodeKeyword = explode(" ", $service->findkeyword);
-        
-        foreach ($explodeKeyword as $key) {
-        	$serviceCriteria->compare('t.code',$key, true, 'OR');
-			$serviceCriteria->compare('t.name',$key, true, 'OR');
-			$serviceCriteria->compare('description',$key, true, 'OR');
-			$serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
-			$serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
-			$serviceCriteria->compare('serviceType.name', $key, true, 'OR');
-			$serviceCriteria->compare('serviceType.code', $key, true, 'OR');
-		}
-
-		//$serviceCriteria->compare('rate',$service->rate,true);
-
-  		$serviceDataProvider = new CActiveDataProvider('Service', array(
-    		'criteria'=>$serviceCriteria,
-  		));
-
-		//$this->performAjaxValidation($customer->header);
-
-		if (isset($_POST['Submit']))
-		{
-			$this->loadState($customer);
-            
-			if ($customer->save(Yii::app()->db)){
-				$this->redirect(array('addVehicle', 'id' => $customer->header->id));
-			} 
-		}
-
-		$this->render('create',array(
-			'customer'=>$customer,
-			'service'=>$service,
-			'serviceDataProvider'=>$serviceDataProvider,
-			'coa'=>$coa,
-			'coaDataProvider'=>$coaDataProvider,
-		));
-	}
-    
-    public function actionAddVehicle($id) {
-        
-		$model = new Vehicle;
-        $model->customer_id = $id;
-        
-        $customer = Customer::model()->findByPk($id);
-        
-        if (isset($_POST['Cancel'])) 
-            $this->redirect(array('view', 'id' => $id));
-
-		if (isset($_POST['Submit'])) {
-			$model->attributes=$_POST['Vehicle'];
-
-			if ($model->save())
-                $this->redirect(array('view', 'id' => $id));
-		}
-
-		if (isset($_POST['Add'])) {
-			$model->attributes=$_POST['Vehicle'];
-
-			if ($model->save())
-                $this->redirect(array('addVehicle', 'id' => $id));
-		}
-
-		$this->render('addVehicle',array(
-			'model'=>$model,
-			'customer'=>$customer,
-		));
+      /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function accessRules() {
+        return array(
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array('index', 'view'),
+                'users' => array('*'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('create', 'update'),
+                'users' => array('@'),
+            ),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'delete', 'ajaxGetCity', 'ajaxHtmlAddPhoneDetail', 'ajaxHtmlRemoveDetail', 'ajaxHtmlAddMobileDetail', 'ajaxHtmlRemoveMobileDetail', 'ajaxHtmlAddPicDetail', 'ajaxHtmlRemovePicDetail', 'ajaxHtmlAddVehicleDetail', 'ajaxHtmlRemoveVehicleDetail', 'ajaxGetModel', 'ajaxGetSubModel', 'updatePic', 'updateVehicle', 'ajaxGetCityPic', 'ajaxGetCityPicIndex', 'ajaxHtmlAddServiceDetail', 'ajaxHtmlRemoveServiceDetail', 'ajaxGetServiceCategory', 'ajaxGetService', 'updatePrice', 'ajaxGetSubModelDetails', 'ajaxGetChasisCode', 'ajaxGetFuelPower', 'ajaxGetTransmissionFuel', 'ajaxGetTransmissionPower', 'ajaxGetCarMake', 'ajaxGetModelPrice', 'ajaxGetSubModelPrice'),
+                'users' => array('Admin'),
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
     }
 
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
-	{
-		// $model=$this->loadModel($id);
+    /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionView($id) {
+        $picDetails = CustomerPic::model()->findAllByAttributes(array('customer_id' => $id));
+        $vehicleDetails = Vehicle::model()->findAllByAttributes(array('customer_id' => $id));
+        $rateDetails = CustomerServiceRate::model()->findAllByAttributes(array('customer_id' => $id));
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
+            'picDetails' => $picDetails,
+            'vehicleDetails' => $vehicleDetails,
+            'rateDetails' => $rateDetails,
+        ));
+    }
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+    /**
+     * Creates a new model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     */
+    public function actionCreate() {
+        // $model=new Customer;
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+        // if(isset($_POST['Customer']))
+        // {
+        // $model->attributes=$_POST['Customer'];
+        // $model->status='Active';
+        // if($model->save())
+        // 	$this->redirect(array('admin'));
+        //$this->redirect(array('view','id'=>$model->id));
+        // }
+        $coa = new Coa('search');
+        $coa->unsetAttributes();  // clear any default values
+        if (isset($_GET['Coa']))
+            $coa->attributes = $_GET['Coa'];
 
-		// if(isset($_POST['Customer']))
-		// {
-		// 	$model->attributes=$_POST['Customer'];
-		// 	if($model->save())
-		// 		$this->redirect(array('admin'));
-		// 		//$this->redirect(array('view','id'=>$model->id));
-		// }
-
-		$coa = new Coa('search');
-      	$coa->unsetAttributes();  // clear any default values
-      	if (isset($_GET['Coa']))
-        	$coa->attributes = $_GET['Coa'];
-
-		$coaCriteria = new CDbCriteria;
-		$coaCriteria->addCondition("coa_sub_category_id = 8 AND coa_id = 346");
-		$coaCriteria->compare('code',$coa->code.'%',true,'AND', false);
-		$coaCriteria->compare('name',$coa->name,true);
+        $coaCriteria = new CDbCriteria;
+        $coaCriteria->addCondition("coa_sub_category_id = 8 AND coa_id = 346");
+        $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
+        $coaCriteria->compare('name', $coa->name, true);
 
 
-	  	$coaDataProvider = new CActiveDataProvider('Coa', array(
-	    	'criteria'=>$coaCriteria,
-	  	));	
-		$customer = $this->instantiate($id);
-		$service = new Service('search');
-      	$service->unsetAttributes();  // clear any default values
-      	if (isset($_GET['Service']))
-        	$service->attributes = $_GET['Service'];
+        $coaDataProvider = new CActiveDataProvider('Coa', array(
+            'criteria' => $coaCriteria,
+        ));
+        $customer = $this->instantiate(null);
+        $service = new Service('search');
+        $service->unsetAttributes();  // clear any default values
+        if (isset($_GET['Service']))
+            $service->attributes = $_GET['Service'];
 
-		$serviceCriteria = new CDbCriteria;
-		//$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
-		$serviceCriteria->together = 'true';
-		$serviceCriteria->with = array('serviceCategory','serviceType');
+        $serviceCriteria = new CDbCriteria;
+        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
+        $serviceCriteria->together = 'true';
+        $serviceCriteria->with = array('serviceCategory', 'serviceType');
 
-		$serviceCriteria->compare('t.name',$service->name,true);
-		$serviceCriteria->compare('t.code',$service->code,true);
-		
-		$serviceCriteria->compare('serviceCategory.name', $service->service_category_name == NULL ? $service->service_category_name : $service->service_category_name , true);
-		$serviceCriteria->compare('serviceType.name', $service->service_type_name == NULL ? $service->service_type_name : $service->service_type_name, true);
-		$explodeKeyword = explode(" ", $service->findkeyword);
+        $serviceCriteria->compare('t.name', $service->name, true);
+        $serviceCriteria->compare('t.code', $service->code, true);
+
+        $serviceCriteria->compare('serviceCategory.name', $service->service_category_name == NULL ? $service->service_category_name : $service->service_category_name, true);
+        $serviceCriteria->compare('serviceType.name', $service->service_type_name == NULL ? $service->service_type_name : $service->service_type_name, true);
+        $explodeKeyword = explode(" ", $service->findkeyword);
+
         foreach ($explodeKeyword as $key) {
-        	$serviceCriteria->compare('t.code',$key, true, 'OR');
-			$serviceCriteria->compare('t.name',$key, true, 'OR');
-			$serviceCriteria->compare('description',$key, true, 'OR');
-			$serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
-			$serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
-			$serviceCriteria->compare('serviceType.name', $key, true, 'OR');
-			$serviceCriteria->compare('serviceType.code', $key, true, 'OR');
-		}
+            $serviceCriteria->compare('t.code', $key, true, 'OR');
+            $serviceCriteria->compare('t.name', $key, true, 'OR');
+            $serviceCriteria->compare('description', $key, true, 'OR');
+            $serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
+            $serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
+            $serviceCriteria->compare('serviceType.name', $key, true, 'OR');
+            $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
+        }
 
-		//$serviceCriteria->compare('rate',$service->rate,true);
+        //$serviceCriteria->compare('rate',$service->rate,true);
 
-  		$serviceDataProvider = new CActiveDataProvider('Service', array(
-    		'criteria'=>$serviceCriteria,
-  		));
+        $serviceDataProvider = new CActiveDataProvider('Service', array(
+            'criteria' => $serviceCriteria,
+        ));
 
-		$this->performAjaxValidation($customer->header);
+        //$this->performAjaxValidation($customer->header);
 
-		if(isset($_POST['Customer']))
-		{
+        if (isset($_POST['Submit'])) {
+            $this->loadState($customer);
+
+            if ($customer->save(Yii::app()->db)) {
+                $this->redirect(array('addVehicle', 'id' => $customer->header->id));
+            }
+        }
+
+        $this->render('create', array(
+            'customer' => $customer,
+            'service' => $service,
+            'serviceDataProvider' => $serviceDataProvider,
+            'coa' => $coa,
+            'coaDataProvider' => $coaDataProvider,
+        ));
+    }
+
+    public function actionAddVehicle($id) {
+
+        $model = new Vehicle;
+        $model->customer_id = $id;
+
+        $customer = Customer::model()->findByPk($id);
+
+        if (isset($_POST['Cancel']))
+            $this->redirect(array('view', 'id' => $id));
+
+        if (isset($_POST['Submit'])) {
+            $model->attributes = $_POST['Vehicle'];
+            $model->plate_number = $model->getPlateNumberCombination();
+
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $id));
+        }
+
+        if (isset($_POST['Add'])) {
+            $model->attributes = $_POST['Vehicle'];
+            $model->plate_number = $model->getPlateNumberCombination();
+
+            if ($model->save())
+                $this->redirect(array('addVehicle', 'id' => $id));
+        }
+
+        $this->render('addVehicle', array(
+            'model' => $model,
+            'customer' => $customer,
+        ));
+    }
+
+    /**
+     * Updates a particular model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id the ID of the model to be updated
+     */
+    public function actionUpdate($id) {
+        // $model=$this->loadModel($id);
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+        // if(isset($_POST['Customer']))
+        // {
+        // 	$model->attributes=$_POST['Customer'];
+        // 	if($model->save())
+        // 		$this->redirect(array('admin'));
+        // 		//$this->redirect(array('view','id'=>$model->id));
+        // }
+
+        $coa = new Coa('search');
+        $coa->unsetAttributes();  // clear any default values
+        if (isset($_GET['Coa']))
+            $coa->attributes = $_GET['Coa'];
+
+        $coaCriteria = new CDbCriteria;
+        $coaCriteria->addCondition("coa_sub_category_id = 8 AND coa_id = 346");
+        $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
+        $coaCriteria->compare('name', $coa->name, true);
 
 
-			$this->loadState($customer);
-			if ($customer->save(Yii::app()->db)){
-				$this->redirect(array('view', 'id' => $customer->header->id));
-			} else {
-				foreach ($customer->phoneDetails as $key => $detail) {
-					//print_r(CJSON::encode($detail->jenis_persediaan_id));
-				}
-			}
-		}
-		$this->render('update',array(
-			'customer'=>$customer,
-			'service'=>$service,
-			'serviceDataProvider'=>$serviceDataProvider,
-			'coa'=>$coa,
-			'coaDataProvider'=>$coaDataProvider,
-		));
-	}
+        $coaDataProvider = new CActiveDataProvider('Coa', array(
+            'criteria' => $coaCriteria,
+        ));
+        $customer = $this->instantiate($id);
+        $service = new Service('search');
+        $service->unsetAttributes();  // clear any default values
+        if (isset($_GET['Service']))
+            $service->attributes = $_GET['Service'];
 
-	public function actionUpdatePic($custId,$picId)
-	{
-		// $customer = $this->instantiate($custId);
+        $serviceCriteria = new CDbCriteria;
+        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
+        $serviceCriteria->together = 'true';
+        $serviceCriteria->with = array('serviceCategory', 'serviceType');
 
-		// $this->performAjaxValidation($customer->header);
+        $serviceCriteria->compare('t.name', $service->name, true);
+        $serviceCriteria->compare('t.code', $service->code, true);
 
-		// if(isset($_POST['CustomerPic']))
-		// {
+        $serviceCriteria->compare('serviceCategory.name', $service->service_category_name == NULL ? $service->service_category_name : $service->service_category_name, true);
+        $serviceCriteria->compare('serviceType.name', $service->service_type_name == NULL ? $service->service_type_name : $service->service_type_name, true);
+        $explodeKeyword = explode(" ", $service->findkeyword);
+        foreach ($explodeKeyword as $key) {
+            $serviceCriteria->compare('t.code', $key, true, 'OR');
+            $serviceCriteria->compare('t.name', $key, true, 'OR');
+            $serviceCriteria->compare('description', $key, true, 'OR');
+            $serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
+            $serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
+            $serviceCriteria->compare('serviceType.name', $key, true, 'OR');
+            $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
+        }
+
+        //$serviceCriteria->compare('rate',$service->rate,true);
+
+        $serviceDataProvider = new CActiveDataProvider('Service', array(
+            'criteria' => $serviceCriteria,
+        ));
+
+        $this->performAjaxValidation($customer->header);
+
+        if (isset($_POST['Customer'])) {
 
 
-		// 	$this->loadState($customer);
-		// 	if ($customer->save(Yii::app()->db)){
-		// 		$this->redirect(array('view', 'id' => $customer->header->id));
-		// 	} else {
-		// 		foreach ($customer->phoneDetails as $key => $detail) {
-		// 			//print_r(CJSON::encode($detail->jenis_persediaan_id));
-		// 		}
-		// 	}
-		// }
+            $this->loadState($customer);
+            if ($customer->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $customer->header->id));
+            } else {
+                foreach ($customer->phoneDetails as $key => $detail) {
+                    //print_r(CJSON::encode($detail->jenis_persediaan_id));
+                }
+            }
+        }
+        $this->render('update', array(
+            'customer' => $customer,
+            'service' => $service,
+            'serviceDataProvider' => $serviceDataProvider,
+            'coa' => $coa,
+            'coaDataProvider' => $coaDataProvider,
+        ));
+    }
 
-		 $customer = $this->instantiate($custId);
+    public function actionUpdatePic($custId, $picId) {
+        // $customer = $this->instantiate($custId);
+        // $this->performAjaxValidation($customer->header);
+        // if(isset($_POST['CustomerPic']))
+        // {
+        // 	$this->loadState($customer);
+        // 	if ($customer->save(Yii::app()->db)){
+        // 		$this->redirect(array('view', 'id' => $customer->header->id));
+        // 	} else {
+        // 		foreach ($customer->phoneDetails as $key => $detail) {
+        // 			//print_r(CJSON::encode($detail->jenis_persediaan_id));
+        // 		}
+        // 	}
+        // }
 
-		// $this->performAjaxValidation($customer->header);
-		$model = CustomerPic::model()->findByPk($picId);
-		if(isset($_POST['CustomerPic']))
-		{
-			$model->attributes=$_POST['CustomerPic'];
-			if($model->save())
-				$this->redirect(array('view', 'id' => $custId));
-		}
-		
-		$this->render('update',array(
-			'customer'=>$customer,
-			'model'=>$model,
-		));
-	}
+        $customer = $this->instantiate($custId);
 
-	public function actionUpdateVehicle($custId,$vehicleId)
-	{
-		 $customer = $this->instantiate($custId);
+        // $this->performAjaxValidation($customer->header);
+        $model = CustomerPic::model()->findByPk($picId);
+        if (isset($_POST['CustomerPic'])) {
+            $model->attributes = $_POST['CustomerPic'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $custId));
+        }
 
-		// $this->performAjaxValidation($customer->header);
-		$model = Vehicle::model()->findByPk($vehicleId);
-		if(isset($_POST['Vehicle']))
-		{
-			$model->attributes=$_POST['Vehicle'];
-			if($model->save())
-				$this->redirect(array('view', 'id' => $custId));
-		}
-		
-		$this->render('update',array(
-			'customer'=>$customer,
-			'model'=>$model,
-		));
-	}
+        $this->render('update', array(
+            'customer' => $customer,
+            'model' => $model,
+        ));
+    }
 
-	public function actionUpdatePrice($custId,$priceId)
-	{
-		
+    public function actionUpdateVehicle($custId, $vehicleId) {
+        $customer = $this->instantiate($custId);
 
-		 $customer = $this->instantiate($custId);
+        // $this->performAjaxValidation($customer->header);
+        $model = Vehicle::model()->findByPk($vehicleId);
+        if (isset($_POST['Vehicle'])) {
+            $model->attributes = $_POST['Vehicle'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $custId));
+        }
 
-		// $this->performAjaxValidation($customer->header);
-		$model = CustomerServiceRate::model()->findByPk($priceId);
-		if(isset($_POST['CustomerServiceRate']))
-		{
-			$model->attributes=$_POST['CustomerServiceRate'];
-			if($model->save())
-				$this->redirect(array('view', 'id' => $custId));
-		}
-		
-		$this->render('update',array(
-			'customer'=>$customer,
-			'model'=>$model,
-		));
-	}
+        $this->render('update', array(
+            'customer' => $customer,
+            'model' => $model,
+        ));
+    }
 
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id)
-	{
-		$this->loadModel($id)->delete();
+    public function actionUpdatePrice($custId, $priceId) {
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-	}
 
-	/**
-	 * Lists all models.
-	 */
-	public function actionIndex()
-	{
-		$dataProvider=new CActiveDataProvider('Customer');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
-	}
+        $customer = $this->instantiate($custId);
 
-	/**
-	 * Manages all models.
-	 */
-	public function actionAdmin()
-	{
-		$model=new Customer('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Customer']))
-			$model->attributes=$_GET['Customer'];
+        // $this->performAjaxValidation($customer->header);
+        $model = CustomerServiceRate::model()->findByPk($priceId);
+        if (isset($_POST['CustomerServiceRate'])) {
+            $model->attributes = $_POST['CustomerServiceRate'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $custId));
+        }
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
-	}
-	//Add PhoneDetail
-	public function actionAjaxHtmlAddPhoneDetail($id)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$customer = $this->instantiate($id); 	
-			$this->loadState($customer);
+        $this->render('update', array(
+            'customer' => $customer,
+            'model' => $model,
+        ));
+    }
 
-			$customer->addDetail();
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-      Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-      $this->renderPartial('_detailPhone', array('customer'=>$customer), false, true);
-		}
-	}
+    /**
+     * Deletes a particular model.
+     * If deletion is successful, the browser will be redirected to the 'admin' page.
+     * @param integer $id the ID of the model to be deleted
+     */
+    public function actionDelete($id) {
+        $this->loadModel($id)->delete();
 
-	//Delete Phone Detail
-	public function actionAjaxHtmlRemoveDetail($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax']))
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+    }
 
-			$customer = $this->instantiate($id);
-			$this->loadState($customer);
-			//print_r(CJSON::encode($salesOrder->details));
-			$customer->removeDetailAt($index);
-			$this->renderPartial('_detailPhone', array('customer'=>$customer), false, true);
-		}
-	}
+    /**
+     * Lists all models.
+     */
+    public function actionIndex() {
+        $dataProvider = new CActiveDataProvider('Customer');
+        $this->render('index', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
 
-	//Add Mobile Detail
-	public function actionAjaxHtmlAddMobileDetail($id)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$customer = $this->instantiate($id); 	
-			$this->loadState($customer);
+    /**
+     * Manages all models.
+     */
+    public function actionAdmin() {
+        $model = new Customer('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Customer']))
+            $model->attributes = $_GET['Customer'];
 
-			$customer->addMobileDetail();
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-      Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-      $this->renderPartial('_detailMobile', array('customer'=>$customer), false, true);
-		}
-	}
+        $this->render('admin', array(
+            'model' => $model,
+        ));
+    }
 
-	//Delete Mobile Detail
-	public function actionAjaxHtmlRemoveMobileDetail($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
+    //Add PhoneDetail
+    public function actionAjaxHtmlAddPhoneDetail($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
 
-			$customer = $this->instantiate($id);
-			$this->loadState($customer);
-			//print_r(CJSON::encode($salesOrder->details));
-			$customer->removeMobileDetailAt($index);
-			$this->renderPartial('_detailMobile', array('customer'=>$customer), false, true);
-		}
-	}
-
-	//Add Vehicle Detail
-	public function actionAjaxHtmlAddVehicleDetail($id)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$customer = $this->instantiate($id); 	
-			$this->loadState($customer);
-
-			$customer->addVehicleDetail();
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            $customer->addDetail();
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
-            $this->renderPartial('_detailVehicle', array('customer'=>$customer), false, true);
-		}
-	}
+            $this->renderPartial('_detailPhone', array('customer' => $customer), false, true);
+        }
+    }
 
-	//Delete Vehicle Detail
-	public function actionAjaxHtmlRemoveVehicleDetail($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
+    //Delete Phone Detail
+    public function actionAjaxHtmlRemoveDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
 
-			$customer = $this->instantiate($id);
-			$this->loadState($customer);
-			//print_r(CJSON::encode($salesOrder->details));
-			$customer->removeVehicleDetailAt($index);
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-      Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-			$this->renderPartial('_detailVehicle', array('customer'=>$customer), false, true);
-		}
-	}
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
+            //print_r(CJSON::encode($salesOrder->details));
+            $customer->removeDetailAt($index);
+            $this->renderPartial('_detailPhone', array('customer' => $customer), false, true);
+        }
+    }
 
-	public function actionAjaxHtmlAddPicDetail($id)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$customer = $this->instantiate($id); 	
-			$this->loadState($customer);
+    //Add Mobile Detail
+    public function actionAjaxHtmlAddMobileDetail($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
 
-			$customer->addPicDetail();
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-      Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-      $this->renderPartial('_detailPic', array('customer'=>$customer), false, true);
-		}
-	}
+            $customer->addMobileDetail();
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            $this->renderPartial('_detailMobile', array('customer' => $customer), false, true);
+        }
+    }
 
-	//Delete Pic Detail
-	public function actionAjaxHtmlRemovePicDetail($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
+    //Delete Mobile Detail
+    public function actionAjaxHtmlRemoveMobileDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
 
-			$customer = $this->instantiate($id);
-			$this->loadState($customer);
-			//print_r(CJSON::encode($salesOrder->details));
-			$customer->removePicDetailAt($index);
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-      Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-			$this->renderPartial('_detailPic', array('customer'=>$customer), false, true);
-		}
-	}
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
+            //print_r(CJSON::encode($salesOrder->details));
+            $customer->removeMobileDetailAt($index);
+            $this->renderPartial('_detailMobile', array('customer' => $customer), false, true);
+        }
+    }
 
-	
+    //Add Vehicle Detail
+    public function actionAjaxHtmlAddVehicleDetail($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
 
-	public function actionAjaxHtmlAddServiceDetail($id,$serviceId)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$customer = $this->instantiate($id); 	
-			$this->loadState($customer);
-			
-			$customer->addServiceDetail($serviceId);
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-      		Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-      $this->renderPartial('_detailPrice', array('customer'=>$customer), false, true);
-		}
-	}
+            $customer->addVehicleDetail();
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
 
-	//Delete Pic Detail
-	public function actionAjaxHtmlRemoveServiceDetail($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
+            $this->renderPartial('_detailVehicle', array('customer' => $customer), false, true);
+        }
+    }
 
-			$customer = $this->instantiate($id);
-			$this->loadState($customer);
-			
-			//print_r(CJSON::encode($salesOrder->details));
-			$customer->removeServiceDetailAt($index);
-			Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-      		Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-			$this->renderPartial('_detailPrice', array('customer'=>$customer,), false, true);
-		}
-	}
+    //Delete Vehicle Detail
+    public function actionAjaxHtmlRemoveVehicleDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
 
-	// Get City
-	public function actionAjaxGetCity()
-	{
-		
-			
-				$data = City::model()->findAllByAttributes(array('province_id'=>$_POST['Customer']['province_id']),array('order'=>'name ASC'));
-			
-			if(count($data) > 0)
-			{
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
+            //print_r(CJSON::encode($salesOrder->details));
+            $customer->removeVehicleDetailAt($index);
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            $this->renderPartial('_detailVehicle', array('customer' => $customer), false, true);
+        }
+    }
 
-				$data=CHtml::listData($data,'id','name');
-				echo CHtml::tag('option',array('value'=>''),'[--Select City--]',true);
-				foreach($data as $value=>$name)
-				{
-					
-					echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-				
-				}
-			}
-			else
-			{
-				echo CHtml::tag('option',array('value'=>''),'[--Select City--]',true);
-			}
+    public function actionAjaxHtmlAddPicDetail($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
 
-		
+            $customer->addPicDetail();
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            $this->renderPartial('_detailPic', array('customer' => $customer), false, true);
+        }
+    }
 
-	}
-	public function actionAjaxGetCityPic()
-	{
-		
-			
-				$data = City::model()->findAllByAttributes(array('province_id'=>$_POST['CustomerPic']['province_id']),array('order'=>'name ASC'));
-			
-			if(count($data) > 0)
-			{
+    //Delete Pic Detail
+    public function actionAjaxHtmlRemovePicDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
 
-				$data=CHtml::listData($data,'id','name');
-				echo CHTML::tag('option',array('value'=>''),'[--Select City--]',true);
-				foreach($data as $value=>$name)
-				{
-					
-					echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-				
-				}
-			}
-			else
-			{
-				echo CHtml::tag('option',array('value'=>''),'[--Select City--]',true);
-			}
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
+            //print_r(CJSON::encode($salesOrder->details));
+            $customer->removePicDetailAt($index);
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            $this->renderPartial('_detailPic', array('customer' => $customer), false, true);
+        }
+    }
 
-		
+    public function actionAjaxHtmlAddServiceDetail($id, $serviceId) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
 
-	}
-	public function actionAjaxGetCityPicIndex($index)
-	{
-		
-		
-				$data = City::model()->findAllByAttributes(array('province_id'=>$_POST['CustomerPic'][$index]['province_id']),array('order'=>'name ASC'));
-			
-			if(count($data) > 0)
-			{
+            $customer->addServiceDetail($serviceId);
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            $this->renderPartial('_detailPrice', array('customer' => $customer), false, true);
+        }
+    }
 
-				$data=CHtml::listData($data,'id','name');
-				echo CHTML::tag('option',array('value'=>''),'[--Select City--]',true);
-				foreach($data as $value=>$name)
-				{
-					
-					echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-				
-				}
-			}
-			else
-			{
-				echo CHtml::tag('option',array('value'=>''),'[--Select City--]',true);
-			}
+    //Delete Pic Detail
+    public function actionAjaxHtmlRemoveServiceDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
 
-		
+            $customer = $this->instantiate($id);
+            $this->loadState($customer);
 
-	}
+            //print_r(CJSON::encode($salesOrder->details));
+            $customer->removeServiceDetailAt($index);
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            $this->renderPartial('_detailPrice', array('customer' => $customer,), false, true);
+        }
+    }
 
-	// Get Car Make
-	public function actionAjaxGetCarMake($year)
-	{
-		$criteria = new CDbCriteria;
-		$criteria->with = array('vehicleCarModels','vehicleCarModels.vehicleCarSubModels','vehicleCarModels.vehicleCarSubModels.vehicleCarSubModelDetails');
+    // Get City
+    public function actionAjaxGetCity() {
+
+
+        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['Customer']['province_id']), array('order' => 'name ASC'));
+
+        if (count($data) > 0) {
+
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
+            foreach ($data as $value => $name) {
+
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
+        }
+    }
+
+    public function actionAjaxGetCityPic() {
+
+
+        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['CustomerPic']['province_id']), array('order' => 'name ASC'));
+
+        if (count($data) > 0) {
+
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHTML::tag('option', array('value' => ''), '[--Select City--]', true);
+            foreach ($data as $value => $name) {
+
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
+        }
+    }
+
+    public function actionAjaxGetCityPicIndex($index) {
+
+
+        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['CustomerPic'][$index]['province_id']), array('order' => 'name ASC'));
+
+        if (count($data) > 0) {
+
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHTML::tag('option', array('value' => ''), '[--Select City--]', true);
+            foreach ($data as $value => $name) {
+
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
+        }
+    }
+
+    // Get Car Make
+    public function actionAjaxGetCarMake($year) {
+        $criteria = new CDbCriteria;
+        $criteria->with = array('vehicleCarModels', 'vehicleCarModels.vehicleCarSubModels', 'vehicleCarModels.vehicleCarSubModels.vehicleCarSubModelDetails');
         $criteria->together = true;
-		$criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
-		$data = VehicleCarMake::model()->findAll($criteria); 
+        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
+        $data = VehicleCarMake::model()->findAll($criteria);
 
-		//$data = VehicleCarMake::model()->findAllByAttributes(array('car_make_id'=>$_POST['Vehicle']['car_make_id']));
+        //$data = VehicleCarMake::model()->findAllByAttributes(array('car_make_id'=>$_POST['Vehicle']['car_make_id']));
 
-		if(count($data) > 0)
-		{
-			$data=CHtml::listData($data,'id','name');
-			echo CHtml::tag('option',array('value'=>''),'[--Select Car Make--]',true);
-			foreach($data as $value=>$name)
-			{
-				echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);			
-			}
-		}
-		else
-		{
-			echo CHtml::tag('option',array('value'=>''),'[--Select Car Make--]',true);
-		}
-	}
+        if (count($data) > 0) {
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Make--]', true);
+            foreach ($data as $value => $name) {
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Make--]', true);
+        }
+    }
 
-	// Get Car Model for pricelist
-	public function actionAjaxGetModelPrice($carmake)
-	{
-		
-		
-			$data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id'=>$carmake));
+    // Get Car Model for pricelist
+    public function actionAjaxGetModelPrice($carmake) {
 
-			if(count($data) > 0)
-			{
 
-				$data=CHtml::listData($data,'id','name');
-				echo CHtml::tag('option',array('value'=>''),'[--Select Car Model--]',true);
-				foreach($data as $value=>$name)
-				{
-					
-					echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-				
-				}
-			}
-			else
-			{
-				echo CHtml::tag('option',array('value'=>''),'[--Select Car Model--]',true);
-			}
+        $data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carmake));
 
-		
+        if (count($data) > 0) {
 
-	}
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Model--]', true);
+            foreach ($data as $value => $name) {
 
-	//Get Car Sub Model for pricelist
-	public function actionAjaxGetSubModelPrice($carmake,$carmodel)
-	{
-		
-		
-			$data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id'=>$carmake,'car_model_id'=>$carmodel));
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Model--]', true);
+        }
+    }
 
-			if(count($data) > 0)
-			{
+    //Get Car Sub Model for pricelist
+    public function actionAjaxGetSubModelPrice($carmake, $carmodel) {
 
-				$data=CHtml::listData($data,'id','name');
-				echo CHtml::tag('option',array('value'=>''),'[--Select Car SubModel--]',true);
-				foreach($data as $value=>$name)
-				{
-					
-					echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-				
-				}
-			}
-			else
-			{
-				echo CHtml::tag('option',array('value'=>''),'[--Select Car SubModel--]',true);
-			}
 
-		
+        $data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id' => $carmake, 'car_model_id' => $carmodel));
 
-	}
+        if (count($data) > 0) {
 
-	// Get Car Model
-	public function actionAjaxGetModel($year,$carmake)
-	{
-		$criteria = new CDbCriteria;
-		$criteria->with = array('vehicleCarSubModels','vehicleCarSubModels.vehicleCarSubModelDetails');
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car SubModel--]', true);
+            foreach ($data as $value => $name) {
+
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car SubModel--]', true);
+        }
+    }
+
+    // Get Car Model
+    public function actionAjaxGetModel($year, $carmake) {
+        $criteria = new CDbCriteria;
+        $criteria->with = array('vehicleCarSubModels', 'vehicleCarSubModels.vehicleCarSubModelDetails');
         $criteria->together = true;
-		$criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
-		$data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id'=>$carmake),$criteria); 
+        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
+        $data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carmake), $criteria);
 
-		if(count($data) > 0)
-		{
-			$data=CHtml::listData($data,'id','name');
-			echo CHtml::tag('option',array('value'=>''),'[--Select Car Model--]',true);
-			foreach($data as $value=>$name)
-			{
-				echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-			}
-		}
-		else
-		{
-			echo CHtml::tag('option',array('value'=>''),'[--Select Car Model--]',true);
-		}
-	}
+        if (count($data) > 0) {
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Model--]', true);
+            foreach ($data as $value => $name) {
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Model--]', true);
+        }
+    }
 
-	// Get Car Sub Model
-	public function actionAjaxGetSubModel($year,$carmake,$carmodel)
-	{
-		$criteria = new CDbCriteria;
-		$criteria->with = array('vehicleCarSubModelDetails');
+    // Get Car Sub Model
+    public function actionAjaxGetSubModel($year, $carmake, $carmodel) {
+        $criteria = new CDbCriteria;
+        $criteria->with = array('vehicleCarSubModelDetails');
         $criteria->together = true;
-		$criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
-		$criteria->order = 't.name ASC';
+        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
+        $criteria->order = 't.name ASC';
 
-		$data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id'=>$carmake,'car_model_id'=>$carmodel),$criteria); 
+        $data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id' => $carmake, 'car_model_id' => $carmodel), $criteria);
 
-		if(count($data) > 0)
-		{
-			$data=CHtml::listData($data,'id','name');
-			echo CHtml::tag('option',array('value'=>''),'[--Select Car Sub Model--]',true);
-			foreach($data as $value=>$name)
-			{		
-				echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-			}
-		}
-		else
-		{
-			echo CHtml::tag('option',array('value'=>''),'[--Select Car Sub Model--]',true);
-		}
-	}
+        if (count($data) > 0) {
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Sub Model--]', true);
+            foreach ($data as $value => $name) {
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select Car Sub Model--]', true);
+        }
+    }
 
-	public function actionAjaxGetSubModelDetails($year,$carsubmodel)
-	{
-		$transmissionCriteria = new CDbCriteria;
-		$transmissionCriteria->select = 'transmission';
-		$transmissionCriteria->distinct = true;
-		$transmissionCriteria->condition = 'car_sub_model_id = ' . $carsubmodel;
+    public function actionAjaxGetSubModelDetails($year, $carsubmodel) {
+        $transmissionCriteria = new CDbCriteria;
+        $transmissionCriteria->select = 'transmission';
+        $transmissionCriteria->distinct = true;
+        $transmissionCriteria->condition = 'car_sub_model_id = ' . $carsubmodel;
 
-		$powerCriteria = new CDbCriteria;
-		$powerCriteria->select = 'power';
-		$powerCriteria->distinct = true;
-		$powerCriteria->condition = 'car_sub_model_id = ' . $carsubmodel;
+        $powerCriteria = new CDbCriteria;
+        $powerCriteria->select = 'power';
+        $powerCriteria->distinct = true;
+        $powerCriteria->condition = 'car_sub_model_id = ' . $carsubmodel;
 
-		$fuelTypeCriteria = new CDbCriteria;
-		$fuelTypeCriteria->select = 'fuel_type';
-		$fuelTypeCriteria->distinct = true;
-		$fuelTypeCriteria->condition = 'car_sub_model_id = ' . $carsubmodel;
+        $fuelTypeCriteria = new CDbCriteria;
+        $fuelTypeCriteria->select = 'fuel_type';
+        $fuelTypeCriteria->distinct = true;
+        $fuelTypeCriteria->condition = 'car_sub_model_id = ' . $carsubmodel;
 
-		$chasisCriteria = new CDbCriteria;
-		$chasisCriteria->select = 'chasis_code';
-		$chasisCriteria->distinct = true;
-		$chasisCriteria->condition = '"' . $year . '" BETWEEN assembly_year_start and assembly_year_end' . ' AND car_sub_model_id = ' . $carsubmodel;		
+        $chasisCriteria = new CDbCriteria;
+        $chasisCriteria->select = 'chasis_code';
+        $chasisCriteria->distinct = true;
+        $chasisCriteria->condition = '"' . $year . '" BETWEEN assembly_year_start and assembly_year_end' . ' AND car_sub_model_id = ' . $carsubmodel;
 
-		$transmissions = VehicleCarSubModelDetail::model()->findAll($transmissionCriteria);
-		$powers = VehicleCarSubModelDetail::model()->findAll($powerCriteria);
-		$fuel_types = VehicleCarSubModelDetail::model()->findAll($fuelTypeCriteria);
-		$chasis = VehicleCarSubModelDetail::model()->find($chasisCriteria);
+        $transmissions = VehicleCarSubModelDetail::model()->findAll($transmissionCriteria);
+        $powers = VehicleCarSubModelDetail::model()->findAll($powerCriteria);
+        $fuel_types = VehicleCarSubModelDetail::model()->findAll($fuelTypeCriteria);
+        $chasis = VehicleCarSubModelDetail::model()->find($chasisCriteria);
 
 
-		$power = CHtml::tag('option',array('value'=>''),'[--Select Power--]',true);
-		$transmission = CHtml::tag('option',array('value'=>''),'[--Select Transmission--]',true);
-		$fuel_type = CHtml::tag('option',array('value'=>''),'[--Select Fuel Type--]',true);
+        $power = CHtml::tag('option', array('value' => ''), '[--Select Power--]', true);
+        $transmission = CHtml::tag('option', array('value' => ''), '[--Select Transmission--]', true);
+        $fuel_type = CHtml::tag('option', array('value' => ''), '[--Select Fuel Type--]', true);
 
-		$object = array();
+        $object = array();
 
-		if($transmissions != NULL){
-			foreach ($transmissions as $t) {
-				$transmission .= CHtml::tag('option',array('value'=>$t->transmission),CHtml::encode($t->transmission),true);
-			}
-			$object['transmission'] = $transmission;
-		}
+        if ($transmissions != NULL) {
+            foreach ($transmissions as $t) {
+                $transmission .= CHtml::tag('option', array('value' => $t->transmission), CHtml::encode($t->transmission), true);
+            }
+            $object['transmission'] = $transmission;
+        }
 
-		if($powers != NULL){
-			foreach ($powers as $p) {
-				$power .= CHtml::tag('option',array('value'=>$p->power),CHtml::encode($p->power),true);
-			}
-			$object['power'] = $power;
-		}
+        if ($powers != NULL) {
+            foreach ($powers as $p) {
+                $power .= CHtml::tag('option', array('value' => $p->power), CHtml::encode($p->power), true);
+            }
+            $object['power'] = $power;
+        }
 
-		if($fuel_types != NULL){
-			foreach ($fuel_types as $f) {
-				$fuel_type .= CHtml::tag('option',array('value'=>$f->fuel_type),CHtml::encode($f->fuel_type),true);
-			}
-			$object['fuel_type'] = $fuel_type;
-		}
+        if ($fuel_types != NULL) {
+            foreach ($fuel_types as $f) {
+                $fuel_type .= CHtml::tag('option', array('value' => $f->fuel_type), CHtml::encode($f->fuel_type), true);
+            }
+            $object['fuel_type'] = $fuel_type;
+        }
 
-		if($chasis != NULL){
-			$object['chasis_code'] = $chasis->chasis_code;
-		}
-		
-		echo CJSON::encode($object);
-	}
+        if ($chasis != NULL) {
+            $object['chasis_code'] = $chasis->chasis_code;
+        }
 
-	public function actionAjaxGetFuelPower($carsubmodel,$transmission)
-	{
-		if($transmission != NULL){
+        echo CJSON::encode($object);
+    }
 
-			$powerCriteria = new CDbCriteria;
-			$powerCriteria->select = 'power';
-			$powerCriteria->distinct = true;
-			$powerCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND transmission = "' . $transmission . '"';
+    public function actionAjaxGetFuelPower($carsubmodel, $transmission) {
+        if ($transmission != NULL) {
 
-			$fuelTypeCriteria = new CDbCriteria;
-			$fuelTypeCriteria->select = 'fuel_type';
-			$fuelTypeCriteria->distinct = true;
-			$fuelTypeCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND transmission = "' . $transmission . '"';
+            $powerCriteria = new CDbCriteria;
+            $powerCriteria->select = 'power';
+            $powerCriteria->distinct = true;
+            $powerCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND transmission = "' . $transmission . '"';
 
-			$powers = VehicleCarSubModelDetail::model()->findAll($powerCriteria);
-			$fuel_types = VehicleCarSubModelDetail::model()->findAll($fuelTypeCriteria);
+            $fuelTypeCriteria = new CDbCriteria;
+            $fuelTypeCriteria->select = 'fuel_type';
+            $fuelTypeCriteria->distinct = true;
+            $fuelTypeCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND transmission = "' . $transmission . '"';
 
-			$power = CHtml::tag('option',array('value'=>''),'[--Select Power--]',true);
-			$fuel_type = CHtml::tag('option',array('value'=>''),'[--Select Fuel Type--]',true);
+            $powers = VehicleCarSubModelDetail::model()->findAll($powerCriteria);
+            $fuel_types = VehicleCarSubModelDetail::model()->findAll($fuelTypeCriteria);
 
-			$object = array();
+            $power = CHtml::tag('option', array('value' => ''), '[--Select Power--]', true);
+            $fuel_type = CHtml::tag('option', array('value' => ''), '[--Select Fuel Type--]', true);
 
-			if($powers != NULL){
-				foreach ($powers as $p) {
-					$power .= CHtml::tag('option',array('value'=>$p->power),CHtml::encode($p->power),true);
-				}
-				$object['power'] = $power;
-			}
+            $object = array();
 
-			if($fuel_types != NULL){
-				foreach ($fuel_types as $f) {
-					$fuel_type .= CHtml::tag('option',array('value'=>$f->fuel_type),CHtml::encode($f->fuel_type),true);
-				}
-				$object['fuel_type'] = $fuel_type;
-			}
-			
-			echo CJSON::encode($object);
-		} else {
-			$this->actionAjaxGetSubModelDetails();
-		}
-	}
+            if ($powers != NULL) {
+                foreach ($powers as $p) {
+                    $power .= CHtml::tag('option', array('value' => $p->power), CHtml::encode($p->power), true);
+                }
+                $object['power'] = $power;
+            }
 
-	public function actionAjaxGetTransmissionPower($carsubmodel,$fueltype)
-	{
-		if($fueltype != NULL){
+            if ($fuel_types != NULL) {
+                foreach ($fuel_types as $f) {
+                    $fuel_type .= CHtml::tag('option', array('value' => $f->fuel_type), CHtml::encode($f->fuel_type), true);
+                }
+                $object['fuel_type'] = $fuel_type;
+            }
 
-			$transmissionCriteria = new CDbCriteria;
-			$transmissionCriteria->select = 'transmission';
-			$transmissionCriteria->distinct = true;
-			$transmissionCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND fuel_type = "' . $fueltype . '"';
+            echo CJSON::encode($object);
+        } else {
+            $this->actionAjaxGetSubModelDetails();
+        }
+    }
 
-			$powerCriteria = new CDbCriteria;
-			$powerCriteria->select = 'power';
-			$powerCriteria->distinct = true;
-			$powerCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND fuel_type = "' . $fueltype . '"';			
+    public function actionAjaxGetTransmissionPower($carsubmodel, $fueltype) {
+        if ($fueltype != NULL) {
 
-			$transmissions = VehicleCarSubModelDetail::model()->findAll($transmissionCriteria);
-			$powers = VehicleCarSubModelDetail::model()->findAll($powerCriteria);
-			
-			$power = CHtml::tag('option',array('value'=>''),'[--Select Power--]',true);
-			$transmission = CHtml::tag('option',array('value'=>''),'[--Select Transmission--]',true);
+            $transmissionCriteria = new CDbCriteria;
+            $transmissionCriteria->select = 'transmission';
+            $transmissionCriteria->distinct = true;
+            $transmissionCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND fuel_type = "' . $fueltype . '"';
 
-			$object = array();
+            $powerCriteria = new CDbCriteria;
+            $powerCriteria->select = 'power';
+            $powerCriteria->distinct = true;
+            $powerCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND fuel_type = "' . $fueltype . '"';
 
-			if($transmissions != NULL){
-				foreach ($transmissions as $t) {
-					$transmission .= CHtml::tag('option',array('value'=>$t->transmission),CHtml::encode($t->transmission),true);
-				}
-				$object['transmission'] = $transmission;
-			}
+            $transmissions = VehicleCarSubModelDetail::model()->findAll($transmissionCriteria);
+            $powers = VehicleCarSubModelDetail::model()->findAll($powerCriteria);
 
-			if($powers != NULL){
-				foreach ($powers as $p) {
-					$power .= CHtml::tag('option',array('value'=>$p->power),CHtml::encode($p->power),true);
-				}
-				$object['power'] = $power;
-			}
-			
-			echo CJSON::encode($object);
-		} else {
-			$this->actionAjaxGetSubModelDetails();
-		}
-	}
+            $power = CHtml::tag('option', array('value' => ''), '[--Select Power--]', true);
+            $transmission = CHtml::tag('option', array('value' => ''), '[--Select Transmission--]', true);
 
-	public function actionAjaxGetTransmissionFuel($carsubmodel,$power)
-	{
-		if($power != NULL){
+            $object = array();
 
-			$transmissionCriteria = new CDbCriteria;
-			$transmissionCriteria->select = 'transmission';
-			$transmissionCriteria->distinct = true;
-			$transmissionCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND power = "' . $power . '"';
+            if ($transmissions != NULL) {
+                foreach ($transmissions as $t) {
+                    $transmission .= CHtml::tag('option', array('value' => $t->transmission), CHtml::encode($t->transmission), true);
+                }
+                $object['transmission'] = $transmission;
+            }
 
-			$fuelTypeCriteria = new CDbCriteria;
-			$fuelTypeCriteria->select = 'fuel_type';
-			$fuelTypeCriteria->distinct = true;
-			$fuelTypeCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND power = "' . $power. '"';
-			
-			$transmissions = VehicleCarSubModelDetail::model()->findAll($transmissionCriteria);
-			$fuel_types = VehicleCarSubModelDetail::model()->findAll($fuelTypeCriteria);
+            if ($powers != NULL) {
+                foreach ($powers as $p) {
+                    $power .= CHtml::tag('option', array('value' => $p->power), CHtml::encode($p->power), true);
+                }
+                $object['power'] = $power;
+            }
 
-			$transmission = CHtml::tag('option',array('value'=>''),'[--Select Transmission--]',true);
-			$fuel_type = CHtml::tag('option',array('value'=>''),'[--Select Fuel Type--]',true);
+            echo CJSON::encode($object);
+        } else {
+            $this->actionAjaxGetSubModelDetails();
+        }
+    }
 
-			$object = array();
+    public function actionAjaxGetTransmissionFuel($carsubmodel, $power) {
+        if ($power != NULL) {
 
-			if($transmissions != NULL){
-				foreach ($transmissions as $t) {
-					$transmission .= CHtml::tag('option',array('value'=>$t->transmission),CHtml::encode($t->transmission),true);
-				}
-				$object['transmission'] = $transmission;
-			}
+            $transmissionCriteria = new CDbCriteria;
+            $transmissionCriteria->select = 'transmission';
+            $transmissionCriteria->distinct = true;
+            $transmissionCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND power = "' . $power . '"';
 
-			if($fuel_types != NULL){
-				foreach ($fuel_types as $f) {
-					$fuel_type .= CHtml::tag('option',array('value'=>$f->fuel_type),CHtml::encode($f->fuel_type),true);
-				}
-				$object['fuel_type'] = $fuel_type;
-			}
-			
-			echo CJSON::encode($object);
-		} else {
-			$this->actionAjaxGetSubModelDetails();
-		}
-	}
+            $fuelTypeCriteria = new CDbCriteria;
+            $fuelTypeCriteria->select = 'fuel_type';
+            $fuelTypeCriteria->distinct = true;
+            $fuelTypeCriteria->condition = 'car_sub_model_id = ' . $carsubmodel . ' AND power = "' . $power . '"';
 
+            $transmissions = VehicleCarSubModelDetail::model()->findAll($transmissionCriteria);
+            $fuel_types = VehicleCarSubModelDetail::model()->findAll($fuelTypeCriteria);
 
-	public function actionAjaxGetChasisCode($carsubmodeldetail)
-	{
-		$data = VehicleCarSubModelDetail::model()->findByPk($carsubmodeldetail);
-		if($data != NULL){
-			$object = array('chasis_code'=>$data->chasis_code);
-		} else {
-			$object = array();
-		}
-		echo CJSON::encode($object);
-	}
+            $transmission = CHtml::tag('option', array('value' => ''), '[--Select Transmission--]', true);
+            $fuel_type = CHtml::tag('option', array('value' => ''), '[--Select Fuel Type--]', true);
 
-	//get Service Category
-	public function actionAjaxGetServiceCategory($serviceType)
-	{
-		
-			
-				$data = ServiceCategory::model()->findAllByAttributes(array('service_type_id'=>$serviceType),array('order'=>'name ASC'));
-			
-			if(count($data) > 0)
-			{
+            $object = array();
 
-				$data=CHtml::listData($data,'id','name');
-				echo CHtml::tag('option',array('value'=>''),'[--Select Service Category--]',true);
-				foreach($data as $value=>$name)
-				{
-					
-					echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-				
-				}
-			}
-			else
-			{
-				echo CHtml::tag('option',array('value'=>''),'[--Select Service Category--]',true);
-			}
+            if ($transmissions != NULL) {
+                foreach ($transmissions as $t) {
+                    $transmission .= CHtml::tag('option', array('value' => $t->transmission), CHtml::encode($t->transmission), true);
+                }
+                $object['transmission'] = $transmission;
+            }
 
-		
+            if ($fuel_types != NULL) {
+                foreach ($fuel_types as $f) {
+                    $fuel_type .= CHtml::tag('option', array('value' => $f->fuel_type), CHtml::encode($f->fuel_type), true);
+                }
+                $object['fuel_type'] = $fuel_type;
+            }
 
-	}
+            echo CJSON::encode($object);
+        } else {
+            $this->actionAjaxGetSubModelDetails();
+        }
+    }
 
-	// get service
-	public function actionAjaxGetService($serviceType,$serviceCategory)
-	{
-		
-			
-				$data = Service::model()->findAllByAttributes(array('service_type_id'=>$serviceType,'service_category_id'=>$serviceCategory),array('order'=>'name ASC'));
-			
-			if(count($data) > 0)
-			{
+    public function actionAjaxGetChasisCode($carsubmodeldetail) {
+        $data = VehicleCarSubModelDetail::model()->findByPk($carsubmodeldetail);
+        if ($data != NULL) {
+            $object = array('chasis_code' => $data->chasis_code);
+        } else {
+            $object = array();
+        }
+        echo CJSON::encode($object);
+    }
 
-				$data=CHtml::listData($data,'id','name');
-				echo CHtml::tag('option',array('value'=>''),'[--Select Service--]',true);
-				foreach($data as $value=>$name)
-				{
-					
-					echo CHtml::tag('option', array('value'=>$value), CHtml::encode($name), true);
-				
-				}
-			}
-			else
-			{
-				echo CHtml::tag('option',array('value'=>''),'[--Select Service--]',true);
-			}
-
-		
-
-	}
+    //get Service Category
+    public function actionAjaxGetServiceCategory($serviceType) {
 
 
-	public function instantiate($id)
-	{
-		if (empty($id)){
-			$customer = new Customers(new Customer(), array(),array(),array(),array(),array());
-			//print_r("test");
-		}
-		else
-		{
-			$customerModel = $this->loadModel($id);
-			$customer = new Customers($customerModel, $customerModel->customerPhones, $customerModel->customerMobiles, $customerModel->customerPics, $customerModel->vehicles,$customerModel->customerServiceRates);
-		}
-		return $customer;
-	}
+        $data = ServiceCategory::model()->findAllByAttributes(array('service_type_id' => $serviceType), array('order' => 'name ASC'));
 
-	public function loadState($customer)
-	{
-		if (isset($_POST['Customer']))
-		{
-			$customer->header->attributes = $_POST['Customer'];
-		}
-        
-		if (isset($_POST['CustomerPhone']))
-		{
-			foreach ($_POST['CustomerPhone'] as $i => $item)
-			{
-				if (isset($customer->phoneDetails[$i]))
-					$customer->phoneDetails[$i]->attributes = $item;
-				else
-				{
-					$detail = new CustomerPhone();
-					$detail->attributes = $item;
-					$customer->phoneDetails[] = $detail;
-				}
-			}
-			if (count($_POST['CustomerPhone']) < count($customer->phoneDetails))
-				array_splice($customer->phoneDetails, $i + 1);
-		}
-		else
-			$customer->phoneDetails = array();
+        if (count($data) > 0) {
+
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select Service Category--]', true);
+            foreach ($data as $value => $name) {
+
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select Service Category--]', true);
+        }
+    }
+
+    // get service
+    public function actionAjaxGetService($serviceType, $serviceCategory) {
 
 
-		if (isset($_POST['CustomerMobile']))
-		{
-			foreach ($_POST['CustomerMobile'] as $i => $item)
-			{
-				if (isset($customer->mobileDetails[$i]))
-					$customer->mobileDetails[$i]->attributes = $item;
-				else
-				{
-					$detail = new CustomerMobile();
-					$detail->attributes = $item;
-					$customer->mobileDetails[] = $detail;
-				}
-			}
-			if (count($_POST['CustomerMobile']) < count($customer->mobileDetails))
-				array_splice($customer->mobileDetails, $i + 1);
-		}
-		else
-			$customer->mobileDetails = array();
+        $data = Service::model()->findAllByAttributes(array('service_type_id' => $serviceType, 'service_category_id' => $serviceCategory), array('order' => 'name ASC'));
+
+        if (count($data) > 0) {
+
+            $data = CHtml::listData($data, 'id', 'name');
+            echo CHtml::tag('option', array('value' => ''), '[--Select Service--]', true);
+            foreach ($data as $value => $name) {
+
+                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
+            }
+        } else {
+            echo CHtml::tag('option', array('value' => ''), '[--Select Service--]', true);
+        }
+    }
+
+    public function instantiate($id) {
+        if (empty($id)) {
+            $customer = new Customers(new Customer(), array(), array(), array(), array(), array());
+            //print_r("test");
+        } else {
+            $customerModel = $this->loadModel($id);
+            $customer = new Customers($customerModel, $customerModel->customerPhones, $customerModel->customerMobiles, $customerModel->customerPics, $customerModel->vehicles, $customerModel->customerServiceRates);
+        }
+        return $customer;
+    }
+
+    public function loadState($customer) {
+        if (isset($_POST['Customer'])) {
+            $customer->header->attributes = $_POST['Customer'];
+        }
+
+        if (isset($_POST['CustomerPhone'])) {
+            foreach ($_POST['CustomerPhone'] as $i => $item) {
+                if (isset($customer->phoneDetails[$i]))
+                    $customer->phoneDetails[$i]->attributes = $item;
+                else {
+                    $detail = new CustomerPhone();
+                    $detail->attributes = $item;
+                    $customer->phoneDetails[] = $detail;
+                }
+            }
+            if (count($_POST['CustomerPhone']) < count($customer->phoneDetails))
+                array_splice($customer->phoneDetails, $i + 1);
+        } else
+            $customer->phoneDetails = array();
 
 
-		if (isset($_POST['CustomerPic']))
-		{
-			foreach ($_POST['CustomerPic'] as $i => $item)
-			{
-				if (isset($customer->picDetails[$i]))
-					$customer->picDetails[$i]->attributes = $item;
-				else
-				{
-					$detail = new CustomerPic();
-					$detail->attributes = $item;
-					$customer->picDetails[] = $detail;
-				}
-			}
-			if (count($_POST['CustomerPic']) < count($customer->picDetails))
-				array_splice($customer->picDetails, $i + 1);
-		}
-		else
-			$customer->picDetails = array();
+        if (isset($_POST['CustomerMobile'])) {
+            foreach ($_POST['CustomerMobile'] as $i => $item) {
+                if (isset($customer->mobileDetails[$i]))
+                    $customer->mobileDetails[$i]->attributes = $item;
+                else {
+                    $detail = new CustomerMobile();
+                    $detail->attributes = $item;
+                    $customer->mobileDetails[] = $detail;
+                }
+            }
+            if (count($_POST['CustomerMobile']) < count($customer->mobileDetails))
+                array_splice($customer->mobileDetails, $i + 1);
+        } else
+            $customer->mobileDetails = array();
 
-		if (isset($_POST['Vehicle']))
-		{
-			foreach ($_POST['Vehicle'] as $i => $item)
-			{
-				if (isset($customer->vehicleDetails[$i]))
-					$customer->vehicleDetails[$i]->attributes = $item;
-				else
-				{
-					$detail = new Vehicle();
-					$detail->attributes = $item;
-					$customer->vehicleDetails[] = $detail;
-				}
-			}
-			if (count($_POST['Vehicle']) < count($customer->vehicleDetails))
-				array_splice($customer->vehicleDetails, $i + 1);
-		}
-		else
-			$customer->vehicleDetails = array();
 
-		if (isset($_POST['CustomerServiceRate']))
-		{
-			foreach ($_POST['CustomerServiceRate'] as $i => $item)
-			{
-				if (isset($customer->serviceDetails[$i]))
-					$customer->serviceDetails[$i]->attributes = $item;
-				else
-				{
-					$detail = new CustomerServiceRate();
-					$detail->attributes = $item;
-					$customer->serviceDetails[] = $detail;
-				}
-			}
-			if (count($_POST['CustomerServiceRate']) < count($customer->serviceDetails))
-				array_splice($customer->serviceDetails, $i + 1);
-		}
-		else
-			$customer->serviceDetails = array();
-	}
+        if (isset($_POST['CustomerPic'])) {
+            foreach ($_POST['CustomerPic'] as $i => $item) {
+                if (isset($customer->picDetails[$i]))
+                    $customer->picDetails[$i]->attributes = $item;
+                else {
+                    $detail = new CustomerPic();
+                    $detail->attributes = $item;
+                    $customer->picDetails[] = $detail;
+                }
+            }
+            if (count($_POST['CustomerPic']) < count($customer->picDetails))
+                array_splice($customer->picDetails, $i + 1);
+        } else
+            $customer->picDetails = array();
 
-	// public function actionRegistration(){
-	// 		$this->render('registration',array(
-	// 		//'model'=>$model,
-	// 		'customer'=>$customer,
-	// 	));
-	// }
+        if (isset($_POST['Vehicle'])) {
+            foreach ($_POST['Vehicle'] as $i => $item) {
+                if (isset($customer->vehicleDetails[$i]))
+                    $customer->vehicleDetails[$i]->attributes = $item;
+                else {
+                    $detail = new Vehicle();
+                    $detail->attributes = $item;
+                    $customer->vehicleDetails[] = $detail;
+                }
+            }
+            if (count($_POST['Vehicle']) < count($customer->vehicleDetails))
+                array_splice($customer->vehicleDetails, $i + 1);
+        } else
+            $customer->vehicleDetails = array();
 
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer $id the ID of the model to be loaded
-	 * @return Customer the loaded model
-	 * @throws CHttpException
-	 */
-	public function loadModel($id)
-	{
-		$model=Customer::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
+        if (isset($_POST['CustomerServiceRate'])) {
+            foreach ($_POST['CustomerServiceRate'] as $i => $item) {
+                if (isset($customer->serviceDetails[$i]))
+                    $customer->serviceDetails[$i]->attributes = $item;
+                else {
+                    $detail = new CustomerServiceRate();
+                    $detail->attributes = $item;
+                    $customer->serviceDetails[] = $detail;
+                }
+            }
+            if (count($_POST['CustomerServiceRate']) < count($customer->serviceDetails))
+                array_splice($customer->serviceDetails, $i + 1);
+        } else
+            $customer->serviceDetails = array();
+    }
 
-	/**
-	 * Performs the AJAX validation.
-	 * @param Customer $model the model to be validated
-	 */
-	protected function performAjaxValidation($model)
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='customer-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
-	public function actionAjaxCoa($id){
-        if (Yii::app()->request->isAjaxRequest)
-        {
+    // public function actionRegistration(){
+    // 		$this->render('registration',array(
+    // 		//'model'=>$model,
+    // 		'customer'=>$customer,
+    // 	));
+    // }
+
+    /**
+     * Returns the data model based on the primary key given in the GET variable.
+     * If the data model is not found, an HTTP exception will be raised.
+     * @param integer $id the ID of the model to be loaded
+     * @return Customer the loaded model
+     * @throws CHttpException
+     */
+    public function loadModel($id) {
+        $model = Customer::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        return $model;
+    }
+
+    /**
+     * Performs the AJAX validation.
+     * @param Customer $model the model to be validated
+     */
+    protected function performAjaxValidation($model) {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'customer-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+    }
+
+    public function actionAjaxCoa($id) {
+        if (Yii::app()->request->isAjaxRequest) {
             $coa = Coa::model()->findByPk($id);
 
             $object = array(
-        		'id' => $coa->id,
+                'id' => $coa->id,
                 'code' => $coa->code,
                 'name' => $coa->name,
             );
 
             echo CJSON::encode($object);
         }
-  	}
+    }
 
+    public function actionExportExcel($id = NULL) {
+        if ($id == NULL) {
+            $dataCustomer = Customer::model()->findAll();
+            $this->getXlsCustomer($dataCustomer);
+        } else {
+            $dataCustomer = Customer::model()->findByAttributes(array('id' => $id));
+            $this->getXlsHistory($dataCustomer);
+            // $dataCustomer = $this->loadModel($id);
+        }
+    }
 
-  	public function actionExportExcel($id=NULL) {
-  		if ($id == NULL) {
-  			$dataCustomer = Customer::model()->findAll();
-	  		$this->getXlsCustomer($dataCustomer);
-  		}else{
-  			$dataCustomer = Customer::model()->findByAttributes(array('id'=>$id));
-	  		$this->getXlsHistory($dataCustomer);
-			// $dataCustomer = $this->loadModel($id);
-  		}
-  	}
+    public function getXlsCustomer($customer) {
 
-  	public function getXlsCustomer($customer) {
-
-  		// var_dump($customer); die();
-  		$objPHPExcel = new PHPExcel();
+        // var_dump($customer); die();
+        $objPHPExcel = new PHPExcel();
 
         // Set document properties
         $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-             ->setLastModifiedBy("Apri Pebriana")
-             ->setTitle("Customer Data ".date('d-m-Y'))
-             ->setSubject("Customer")
-             ->setDescription("Export Data Customer, generated using PHP classes.")
-             ->setKeywords("Customer Data")
-             ->setCategory("Export Customer");        
-        
+                ->setLastModifiedBy("Apri Pebriana")
+                ->setTitle("Customer Data " . date('d-m-Y'))
+                ->setSubject("Customer")
+                ->setDescription("Export Data Customer, generated using PHP classes.")
+                ->setKeywords("Customer Data")
+                ->setCategory("Export Customer");
+
         // style for horizontal vertical center
-		$styleHorizontalVertivalCenter = array(
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
-		$styleHorizontalVertivalCenterBold = array(
-			'font' => array(
-				'bold' => true,
-			),
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
-		$styleLeftVertivalCenterBold = array(
-			'font' => array(
-				'bold' => true,
-			),
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
-		$styleHorizontalCenter = array(
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-			)
-		);
-		$styleVerticalCenter = array(
-			'alignment' => array(
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
+        $styleHorizontalVertivalCenter = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
+        $styleHorizontalVertivalCenterBold = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
+        $styleLeftVertivalCenterBold = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
+        $styleHorizontalCenter = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            )
+        );
+        $styleVerticalCenter = array(
+            'alignment' => array(
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
 
-		$styleBold = array(
-			'font' => array(
-				'bold' => true,
-			)
-		);
+        $styleBold = array(
+            'font' => array(
+                'bold' => true,
+            )
+        );
 
-		// style color red
-		$styleColorRED = array(
-	        'font' => array(
-	            'color' => array('rgb' => 'FF0000'),
-				'bold' => true,
-	        ),
-	        // 'fill' => array(
-	        //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-	        //     'color' => array('rgb' => 'FF0000')
-	        // )
-	    );
+        // style color red
+        $styleColorRED = array(
+            'font' => array(
+                'color' => array('rgb' => 'FF0000'),
+                'bold' => true,
+            ),
+                // 'fill' => array(
+                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                //     'color' => array('rgb' => 'FF0000')
+                // )
+        );
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'DATA CUSTOMER')
-            ->setCellValue('A2', 'Data Customer')
-            ->setCellValue('E2', 'Data Kendaraan')
-            ->setCellValue('H2', 'P/K')
-            ->setCellValue('I2', 'Update By')
-            ->setCellValue('L2', 'Historical')
-            ->setCellValue('A3', 'Nama Customer')
-            ->setCellValue('B3', 'Alamat')
-            ->setCellValue('C3', 'No Phone')
-            ->setCellValue('D3', 'Email')
-            ->setCellValue('E3', 'No Polisi')
-            ->setCellValue('F3', 'Merk Mobil')
-            ->setCellValue('G3', 'Extensi')
-            ->setCellValue('I3', 'User ID')
-            ->setCellValue('J3', 'Date')
-            ->setCellValue('K3', 'Time');
-            // ->setCellValue('L2', 'Historical');
+                ->setCellValue('A1', 'DATA CUSTOMER')
+                ->setCellValue('A2', 'Data Customer')
+                ->setCellValue('E2', 'Data Kendaraan')
+                ->setCellValue('H2', 'P/K')
+                ->setCellValue('I2', 'Update By')
+                ->setCellValue('L2', 'Historical')
+                ->setCellValue('A3', 'Nama Customer')
+                ->setCellValue('B3', 'Alamat')
+                ->setCellValue('C3', 'No Phone')
+                ->setCellValue('D3', 'Email')
+                ->setCellValue('E3', 'No Polisi')
+                ->setCellValue('F3', 'Merk Mobil')
+                ->setCellValue('G3', 'Extensi')
+                ->setCellValue('I3', 'User ID')
+                ->setCellValue('J3', 'Date')
+                ->setCellValue('K3', 'Time');
+        // ->setCellValue('L2', 'Historical');
 
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:L1');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:D2');
@@ -1282,56 +1128,56 @@ class CustomerController extends Controller
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H2:H3');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I2:K2');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('L2:L3');
-		
-		$sheet = $objPHPExcel->getActiveSheet();
-		$sheet->getStyle('A1:L1')->applyFromArray($styleHorizontalVertivalCenterBold);
-		$sheet->getStyle('A2:D2')->applyFromArray($styleHorizontalVertivalCenterBold);
-		$sheet->getStyle('E2:G2')->applyFromArray($styleHorizontalVertivalCenterBold);
-		$sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
-		$sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
-		$sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
-		$sheet->getStyle('A2:K3')->applyFromArray($styleBold);
 
-		$objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-		$objPHPExcel->getActiveSheet()->freezePane('E4');
+        $sheet = $objPHPExcel->getActiveSheet();
+        $sheet->getStyle('A1:L1')->applyFromArray($styleHorizontalVertivalCenterBold);
+        $sheet->getStyle('A2:D2')->applyFromArray($styleHorizontalVertivalCenterBold);
+        $sheet->getStyle('E2:G2')->applyFromArray($styleHorizontalVertivalCenterBold);
+        $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
+        $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
+        $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
+        $sheet->getStyle('A2:K3')->applyFromArray($styleBold);
 
-		$startrow = 4;
-		foreach ($customer as $key => $value) {
+        $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->freezePane('E4');
 
-			$phone = ($value->customerPhones !=NULL)?$this->phoneNumber($value->customerPhones):'';
+        $startrow = 4;
+        foreach ($customer as $key => $value) {
 
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$startrow, $value->name);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$startrow, $value->address);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$startrow, $phone);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$startrow, $value->email);
-			$customertype = (($value->customer_type == 'Individual')?"P":(($value->customer_type == 'Company')?"K":""));
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$startrow, $customertype);
-			
-			// $objPHPExcel->getActiveSheet()->setCellValue('L'.$startrow,'see details');
-			// $objPHPExcel->getActiveSheet()->getCell('L'.$startrow)->getHyperlink()->setUrl("sheet://'Historical'!A1");
+            $phone = ($value->customerPhones != NULL) ? $this->phoneNumber($value->customerPhones) : '';
 
-			$kendaraan = $value->vehicles;
-			foreach ($kendaraan as $key => $vehicle) {
-				$objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$startrow, $vehicle->plate_number);
-				$objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$startrow, $vehicle->carMake->name . ' - '. $vehicle->carModel->name);
-				$objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$startrow, $vehicle->machine_number);
-				$startrow++;
-			}
-			
-			$objPHPExcel->getActiveSheet()
-			    ->getStyle('C'.$startrow)
-			    ->getNumberFormat()
-			    ->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $value->name);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $value->address);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $phone);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $value->email);
+            $customertype = (($value->customer_type == 'Individual') ? "P" : (($value->customer_type == 'Company') ? "K" : ""));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, $customertype);
 
-			$startrow++;
-		}
-	        // die();
-		$objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
+            // $objPHPExcel->getActiveSheet()->setCellValue('L'.$startrow,'see details');
+            // $objPHPExcel->getActiveSheet()->getCell('L'.$startrow)->getHyperlink()->setUrl("sheet://'Historical'!A1");
+
+            $kendaraan = $value->vehicles;
+            foreach ($kendaraan as $key => $vehicle) {
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $vehicle->plate_number);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, $vehicle->carMake->name . ' - ' . $vehicle->carModel->name);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, $vehicle->machine_number);
+                $startrow++;
+            }
+
+            $objPHPExcel->getActiveSheet()
+                    ->getStyle('C' . $startrow)
+                    ->getNumberFormat()
+                    ->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+
+            $startrow++;
+        }
+        // die();
+        $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet
         $objPHPExcel->getActiveSheet()->setTitle('DataCustomer');
@@ -1341,11 +1187,11 @@ class CustomerController extends Controller
         $objPHPExcel->setActiveSheetIndex(0);
 
         // Save a xls file
-        $filename = 'Customer_data_'.date("Y-m-d");
+        $filename = 'Customer_data_' . date("Y-m-d");
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'.$filename.'.xls"');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
-        
+
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
         $objWriter->save('php://output');
@@ -1354,135 +1200,133 @@ class CustomerController extends Controller
         unset($this->objReader);
         unset($this->objPHPExcel);
         exit();
-  	}
+    }
 
-  	public function getXlsHistory($customer) {
+    public function getXlsHistory($customer) {
 
-		// $plate_number = [];
-		// $merkmobil = [];
-		// foreach ($customer->vehicles as $key => $value) {
-		// 	$plate_number[] = $value->plate_number;
-		// 	$merkmobil[] = $value->carMake->name . ' - '. $value->carModel->name ;
-		// }
-
-		// var_dump($plate_number); die();
-  		$objPHPExcel = new PHPExcel();
+        // $plate_number = [];
+        // $merkmobil = [];
+        // foreach ($customer->vehicles as $key => $value) {
+        // 	$plate_number[] = $value->plate_number;
+        // 	$merkmobil[] = $value->carMake->name . ' - '. $value->carModel->name ;
+        // }
+        // var_dump($plate_number); die();
+        $objPHPExcel = new PHPExcel();
 
         // Set document properties
         $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-             ->setLastModifiedBy("Apri Pebriana")
-             ->setTitle("Customer Data ".date('d-m-Y'))
-             ->setSubject("Customer")
-             ->setDescription("Export Data Customer, generated using PHP classes.")
-             ->setKeywords("Customer Data")
-             ->setCategory("Export Customer");        
-        
+                ->setLastModifiedBy("Apri Pebriana")
+                ->setTitle("Customer Data " . date('d-m-Y'))
+                ->setSubject("Customer")
+                ->setDescription("Export Data Customer, generated using PHP classes.")
+                ->setKeywords("Customer Data")
+                ->setCategory("Export Customer");
+
         // style for horizontal vertical center
-		$styleHorizontalVertivalCenter = array(
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
-		$styleHorizontalVertivalCenterBold = array(
-			'font' => array(
-				'bold' => true,
-			),
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
-		$styleLeftVertivalCenterBold = array(
-			'font' => array(
-				'bold' => true,
-			),
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
-		$styleHorizontalCenter = array(
-			'alignment' => array(
-				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-			)
-		);
-		$styleVerticalCenter = array(
-			'alignment' => array(
-				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-			)
-		);
+        $styleHorizontalVertivalCenter = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
+        $styleHorizontalVertivalCenterBold = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
+        $styleLeftVertivalCenterBold = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
+        $styleHorizontalCenter = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            )
+        );
+        $styleVerticalCenter = array(
+            'alignment' => array(
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
 
-		// style color red
-		$styleColorRED = array(
-	        'font' => array(
-	            'color' => array('rgb' => 'FF0000'),
-				'bold' => true,
-	        ),
-	        // 'fill' => array(
-	        //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-	        //     'color' => array('rgb' => 'FF0000')
-	        // )
-	    );
+        // style color red
+        $styleColorRED = array(
+            'font' => array(
+                'color' => array('rgb' => 'FF0000'),
+                'bold' => true,
+            ),
+                // 'fill' => array(
+                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                //     'color' => array('rgb' => 'FF0000')
+                // )
+        );
 
-		$objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('B1', 'Historical')
-            ->setCellValue('B2', 'Nama Customer')
-            ->setCellValue('B3', 'No Polisi')
-            ->setCellValue('B4', 'Merk Mobil')
-            ->setCellValue('B5', 'Phone')
-            ->setCellValue('B6', 'Tanggal Cetak')
-            ->setCellValue('B7', 'UserID');
-            // ->setCellValue('B8', 'Halaman');
-
+        $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('B1', 'Historical')
+                ->setCellValue('B2', 'Nama Customer')
+                ->setCellValue('B3', 'No Polisi')
+                ->setCellValue('B4', 'Merk Mobil')
+                ->setCellValue('B5', 'Phone')
+                ->setCellValue('B6', 'Tanggal Cetak')
+                ->setCellValue('B7', 'UserID');
+        // ->setCellValue('B8', 'Halaman');
         // $customer->full_name;
 
-		$objPHPExcel->setActiveSheetIndex(0)
-            // ->setCellValue('C1', ':')
-            ->setCellValue('C2', ':')
-            ->setCellValue('C3', ':')
-            ->setCellValue('c4', ':')
-            ->setCellValue('c5', ':')
-            ->setCellValue('c6', ':')
-            ->setCellValue('c7', ':');
-            // ->setCellValue('c8', ':');
+        $objPHPExcel->setActiveSheetIndex(0)
+                // ->setCellValue('C1', ':')
+                ->setCellValue('C2', ':')
+                ->setCellValue('C3', ':')
+                ->setCellValue('c4', ':')
+                ->setCellValue('c5', ':')
+                ->setCellValue('c6', ':')
+                ->setCellValue('c7', ':');
+        // ->setCellValue('c8', ':');
 
-		$phone = ($customer->customerPhones !=NULL)?$this->phoneNumber($customer->customerPhones):'';
-		
+        $phone = ($customer->customerPhones != NULL) ? $this->phoneNumber($customer->customerPhones) : '';
+
 //		$plate_number = [];
 //		$merkmobil = [];
 //		$customerMobiles = [];
-		foreach ($customer->vehicles as $key => $value) {
-			$plate_number[] = $value->plate_number;
-			$merkmobil[] = $value->carMake->name . ' - '. $value->carModel->name ;
-		}
+        foreach ($customer->vehicles as $key => $value) {
+            $plate_number[] = $value->plate_number;
+            $merkmobil[] = $value->carMake->name . ' - ' . $value->carModel->name;
+        }
 
-		foreach ($customer->customerPhones as $key => $cusvalue) {
-			$customerMobiles[] = $cusvalue->phone_no;
-		}
+        foreach ($customer->customerPhones as $key => $cusvalue) {
+            $customerMobiles[] = $cusvalue->phone_no;
+        }
 
-		$objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('D2', $customer->name)
-            ->setCellValue('D3', implode(', ', $plate_number))
-            ->setCellValue('D4', implode(', ', $merkmobil))
-            ->setCellValue('D5', implode(', ', $customerMobiles))
-            ->setCellValue('D6', date("d-m-Y"))
-            ->setCellValue('D7', $customer->id);
+        $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('D2', $customer->name)
+                ->setCellValue('D3', implode(', ', $plate_number))
+                ->setCellValue('D4', implode(', ', $merkmobil))
+                ->setCellValue('D5', implode(', ', $customerMobiles))
+                ->setCellValue('D6', date("d-m-Y"))
+                ->setCellValue('D7', $customer->id);
 
-		$objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('D8', 'Tanggal Nota')
-            ->setCellValue('E8', 'Nomor Nota')
-            ->setCellValue('F8', 'Tanggal WO')
-            ->setCellValue('G8', 'Nomor WO')
-            ->setCellValue('H8', 'KM')
-            ->setCellValue('I8', 'Jasa')
-            ->setCellValue('J8', 'Barang/Parts')
-            ->setCellValue('J9', 'Kode')
-            ->setCellValue('K9', 'Nama')
-            ->setCellValue('L8', 'QTY')
-            ->setCellValue('M8', 'Sat')
-            ->setCellValue('N8', 'Kode Mekanik')
-            ->setCellValue('O8', 'Rekomendasi');
+        $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('D8', 'Tanggal Nota')
+                ->setCellValue('E8', 'Nomor Nota')
+                ->setCellValue('F8', 'Tanggal WO')
+                ->setCellValue('G8', 'Nomor WO')
+                ->setCellValue('H8', 'KM')
+                ->setCellValue('I8', 'Jasa')
+                ->setCellValue('J8', 'Barang/Parts')
+                ->setCellValue('J9', 'Kode')
+                ->setCellValue('K9', 'Nama')
+                ->setCellValue('L8', 'QTY')
+                ->setCellValue('M8', 'Sat')
+                ->setCellValue('N8', 'Kode Mekanik')
+                ->setCellValue('O8', 'Rekomendasi');
 
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B1:O1');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('J8:K8');
@@ -1498,80 +1342,80 @@ class CustomerController extends Controller
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('O8:O9');
 
 
-		$sheet = $objPHPExcel->getActiveSheet();
-		$sheet->getStyle('B1:O1')->applyFromArray($styleHorizontalVertivalCenterBold);
-		$sheet->getStyle('B2:B7')->applyFromArray($styleLeftVertivalCenterBold);
-		$sheet->getStyle('D8:O9')->applyFromArray($styleVerticalCenter);
-		$sheet->getStyle('D8:O9')->applyFromArray($styleHorizontalVertivalCenterBold);
-		// $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
-		// $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
-		// $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
+        $sheet = $objPHPExcel->getActiveSheet();
+        $sheet->getStyle('B1:O1')->applyFromArray($styleHorizontalVertivalCenterBold);
+        $sheet->getStyle('B2:B7')->applyFromArray($styleLeftVertivalCenterBold);
+        $sheet->getStyle('D8:O9')->applyFromArray($styleVerticalCenter);
+        $sheet->getStyle('D8:O9')->applyFromArray($styleHorizontalVertivalCenterBold);
+        // $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
+        // $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
+        // $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
 
-		$objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(1.10);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(1.10);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(5);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(5);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(5);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(15);
-		$objPHPExcel->getActiveSheet()->freezePane('A10');
+        $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(1.10);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(1.10);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(15);
+        $objPHPExcel->getActiveSheet()->freezePane('A10');
 
-			/*
-            ->setCellValue('D8', 'Tanggal Nota')
-            ->setCellValue('E8', 'Nomor Nota')
-            ->setCellValue('F8', 'Tanggal WO')
-            ->setCellValue('G8', 'Nomor WO')
-            ->setCellValue('H8', 'KM')
-            ->setCellValue('I8', 'Jasa')
-            ->setCellValue('J8', 'Barang/Parts')
-            ->setCellValue('J9', 'Kode')
-            ->setCellValue('K9', 'Nama')
-            ->setCellValue('L8', 'QTY')
-            ->setCellValue('M8', 'Sat')
-            ->setCellValue('N8', 'Kode Mekanik')
-            ->setCellValue('O8', 'Rekomendasi');
-            */
+        /*
+          ->setCellValue('D8', 'Tanggal Nota')
+          ->setCellValue('E8', 'Nomor Nota')
+          ->setCellValue('F8', 'Tanggal WO')
+          ->setCellValue('G8', 'Nomor WO')
+          ->setCellValue('H8', 'KM')
+          ->setCellValue('I8', 'Jasa')
+          ->setCellValue('J8', 'Barang/Parts')
+          ->setCellValue('J9', 'Kode')
+          ->setCellValue('K9', 'Nama')
+          ->setCellValue('L8', 'QTY')
+          ->setCellValue('M8', 'Sat')
+          ->setCellValue('N8', 'Kode Mekanik')
+          ->setCellValue('O8', 'Rekomendasi');
+         */
 
 //		$registrationTransaction = RegistrationTransaction::model()->findAllByAttributes(['customer_id'=>$customer->id]);
-		$startrowTransaction = 10;
-		foreach ($registrationTransaction as $key => $val) {
-			$mekanik = ($val->pic !=NULL)? $val->pic->name . ' - ' .$val->pic->id : '';
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$startrowTransaction, $val->transaction_date);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$startrowTransaction, $val->transaction_number);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$startrowTransaction, $val->work_order_date);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$startrowTransaction, $val->work_order_number);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$startrowTransaction, '');
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$startrowTransaction, $val->repair_type);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$startrowTransaction, $val->getServices());
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('K'.$startrowTransaction, '');
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('L'.$startrowTransaction, '');
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M'.$startrowTransaction, '');
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N'.$startrowTransaction, $mekanik);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('O'.$startrowTransaction, '');
-			$startrowTransaction++;
-		}
+        $startrowTransaction = 10;
+        foreach ($registrationTransaction as $key => $val) {
+            $mekanik = ($val->pic != NULL) ? $val->pic->name . ' - ' . $val->pic->id : '';
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrowTransaction, $val->transaction_date);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrowTransaction, $val->transaction_number);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrowTransaction, $val->work_order_date);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrowTransaction, $val->work_order_number);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrowTransaction, '');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrowTransaction, $val->repair_type);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrowTransaction, $val->getServices());
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrowTransaction, '');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('L' . $startrowTransaction, '');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('M' . $startrowTransaction, '');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrowTransaction, $mekanik);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('O' . $startrowTransaction, '');
+            $startrowTransaction++;
+        }
 
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet
         $objPHPExcel->getActiveSheet()->setTitle('Historical');
-        
+
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         // $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->setActiveSheetIndex(0);
 
         // Save a xls file
-        $filename = 'customer_'.strtolower($customer->name).'_'.date("Y-m-d");
+        $filename = 'customer_' . strtolower($customer->name) . '_' . date("Y-m-d");
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'.$filename.'.xls"');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
-        
+
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
         $objWriter->save('php://output');
@@ -1580,12 +1424,14 @@ class CustomerController extends Controller
         unset($this->objReader);
         unset($this->objPHPExcel);
         exit();
-  	}
-  	public function phoneNumber($phones) {
-		$numberphone = array();
-		foreach ($phones as $phone) {
-			$numberphone[] = $phone->phone_no;
-		}
-		return "'".implode(',', $numberphone);
-  	}
+    }
+
+    public function phoneNumber($phones) {
+        $numberphone = array();
+        foreach ($phones as $phone) {
+            $numberphone[] = $phone->phone_no;
+        }
+        return "'" . implode(',', $numberphone);
+    }
+
 }

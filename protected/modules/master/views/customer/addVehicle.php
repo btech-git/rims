@@ -42,9 +42,17 @@
                             <div class="small-4 columns">
                                 <label class="prefix">Plate Number</label>
                             </div>
-                            <div class="small-8 columns">
-                                <?php echo CHtml::activeTextField($model,"plate_number",array('size'=>30,'maxlength'=>30)); ?>
-                                <?php echo $form->error($model, 'plate_number'); ?>
+                            <div class="small-2 columns">
+                                <?php echo CHtml::activeDropDownList($model, "plate_number_prefix_id", CHtml::listData(VehiclePlateNumberPrefix::model()->findAll(array('order'=>'code')),'id','code'),  array('prompt' => '[--Select Code--]',)); ?>
+                                <?php echo $form->error($model, 'plate_number_prefix_id'); ?>
+                            </div>
+                            <div class="small-3 columns">
+                                <?php echo CHtml::activeTextField($model, "plate_number_ordinal", array('size'=>10,'maxlength'=>4)); ?>
+                                <?php echo $form->error($model, 'plate_number_ordinal'); ?>
+                            </div>
+                            <div class="small-3 columns">
+                                <?php echo CHtml::activeTextField($model, "plate_number_suffix", array('size'=>5,'maxlength'=>3, 'style' => 'text-transform: uppercase')); ?>
+                                <?php echo $form->error($model, 'plate_number_suffix'); ?>
                             </div>
                         </div>
                     </div>
