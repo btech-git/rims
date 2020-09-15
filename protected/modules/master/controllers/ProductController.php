@@ -55,7 +55,9 @@ class ProductController extends Controller {
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
             $model->user_id_approval = Yii::app()->user->getId();
-            if ($model->save(true, array('is_approved', 'user_id_approval')))
+            $model->date_approval = date('Y-m-d H:i:s');
+            
+            if ($model->save(true, array('is_approved', 'user_id_approval', 'date_approval')))
                 Yii::app()->user->setFlash('confirm', 'Your Order has been approved!!!');
             else
                 Yii::app()->user->setFlash('error', 'Your Order failed to approved!!!');
@@ -89,14 +91,16 @@ class ProductController extends Controller {
 
         $product = $this->instantiate(null);
         $product->header->date_posting = date('Y-m-d H:i:s');
+        $product->header->ppn = 2;
+        $product->header->user_id_approval = null;
+        $product->header->date_approval = null;
         $productSpecificationBattery = new ProductSpecificationBattery;
         $productSpecificationOil = new ProductSpecificationOil;
         $productSpecificationTire = new ProductSpecificationTire;
 
-        $product->header->ppn = 2;
-
         if (isset($_POST['Product'])) {
             $this->loadState($product);
+            
             if ($product->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $product->header->id));
             } /* else {

@@ -75,6 +75,14 @@ $this->menu=array(
                 array('name'=>'ppn', 'value'=>$model->ppn == 1 ? 'Include': 'Exclude'),
                 'minimum_stock',
                 'date_posting',
+                array(
+                    'name' => 'user_id_approval',
+                    'value' => empty($model->user_id_approval) ? "N/A" : $model->userIdApproval->username,
+                ),
+                array(
+                    'name' => 'date_approval',
+                    'value' => empty($model->date_approval) ? "N/A" : $model->date_approval,
+                ),
             ),
         )); ?>
     </div>

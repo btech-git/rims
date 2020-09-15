@@ -35,6 +35,7 @@
  * @property string $date_posting
  * @property integer $is_approved
  * @property integer $user_id_approval
+ * @property string $date_approval
  *
  * The followings are the available model relations:
  * @property ConsignmentInDetail[] $consignmentInDetails
@@ -115,9 +116,10 @@ class Product extends CActiveRecord {
             array('name', 'length', 'max' => 30),
             array('purchase_price, recommended_selling_price, hpp, retail_price, status', 'length', 'max' => 10),
             array('is_usable', 'length', 'max' => 5),
+            array('date_posting, date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval', 'safe', 'on' => 'search'),
         );
     }
 
@@ -161,6 +163,7 @@ class Product extends CActiveRecord {
             'warehouseSections' => array(self::HAS_MANY, 'WarehouseSection', 'product_id'),
             'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
         );
     }
 
@@ -199,9 +202,10 @@ class Product extends CActiveRecord {
             'ppn' => 'Ppn',
             'unit_id' => 'Satuan',
             'user_id' => 'User',
-            'date_posting' => 'Tanggal',
+            'date_posting' => 'Tanggal Input',
             'is_approved' => 'Approval',
             'user_id_approval' => 'User Approval',
+            'date_approval' => 'Tanggal Approval',
         );
     }
 
