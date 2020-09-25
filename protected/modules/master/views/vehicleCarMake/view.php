@@ -42,10 +42,6 @@ $this->menu = array(
             'attributes' => array(
                 'id',
                 'name',
-                array(
-                    'name'=>'service_difficulty_rate', 
-                    'value'=>$model->getServiceDifficultyRate($model->service_difficulty_rate),
-                ),
                 'status',
             ),
         )); ?>

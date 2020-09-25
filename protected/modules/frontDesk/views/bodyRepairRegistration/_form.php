@@ -98,8 +98,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php endif ?>
-                                    <?php endif ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
                                     <div class="field">
                                         <div class="row collapse">
@@ -162,6 +162,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -174,6 +175,20 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <?php if ($customer->customer_type === 'Company'): ?>
+                                        <div class="field">
+                                            <div class="row collapse">
+                                                <div class="small-4 columns">
+                                                    <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header, 'customer_work_order_number'); ?></label>
+                                                </div>
+                                                <div class="small-8 columns">
+                                                    <?php echo $form->textField($bodyRepairRegistration->header, 'customer_work_order_number'); ?>
+                                                    <?php echo $form->error($bodyRepairRegistration->header,'customer_work_order_number'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -195,9 +210,9 @@
                             <hr />
                             
                             <div class="field buttons text-center">
-                                <?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
+                                <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
                                 <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton')); ?>
                             </div>
                         </div>
                     </div>

@@ -5,6 +5,9 @@
 
 
 <div id="link">
+    <?php if (!($paymentOut->status == 'Approved' || $paymentOut->status == 'Rejected')): ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.updateApproval"))) ?>
+    <?php endif; ?>
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.admin"))) ?>
 </div>
 
@@ -22,8 +25,16 @@
             'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOut->payment_date),
         ),
         array(
-            'label' => 'Status',
-            'value' => $paymentOut->status,
+            'label' => 'Supplier',
+            'value' => $paymentOut->supplier->company,
+        ),
+        array(
+            'label' => 'Code',
+            'value' => $paymentOut->supplier->code,
+        ),
+        array(
+            'label' => 'Address',
+            'value' => $paymentOut->supplier->address,
         ),
         array(
             'label' => 'Branch',
@@ -38,8 +49,16 @@
             'value' => $paymentOut->nomor_giro,
         ),
         array(
+            'label' => 'Company Bank',
+            'value' => empty($paymentOut->company_bank_id) ? "N/A" : $paymentOut->companyBank->account_name,
+        ),
+        array(
             'label' => 'Bank',
-            'value' => empty($paymentOut->bank_id) ? "" : $paymentOut->bank->name,
+            'value' => empty($paymentOut->bank_id) ? "N/A" : $paymentOut->bank->name,
+        ),
+        array(
+            'label' => 'Admin',
+            'value' => $paymentOut->user->username,
         ),
         array(
             'label' => 'Catatan',
@@ -85,7 +104,7 @@
         <tr>
             <td style="text-align: right; font-weight: bold" colspan="4">Total Hutang</td>
             <td style="text-align: right; font-weight: bold">
-                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>
         </tr>
         <tr>

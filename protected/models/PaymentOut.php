@@ -55,7 +55,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_id, payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status', 'required'),
+            array('payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status', 'required'),
             array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount', 'length', 'max' => 18),

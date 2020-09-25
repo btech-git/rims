@@ -103,6 +103,7 @@
                                     array('label'=>'Service Type', 'url'=>array('/master/serviceType/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.ServiceType.View')),
                                     array('label'=>'Service Pricelist', 'url'=>array('/master/servicePricelist/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.ServicePricelist.View')),
                                     array('label'=>'Service Standard Pricelist', 'url'=>array('/master/serviceStandardPricelist/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.ServiceStandardPricelist.View')),
+                                    array('label'=>'Service Group', 'url'=>array('/master/serviceGroup/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.ServiceType.View')),
                                     array('label'=>'Standard Flat Rate', 'url'=>array('/master/generalStandardFr/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.GeneralStandardFr.View')),
                                     array('label'=>'Standard Value', 'url'=>array('/master/generalStandardValue/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.GeneralStandardValue.View')),
                                     array('label'=>'Quick Service', 'url'=>array('/master/quickService/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.QuickService.View')),

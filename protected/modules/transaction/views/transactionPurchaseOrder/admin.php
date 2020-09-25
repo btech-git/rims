@@ -158,7 +158,7 @@ Yii::app()->clientScript->registerScript('search', "
                         array(
                             'header'=>'Purchases',
                             'value'=> function($data){
-                                if(count($data->transactionPurchaseOrderDetailRequests) >0) {
+                                if (count($data->transactionPurchaseOrderDetailRequests) >0) {
                                     foreach ($data->transactionPurchaseOrderDetailRequests as $key => $podetail) {
                                         echo $podetail->purchaseOrderDetail->purchaseOrder->purchase_order_no. "<br>";
                                     }

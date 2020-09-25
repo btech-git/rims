@@ -1,6 +1,6 @@
 <?php
-/* @var $this SubBrandController */
-/* @var $data SubBrand */
+/* @var $this ServiceGroupController */
+/* @var $data ServiceGroup */
 ?>
 
 <div class="view">
@@ -9,12 +9,12 @@
 	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('brand_id')); ?>:</b>
-	<?php echo CHtml::encode($data->brand_id); ?>
-	<br />
-
 	<b><?php echo CHtml::encode($data->getAttributeLabel('name')); ?>:</b>
 	<?php echo CHtml::encode($data->name); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<?php echo CHtml::encode($data->description); ?>
 	<br />
 
 

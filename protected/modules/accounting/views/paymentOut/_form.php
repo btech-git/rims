@@ -118,36 +118,13 @@
         </div>
         
         <div class="small-12 medium-6 columns">
-
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('PO #', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'purchaseOrder.purchase_order_no')); ?>
-                    </div>
-                </div>
-            </div>	
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('PO Date', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($paymentOut->header, 'purchaseOrder.purchase_order_date'))); ?>
-                    </div>
-                </div>
-            </div>	
-            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
                         <?php echo CHtml::label('Supplier Company', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'purchaseOrder.supplier.company')); ?>
+                        <?php echo CHtml::encode(CHtml::value($supplier, 'company')); ?>
                     </div>
                 </div>
             </div>	
@@ -158,7 +135,7 @@
                         <?php echo CHtml::label('Name', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'purchaseOrder.supplier.name')); ?>
+                        <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
                     </div>
                 </div>
             </div>	
@@ -169,7 +146,7 @@
                         <?php echo CHtml::label('Address', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'purchaseOrder.supplier.address')); ?>
+                        <?php echo CHtml::encode(CHtml::value($supplier, 'address')); ?>
                     </div>
                 </div>
             </div>	
@@ -180,7 +157,7 @@
                         <?php echo CHtml::label('Phone', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'purchaseOrder.supplier.phone')); ?>
+                        <?php echo CHtml::encode(CHtml::value($supplier, 'phone')); ?>
                     </div>
                 </div>
             </div>	
@@ -219,7 +196,7 @@
         </div>
     </div>
 
-    <div id="product">
+<!--    <div id="product">
         <fieldset>
             <legend>Product</legend>
             <table>
@@ -234,7 +211,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($paymentOut->header->purchase_order_id)): ?>
+                    <?php /*if (!empty($paymentOut->header->purchase_order_id)): ?>
                         <?php foreach ($purchaseOrder->transactionPurchaseOrderDetails as $purchaseOrderDetail): ?>
                             <tr>
                                 <?php $product = Product::model()->findByPK($purchaseOrderDetail->product_id); ?>
@@ -267,12 +244,12 @@
                     </tr>
                     <tr>
                         <td colspan="5" style="text-align: right">REMAINING</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder, 'payment_left'))); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder, 'payment_left')));*/ ?></td>
                     </tr>
                 </tfoot>
             </table>
         </fieldset>
-    </div>
+    </div>-->
     
     <hr />
 

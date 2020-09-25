@@ -36,6 +36,7 @@ class ServiceCategory extends CActiveRecord
 	public $coa_code;
 	public $coa_diskon_service_name;
 	public $coa_diskon_service_code;
+        
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);

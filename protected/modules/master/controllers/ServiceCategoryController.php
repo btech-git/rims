@@ -73,7 +73,6 @@ class ServiceCategoryController extends Controller {
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
 
-
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,
         ));
@@ -84,10 +83,9 @@ class ServiceCategoryController extends Controller {
             $coaDiskon->attributes = $_GET['Coa'];
 
         $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id IN (4, 5, 6, 24, 28, 29, 30, 31, 47, 50, 51)");
+        $coaDiskonCriteria->addCondition("coa_sub_category_id IN (30)");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
         $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
-
 
         $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaDiskonCriteria,
@@ -124,7 +122,7 @@ class ServiceCategoryController extends Controller {
             $coa->attributes = $_GET['Coa'];
 
         $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("coa_sub_category_id = 22 and coa_id = 0");
+        $coaCriteria->addCondition("coa_sub_category_id IN (4, 5, 6, 24, 28, 29, 30, 31, 47, 50, 51)");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
 
@@ -138,10 +136,9 @@ class ServiceCategoryController extends Controller {
             $coaDiskon->attributes = $_GET['Coa'];
 
         $coaDiskonCriteria = new CDbCriteria;
-        //$coaCriteria->addCondition("coa_sub_category_id = 2");
+        $coaDiskonCriteria->addCondition("coa_sub_category_id = 30");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
         $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
-
 
         $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaDiskonCriteria,

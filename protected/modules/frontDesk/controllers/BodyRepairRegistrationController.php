@@ -41,13 +41,11 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration->header->branch_id = $bodyRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $bodyRepairRegistration->header->branch_id;
         $bodyRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);
 
-        if (isset($_POST['_FormSubmit_'])) {
-            if ($_POST['_FormSubmit_'] === 'Submit') {
-                $this->loadState($bodyRepairRegistration);
+        if (isset($_POST['Submit'])) {
+            $this->loadState($bodyRepairRegistration);
 
-                if ($bodyRepairRegistration->save(Yii::app()->db)) {
-                    $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
-                }
+            if ($bodyRepairRegistration->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
             }
         }
 

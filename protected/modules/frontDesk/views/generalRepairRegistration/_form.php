@@ -99,8 +99,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php endif ?>
-                                    <?php endif ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
                                     <div class="field">
                                         <div class="row collapse">
@@ -125,6 +125,20 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <?php if ($customer->customer_type === 'Company'): ?>
+                                        <div class="field">
+                                            <div class="row collapse">
+                                                <div class="small-4 columns">
+                                                    <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header, 'customer_work_order_number'); ?></label>
+                                                </div>
+                                                <div class="small-8 columns">
+                                                    <?php echo $form->textField($generalRepairRegistration->header, 'customer_work_order_number'); ?>
+                                                    <?php echo $form->error($generalRepairRegistration->header,'customer_work_order_number'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div> 
                                 <!-- END COLUMN 6-->
                                 <div class="medium-6 columns">

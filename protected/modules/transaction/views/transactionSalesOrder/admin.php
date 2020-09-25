@@ -38,7 +38,7 @@ $('.search-form form').submit(function(){
             Yii::app()->baseUrl . '/transaction/transactionSalesOrder/create', array(
                 'class' => 'button success right',
                 'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.create")
-            )) ?>
+            )); ?>
         <h1>Manage Transaction Sales Orders</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
@@ -124,16 +124,13 @@ $('.search-form form').submit(function(){
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit} {print}',
-                        'buttons' => array
-                        (
-                            'edit' => array
-                            (
+                        'buttons' => array(
+                            'edit' => array(
                                 'label' => 'edit',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/update", array("id"=>$data->id))',
                                 'visible' => '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSalesOrder.update")',
                             ),
-                            'print' => array
-                            (
+                            'print' => array(
                                 'label' => 'print',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/pdf", array("id"=>$data->id))',
                                 'visible' => '$data->status_document == "Approved" && Yii::app()->user->checkAccess("transaction.transactionSalesOrder.pdf")',

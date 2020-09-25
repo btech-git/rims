@@ -252,39 +252,39 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         return ($totalRemaining = $this->total_quantity) ? 'Partial' : 'Pending';
     }
 
-    public function searchForPaymentOut() {
-        $criteria = new CDbCriteria;
-
-        $criteria->condition = " payment_left > 0 ";
-        
-        $criteria->compare('id', $this->id);
-        $criteria->compare('purchase_order_no', $this->purchase_order_no, true);
-        $criteria->compare('purchase_order_date', $this->purchase_order_date, true);
-        $criteria->compare('status_document', $this->status_document, true);
-        $criteria->compare('supplier_id', $this->supplier_id);
-        $criteria->compare('payment_type', $this->payment_type, true);
-        $criteria->compare('estimate_date_arrival', $this->estimate_date_arrival, true);
-        $criteria->compare('requester_id', $this->requester_id);
-        $criteria->compare('main_branch_id', $this->main_branch_id);
-        $criteria->compare('approved_id', $this->approved_id);
-        $criteria->compare('total_quantity', $this->total_quantity);
-        $criteria->compare('price_before_discount', $this->price_before_discount, true);
-        $criteria->compare('discount', $this->discount, true);
-        $criteria->compare('subtotal', $this->subtotal, true);
-        $criteria->compare('ppn', $this->ppn);
-        $criteria->compare('ppn_price', $this->ppn_price, true);
-        $criteria->compare('total_price', $this->total_price, true);
-        $criteria->compare('payment_amount', $this->payment_amount, true);
-        $criteria->compare('payment_left', $this->payment_left, true);
-        $criteria->compare('company_bank_id', $this->company_bank_id);
-        $criteria->compare('payment_status', $this->payment_status, true);
-        $criteria->compare('estimate_payment_date', $this->estimate_payment_date, true);
-        $criteria->compare('purchase_type', $this->purchase_type, true);
-
-        return new CActiveDataProvider(get_class($this), array(
-            'criteria' => $criteria,
-        ));
-    }
+//    public function searchForPaymentOut() {
+//        $criteria = new CDbCriteria;
+//
+//        $criteria->condition = " payment_left > 0 ";
+//        
+//        $criteria->compare('id', $this->id);
+//        $criteria->compare('purchase_order_no', $this->purchase_order_no, true);
+//        $criteria->compare('purchase_order_date', $this->purchase_order_date, true);
+//        $criteria->compare('status_document', $this->status_document, true);
+//        $criteria->compare('supplier_id', $this->supplier_id);
+//        $criteria->compare('payment_type', $this->payment_type, true);
+//        $criteria->compare('estimate_date_arrival', $this->estimate_date_arrival, true);
+//        $criteria->compare('requester_id', $this->requester_id);
+//        $criteria->compare('main_branch_id', $this->main_branch_id);
+//        $criteria->compare('approved_id', $this->approved_id);
+//        $criteria->compare('total_quantity', $this->total_quantity);
+//        $criteria->compare('price_before_discount', $this->price_before_discount, true);
+//        $criteria->compare('discount', $this->discount, true);
+//        $criteria->compare('subtotal', $this->subtotal, true);
+//        $criteria->compare('ppn', $this->ppn);
+//        $criteria->compare('ppn_price', $this->ppn_price, true);
+//        $criteria->compare('total_price', $this->total_price, true);
+//        $criteria->compare('payment_amount', $this->payment_amount, true);
+//        $criteria->compare('payment_left', $this->payment_left, true);
+//        $criteria->compare('company_bank_id', $this->company_bank_id);
+//        $criteria->compare('payment_status', $this->payment_status, true);
+//        $criteria->compare('estimate_payment_date', $this->estimate_payment_date, true);
+//        $criteria->compare('purchase_type', $this->purchase_type, true);
+//
+//        return new CActiveDataProvider(get_class($this), array(
+//            'criteria' => $criteria,
+//        ));
+//    }
 
     public function getTotalPayment() {
         $total = 0.00;

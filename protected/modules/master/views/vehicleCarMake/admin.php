@@ -152,11 +152,6 @@ $('.search-form form').submit(function(){
                         'type' => 'raw'
                     ),
                     array(
-                        'name' => 'service_difficulty_rate', 
-                        'value' => '$data->getServiceDifficultyRate($data->service_difficulty_rate)', 
-                        'type' => 'raw'
-                    ),
-                    array(
                         'header' => 'Status',
                         'name' => 'status',
                         'value' => '$data->status',

@@ -1,18 +1,18 @@
 <?php
-/* @var $this SubBrandController */
+/* @var $this ServiceGroupController */
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Sub Brands',
+	'Service Groups',
 );
 
 $this->menu=array(
-	array('label'=>'Create SubBrand', 'url'=>array('create')),
-	array('label'=>'Manage SubBrand', 'url'=>array('admin')),
+	array('label'=>'Create ServiceGroup', 'url'=>array('create')),
+	array('label'=>'Manage ServiceGroup', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Sub Brands</h1>
+<h1>Service Groups</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,
