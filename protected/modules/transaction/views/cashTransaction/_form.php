@@ -519,7 +519,7 @@
     'columns' => array(
         array(
             'name' => 'name', 
-            'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+            'value' => '$data->name', 
             'type' => 'raw'
         ),
         'code',

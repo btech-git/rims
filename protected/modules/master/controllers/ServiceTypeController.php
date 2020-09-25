@@ -70,6 +70,8 @@ class ServiceTypeController extends Controller {
         $coaCriteria->addCondition("coa_sub_category_id IN (4, 5, 6, 24, 28, 29, 30, 31, 47, 50, 51)");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
+        $coaCriteria->compare('coa_sub_category_id', $coa->coa_sub_category_id);
+        $coaCriteria->compare('coa_category_id', $coa->coa_category_id);
 
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,
@@ -82,9 +84,11 @@ class ServiceTypeController extends Controller {
             $coaDiskon->attributes = $_GET['Coa'];
 
         $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id = 30");
+        $coaDiskonCriteria->addCondition("coa_sub_category_id IN (28, 30)");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
         $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
+        $coaDiskonCriteria->compare('coa_sub_category_id', $coaDiskon->coa_sub_category_id);
+        $coaDiskonCriteria->compare('coa_category_id', $coaDiskon->coa_category_id);
 
         $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaDiskonCriteria,
@@ -125,6 +129,8 @@ class ServiceTypeController extends Controller {
         $coaCriteria->addCondition("coa_sub_category_id IN (4, 5, 6, 24, 28, 29, 30, 31, 47, 50, 51)");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
+        $coaCriteria->compare('coa_sub_category_id', $coa->coa_sub_category_id);
+        $coaCriteria->compare('coa_category_id', $coa->coa_category_id);
 
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,
@@ -136,9 +142,11 @@ class ServiceTypeController extends Controller {
             $coaDiskon->attributes = $_GET['Coa'];
 
         $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id = 30");
+        $coaDiskonCriteria->addCondition("coa_sub_category_id IN (28, 30)");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
         $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
+        $coaDiskonCriteria->compare('coa_sub_category_id', $coaDiskon->coa_sub_category_id);
+        $coaDiskonCriteria->compare('coa_category_id', $coaDiskon->coa_category_id);
 
         $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaDiskonCriteria,

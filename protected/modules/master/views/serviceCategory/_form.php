@@ -202,7 +202,7 @@
         ),
         array(
             'header' => 'Sub Category',
-            'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+            'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('condition' => 'id IN (4, 5, 6, 24, 28, 29, 30, 31, 47, 50, 51)', 'order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
             'value' => '$data->coaSubCategory!="" ?$data->coaSubCategory->name:""'
         ),
     ),
@@ -261,7 +261,7 @@
         ),
         array(
             'header' => 'Sub Category',
-            'filter' => CHtml::activeDropDownList($coaDiskon, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+            'filter' => CHtml::activeDropDownList($coaDiskon, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('condition' => 'id IN (28, 30)', 'order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
             'value' => '$data->coaSubCategory!="" ?$data->coaSubCategory->name:""'
         ),
     ),
