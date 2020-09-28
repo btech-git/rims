@@ -13,9 +13,13 @@
                 <td><?php echo $receiveHeader->receive_item_date; ?></td>
             </tr>
             <tr>
+                <td width="15%">Supplier SJ#</td>
+                <td><?php echo $receiveHeader->supplier_delivery_number; ?></td>
+            </tr>
+            <tr>
                 <td colspan="2">
                     <?php if ($receiveHeader->request_type != 'Internal Delivery Order' && empty($receiveHeader->invoice_number)): ?>
-                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Invoice', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $receiveHeader->id, array('visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $receiveHeader->id, array('visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
                     <?php endif; ?>
                 </td>
             </tr>

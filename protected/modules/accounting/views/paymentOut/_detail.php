@@ -1,11 +1,12 @@
 <table style="border: 1px solid">
     <thead>
         <tr style="background-color: skyblue">
-            <th style="text-align: center; width: 10%">Invoice #</th>
-            <th style="text-align: center; width: 10%">Tanggal</th>
-            <th style="text-align: center; width: 10%">Jatuh Tempo</th>
+            <th style="text-align: center; width: 15%">Invoice #</th>
+            <th style="text-align: center; width: 15%">Tanggal</th>
+            <th style="text-align: center; width: 15%">SJ #</th>
+            <th style="text-align: center; width: 15%">Jatuh Tempo</th>
             <th style="text-align: center">Memo</th>
-            <th style="text-align: center; width: 10%">Amount</th>
+            <th style="text-align: center; width: 15%">Amount</th>
             <th style="width: 5%"></th>
         </tr>
     </thead>
@@ -20,6 +21,9 @@
                 </td>
                 <td>
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?>
+                </td>
+                <td>
+                    <?php echo CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')); ?>
                 </td>
                 <td>
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_due_date'))); ?>
@@ -49,14 +53,14 @@
     </tbody>
     <tfoot>
 	<tr style="background-color: aquamarine">
-            <td colspan="4" style="text-align: right; font-weight: bold">Total Hutang:</td>
+            <td colspan="5" style="text-align: right; font-weight: bold">Total Hutang:</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>
             <td></td>
 	</tr>
 	<tr style="background-color: aquamarine">
-            <td colspan="4" style="text-align: right; font-weight: bold">Pembayaran:</td>
+            <td colspan="5" style="text-align: right; font-weight: bold">Pembayaran:</td>
             <td style="text-align: right;font-weight: bold">
                 <?php echo CHtml::activeTextField($paymentOut->header, 'payment_amount'); ?>
                 <?php echo CHtml::error($paymentOut->header, 'payment_amount'); ?>

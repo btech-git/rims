@@ -21,7 +21,21 @@
                         <?php echo CHtml::label('Tanggal Payment', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($paymentOut->header, 'payment_date'))); ?>
+                        <?php //echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($paymentOut->header, 'payment_date'))); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                            'model' => $paymentOut->header,
+                            'attribute' => "payment_date",
+                            'options'=>array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth'=>true,
+                                'changeYear'=>true,
+                                'yearRange'=>'1900:2020'
+                            ),
+                            'htmlOptions'=>array(
+                                'value'=>date('Y-m-d'),
+                                'readonly' => true,
+                            ),
+                        )); ?>
                         <?php echo CHtml::error($paymentOut->header, 'payment_date'); ?>
                     </div>
                 </div>
@@ -336,6 +350,11 @@
             'header' => 'Tanggal',
             'name' => 'invoice_date',
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
+        ),
+        array(
+            'name' => 'supplier_delivery_number',
+            'header' => 'Supplier SJ #',
+            'value' => '$data->supplier_delivery_number',
         ),
         array(
             'header' => 'Jatuh Tempo',

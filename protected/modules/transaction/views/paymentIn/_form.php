@@ -5,9 +5,7 @@
 ?>
 
 <div class="form">
-
-    <?php
-    $form = $this->beginWidget('CActiveForm', array(
+    <?php $form = $this->beginWidget('CActiveForm', array(
         'id' => 'payment-in-form',
         'htmlOptions' => array('enctype' => 'multipart/form-data'),
         // Please note: When you enable ajax validation, make sure the corresponding
@@ -15,12 +13,11 @@
         // There is a call to performAjaxValidation() commented in generated controller code.
         // See class documentation of CActiveForm for details on this.
         'enableAjaxValidation' => false,
-            ));
-    ?>
+    )); ?>
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
-
-<?php echo $form->errorSummary($model); ?>
+    
+    <?php echo $form->errorSummary($model); ?>
 
     <div class="row">
         <div class="small-12 medium-6 columns">
@@ -42,21 +39,21 @@
                         <?php echo $form->labelEx($model, 'payment_date'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'payment_date', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
-                        <?php /* $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                          'model' => $model,
-                          'attribute' => "payment_date",
-                          'options'=>array(
-                          'dateFormat' => 'yy-mm-dd',
-                          'changeMonth'=>true,
-                          'changeYear'=>true,
-                          'yearRange'=>'1900:2020'
-                          ),
-                          'htmlOptions'=>array(
-                          'value'=>date('Y-m-d'),
-                          //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
-                          ),
-                          )); */ ?>
+                        <?php //echo $form->textField($model, 'payment_date', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                            'model' => $model,
+                            'attribute' => "payment_date",
+                            'options'=>array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth'=>true,
+                                'changeYear'=>true,
+                                'yearRange'=>'1900:2020'
+                            ),
+                            'htmlOptions'=>array(
+                                'value'=>date('Y-m-d'),
+                                'readonly' => true,
+                            ),
+                        )); ?>
                         <?php echo $form->error($model, 'payment_date'); ?>
                     </div>
                 </div>

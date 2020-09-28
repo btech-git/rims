@@ -142,7 +142,7 @@ class ServiceCategoryController extends Controller {
             $coaDiskon->attributes = $_GET['Coa'];
 
         $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id = 30");
+        $coaDiskonCriteria->addCondition("coa_sub_category_id IN (28, 30)");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
         $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
         $coaDiskonCriteria->compare('coa_sub_category_id', $coaDiskon->coa_sub_category_id);

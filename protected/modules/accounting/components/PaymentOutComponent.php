@@ -26,7 +26,7 @@ class PaymentOutComponent extends CComponent {
             }
 
             if (!$exist) {
-                $detail = new PaymentOutDetail;
+                $detail = new PayOutDetail;
                 $detail->receive_item_id = $invoiceId;
                 $detail->total_invoice = $receiveItem->invoice_grand_total;
                 $this->details[] = $detail;
@@ -137,10 +137,10 @@ class PaymentOutComponent extends CComponent {
 
             $valid = $detail->save(false) && $valid;
 
-            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
-            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
-            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+//            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
+//            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+//            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
+//            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
         }
 
         foreach ($this->header->images as $file) {
@@ -185,5 +185,4 @@ class PaymentOutComponent extends CComponent {
         
         return $total;
     }
-
 }

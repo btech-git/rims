@@ -25,7 +25,7 @@
  * @property Users $user
  * @property Branch $branch
  * @property CompanyBank $companyBank
- * @property PaymentOutDetails[] $paymentOutDetails
+ * @property PayOutDetails[] $payOutDetails
  * @property PaymentOutImages[] $paymentOutImages
  * @property PaymentOutApproval[] $paymentOutApprovals
  * @property PaymentType $paymentType
@@ -80,7 +80,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'bank' => array(self::BELONGS_TO, 'Bank', 'bank_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
-            'paymentOutDetails' => array(self::HAS_MANY, 'PaymentOutDetail', 'payment_out_id'),
+            'payOutDetails' => array(self::HAS_MANY, 'PayOutDetail', 'payment_out_id'),
             'paymentOutApprovals' => array(self::HAS_MANY, 'PaymentOutApproval', 'payment_out_id'),
             'paymentOutImages' => array(self::HAS_MANY, 'PaymentOutImages', 'payment_out_id'),
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
@@ -223,7 +223,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
     public function getTotalInvoice() {
         $total = 0.00;
         
-        foreach ($this->paymentOutDetails as $detail) {
+        foreach ($this->payOutDetails as $detail) {
             $total += $detail->total_invoice;
         }
         

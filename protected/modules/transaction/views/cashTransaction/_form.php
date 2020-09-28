@@ -61,7 +61,21 @@
                         <?php echo $form->labelEx($cashTransaction->header, 'transaction_date', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction->header, 'transaction_date', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
+                        <?php //echo $form->textField($cashTransaction->header, 'transaction_date', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                            'model' => $cashTransaction->header,
+                            'attribute' => "transaction_date",
+                            'options'=>array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth'=>true,
+                                'changeYear'=>true,
+                                'yearRange'=>'1900:2020'
+                            ),
+                            'htmlOptions'=>array(
+                                'value'=>date('Y-m-d'),
+                                'readonly' => true,
+                            ),
+                        )); ?>
                         <?php echo $form->error($cashTransaction->header, 'transaction_date'); ?>
                     </div>
                 </div>

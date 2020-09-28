@@ -61,7 +61,7 @@ $this->breadcrumbs=array(
                 </div>
             </div>
             
-            <div class="small-12 medium-6 columns">		
+            <div class="small-12 medium-6 columns">
                 <div id="purchase" >
                     <div class="field">
                         <div class="row collapse">
@@ -103,6 +103,17 @@ $this->breadcrumbs=array(
                             <div class="small-8 columns">
                                 <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.supplier.name')); ?>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem, 'supplier_delivery_number', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')); ?>
                         </div>
                     </div>
                 </div>
@@ -208,16 +219,47 @@ $this->breadcrumbs=array(
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="10" style="text-align: right">SUB TOTAL</td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'subTotal'))); ?></td>
+                            <td colspan="10" style="text-align: right">TOTAL</td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'subTotal'))); ?>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="10" style="text-align: right">PPn 10%</td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'taxNominal'))); ?></td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'taxNominal'))); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" style="text-align: right">SUB TOTAL</td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotal'))); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" style="text-align: right">PEMBULATAN</td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::activeTextField($receiveItem, 'invoice_rounding_nominal', array(
+                                    'maxlength' => 50, 
+                                    'size' => 30,
+                                    'onchange' => CHtml::ajax(array(
+                                        'type' => 'POST',
+                                        'dataType' => 'JSON',
+                                        'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $receiveItem->id)),
+                                        'success' => 'function(data) {
+                                            $("#grand_total").html(data.grandTotal);
+                                        }',
+                                    ))
+                                )); ?>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="10" style="text-align: right">GRAND TOTAL</td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotal'))); ?></td>
+                            <td style="text-align: right">
+                                <span id="grand_total">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total_rounded'))); ?>
+                                </span>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>

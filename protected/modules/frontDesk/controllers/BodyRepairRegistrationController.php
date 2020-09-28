@@ -373,7 +373,7 @@ class BodyRepairRegistrationController extends Controller {
         
         $dataProvider = $model->search();
         $dataProvider->criteria->addCondition("repair_type = 'BR'");
-        $dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,

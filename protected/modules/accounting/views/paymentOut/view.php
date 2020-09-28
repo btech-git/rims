@@ -95,7 +95,7 @@
                     <?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?>
                 </td>
                 <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'invoice_grand_total'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total_invoice'))); ?>
                 </td>
             </tr>
 	<?php endforeach; ?>

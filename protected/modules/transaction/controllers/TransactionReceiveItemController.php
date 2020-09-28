@@ -549,44 +549,50 @@ class TransactionReceiveItemController extends Controller {
 
     public function actionAjaxHtmlRemoveDetailRequest($id) {
         if (Yii::app()->request->isAjaxRequest) {
-
-
-
+            
             $receiveItem = $this->instantiate($id);
             $this->loadState($receiveItem);
 
             $receiveItem->removeDetailAt();
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('receiveItem' => $receiveItem
-                    ), false, true);
+            
+            $this->renderPartial('_detail', array('receiveItem' => $receiveItem), false, true);
         }
     }
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-
-
-
             $receiveItem = $this->instantiate($id);
             $this->loadState($receiveItem);
 
             $receiveItem->removeDetail($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('receiveItem' => $receiveItem
-                    ), false, true);
+            
+            $this->renderPartial('_detail', array('receiveItem' => $receiveItem), false, true);
+        }
+    }
+
+    public function actionAjaxJsonGrandTotal($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $receiveItem = $this->instantiate($id);
+            $this->loadState($receiveItem);
+
+            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $receiveItem->grandTotalAfterRounding));
+
+            echo CJSON::encode(array(
+                'grandTotal' => $grandTotal,
+            ));
         }
     }
 
     public function instantiate($id) {
         if (empty($id)) {
             $receiveItem = new ReceiveItems(new TransactionReceiveItem(), array());
-            //print_r("test");
         } else {
             $receiveItemModel = $this->loadModel($id);
             $receiveItem = new ReceiveItems($receiveItemModel, $receiveItemModel->transactionReceiveItemDetails);
-            //print_r("test");
         }
         return $receiveItem;
     }
@@ -595,7 +601,6 @@ class TransactionReceiveItemController extends Controller {
         if (isset($_POST['TransactionReceiveItem'])) {
             $receiveItem->header->attributes = $_POST['TransactionReceiveItem'];
         }
-
 
         if (isset($_POST['TransactionReceiveItemDetail'])) {
             foreach ($_POST['TransactionReceiveItemDetail'] as $i => $item) {

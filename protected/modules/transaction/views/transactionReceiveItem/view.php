@@ -32,7 +32,7 @@ $this->menu = array(
         <?php endif; ?>
 
         <?php if ($model->request_type != 'Internal Delivery Order' && empty($model->invoice_number)): ?>
-            <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Invoice', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
+            <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
         <?php endif; ?>
 
         <h1>View Transaction Receive Item #<?php echo $model->id; ?></h1>
@@ -97,13 +97,13 @@ $this->menu = array(
                         </div>
                     </div>
                 </div>
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label for="label">Invoice No</label>
                         </div>
                         <div class="small-8 columns">
-                            <label for="label"><?php echo $model->invoice_number; ?></label>
+                            <label for="label"><?php /*echo $model->invoice_number; ?></label>
                         </div>
                     </div>
                 </div>
@@ -113,10 +113,10 @@ $this->menu = array(
                             <label for="label">Invoice Date</label>
                         </div>
                         <div class="small-8 columns">
-                            <label for="label"><?php echo $model->invoice_date; ?></label>
+                            <label for="label"><?php echo $model->invoice_date;*/ ?></label>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
 
         </div>
@@ -242,6 +242,7 @@ $this->menu = array(
                     <td>Barcode Product</td>
                 </tr>
             </thead>
+            
             <tbody>
                 <?php foreach ($recieveDetails as $key => $recieveDetail): ?>
                     <tr>
@@ -269,7 +270,9 @@ $this->menu = array(
     <?php else: ?>
         <?php echo 'No Details Available'; ?>
     <?php endif ?>
+    
     <hr />
+    
     <?php
     if ($model->request_type == 'Purchase Order') {
         $itemHeaders = TransactionReceiveItem::model()->findAllByAttributes(array('purchase_order_id' => $model->purchase_order_id));
@@ -286,6 +289,7 @@ $this->menu = array(
                 <tr>
                     <td>Receive #</td>
                     <td>Date</td>
+                    <td>Supplier SJ#</td>
                     <td>Product</td>
                     <td>Qty Request</td>
                     <td>Qty Received</td>
@@ -295,13 +299,13 @@ $this->menu = array(
                 </tr>
             </thead>
             <tbody>
-    <?php foreach ($itemHeaders as $key => $itemHeader): ?>
-        <?php $receiveItemDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $itemHeader->id)); ?>
-        <?php foreach ($receiveItemDetails as $key => $receiveItemDetail): ?>
-
+                <?php foreach ($itemHeaders as $key => $itemHeader): ?>
+                    <?php $receiveItemDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $itemHeader->id)); ?>
+                    <?php foreach ($receiveItemDetails as $key => $receiveItemDetail): ?>
                         <tr>
                             <td><?php echo $receiveItemDetail->receiveItem->receive_item_no; ?></td>
                             <td><?php echo $receiveItemDetail->receiveItem->receive_item_date; ?></td>
+                            <td><?php echo $receiveItemDetail->receiveItem->supplier_delivery_number; ?></td>
                             <td><?php echo $receiveItemDetail->product->name; ?></td>
                             <td><?php echo $receiveItemDetail->qty_request; ?></td>
                             <td><?php echo $receiveItemDetail->qty_received; ?></td>
@@ -309,13 +313,9 @@ $this->menu = array(
                             <td><?php echo $receiveItemDetail->note; ?></td>
                             <td><?php echo $receiveItemDetail->barcode_product; ?></td>
                         </tr>
-
-        <?php endforeach ?>
-    <?php endforeach ?>
-<?php endif ?>
-
-
-
-        </tbody>
-    </table>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
 </div>

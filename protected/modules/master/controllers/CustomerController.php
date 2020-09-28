@@ -82,7 +82,7 @@ class CustomerController extends Controller {
             $coa->attributes = $_GET['Coa'];
 
         $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("coa_sub_category_id = 8 AND coa_id = 346");
+        $coaCriteria->addCondition("coa_sub_category_id = 8");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
 
@@ -198,7 +198,7 @@ class CustomerController extends Controller {
             $coa->attributes = $_GET['Coa'];
 
         $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("coa_sub_category_id = 8 AND coa_id = 346");
+        $coaCriteria->addCondition("coa_sub_category_id = 8");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
 

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "{{payment_out_detail}}".
+ * This is the model class for table "{{pay_out_detail}}".
  *
- * The followings are the available columns in table '{{payment_out_detail}}':
+ * The followings are the available columns in table '{{pay_out_detail}}':
  * @property integer $id
  * @property string $total_invoice
  * @property string $memo
@@ -14,7 +14,7 @@
  * @property TransactionReceiveItem $receiveItem
  * @property PaymentOut $paymentOut
  */
-class PaymentOutDetail extends CActiveRecord {
+class PayOutDetail extends CActiveRecord {
 
     /**
      * Returns the static model of the specified AR class.
@@ -29,7 +29,7 @@ class PaymentOutDetail extends CActiveRecord {
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{payment_out_detail}}';
+        return '{{pay_out_detail}}';
     }
 
     /**

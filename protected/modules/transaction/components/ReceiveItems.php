@@ -5,7 +5,7 @@ class ReceiveItems extends CComponent {
     public $header;
     public $details;
 
-    // /public $detailApprovals;
+    // public $detailApprovals;
     // public $picPhoneDetails;
     // public $picMobileDetails;
 
@@ -165,6 +165,7 @@ class ReceiveItems extends CComponent {
         $this->header->invoice_sub_total = $this->subTotal;
         $this->header->invoice_tax_nominal = $this->taxNominal;
         $this->header->invoice_grand_total = $this->grandTotal;
+        $this->header->invoice_grand_total_rounded = $this->grandTotalAfterRounding;
         $valid = $this->header->save();
 
         $requestDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $this->header->id));
@@ -649,5 +650,9 @@ class ReceiveItems extends CComponent {
     
     public function getGrandTotal() {
         return $this->subTotal + $this->taxNominal;
+    }
+    
+    public function getGrandTotalAfterRounding() {
+        return $this->header->getGrandTotal() + $this->header->invoice_rounding_nominal;
     }
 }

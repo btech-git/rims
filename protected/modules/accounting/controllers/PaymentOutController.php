@@ -79,16 +79,16 @@ class PaymentOutController extends Controller {
 
     public function actionUpdate($id) {
         $paymentOut = $this->instantiate($id);
-        $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($paymentOut->header->purchase_order_id);
+        $supplier = Supplier::model()->findByPk($paymentOut->header->supplier_id);
 
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
 
-        if (!empty($paymentOut->purchase_order_id)) {
-            $receiveItemDataProvider->criteria->addCondition("t.purchase_order_id = :purchase_order_id");
-            $receiveItemDataProvider->criteria->params[':purchase_order_id'] = $paymentOut->purchase_order_id;
+        if (!empty($paymentOut->header->supplier_id)) {
+            $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
+            $receiveItemDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
         }
-
+        
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
 
@@ -98,7 +98,7 @@ class PaymentOutController extends Controller {
 
         $this->render('update', array(
             'paymentOut' => $paymentOut,
-            'purchaseOrder' => $purchaseOrder,
+            'supplier' => $supplier,
             'receiveItem' => $receiveItem,
             'receiveItemDataProvider' => $receiveItemDataProvider,
         ));
@@ -106,7 +106,7 @@ class PaymentOutController extends Controller {
 
     public function actionView($id) {
         $paymentOut = $this->loadModel($id);
-        $paymentOutDetails = PaymentOutDetail::model()->findAllByAttributes(array('payment_out_id' => $id));
+        $paymentOutDetails = PayOutDetail::model()->findAllByAttributes(array('payment_out_id' => $id));
         
         $postImages = PaymentOutImages::model()->findAllByAttributes(array(
             'payment_out_id' => $paymentOut->id,
@@ -393,7 +393,7 @@ class PaymentOutController extends Controller {
             $paymentOut = new PaymentOutComponent(new PaymentOut(), array(), new PaymentOutImages());
         else {
             $paymentOutHeader = $this->loadModel($id);
-            $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->paymentOutDetails, $paymentOutHeader->paymentOutImages);
+            $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->payOutDetails, $paymentOutHeader->paymentOutImages);
         }
 
         return $paymentOut;
@@ -413,17 +413,17 @@ class PaymentOutController extends Controller {
             $paymentOut->header->attributes = $_POST['PaymentOut'];
         }
         
-        if (isset($_POST['PaymentOutDetail'])) {
-            foreach ($_POST['PaymentOutDetail'] as $i => $item) {
+        if (isset($_POST['PayOutDetail'])) {
+            foreach ($_POST['PayOutDetail'] as $i => $item) {
                 if (isset($paymentOut->details[$i]))
                     $paymentOut->details[$i]->attributes = $item;
                 else {
-                    $detail = new PaymentOutDetail();
+                    $detail = new PayOutDetail();
                     $detail->attributes = $item;
                     $paymentOut->details[] = $detail;
                 }
             }
-            if (count($_POST['PaymentOutDetail']) < count($paymentOut->details))
+            if (count($_POST['PayOutDetail']) < count($paymentOut->details))
                 array_splice($paymentOut->details, $i + 1);
         } else
             $paymentOut->details = array();

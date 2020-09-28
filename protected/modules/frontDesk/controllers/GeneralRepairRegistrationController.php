@@ -291,9 +291,9 @@ class GeneralRepairRegistrationController extends Controller {
         if (isset($_GET['RegistrationTransaction']))
             $model->attributes = $_GET['RegistrationTransaction'];
 
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchAdmin();
         $dataProvider->criteria->addCondition("repair_type = 'GR'");
-        $dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,

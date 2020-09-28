@@ -12,14 +12,11 @@
             'header'=>'',
                     ),
         'columns'=>array(
-            //'id',
-            //'code',
             array(
                 'name'=>'purchase_order_no', 
                 'value'=>'CHTml::link($data->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
-            // 'purchase_order_no',
             'purchase_order_date',
             array(
                 'name'=>'supplier_name',

@@ -36,6 +36,11 @@
     'id' => 'payment-grid',
     'dataProvider' => $dataProvider,
     'filter' => $paymentOut,
+    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+    'pager'=>array(
+       'cssFile'=>false,
+       'header'=>'',
+    ),
     'columns' => array(
         array(
             'name' => 'payment_number',
@@ -65,7 +70,7 @@
         'branch.name: Branch',
         array(
             'class' => 'CButtonColumn',
-            'template' => '{view}{update}{delete}',
+            'template' => '{view}{update}',
             'afterDelete' => 'function(){ location.reload(); }'
         ),
     ),
