@@ -12,15 +12,15 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-                $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'create' ||
-                $filterChain->action->id === 'generateInvoice' ||
-                $filterChain->action->id === 'generateSalesOrder' ||
-                $filterChain->action->id === 'generateWorkOrder' ||
-                $filterChain->action->id === 'receive' ||
-                $filterChain->action->id === 'view' ||
-                $filterChain->action->id === 'showRealization' ||
-                $filterChain->action->id === 'update'
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'create' ||
+            $filterChain->action->id === 'generateInvoice' ||
+            $filterChain->action->id === 'generateSalesOrder' ||
+            $filterChain->action->id === 'generateWorkOrder' ||
+            $filterChain->action->id === 'receive' ||
+            $filterChain->action->id === 'view' ||
+            $filterChain->action->id === 'showRealization' ||
+            $filterChain->action->id === 'update'
         ) {
             if (!(Yii::app()->user->checkAccess('frontOfficeStaff')))
                 $this->redirect(array('/site/login'));
@@ -95,6 +95,7 @@ class GeneralRepairRegistrationController extends Controller {
         $serviceCriteria->compare('t.code', $service->code, true);
         $serviceCriteria->compare('t.service_category_id', $service->service_category_id);
         $serviceCriteria->compare('t.service_type_id', $service->service_type_id);
+        $serviceCriteria->compare('t.is_deleted', 0);
         $explodeKeyword = explode(" ", $service->findkeyword);
 
         foreach ($explodeKeyword as $key) {
@@ -748,6 +749,7 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionShowRealization($id) {
         $head = RegistrationTransaction::model()->findByPk($id);
         $reals = RegistrationRealizationProcess::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        
         $this->render('realization', array(
             'head' => $head,
             'reals' => $reals,
@@ -755,7 +757,6 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionReceive($movementOutDetailId, $registrationProductId, $quantity) {
-        //$quantity = 0;
 
         $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);
         $registration = RegistrationTransaction::model()->findByPk($registrationProduct->registration_transaction_id);
@@ -772,6 +773,7 @@ class GeneralRepairRegistrationController extends Controller {
         $receiveHeader->request_date = $movementOut->date_posting;
         $receiveHeader->destination_branch = $registration->branch_id;
         $receiveHeader->movement_out_id = $movementOut->id;
+        
         if ($receiveHeader->save(false)) {
             $receiveDetail = new TransactionReceiveItemDetail();
             $receiveDetail->receive_item_id = $receiveHeader->id;
@@ -779,6 +781,7 @@ class GeneralRepairRegistrationController extends Controller {
             $receiveDetail->product_id = $registrationProduct->product_id;
             $receiveDetail->qty_request = $registrationProduct->quantity;
             $receiveDetail->qty_received = $quantity;
+            
             if ($receiveDetail->save(false)) {
 
                 $criteria = new CDbCriteria;
@@ -847,11 +850,11 @@ class GeneralRepairRegistrationController extends Controller {
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
-                    'generalRepairRegistration' => $generalRepairRegistration,
-                    'customer' => $customer,
-                    'vehicle' => $vehicle,
-                    'branch' => $branch,
-                        ), true));
+            'generalRepairRegistration' => $generalRepairRegistration,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
         $mPDF1->Output();
     }
 
@@ -866,11 +869,11 @@ class GeneralRepairRegistrationController extends Controller {
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfSaleOrder', array(
-                    'generalRepairRegistration' => $generalRepairRegistration,
-                    'customer' => $customer,
-                    'vehicle' => $vehicle,
-                    'branch' => $branch,
-                        ), true));
+            'generalRepairRegistration' => $generalRepairRegistration,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
         $mPDF1->Output();
     }
 
@@ -885,11 +888,11 @@ class GeneralRepairRegistrationController extends Controller {
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfWorkOrder', array(
-                    'generalRepairRegistration' => $generalRepairRegistration,
-                    'customer' => $customer,
-                    'vehicle' => $vehicle,
-                    'branch' => $branch,
-                        ), true));
+            'generalRepairRegistration' => $generalRepairRegistration,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
         $mPDF1->Output();
     }
 
@@ -905,7 +908,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailQuickService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -917,7 +920,10 @@ class GeneralRepairRegistrationController extends Controller {
             $generalRepairRegistration->addQsServiceDetail($quickServiceId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detailService', array('registrationTransaction' => $generalRepairRegistration), false, true);
+            
+            $this->renderPartial('_detailService', array(
+                'registrationTransaction' => $generalRepairRegistration
+            ), false, true);
         }
     }
 
@@ -935,7 +941,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailQuickService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -951,7 +957,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailQuickService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -968,7 +974,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -986,7 +992,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1002,7 +1008,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1021,7 +1027,7 @@ class GeneralRepairRegistrationController extends Controller {
             $this->renderPartial('_detailProduct', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
                 'branches' => $branches,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1038,7 +1044,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailProduct', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1139,7 +1145,7 @@ class GeneralRepairRegistrationController extends Controller {
                 'service' => $serviceId,
                 'vehicle' => $vehicleId,
                 'insurance' => $insuranceId
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1260,9 +1266,7 @@ class GeneralRepairRegistrationController extends Controller {
     public function instantiateRegistrationService($id) {
         if (empty($id)) {
             $registrationService = new RegistrationServices(new RegistrationService(), array(), array());
-            //print_r("test");
         } else {
-            //$registrationServiceModel = $this->loadModel($id);
             $registrationServiceModel = RegistrationService::model()->findByAttributes(array('id' => $id));
             $registrationService = new RegistrationServices($registrationServiceModel, $registrationServiceModel->registrationServiceEmployees, $registrationServiceModel->registrationServiceSupervisors);
         }
@@ -1273,6 +1277,7 @@ class GeneralRepairRegistrationController extends Controller {
         if (isset($_POST['RegistrationService'])) {
             $registrationService->header->attributes = $_POST['RegistrationService'];
         }
+        
         if (isset($_POST['RegistrationServiceEmployee'])) {
             foreach ($_POST['RegistrationServiceEmployee'] as $i => $item) {
                 if (isset($registrationService->employeeDetails[$i])) {

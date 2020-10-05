@@ -1,32 +1,29 @@
 <?php
 
-class IdleManagementController extends Controller
-{
+class GeneralRepairMechanicController extends Controller {
+
     public $layout = '//layouts/column1';
-    /**
-     * Idle Management.
-     */
-    
+
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'indexHead' || 
-            $filterChain->action->id === 'viewHeadWorkOrder' || 
-            $filterChain->action->id === 'viewEmployeeDetail'
+                $filterChain->action->id === 'indexHead' ||
+                $filterChain->action->id === 'viewHeadWorkOrder' ||
+                $filterChain->action->id === 'viewEmployeeDetail'
         ) {
             if (!(Yii::app()->user->checkAccess('maintenanceMechanicHead')))
                 $this->redirect(array('/site/login'));
         }
-        
+
         if (
-            $filterChain->action->id === 'indexMechanic' || 
-            $filterChain->action->id === 'viewDetailWorkOrder' || 
-            $filterChain->action->id === 'viewEmployeeDetail'
+                $filterChain->action->id === 'indexMechanic' ||
+                $filterChain->action->id === 'viewDetailWorkOrder' ||
+                $filterChain->action->id === 'viewEmployeeDetail'
         ) {
             if (!(Yii::app()->user->checkAccess('maintenanceMechanicStaff')))
                 $this->redirect(array('/site/login'));
@@ -35,135 +32,62 @@ class IdleManagementController extends Controller
         $filterChain->run();
     }
 
-    public function actionIndexHead()
-    {
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-        $mechanicId = isset($_GET['MechanicId']) ? $_GET['MechanicId'] : '';
-        $startMechanic = empty($model->start_mechanic_id) ? '' : Users::model()->findByPk($model->start_mechanic_id);
-        
-        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
-        $modelDataProvider = $model->searchByIdleManagement();
-//        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
-//        $modelDataProvider->criteria->compare('t.work_order_number',$model->work_order_number,true);
-//        $modelDataProvider->criteria->compare('t.branch_id',$model->branch_id);
-//        $modelDataProvider->criteria->compare('t.status', $model->status, true);
-//        $modelDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC, t.vehicle_id ASC';
-        
+    public function actionIndex() {
         $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
-        $registrationServiceDataProvider = $registrationService->search();
-        $registrationServiceDataProvider->criteria->together = 'true';
-        $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
-        $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
-        $registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
-        $registrationServiceDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
+        $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
+        $status = isset($_GET['Status']) ? $_GET['Status'] : '';
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
 
-        $employee = Search::bind(new EmployeeBranchDivisionPositionLevel('search'), isset($_GET['EmployeeBranchDivisionPositionLevel']) ? $_GET['EmployeeBranchDivisionPositionLevel'] : '');
-        $employeeDataProvider = $employee->search();
-        $employeeDataProvider->criteria->with = array(
-            'employee',
-            'branch',
-            'division',
-            'position',
-            'level',
-        );
-        $employeeDataProvider->criteria->order = 'employee.name ASC';
-        $employeeDataProvider->criteria->addCondition("position_id IN (1, 3, 4) AND division_id = 1");
-        
-        $this->render('indexHead', array(
-            'model' => $model,
-            'modelDataProvider' => $modelDataProvider,
-            'registrationService' => $registrationService,
-            'registrationServiceDataProvider' => $registrationServiceDataProvider,
-            'startMechanic' => $startMechanic,
-            'employee' => $employee,
-            'employeeDataProvider' => $employeeDataProvider,
+        $registrationServiceDataProvider = $registrationService->searchByGeneralRepairMechanic();
+
+        if (!empty($plateNumber)) {
+            $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.plate_number = :plate_number");
+            $registrationServiceDataProvider->criteria->params[':plate_number'] = $plateNumber;
+        }
+
+        if (!empty($workOrderNumber)) {
+            $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.work_order_number = :work_order_number");
+            $registrationServiceDataProvider->criteria->params[':work_order_number'] = $workOrderNumber;
+        }
+
+        if (!empty($status)) {
+            $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = :status");
+            $registrationServiceDataProvider->criteria->params[':status'] = $status;
+        }
+
+        if (!empty($branchId)) {
+            $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.branch_id = :branch_id");
+            $registrationServiceDataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+
+        if (!empty($serviceTypeId)) {
+            $registrationServiceDataProvider->criteria->addCondition("service.service_type_id = :service_type_id");
+            $registrationServiceDataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
+        }
+
+        $registrationServiceHistoryDataProvider = $registrationService->search();
+        $registrationServiceHistoryDataProvider->criteria->together = 'true';
+        $registrationServiceHistoryDataProvider->criteria->with = array('registrationTransaction');
+        $registrationServiceHistoryDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
+        $registrationServiceHistoryDataProvider->criteria->compare('t.start_mechanic_id', Yii::app()->user->id);
+        $registrationServiceHistoryDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+        $registrationServiceHistoryDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
+
+        $this->render('index', array(
+            'plateNumber' => $plateNumber,
+            'workOrderNumber' => $workOrderNumber,
+            'status' => $status,
             'branchId' => $branchId,
-            'mechanicId' => $mechanicId,
-        ));
-    }
-    
-    public function actionViewHeadWorkOrder($registrationId)
-    {
-        $registration = RegistrationTransaction::model()->findByPk($registrationId);
-        $vehicle = Vehicle::model()->findByPk($registration->vehicle_id);
-        $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
-
-        $registrationService = new RegistrationService('search');
-        $registrationService->unsetAttributes();  // clear any default values
-        if (isset($_GET['RegistrationService'])) {
-            $registrationService->attributes = $_GET['RegistrationService'];
-        }
-
-        $registrationServiceCriteria = new CDbCriteria;
-        $registrationServiceCriteria->compare('id', $registrationService->id);
-        $registrationServiceCriteria->compare('registration_transaction_id', $registrationId);
-        $registrationServiceCriteria->compare('service_id', $registrationService->service_id);
-        $registrationServiceCriteria->compare('claim', $registrationService->claim, true);
-        $registrationServiceCriteria->compare('is_quick_service', $registrationService->is_quick_service);
-        $registrationServiceCriteria->compare('start', $registrationService->start, true);
-        $registrationServiceCriteria->compare('end', $registrationService->end, true);
-        $registrationServiceCriteria->compare('note', $registrationService->note, true);
-        $registrationServiceCriteria->compare('is_body_repair', $registrationService->is_body_repair);
-        $registrationServiceCriteria->compare('LOWER(status)', strtolower($registrationService->status), false);
-        $registrationServiceCriteria->compare('start_mechanic_id', $registrationService->start_mechanic_id);
-        $registrationServiceCriteria->compare('finish_mechanic_id', $registrationService->finish_mechanic_id);
-        $registrationServiceCriteria->compare('supervisor_id', $registrationService->supervisor_id);
-        $registrationServiceCriteria->compare('t.status', $registrationService->status, true);
-
-        $registrationServiceDataProvider = new CActiveDataProvider('RegistrationService', array(
-            'criteria' => $registrationServiceCriteria,
-        ));
-        
-        $registrationQuickService = new RegistrationQuickService('search');
-        $registrationQuickService->unsetAttributes();  // clear any default values
-        if (isset($_GET['RegistrationQuickService'])) {
-            $registrationQuickService->attributes = $_GET['RegistrationQuickService'];
-        }
-
-        $registrationQuickServiceCriteria = new CDbCriteria;
-        $registrationQuickServiceCriteria->compare('id', $registrationQuickService->id);
-        $registrationQuickServiceCriteria->compare('registration_transaction_id', $registrationId);
-        $registrationQuickServiceCriteria->compare('quick_service_id', $registrationQuickService->quick_service_id);
-        $registrationQuickServiceCriteria->compare('price', $registrationQuickService->price);
-        $registrationQuickServiceCriteria->compare('hour', $registrationQuickService->hour);
-
-        $registrationQuickServiceDataProvider = new CActiveDataProvider('RegistrationQuickService', array(
-            'criteria' => $registrationQuickServiceCriteria,
-        ));
-        
-            if (isset($_POST['Submit'])) {
-                foreach($registration->registrationServices as $i => $registrationService) {
-                    $registrationService->assign_mechanic_id = $_POST['RegistrationService'][$i]['assign_mechanic_id'];
-                    $registrationService->update(array('assign_mechanic_id'));
-                }
-            } elseif (isset($_POST['Save'])) {
-                $registration->is_passed = $_POST['RegistrationTransaction']['is_passed'];
-                $registration->priority_level = $_POST['RegistrationTransaction']['priority_level'];
-                $registration->update(array('is_passed', 'priority_level'));
-
-                if (!empty($_POST['Memo'])) {
-                    $registrationMemo = new RegistrationMemo();
-                    $registrationMemo->registration_transaction_id = $registrationId;
-                    $registrationMemo->memo = $_POST['Memo'];
-                    $registrationMemo->date_time = date('Y-m-d H:i:s');
-                    $registrationMemo->user_id = Yii::app()->user->id;
-                    $registrationMemo->save();
-                }
-            }
-
-        $this->render('viewHeadWorkOrder', array(
-            'registration' => $registration,
+            'serviceTypeId' => $serviceTypeId,
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
-            'registrationQuickService' => $registrationQuickService,
-            'registrationQuickServiceDataProvider' => $registrationQuickServiceDataProvider,
-            'vehicle' => $vehicle,
-            'memo' => $memo,
+            'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
         ));
     }
 
-    public function actionViewDetailWorkOrder($registrationId)
-    {
+    public function actionViewDetailWorkOrder($registrationId) {
         $registration = RegistrationTransaction::model()->findByPk($registrationId);
         $vehicle = Vehicle::model()->findByPk($registration->vehicle_id);
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
@@ -200,7 +124,7 @@ class IdleManagementController extends Controller
         $registrationServiceDataProvider = new CActiveDataProvider('RegistrationService', array(
             'criteria' => $registrationServiceCriteria,
         ));
-        
+
         $registrationQuickService = new RegistrationQuickService('search');
         $registrationQuickService->unsetAttributes();  // clear any default values
         if (isset($_GET['RegistrationQuickService'])) {
@@ -217,7 +141,7 @@ class IdleManagementController extends Controller
         $registrationQuickServiceDataProvider = new CActiveDataProvider('RegistrationQuickService', array(
             'criteria' => $registrationQuickServiceCriteria,
         ));
-        
+
         if (isset($_POST['Submit']) && !empty($_POST['Memo'])) {
             $registrationMemo = new RegistrationMemo();
             $registrationMemo->registration_transaction_id = $registrationId;
@@ -239,12 +163,12 @@ class IdleManagementController extends Controller
     }
 
     public function actionViewEmployeeDetail($employeeId) {
-        $employee = Employee::model()->findByPk($employeeId); 
+        $employee = Employee::model()->findByPk($employeeId);
         $employeeBranchDivisionPositionLevel = EmployeeBranchDivisionPositionLevel::model()->findByAttributes(array('employee_id' => $employeeId));
-        
+
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
-        
+
         $registrationServiceDataProvider = $registrationService->search();
         $registrationServiceDataProvider->criteria->together = 'true';
         $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
@@ -272,8 +196,7 @@ class IdleManagementController extends Controller
     /**
      * Start Finish Service.
      */
-    public function actionWorkOrderStartService($serviceId, $registrationId)
-    {
+    public function actionWorkOrderStartService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
@@ -304,8 +227,7 @@ class IdleManagementController extends Controller
     /**
      * Start Pause Service.
      */
-    public function actionWorkOrderPauseService($serviceId, $registrationId)
-    {
+    public function actionWorkOrderPauseService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
@@ -335,8 +257,7 @@ class IdleManagementController extends Controller
     /**
      * Start Resume Service.
      */
-    public function actionWorkOrderResumeService($serviceId, $registrationId)
-    {
+    public function actionWorkOrderResumeService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
@@ -371,8 +292,7 @@ class IdleManagementController extends Controller
         }
     }
 
-    public function actionWorkOrderFinishService($serviceId, $registrationId)
-    {
+    public function actionWorkOrderFinishService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
@@ -427,49 +347,61 @@ class IdleManagementController extends Controller
             $model->save();
         }
     }
-    
-    public function actionAjaxHtmlUpdateMechanicWaitlistTable()
-	{
-        if (Yii::app()->request->isAjaxRequest) {
-            $model = new RegistrationTransaction('search');
-            $model->unsetAttributes();  // clear any default values
 
-            if (isset($_GET['RegistrationTransaction'])) {
-                $model->attributes = $_GET['RegistrationTransaction'];
+    public function actionAjaxHtmlUpdateWaitlistTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $registrationService = new RegistrationService('search');
+            $registrationService->unsetAttributes();  // clear any default values
+            $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
+            $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
+            $status = isset($_GET['Status']) ? $_GET['Status'] : '';
+            $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+            $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
+
+            if (isset($_GET['RegistrationService'])) {
+                $registrationService->attributes = $_GET['RegistrationService'];
             }
 
-            $modelDataProvider = $model->search();
-            $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
+            $registrationServiceDataProvider = $registrationService->searchByGeneralRepairMechanic();
+        
+            if (!empty($plateNumber)) {
+                $registrationServiceDataProvider->criteria->addCondition("vehicle.plate_number = :plate_number");
+                $registrationServiceDataProvider->criteria->params[':plate_number'] = $plateNumber;
+            }
 
-            $this->renderPartial('_mechanicWaitlistTable', array(
-                'model' => $model,
-                'modelDataProvider' => $modelDataProvider,
+            if (!empty($workOrderNumber)) {
+                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.work_order_number = :work_order_number");
+                $registrationServiceDataProvider->criteria->params[':work_order_number'] = $workOrderNumber;
+            }
+
+            if (!empty($status)) {
+                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = :status");
+                $registrationServiceDataProvider->criteria->params[':status'] = $status;
+            }
+
+            if (!empty($branchId)) {
+                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.branch_id = :branch_id");
+                $registrationServiceDataProvider->criteria->params[':branch_id'] = $branchId;
+            }
+
+            if (!empty($serviceTypeId)) {
+                $registrationServiceDataProvider->criteria->addCondition("service.service_type_id = :service_type_id");
+                $registrationServiceDataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
+            }
+
+            $this->renderPartial('_waitlistTable', array(
+                'registrationService' => $registrationService,
+                'registrationServiceDataProvider' => $registrationServiceDataProvider,
+                'plateNumber' => $plateNumber,
+                'workOrderNumber' => $workOrderNumber,
+                'status' => $status,
+                'branchId' => $branchId,
+                'serviceTypeId' => $serviceTypeId,
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateHeadWaitlistTable()
-	{
-        if (Yii::app()->request->isAjaxRequest) {
-            $model = new RegistrationTransaction('search');
-            $model->unsetAttributes();  // clear any default values
 
-            if (isset($_GET['RegistrationTransaction'])) {
-                $model->attributes = $_GET['RegistrationTransaction'];
-            }
-
-            $modelDataProvider = $model->search();
-            $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
-
-            $this->renderPartial('_headWaitlistTable', array(
-                'model' => $model,
-                'modelDataProvider' => $modelDataProvider,
-            ));
-        }
-    }
-    
-	public function actionAjaxHtmlUpdateTransactionHistoryTable()
-	{
+    public function actionAjaxHtmlUpdateTransactionHistoryTable() {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = new RegistrationService('search');
             $registrationService->unsetAttributes();  // clear any default values
@@ -485,13 +417,13 @@ class IdleManagementController extends Controller
             $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
             $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND registrationTransaction.status = 'Finished'");
             $registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
-            
+
             if (empty($mechanicId)) {
                 $registrationServiceDataProvider->criteria->compare('t.finish_mechanic_id', Yii::app()->user->id);
             } else {
                 $registrationServiceDataProvider->criteria->compare('t.finish_mechanic_id', $mechanicId);
             };
-            
+
             $this->renderPartial('_transactionHistoryTable', array(
                 'registrationService' => $registrationService,
                 'registrationServiceDataProvider' => $registrationServiceDataProvider,
@@ -500,15 +432,14 @@ class IdleManagementController extends Controller
             ));
         }
     }
-    
-    public function loadModel($id)
-    {
+
+    public function loadModel($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
-        
+
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
         }
-        
+
         return $model;
     }
 

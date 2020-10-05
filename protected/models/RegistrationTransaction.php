@@ -280,7 +280,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 'with' => array(
                     'carMake', 'carModel', 'color'
                 ),
-            ), 'customer', 'pic'
+            ), 
+            'customer', 
+            'pic',
         );
 
         $criteria->compare('vehicle.plate_number', $this->plate_number, true);
@@ -476,8 +478,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.status', $this->status);
         $criteria->compare('note', $this->note, true);
 
-        $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
-        $criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate));
+//        $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
+        $criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $this->transaction_date_from, $this->transaction_date_to);
+//        $criteria->mergeWith($this->dateRangeSearchCriteria('SUBSTRING(transaction_date, 1, 10)', $arrayTransactionDate));
 
         $criteria->addCondition("t.work_order_number != ''");
         $criteria->compare('carMake.id', $this->car_make_code, true);

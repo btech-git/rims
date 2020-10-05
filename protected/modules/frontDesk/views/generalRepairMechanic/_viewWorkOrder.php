@@ -31,6 +31,15 @@
             <td>Work Order #: <?php echo $registration->work_order_number; ?></td>
             <td>Status: <?php echo $registration->status; ?></td>
         </tr>
+        <?php $inspectionModel = VehicleInspection::model()->findByAttributes(array('work_order_number' => $registration->work_order_number)); ?>
+        <?php if (!empty($inspectionModel)): ?>
+            <tr>
+                <td>
+                    Inspection: <?php echo CHtml::link($inspectionModel->inspection->name, array("/frontDesk/vehicleInspection/view", "id"=>$inspectionModel->id), array("target" => "_blank")); ?>
+                </td>
+                <td>Status: <?php echo $inspectionModel->status; ?></td>
+            </tr>
+        <?php endif; ?>
         <tr>
             <td colspan="2">
                 Tambah Memo: 

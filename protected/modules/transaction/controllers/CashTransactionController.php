@@ -82,7 +82,7 @@ class CashTransactionController extends Controller {
             $coaKas->attributes = $_GET['Coa'];
         
         $coaKasCriteria = new CDbCriteria;
-        $coaKasCriteria->addCondition("coa_sub_category_id BETWEEN 1 AND 3");
+        $coaKasCriteria->addCondition("coa_id IS NOT NULL AND SUBSTRING(code, -3 , 3) <> 000 AND coa_sub_category_id BETWEEN 1 AND 3");
         $coaKasCriteria->compare('code', $coaKas->code . '%', true, 'AND', false);
         $coaKasCriteria->compare('name', $coaKas->name, true);
         $coaKasCriteria->compare('normal_balance', $coaKas->normal_balance, true);
@@ -97,8 +97,7 @@ class CashTransactionController extends Controller {
             $coaDetail->attributes = $_GET['Coa'];
         
         $coaDetailCriteria = new CDbCriteria;
-
-//        $coaDetailCriteria->addCondition("(coa_sub_category_id IN (2,6,7,10,12,14,15,17,19,20,21,23,24,25,29,30,31,32,33,34,35,36,37,38,39,40,41,42,45,53,54)) ");
+        $coaDetailCriteria->addCondition("coa_id IS NOT NULL AND SUBSTRING(code, -3 , 3) <> 000");
         $coaDetailCriteria->compare('code', $coaDetail->code . '%', true, 'AND', false);
         $coaDetailCriteria->compare('name', $coaDetail->name, true);
         $coaDetailCriteria->compare('t.coa_category_id', $coaDetail->coa_category_id);
@@ -179,21 +178,23 @@ class CashTransactionController extends Controller {
         $coaKas->unsetAttributes();  // clear any default values
         if (isset($_GET['Coa']))
             $coaKas->attributes = $_GET['Coa'];
+        
         $coaKasCriteria = new CDbCriteria;
-        $coaKasCriteria->addCondition("(coa_sub_category_id = 2 OR id = 3 OR id = 183) AND coa_id = 0");
+        $coaKasCriteria->addCondition("coa_id IS NOT NULL AND SUBSTRING(code, -3 , 3) <> 000 AND coa_sub_category_id BETWEEN 1 AND 3");
         $coaKasCriteria->compare('code', $coaKas->code . '%', true, 'AND', false);
         $coaKasCriteria->compare('name', $coaKas->name, true);
         $coaKasCriteria->compare('normal_balance', $coaKas->normal_balance, true);
         $coaKasDataProvider = new CActiveDataProvider('Coa', array(
-                    'criteria' => $coaKasCriteria,
-                ));
+            'criteria' => $coaKasCriteria,
+        ));
 
         $coaDetail = new Coa('search');
         $coaDetail->unsetAttributes();  // clear any default values
         if (isset($_GET['Coa']))
             $coaDetail->attributes = $_GET['Coa'];
+        
         $coaDetailCriteria = new CDbCriteria;
-        $coaDetailCriteria->addCondition("(coa_sub_category_id IN (2,6,7,10,12,14,15,17,19,20,21,23,24,25,29,30,31,32,33,34,35,36,37,38,39,40,41,42,45,53,54)) AND coa_id = 0 ");
+        $coaDetailCriteria->addCondition("coa_id IS NOT NULL AND SUBSTRING(code, -3 , 3) <> 000");
         $coaDetailCriteria->compare('code', $coaDetail->code . '%', true, 'AND', false);
         $coaDetailCriteria->compare('name', $coaDetail->name, true);
         $coaDetailCriteria->compare('normal_balance', $coaDetail->normal_balance, true);
@@ -276,6 +277,7 @@ class CashTransactionController extends Controller {
      */
     public function actionIndex() {
         $dataProvider = new CActiveDataProvider('CashTransaction');
+        
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -287,6 +289,7 @@ class CashTransactionController extends Controller {
     public function actionAdmin() {
         $model = new CashTransaction('search');
         $model->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['CashTransaction']))
             $model->attributes = $_GET['CashTransaction'];
         

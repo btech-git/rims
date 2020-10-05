@@ -59,7 +59,7 @@
         <?php $this->widget('zii.widgets.CMenu', array(
             'items' => array(
                 array('label' => 'GENERAL REPAIR', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Mechanic POV', 'url' => array('/frontDesk/idleManagement/indexMechanic'), 'visible' => Yii::app()->user->checkAccess('maintenanceMechanicStaff')),
+                array('label' => 'Mechanic POV', 'url' => array('/frontDesk/generalRepairMechanic/index'), 'visible' => Yii::app()->user->checkAccess('maintenanceMechanicStaff')),
                 array('label' => 'Head POV', 'url' => array('/frontDesk/idleManagement/indexHead'), 'visible' => Yii::app()->user->checkAccess('maintenanceMechanicHead')),
                 array('label' => 'BODY REPAIR', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
                 array('label' => 'Mechanic POV', 'url' => array('/frontDesk/bodyRepairMechanic/index'), 'visible' => Yii::app()->user->checkAccess('bodyRepairMechanicStaff')),

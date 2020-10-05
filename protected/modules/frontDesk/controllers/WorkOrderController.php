@@ -136,65 +136,71 @@ class WorkOrderController extends Controller
 	 */
 	public function actionAdmin()
 	{
-        $model = new RegistrationTransaction('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['RegistrationTransaction'])) {
-            $model->attributes = $_GET['RegistrationTransaction'];
-        }
-        
-//        $model->transaction_date_from = date('Y-m-d');
-//        $model->transaction_date_to = date('Y-m-d');
-        
-        $carMakeId = isset($_GET['CarMakeId']) ? $_GET['CarMakeId'] : '';
-        $carModelId = isset($_GET['CarModelId']) ? $_GET['CarModelId'] : '';
+            $model = new RegistrationTransaction('search');
+            $model->unsetAttributes();  // clear any default values
+            if (isset($_GET['RegistrationTransaction'])) {
+                $model->attributes = $_GET['RegistrationTransaction'];
+            }
 
-        $modelDataProvider = $model->searchByWorkOrder();
-        
-//        $modelCriteria = new CDbCriteria;
-//        $modelCriteria->addCondition("work_order_number != ''");
-        
-//        $modelDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
-//            'criteria' => $modelCriteria,
-//            'sort' => array(
-//                'defaultOrder' => 'transaction_number',
-//                'attributes' => array(
-//                    'branch_id' => array(
-//                        'asc' => 'branch.name ASC',
-//                        'desc' => 'branch.name DESC',
-//                    ),
-//                    'customer_name' => array(
-//                        'asc' => 'customer.name ASC',
-//                        'desc' => 'customer.name DESC',
-//                    ),
-//                    'pic_name' => array(
-//                        'asc' => 'pic.name ASC',
-//                        'desc' => 'pic.name DESC',
-//                    ),
-//                    '*',
-//                ),
-//            ),
-//            'pagination' => array(
-//                'pageSize' => 10,
-//            ),
-//        ));
-        
-        $this->render('admin', array(
-            'model' => $model,
-            'modelDataProvider' => $modelDataProvider,
-            'carMakeId' => $carMakeId,
-            'carModelId' => $carModelId,
-        ));
+//            $model->transaction_date_from = date('Y-m-d');
+//            $model->transaction_date_to = date('Y-m-d');
+
+//            $carMakeId = isset($_GET['CarMakeId']) ? $_GET['CarMakeId'] : '';
+//            $carModelId = isset($_GET['CarModelId']) ? $_GET['CarModelId'] : '';
+
+            $modelDataProvider = $model->searchByWorkOrder();
+
+    //        $modelCriteria = new CDbCriteria;
+    //        $modelCriteria->addCondition("work_order_number != ''");
+
+    //        $modelDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
+    //            'criteria' => $modelCriteria,
+    //            'sort' => array(
+    //                'defaultOrder' => 'transaction_number',
+    //                'attributes' => array(
+    //                    'branch_id' => array(
+    //                        'asc' => 'branch.name ASC',
+    //                        'desc' => 'branch.name DESC',
+    //                    ),
+    //                    'customer_name' => array(
+    //                        'asc' => 'customer.name ASC',
+    //                        'desc' => 'customer.name DESC',
+    //                    ),
+    //                    'pic_name' => array(
+    //                        'asc' => 'pic.name ASC',
+    //                        'desc' => 'pic.name DESC',
+    //                    ),
+    //                    '*',
+    //                ),
+    //            ),
+    //            'pagination' => array(
+    //                'pageSize' => 10,
+    //            ),
+    //        ));
+
+            $this->render('admin', array(
+                'model' => $model,
+                'modelDataProvider' => $modelDataProvider,
+//                'carMakeId' => $carMakeId,
+//                'carModelId' => $carModelId,
+            ));
 	}
     
 	public function actionAjaxHtmlUpdateCarModelSelect()
 	{
         if (Yii::app()->request->isAjaxRequest) {
-            $carMakeId = isset($_GET['CarMakeId']) ? $_GET['CarMakeId'] : '';
-            $carModelId = isset($_GET['CarModelId']) ? $_GET['CarModelId'] : '';
+            $model = new RegistrationTransaction('search');
+            $model->unsetAttributes();  // clear any default values
+            if (isset($_GET['RegistrationTransaction'])) {
+                $model->attributes = $_GET['RegistrationTransaction'];
+            }
+
+            $carMakeId = isset($_GET['RegistrationTransaction']['car_make_code']) ? $_GET['RegistrationTransaction']['car_make_code'] : '';
+//            $carModelId = isset($_GET['CarModelId']) ? $_GET['CarModelId'] : '';
 
             $this->renderPartial('_carModelSelect', array(
+                'model' => $model,
                 'carMakeId' => $carMakeId,
-                'carModelId' => $carModelId,
             ));
         }
     }

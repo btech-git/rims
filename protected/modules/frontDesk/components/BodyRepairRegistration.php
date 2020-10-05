@@ -323,8 +323,9 @@ class BodyRepairRegistration extends CComponent {
 
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
-        if ($isNewRecord)
+        if ($isNewRecord) {
             $this->header->status = 'Registration';
+        }
         else
             $this->header->status = 'Update Registration';
 
@@ -348,6 +349,12 @@ class BodyRepairRegistration extends CComponent {
                     break;
                 }
             }
+            
+            $registrationRealization = new RegistrationRealizationProcess();
+            $registrationRealization->registration_transaction_id = $this->header->id;
+            $registrationRealization->name = 'Vehicle Inspection';
+            $registrationRealization->detail = 'No';
+            $registrationRealization->save();
         }
         
         return $valid;

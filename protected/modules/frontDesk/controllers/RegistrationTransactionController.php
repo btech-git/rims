@@ -1,7 +1,7 @@
 <?php
 
-class RegistrationTransactionController extends Controller
-{
+class RegistrationTransactionController extends Controller {
+
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -19,16 +19,15 @@ class RegistrationTransactionController extends Controller
     // 	);
     // }
 
-    /**f
+    /*     * f
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function accessRules()
-    {
+    public function accessRules() {
         return array(
             array(
-                'allow',  // allow all users to perform 'index' and 'view' actions
+                'allow', // allow all users to perform 'index' and 'view' actions
                 'actions' => array('index', 'view'),
                 'users' => array('*'),
             ),
@@ -111,7 +110,7 @@ class RegistrationTransactionController extends Controller
                 'users' => array('Admin'),
             ),
             array(
-                'deny',  // deny all users
+                'deny', // deny all users
                 'users' => array('*'),
             ),
         );
@@ -121,8 +120,7 @@ class RegistrationTransactionController extends Controller
      * Displays a particular model.
      * @param integer $id the ID of the model to be displayed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $services = RegistrationService::model()->findAllByAttributes(array(
             'registration_transaction_id' => $id,
@@ -144,8 +142,7 @@ class RegistrationTransactionController extends Controller
         ));
     }
 
-    public function actionViewWo($id)
-    {
+    public function actionViewWo($id) {
 
         $model = $this->loadModel($id);
         // if($model->repair_type == 'GR'){
@@ -168,21 +165,16 @@ class RegistrationTransactionController extends Controller
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate($type, $id)
-    {
+    public function actionCreate($type, $id) {
         // $model=new RegistrationTransaction;
-
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-
-
         // if(isset($_POST['RegistrationTransaction']))
         // {
         // 	$model->attributes=$_POST['RegistrationTransaction'];
         // 	if($model->save())
         // 		$this->redirect(array('view','id'=>$model->id));
         // }
-
         // $this->render('create',array(
         // 	'model'=>$model,
         // 	'customer'=>$customer,
@@ -202,14 +194,12 @@ class RegistrationTransactionController extends Controller
         }
 
         $customerCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('email', $customer->email . '%', true, 'AND', false);
 
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
         ));
-
 
         $qs = new QuickService('search');
         $qs->unsetAttributes();  // clear any default values
@@ -218,7 +208,6 @@ class RegistrationTransactionController extends Controller
         }
 
         $qsCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $qsCriteria->compare('name', $qs->name, true);
         $qsCriteria->compare('code', $qs->code, true);
         $qsCriteria->compare('rate', $qs->rate, true);
@@ -233,7 +222,6 @@ class RegistrationTransactionController extends Controller
         }
 
         $serviceCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $serviceCriteria->together = 'true';
         $serviceCriteria->with = array('serviceCategory', 'serviceType');
 
@@ -250,8 +238,6 @@ class RegistrationTransactionController extends Controller
             $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
         }
 
-        //$serviceCriteria->compare('rate',$service->rate,true);
-
         $serviceDataProvider = new CActiveDataProvider('Service', array(
             'criteria' => $serviceCriteria,
         ));
@@ -261,7 +247,6 @@ class RegistrationTransactionController extends Controller
         //     	$product->unsetAttributes();  // clear any default values
         //     	if (isset($_GET['Product']))
         //       	$product->attributes = $_GET['Product'];
-
         // $productCriteria = new CDbCriteria;
         // $productCriteria->compare('name',$product->name,true);
         // $productCriteria->compare('manufacturer_code',$product->manufacturer_code,true);
@@ -292,9 +277,6 @@ class RegistrationTransactionController extends Controller
 //        $productCriteria->compare('productSubCategory.name', $product->product_sub_category_name, true);
 
         $productDataProvider = $product->search();
-//        new CActiveDataProvider('Product', array(
-//            'criteria' => $productCriteria,
-//        ));
 
         $registrationTransaction = $this->instantiate(null);
         $registrationTransaction->header->branch_id = $registrationTransaction->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $registrationTransaction->header->branch_id;
@@ -305,10 +287,8 @@ class RegistrationTransactionController extends Controller
             if ($registrationTransaction->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $registrationTransaction->header->id));
             }
-
         }
         $this->render('create', array(
-            //'model'=>$model,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
             'registrationTransaction' => $registrationTransaction,
@@ -321,9 +301,7 @@ class RegistrationTransactionController extends Controller
             'serviceArray' => $serviceArray,
             'data' => $data,
             'type' => $type,
-
         ));
-
     }
 
     /**
@@ -331,20 +309,16 @@ class RegistrationTransactionController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         //$model=$this->loadModel($id);
-
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-
         // if(isset($_POST['RegistrationTransaction']))
         // {
         // 	$model->attributes=$_POST['RegistrationTransaction'];
         // 	if($model->save())
         // 		$this->redirect(array('view','id'=>$model->id));
         // }
-
         // $this->render('update',array(
         // 	'model'=>$model,
         // ));
@@ -355,7 +329,6 @@ class RegistrationTransactionController extends Controller
         }
 
         $customerCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('email', $customer->email . '%', true, 'AND', false);
 
@@ -369,7 +342,6 @@ class RegistrationTransactionController extends Controller
             $qs->attributes = $_GET['QuickService'];
         }
         $qsCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $qsCriteria->compare('name', $qs->name, true);
         $qsCriteria->compare('code', $qs->code, true);
         $qsCriteria->compare('rate', $qs->rate, true);
@@ -384,7 +356,6 @@ class RegistrationTransactionController extends Controller
         }
 
         $serviceCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $serviceCriteria->together = 'true';
         $serviceCriteria->with = array('serviceCategory', 'serviceType');
 
@@ -401,8 +372,6 @@ class RegistrationTransactionController extends Controller
             $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
         }
 
-        //$serviceCriteria->compare('rate',$service->rate,true);
-
         $serviceDataProvider = new CActiveDataProvider('Service', array(
             'criteria' => $serviceCriteria,
         ));
@@ -417,7 +386,6 @@ class RegistrationTransactionController extends Controller
         //     	$product->unsetAttributes();  // clear any default values
         //     	if (isset($_GET['Product']))
         //       	$product->attributes = $_GET['Product'];
-
         // $productCriteria = new CDbCriteria;
         // $productCriteria->compare('name',$product->name,true);
         // $productCriteria->compare('manufacturer_code',$product->manufacturer_code,true);
@@ -463,8 +431,6 @@ class RegistrationTransactionController extends Controller
         $type = "";
         $data = RegistrationTransaction::model()->findByPk($id);
         if (isset($_POST['RegistrationTransaction'])) {
-
-
             $this->loadState($registrationTransaction);
             if ($registrationTransaction->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $registrationTransaction->header->id));
@@ -484,7 +450,6 @@ class RegistrationTransactionController extends Controller
             'type' => $type,
             'data' => $data,
         ));
-
     }
 
     /**
@@ -492,8 +457,7 @@ class RegistrationTransactionController extends Controller
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -505,8 +469,7 @@ class RegistrationTransactionController extends Controller
     /**
      * Lists all models.
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $model = new RegistrationTransaction();
         $model->choice = 2;
         $customer = new Customer('search');
@@ -516,7 +479,6 @@ class RegistrationTransactionController extends Controller
         }
 
         $customerCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('email', $customer->email . '%', true, 'AND', false);
         $customerCriteria->compare('customer_type', $customer->customer_type, true);
@@ -524,7 +486,7 @@ class RegistrationTransactionController extends Controller
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
         ));
-        
+
         $customerCompany = isset($_GET['CustomerCompany']) ? $_GET['CustomerCompany'] : '';
         $vehicle = new Vehicle('search');
         $vehicle->unsetAttributes();  // clear any default values
@@ -532,22 +494,14 @@ class RegistrationTransactionController extends Controller
             $vehicle->attributes = $_GET['Vehicle'];
         }
 
-//        $vehicleCriteria = new CDbCriteria;
-//        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
-//        $vehicleCriteria->compare('plate_number', $vehicle->plate_number, true);
-
-        $vehicleDataProvider = $vehicle->search(); 
+        $vehicleDataProvider = $vehicle->search();
         $vehicleDataProvider->criteria->with = array('customer');
-
-        //new CActiveDataProvider('Vehicle', array(
-//            'criteria' => $vehicleCriteria,
-//        ));
 
         if (!empty($customerCompany)) {
             $vehicleDataProvider->criteria->addCondition('customer.name LIKE :customer_company');
             $vehicleDataProvider->criteria->params[':customer_company'] = "%{$customerCompany}%";
         }
-        
+
         $dataProvider = new CActiveDataProvider('RegistrationTransaction');
         $this->render('index', array(
             'model' => $model,
@@ -562,10 +516,9 @@ class RegistrationTransactionController extends Controller
     /**
      * Manages all models.
      */
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
         $model = new RegistrationTransaction('search');
-        // var_dump($model); die("S");
+
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
@@ -576,10 +529,9 @@ class RegistrationTransactionController extends Controller
         ));
     }
 
-    public function actionAdminTest()
-    {
+    public function actionAdminTest() {
         $model = new RegistrationTransaction('search');
-        // var_dump($model); die("S");
+
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
@@ -590,18 +542,17 @@ class RegistrationTransactionController extends Controller
         ));
     }
 
-    public function actionCashier()
-    {
+    public function actionCashier() {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
-        
+
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
         }
@@ -613,7 +564,7 @@ class RegistrationTransactionController extends Controller
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
         ));
-        
+
         $this->render('cashier', array(
             'model' => $model,
             'customer' => $customer,
@@ -621,17 +572,14 @@ class RegistrationTransactionController extends Controller
         ));
     }
 
-    public function actionAdminWo()
-    {
+    public function actionAdminWo() {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
 
-        // var_dump($model->getDatas()); die("S");
         $modelCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $modelCriteria->addCondition("work_order_number != ''");
         $modelDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $modelCriteria,
@@ -666,8 +614,7 @@ class RegistrationTransactionController extends Controller
     /**
      * Idle Management.
      */
-    public function actionIdleManagement()
-    {
+    public function actionIdleManagement() {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['RegistrationTransaction'])) {
@@ -675,7 +622,6 @@ class RegistrationTransactionController extends Controller
         }
 
         $modelCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $modelCriteria->addCondition("work_order_number != ''");
         $modelCriteria->compare('status', $model->status, true);
         $modelCriteria->order = 'vehicle_id ASC, work_order_date DESC';
@@ -691,27 +637,22 @@ class RegistrationTransactionController extends Controller
     /**
      * Idle Management.
      */
-    public function actionIdleManagementAjaxInfo($registrationId, $vehicleId)
-    {
+    public function actionIdleManagementAjaxInfo($registrationId, $vehicleId) {
         $registrationCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $registrationCriteria->addCondition("work_order_number != ''");
-        //$registrationCriteria->addCondition("vehicle_id = " . $vehicleId);
         $registrationCriteria->addCondition("vehicle_id = 4");
         $registrationCriteria->order = 'work_order_date DESC';
-        $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array(),
-            $registrationCriteria);
+        $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array(), $registrationCriteria);
+        
         $this->renderPartial('_idle-management-info', array(
             'registrationTransactions' => $registrationTransactions,
-            //'modelDataProvider'=>$modelDataProvider,
         ), false, true);
     }
 
     /**
      * Idle Management Update Service.
      */
-    public function actionIdleManagementUpdate($id)
-    {
+    public function actionIdleManagementUpdate($id) {
         $model = $this->loadModel($id);
 
         //Uncomment the following line if AJAX validation is needed
@@ -733,16 +674,15 @@ class RegistrationTransactionController extends Controller
     /**
      * Idle Management Services.
      */
-    public function actionIdleManagementServices($registrationId)
-    {
-        /*$model=new RegistrationTransaction('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['RegistrationTransaction']))
-			$model->attributes=$_GET['RegistrationTransaction'];
+    public function actionIdleManagementServices($registrationId) {
+        /* $model=new RegistrationTransaction('search');
+          $model->unsetAttributes();  // clear any default values
+          if(isset($_GET['RegistrationTransaction']))
+          $model->attributes=$_GET['RegistrationTransaction'];
 
-		$this->render('idle-management',array(
-			'model'=>$model,
-		));*/
+          $this->render('idle-management',array(
+          'model'=>$model,
+          )); */
         $registration = RegistrationTransaction::model()->findByPk($registrationId);
 
         $registrationService = new RegistrationService('search');
@@ -758,11 +698,9 @@ class RegistrationTransactionController extends Controller
             $registrationServiceCriteria->condition = 'registration_transaction_id = ' . $registrationId . ' AND is_body_repair = 1 ';
         } else {
             $registrationServiceCriteria->condition = 'registration_transaction_id = ' . $registrationId . ' AND is_body_repair = 0 ';
-
         }
         $registrationServiceCriteria->compare('id', $registrationService->id);
-        $registrationServiceCriteria->compare('registration_transaction_id',
-            $registrationService->registration_transaction_id);
+        $registrationServiceCriteria->compare('registration_transaction_id', $registrationService->registration_transaction_id);
         $registrationServiceCriteria->compare('service_id', $registrationService->service_id);
         $registrationServiceCriteria->compare('claim', $registrationService->claim, true);
         $registrationServiceCriteria->compare('price', $registrationService->price, true);
@@ -790,45 +728,32 @@ class RegistrationTransactionController extends Controller
             'criteria' => $registrationServiceCriteria,
         ));
 
-
-        //$model= Vehicle::model()->findAll($criteria);
-        //$model->unsetAttributes();  // clear any default values
-        //if(isset($_GET['Vehicle']))
-        //$model->attributes=$_GET['Vehicle'];
-
         $this->render('idle-management-services', array(
             'registration' => $registration,
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider
         ));
-
-        /*$this->renderPartial('_idle-management-services',array(
-			'registration'=>$registration,
-			'registrationService'=>$registrationService,
-			'registrationServiceDataProvider'=>$registrationServiceDataProvider
-		), false, true);*/
     }
 
     /**
      * Idle Management Update Service.
      */
-    public function actionIdleManagementServiceUpdate($serviceId, $registrationId)
-    {
-        /*$registrationService = RegistrationService::model()->findByAttributes(array('service_id'=>$serviceId));
+    public function actionIdleManagementServiceUpdate($serviceId, $registrationId) {
+        /* $registrationService = RegistrationService::model()->findByAttributes(array('service_id'=>$serviceId));
 
-		//Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($registrationService);
+          //Uncomment the following line if AJAX validation is needed
+          $this->performAjaxValidation($registrationService);
 
-		if(isset($_POST['RegistrationService']))
-		{
-			$registrationService->attributes=$_POST['RegistrationService'];
-			if($registrationService->save())
-				$this->redirect(array('idleManagementServiceView','serviceId'=>$registrationService->service_id));
-		}
+          if(isset($_POST['RegistrationService']))
+          {
+          $registrationService->attributes=$_POST['RegistrationService'];
+          if($registrationService->save())
+          $this->redirect(array('idleManagementServiceView','serviceId'=>$registrationService->service_id));
+          }
 
-		$this->render('idle-management-service-update',array(
-			'registrationService'=>$registrationService,
-		));*/
+          $this->render('idle-management-service-update',array(
+          'registrationService'=>$registrationService,
+          )); */
 
         $registrationService = $this->instantiateRegistrationService($_GET['registrationServiceId']);
 
@@ -853,30 +778,23 @@ class RegistrationTransactionController extends Controller
             $this->loadStateRegistrationService($registrationService);
             if ($registrationService->save(Yii::app()->db)) {
                 $this->redirect(array('idleManagementServices', 'registrationId' => $registrationId));
-                //$this->redirect(array('idleManagement'));
             } else {
                 foreach ($registrationService->employeeDetails as $key => $employeeDetail) {
-                    //print_r(CJSON::encode($vehicleInspectionDetail->id));
                 }
             }
-
         }
 
         $this->render('idle-management-service-update', array(
-            //'model'=>$model,
             'registrationService' => $registrationService,
             'employee' => $employee,
             'employeeDataProvider' => $employeeDataProvider,
-            //'sectionArray'=>$sectionArray,
         ));
-
     }
 
     /**
      * Idle Management View Service.
      */
-    public function actionIdleManagementServiceView($serviceId, $registrationId)
-    {
+    public function actionIdleManagementServiceView($serviceId, $registrationId) {
         $registrationService = RegistrationService::model()->findByAttributes(array(
             'service_id' => $serviceId,
             'registration_transaction_id' => $registrationId
@@ -890,8 +808,7 @@ class RegistrationTransactionController extends Controller
     /**
      * Start Finish Service.
      */
-    public function actionIdleManagementStartService($serviceId, $registrationId)
-    {
+    public function actionIdleManagementStartService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
@@ -901,21 +818,21 @@ class RegistrationTransactionController extends Controller
             $registrationService->status = 'On Progress';
             $registrationService->start_mechanic_id = Yii::app()->user->id;
 
-            /*$registrationRealization = new RegistrationRealizationProcess();
-			$registrationRealization->registration_transaction_id = $registrationId;
-			$registrationRealization->name = $registrationService->service->name;
-			$registrationRealization->checked = 1;
-			$registrationRealization->checked_by = Yii::app()->user->id;
-			$registrationRealization->checked_date = date('Y-m-d');
-			$registrationRealization->detail = 'On Progress';
-			$registrationRealization->save();*/
+            /* $registrationRealization = new RegistrationRealizationProcess();
+              $registrationRealization->registration_transaction_id = $registrationId;
+              $registrationRealization->name = $registrationService->service->name;
+              $registrationRealization->checked = 1;
+              $registrationRealization->checked_by = Yii::app()->user->id;
+              $registrationRealization->checked_date = date('Y-m-d');
+              $registrationRealization->detail = 'On Progress';
+              $registrationRealization->save(); */
 
             //Ada error di bagian ini
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $registrationId,
                 'name' => $registrationService->service->name
             ));
-            //$real->checked = 1;
+            
             $real->checked_date = date('Y-m-d');
             $real->checked_by = Yii::app()->user->id;
             $real->detail = 'On Progress (Update From Idle Management)';
@@ -927,26 +844,22 @@ class RegistrationTransactionController extends Controller
             $model->status = 'On Progress';
             $model->save();
 
-            //$this->redirect(array('idleManagementServices', 'registrationId' => $registrationId));
-            //$this->redirect(array('idleManagement'));
         }
     }
 
     /**
      * Start Pause Service.
      */
-    public function actionIdleManagementPauseService($serviceId, $registrationId)
-    {
+    public function actionIdleManagementPauseService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
                 'registration_transaction_id' => $registrationId
             ));
+            
             $registrationService->pause = date('Y-m-d H:i:s');
-            //$registrationService->pause = round(abs(strtotime(date('Y-m-d H:i:s'))-strtotime($registrationService->start)));
             $registrationService->status = 'On Progress';
             $registrationService->pause_mechanic_id = Yii::app()->user->id;
-            //$registrationService->start_mechanic_id = Yii::app()->user->id;
 
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $registrationId,
@@ -963,17 +876,13 @@ class RegistrationTransactionController extends Controller
             $model = $this->loadModel($registrationId);
             $model->status = 'Paused';
             $model->save();
-
-            //$this->redirect(array('idleManagementServices', 'registrationId' => $registrationId));
-            //$this->redirect(array('idleManagement'));
         }
     }
 
     /**
      * Start Resume Service.
      */
-    public function actionIdleManagementResumeService($serviceId, $registrationId)
-    {
+    public function actionIdleManagementResumeService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
@@ -982,22 +891,21 @@ class RegistrationTransactionController extends Controller
             //$registrationService->pause = date('H:i:s');
             $registrationService->resume = date('Y-m-d H:i:s');
             //$pauseTime = date_create($registrationService->resume)->diff(date_create($registrationService->pause))->format('%H:%i:%s');
-            /*$pauseTime = strtotime($registrationService->resume) - strtotime($registrationService->pause) + $registrationService->pause_time;
-			if($registrationService->pause_time == NULL){
-				$registrationService->pause_time = date_create($registrationService->resume)->diff(date_create($registrationService->pause))->format('%y-%m-%d %H:%i:%s');
-			} else {
-				$registrationService->pause_time = $pauseTime;
-			}*/
+            /* $pauseTime = strtotime($registrationService->resume) - strtotime($registrationService->pause) + $registrationService->pause_time;
+              if($registrationService->pause_time == NULL){
+              $registrationService->pause_time = date_create($registrationService->resume)->diff(date_create($registrationService->pause))->format('%y-%m-%d %H:%i:%s');
+              } else {
+              $registrationService->pause_time = $pauseTime;
+              } */
 
             $registrationService->status = 'On Progress';
             $registrationService->resume_mechanic_id = Yii::app()->user->id;
-            //$registrationService->start_mechanic_id = Yii::app()->user->id;
 
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $registrationId,
                 'service_id' => $registrationService->service_id
             ));
-            //$real->checked = 1;
+
             $real->checked_date = date('Y-m-d');
             $real->checked_by = Yii::app()->user->id;
             $real->detail = 'On Progress (Update From Idle Management)';
@@ -1006,7 +914,6 @@ class RegistrationTransactionController extends Controller
             $registrationService->save();
 
             $connection = Yii::app()->db;
-            //$sql='UPDATE rims_registration_service SET `total_time` = SEC_TO_TIME(TIME_TO_SEC(`end`)-TIME_TO_SEC(`start`)+TIME_TO_SEC(`pause_time`)) WHERE service_id=:service_id and registration_transaction_id=:registration_transaction_id';
             $sql = 'UPDATE rims_registration_service SET `pause_time` = SEC_TO_TIME(TIMESTAMPDIFF(SECOND,pause,resume)+TIME_TO_SEC(`pause_time`)) WHERE service_id=:service_id and registration_transaction_id=:registration_transaction_id';
             $command = $connection->createCommand($sql);
             $command->bindParam(":service_id", $serviceId, PDO::PARAM_STR);
@@ -1017,23 +924,20 @@ class RegistrationTransactionController extends Controller
             $model->status = 'On Progress';
             $model->save();
 
-            //$this->redirect(array('idleManagementServices', 'registrationId' => $registrationId));
-            //$this->redirect(array('idleManagement'));
         }
     }
 
-    public function actionIdleManagementFinishService($serviceId, $registrationId)
-    {
+    public function actionIdleManagementFinishService($serviceId, $registrationId) {
         if (Yii::app()->request->isAjaxRequest) {
-            /*$c = new CDbCriteria;
-			$c->condition = 'service_id = ' . $serviceId . ' and registration_transaction_id = ' . $registrationId;
-			RegistrationService::model()->updateAll(array('end'=>date('Y-m-d H:i:s'), 'status'=>'Finished', 'finish_mechanic_id'=>Yii::app()->user->id, 'total_time'=>'SEC_TO_TIME(TIME_TO_SEC(`end`)-TIME_TO_SEC(`start`))'), $c);*/
+            /* $c = new CDbCriteria;
+              $c->condition = 'service_id = ' . $serviceId . ' and registration_transaction_id = ' . $registrationId;
+              RegistrationService::model()->updateAll(array('end'=>date('Y-m-d H:i:s'), 'status'=>'Finished', 'finish_mechanic_id'=>Yii::app()->user->id, 'total_time'=>'SEC_TO_TIME(TIME_TO_SEC(`end`)-TIME_TO_SEC(`start`))'), $c); */
 
-            /*$command = Yii::app()->db->createCommand();
-			$command->update('rims_registration_service', array(
-    			'end'=>date('Y-m-d H:i:s'),
-    			'total_time'=>'SEC_TO_TIME(TIME_TO_SEC(`end`)-TIME_TO_SEC(`start`))'
-			), 'service_id = ' . $serviceId . ' and registration_transaction_id = ' . $registrationId);*/
+            /* $command = Yii::app()->db->createCommand();
+              $command->update('rims_registration_service', array(
+              'end'=>date('Y-m-d H:i:s'),
+              'total_time'=>'SEC_TO_TIME(TIME_TO_SEC(`end`)-TIME_TO_SEC(`start`))'
+              ), 'service_id = ' . $serviceId . ' and registration_transaction_id = ' . $registrationId); */
 
             $registrationService = RegistrationService::model()->findByAttributes(array(
                 'service_id' => $serviceId,
@@ -1043,17 +947,17 @@ class RegistrationTransactionController extends Controller
             $registrationService->status = 'Finished';
             $registrationService->finish_mechanic_id = Yii::app()->user->id;
 
-            /*$registrationService = RegistrationService::model()->findByAttributes(array('service_id'=>$serviceId,'registration_transaction_id'=>$registrationId));
-			$registrationService->end = date('Y-m-d H:i:s');
-			$registrationService->status = 'Finished';
-			$registrationService->finish_mechanic_id = Yii::app()->user->id;
+            /* $registrationService = RegistrationService::model()->findByAttributes(array('service_id'=>$serviceId,'registration_transaction_id'=>$registrationId));
+              $registrationService->end = date('Y-m-d H:i:s');
+              $registrationService->status = 'Finished';
+              $registrationService->finish_mechanic_id = Yii::app()->user->id;
 
-			$diff = date_create($registrationService->end)->diff(date_create($registrationService->start))->format('%y-%m-%d %H:%i:%s');
-			$sec = strtotime($registrationService->pause_time)-time();
-			$registrationService->total_time = time() - strtotime($registrationService->pause_time);
-			$registrationService->total_time = ($registrationService->total_time) + strtotime($registrationService->pause_time);
-			$registrationService->total_time = $registrationService->getTotalTime($serviceId,$registrationId);
-			*/
+              $diff = date_create($registrationService->end)->diff(date_create($registrationService->start))->format('%y-%m-%d %H:%i:%s');
+              $sec = strtotime($registrationService->pause_time)-time();
+              $registrationService->total_time = time() - strtotime($registrationService->pause_time);
+              $registrationService->total_time = ($registrationService->total_time) + strtotime($registrationService->pause_time);
+              $registrationService->total_time = $registrationService->getTotalTime($serviceId,$registrationId);
+             */
 
             $transaction = RegistrationTransaction::model()->findByPk($registrationId);
 
@@ -1079,20 +983,18 @@ class RegistrationTransactionController extends Controller
                     $real->detail = 'Finished (Update From Idle Management)';
                     $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
                 }
-
             }
-            /*$real = RegistrationRealizationProcess::model()->findByAttributes(array('registration_transaction_id'=>$registrationId,'name'=>$registrationService->service->name));
-			$real->checked = 1;
-			$real->checked_date = date('Y-m-d');
-			$real->checked_by = Yii::app()->user->id;
-			$real->detail = 'Finished (Update From Idle Management)';
-			$real->update(array('checked','checked_by','checked_date','detail'));*/
+            /* $real = RegistrationRealizationProcess::model()->findByAttributes(array('registration_transaction_id'=>$registrationId,'name'=>$registrationService->service->name));
+              $real->checked = 1;
+              $real->checked_date = date('Y-m-d');
+              $real->checked_by = Yii::app()->user->id;
+              $real->detail = 'Finished (Update From Idle Management)';
+              $real->update(array('checked','checked_by','checked_date','detail')); */
 
             $registrationService->save();
 
             //Update Total Time using SQL Syntax
             $connection = Yii::app()->db;
-            //$sql='UPDATE rims_registration_service SET `total_time` = SEC_TO_TIME(TIME_TO_SEC(`end`)-TIME_TO_SEC(`start`)+TIME_TO_SEC(`pause_time`)) WHERE service_id=:service_id and registration_transaction_id=:registration_transaction_id';
             $sql = 'UPDATE rims_registration_service SET `total_time` = SEC_TO_TIME(TIMESTAMPDIFF(SECOND,start,end)+TIME_TO_SEC(`pause_time`)) WHERE service_id=:service_id and registration_transaction_id=:registration_transaction_id';
             $command = $connection->createCommand($sql);
             $command->bindParam(":service_id", $serviceId, PDO::PARAM_STR);
@@ -1107,163 +1009,144 @@ class RegistrationTransactionController extends Controller
             $model = $this->loadModel($registrationId);
             $model->status = $count == 0 ? 'Finished' : 'On Progress';
             $model->save();
-
-            //$this->redirect(array('idleManagementServices', 'registrationId' => $registrationId));
-            //$this->redirect(array('idleManagement'));
         }
     }
 
-	public function actionAjaxJsonTotalService($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$registrationTransaction = $this->instantiate($id);
-			$this->loadState($registrationTransaction);
+    public function actionAjaxJsonTotalService($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $registrationTransaction = $this->instantiate($id);
+            $this->loadState($registrationTransaction);
 
-			$totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction->serviceDetails[$index], 'totalAmount')));
+            $totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction->serviceDetails[$index], 'totalAmount')));
             $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransaction->totalQuantityService));
-			$subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalService));
-			$totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalDiscountService));
-//			$tax = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->calculatedTax));
-			$grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalService));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxItemAmount));
-			$taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxServiceAmount));
-			$grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalTransaction));
-
-			echo CJSON::encode(array(
-				'totalAmount' => $totalAmount,
-                'totalQuantityService' => $totalQuantityService,
-				'subTotalService' => $subTotalService,
-				'totalDiscountService' => $totalDiscountService,
-//				'tax'=>$tax,
-				'grandTotalService'=>$grandTotalService,
-                'subTotalTransaction' => $subTotalTransaction,
-                'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
-                'grandTotalTransaction' => $grandTotalTransaction,
-			));
-		}
-	}
-
-	public function actionAjaxJsonTotalProduct($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$registrationTransaction = $this->instantiate($id);
-			$this->loadState($registrationTransaction);
-
-			$totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction->productDetails[$index], 'totalAmountProduct')));
-            $totalQuantityProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransaction->totalQuantityProduct));
-			$subTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalProduct));
-			$totalDiscountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalDiscountProduct));
-//			$tax = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->calculatedTax));
-			$grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalProduct));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxItemAmount));
-			$taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxServiceAmount));
-			$grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalTransaction));
-
-			echo CJSON::encode(array(
-				'totalAmountProduct' => $totalAmountProduct,
-                'totalQuantityProduct' => $totalQuantityProduct,
-				'subTotalProduct' => $subTotalProduct,
-				'totalDiscountProduct' => $totalDiscountProduct,
-//				'tax'=>$tax,
-				'grandTotalProduct'=>$grandTotalProduct,
-                'subTotalTransaction' => $subTotalTransaction,
-                'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
-                'grandTotalTransaction' => $grandTotalTransaction,
-			));
-		}
-	}
-
-	public function actionAjaxJsonGrandTotal($id)
-	{
-		if (Yii::app()->request->isAjaxRequest) {
-			$registrationTransaction = $this->instantiate($id);
-			$this->loadState($registrationTransaction);
-
-			$totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalQuickServiceQuantity));
-			$subTotalQuickService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalQuickService));
-            $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransaction->totalQuantityService));
-			$subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalService));
-			$totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalDiscountService));
-			$grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalService));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxItemAmount));
+            $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalService));
+            $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalDiscountService));
+            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalService));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxItemAmount));
             $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxServiceAmount));
-			$grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalTransaction));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalTransaction));
 
-			echo CJSON::encode(array(
+            echo CJSON::encode(array(
+                'totalAmount' => $totalAmount,
+                'totalQuantityService' => $totalQuantityService,
+                'subTotalService' => $subTotalService,
+                'totalDiscountService' => $totalDiscountService,
+                'grandTotalService' => $grandTotalService,
+                'subTotalTransaction' => $subTotalTransaction,
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotalTransaction' => $grandTotalTransaction,
+            ));
+        }
+    }
+
+    public function actionAjaxJsonTotalProduct($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $registrationTransaction = $this->instantiate($id);
+            $this->loadState($registrationTransaction);
+
+            $totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction->productDetails[$index], 'totalAmountProduct')));
+            $totalQuantityProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransaction->totalQuantityProduct));
+            $subTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalProduct));
+            $totalDiscountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalDiscountProduct));
+            $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalProduct));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxItemAmount));
+            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxServiceAmount));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalTransaction));
+
+            echo CJSON::encode(array(
+                'totalAmountProduct' => $totalAmountProduct,
+                'totalQuantityProduct' => $totalQuantityProduct,
+                'subTotalProduct' => $subTotalProduct,
+                'totalDiscountProduct' => $totalDiscountProduct,
+//				'tax'=>$tax,
+                'grandTotalProduct' => $grandTotalProduct,
+                'subTotalTransaction' => $subTotalTransaction,
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotalTransaction' => $grandTotalTransaction,
+            ));
+        }
+    }
+
+    public function actionAjaxJsonGrandTotal($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $registrationTransaction = $this->instantiate($id);
+            $this->loadState($registrationTransaction);
+
+            $totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalQuickServiceQuantity));
+            $subTotalQuickService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalQuickService));
+            $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransaction->totalQuantityService));
+            $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalService));
+            $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->totalDiscountService));
+            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalService));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxItemAmount));
+            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->taxServiceAmount));
+            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $registrationTransaction->grandTotalTransaction));
+
+            echo CJSON::encode(array(
                 'totalQuickServiceQuantity' => $totalQuickServiceQuantity,
                 'subTotalQuickService' => $subTotalQuickService,
                 'totalQuantityService' => $totalQuantityService,
-				'subTotalService' => $subTotalService,
-				'totalDiscountService' => $totalDiscountService,
-				'grandTotalService'=>$grandTotalService,
+                'subTotalService' => $subTotalService,
+                'totalDiscountService' => $totalDiscountService,
+                'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
-				'taxItemAmount' => $taxItemAmount,
-				'taxServiceAmount' => $taxServiceAmount,
-				'grandTotal' => $grandTotal,
-			));
-		}
-	}
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotal' => $grandTotal,
+            ));
+        }
+    }
 
     //Add Employee Detail
-    public function actionAjaxHtmlAddEmployeeDetail($id, $employeeId)
-    {
+    public function actionAjaxHtmlAddEmployeeDetail($id, $employeeId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = $this->instantiateRegistrationService($id);
             $this->loadStateRegistrationService($registrationService);
             $registrationService->addEmployeeDetail($employeeId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_idle-management-update-detail-employee',
-                array('registrationService' => $registrationService), false, true);
+            $this->renderPartial('_idle-management-update-detail-employee', array('registrationService' => $registrationService), false, true);
         }
     }
 
     //Delete Employee Detail
-    public function actionAjaxHtmlRemoveEmployeeDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveEmployeeDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = $this->instantiateRegistrationService($id);
             $this->loadStateRegistrationService($registrationService);
             $registrationService->removeEmployeeDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_idle-management-update-detail-employee',
-                array('registrationService' => $registrationService), false, true);
+            $this->renderPartial('_idle-management-update-detail-employee', array('registrationService' => $registrationService), false, true);
         }
     }
 
     //Add Supervisor Detail
-    public function actionAjaxHtmlAddSupervisorDetail($id, $supervisorId)
-    {
+    public function actionAjaxHtmlAddSupervisorDetail($id, $supervisorId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = $this->instantiateRegistrationService($id);
             $this->loadStateRegistrationService($registrationService);
             $registrationService->addSupervisorDetail($supervisorId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_idle-management-update-detail-supervisor',
-                array('registrationService' => $registrationService), false, true);
+            $this->renderPartial('_idle-management-update-detail-supervisor', array('registrationService' => $registrationService), false, true);
         }
     }
 
     //Delete Supervisor Detail
-    public function actionAjaxHtmlRemoveSupervisorDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveSupervisorDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationService = $this->instantiateRegistrationService($id);
             $this->loadStateRegistrationService($registrationService);
             $registrationService->removeSupervisorDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_idle-management-update-detail-supervisor',
-                array('registrationService' => $registrationService), false, true);
+            $this->renderPartial('_idle-management-update-detail-supervisor', array('registrationService' => $registrationService), false, true);
         }
     }
 
@@ -1274,25 +1157,18 @@ class RegistrationTransactionController extends Controller
      * @return RegistrationTransaction the loaded model
      * @throws CHttpException
      */
-    public function instantiate($id)
-    {
+    public function instantiate($id) {
         if (empty($id)) {
-            $registrationTransaction = new RegistrationTransactions(new RegistrationTransaction(), array(), array(),
-                array(), array(), array());
+            $registrationTransaction = new RegistrationTransactions(new RegistrationTransaction(), array(), array(), array(), array(), array());
             //print_r("test");
         } else {
             $registrationTransactionModel = $this->loadModel($id);
-            $registrationTransaction = new RegistrationTransactions($registrationTransactionModel,
-                $registrationTransactionModel->registrationQuickServices,
-                $registrationTransactionModel->registrationServices,
-                $registrationTransactionModel->registrationProducts, $registrationTransactionModel->registrationDamages,
-                $registrationTransactionModel->registrationInsuranceDatas);
+            $registrationTransaction = new RegistrationTransactions($registrationTransactionModel, $registrationTransactionModel->registrationQuickServices, $registrationTransactionModel->registrationServices, $registrationTransactionModel->registrationProducts, $registrationTransactionModel->registrationDamages, $registrationTransactionModel->registrationInsuranceDatas);
         }
         return $registrationTransaction;
     }
 
-    public function loadState($registrationTransaction)
-    {
+    public function loadState($registrationTransaction) {
         if (isset($_POST['RegistrationTransaction'])) {
             $registrationTransaction->header->attributes = $_POST['RegistrationTransaction'];
         }
@@ -1380,27 +1256,19 @@ class RegistrationTransactionController extends Controller
         } else {
             $registrationTransaction->insuranceDetails = array();
         }
-
-
     }
 
-    public function instantiateRegistrationService($id)
-    {
+    public function instantiateRegistrationService($id) {
         if (empty($id)) {
             $registrationService = new RegistrationServices(new RegistrationService(), array(), array());
-            //print_r("test");
         } else {
-            //$registrationServiceModel = $this->loadModel($id);
             $registrationServiceModel = RegistrationService::model()->findByAttributes(array('id' => $id));
-            $registrationService = new RegistrationServices($registrationServiceModel,
-                $registrationServiceModel->registrationServiceEmployees,
-                $registrationServiceModel->registrationServiceSupervisors);
+            $registrationService = new RegistrationServices($registrationServiceModel, $registrationServiceModel->registrationServiceEmployees, $registrationServiceModel->registrationServiceSupervisors);
         }
         return $registrationService;
     }
 
-    public function loadStateRegistrationService($registrationService)
-    {
+    public function loadStateRegistrationService($registrationService) {
         if (isset($_POST['RegistrationService'])) {
             $registrationService->header->attributes = $_POST['RegistrationService'];
         }
@@ -1439,9 +1307,7 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-
-    public function loadModel($id)
-    {
+    public function loadModel($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
@@ -1449,13 +1315,9 @@ class RegistrationTransactionController extends Controller
         return $model;
     }
 
-    public function actionAjaxCustomer($id)
-    {
+    public function actionAjaxCustomer($id) {
 
         if (Yii::app()->request->isAjaxRequest) {
-            // $invoice = $this->instantiate($id);
-            // $this->loadState($invoice);
-
             $customer = Customer::model()->findByPk($id);
 
             $object = array(
@@ -1474,13 +1336,9 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxPic($id)
-    {
+    public function actionAjaxPic($id) {
 
         if (Yii::app()->request->isAjaxRequest) {
-            // $invoice = $this->instantiate($id);
-            // $this->loadState($invoice);
-
             $customer_pic = CustomerPic::model()->findByPk($id);
 
             $object = array(
@@ -1492,19 +1350,15 @@ class RegistrationTransactionController extends Controller
                 'city' => $customer_pic->city_id,
                 'zipcode' => $customer_pic->zipcode,
                 'email' => $customer_pic->email,
-
             );
 
             echo CJSON::encode($object);
         }
     }
 
-    public function actionAjaxVehicle($id)
-    {
+    public function actionAjaxVehicle($id) {
 
         if (Yii::app()->request->isAjaxRequest) {
-            // $invoice = $this->instantiate($id);
-            // $this->loadState($invoice);
             $colorName = "";
             $vehicle = Vehicle::model()->findByPk($id);
             $color = Colors::model()->findByPk($vehicle->color_id);
@@ -1534,10 +1388,8 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxGetCustomerPic()
-    {
-        $data = CustomerPic::model()->findAllByAttributes(array('customer_id' => $_POST['RegistrationTransaction']['customer_id']),
-            array('order' => 'name ASC'));
+    public function actionAjaxGetCustomerPic() {
+        $data = CustomerPic::model()->findAllByAttributes(array('customer_id' => $_POST['RegistrationTransaction']['customer_id']), array('order' => 'name ASC'));
         if (count($data) > 0) {
 
             $data = CHtml::listData($data, 'id', 'name');
@@ -1550,8 +1402,7 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxGetCustomerVehicle()
-    {
+    public function actionAjaxGetCustomerVehicle() {
         $data = Vehicle::model()->findAllByAttributes(array('customer_id' => $_POST['RegistrationTransaction']['customer_id']));
         if (count($data) > 0) {
 
@@ -1565,39 +1416,28 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxGetServiceRate()
-    {
-        //$datas = CustomerServiceRate::model()->findAllByAttributes(array('customer_id'=>$_POST['RegistrationTransaction']['customer_id'])));
-        $this->renderPartial('_serviceException', array('customer' => $_POST['RegistrationTransaction']['customer_id']),
-            false, true);
+    public function actionAjaxGetServiceRate() {
+        $this->renderPartial('_serviceException', array('customer' => $_POST['RegistrationTransaction']['customer_id']), false, true);
     }
 
-    public function actionAjaxGetHistory()
-    {
-        //$datas = CustomerServiceRate::model()->findAllByAttributes(array('customer_id'=>$_POST['RegistrationTransaction']['customer_id'])));
-        $this->renderPartial('_historyTransaction',
-            array('customer' => $_POST['RegistrationTransaction']['customer_id']), false, true);
+    public function actionAjaxGetHistory() {
+        $this->renderPartial('_historyTransaction', array('customer' => $_POST['RegistrationTransaction']['customer_id']), false, true);
     }
 
-    public function actionAjaxEmployee($id)
-    {
+    public function actionAjaxEmployee($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            //$registrationTransaction = $this->instantiate($id);
             $employee = Employee::model()->findByPk($id);
             $name = $employee->name;
 
             $object = array(
-                //'id'=>$supplier->id,
                 'name' => $name,
-
             );
 
             echo CJSON::encode($object);
         }
     }
 
-    public function actionAjaxProduct($id)
-    {
+    public function actionAjaxProduct($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $product = Product::model()->findByPk($id);
 
@@ -1611,8 +1451,7 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxService($id)
-    {
+    public function actionAjaxService($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $service = Service::model()->findByPk($id);
 
@@ -1630,8 +1469,7 @@ class RegistrationTransactionController extends Controller
      * Performs the AJAX validation.
      * @param RegistrationTransaction $model the model to be validated
      */
-    protected function performAjaxValidation($model)
-    {
+    protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'registration-transaction-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
@@ -1639,8 +1477,7 @@ class RegistrationTransactionController extends Controller
     }
 
     //Add QuickService
-    public function actionAjaxHtmlAddQuickServiceDetail($id, $quickServiceId)
-    {
+    public function actionAjaxHtmlAddQuickServiceDetail($id, $quickServiceId) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $employee = new Employee('search');
@@ -1652,7 +1489,6 @@ class RegistrationTransactionController extends Controller
             $employeeCriteria = new CDbCriteria;
             //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
             $employeeCriteria->compare('name', $employee->name, true);
-
 
             $employeeDataProvider = new CActiveDataProvider('Employee', array(
                 'criteria' => $employeeCriteria,
@@ -1663,6 +1499,7 @@ class RegistrationTransactionController extends Controller
             $registrationTransaction->addQuickServiceDetail($quickServiceId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            
             $this->renderPartial('_detailQuickService', array(
                 'registrationTransaction' => $registrationTransaction,
                 'employee' => $employee,
@@ -1671,57 +1508,51 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxHtmlAddQsServiceDetail($id, $quickServiceId)
-    {
+    public function actionAjaxHtmlAddQsServiceDetail($id, $quickServiceId) {
         if (Yii::app()->request->isAjaxRequest) {
-
-
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
 
             $registrationTransaction->addQsServiceDetail($quickServiceId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false,
-                true);
+            
+            $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveQuickServiceDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveQuickServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
+
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeQuickServiceDetailAt($index);
-            $this->renderPartial('_detailQuickService', array('registrationTransaction' => $registrationTransaction),
-                false, true);
+            
+            $this->renderPartial('_detailQuickService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveQuickServiceDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveQuickServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeQuickServiceAll();
-            $this->renderPartial('_detailQuickService', array('registrationTransaction' => $registrationTransaction),
-                false, true);
+            
+            $this->renderPartial('_detailQuickService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
 
 //Add Service
-    public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair)
-    {
+    public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $employee = new Employee('search');
@@ -1733,11 +1564,10 @@ class RegistrationTransactionController extends Controller
             $employeeCriteria = new CDbCriteria;
             //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
             $employeeCriteria->compare('name', $employee->name, true);
-
-
             $employeeDataProvider = new CActiveDataProvider('Employee', array(
                 'criteria' => $employeeCriteria,
             ));
+            
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
 
@@ -1745,6 +1575,7 @@ class RegistrationTransactionController extends Controller
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            
             $this->renderPartial('_detailService', array(
                 'registrationTransaction' => $registrationTransaction,
                 'employee' => $employee,
@@ -1753,8 +1584,7 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxHtmlAddServiceInsuranceDetail($id, $serviceId, $insuranceId, $damageType, $repair)
-    {
+    public function actionAjaxHtmlAddServiceInsuranceDetail($id, $serviceId, $insuranceId, $damageType, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $employee = new Employee('search');
@@ -1764,9 +1594,7 @@ class RegistrationTransactionController extends Controller
             }
 
             $employeeCriteria = new CDbCriteria;
-            //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
             $employeeCriteria->compare('name', $employee->name, true);
-
 
             $employeeDataProvider = new CActiveDataProvider('Employee', array(
                 'criteria' => $employeeCriteria,
@@ -1787,40 +1615,37 @@ class RegistrationTransactionController extends Controller
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveServiceDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
+            
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            
             $registrationTransaction->removeServiceDetailAt($index);
-            $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false,
-                true);
+            $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveServiceDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
+            
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeServiceDetailAll();
-            $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false,
-                true);
+            
+            $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
 
 //Add Product
-    public function actionAjaxHtmlAddProductDetail($id, $productId)
-    {
+    public function actionAjaxHtmlAddProductDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $employee = new Employee('search');
@@ -1832,7 +1657,6 @@ class RegistrationTransactionController extends Controller
             $employeeCriteria = new CDbCriteria;
             //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
             $employeeCriteria->compare('name', $employee->name, true);
-
 
             $employeeDataProvider = new CActiveDataProvider('Employee', array(
                 'criteria' => $employeeCriteria,
@@ -1854,8 +1678,7 @@ class RegistrationTransactionController extends Controller
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveProductDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveProductDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
@@ -1864,14 +1687,12 @@ class RegistrationTransactionController extends Controller
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeProductDetailAt($index);
-            $this->renderPartial('_detailProduct', array('registrationTransaction' => $registrationTransaction), false,
-                true);
+            $this->renderPartial('_detailProduct', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
 
     //Add Product
-    public function actionAjaxHtmlAddDamageDetail($id, $repair, $serviceId)
-    {
+    public function actionAjaxHtmlAddDamageDetail($id, $repair, $serviceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
@@ -1906,8 +1727,7 @@ class RegistrationTransactionController extends Controller
             //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
             $productCriteria->compare('t.name', $product->name, true);
             $productCriteria->compare('productMasterCategory.name', $product->product_master_category_name, true);
-            $productCriteria->compare('productSubMasterCategory.name', $product->product_sub_master_category_name,
-                true);
+            $productCriteria->compare('productSubMasterCategory.name', $product->product_sub_master_category_name, true);
             $productCriteria->compare('productSubCategory.name', $product->product_sub_category_name, true);
 
             $productDataProvider = new CActiveDataProvider('Product', array(
@@ -1925,13 +1745,12 @@ class RegistrationTransactionController extends Controller
                 'serviceDataProvider' => $serviceDataProvider,
                 'product' => $product,
                 'productDataProvider' => $productDataProvider
-            ), false, true);
+                    ), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveDamageDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveDamageDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
 
@@ -1941,31 +1760,29 @@ class RegistrationTransactionController extends Controller
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeDamageDetailAt($index);
-            $this->renderPartial('_detailDamage', array('registrationTransaction' => $registrationTransaction), false,
-                true);
+            $this->renderPartial('_detailDamage', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveDamageDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveDamageDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeDamageDetailAll();
-            $this->renderPartial('_detailDamage', array('registrationTransaction' => $registrationTransaction), false,
-                true);
+
+            $this->renderPartial('_detailDamage', array(
+                'registrationTransaction' => $registrationTransaction
+                    ), false, true);
         }
     }
 
     //Add Insurance Data
-    public function actionAjaxHtmlAddInsuranceDetail($id, $insuranceCompany)
-    {
+    public function actionAjaxHtmlAddInsuranceDetail($id, $insuranceCompany) {
         if (Yii::app()->request->isAjaxRequest) {
-
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
@@ -1973,49 +1790,51 @@ class RegistrationTransactionController extends Controller
             $registrationTransaction->addInsuranceDetail($insuranceCompany);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detailInsurance', array('registrationTransaction' => $registrationTransaction),
-                false, true);
+            $this->renderPartial('_detailInsurance', array(
+                'registrationTransaction' => $registrationTransaction
+                    ), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveInsuranceDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveInsuranceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
+
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeInsuranceDetailAt($index);
-            $this->renderPartial('_detailInsurance', array('registrationTransaction' => $registrationTransaction),
-                false, true);
+
+            $this->renderPartial('_detailInsurance', array(
+                'registrationTransaction' => $registrationTransaction
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveInsuranceDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveInsuranceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeInsuranceAll();
-            $this->renderPartial('_detailInsurance', array('registrationTransaction' => $registrationTransaction),
-                false, true);
+
+            $this->renderPartial('_detailInsurance', array(
+                'registrationTransaction' => $registrationTransaction
+                    ), false, true);
         }
     }
 
-    public function actionAjaxEstimateBilling($id)
-    {
+    public function actionAjaxEstimateBilling($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            
+
             $totalQs = 0;
             $totalQsPrice = 0;
             $totalService = 0;
@@ -2050,7 +1869,6 @@ class RegistrationTransactionController extends Controller
                 $discountService += $serviceDetail->discount_price;
                 $totalServicePrice += $serviceDetail->total_price;
                 $totalService += $serviceDetail->quantity;
-
             }
             foreach ($registrationTransaction->productDetails as $key => $productDetail) {
                 $subtotalProduct += $productDetail->sale_price;
@@ -2068,12 +1886,9 @@ class RegistrationTransactionController extends Controller
                 } else {
                     $servicePpn = $totalServicePrice * 0.1;
                     $qsServicePpn = $totalQsPrice * 0.1;
-
                 }
                 $jumlahPpn = $productPpn + $servicePpn + $qsServicePpn;
                 $jumlahPph = $servicePph + $qsServicePph;
-
-
             } else {
                 if ($pph == 1) {
                     $servicePph = $totalServicePrice * 0.02;
@@ -2082,7 +1897,7 @@ class RegistrationTransactionController extends Controller
                 }
             }
             $grandTotal = $subtotal + $jumlahPpn + $jumlahPph;
-            
+
             $totalQsFormatted = CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $totalQs));
             $totalQsPriceFormatted = CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $totalQsPrice));
             $subtotalServiceFormatted = CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $subtotalService));
@@ -2097,7 +1912,7 @@ class RegistrationTransactionController extends Controller
             $jumlahPphFormatted = CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $jumlahPph));
             $totalServiceFormatted = CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $totalService));
             $totalProductFormatted = CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $totalProduct));
-            
+
             $object = array(
                 'totalQs' => $totalQs,
                 'totalQsPrice' => $totalQsPrice,
@@ -2112,7 +1927,7 @@ class RegistrationTransactionController extends Controller
                 'grandTotal' => $grandTotal,
                 'subtotal' => $subtotal,
                 'ppn' => $jumlahPpn,
-                'pph' => $jumlahPph, 
+                'pph' => $jumlahPph,
                 'totalQsFormatted' => $totalQsFormatted,
                 'totalQsPriceFormatted' => $totalQsPriceFormatted,
                 'subtotalServiceFormatted' => $subtotalServiceFormatted,
@@ -2133,15 +1948,13 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxCountProduct($quantity, $sale)
-    {
+    public function actionAjaxCountProduct($quantity, $sale) {
         $total = $quantity * $sale;
         $object = array('total' => $total);
         echo CJSON::encode($object);
     }
 
-    public function actionAjaxCheckQuickService($id)
-    {
+    public function actionAjaxCheckQuickService($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $registrationTransaction = $this->instantiate($id);
@@ -2157,13 +1970,10 @@ class RegistrationTransactionController extends Controller
             $object = array('msg' => $msg);
             echo CJSON::encode($object);
         }
-
     }
 
-    public function actionAjaxGetCity($index)
-    {
-        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['RegistrationInsuranceData'][$index]['insured_province_id']),
-            array('order' => 'name ASC'));
+    public function actionAjaxGetCity($index) {
+        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['RegistrationInsuranceData'][$index]['insured_province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
 
@@ -2172,19 +1982,14 @@ class RegistrationTransactionController extends Controller
             foreach ($data as $value => $name) {
 
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
-
             }
         } else {
             echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
         }
-
-
     }
 
-    public function actionAjaxGetCityDriver($index)
-    {
-        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['RegistrationInsuranceData'][$index]['driver_province_id']),
-            array('order' => 'name ASC'));
+    public function actionAjaxGetCityDriver($index) {
+        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['RegistrationInsuranceData'][$index]['driver_province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
 
@@ -2193,15 +1998,13 @@ class RegistrationTransactionController extends Controller
             foreach ($data as $value => $name) {
 
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
-
             }
         } else {
             echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
         }
     }
 
-    public function actionAjaxShowPricelist($index, $serviceId, $customerId, $vehicleId, $insuranceId)
-    {
+    public function actionAjaxShowPricelist($index, $serviceId, $customerId, $vehicleId, $insuranceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $this->renderPartial('_price-dialog', array(
                 'index' => $index,
@@ -2209,12 +2012,11 @@ class RegistrationTransactionController extends Controller
                 'service' => $serviceId,
                 'vehicle' => $vehicleId,
                 'insurance' => $insuranceId
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionGenerateWorkOrder($id)
-    {
+    public function actionGenerateWorkOrder($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
 
         $model->work_order_number = $model->id . mt_rand();
@@ -2255,8 +2057,7 @@ class RegistrationTransactionController extends Controller
         }
     }
 
-    public function actionAjaxHtmlUpdate($id)
-    {
+    public function actionAjaxHtmlUpdate($id) {
 
         //$head = RegistrationTransaction::model()->findByPk($id);
         $model = RegistrationRealizationProcess::model()->findByPk($id);
@@ -2307,10 +2108,8 @@ class RegistrationTransactionController extends Controller
                             $square = Yii::app()->image->load($path);
                             $square_path = $dir . '/' . $realizationImage->squarename;
                             $square->save($square_path);
-
                         }
                         echo $image->extensionName;
-
                     }
                 }
                 $this->redirect(array('showRealization', 'id' => $model->registration_transaction_id));
@@ -2321,15 +2120,13 @@ class RegistrationTransactionController extends Controller
             'model' => $model,
             'realizationImages' => $realizationImages,
             'allowedImages' => $allowedImages,
-            //'head' => $head,
-            //'jenisPersediaan'=>$jenisPersediaan,
-            //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
+                //'head' => $head,
+                //'jenisPersediaan'=>$jenisPersediaan,
+                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
-
     }
 
-    public function actionShowRealization($id)
-    {
+    public function actionShowRealization($id) {
         $head = RegistrationTransaction::model()->findByPk($id);
         $reals = RegistrationRealizationProcess::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $this->render('realization', array(
@@ -2338,8 +2135,7 @@ class RegistrationTransactionController extends Controller
         ));
     }
 
-    public function actionUpdateSpk($id)
-    {
+    public function actionUpdateSpk($id) {
 
         //$head = RegistrationTransaction::model()->findByPk($id);
         $model = RegistrationInsuranceData::model()->findByPk($id);
@@ -2350,7 +2146,6 @@ class RegistrationTransactionController extends Controller
 
             if (isset($featured_image) && !empty($featured_image)) {
                 $model->spk_insurance = $featured_image->extensionName;
-
             }
             if ($model->save()) {
                 $real = RegistrationRealizationProcess::model()->findByAttributes(array(
@@ -2378,21 +2173,17 @@ class RegistrationTransactionController extends Controller
                 }
                 $this->redirect(array('view', 'id' => $model->registration_transaction_id));
             }
-
-
         }
 
         $this->render('updateSpk', array(
             'model' => $model,
-            //'head' => $head,
-            //'jenisPersediaan'=>$jenisPersediaan,
-            //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
+                //'head' => $head,
+                //'jenisPersediaan'=>$jenisPersediaan,
+                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
-
     }
 
-    public function actionUpdateImages($id)
-    {
+    public function actionUpdateImages($id) {
         $model = RegistrationInsuranceData::model()->findByPk($id);
 
         $insuranceImages = RegistrationInsuranceImages::model()->findAllByAttributes(array(
@@ -2434,7 +2225,6 @@ class RegistrationTransactionController extends Controller
                     $this->redirect(array('view', 'id' => $model->registration_transaction_id));
                 }
                 echo $image->extensionName;
-
             }
             //print_r($images);
         }
@@ -2443,14 +2233,13 @@ class RegistrationTransactionController extends Controller
             'model' => $model,
             'insuranceImages' => $insuranceImages,
             'allowedImages' => $allowedImages,
-            //'head' => $head,
-            //'jenisPersediaan'=>$jenisPersediaan,
-            //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
+                //'head' => $head,
+                //'jenisPersediaan'=>$jenisPersediaan,
+                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
     }
 
-    public function actionDeleteImage($id)
-    {
+    public function actionDeleteImage($id) {
         $model = RegistrationInsuranceImages::model()->findByPk($id);
         $model->scenario = 'delete';
 
@@ -2474,8 +2263,7 @@ class RegistrationTransactionController extends Controller
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
-    public function actionDeleteFeatured($id)
-    {
+    public function actionDeleteFeatured($id) {
         $model = RegistrationInsuranceData::model()->findByPk($id);
         $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/insurance/' . $model->id . '/' . $model->featuredname;
         if (file_exists($dir)) {
@@ -2487,8 +2275,7 @@ class RegistrationTransactionController extends Controller
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
-    public function actionDeleteImageRealization($id)
-    {
+    public function actionDeleteImageRealization($id) {
         $model = RegistrationRealizationImages::model()->findByPk($id);
         $model->scenario = 'delete';
 
@@ -2519,43 +2306,29 @@ class RegistrationTransactionController extends Controller
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
-    public function actionBillDetail($registrationId)
-    {
+    public function actionBillDetail($registrationId) {
         $model = $this->loadModel($registrationId);
-        //$registrationData = RegistrationTransaction::model()->findByPk($registrationId);
         $registrationServices = RegistrationService::model()->findAllByAttributes(array(
             'registration_transaction_id' => $model->id,
             'is_body_repair' => 0
         ));
         $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
         $registrationQuickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
-        
+
         $payment = new PaymentIn;
         $payment->branch_id = $payment->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $payment->branch_id;
         $payment->payment_date = date('Y-m-d');
         $payment->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($payment->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($payment->payment_date)), $payment->branch_id);
-        // if(isset($_POST['PaymentIn']))
-        // {
-        // 	$payment->attributes=$_POST['PaymentIn'];
-        // 	var_dump($payment);
-        // 	// if($payment->save())
-        // 	// 	$this->redirect(array('view','id'=>$model->id));
-        // }
+
         if (isset($_POST['PaymentIn'])) {
             $payment->attributes = $_POST['PaymentIn'];
-
-            // var_dump($payment->attributes); die;
-
             $payment->status = "CLEAR";
-//            $payment->branch_id = 1;
-            // var_dump($payment->branch_id); die;
 
             if ($payment->save(false)) {
                 $criteria = new CDbCriteria;
 
                 $criteria->condition = "invoice_id =" . $payment->invoice_id . " AND id != " . $payment->id;
                 $paymentIn = PaymentIn::model()->findAll($criteria);
-                // $payment = PaymentIn::model()->findAllByAttributes(array('invoice_id'=>$model->invoice_id));
                 $invoiceData = InvoiceHeader::model()->findByPk($payment->invoice_id);
 
                 if (count($paymentIn) == 0) {
@@ -2580,32 +2353,27 @@ class RegistrationTransactionController extends Controller
                 $this->redirect(array('billDetail', 'registrationId' => $registrationId));
             }
         }
-        
+
         $this->render('billDetail', array(
             'model' => $model,
-            //'registrationData'=>$registrationData,
             'registrationServices' => $registrationServices,
             'registrationProducts' => $registrationProducts,
             'registrationQuickServices' => $registrationQuickServices,
             'payment' => $payment,
-
         ));
     }
 
-    public function actionCustomerData($customerId)
-    {
+    public function actionCustomerData($customerId) {
         $customer = Customer::model()->findByPk($customerId);
         $this->renderPartial('_customerData', array('customer' => $customer, false, true));
     }
 
-    public function actionVehicleData($vehicleId)
-    {
+    public function actionVehicleData($vehicleId) {
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $this->renderPartial('_vehicleData', array('vehicle' => $vehicle, false, true));
     }
 
-    public function actionCustomerWaitlist()
-    {
+    public function actionCustomerWaitlist() {
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $modelDataProvider = $model->search();
         $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL");
@@ -2620,30 +2388,30 @@ class RegistrationTransactionController extends Controller
             if ($service->name == 'Epoxy') {
                 $epoxyId = $service->id;
             }
-            
+
             if ($service->name == 'Cat') {
                 $paintId = $service->id;
             }
-            
+
             if ($service->name == 'Finishing') {
                 $finishId = $service->id;
             }
-            
+
             if ($service->name == 'Dempul') {
                 $dempulId = $service->id;
             }
-            
+
             if ($service->name == 'Cuci') {
                 $washingId = $service->id;
             }
-            
+
             if ($service->name == 'Bongkar') {
                 $openingId = $service->id;
             }
         }
 
         $tbaId = 3; //3 is service TBA
-        
+
         $modelGR = new CDbCriteria;
         $modelGR->compare("repair_type", 'GR');
         $modelGR->addCondition("work_order_number != ''");
@@ -2667,16 +2435,12 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modelEpoxyCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelEpoxyCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modelEpoxyCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelEpoxyCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelEpoxyCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelEpoxyCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelEpoxyCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
             $modelEpoxyCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
         // end expoxy
-
         // paint
         $modelpaintCriteria = new CDbCriteria;
         $modelpaintCriteria->compare("service_id", $paintId);
@@ -2689,19 +2453,13 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modelpaintCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelpaintCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modelpaintCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelpaintCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modelpaintCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modelpaintCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelpaintCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelpaintCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelpaintCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modelpaintCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
         // end paint
-
         // finish
         $modelfinishingCriteria = new CDbCriteria;
         $modelfinishingCriteria->compare("service_id", $finishId);
@@ -2719,20 +2477,14 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modelfinishingCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelfinishingCriteria->compare('customer.customer_type',
-                $_GET['RegistrationTransaction']['customer_type'], true);
-            $modelfinishingCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelfinishingCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelfinishingCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelfinishingCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelfinishingCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
             // $modelfinishingCriteria->compare('registrationTransaction.transaction_date',$_GET['RegistrationTransaction']['date_repair'],TRUE);
-            $modelfinishingCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modelfinishingCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modelfinishingCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
         // end finish
-
         // dempul
         $modeldempulCriteria = new CDbCriteria;
         $modeldempulCriteria->compare("service_id", $dempulId);
@@ -2745,15 +2497,10 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modeldempulCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modeldempulCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modeldempulCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modeldempulCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modeldempulCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modeldempulCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modeldempulCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modeldempulCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modeldempulCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modeldempulCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
         // end dempul
@@ -2769,15 +2516,10 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modelwashingCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelwashingCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modelwashingCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelwashingCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modelwashingCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modelwashingCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelwashingCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelwashingCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelwashingCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modelwashingCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
 
@@ -2792,15 +2534,10 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modelopeningCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelopeningCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modelopeningCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelopeningCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modelopeningCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modelopeningCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelopeningCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelopeningCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelopeningCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modelopeningCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
 
@@ -2815,15 +2552,10 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modeltbaCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modeltbaCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modeltbaCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modeltbaCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modeltbaCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modeltbaCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modeltbaCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modeltbaCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modeltbaCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modeltbaCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
 
@@ -2838,15 +2570,10 @@ class RegistrationTransactionController extends Controller
 
         if (isset($_GET['RegistrationTransaction'])) {
             $modelgrCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelgrCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modelgrCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelgrCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modelgrCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modelgrCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelgrCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelgrCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelgrCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modelgrCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
 
@@ -2854,8 +2581,8 @@ class RegistrationTransactionController extends Controller
         $oiltype = 4;
         $oiltypes = Service::model()->findAllByAttributes(array('service_type_id' => $oiltype));
         $arrayOil = CHtml::listData($oiltypes, 'id', function ($oiltypes) {
-            return $oiltypes->id;
-        });
+                    return $oiltypes->id;
+                });
         $modelgrOilCriteria = new CDbCriteria;
         $modelgrOilCriteria->addInCondition("service_id", $arrayOil);
         $modelgrOilCriteria->with = array(
@@ -2866,23 +2593,18 @@ class RegistrationTransactionController extends Controller
         $modelgrOilCriteria->together = true;
         if (isset($_GET['RegistrationTransaction'])) {
             $modelgrOilCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelgrOilCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modelgrOilCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelgrOilCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modelgrOilCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modelgrOilCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelgrOilCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelgrOilCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelgrOilCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modelgrOilCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
 
         $wash = 5;
         $washs = Service::model()->findAllByAttributes(array('service_type_id' => $wash));
         $arrayWash = CHtml::listData($washs, 'id', function ($washs) {
-            return $washs->id;
-        });
+                    return $washs->id;
+                });
         $modelgrWashCriteria = new CDbCriteria;
         $modelgrWashCriteria->addInCondition("service_id", $arrayWash);
         $modelgrWashCriteria->with = array(
@@ -2893,15 +2615,10 @@ class RegistrationTransactionController extends Controller
         $modelgrWashCriteria->together = true;
         if (isset($_GET['RegistrationTransaction'])) {
             $modelgrWashCriteria->compare('customer.name', $_GET['RegistrationTransaction']['customer_name'], true);
-            $modelgrWashCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'],
-                true);
-            $modelgrWashCriteria->compare('registrationTransaction.repair_type',
-                $_GET['RegistrationTransaction']['repair_type'], true);
-            $modelgrWashCriteria->compare('registrationTransaction.branch_id',
-                $_GET['RegistrationTransaction']['branch_id'], true);
-            $modelgrWashCriteria->addBetweenCondition('registrationTransaction.transaction_date',
-                $_GET['RegistrationTransaction']['transaction_date_from'],
-                $_GET['RegistrationTransaction']['transaction_date_to']);
+            $modelgrWashCriteria->compare('customer.customer_type', $_GET['RegistrationTransaction']['customer_type'], true);
+            $modelgrWashCriteria->compare('registrationTransaction.repair_type', $_GET['RegistrationTransaction']['repair_type'], true);
+            $modelgrWashCriteria->compare('registrationTransaction.branch_id', $_GET['RegistrationTransaction']['branch_id'], true);
+            $modelgrWashCriteria->addBetweenCondition('registrationTransaction.transaction_date', $_GET['RegistrationTransaction']['transaction_date_from'], $_GET['RegistrationTransaction']['transaction_date_to']);
             $modelgrWashCriteria->compare('t.status', $_GET['RegistrationTransaction']['status'], true);
         }
 
@@ -2933,8 +2650,7 @@ class RegistrationTransactionController extends Controller
         ));
     }
 
-	public function actionAjaxHtmlUpdateWaitlistTable()
-	{
+    public function actionAjaxHtmlUpdateWaitlistTable() {
         if (Yii::app()->request->isAjaxRequest) {
             $model = new RegistrationTransaction('search');
             $model->unsetAttributes();  // clear any default values
@@ -2952,9 +2668,8 @@ class RegistrationTransactionController extends Controller
             ));
         }
     }
-    
-    public function getDataProviderTimecounter($modelCriteria)
-    {
+
+    public function getDataProviderTimecounter($modelCriteria) {
         $cri = new CActiveDataProvider('RegistrationService', array(
             'criteria' => $modelCriteria,
             'sort' => array(
@@ -2975,12 +2690,11 @@ class RegistrationTransactionController extends Controller
                 'pageSize' => 10,
             ),
         ));
-        
+
         return $cri;
     }
 
-    public function actionGetMaterial($serviceId)
-    {
+    public function actionGetMaterial($serviceId) {
         $first = true;
         $rec = "";
 
@@ -2993,15 +2707,13 @@ class RegistrationTransactionController extends Controller
                 $rec .= ', ';
             }
             $rec .= $product->name;
-
         }
         //echo $rec;
         $object = array('rec' => $rec);
         echo CJSON::encode($object);
     }
 
-    public function actionGenerateInvoice($id)
-    {
+    public function actionGenerateInvoice($id) {
         $registration = RegistrationTransaction::model()->findByPK($id);
         $customer = Customer::model()->findByPk($registration->customer_id);
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $registration->id));
@@ -3010,11 +2722,9 @@ class RegistrationTransactionController extends Controller
             $invoice->status = "CANCELLED";
             $invoice->save(false);
         }
-        $days =
-            // $duedate = date('Y-m-d', strtotime('+'.$days.' days'));
-            // $nextmonth = date('Y-m-d',strtotime('+1 months'));
-        $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d',
-            strtotime("+1 months"));
+        $days = // $duedate = date('Y-m-d', strtotime('+'.$days.' days'));
+                // $nextmonth = date('Y-m-d',strtotime('+1 months'));
+                $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
         $invoiceHeader = InvoiceHeader::model()->findAll();
         $count = count($invoiceHeader) + 1;
         $model = new InvoiceHeader();
@@ -3081,8 +2791,8 @@ class RegistrationTransactionController extends Controller
                     $modelDetail->save(false);
                 }
             }
-            
-            /*SAVE TO JOURNAL*/
+
+            /* SAVE TO JOURNAL */
             $jurnalUmumPiutang = new JurnalUmum;
             $jurnalUmumPiutang->kode_transaksi = $registration->transaction_number;
             $jurnalUmumPiutang->tanggal_transaksi = $registration->transaction_date;
@@ -3097,7 +2807,6 @@ class RegistrationTransactionController extends Controller
 
 //                $getCoaPiutang = $branch->coa_prefix . '.105.000';
 //                $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
-
                 // save product master category coa hpp
 //                $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaHpp->id);
 //                $getCoaMasterHpp = $branch->coa_prefix . '.' . $coaMasterHpp->code;
@@ -3111,7 +2820,6 @@ class RegistrationTransactionController extends Controller
 //                $jurnalUmumMasterHpp->debet_kredit = 'D';
 //                $jurnalUmumMasterHpp->tanggal_posting = date('Y-m-d');
 //                $jurnalUmumMasterHpp->save();
-
                 // save product sub master category coa hpp
                 $coaHpp = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaHpp->id);
                 $getCoaHpp = $branch->coa_prefix . '.' . $coaHpp->code;
@@ -3155,7 +2863,6 @@ class RegistrationTransactionController extends Controller
                 $jurnalUmumDiskon->save();
 
                 //K
-
                 //save product master category coa penjualan barang
                 $coaMasterPenjualan = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaPenjualanBarangDagang->id);
                 $getCoaMasterPenjualan = $branch->coa_prefix . '.' . $coaMasterPenjualan->code;
@@ -3227,7 +2934,6 @@ class RegistrationTransactionController extends Controller
 //                $jurnalUmumPiutang->debet_kredit = 'D';
 //                $jurnalUmumPiutang->tanggal_posting = date('Y-m-d');
 //                $jurnalUmumPiutang->save();
-
                 //K
                 // save service type coa
                 $coaGroupPendapatanJasa = Coa::model()->findByPk($rService->service->serviceType->coa_id);
@@ -3256,9 +2962,7 @@ class RegistrationTransactionController extends Controller
                 $jurnalUmumPendapatanJasa->debet_kredit = 'K';
                 $jurnalUmumPendapatanJasa->tanggal_posting = date('Y-m-d');
                 $jurnalUmumPendapatanJasa->save();
-
             }
-
         }// end if model save
         if (count($invoices) > 0) {
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
@@ -3279,7 +2983,6 @@ class RegistrationTransactionController extends Controller
                 $real->detail = 'Generate Invoice with number #' . $model->invoice_number;
                 $real->save();
             }
-
         } else {
             $real = new RegistrationRealizationProcess();
             $real->registration_transaction_id = $registration->id;
@@ -3290,11 +2993,9 @@ class RegistrationTransactionController extends Controller
             $real->detail = 'Generate Invoice with number #' . $model->invoice_number;
             $real->save();
         }
-
     }
 
-    public function actionGenerateSalesOrder($id)
-    {
+    public function actionGenerateSalesOrder($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
 
         $model->sales_order_number = 'RS_' . $model->id . mt_rand();
@@ -3311,12 +3012,10 @@ class RegistrationTransactionController extends Controller
             $real->checked_by = Yii::app()->user->getId();
             $real->detail = 'Generate Sales Order with number #' . $model->sales_order_number;
             $real->save();
-
         }
     }
 
-    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity)
-    {
+    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity) {
         //$quantity = 0;
 
         $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);
@@ -3354,7 +3053,6 @@ class RegistrationTransactionController extends Controller
                 //print_r($receiveItemDetails);
                 foreach ($receiveItemDetails as $receiveItemDetail) {
                     $quantity += $receiveItemDetail->qty_received;
-
                 }
 
                 $moveOutDetail = MovementOutDetail::model()->findByAttributes(array(
@@ -3377,7 +3075,6 @@ class RegistrationTransactionController extends Controller
                     //print_r($receiveItemDetails);
                     foreach ($moDetails as $moDetail) {
                         $mquantity += $moDetail->quantity_receive;
-
                     }
 
                     $rpDetail = RegistrationProduct::model()->findByAttributes(array(
@@ -3399,16 +3096,11 @@ class RegistrationTransactionController extends Controller
                         $registrationRealization->save();
                     }
                 }
-
             }
-
-
         }
-
     }
 
-    public function actionAjaxGetCompanyBank()
-    {
+    public function actionAjaxGetCompanyBank() {
         $branch = Branch::model()->findByPk($_POST['PaymentIn']['branch_id']);
         $company = Company::model()->findByPk($branch->company_id);
         if ($company == null) {
@@ -3418,8 +3110,7 @@ class RegistrationTransactionController extends Controller
             // foreach ($company as $key => $value) {
             // 	$companyarray[] = (int) $value->company_id;
             // }
-            $data = CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id),
-                array('order' => 'account_name'));
+            $data = CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name'));
             // $criteria = new CDbCriteria;
             // $criteria->addInCondition('company_id', $companyarray);
             // $data = CompanyBank::model()->findAll($criteria);
@@ -3429,19 +3120,15 @@ class RegistrationTransactionController extends Controller
                 // $data=CHtml::listData($data,'bank_id',$data);
                 echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
                 foreach ($data as $value => $name) {
-                    echo CHtml::tag('option', array('value' => $name->id),
-                        CHtml::encode($name->bank->name . " " . $name->account_no . " a/n " . $name->account_name),
-                        true);
+                    echo CHtml::tag('option', array('value' => $name->id), CHtml::encode($name->bank->name . " " . $name->account_no . " a/n " . $name->account_name), true);
                 }
             } else {
                 echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
             }
         }
-
     }
 
-    public function actionlaporanPenjualan()
-    {
+    public function actionlaporanPenjualan() {
         $this->pageTitle = "RIMS - Laporan Penjualan";
 
         $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
@@ -3548,24 +3235,21 @@ class RegistrationTransactionController extends Controller
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
         ));
-
-
     }
 
-    public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai)
-    {
+    public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai) {
 
         // var_dump($customer); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
         $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-            ->setLastModifiedBy("RIMS")
-            ->setTitle("Laporan Penjualan " . date('d-m-Y'))
-            ->setSubject("Laporan Penjualan")
-            ->setDescription("Export Data Laporan Penjualan.")
-            ->setKeywords("Laporan Penjualan Data")
-            ->setCategory("Export Laporan Penjualan");
+                ->setLastModifiedBy("RIMS")
+                ->setTitle("Laporan Penjualan " . date('d-m-Y'))
+                ->setSubject("Laporan Penjualan")
+                ->setDescription("Export Data Laporan Penjualan.")
+                ->setKeywords("Laporan Penjualan Data")
+                ->setCategory("Export Laporan Penjualan");
 
         // style for horizontal vertical center
         $styleHorizontalVertivalCenter = array(
@@ -3615,10 +3299,10 @@ class RegistrationTransactionController extends Controller
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-            // 'fill' => array(
-            //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            //     'color' => array('rgb' => 'FF0000')
-            // )
+                // 'fill' => array(
+                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                //     'color' => array('rgb' => 'FF0000')
+                // )
         );
         $styleBorder = array(
             'borders' => array(
@@ -3637,56 +3321,56 @@ class RegistrationTransactionController extends Controller
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
-            ->setCellValue('A3', 'Laporan Penjualan Registration')
-            ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
-            ->setCellValue('A6', 'TANGGAL')
-            ->setCellValue('B6', 'NO DOKUMEN')
-            ->setCellValue('C6', 'NO WO')
-            ->setCellValue('D6', 'NO POLISI')
-            ->setCellValue('E6', 'CAR MAKE')
-            ->setCellValue('F6', 'CAR SUB MODEL')
-            ->setCellValue('G6', 'CUSTOMER')
-            ->setCellValue('H6', 'T/K')
-            ->setCellValue('I6', 'SUBTOTAL')
-            ->setCellValue('J6', 'DISCOUNT PRODUCT')
-            ->setCellValue('K6', 'DISCOUNT SERVICE')
-            ->setCellValue('L6', 'PPN')
-            ->setCellValue('M6', 'PPH')
-            ->setCellValue('N6', 'TOTAL')
-            ->setCellValue('A7', 'PRODUCT CODE')
-            ->setCellValue('B7', 'PRODUCT NAME')
-            ->setCellValue('C7', 'PRODUCT MASTER CATEGORY')
-            ->setCellValue('D7', 'PRODUCT SUB MASTER CATEGORY')
-            ->setCellValue('E7', 'PRODUCT SUB CATEGORY')
-            ->setCellValue('G7', 'QUANTITY')
-            ->setCellValue('H7', 'UNIT PRICE')
-            ->setCellValue('I7', 'BRUTTO')
-            ->setCellValue('J7', 'DISCOUNT TYPE')
-            ->setCellValue('K7', 'DISCOUNT PRICE')
-            ->setCellValue('L7', 'NETTO')
-            ->setCellValue('M7', 'BIAYA')
-            ->setCellValue('N7', 'TOTAL')
-            ->setCellValue('A8', 'SERVICE CODE')
-            ->setCellValue('B8', 'SERVICE NAME')
-            ->setCellValue('C8', 'SERVICE CATEGORY')
-            ->setCellValue('D8', 'SERVICE TYPE')
-            ->setCellValue('G8', 'HOUR')
-            ->setCellValue('H8', 'PRICE')
-            ->setCellValue('I8', 'BRUTTO')
-            ->setCellValue('J8', 'DISCOUNT TYPE')
-            ->setCellValue('K8', 'DISCOUNT PRICE')
-            ->setCellValue('L8', 'NETTO')
-            ->setCellValue('M8', 'BIAYA')
-            ->setCellValue('N8', 'TOTAL')
-            ->setCellValue('A9', 'QS CODE')
-            ->setCellValue('B9', 'QS NAME')
-            ->setCellValue('G9', 'HOUR')
-            ->setCellValue('H9', 'PRICE')
-            ->setCellValue('I9', 'BRUTTO')
-            ->setCellValue('L9', 'NETTO')
-            ->setCellValue('M9', 'BIAYA')
-            ->setCellValue('N9', 'TOTAL');
+                ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
+                ->setCellValue('A3', 'Laporan Penjualan Registration')
+                ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
+                ->setCellValue('A6', 'TANGGAL')
+                ->setCellValue('B6', 'NO DOKUMEN')
+                ->setCellValue('C6', 'NO WO')
+                ->setCellValue('D6', 'NO POLISI')
+                ->setCellValue('E6', 'CAR MAKE')
+                ->setCellValue('F6', 'CAR SUB MODEL')
+                ->setCellValue('G6', 'CUSTOMER')
+                ->setCellValue('H6', 'T/K')
+                ->setCellValue('I6', 'SUBTOTAL')
+                ->setCellValue('J6', 'DISCOUNT PRODUCT')
+                ->setCellValue('K6', 'DISCOUNT SERVICE')
+                ->setCellValue('L6', 'PPN')
+                ->setCellValue('M6', 'PPH')
+                ->setCellValue('N6', 'TOTAL')
+                ->setCellValue('A7', 'PRODUCT CODE')
+                ->setCellValue('B7', 'PRODUCT NAME')
+                ->setCellValue('C7', 'PRODUCT MASTER CATEGORY')
+                ->setCellValue('D7', 'PRODUCT SUB MASTER CATEGORY')
+                ->setCellValue('E7', 'PRODUCT SUB CATEGORY')
+                ->setCellValue('G7', 'QUANTITY')
+                ->setCellValue('H7', 'UNIT PRICE')
+                ->setCellValue('I7', 'BRUTTO')
+                ->setCellValue('J7', 'DISCOUNT TYPE')
+                ->setCellValue('K7', 'DISCOUNT PRICE')
+                ->setCellValue('L7', 'NETTO')
+                ->setCellValue('M7', 'BIAYA')
+                ->setCellValue('N7', 'TOTAL')
+                ->setCellValue('A8', 'SERVICE CODE')
+                ->setCellValue('B8', 'SERVICE NAME')
+                ->setCellValue('C8', 'SERVICE CATEGORY')
+                ->setCellValue('D8', 'SERVICE TYPE')
+                ->setCellValue('G8', 'HOUR')
+                ->setCellValue('H8', 'PRICE')
+                ->setCellValue('I8', 'BRUTTO')
+                ->setCellValue('J8', 'DISCOUNT TYPE')
+                ->setCellValue('K8', 'DISCOUNT PRICE')
+                ->setCellValue('L8', 'NETTO')
+                ->setCellValue('M8', 'BIAYA')
+                ->setCellValue('N8', 'TOTAL')
+                ->setCellValue('A9', 'QS CODE')
+                ->setCellValue('B9', 'QS NAME')
+                ->setCellValue('G9', 'HOUR')
+                ->setCellValue('H9', 'PRICE')
+                ->setCellValue('I9', 'BRUTTO')
+                ->setCellValue('L9', 'NETTO')
+                ->setCellValue('M9', 'BIAYA')
+                ->setCellValue('N9', 'TOTAL');
 
 
         // ->setCellValue('L2', 'Historical');
@@ -3715,7 +3399,6 @@ class RegistrationTransactionController extends Controller
         // $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
         // $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
         //$sheet->getStyle('A7:I7')->applyFromArray($styleBold);
-
         // $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
@@ -3745,27 +3428,17 @@ class RegistrationTransactionController extends Controller
             //$phone = ($value->customerPhones !=NULL)?$this->phoneNumber($value->customerPhones):'';
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transaction->transaction_date);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $transaction->transaction_number);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow,
-                $transaction->work_order_number == "" ? '-' : $transaction->work_order_number);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow,
-                $transaction->vehicle->plate_number == "" ? '-' : $transaction->vehicle->plate_number);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow,
-                $transaction->vehicle->carMake->name == "" ? '-' : $transaction->vehicle->carMake->name);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow,
-                $transaction->vehicle->carSubModel->name == "" ? '-' : $transaction->vehicle->carSubModel->name);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $transaction->work_order_number == "" ? '-' : $transaction->work_order_number);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->vehicle->plate_number == "" ? '-' : $transaction->vehicle->plate_number);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $transaction->vehicle->carMake->name == "" ? '-' : $transaction->vehicle->carMake->name);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, $transaction->vehicle->carSubModel->name == "" ? '-' : $transaction->vehicle->carSubModel->name);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, $transaction->customer->name);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrow,
-                number_format($transaction->subtotal, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrow,
-                number_format($transaction->discount_product, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow,
-                number_format($transaction->discount_service, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('L' . $startrow,
-                number_format($transaction->ppn_price, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('M' . $startrow,
-                number_format($transaction->pph_price, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow,
-                number_format($transaction->grand_total, 2));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrow, number_format($transaction->subtotal, 2));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrow, number_format($transaction->discount_product, 2));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow, number_format($transaction->discount_service, 2));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('L' . $startrow, number_format($transaction->ppn_price, 2));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('M' . $startrow, number_format($transaction->pph_price, 2));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow, number_format($transaction->grand_total, 2));
             $sheet = $objPHPExcel->getActiveSheet();
             $sheet->getStyle("A" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleBorder);
             $sheet->getStyle("A" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleBold);
@@ -3776,46 +3449,34 @@ class RegistrationTransactionController extends Controller
             foreach ($transaction->registrationProducts as $key => $transactionDetail) {
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transactionDetail->product->code);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $transactionDetail->product->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow,
-                    $transactionDetail->product->productMasterCategory->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow,
-                    $transactionDetail->product->productSubMasterCategory->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow,
-                    $transactionDetail->product->productSubCategory->name);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $transactionDetail->product->productMasterCategory->name);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transactionDetail->product->productSubMasterCategory->name);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $transactionDetail->product->productSubCategory->name);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, "B");
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, $transactionDetail->quantity);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow,
-                    number_format($transactionDetail->sale_price, 2));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrow,
-                    number_format($transactionDetail->quantity * $transactionDetail->sale_price, 2));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($transactionDetail->sale_price, 2));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrow, number_format($transactionDetail->quantity * $transactionDetail->sale_price, 2));
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrow, $transactionDetail->discount_type);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow,
-                    number_format($transactionDetail->discount, 2));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow, number_format($transactionDetail->discount, 2));
 
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow,
-                    number_format($transactionDetail->total_price, 2));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow, number_format($transactionDetail->total_price, 2));
                 $startrow++;
             }
 
             foreach ($transaction->registrationServices as $key => $serviceDetail) {
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $serviceDetail->service->code);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $serviceDetail->service->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow,
-                    $serviceDetail->service->serviceCategory->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow,
-                    $serviceDetail->service->serviceType->name);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $serviceDetail->service->serviceCategory->name);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $serviceDetail->service->serviceType->name);
 
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, "J");
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, $serviceDetail->hour);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow,
-                    number_format($serviceDetail->price, 2));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($serviceDetail->price, 2));
 
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrow, $serviceDetail->discount_type);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow,
-                    number_format($serviceDetail->discount_price, 2));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow, number_format($serviceDetail->discount_price, 2));
 
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow,
-                    number_format($serviceDetail->total_price, 2));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow, number_format($serviceDetail->total_price, 2));
                 $startrow++;
             }
             foreach ($transaction->registrationQuickServices as $key => $qsDetail) {
@@ -3884,8 +3545,7 @@ class RegistrationTransactionController extends Controller
         exit();
     }
 
-    public function actionMonthlyYearly()
-    {
+    public function actionMonthlyYearly() {
         $this->pageTitle = "RIMS - Monthly & Yearly Report";
 
         // $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
@@ -3936,32 +3596,29 @@ class RegistrationTransactionController extends Controller
             'year' => $year,
             'month' => $month,
             'type' => $type,
-            // 'customer_id'=>$customer_id,
-            // 'customer_name'=>$customer_name,
-            // 'customerType'=>$customerType,
-            // 'serviceType'=>$serviceType,
-            // 'paymentType'=>$paymentType,
-            // 'customer'=>$customer,
-            // 'customerDataProvider'=>$customerDataProvider,
+                // 'customer_id'=>$customer_id,
+                // 'customer_name'=>$customer_name,
+                // 'customerType'=>$customerType,
+                // 'serviceType'=>$serviceType,
+                // 'paymentType'=>$paymentType,
+                // 'customer'=>$customer,
+                // 'customerDataProvider'=>$customerDataProvider,
         ));
-
-
     }
 
-    public function getXlsYearlyReport($year, $branch)
-    {
+    public function getXlsYearlyReport($year, $branch) {
 
         // var_dump($customer); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
         $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-            ->setLastModifiedBy("RIMS")
-            ->setTitle("Monthly & Yearly Report " . date('d-m-Y'))
-            ->setSubject("Monthly & Yearly Report")
-            ->setDescription("Export Monthly and yearly report.")
-            ->setKeywords("Monthly and yearly report")
-            ->setCategory("Export Monthly and yearly report");
+                ->setLastModifiedBy("RIMS")
+                ->setTitle("Monthly & Yearly Report " . date('d-m-Y'))
+                ->setSubject("Monthly & Yearly Report")
+                ->setDescription("Export Monthly and yearly report.")
+                ->setKeywords("Monthly and yearly report")
+                ->setCategory("Export Monthly and yearly report");
 
         // style for horizontal vertical center
         $styleHorizontalVertivalCenter = array(
@@ -4016,10 +3673,10 @@ class RegistrationTransactionController extends Controller
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-            // 'fill' => array(
-            //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            //     'color' => array('rgb' => 'FF0000')
-            // )
+                // 'fill' => array(
+                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                //     'color' => array('rgb' => 'FF0000')
+                // )
         );
         $styleBorder = array(
             'borders' => array(
@@ -4042,31 +3699,31 @@ class RegistrationTransactionController extends Controller
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'Monthly and yearly report')
-            ->setCellValue('B4', 'Year')
-            ->setCellValue('B5', 'Month')
-            ->setCellValue('B6', 'Branch')
-            ->setCellValue('B7', 'Location')
-            ->setCellValue('B10', 'Revenue')
-            ->setCellValue('C11', 'Total')
-            ->setCellValue('C13', 'Service')
-            ->setCellValue('G13', 'Parts')
-            ->setCellValue('D15', 'General Repair')
-            ->setCellValue('D16', 'Body Repair')
-            ->setCellValue('D17', 'TBA')
-            ->setCellValue('D18', 'Oil')
-            ->setCellValue('D19', 'Car Wash')
-            ->setCellValue('D20', 'Sub Pekerjaan Luar')
-            ->setCellValue('D21', 'Other')
-            ->setCellValue('B37', 'Service Sales by Division & Employee')
-            ->setCellValue('C39', 'Division')
-            ->setCellValue('D39', 'Employee #')
-            ->setCellValue('E39', 'Employee Name')
-            ->setCellValue('F39', 'Service Sales (Rp)')
-            ->setCellValue('G15', 'Spareparts')
-            ->setCellValue('C4', $year)
-            ->setCellValue('C5', 'January - December')
-            ->setCellValue('C6', $branchData == "" ? 'All Branch' : $branchData);
+                ->setCellValue('A1', 'Monthly and yearly report')
+                ->setCellValue('B4', 'Year')
+                ->setCellValue('B5', 'Month')
+                ->setCellValue('B6', 'Branch')
+                ->setCellValue('B7', 'Location')
+                ->setCellValue('B10', 'Revenue')
+                ->setCellValue('C11', 'Total')
+                ->setCellValue('C13', 'Service')
+                ->setCellValue('G13', 'Parts')
+                ->setCellValue('D15', 'General Repair')
+                ->setCellValue('D16', 'Body Repair')
+                ->setCellValue('D17', 'TBA')
+                ->setCellValue('D18', 'Oil')
+                ->setCellValue('D19', 'Car Wash')
+                ->setCellValue('D20', 'Sub Pekerjaan Luar')
+                ->setCellValue('D21', 'Other')
+                ->setCellValue('B37', 'Service Sales by Division & Employee')
+                ->setCellValue('C39', 'Division')
+                ->setCellValue('D39', 'Employee #')
+                ->setCellValue('E39', 'Employee Name')
+                ->setCellValue('F39', 'Service Sales (Rp)')
+                ->setCellValue('G15', 'Spareparts')
+                ->setCellValue('C4', $year)
+                ->setCellValue('C5', 'January - December')
+                ->setCellValue('C6', $branchData == "" ? 'All Branch' : $branchData);
 
 
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
@@ -4123,11 +3780,8 @@ class RegistrationTransactionController extends Controller
                 } else {
                     $othersYear += $service->total_price;
                 }
-
             }
             $serviceYear += $transaction->total_service_price;
-
-
         }
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D13', $serviceYear);
 
@@ -4156,8 +3810,6 @@ class RegistrationTransactionController extends Controller
             $productYear = 0;
             foreach ($products as $key => $product) {
                 $productYear += $product->total_price;
-
-
             }
             $soCriteria = new CDbCriteria;
             $soCriteria->together = 'true';
@@ -4172,8 +3824,6 @@ class RegistrationTransactionController extends Controller
             $soYear = 0;
             foreach ($soProducts as $key => $soProduct) {
                 $soYear += $soProduct->total_price;
-
-
             }
             $productAll = $productYear + $soYear;
             $totalYearProduct += $productAll;
@@ -4211,19 +3861,15 @@ class RegistrationTransactionController extends Controller
                 foreach ($employees as $key => $employee) {
                     $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $row, $employee->id);
                     $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $row, $employee->name);
-                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $row,
-                        $yearServiceSale->registrationService->total_price);
+                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $row, $yearServiceSale->registrationService->total_price);
 
                     $row++;
                 }
 
                 // echo $yearServiceSale->employee->name;
                 // echo '<br>';
-
-
             }
             $row++;
-
         }
         // foreach ($yearServiceSales as $key => $yearServiceSale) {
         //   $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$row,$yearServiceSale->registrationService->service->serviceType->name);
@@ -4231,10 +3877,8 @@ class RegistrationTransactionController extends Controller
         //   $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$row,$yearServiceSale->employee->name);
         //   $row++;
         //   // echo $yearServiceSale->registrationService->service->serviceType->name;
-
         //   // echo $yearServiceSale->employee->name; echo '<br>';
         // }
-
         // $regServiceEmpCriteria = new CDbCriteria;
         // $regServiceEmpCriteria->with = array('registrationTransaction','service'=>array('with'=>array('serviceType')),'registrationServiceEmployees'=>array('with'=>array('employee')));
         // $regServiceEmps = RegistrationService::model()->findAll($regServiceEmpCriteria);
@@ -4292,27 +3936,27 @@ class RegistrationTransactionController extends Controller
             }
             $monthSheet->setTitle($bulan);
             $monthSheet->setCellValue('A1', 'Monthly report')
-                ->setCellValue('B4', 'Year')
-                ->setCellValue('B5', 'Month')
-                ->setCellValue('B6', 'Branch')
-                ->setCellValue('B7', 'Location')
-                ->setCellValue('B10', 'Revenue')
-                ->setCellValue('C11', 'Total')
-                ->setCellValue('C13', 'Service')
-                ->setCellValue('G13', 'Parts')
-                ->setCellValue('D15', 'General Repair')
-                ->setCellValue('D16', 'Body Repair')
-                ->setCellValue('D17', 'TBA')
-                ->setCellValue('D18', 'Oil')
-                ->setCellValue('D19', 'Car Wash')
-                ->setCellValue('D20', 'Sub Pekerjaan Luar')
-                ->setCellValue('D21', 'Other')
-                ->setCellValue('B37', 'Service Sales by Division & Employee')
-                ->setCellValue('C39', 'Division')
-                ->setCellValue('D39', 'Employee #')
-                ->setCellValue('E39', 'Employee Name')
-                ->setCellValue('F39', 'Service Sales (Rp)')
-                ->setCellValue('G15', 'Spareparts');
+                    ->setCellValue('B4', 'Year')
+                    ->setCellValue('B5', 'Month')
+                    ->setCellValue('B6', 'Branch')
+                    ->setCellValue('B7', 'Location')
+                    ->setCellValue('B10', 'Revenue')
+                    ->setCellValue('C11', 'Total')
+                    ->setCellValue('C13', 'Service')
+                    ->setCellValue('G13', 'Parts')
+                    ->setCellValue('D15', 'General Repair')
+                    ->setCellValue('D16', 'Body Repair')
+                    ->setCellValue('D17', 'TBA')
+                    ->setCellValue('D18', 'Oil')
+                    ->setCellValue('D19', 'Car Wash')
+                    ->setCellValue('D20', 'Sub Pekerjaan Luar')
+                    ->setCellValue('D21', 'Other')
+                    ->setCellValue('B37', 'Service Sales by Division & Employee')
+                    ->setCellValue('C39', 'Division')
+                    ->setCellValue('D39', 'Employee #')
+                    ->setCellValue('E39', 'Employee Name')
+                    ->setCellValue('F39', 'Service Sales (Rp)')
+                    ->setCellValue('G15', 'Spareparts');
 
             $monthSheet->setCellValue('C4', $year);
             $monthSheet->setCellValue('C5', $bulan);
@@ -4373,11 +4017,8 @@ class RegistrationTransactionController extends Controller
                     } else {
                         $othersMonth += $service->total_price;
                     }
-
                 }
                 $serviceMonth += $transaction->total_service_price;
-
-
             }
             $monthSheet->setCellValue('D13', $serviceMonth);
 
@@ -4407,8 +4048,6 @@ class RegistrationTransactionController extends Controller
                 $productMonth = 0;
                 foreach ($products as $key => $product) {
                     $productMonth += $product->total_price;
-
-
                 }
                 $soCriteria = new CDbCriteria;
                 $soCriteria->together = 'true';
@@ -4424,8 +4063,6 @@ class RegistrationTransactionController extends Controller
                 $soMonth = 0;
                 foreach ($soProducts as $key => $soProduct) {
                     $soMonth += $soProduct->total_price;
-
-
                 }
                 $productAll = $productMonth + $soMonth;
                 $totalMonthProduct += $productAll;
@@ -4471,11 +4108,8 @@ class RegistrationTransactionController extends Controller
 
                     // echo $yearServiceSale->employee->name;
                     // echo '<br>';
-
-
                 }
                 $row++;
-
             }
         }
 
@@ -4496,20 +4130,19 @@ class RegistrationTransactionController extends Controller
         exit();
     }
 
-    public function getXlsMonthlyReport($year, $month, $branch)
-    {
+    public function getXlsMonthlyReport($year, $month, $branch) {
 
         // var_dump($customer); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
         $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-            ->setLastModifiedBy("RIMS")
-            ->setTitle("Monthly Report " . date('d-m-Y'))
-            ->setSubject("Monthly Report")
-            ->setDescription("Export Monthly report.")
-            ->setKeywords("Monthly report")
-            ->setCategory("Export Monthly report");
+                ->setLastModifiedBy("RIMS")
+                ->setTitle("Monthly Report " . date('d-m-Y'))
+                ->setSubject("Monthly Report")
+                ->setDescription("Export Monthly report.")
+                ->setKeywords("Monthly report")
+                ->setCategory("Export Monthly report");
 
         // style for horizontal vertical center
         $styleHorizontalVertivalCenter = array(
@@ -4564,10 +4197,10 @@ class RegistrationTransactionController extends Controller
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-            // 'fill' => array(
-            //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            //     'color' => array('rgb' => 'FF0000')
-            // )
+                // 'fill' => array(
+                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                //     'color' => array('rgb' => 'FF0000')
+                // )
         );
         $styleBorder = array(
             'borders' => array(
@@ -4629,31 +4262,31 @@ class RegistrationTransactionController extends Controller
         }
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'Monthly report')
-            ->setCellValue('B4', 'Year')
-            ->setCellValue('B5', 'Month')
-            ->setCellValue('B6', 'Branch')
-            ->setCellValue('B7', 'Location')
-            ->setCellValue('B10', 'Revenue')
-            ->setCellValue('C11', 'Total')
-            ->setCellValue('C13', 'Service')
-            ->setCellValue('G13', 'Parts')
-            ->setCellValue('D15', 'General Repair')
-            ->setCellValue('D16', 'Body Repair')
-            ->setCellValue('D17', 'TBA')
-            ->setCellValue('D18', 'Oil')
-            ->setCellValue('D19', 'Car Wash')
-            ->setCellValue('D20', 'Sub Pekerjaan Luar')
-            ->setCellValue('D21', 'Other')
-            ->setCellValue('B37', 'Service Sales by Division & Employee')
-            ->setCellValue('C39', 'Division')
-            ->setCellValue('D39', 'Employee #')
-            ->setCellValue('E39', 'Employee Name')
-            ->setCellValue('F39', 'Service Sales (Rp)')
-            ->setCellValue('G15', 'Spareparts')
-            ->setCellValue('C4', $year)
-            ->setCellValue('C5', $bulan)
-            ->setCellValue('C6', $branchData == "" ? 'All Branch' : $branchData);
+                ->setCellValue('A1', 'Monthly report')
+                ->setCellValue('B4', 'Year')
+                ->setCellValue('B5', 'Month')
+                ->setCellValue('B6', 'Branch')
+                ->setCellValue('B7', 'Location')
+                ->setCellValue('B10', 'Revenue')
+                ->setCellValue('C11', 'Total')
+                ->setCellValue('C13', 'Service')
+                ->setCellValue('G13', 'Parts')
+                ->setCellValue('D15', 'General Repair')
+                ->setCellValue('D16', 'Body Repair')
+                ->setCellValue('D17', 'TBA')
+                ->setCellValue('D18', 'Oil')
+                ->setCellValue('D19', 'Car Wash')
+                ->setCellValue('D20', 'Sub Pekerjaan Luar')
+                ->setCellValue('D21', 'Other')
+                ->setCellValue('B37', 'Service Sales by Division & Employee')
+                ->setCellValue('C39', 'Division')
+                ->setCellValue('D39', 'Employee #')
+                ->setCellValue('E39', 'Employee Name')
+                ->setCellValue('F39', 'Service Sales (Rp)')
+                ->setCellValue('G15', 'Spareparts')
+                ->setCellValue('C4', $year)
+                ->setCellValue('C5', $bulan)
+                ->setCellValue('C6', $branchData == "" ? 'All Branch' : $branchData);
 
 
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
@@ -4711,11 +4344,8 @@ class RegistrationTransactionController extends Controller
                 } else {
                     $othersYear += $service->total_price;
                 }
-
             }
             $serviceYear += $transaction->total_service_price;
-
-
         }
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D13', $serviceYear);
 
@@ -4745,8 +4375,6 @@ class RegistrationTransactionController extends Controller
             $productYear = 0;
             foreach ($products as $key => $product) {
                 $productYear += $product->total_price;
-
-
             }
             $soCriteria = new CDbCriteria;
             $soCriteria->together = 'true';
@@ -4762,8 +4390,6 @@ class RegistrationTransactionController extends Controller
             $soYear = 0;
             foreach ($soProducts as $key => $soProduct) {
                 $soYear += $soProduct->total_price;
-
-
             }
             $productAll = $productYear + $soYear;
             $totalYearProduct += $productAll;
@@ -4802,19 +4428,15 @@ class RegistrationTransactionController extends Controller
                 foreach ($employees as $key => $employee) {
                     $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $row, $employee->id);
                     $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $row, $employee->name);
-                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $row,
-                        $monthServiceSale->registrationService->total_price);
+                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $row, $monthServiceSale->registrationService->total_price);
 
                     $row++;
                 }
 
                 // echo $yearServiceSale->employee->name;
                 // echo '<br>';
-
-
             }
             $row++;
-
         }
         // $regServiceEmpCriteria = new CDbCriteria;
         // $regServiceEmpCriteria->with = array('registrationTransaction','service'=>array('with'=>array('serviceType')),'registrationServiceEmployees'=>array('with'=>array('employee')));
@@ -4847,8 +4469,7 @@ class RegistrationTransactionController extends Controller
         exit();
     }
 
-    public function actionAjaxGetBranch()
-    {
+    public function actionAjaxGetBranch() {
 
 
         $data = Branch::model()->findAllByAttributes(array('company_id' => $_POST['company']));
@@ -4867,6 +4488,7 @@ class RegistrationTransactionController extends Controller
             echo CHtml::tag('option', array('value' => ''), '-- All Branch --', true);
         }
     }
+
     // public function showYearReport($branch, $year){
     // 	$month = "";
     // 	$criteria = new CDbCriteria;
@@ -4876,15 +4498,11 @@ class RegistrationTransactionController extends Controller
     // 	}
     // 	$transactions = RegistrationTransaction::model()->findAll($criteria);
     // 	$this->render('monthlyYearlyReport',array(
-
     // 		'transactions'=>$transactions,
     // 		'branch'=>$branch,
     // 		'month'=>$month,
     // 		'year'=>$year,
-
     // 	));
-
-
     // }
     // public function showMonthReport($branch, $year,$month){
     // 	$criteria = new CDbCriteria;
@@ -4893,10 +4511,8 @@ class RegistrationTransactionController extends Controller
     // 	if ($branch!="") {
     // 		$criteria->addCondition("branch_id = ".$branch);
     // 	}
-
     // 	$transactions = RegistrationTransaction::model()->findAll($criteria);
     // 	$this->render('monthlyYearlyReport',array(
-
     // 		'transactions'=>$transactions,
     // 		'branch'=>$branch,
     // 		'year'=>$year,

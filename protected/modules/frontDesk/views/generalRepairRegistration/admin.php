@@ -102,7 +102,7 @@ $('.search-form form').submit(function(){
                 'name' => 'customer_name',
                 'value' => '$data->customer->name',
             ),
-            'sales_order_number',
+            'work_order_number',
             array(
                 'header' => 'Invoice #',
                 'filter' => false,

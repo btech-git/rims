@@ -2,104 +2,92 @@
 /* @var $this RegistrationTransactionController */
 /* @var $model RegistrationTransaction */
 
-$this->breadcrumbs=array(
-	'Idle Management'=>array('indexHead'),
-	'Manage',
+$this->breadcrumbs = array(
+    'Idle Management' => array('indexHead'),
+    'Manage',
 );
 
-$this->menu=array(
-	array('label'=>'List RegistrationTransaction', 'url'=>array('admin')),
-	array('label'=>'Create RegistrationTransaction', 'url'=>array('index')),
+$this->menu = array(
+    array('label' => 'List RegistrationTransaction', 'url' => array('admin')),
+    array('label' => 'Create RegistrationTransaction', 'url' => array('index')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
-	$('.search-form').slideToggle(600);
-	$('.bulk-action').toggle();
-	$(this).toggleClass('active');
-	if($(this).hasClass('active')){
-		$(this).text('');
-	}else {
-		$(this).text('Advanced Search');
-	}
-	return false;
+    $('.search-form').slideToggle(600);
+    $('.bulk-action').toggle();
+    $(this).toggleClass('active');
+    if($(this).hasClass('active')){
+            $(this).text('');
+    }else {
+            $(this).text('Advanced Search');
+    }
+    return false;
 });
 $('.search-form form').submit(function(){
-	$('#registration-service-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
+    $('#registration-service-grid').yiiGridView('update', {
+            data: $(this).serialize()
+    });
+    return false;
 });
 
-	/*$('#registration-service-grid a.registration-service-start').live('click',function() {
-        //if(!confirm('Are you sure you want to mark this commission as PAID?')) return false;
-        
-        var url = $(this).attr('href');
-        //  do your post request here
-        console.log(url);
-        $.post(url,function(html){
-            $.fn.yiiGridView.update('registration-service-grid');
-        });
-        return false;
-	});
+/*$('#registration-service-grid a.registration-service-start').live('click',function() {
+    //if(!confirm('Are you sure you want to mark this commission as PAID?')) return false;
 
-	$('#registration-service-grid a.registration-service-finish').live('click',function() {
-        //if(!confirm('Are you sure you want to mark this commission as PAID?')) return false;
-        
-        var url = $(this).attr('href');
-        //  do your post request here
-        console.log(url);
-        $.post(url,function(html){
-            $.fn.yiiGridView.update('registration-service-grid');
-        });
-        return false;
-	});*/
-");
-?>
+    var url = $(this).attr('href');
+    //  do your post request here
+    console.log(url);
+    $.post(url,function(html){
+        $.fn.yiiGridView.update('registration-service-grid');
+    });
+    return false;
+    });
+
+    $('#registration-service-grid a.registration-service-finish').live('click',function() {
+    //if(!confirm('Are you sure you want to mark this commission as PAID?')) return false;
+
+    var url = $(this).attr('href');
+    //  do your post request here
+    console.log(url);
+    $.post(url,function(html){
+        $.fn.yiiGridView.update('registration-service-grid');
+    });
+    
+    return false;
+});*/
+"); ?>
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
-	<div class="clearfix page-action">
-		<h1>Manage General Repair Progress</h1>
+    <div class="clearfix page-action">
+        <h1>Manage General Repair Progress</h1>
 
-		<div>
+        <div>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(
                     'Work Order' => array(
-                        'content' => $this->renderPartial(
-                            '_viewWorkOrderHead',
-                            array(
-                                'registration' => $registration,
-                                'memo' => $memo,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewWorkOrderHead', array(
+                            'registration' => $registration,
+                            'memo' => $memo,
+                        ), true),
                     ),
                     'Products' => array(
-                        'content' => $this->renderPartial(
-                            '_viewProduct',
-                            array(
-                                'registration' => $registration,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewProduct', array(
+                            'registration' => $registration,
+                        ), true),
                     ),
                     'Quick Service' => array(
-                        'content' => $this->renderPartial(
-                            '_viewQuickService',
-                            array(
-                                'registration' => $registration,
-                                'registrationQuickService' => $registrationQuickService,
-                                'registrationQuickServiceDataProvider' => $registrationQuickServiceDataProvider,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewQuickService', array(
+                            'registration' => $registration,
+                            'registrationQuickService' => $registrationQuickService,
+                            'registrationQuickServiceDataProvider' => $registrationQuickServiceDataProvider,
+                        ), true),
                     ),
                     'Service History' => array(
-                        'content' => $this->renderPartial(
-                            '_viewServiceHistory',
-                            array(
-                                'registration' => $registration,
-                                'vehicle' => $vehicle,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewServiceHistory', array(
+                            'registration' => $registration,
+                            'vehicle' => $vehicle,
+                        ), true),
                     ),
                 ),
                 // additional javascript options for the tabs plugin
@@ -108,11 +96,12 @@ $('.search-form form').submit(function(){
                 ),
                 // set id for this widgets
                 'id' => 'view_tab',
-            )); ?>
+            ));
+            ?>
         </div>
-        
+
         <br />
-        
+
         <div>
             <h3>List Memo</h3>
             <table>
@@ -129,8 +118,8 @@ $('.search-form form').submit(function(){
         </div>
 
         <br />
-        
-		<div class="grid-view">
+
+        <div class="grid-view">
             <table>
                 <thead>
                     <tr style="background-color: yellow">
@@ -157,28 +146,23 @@ $('.search-form form').submit(function(){
                             <td><?php echo CHtml::encode(CHtml::value($registrationService, 'total_time')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($registrationService, 'status')); ?></td>
                             <td>
-                                <?php //if (empty($registrationService->assign_mechanic_id)): ?>
-                                    <?php echo CHtml::activeDropDownlist($registrationService, "[$i]assign_mechanic_id", CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
-                                        "branch_id" => $registration->branch_id,
-                                        "division_id" => 1,
-                                        "position_id" => 1,
-                                        "level_id" => array(1, 2, 3),
-                                    )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
-                                <?php /*else: ?>
-                                    <?php echo CHtml::activeHiddenField($registrationService, "[$i]assign_mechanic_id"); ?>
-                                    <?php echo CHtml::encode(CHtml::value($registrationService, 'assignMechanic.name')); ?>
-                                <?php endif;*/ ?>
+                                <?php echo CHtml::activeDropDownlist($registrationService, "[$i]assign_mechanic_id", CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                                    "branch_id" => $registration->branch_id,
+                                    "division_id" => 1,
+                                    "position_id" => 1,
+                                    "level_id" => array(1, 2, 3),
+                                )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>                        
                 </tbody>
             </table>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 
 <div style="text-align:center">
-    <?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
-    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class' => 'button success', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+    <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
+    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class' => 'button success')); ?>
 </div>
 <?php echo CHtml::endForm(); ?>

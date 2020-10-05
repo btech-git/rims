@@ -1,6 +1,6 @@
 <?php
 
-class VehicleInspectionController extends Controller {
+class VehicleInspectionAfterServiceController extends Controller {
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -97,43 +97,22 @@ class VehicleInspectionController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        $vehicleInspectionDetail = new VehicleInspectionDetail('search');
-        $vehicleInspectionDetail->unsetAttributes();  // clear any default values
-        if (isset($_GET['VehicleInspectionDetail']))
-            $vehicleInspection->attributes = $_GET['VehicleInspectionDetail'];
-
-        $vehicleInspectionDetailCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
-        //$vehicleInspectionDetailCriteria->compare('name',$vehicleInspectionDetail->name,true);
-
-        $vehicleInspectionDetailDataProvider = new CActiveDataProvider('VehicleInspectionDetail', array(
-            'criteria' => $vehicleInspectionDetailCriteria,
-        ));
 
         $vehicleInspection = $this->instantiate($id);
         $this->performAjaxValidation($vehicleInspection->header);
 
         if (isset($_POST['VehicleInspection'])) {
             $this->loadState($vehicleInspection);
+            
             if ($vehicleInspection->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $vehicleInspection->header->id));
-            } else {
-                foreach ($vehicleInspection->vehicleInspectionDetails as $key => $vehicleInspectionDetail) {
-                    //print_r(CJSON::encode($vehicleInspectionDetail->id));
-                }
-            }
+            } 
         }
 
         $this->render('update', array(
-            //'model'=>$model,
             'vehicleInspection' => $vehicleInspection,
-            'vehicleInspectionDetail' => $vehicleInspectionDetail,
-            'vehicleInspectionDetailDataProvider' => $vehicleInspectionDetailDataProvider,
-                //'sectionArray'=>$sectionArray,
+//            'vehicleInspectionDetail' => $vehicleInspectionDetail,
+//            'vehicleInspectionDetailDataProvider' => $vehicleInspectionDetailDataProvider,
         ));
     }
 
@@ -164,10 +143,6 @@ class VehicleInspectionController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        /* $vehicleInspectionCriteria = new CDbCriteria;
-          $vehicleInspectionCriteria->select = 't.id'; // select fields which you want in output
-          $criteria->condition = 't.status = 1';
-          $vehicleInspection = VehicleInspection::model()->findAll($vehicleInspectionCriteria); */
         $plate_number = '';
         $vehicle = new RegistrationTransaction('search');
         $vehicle->unsetAttributes();  // clear any default values
@@ -208,69 +183,40 @@ class VehicleInspectionController extends Controller {
     /**
      * Vehicles with inspections.
      */
-    public function actionInspection($vehicleId, $wonumber) {
-        $vehicleInspection = new VehicleInspection('search');
-        $vehicleInspection->unsetAttributes();  // clear any default values
-        
+    public function actionInspection($id) {
+        $vehicleInspection = $this->instantiate($id);
+        $this->performAjaxValidation($vehicleInspection->header);
+
         if (isset($_GET['vehicleInspection']))
             $vehicleInspection->attributes = $_GET['VehicleInspection'];
 
-        $vehicleInspectionCriteria = new CDbCriteria;
-        $vehicleInspectionCriteria->condition = 't.work_order_number = ' . $wonumber;
+        $vehicleInspectionDetail = new VehicleInspectionDetail('search');
+        $vehicleInspectionDetail->unsetAttributes();  // clear any default values
+        if (isset($_GET['VehicleInspectionDetail']))
+            $vehicleInspection->attributes = $_GET['VehicleInspectionDetail'];
 
-        $vehicleInspectionDataProvider = new CActiveDataProvider('VehicleInspection', array(
-            'criteria' => $vehicleInspectionCriteria,
+        $vehicleInspectionDetailCriteria = new CDbCriteria;
+        $vehicleInspectionDetailDataProvider = new CActiveDataProvider('VehicleInspectionDetail', array(
+            'criteria' => $vehicleInspectionDetailCriteria,
         ));
 
-        $vehicle = Vehicle::model()->findByPk($vehicleId);
-
+        if ($vehicleInspection->save(Yii::app()->db)) {
+            $this->redirect(array('view', 'id' => $vehicleInspection->header->id));
+        } 
+        
         $this->render('inspection', array(
-            'vehicle' => $vehicle,
             'vehicleInspection' => $vehicleInspection,
-            'vehicleInspectionDataProvider' => $vehicleInspectionDataProvider
+            'vehicleInspectionDetail' => $vehicleInspectionDetail,
+            'vehicleInspectionDetailDataProvider' => $vehicleInspectionDetailDataProvider,
         ));
-    }
-
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return VehicleInspection the loaded model
-     * @throws CHttpException
-     */
-    //Add Checklist Module Detail
-    public function actionAjaxHtmlAddVehicleInspectionDetail($id, $inspectionId) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $vehicleInspection = $this->instantiate($id);
-            //$this->loadState($vehicleInspection);
-
-            $vehicleInspection->addVehicleInspectionDetail($inspectionId);
-            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detailVehicleInspectionDetail', array('vehicleInspection' => $vehicleInspection), false, true);
-        }
-    }
-
-    //Delete Checklist Module Detail
-    public function actionAjaxHtmlRemoveSectionDetail($id, $index) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $inspection = $this->instantiate($id);
-            $this->loadState($inspection);
-            //print_r(CJSON::encode($salesOrder->details));
-            $inspection->removeDetailAt($index);
-            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detailSection', array('inspection' => $inspection), false, true);
-        }
     }
 
     public function instantiate($id) {
         if (empty($id)) {
-            $vehicleInspection = new VehicleInspections(new VehicleInspection(), array());
-            //print_r("test");
+            $vehicleInspection = new VehicleInspectionAfterService(new VehicleInspection(), array());
         } else {
             $vehicleInspectionModel = $this->loadModel($id);
-            $vehicleInspection = new VehicleInspections($vehicleInspectionModel, $vehicleInspectionModel->vehicleInspectionDetails);
+            $vehicleInspection = new VehicleInspectionAfterService($vehicleInspectionModel, $vehicleInspectionModel->vehicleInspectionDetails);
         }
         return $vehicleInspection;
     }
@@ -288,7 +234,6 @@ class VehicleInspectionController extends Controller {
                     $detail = new VehicleInspectionDetail();
                     $detail->attributes = $item;
                     $vehicleInspection->vehicleInspectionDetails[] = $detail;
-                    //echo "test";
                 }
             }
             if (count($_POST['VehicleInspectionDetail']) < count($vehicleInspection->vehicleInspectionDetails))

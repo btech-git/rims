@@ -101,23 +101,12 @@ class GeneralRepairRegistration extends CComponent {
         $serviceArrays = array();
         $serviceArrays = $this->serviceDetails;
         $checkService = array();
-        $servicePriceRate = 0.00;
         
         $service = Service::model()->findByPk($serviceId);
         $vehicle = Vehicle::model()->findByPk($vehicleId);
-        $vehicleCarMake = VehicleCarMake::model()->findByPk($vehicle->car_make_id);
-        
-        if ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::EASY_VALUE) {
-            $servicePriceRate = $service->price_easy;
-        } elseif ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::MEDIUM_VALUE) {
-            $servicePriceRate = $service->price_medium;
-        } elseif ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::HARD_VALUE) {
-            $servicePriceRate = $service->price_hard;
-        } elseif ($vehicleCarMake->service_difficulty_rate == VehicleCarMake::LUXURY_VALUE) {
-            $servicePriceRate = $service->price_luxury;
-        } else {
-            $servicePriceRate = 0.00;
-        }
+        $vehicleCarModel = VehicleCarModel::model()->findByPk($vehicle->car_model_id);
+        $servicePricelist = ServicePricelist::model()->findByAttributes(array('service_id' => $serviceId, 'service_group_id' => $vehicleCarModel->service_group_id));
+        $servicePriceRate = empty($servicePricelist) ? 0.00 : $servicePricelist->price;
 
         foreach ($serviceArrays as $serviceArray) {
             $checkService[] = $serviceArray->service_id;
@@ -125,8 +114,6 @@ class GeneralRepairRegistration extends CComponent {
         if (in_array($serviceId, $checkService)) {
             echo "Please select other Service, this is already added";
         } else {
-//            $this->getService($serviceId, $customerId, $custType, $vehicleId, $repair);
-            
             $serviceDetail = new RegistrationService();
             $serviceDetail->service_id = $serviceId;
             $serviceDetail->hour = $service->flat_rate_hour;
@@ -329,8 +316,9 @@ class GeneralRepairRegistration extends CComponent {
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
         
-        if ($isNewRecord)
+        if ($isNewRecord) {
             $this->header->status = 'Registration';
+        }
         else
             $this->header->status = 'Update Registration';
 
@@ -340,6 +328,14 @@ class GeneralRepairRegistration extends CComponent {
 
         $valid = $this->header->save();
 
+        if ($isNewRecord) {
+            $registrationRealization = new RegistrationRealizationProcess();
+            $registrationRealization->registration_transaction_id = $this->header->id;
+            $registrationRealization->name = 'Vehicle Inspection';
+            $registrationRealization->detail = 'No';
+            $registrationRealization->save();
+        }
+        
         return $valid;
     }
 
@@ -470,7 +466,6 @@ class GeneralRepairRegistration extends CComponent {
                 $registrationRealization->registration_transaction_id = $this->header->id;
                 $registrationRealization->name = $serviceDetail->service->name;
                 $registrationRealization->service_id = $serviceDetail->service_id;
-
                 $registrationRealization->detail = 'Pending';
                 $registrationRealization->save();
             }
@@ -487,6 +482,7 @@ class GeneralRepairRegistration extends CComponent {
         //save Product
         $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
         $product_id = array();
+        
         foreach ($products as $product) {
             $product_id[] = $product->id;
         }

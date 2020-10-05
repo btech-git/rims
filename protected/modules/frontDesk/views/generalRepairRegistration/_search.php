@@ -135,10 +135,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'sales_order_number', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($model,'work_order_number', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'sales_order_number'); ?>
+                        <?php echo $form->textField($model,'work_order_number'); ?>
                     </div>
                 </div>
             </div>	

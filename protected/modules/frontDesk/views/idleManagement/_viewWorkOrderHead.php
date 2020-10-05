@@ -1,4 +1,4 @@
-<div style="height: 350px">
+<div style="height: 470px">
     <h1>Work Order Information</h1>
     <?php
         $duration = 0;
@@ -16,7 +16,7 @@
     <?php $vehicle = $registration->vehicle; ?>
     <table>
         <tr>
-            <td style="width: 35%">Plate Number: <?php echo $registration->vehicle->plate_number; ?></td>
+            <td style="width: 50%">Plate Number: <?php echo $registration->vehicle->plate_number; ?></td>
             <td>Problem : <?php echo $registration->problem; ?></td>
         </tr>
         <tr>
@@ -33,20 +33,30 @@
         </tr>
         <tr>
             <td style="vertical-align: top">
-                Quality Control:
+                Quality Control: <br />
                 <?php if ($registration->is_passed == 0): ?>
-                    <?php echo CHtml::activeDropDownList($registration, 'is_passed', array(
+                    <?php echo CHtml::activeRadioButtonList($registration, 'is_passed', array(
                         '0' => 'Failed',
                         '1' => 'Passed'
-                    ),array('empty'=>'-- Pass/Fail --')); ?>
+                    ), array(
+                        'labelOptions' => array(
+                            'style' => 'display:inline',
+                            'separator' => ' | ',
+                        )
+                    )); ?>
                     <?php echo CHtml::error($registration,'is_passed'); ?>
                 <?php else: ?>
                     <?php echo 'Passed'; ?>
-                <?php endif; ?>
+                <?php endif; ?> <br /><br />
+                <?php $inspection = VehicleInspection::model()->findByAttributes(array(
+                    'work_order_number' => $registration->work_order_number, 
+                    'vehicle_id' => $registration->vehicle_id,
+                )); ?>
+                <?php echo empty($inspection) ? '' : CHtml::link('Process Inspection', array("/frontDesk/vehicleInspectionAfterService/update", "id"=>$inspection->id), array("target" => "_blank", 'class' => 'button warning')); ?>
             </td>
             <td>
-                Priority: 
-                <?php echo CHtml::activeDropDownList($registration, 'priority_level', array(
+                Priority: <br />
+                <?php echo CHtml::activeRadioButtonList($registration, 'priority_level', array(
                      RegistrationTransaction::PRIORITY_HIGH => RegistrationTransaction::PRIORITY_HIGH_LITERAL,
                      RegistrationTransaction::PRIORITY_MEDIUM => RegistrationTransaction::PRIORITY_MEDIUM_LITERAL,
                      RegistrationTransaction::PRIORITY_LOW => RegistrationTransaction::PRIORITY_LOW_LITERAL,
@@ -57,7 +67,7 @@
             <td colspan="2">
                 Tambah Memo: 
                 <?php echo CHtml::textField('Memo', $memo); ?> <br />
-                <?php echo CHtml::submitButton('Save', array('name' => 'Save', 'confirm' => 'Are you sure you want to add note?', 'class' => 'btn_blue')); ?>
+                <?php echo CHtml::submitButton('Save', array('name' => 'Save', 'confirm' => 'Are you sure you want to add note?', 'class' => 'button primary')); ?>
             </td>
         </tr>
     </table>

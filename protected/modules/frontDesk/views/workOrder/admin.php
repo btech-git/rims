@@ -140,7 +140,11 @@ $('form').submit(function(){
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                         } } });
-                                    ',
+                                    ' . CHtml::ajax(array(
+                                        'type' => 'GET',
+                                        'url' => CController::createUrl('ajaxHtmlUpdateCarModelSelect'),
+                                        'update' => '#car_model',
+                                    )),
                                 )); ?>
                             </td>
                             <td>

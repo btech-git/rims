@@ -2,30 +2,30 @@
     <h1>Products</h1>
     <table>
         <thead>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Quantity Movement</th>
-                <th>Quantity Movement Left</th>
-                <th>Quantity Receive</th>
-                <th>Quantity ReceiveLeft</th>
-                <th>Action</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Quantity Movement</th>
+            <th>Quantity Movement Left</th>
+            <th>Quantity Receive</th>
+            <th>Quantity ReceiveLeft</th>
+            <th>Action</th>
         </thead>
         <tbody>
             <?php foreach ($registration->registrationProducts as $key => $rp): ?>
                 <tr>
-                    <td><?php echo $rp->product->name; ?></td>
-                    <td><?php echo $rp->quantity; ?></td>
-                    <td><?php echo $rp->quantity_movement; ?></td>
-                    <td><?php echo $rp->quantity_movement_left; ?></td>
-                    <td><?php echo $rp->quantity_receive; ?></td>
-                    <td><?php echo $rp->quantity_receive_left; ?></td>
-                    <td>
-                        <?php echo CHtml::tag('button', array(
-                            'type'=>'button',
-                            'class' => 'hello button expand',
-                            'onclick'=>'$("#detail-'.$key.'").toggle();'
-                          ), '<span class="fa fa-caret-down"></span> Detail');?>
-                    </td>
+                        <td><?php echo $rp->product->name; ?></td>
+                        <td><?php echo $rp->quantity; ?></td>
+                        <td><?php echo $rp->quantity_movement; ?></td>
+                        <td><?php echo $rp->quantity_movement_left; ?></td>
+                        <td><?php echo $rp->quantity_receive; ?></td>
+                        <td><?php echo $rp->quantity_receive_left; ?></td>
+                        <td>
+                            <?php echo CHtml::tag('button', array(
+                                'type'=>'button',
+                                'class' => 'hello button expand',
+                                'onclick'=>'$("#detail-'.$key.'").toggle();'
+                            ), '<span class="fa fa-caret-down"></span> Detail');?>
+                        </td>
                 </tr>
                 <tr>
                     <td id="detail-<?php echo $key?>" class="hide" colspan=6>
@@ -34,7 +34,7 @@
                         $mcriteria->together = 'true';
                         $mcriteria->with = array('movementOutHeader');
                         $mcriteria->condition="movementOutHeader.status ='Delivered' AND registration_product_id = ".$rp->id;
-                        $getMovementDetails = MovementOutDetail::model()->findAll($mcriteria);
+                        $getMovementDetails = MovementOutDetail::model()->findAll($mcriteria); 
                         ?>
                         <table>
                             <thead>
@@ -75,22 +75,22 @@
                                     </td>
                                     <td>
                                         <?php echo CHtml::button('Receive', array(
-                                        'id' => 'detail-button',
-                                        'name' => 'Detail',
-                                        'class'=>'button cbutton left',
-                                        'disabled'=>$md->quantity_receive_left > 0 || $md->quantity_receive_left == "" ? false : true,
-                                        'onclick' => ' 
-                                            $.ajax({
-                                            type: "POST",
-                                            //dataType: "JSON",
-                                            url: "' . CController::createUrl('receive', array('movementOutDetailId'=> $md->id,'registrationProductId'=>$rp->id,'quantity'=>'')) .'"+$("#quantity-'.$i.'").val(),
-                                            data: $("form").serialize(),
-                                            success: function(html) {
-
-                                                alert("Success");
-                                                location.reload();
-                                            },})
-                                        '
+                                            'id' => 'detail-button',
+                                            'name' => 'Detail',
+                                            'class'=>'button cbutton left',
+                                            'disabled'=>$md->quantity_receive_left > 0 || $md->quantity_receive_left == "" ? false : true,
+                                            'onclick' => ' 
+                                                $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('receive', array('movementOutDetailId'=> $md->id,'registrationProductId'=>$rp->id,'quantity'=>'')) .'"+$("#quantity-'.$i.'").val(),
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        alert("Success");
+                                                        location.reload();
+                                                    },
+                                                })
+                                            '
                                         )); ?>
                                     </td>
                                 </tr>
