@@ -7,12 +7,10 @@
  * @property integer $id
  * @property integer $checklist_type_id
  * @property integer $checklist_module_id
- * @property integer $checklist_module_id_after_service
  *
  * The followings are the available model relations:
  * @property InspectionChecklistType $checklistType
  * @property InspectionChecklistModule $checklistModule
- * @property InspectionChecklistModule $checklistModuleAfterService
  */
 class InspectionChecklistTypeModule extends CActiveRecord {
 
@@ -33,10 +31,10 @@ class InspectionChecklistTypeModule extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('checklist_type_id, checklist_module_id', 'required'),
-            array('checklist_type_id, checklist_module_id, checklist_module_id_after_service', 'numerical', 'integerOnly' => true),
+            array('checklist_type_id, checklist_module_id', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, checklist_type_id, checklist_module_id, checklist_module_name, checklist_module_id_after_service', 'safe', 'on' => 'search'),
+            array('id, checklist_type_id, checklist_module_id, checklist_module_name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -49,7 +47,6 @@ class InspectionChecklistTypeModule extends CActiveRecord {
         return array(
             'checklistType' => array(self::BELONGS_TO, 'InspectionChecklistType', 'checklist_type_id'),
             'checklistModule' => array(self::BELONGS_TO, 'InspectionChecklistModule', 'checklist_module_id'),
-            'checklistModuleAfterService' => array(self::BELONGS_TO, 'InspectionChecklistModule', 'checklist_module_id_after_service'),
         );
     }
 
@@ -61,7 +58,6 @@ class InspectionChecklistTypeModule extends CActiveRecord {
             'id' => 'ID',
             'checklist_type_id' => 'Checklist Type',
             'checklist_module_id' => 'Checklist Module',
-            'checklist_module_id_after_service' => 'Checklist Module',
         );
     }
 
@@ -85,7 +81,6 @@ class InspectionChecklistTypeModule extends CActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('checklist_type_id', $this->checklist_type_id);
         $criteria->compare('checklist_module_id', $this->checklist_module_id);
-        $criteria->compare('checklist_module_id_after_service', $this->checklist_module_id_after_service);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
