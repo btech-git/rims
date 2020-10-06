@@ -128,6 +128,8 @@ class TransactionReceiveItemController extends Controller {
         $receiveItem = $this->instantiate(null);
         $receiveItem->header->receive_item_date = date('Y-m-d');
         $receiveItem->header->arrival_date = date('Y-m-d');
+        $receiveItem->header->user_id_receive = Yii::app()->user->id;
+        $receiveItem->header->user_id_invoice = null;
         $receiveItem->header->recipient_branch_id = $receiveItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $receiveItem->header->recipient_branch_id;
         $receiveItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($receiveItem->header->receive_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($receiveItem->header->receive_item_date)), $receiveItem->header->recipient_branch_id);
         $this->performAjaxValidation($receiveItem->header);
@@ -257,6 +259,7 @@ class TransactionReceiveItemController extends Controller {
     public function actionAddInvoice($id) {
         $receiveItem = $this->loadModel($id);
         $receiveItem->invoice_date = date('Y-m-d');
+        $receiveItem->header->user_id_invoice = Yii::app()->user->id;
         $this->performAjaxValidation($receiveItem);
 
         if (isset($_POST['Cancel']))

@@ -121,7 +121,7 @@ class PaymentInController extends Controller {
 
                 $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
                 $payment = PaymentIn::model()->findAll($criteria);
-                
+
                 if (isset($images) && !empty($images)) {
                     foreach ($model->images as $i => $image) {
                         $postImage = new PaymentInImages;
@@ -185,11 +185,11 @@ class PaymentInController extends Controller {
         $invoiceCriteria->with = array('customer');
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array('criteria' => $invoiceCriteria, 'sort' => array(
-                        'defaultOrder' => 'invoice_date DESC',
-                    ),
-                    'pagination' => array(
-                        'pageSize' => 10,
-                        )));
+                'defaultOrder' => 'invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+        )));
 
         $model = $this->loadModel($id);
         $postImages = PaymentInImages::model()->findAllByAttributes(array('payment_in_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
@@ -332,7 +332,7 @@ class PaymentInController extends Controller {
             $invoice->attributes = $_GET['InvoiceHeader'];
 
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.status != "CANCELLED" || t.status != "PAID"');
+        $invoiceCriteria->addCondition('t.status IN ("INVOICING", "PARTIAL PAYMENT", "NOT PAID", "PARTIALLY PAID")');
         $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
         $invoiceCriteria->compare('due_date', $invoice->due_date, true);
@@ -341,14 +341,15 @@ class PaymentInController extends Controller {
         $invoiceCriteria->with = array('customer');
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
-                    'criteria' => $invoiceCriteria,
-                    'sort' => array(
-                        'defaultOrder' => 'invoice_date DESC',
-                    ),
-                    'pagination' => array(
-                        'pageSize' => 10,
-                    )
-                ));
+            'criteria' => $invoiceCriteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            )
+        ));
+        
         $model = new PaymentIn('search');
         $model->unsetAttributes();  // clear any default values
 
@@ -544,7 +545,7 @@ class PaymentInController extends Controller {
                             $jurnalPpn->transaction_type = 'Pin';
                             $jurnalPpn->save();
                         }
-                            
+
                         if ($paymentIn->payment_type == "Cash") {
                             $getCoaKas = '101.00.000';
                             $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
@@ -574,8 +575,9 @@ class PaymentInController extends Controller {
                             $jurnalUmumKasBank->transaction_subject = $paymentIn->customer->name;
                             $jurnalUmumKasBank->is_coa_category = 1;
                             $jurnalUmumKasBank->transaction_type = 'Pin';
-                            $jurnalUmumKasBank->save();$jurnalUmumKasBank = new JurnalUmum;
-                            
+                            $jurnalUmumKasBank->save();
+                            $jurnalUmumKasBank = new JurnalUmum;
+
                             $jurnalUmumBank->kode_transaksi = $paymentIn->payment_number;
                             $jurnalUmumBank->tanggal_transaksi = $paymentIn->payment_date;
                             $jurnalUmumBank->coa_id = $paymentIn->companyBank->coa_id;
@@ -619,7 +621,7 @@ class PaymentInController extends Controller {
                             $jurnalUmumKasBank->is_coa_category = 1;
                             $jurnalUmumKasBank->transaction_type = 'Pin';
                             $jurnalUmumKasBank->save();
-                            
+
                             $jurnalUmumKasBank = new JurnalUmum;
                             $jurnalUmumKasBank->kode_transaksi = $paymentIn->payment_number;
                             $jurnalUmumKasBank->tanggal_transaksi = $paymentIn->payment_date;
@@ -638,7 +640,7 @@ class PaymentInController extends Controller {
                         // $criteria->with = array('deliveryOrder');
                         $criteria->condition = "invoice_id =" . $paymentIn->invoice_id . " AND id != " . $paymentIn->id;
                         $paymentDetails = PaymentIn::model()->findAll($criteria);
-                        
+
                         if (count($paymentDetails) == 0) {
                             $pph = $paymentIn->invoice->pph_total;
                             $ppn = $paymentIn->invoice->ppn_total;
@@ -675,7 +677,7 @@ class PaymentInController extends Controller {
                                 $jurnalPpn->transaction_type = 'Pin';
                                 $jurnalPpn->save();
                             }
-                            
+
                             if ($pph > 0) {
                                 $getCoaPph = '526.00.004';
                                 $coaPphWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPph));

@@ -54,7 +54,7 @@
 
                     foreach ($checklistTypeModules as $key => $checklistTypeModule) {
                         if ($checklistTypeModule->checklistType->type == "Radio") {
-                            if ($vehicleInspectionDetail->checklist_module_id_after_service == $checklistTypeModule->checklist_module_id_after_service) {
+                            if ($vehicleInspectionDetail->checklist_module_id_after_service == $checklistTypeModule->checklist_module_id) {
                                 $checked = 'checked';
                             } else {
                                 $checked = '';

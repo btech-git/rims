@@ -49,10 +49,26 @@ $this->breadcrumbs=array(
                 'data'=>$vehicleInspection->header,
                 'attributes'=>array(
                     'id',
-                    'vehicle.carMake.name',
-                    'vehicle.carModel.name',
-                    'vehicle.carSubModel.name',
-                    'inspection.name',
+                    array(
+                        'name'=>'car_make_id',
+                        'label' => 'Car Make',
+                        'value'=> $model->vehicle->carMake->name
+                    ),
+                    array(
+                        'name'=>'car_model_id',
+                        'label' => 'Car Model',
+                        'value'=> $model->vehicle->carModel->name
+                    ),
+                    array(
+                        'name'=>'car_sub_model_id',
+                        'label' => 'Car Sub Model',
+                        'value'=>$model->vehicle->carSubModel->name
+                    ),
+                    array(
+                        'name'=>'inspection_id',
+                        'label' => 'Inspection',
+                        'value'=>$model->inspection->name
+                    ),
                     'inspection_date',
                     'work_order_number',
                     'status',

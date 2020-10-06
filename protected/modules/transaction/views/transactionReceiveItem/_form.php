@@ -464,10 +464,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="field">
+<!--                    <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <?php echo $form->labelEx($receiveItem->header, 'invoice_number', array('class' => 'prefix')); ?>
+                                <?php /*echo $form->labelEx($receiveItem->header, 'invoice_number', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
                                 <?php echo $form->textField($receiveItem->header, 'invoice_number', array('maxlength' => 50, 'size' => 50)); ?>
@@ -496,10 +496,10 @@
                                     //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
                                     ),
                                 )); ?>
-                                <?php echo $form->error($receiveItem->header, 'supplier_id'); ?>
+                                <?php echo $form->error($receiveItem->header, 'supplier_id');*/ ?>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div id="delivery">

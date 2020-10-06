@@ -29,6 +29,8 @@
  * @property string $supplier_delivery_number
  * @property string $note
  * @property integer $movement_out_id
+ * @property integer $user_id_receive
+ * @property integer $user_id_invoice
  * @property string $invoice_rounding_nominal
  * @property string $invoice_grand_total_rounded
  *
@@ -42,6 +44,8 @@
  * @property ConsignmentInHeader $consignmentIn
  * @property TransactionDeliveryOrder $deliveryOrder
  * @property MovementOutHeader $movementOut
+ * @property Users $userIdReceive
+ * @property Users $userIdInvoice
  * @property TransactionReceiveItemDetail[] $transactionReceiveItemDetails
  * @property TransactionReturnOrder[] $transactionReturnOrders
  */
@@ -84,15 +88,15 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('receive_item_no, receive_item_date', 'required'),
-            array('recipient_id, recipient_branch_id, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id', 'numerical', 'integerOnly' => true),
+            array('receive_item_no, receive_item_date, user_id_receive', 'required'),
+            array('recipient_id, recipient_branch_id, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id, user_id_receive, user_id_invoice', 'numerical', 'integerOnly' => true),
             array('receive_item_no, request_type', 'length', 'max' => 30),
             array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
             array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total, invoice_grand_total_rounded, invoice_rounding_nominal', 'length', 'max' => 18),
             array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_no, receive_item_date, arrival_date, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal', 'safe', 'on' => 'search'),
+            array('id, receive_item_no, receive_item_date, arrival_date, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice', 'safe', 'on' => 'search'),
         );
     }
 
@@ -113,6 +117,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             'consignmentIn' => array(self::BELONGS_TO, 'ConsignmentInHeader', 'consignment_in_id'),
             'deliveryOrder' => array(self::BELONGS_TO, 'TransactionDeliveryOrder', 'delivery_order_id'),
             'movementOut' => array(self::BELONGS_TO, 'MovementOutHeader', 'movement_out_id'),
+            'userIdReceive' => array(self::BELONGS_TO, 'Users', 'user_id_receive'),
+            'userIdInvoice' => array(self::BELONGS_TO, 'Users', 'user_id_invoice'),
             'transactionReceiveItemDetails' => array(self::HAS_MANY, 'TransactionReceiveItemDetail', 'receive_item_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'receive_item_id'),
         );
@@ -183,6 +189,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('supplier_delivery_number', $this->supplier_delivery_number, true);
         $criteria->compare('movement_out_id', $this->movement_out_id);
         $criteria->compare('note', $this->note);
+        $criteria->compare('user_id_receive', $this->user_id_receive);
+        $criteria->compare('user_id_invoice', $this->user_id_invoice);
         $criteria->compare('invoice_grand_total_rounded', $this->invoice_grand_total_rounded);
         $criteria->compare('invoice_rounding_nominal', $this->invoice_rounding_nominal);
 
