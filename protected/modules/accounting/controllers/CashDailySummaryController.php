@@ -118,12 +118,17 @@ class CashDailySummaryController extends Controller {
         
         $cashDaily->amount = $paymentInRetailAmount;
         
+        $paymentIns = PaymentIn::model()->findAllByAttributes(array(
+            'payment_date' => $transactionDate, 
+            'branch_id' => $branchId, 
+            'payment_type_id' => $paymentTypeId
+        ));
+        
         if (isset($_POST['CashDailySummary'])) {
             $cashDaily->attributes = $_POST['CashDailySummary'];
             $cashDaily->images = CUploadedFile::getInstances($cashDaily, 'images');
             
             if ($cashDaily->save(Yii::app()->db)) {
-                
                 foreach ($cashDaily->images as $file) {
                     $contentImage = new CashDailyImages;
                     $contentImage->cash_daily_summary_id = $cashDaily->id;
@@ -141,6 +146,7 @@ class CashDailySummaryController extends Controller {
 
         $this->render('create', array(
             'cashDaily' => $cashDaily,
+            'paymentIns' => $paymentIns,
         ));
     }
 

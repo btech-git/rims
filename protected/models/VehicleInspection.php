@@ -54,6 +54,7 @@ class VehicleInspection extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
+            'serviceAdvisor' => array(self::BELONGS_TO, 'Users', 'service_advisor_id'),
             'inspection' => array(self::BELONGS_TO, 'Inspection', 'inspection_id'),
             'vehicleInspectionDetails' => array(self::HAS_MANY, 'VehicleInspectionDetail', 'vehicle_inspection_id'),
         );

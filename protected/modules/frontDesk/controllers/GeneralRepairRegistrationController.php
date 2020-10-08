@@ -407,7 +407,6 @@ class GeneralRepairRegistrationController extends Controller {
 
             if (count($registrationProducts) > 0) {
                 foreach ($registration->registrationProducts as $key => $rProduct) {
-
                     $coaMasterGroupHpp = Coa::model()->findByAttributes(array('code' => '520.00.000'));
                     $jurnalUmumMasterGroupHpp = new JurnalUmum;
                     $jurnalUmumMasterGroupHpp->kode_transaksi = $registration->transaction_number;
@@ -697,9 +696,9 @@ class GeneralRepairRegistrationController extends Controller {
 
         $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->sales_order_date = date('Y-m-d');
+        $model->header->status = 'Processing SO';
 
-        if ($model->save(Yii::app()->db)) {
-
+        if ($model->header->update(array('sales_order_number', 'sales_order_date', 'status'))) {
             $real = new RegistrationRealizationProcess();
             $real->registration_transaction_id = $model->header->id;
             $real->name = 'Sales Order';
@@ -718,20 +717,9 @@ class GeneralRepairRegistrationController extends Controller {
 
         $model->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->work_order_date = date('Y-m-d');
-        $model->header->status = 'Processing';
+        $model->header->status = 'Processing WO';
 
-        if ($model->save(Yii::app()->db)) {
-//            if ($model->header->repair_type == 'BR') {
-//                $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-//                    'registration_transaction_id' => $id,
-//                    'name' => 'Work Order'
-//                ));
-//                $real->checked = 1;
-//                $real->checked_date = date('Y-m-d');
-//                $real->checked_by = 1;
-//                $real->detail = 'Update When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
-//                $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
-//            } else {
+        if ($model->header->update(array('work_order_number', 'work_order_date', 'status'))) {
             $real = new RegistrationRealizationProcess();
             $real->registration_transaction_id = $model->header->id;
             $real->name = 'Work Order';
@@ -740,7 +728,6 @@ class GeneralRepairRegistrationController extends Controller {
             $real->checked_by = 1;
             $real->detail = 'Add When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
             $real->save();
-//            }
 
             $this->redirect(array('view', 'id' => $id));
         }
@@ -1194,8 +1181,7 @@ class GeneralRepairRegistrationController extends Controller {
             $generalRepairRegistration = new GeneralRepairRegistration(new RegistrationTransaction(), array(), array(), array());
         } else {
             $generalRepairRegistrationModel = $this->loadModel($id);
-            $generalRepairRegistration = new GeneralRepairRegistration($generalRepairRegistrationModel, $generalRepairRegistrationModel->registrationQuickServices, $generalRepairRegistrationModel->registrationServices, $generalRepairRegistrationModel->registrationProducts
-            );
+            $generalRepairRegistration = new GeneralRepairRegistration($generalRepairRegistrationModel, $generalRepairRegistrationModel->registrationQuickServices, $generalRepairRegistrationModel->registrationServices, $generalRepairRegistrationModel->registrationProducts);
         }
         return $generalRepairRegistration;
     }

@@ -37,18 +37,21 @@ $('.search-form form').submit(function(){
         </div>
         <div class="clearfix"></div>
         <div class="search-form" style="display:none">
-            <?php $this->renderPartial('_search',array(
-                'model'=>$model,
+            <?php
+            $this->renderPartial('_search', array(
+                'model' => $model,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
-            )); ?>
+            ));
+            ?>
         </div><!-- search-form -->
     </div>
     <div class="clearfix"></div>
 </div>
 <br />
 <div class="grid-view">
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
+    <?php
+    $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'registration-transaction-grid',
         'dataProvider' => $dataProvider,
         'filter' => null,
@@ -58,17 +61,14 @@ $('.search-form form').submit(function(){
             'header' => '',
         ),
         'rowCssClassExpression' => '(($data->status == "Finished")?"hijau":"merah")',
-        // 'rowCssClassExpression' => '(($data->status == "Finished")?"hijau":(($data->status == "Pending")?"merah":""))',
         'columns' => array(
             array(
                 'header' => '#',
                 'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1', //  row is zero based
             ),
             'transaction_number',
-            // 'transaction_date',
             array(
                 'name' => 'transaction_date',
-                // 'value'=>'$data->transaction_date',
                 'value' => "Yii::app()->dateFormatter->formatDateTime(\$data->transaction_date, 'medium', 'short')",
                 'filter' => false, // Set the filter to false when date range searching
             ),
@@ -79,23 +79,16 @@ $('.search-form form').submit(function(){
                 'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
             ),
             array(
-                'header'=>'Car Model',
-                'name'=>'car_model_code',
-                'value'=>'$data->vehicle->carModel->name'
+                'header' => 'Car Model',
+                'name' => 'car_model_code',
+                'value' => '$data->vehicle->carModel->name'
             ),
-//            array('header'=>'Color','name'=>'car_color','value'=>'$data->vehicle->getColor($data->vehicle,"color_id")',
-//             	'filter'=>CHtml::dropDownList('RegistrationTransaction[car_color]', 'car_color', CHtml::listData(Colors::model()->findAll(),'id','name'), array('class'=>'form-control','empty'=>'--Select Color--')),),
-//            'work_order_number',
             array(
                 'header' => 'Repair Type',
                 'name' => 'repair_type',
                 'value' => '$data->repair_type',
                 'type' => 'raw',
                 'filter' => false,
-//                    CHtml::dropDownList('RegistrationTransaction[repair_type]', $model->repair_type, array(
-//                    'GR' => 'General Repair',
-//                    'BR' => 'Body Repair',
-//                ), array('class' => 'form-control', 'empty' => '--Select Branch--')),
             ),
             array(
                 'header' => 'Customer Name',
@@ -112,8 +105,11 @@ $('.search-form form').submit(function(){
                     $invoiceCriteria->addCondition("registration_transaction_id = " . $data->id);
                     $invoice = InvoiceHeader::model()->find($invoiceCriteria);
                     $invoiceNumber = "";
-                    if (count($invoice) != 0)
+
+                    if (count($invoice) != 0) {
                         $invoiceNumber = $invoice->invoice_number;
+                    }
+
                     return $invoiceNumber;
                 }
             ),
@@ -131,10 +127,12 @@ $('.search-form form').submit(function(){
                     'Finished' => 'Finished'
                 )),
             ),
+            'service_status',
+            'payment_status',
             array(
-                'name'=>'branch_id',
+                'name' => 'branch_id',
                 'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                'value'=>'$data->branch->name'
+                'value' => '$data->branch->name'
             ),
             'problem',
             array(
@@ -159,5 +157,6 @@ $('.search-form form').submit(function(){
                 ),
             ),
         ),
-    )); ?>
+    ));
+    ?>
 </div>

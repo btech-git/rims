@@ -18,7 +18,6 @@
                                         <label class="prefix">Tanggal</label>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('TransactionDate', $transactionDate); ?>
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'TransactionDate',
                                             'value' => $transactionDate,

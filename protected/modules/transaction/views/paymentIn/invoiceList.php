@@ -108,8 +108,18 @@
             'invoice_date',
             'due_date',
             'status',
-            array('name' => 'reference_type', 'value' => '$data->reference_type == 1 ? "Sales Order" : "Retail Sales"'),
-            array('name' => 'customer_name', 'value' => '$data->customer->name'),
+            array(
+                'name' => 'reference_type', 
+                'value' => '$data->reference_type == 1 ? "Sales Order" : "Retail Sales"'
+            ),
+            array(
+                'name' => 'customer_name', 
+                'value' => '$data->customer->name'
+            ),
+            array(
+                'header' => 'Plate #', 
+                'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
+            ),
             array(
                 'name' => 'total_price',
                 'value' => 'number_format($data->total_price, 2)',

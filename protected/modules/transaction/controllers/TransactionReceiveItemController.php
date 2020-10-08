@@ -259,7 +259,7 @@ class TransactionReceiveItemController extends Controller {
     public function actionAddInvoice($id) {
         $receiveItem = $this->loadModel($id);
         $receiveItem->invoice_date = date('Y-m-d');
-        $receiveItem->header->user_id_invoice = Yii::app()->user->id;
+        $receiveItem->user_id_invoice = Yii::app()->user->id;
         $this->performAjaxValidation($receiveItem);
 
         if (isset($_POST['Cancel']))

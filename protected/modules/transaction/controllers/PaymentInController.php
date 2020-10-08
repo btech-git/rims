@@ -117,8 +117,11 @@ class PaymentInController extends Controller {
 
             if ($model->save()) {
                 //update Invoice
+                $invoice->payment_amount = $invoice->getTotalPayment();
+                $invoice->payment_left = $invoice->getTotalRemaining();
+                $valid = $invoice->update(array('payment_amount', 'payment_left')) && $valid;
+            
                 $criteria = new CDbCriteria;
-
                 $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
                 $payment = PaymentIn::model()->findAll($criteria);
 
@@ -158,7 +161,6 @@ class PaymentInController extends Controller {
         $this->render('create', array(
             'model' => $model,
             'invoice' => $invoice,
-//            'invoiceDataProvider' => $invoiceDataProvider,
         ));
     }
 

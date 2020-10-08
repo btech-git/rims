@@ -47,11 +47,11 @@
                                 <?php echo $form->error($model, 'plate_number_prefix_id'); ?>
                             </div>
                             <div class="small-3 columns">
-                                <?php echo CHtml::activeTextField($model, "plate_number_ordinal", array('size'=>10,'maxlength'=>4)); ?>
+                                <?php echo CHtml::activeTextField($model, "plate_number_ordinal", array('size'=>10,'maxlength'=>20)); ?>
                                 <?php echo $form->error($model, 'plate_number_ordinal'); ?>
                             </div>
                             <div class="small-3 columns">
-                                <?php echo CHtml::activeTextField($model, "plate_number_suffix", array('size'=>5,'maxlength'=>3, 'style' => 'text-transform: uppercase')); ?>
+                                <?php echo CHtml::activeTextField($model, "plate_number_suffix", array('size'=>5,'maxlength'=>10, 'style' => 'text-transform: uppercase')); ?>
                                 <?php echo $form->error($model, 'plate_number_suffix'); ?>
                             </div>
                         </div>

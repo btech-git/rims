@@ -20,7 +20,7 @@ $('.search-button').click(function(){
     
     if ($(this).hasClass('active')) {
         $(this).text('');
-    }else {
+    } else {
         $(this).text('Advanced Search');
     }
     
@@ -89,6 +89,10 @@ $('.search-form form').submit(function(){
                             'value' => '$data->customer->name'
                         ),
                         array(
+                            'header' => 'Plate #', 
+                            'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
+                        ),
+                        array(
                             'name' => 'payment_number',
                             'value' => 'CHTml::link($data->payment_number, array("view", "id"=>$data->id))',
                             'type' => 'raw'
@@ -121,7 +125,6 @@ $('.search-form form').submit(function(){
                             'cssFile' => false,
                             'header' => '',
                         ),
-
                         'columns' => array(
                             array(
                                 'name' => 'invoice_number',
@@ -138,6 +141,10 @@ $('.search-form form').submit(function(){
                             array(
                                 'name' => 'customer_name', 
                                 'value' => '$data->customer->name'
+                            ),
+                            array(
+                                'header' => 'Plate #', 
+                                'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
                             ),
                             array(
                                 'name' => 'total_price', 

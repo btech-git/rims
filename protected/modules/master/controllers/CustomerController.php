@@ -97,7 +97,6 @@ class CustomerController extends Controller {
             $service->attributes = $_GET['Service'];
 
         $serviceCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $serviceCriteria->together = 'true';
         $serviceCriteria->with = array('serviceCategory', 'serviceType');
 
@@ -300,6 +299,8 @@ class CustomerController extends Controller {
         $model = Vehicle::model()->findByPk($vehicleId);
         if (isset($_POST['Vehicle'])) {
             $model->attributes = $_POST['Vehicle'];
+            $model->plate_number = $model->getPlateNumberCombination();
+            
             if ($model->save())
                 $this->redirect(array('view', 'id' => $custId));
         }

@@ -228,5 +228,20 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         $this->setCodeNumberByNext('invoice_number', $branchCode, InvoiceHeader::CONSTANT, $currentMonth, $currentYear);
     }
+    
+    public function getTotalPayment() {
+        $total = 0.00;
+        
+        foreach ($this->paymentIns as $detail) {
+            $total += $detail->payment_amount;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalRemaining() {
+        
+        return $this->total_price - $this->getTotalPayment();
+    }
 
 }

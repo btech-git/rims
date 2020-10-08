@@ -318,13 +318,12 @@ class GeneralRepairRegistration extends CComponent {
         
         if ($isNewRecord) {
             $this->header->status = 'Registration';
-        }
-        else
+            $this->header->repair_type = 'GR';
+            $this->header->service_status = 'Pending';
+            $this->header->priority_level = 2;
+        } else {
             $this->header->status = 'Update Registration';
-
-        $this->header->repair_type = 'GR';
-        $this->header->service_status = 'Pending';
-        $this->header->priority_level = 2;
+        }
 
         $valid = $this->header->save();
 
@@ -333,6 +332,7 @@ class GeneralRepairRegistration extends CComponent {
             $registrationRealization->registration_transaction_id = $this->header->id;
             $registrationRealization->name = 'Vehicle Inspection';
             $registrationRealization->detail = 'No';
+            
             $registrationRealization->save();
         }
         

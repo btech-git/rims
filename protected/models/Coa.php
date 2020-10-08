@@ -7,17 +7,22 @@
  * @property integer $id
  * @property string $name
  * @property string $code
+ * @property integer $coa_id
  * @property integer $coa_category_id
  * @property integer $coa_sub_category_id
+ * @property string $cash_transaction
  * @property string $normal_balance
  * @property string $opening_balance
  * @property string $closing_balance
  * @property string $debit
  * @property string $credit
+ * @property string $status
+ * @property string $date
  *
  * The followings are the available model relations:
  * @property CashTransaction[] $cashTransactions
  * @property CashTransactionDetail[] $cashTransactionDetails
+ * @property Coa $coa
  * @property CoaCategory $coaCategory
  * @property CoaSubCategory $coaSubCategory
  * @property CoaDetail[] $coaDetails
@@ -51,7 +56,7 @@ class Coa extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, coa_category_id, coa_sub_category_id', 'required'),
-            array('coa_category_id, coa_sub_category_id', 'numerical', 'integerOnly' => true),
+            array('coa_category_id, coa_sub_category_id, coa_id', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 50),
             array('normal_balance', 'length', 'max' => 10),
             array('code', 'length', 'max' => 15),
@@ -60,7 +65,7 @@ class Coa extends CActiveRecord {
             array('opening_balance, closing_balance, debit, credit', 'length', 'max' => 18),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance', 'safe', 'on' => 'search'),
+            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date', 'safe', 'on' => 'search'),
         );
     }
 
@@ -73,6 +78,7 @@ class Coa extends CActiveRecord {
         return array(
             'cashTransactions' => array(self::HAS_MANY, 'CashTransaction', 'coa_id'),
             'cashTransactionDetails' => array(self::HAS_MANY, 'CashTransactionDetail', 'coa_id'),
+            'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
             'coaCategory' => array(self::BELONGS_TO, 'CoaCategory', 'coa_category_id'),
             'coaSubCategory' => array(self::BELONGS_TO, 'CoaSubCategory', 'coa_sub_category_id'),
             'coaDetails' => array(self::HAS_MANY, 'CoaDetail', 'coa_id'),

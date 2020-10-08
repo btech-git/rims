@@ -111,8 +111,6 @@ class VehicleInspectionAfterServiceController extends Controller {
 
         $this->render('update', array(
             'vehicleInspection' => $vehicleInspection,
-//            'vehicleInspectionDetail' => $vehicleInspectionDetail,
-//            'vehicleInspectionDetailDataProvider' => $vehicleInspectionDetailDataProvider,
         ));
     }
 

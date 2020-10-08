@@ -25,8 +25,12 @@ class RegistrationTransactions extends CComponent {
         $registrationTransaction = RegistrationTransaction::model()->find(array(
             'order' => ' id DESC',
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
-            'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $branchId),
-                ));
+            'params' => array(
+                ':cn_year' => $currentYear, 
+                ':cn_month' => $arr[$currentMonth], 
+                ':branch_id' => $branchId
+            ),
+        ));
 
         if ($registrationTransaction == null) {
             $branchCode = Branch::model()->findByPk($branchId)->code;
@@ -49,9 +53,6 @@ class RegistrationTransactions extends CComponent {
             $quickServiceDetail->hour = $quickService->hour;
             $this->quickServiceDetails[] = $quickServiceDetail;
         }
-
-
-        //echo "5";
     }
 
     public function removeQuickServiceAll() {
@@ -60,7 +61,6 @@ class RegistrationTransactions extends CComponent {
 
     public function removeQuickServiceDetailAt($index) {
         array_splice($this->quickServiceDetails, $index, 1);
-        //var_dump(CJSON::encode($this->details));
     }
 
     public function addServiceDetail($serviceId, $customerId, $custType, $vehicleId, $repair) {
@@ -68,44 +68,20 @@ class RegistrationTransactions extends CComponent {
         $serviceArrays = array();
         $serviceArrays = $this->serviceDetails;
         $checkService = array();
-        //$brServices = array();
         /* $brServiceCriteria = new CDbCriteria;
           $brServiceCriteria->condition .= " code LIKE 'BR-BW-%'";
           //$brServiceCriteria->limit = 10;
           $services = Service::model()->findAll($brServiceCriteria);
          */
 
-
-        // $serviceType = ServiceType::model()->findByAttributes(array('code'=>'BR'));
-        // $serviceCategory = ServiceCategory::model()->findByAttributes(array('code'=>'BW','service_type_id'=>$serviceType->id));
-        // $services = Service::model()->findAllByAttributes(array('service_category_id'=>$serviceCategory->id));	
-        // foreach($services as $i => $bodyRepairService){
-        // 	if($i == 10)
-        // 		break;
-        // 	$brServices[] = $bodyRepairService->id;
-        // }
-
         foreach ($serviceArrays as $serviceArray) {
             $checkService[] = $serviceArray->service_id;
         }
+        
         if (in_array($serviceId, $checkService)) {
             echo "Please select other Service, this is already added";
         } else {
-            // if($repair == "BR")
-            // {
-            // 	if(in_array($serviceId, $brServices)){
-            // 	echo "Repair Type : Body Repair; this services will be added automatically when choosing BR as repair type.";
-            // 	}
-            // 	else
-            // 	{
-            // 		$this->getService($serviceId,$customerId,$custType,$vehicleId,$repair);
-            // 	}//else if in_array
-            // }// else if BR
-            // else
-            // {
             $this->getService($serviceId, $customerId, $custType, $vehicleId, $repair);
-
-            //}
         }
     }
 
@@ -114,6 +90,7 @@ class RegistrationTransactions extends CComponent {
         $serviceDetail = new RegistrationService();
         $serviceDetail->service_id = $serviceId;
         $service = Service::model()->findByPk($serviceId);
+        
         if ($custType == "Individual") {
             $serviceCarSubDetail = ServicePricelist::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id, 'car_model_id' => $vehicle->car_model_id, 'car_sub_detail_id' => $vehicle->car_sub_model_id));
             if (count($serviceCarSubDetail) > 0) {
@@ -155,8 +132,7 @@ class RegistrationTransactions extends CComponent {
                     }//else servicecarMake
                 }//else count servicecarmodel
             }//else count servicecarSubDetail
-        }//endif Individual
-        else {
+        } else {
             $custServiceSubDetail = CustomerServiceRate::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id, 'car_model_id' => $vehicle->car_model_id, 'car_sub_model_id' => $vehicle->car_sub_model_id, 'customer_id' => $customerId));
             if (count($custServiceSubDetail) > 0) {
                 $serviceDetail->price = $custServiceSubDetail->rate;
@@ -183,12 +159,14 @@ class RegistrationTransactions extends CComponent {
                             $lux = $service->luxury_value;
                             $hour = $service->flat_rate_hour;
                         }
+                        
                         if ($customerData->flat_rate != null) {
                             $priceTotal = $diff * $lux * $hour * $customerData->flat_rate;
                         } else {
                             $generalFR = GeneralStandardFr::model()->findByPk(1);
                             $priceTotal = $diff * $lux * $hour * $generalFR->flat_rate;
                         }
+                        
                         $serviceDetail->price = $priceTotal;
                         $serviceDetail->total_price = $priceTotal;
                     }//else servicecarMake
@@ -208,14 +186,14 @@ class RegistrationTransactions extends CComponent {
         $serviceArrays = $this->serviceDetails;
         $checkService = array();
         $serviceDetail = new RegistrationService();
+        
         foreach ($serviceArrays as $serviceArray) {
             $checkService[] = $serviceArray->service_id;
         }
+        
         if (in_array($serviceId, $checkService)) {
             echo "Please select other Service, this is already added";
         } else {
-
-
             $serviceDetail->service_id = $serviceId;
             $service = Service::model()->findByPk($serviceId);
             $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceId);
@@ -246,16 +224,13 @@ class RegistrationTransactions extends CComponent {
                 $serviceDetail->claim = "YES";
             }
 
-
             $this->serviceDetails[] = $serviceDetail;
         }
     }
 
     //public function loadServiceDetail()
-
     public function removeServiceDetailAt($index) {
         array_splice($this->serviceDetails, $index, 1);
-        //var_dump(CJSON::encode($this->details));
     }
 
     public function removeServiceDetailAll() {
@@ -266,9 +241,11 @@ class RegistrationTransactions extends CComponent {
         $productArrays = array();
         $productArrays = $this->productDetails;
         $checkProduct = array();
+        
         foreach ($productArrays as $productArray) {
             $checkProduct[] = $productArray->product_id;
         }
+        
         if (in_array($productId, $checkProduct)) {
             echo "Please select other Product, this is already added";
         } else {
@@ -287,9 +264,11 @@ class RegistrationTransactions extends CComponent {
         $productArrays = array();
         $productArrays = $this->productDetails;
         $checkProduct = array();
+        
         foreach ($productArrays as $productArray) {
             $checkProduct[] = $productArray->product_id;
         }
+        
         if (in_array($productId, $checkProduct)) {
             echo "Please select other Product, this is already added";
         } else {
@@ -300,16 +279,12 @@ class RegistrationTransactions extends CComponent {
             $productDetail->retail_price = $product->retail_price;
             $productDetail->hpp = $product->hpp;
             $productDetail->sale_price = $product->recommended_selling_price;
-            // $serviceDetail->price = $service->rate;
-            // $serviceDetail->hour = $service->hour;
             $this->productDetails[] = $productDetail;
         }
-        //echo "5";
     }
 
     public function removeProductDetailAt($index) {
         array_splice($this->productDetails, $index, 1);
-        //var_dump(CJSON::encode($this->details));
     }
 
     public function addDamageDetail($serviceId) {
@@ -345,14 +320,10 @@ class RegistrationTransactions extends CComponent {
                 $this->damageDetails[] = $damageDetail;
             }//else if in_array
         }
-
-
-        //echo "5";
     }
 
     public function removeDamageDetailAt($index) {
         array_splice($this->damageDetails, $index, 1);
-        //var_dump(CJSON::encode($this->details));
     }
 
     public function removeDamageDetailAll() {
@@ -380,7 +351,6 @@ class RegistrationTransactions extends CComponent {
         $insuranceDetail = new RegistrationInsuranceData();
         $insuranceDetail->insurance_company_id = $insuranceCompany;
         $this->insuranceDetails[] = $insuranceDetail;
-        //echo "5";
     }
 
     public function removeInsuranceAll() {
@@ -389,7 +359,6 @@ class RegistrationTransactions extends CComponent {
 
     public function removeInsuranceDetailAt($index) {
         array_splice($this->insuranceDetails, $index, 1);
-        //var_dump(CJSON::encode($this->details));
     }
 
     public function save($dbConnection) {
@@ -398,24 +367,19 @@ class RegistrationTransactions extends CComponent {
             $valid = $this->validate() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
-                //print_r('1');
             } else {
                 $dbTransaction->rollback();
-                //print_r('2');
             }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
-            //print_r($e);
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
         $valid = $this->header->validate();
-
 
         if (count($this->quickServiceDetails) > 0) {
             foreach ($this->quickServiceDetails as $detail) {
@@ -445,21 +409,18 @@ class RegistrationTransactions extends CComponent {
             $valid = true;
         }
 
-
-
-        //print_r($valid);
         return $valid;
     }
 
-    public function validateDetailsCount() {
-        $valid = true;
-        if (count($this->serviceDetails) === 0) {
-            $valid = false;
-            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-        }
-
-        return $valid;
-    }
+//    public function validateDetailsCount() {
+//        $valid = true;
+//        if (count($this->serviceDetails) === 0) {
+//            $valid = false;
+//            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+//        }
+//
+//        return $valid;
+//    }
 
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
@@ -484,7 +445,7 @@ class RegistrationTransactions extends CComponent {
         $this->header->pph_price = $this->taxServiceAmount;
 
         $valid = $this->header->save();
-        //echo "valid";
+
         $bongkar = $sparepart = $ketok_las = $dempul = $epoxy = $cat = $pasang = $poles = $cuci = $finishing = 0;
 
         $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));

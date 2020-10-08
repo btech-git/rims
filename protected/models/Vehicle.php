@@ -6,7 +6,7 @@
  * The followings are the available columns in table '{{vehicle}}':
  * @property integer $id
  * @property string $plate_number
- * @property string $plate_number_prefix_id
+ * @property integer $plate_number_prefix_id
  * @property string $plate_number_ordinal
  * @property string $plate_number_suffix
  * @property string $machine_number
@@ -65,12 +65,12 @@ class Vehicle extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('plate_number, car_make_id, car_model_id, car_sub_model_id, plate_number_prefix_id, plate_number_ordinal', 'required'),
-            array('car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, power, plate_number_prefix_id, plate_number_ordinal', 'numerical', 'integerOnly' => true),
+            array('plate_number, car_make_id, car_model_id, car_sub_model_id', 'required'),
+            array('car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, power, plate_number_prefix_id', 'numerical', 'integerOnly' => true),
             array('year, drivetrain, plate_number_suffix', 'length', 'max' => 10),
             array('plate_number', 'unique', 'message' => 'Plate number already exists.'),
             array('machine_number, frame_number, chasis_code, transmission', 'length', 'max' => 30),
-            array('plate_number, fuel_type', 'length', 'max' => 20),
+            array('plate_number, fuel_type, plate_number_ordinal', 'length', 'max' => 20),
             array('notes', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -188,10 +188,6 @@ class Vehicle extends CActiveRecord {
                         'asc' => 'carSubModel.name ASC',
                         'desc' => 'carSubModel.name DESC',
                     ),
-                    // 'color' => array(
-                    //     'asc' => 'color.name ASC',
-                    //     'desc' => 'color.name DESC',
-                    // ),
                     '*',
                 ),
             ),

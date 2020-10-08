@@ -28,6 +28,7 @@
         <tr>
             <td colspan="3" style="text-align: right; border-top: 1px solid">Total</td>
             <td style="text-align: right; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+            <td colspan="2">&nbsp;</td>
         </tr>
     </tfoot>
 </table>

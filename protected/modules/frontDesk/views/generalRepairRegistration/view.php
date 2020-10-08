@@ -23,7 +23,7 @@ $this->breadcrumbs = array(
                         <?php if (count($invoices) == 0): ?>
                             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.generalRepairRegistration.update"))) ?>
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Product & Service', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/addProductService?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.generalRepairRegistration.create"))) ?>
-                        <?php endif ?>
+                        <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("transaction.generalRepairRegistration.generateSalesOrder") && empty($model->sales_order_number)): ?>
                             <?php echo CHtml::button('Generate Sales Order', array(
@@ -32,18 +32,16 @@ $this->breadcrumbs = array(
                                 'class' => 'button cbutton left',
                                 'style' => 'margin-right:10px',
                                 'disabled' => $model->sales_order_number == null ? false : true,
-                                'onclick' => ' 
-                                    $.ajax({
-                                        type: "POST",
-                                        //dataType: "JSON",
-                                        url: "' . CController::createUrl('generateSalesOrder', array('id' => $model->id)) . '",
-                                        data: $("form").serialize(),
-                                        success: function(html) {
-                                            alert("Sales Order Succesfully Generated");
-                                            location.reload();
-                                        },
-                                    })
-                                '
+                                'onclick' => '$.ajax({
+                                    type: "POST",
+                                    //dataType: "JSON",
+                                    url: "' . CController::createUrl('generateSalesOrder', array('id' => $model->id)) . '",
+                                    data: $("form").serialize(),
+                                    success: function(html) {
+                                        alert("Sales Order Succesfully Generated");
+                                        location.reload();
+                                    },
+                                })'
                             )); ?>
                         <?php endif; ?>
 
@@ -61,27 +59,27 @@ $this->breadcrumbs = array(
                                 'onclick' => ''
                             )); ?>
                         <?php else :*/ ?>
-                            <?php if (empty($model->work_order_number) && Yii::app()->user->checkAccess("transaction.registrationTrasaction.generateWorkOrder")): ?>
-                                <?php echo CHtml::button('Generate Work Order', array(
-                                    'id' => 'detail-button',
-                                    'name' => 'Detail',
-                                    'class' => 'button cbutton left',
-                                    'style' => 'margin-right:10px',
-                                    'disabled' => $model->work_order_number == null ? false : true,
-                                    'onclick' => ' 
-                                        $.ajax({
-                                            type: "POST",
-                                            //dataType: "JSON",
-                                            url: "' . CController::createUrl('generateWorkOrder', array('id' => $model->id)) . '",
-                                            data: $("form").serialize(),
-                                            success: function(html) {
-                                                alert("Work Order Succesfully Generated");
-                                                location.reload();
-                                            },
-                                        })
-                                    '
-                                )); ?>
-                            <?php endif; ?>
+                        <?php if (count($model->registrationServices) > 0 && empty($model->work_order_number) && Yii::app()->user->checkAccess("transaction.registrationTrasaction.generateWorkOrder")): ?>
+                            <?php echo CHtml::button('Generate Work Order', array(
+                                'id' => 'detail-button',
+                                'name' => 'Detail',
+                                'class' => 'button cbutton left',
+                                'style' => 'margin-right:10px',
+                                'disabled' => $model->work_order_number == null ? false : true,
+                                'onclick' => ' 
+                                    $.ajax({
+                                        type: "POST",
+                                        //dataType: "JSON",
+                                        url: "' . CController::createUrl('generateWorkOrder', array('id' => $model->id)) . '",
+                                        data: $("form").serialize(),
+                                        success: function(html) {
+                                            alert("Work Order Succesfully Generated");
+                                            location.reload();
+                                        },
+                                    })
+                                '
+                            )); ?>
+                        <?php endif; ?>
                         <?php //endif; ?>		
                     <?php endif; ?>
                     
@@ -94,33 +92,28 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
                     
-                    <?php if (Yii::app()->user->checkAccess("transaction.registrationTrasaction.generateInvoice")): ?>
-                        <?php //if (count($invoices) == 0): ?>
-                            <?php echo CHtml::button('Generate Invoice', array(
-                                'id' => 'invoice-button',
-                                'name' => 'Invoice',
-                                'class' => 'button cbutton left',
-                                'style' => 'margin-left:10px',
-                                //'disabled'=>$model->sales_order_number == "" ? true : false,
-                                'onclick' => ' 
-                                    $.ajax({
-										type: "POST",
-										//dataType: "JSON",
-										url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-										data: $("form").serialize(),
-										success: function(html) {
-											alert("Invoice Succesfully Generated");
-											location.reload();
-										},
-                                    })
-                                '
-                            )); ?>
-                        <?php //endif; ?>
+                    <?php if (count($invoices) == 0 && !empty($model->sales_order_number) && Yii::app()->user->checkAccess("transaction.registrationTrasaction.generateInvoice")): ?>
+                        <?php echo CHtml::button('Generate Invoice', array(
+                            'id' => 'invoice-button',
+                            'name' => 'Invoice',
+                            'class' => 'button cbutton left',
+                            'style' => 'margin-left:10px',
+                            'onclick' => '$.ajax({
+                                type: "POST",
+                                //dataType: "JSON",
+                                url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
+                                data: $("form").serialize(),
+                                success: function(html) {
+                                    alert("Invoice Succesfully Generated");
+                                    location.reload();
+                                },
+                            })'
+                        )); ?>
                     <?php endif; ?>
                 </div>
             </div>
 
-            <h1>View RegistrationTransaction #<?php echo $model->transaction_number; ?></h1>
+            <h1>View Registration Transaction #<?php echo $model->transaction_number; ?></h1>
 
             <fieldset>
                 <legend>Information</legend>

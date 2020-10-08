@@ -38,6 +38,18 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo $form->labelEx($model,'COA Grouping'); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->dropDownlist($model, 'coa_id', CHtml::listData(Coa::model()->findAllByAttributes(array('coa_id' => null)),'id','name'), array('empty' => '-- Pilih Group --')); ?>
+                        <?php echo $form->error($model, 'coa_id'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <?php echo $form->labelEx($model,'name'); ?>
                     </div>
                     <div class="small-8 columns">
@@ -47,26 +59,12 @@
                 </div>
             </div>		
 
-        <!--	<div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php //echo $form->labelEx($model,'coa_category_id'); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php //echo $form->textField($model,'coa_category_id'); ?>
-                        <?php //echo $form->dropDownlist($model,'coa_category_id',CHtml::listData(CoaCategory::model()->findAll(),'id','name')); ?>
-                        <?php //echo $form->error($model,'coa_category_id'); ?>
-                    </div>
-                </div>
-            </div>-->
-
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
                         <?php echo $form->labelEx($model,'coa_sub_category_id'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php //echo $form->textField($model,'coa_sub_category_id'); ?>
                         <?php echo $form->dropDownlist($model,'coa_sub_category_id',CHtml::listData(CoaSubCategory::model()->findAll(),'id','name')); ?>
                         <?php echo $form->error($model,'coa_sub_category_id'); ?>
                     </div>
