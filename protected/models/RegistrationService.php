@@ -248,7 +248,7 @@ class RegistrationService extends CActiveRecord {
         return empty($user) ? "N/A" : $user->username;
     }
 
-    public function searchByGeneralRepairMechanic() {
+    public function searchByGeneralRepairIdleManagement() {
         $criteria = new CDbCriteria;
 
         $criteria->together = 'true';

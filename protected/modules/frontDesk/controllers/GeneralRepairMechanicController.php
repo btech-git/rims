@@ -33,14 +33,14 @@ class GeneralRepairMechanicController extends Controller {
     }
 
     public function actionIndex() {
-        $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
         $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
         $status = isset($_GET['Status']) ? $_GET['Status'] : '';
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-        $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
+//        $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
 
-        $registrationServiceDataProvider = $registrationService->searchByGeneralRepairMechanic();
+        $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
+        $registrationServiceDataProvider = $registrationService->searchByGeneralRepairIdleManagement();
 
         if (!empty($plateNumber)) {
             $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.plate_number = :plate_number");
@@ -62,10 +62,10 @@ class GeneralRepairMechanicController extends Controller {
             $registrationServiceDataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
-        if (!empty($serviceTypeId)) {
-            $registrationServiceDataProvider->criteria->addCondition("service.service_type_id = :service_type_id");
-            $registrationServiceDataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
-        }
+//        if (!empty($serviceTypeId)) {
+//            $registrationServiceDataProvider->criteria->addCondition("service.service_type_id = :service_type_id");
+//            $registrationServiceDataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
+//        }
 
         $registrationServiceHistoryDataProvider = $registrationService->search();
         $registrationServiceHistoryDataProvider->criteria->together = 'true';
@@ -80,7 +80,7 @@ class GeneralRepairMechanicController extends Controller {
             'workOrderNumber' => $workOrderNumber,
             'status' => $status,
             'branchId' => $branchId,
-            'serviceTypeId' => $serviceTypeId,
+//            'serviceTypeId' => $serviceTypeId,
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
@@ -237,14 +237,14 @@ class GeneralRepairMechanicController extends Controller {
             $registrationService->status = 'On Progress';
             $registrationService->pause_mechanic_id = Yii::app()->user->id;
 
-            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-                'registration_transaction_id' => $registrationId,
-                'service_id' => $registrationService->service_id
-            ));
-            $real->checked_date = date('Y-m-d');
-            $real->checked_by = Yii::app()->user->id;
-            $real->detail = 'Paused (Update From Idle Management)';
-            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
+//            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
+//                'registration_transaction_id' => $registrationId,
+//                'service_id' => $registrationService->service_id
+//            ));
+//            $real->checked_date = date('Y-m-d');
+//            $real->checked_by = Yii::app()->user->id;
+//            $real->detail = 'Paused (Update From Idle Management)';
+//            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
 
             $registrationService->save();
 
@@ -268,14 +268,14 @@ class GeneralRepairMechanicController extends Controller {
             $registrationService->status = 'On Progress';
             $registrationService->resume_mechanic_id = Yii::app()->user->id;
 
-            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-                'registration_transaction_id' => $registrationId,
-                'service_id' => $registrationService->service_id
-            ));
-            $real->checked_date = date('Y-m-d');
-            $real->checked_by = Yii::app()->user->id;
-            $real->detail = 'On Progress (Update From Idle Management)';
-            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
+//            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
+//                'registration_transaction_id' => $registrationId,
+//                'service_id' => $registrationService->service_id
+//            ));
+//            $real->checked_date = date('Y-m-d');
+//            $real->checked_by = Yii::app()->user->id;
+//            $real->detail = 'On Progress (Update From Idle Management)';
+//            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
 
             $registrationService->save();
 
@@ -304,29 +304,29 @@ class GeneralRepairMechanicController extends Controller {
 
             $transaction = RegistrationTransaction::model()->findByPk($registrationId);
 
-            if ($transaction->repair_type == 'GR') {
-                $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-                    'registration_transaction_id' => $registrationId,
-                    'service_id' => $registrationService->service_id
-                ));
-                $real->checked = 1;
-                $real->checked_date = date('Y-m-d');
-                $real->checked_by = Yii::app()->user->id;
-                $real->detail = 'Finished (Update From Idle Management)';
-                $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
-            } else {
-                if ($registrationService->is_body_repair == 1) {
-                    $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-                        'registration_transaction_id' => $registrationId,
-                        'service_id' => $registrationService->service_id
-                    ));
-                    $real->checked = 1;
-                    $real->checked_date = date('Y-m-d');
-                    $real->checked_by = Yii::app()->user->id;
-                    $real->detail = 'Finished (Update From Idle Management)';
-                    $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
-                }
-            }
+//            if ($transaction->repair_type == 'GR') {
+//                $real = RegistrationRealizationProcess::model()->findByAttributes(array(
+//                    'registration_transaction_id' => $registrationId,
+//                    'service_id' => $registrationService->service_id
+//                ));
+//                $real->checked = 1;
+//                $real->checked_date = date('Y-m-d');
+//                $real->checked_by = Yii::app()->user->id;
+//                $real->detail = 'Finished (Update From Idle Management)';
+//                $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
+//            } else {
+//                if ($registrationService->is_body_repair == 1) {
+//                    $real = RegistrationRealizationProcess::model()->findByAttributes(array(
+//                        'registration_transaction_id' => $registrationId,
+//                        'service_id' => $registrationService->service_id
+//                    ));
+//                    $real->checked = 1;
+//                    $real->checked_date = date('Y-m-d');
+//                    $real->checked_by = Yii::app()->user->id;
+//                    $real->detail = 'Finished (Update From Idle Management)';
+//                    $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
+//                }
+//            }
             $registrationService->save();
 
             //Update Total Time using SQL Syntax

@@ -72,7 +72,6 @@ class CashTransactionController extends Controller {
         $cashTransaction = $this->instantiate(null);
         $cashTransaction->header->branch_id = $cashTransaction->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $cashTransaction->header->branch_id;
         $cashTransaction->header->payment_type_id = 1;
-        $cashTransaction->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($cashTransaction->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($cashTransaction->header->transaction_date)), $cashTransaction->header->branch_id);
         $this->performAjaxValidation($cashTransaction->header);
 
         $coaKas = new Coa('search');
@@ -114,10 +113,10 @@ class CashTransactionController extends Controller {
             $this->redirect(array('admin'));
 
         if (isset($_POST['CashTransaction'])) {
-            // $model->attributes=$_POST['CashTransaction'];
-            // if($model->save())
-            // 	$this->redirect(array('view','id'=>$model->id));
+            
             $this->loadState($cashTransaction);
+            $cashTransaction->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($cashTransaction->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($cashTransaction->header->transaction_date)), $cashTransaction->header->branch_id);
+            
             if ($cashTransaction->save(Yii::app()->db)) {
                 if (isset($images) && !empty($images)) {
                     foreach ($cashTransaction->header->images as $i => $image) {
@@ -492,7 +491,7 @@ class CashTransactionController extends Controller {
                         $jurnalUmum->debet_kredit = 'D';
                         $jurnalUmum->tanggal_posting = date('Y-m-d');
                         $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                        $jurnalUmum->transaction_subject = 'Cash Transaction';
+                        $jurnalUmum->transaction_subject = 'Cash Transaction In';
                         $jurnalUmum->is_coa_category = 0;
                         $jurnalUmum->transaction_type = 'CASH';
                         $jurnalUmum->save();
@@ -505,7 +504,7 @@ class CashTransactionController extends Controller {
                         $jurnalUmum->debet_kredit = 'K';
                         $jurnalUmum->tanggal_posting = date('Y-m-d');
                         $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                        $jurnalUmum->transaction_subject = 'Cash Transaction';
+                        $jurnalUmum->transaction_subject = 'Cash Transaction Out';
                         $jurnalUmum->is_coa_category = 0;
                         $jurnalUmum->transaction_type = 'CASH';
                         $jurnalUmum->save();
@@ -525,7 +524,7 @@ class CashTransactionController extends Controller {
                             $jurnalUmum->debet_kredit = 'K';
                             $jurnalUmum->tanggal_posting = date('Y-m-d');
                             $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                            $jurnalUmum->transaction_subject = 'Cash Transaction';
+                            $jurnalUmum->transaction_subject = 'Cash Transaction In';
                             $jurnalUmum->is_coa_category = 0;
                             $jurnalUmum->transaction_type = 'CASH';
                             $jurnalUmum->save(false);
@@ -538,7 +537,7 @@ class CashTransactionController extends Controller {
                             $jurnalUmum->debet_kredit = 'D';
                             $jurnalUmum->tanggal_posting = date('Y-m-d');
                             $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                            $jurnalUmum->transaction_subject = 'Cash Transaction';
+                            $jurnalUmum->transaction_subject = 'Cash Transaction Out';
                             $jurnalUmum->is_coa_category = 0;
                             $jurnalUmum->transaction_type = 'CASH';
                             $jurnalUmum->save(false);

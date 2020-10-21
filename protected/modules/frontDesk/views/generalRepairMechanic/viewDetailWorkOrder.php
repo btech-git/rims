@@ -116,8 +116,31 @@ Yii::app()->clientScript->registerScript('search', "
         </div>
 
         <br />
+        <div id="aaa"></div>
 
         <div class="grid-view">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Duration</th>
+                        <th>Countdown</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($registration->registrationServices as $registrationService): ?>
+                    <tr>
+                        <td><?php echo CHtml::encode(CHtml::value($registrationService, 'service.name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($registrationService, 'hour')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($registrationService, 'start')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($registrationService, 'end')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($registrationService, 'total_time')); ?></td>
+                        <td><?php echo CHtml::button('test', array('onclick' => 'setInterval(function() { $("#aaa").html("abc"); }, 1000);')); ?></td>
+                        <td><?php echo CHtml::submitButton('Start', array('name' => 'StartOrPauseTimesheet', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'registration-service-grid',
                 'dataProvider' => $registrationServiceDataProvider,
@@ -141,15 +164,21 @@ Yii::app()->clientScript->registerScript('search', "
                         'value' => '$data->service->serviceCategory->name'
                     ),
                     array(
-                        'header' => 'duration',
+                        'header' => 'Duration',
                         'value' => '$data->hour'
+                    ),
+                    array(
+                        'type' => 'raw',
+                        'cssClassExpression' => '"countdown"',
+                        'header' => 'Countdown',
+                        'value' => ''
                     ),
                     'start',
                     'end',
                     array(
                         'name' => 'total_time',
                         'value' => '$data->total_time',
-                        'footer' => ' ' . $registrationService->getTotal($_GET["registrationId"])
+                        'footer' => $registrationService->getTotal($_GET["registrationId"])
                     ),
                     array(
                         'header' => 'Service Status',
@@ -173,22 +202,30 @@ Yii::app()->clientScript->registerScript('search', "
                         'buttons' => array(
                             'start' => array(
                                 'label' => 'Start',
-                                'url' => 'Yii::app()->createUrl("frontDesk/idleManagement/workOrderStartService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
+                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/workOrderStartService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
                                 'options' => array('class' => 'registration-service-start'),
-                                'click' => "js:function(){
+                                'click' => "js:function(e){
+                                    e.preventDefault();
                                     var url = $(this).attr('href');
                                     //  do your post request here
                                     console.log(url);
-                                    $.post(url,function(html){
-                                        $.fn.yiiGridView.update('registration-service-grid');
-                                    });
-                                    return false;
+                                    setInterval(function() {
+                                        var distance = 3600000;
+                                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                                        $(this).closest('tr').find('td.countdown').html(hours + 'h '
+  + minutes + 'm ' + seconds + 's ');
+                                    }, 1000);
+//                                    $.post(url,function(html){
+//                                        $.fn.yiiGridView.update('registration-service-grid');
+//                                    });
                                 }",
                                 'visible' => '$data->start==NULL or $data->start=="0000-00-00 00:00:00" or ($data->end != "0000-00-00 00:00:00" and $data->registrationTransaction->is_passed == 0)'
                             ),
                             'pause' => array(
                                 'label' => 'Pause',
-                                'url' => 'Yii::app()->createUrl("frontDesk/idleManagement/WorkOrderPauseService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
+                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/WorkOrderPauseService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
                                 'options' => array('class' => 'registration-service-pause'),
                                 'click' => "js:function(){
                                     var url = $(this).attr('href');
@@ -203,7 +240,7 @@ Yii::app()->clientScript->registerScript('search', "
                             ),
                             'resume' => array(
                                 'label' => 'Resume',
-                                'url' => 'Yii::app()->createUrl("frontDesk/idleManagement/workOrderResumeService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
+                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/workOrderResumeService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
                                 'options' => array('class' => 'registration-service-resume'),
                                 'click' => "js:function(){
                                     var url = $(this).attr('href');
@@ -218,7 +255,7 @@ Yii::app()->clientScript->registerScript('search', "
                             ),
                             'finish' => array(
                                 'label' => 'Finish',
-                                'url' => 'Yii::app()->createUrl("frontDesk/idleManagement/workOrderFinishService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
+                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/workOrderFinishService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
                                 'options' => array('class' => 'registration-service-finish'),
                                 'click' => "js:function(){
                                     var url = $(this).attr('href');

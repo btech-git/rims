@@ -87,6 +87,7 @@
                                                           'Pin' => 'PAYMENT IN',
                                                           'Pout' => 'PAYMENT OUT',
                                                           'SO' => 'SALES',
+                                                          'CASH' => 'CASH TRANSACTION',
                                                       ), array('empty'=>'-- All Transaction --')); ?>
                                                 </div>
                                             </div>

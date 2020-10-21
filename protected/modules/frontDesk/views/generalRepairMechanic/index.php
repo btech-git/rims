@@ -60,7 +60,7 @@ Yii::app()->clientScript->registerScript('search', "
                                 'workOrderNumber' => $workOrderNumber,
                                 'status' => $status,
                                 'branchId' => $branchId,
-                                'serviceTypeId' => $serviceTypeId,
+//                                'serviceTypeId' => $serviceTypeId,
                                 'registrationService' => $registrationService,
                                 'registrationServiceDataProvider' => $registrationServiceDataProvider,
                             ), true

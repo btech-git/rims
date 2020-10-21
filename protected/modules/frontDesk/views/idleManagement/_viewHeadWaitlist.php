@@ -13,47 +13,46 @@
             <tbody>
                 <tr>
                     <td>
-                        <?php echo CHtml::activeTextField($model, 'plate_number', array(
-                            'onchange' => 
-                            CHtml::ajax(array(
+                        <?php echo CHtml::textField('PlateNumber', $plateNumber, array(
+                            'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateHeadWaitlistTable'),
-                                'update' => '#head_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#mechanic_waitlist_table',
                             )),
                         )); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::activeTextField($model, 'work_order_number', array(
-                            'onchange' => 
-                            CHtml::ajax(array(
+                        <?php echo CHtml::textField('WorkOrderNumber', $workOrderNumber, array(
+                            'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateHeadWaitlistTable'),
-                                'update' => '#head_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#mechanic_waitlist_table',
                             )),
                         )); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::activeDropDownList($model, 'status', array(
-							'Pending'=>'Pending',
-							'Available'=>'Available',
-							'On Progress'=>'On Progress',
-							'Finished'=>'Finished'
-						), array(
+                        <?php echo CHtml::dropDownList('Status', $status, array(
+                            'Pending'=>'Pending',
+                            'Available'=>'Available',
+                            'On Progress'=>'On Progress',
+                            'Finished'=>'Finished'
+                        ), array(
                             'empty' => '-- All --',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateHeadWaitlistTable'),
-                                'update' => '#head_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#mechanic_waitlist_table',
                             )),
                         )); ?>
                     </td>
+                    </td>
                     <td>
-                        <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateHeadWaitlistTable'),
-                                'update' => '#head_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#mechanic_waitlist_table',
                             )),
                         )); ?>
                     </td>
@@ -69,8 +68,22 @@
 </div>
 
 <div id="head_waitlist_table">
-    <?php $this->renderPartial('_headWaitlistTable', array(
-        'model' => $model,
-        'modelDataProvider' => $modelDataProvider,
+    <?php $serviceTypes = ServiceType::model()->findAll(); ?>
+    <?php foreach ($serviceTypes as $i => $serviceType): ?>
+        <?php $serviceTabs[$serviceType->name] = $this->renderPartial(
+            '_headWaitlistTable',
+            array(
+                'registrationService' => $registrationService,
+                'registrationServiceDataProvider' => $registrationServiceDataProvider,
+                'serviceType' => $serviceType,
+            ), true
+        ); ?>
+    <?php endforeach; ?>
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+        'tabs' => $serviceTabs,
+        // additional javascript options for the tabs plugin
+        'options' => array(
+            'collapsible' => true,
+        ),
     )); ?>
 </div>

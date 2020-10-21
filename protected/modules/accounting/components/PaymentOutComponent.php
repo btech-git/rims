@@ -137,10 +137,10 @@ class PaymentOutComponent extends CComponent {
 
             $valid = $detail->save(false) && $valid;
 
-            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
-            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
-            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+//            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
+//            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+//            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
+//            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
         }
 
         foreach ($this->header->images as $file) {

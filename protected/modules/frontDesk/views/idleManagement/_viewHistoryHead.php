@@ -44,6 +44,6 @@
 <div id="transaction_history_table">
     <?php $this->renderPartial('_transactionHistoryTable', array(
         'registrationService' => $registrationService,
-        'registrationServiceDataProvider' => $registrationServiceDataProvider,
+        'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
     )); ?>
 </div>

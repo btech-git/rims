@@ -37,25 +37,20 @@ class IdleManagementController extends Controller
 
     public function actionIndexHead()
     {
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
+        $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
+        $status = isset($_GET['Status']) ? $_GET['Status'] : '';
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $mechanicId = isset($_GET['MechanicId']) ? $_GET['MechanicId'] : '';
         $startMechanic = empty($model->start_mechanic_id) ? '' : Users::model()->findByPk($model->start_mechanic_id);
         
-        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
-        $modelDataProvider = $model->searchByIdleManagement();
-//        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
-//        $modelDataProvider->criteria->compare('t.work_order_number',$model->work_order_number,true);
-//        $modelDataProvider->criteria->compare('t.branch_id',$model->branch_id);
-//        $modelDataProvider->criteria->compare('t.status', $model->status, true);
-//        $modelDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC, t.vehicle_id ASC';
-        
         $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
-        $registrationServiceDataProvider = $registrationService->search();
+        $registrationServiceDataProvider = $registrationService->searchByGeneralRepairIdleManagement();
         $registrationServiceDataProvider->criteria->together = 'true';
         $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
-        $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
-        $registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
-        $registrationServiceDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
+//        $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
+//        $registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+//        $registrationServiceDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $employee = Search::bind(new EmployeeBranchDivisionPositionLevel('search'), isset($_GET['EmployeeBranchDivisionPositionLevel']) ? $_GET['EmployeeBranchDivisionPositionLevel'] : '');
         $employeeDataProvider = $employee->search();
@@ -69,16 +64,26 @@ class IdleManagementController extends Controller
         $employeeDataProvider->criteria->order = 'employee.name ASC';
         $employeeDataProvider->criteria->addCondition("position_id IN (1, 3, 4) AND division_id = 1");
         
+        $registrationServiceHistoryDataProvider = $registrationService->search();
+        $registrationServiceHistoryDataProvider->criteria->together = 'true';
+        $registrationServiceHistoryDataProvider->criteria->with = array('registrationTransaction');
+        $registrationServiceHistoryDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
+        $registrationServiceHistoryDataProvider->criteria->compare('t.start_mechanic_id', Yii::app()->user->id);
+        $registrationServiceHistoryDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+        $registrationServiceHistoryDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
+
         $this->render('indexHead', array(
-            'model' => $model,
-            'modelDataProvider' => $modelDataProvider,
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
+            'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
             'startMechanic' => $startMechanic,
             'employee' => $employee,
             'employeeDataProvider' => $employeeDataProvider,
             'branchId' => $branchId,
             'mechanicId' => $mechanicId,
+            'plateNumber' => $plateNumber,
+            'workOrderNumber' => $workOrderNumber,
+            'status' => $status,
         ));
     }
     
@@ -131,25 +136,25 @@ class IdleManagementController extends Controller
             'criteria' => $registrationQuickServiceCriteria,
         ));
         
-            if (isset($_POST['Submit'])) {
-                foreach($registration->registrationServices as $i => $registrationService) {
-                    $registrationService->assign_mechanic_id = $_POST['RegistrationService'][$i]['assign_mechanic_id'];
-                    $registrationService->update(array('assign_mechanic_id'));
-                }
-            } elseif (isset($_POST['Save'])) {
-                $registration->is_passed = $_POST['RegistrationTransaction']['is_passed'];
-                $registration->priority_level = $_POST['RegistrationTransaction']['priority_level'];
-                $registration->update(array('is_passed', 'priority_level'));
-
-                if (!empty($_POST['Memo'])) {
-                    $registrationMemo = new RegistrationMemo();
-                    $registrationMemo->registration_transaction_id = $registrationId;
-                    $registrationMemo->memo = $_POST['Memo'];
-                    $registrationMemo->date_time = date('Y-m-d H:i:s');
-                    $registrationMemo->user_id = Yii::app()->user->id;
-                    $registrationMemo->save();
-                }
+        if (isset($_POST['Submit'])) {
+            foreach($registration->registrationServices as $i => $registrationService) {
+                $registrationService->assign_mechanic_id = $_POST['RegistrationService'][$i]['assign_mechanic_id'];
+                $registrationService->update(array('assign_mechanic_id'));
             }
+        } elseif (isset($_POST['Save'])) {
+            $registration->is_passed = $_POST['RegistrationTransaction']['is_passed'];
+            $registration->priority_level = $_POST['RegistrationTransaction']['priority_level'];
+            $registration->update(array('is_passed', 'priority_level'));
+
+            if (!empty($_POST['Memo'])) {
+                $registrationMemo = new RegistrationMemo();
+                $registrationMemo->registration_transaction_id = $registrationId;
+                $registrationMemo->memo = $_POST['Memo'];
+                $registrationMemo->date_time = date('Y-m-d H:i:s');
+                $registrationMemo->user_id = Yii::app()->user->id;
+                $registrationMemo->save();
+            }
+        }
 
         $this->render('viewHeadWorkOrder', array(
             'registration' => $registration,

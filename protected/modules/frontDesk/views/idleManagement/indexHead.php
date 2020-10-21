@@ -3,83 +3,78 @@
 /* @var $model RegistrationTransaction */
 
 $this->breadcrumbs=array(
-	'Manage',
+    'Manage',
 );
 
 $this->menu=array(
-	array('label'=>'List RegistrationTransaction', 'url'=>array('admin')),
-	array('label'=>'Create RegistrationTransaction', 'url'=>array('index')),
+    array('label'=>'List RegistrationTransaction', 'url'=>array('admin')),
+    array('label'=>'Create RegistrationTransaction', 'url'=>array('index')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
-	$('.search-button').click(function(){
-		$('.search-form').slideToggle(600);
-		$('.bulk-action').toggle();
-		$(this).toggleClass('active');
-		if($(this).hasClass('active')){
-			$(this).text('');
-		}else {
-			$(this).text('Advanced Search');
-		}
-		return false;
-	});
-	$('.search-form form').submit(function(){
-		$('#registration-transaction-grid').yiiGridView('update', {
-			data: $(this).serialize()
-		});
-		return false;
-	});
-	
-	$('#info').click(function(){
-		href = $(this).attr('href')
-		$.ajax({
-			type: 'POST',
-			url: href,
-			data: $('form').serialize(),
-			success: function(html) {
-				$('#info-dialog').dialog('open');
-				$('#info_div').html(html);
-			},
-		});
-	});
+    $('.search-button').click(function(){
+        $('.search-form').slideToggle(600);
+        $('.bulk-action').toggle();
+        $(this).toggleClass('active');
+        if ($(this).hasClass('active')) {
+            $(this).text('');
+        } else {
+            $(this).text('Advanced Search');
+        }
+        return false;
+    });
+    $('.search-form form').submit(function(){
+        $('#registration-transaction-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+        
+        return false;
+    });
+
+    $('#info').click(function(){
+        href = $(this).attr('href')
+        $.ajax({
+            type: 'POST',
+            url: href,
+            data: $('form').serialize(),
+            success: function(html) {
+                $('#info-dialog').dialog('open');
+                $('#info_div').html(html);
+            },
+        });
+    });
 ");
 ?>
 
 <div id="maincontent">
-	<div class="clearfix page-action">
-		<h1>General Repair Head Management</h1>
-		<div>
+    <div class="clearfix page-action">
+        <h1>General Repair Head Management</h1>
+        <div>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(
                     'Service List' => array(
-                        'content' => $this->renderPartial(
-                            '_viewHeadWaitlist',
-                            array(
-                                'model' => $model,
-                                'modelDataProvider' => $modelDataProvider,
-//                                'startMechanic' => $startMechanic,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewHeadWaitlist', array(
+                            'registrationService' => $registrationService,
+                            'registrationServiceDataProvider' => $registrationServiceDataProvider,
+                            'plateNumber' => $plateNumber,
+                            'workOrderNumber' => $workOrderNumber,
+                            'status' => $status,
+                            'branchId' => $branchId,
+                        ), true),
                     ),
                     'History' => array(
-                        'content' => $this->renderPartial(
-                            '_viewHistoryHead',
-                            array(
-                                'registrationService' => $registrationService,
-                                'registrationServiceDataProvider' => $registrationServiceDataProvider,
-                                'branchId' => $branchId,
-                                'mechanicId' => $mechanicId,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewHistoryHead', array(
+                            'registrationService' => $registrationService,
+                            'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
+                            'branchId' => $branchId,
+                            'mechanicId' => $mechanicId,
+                        ), true),
                     ),
                     'Available Mechanics' => array(
-                        'content' => $this->renderPartial(
-                            '_viewAvailableMechanic',
-                            array(
-                                'employee' => $employee,
-                                'employeeDataProvider' => $employeeDataProvider,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewAvailableMechanic', array(
+                            'employee' => $employee,
+                            'employeeDataProvider' => $employeeDataProvider,
+                        ), true),
                     ),
                 ),
                 // additional javascript options for the tabs plugin
@@ -90,13 +85,13 @@ Yii::app()->clientScript->registerScript('search', "
                 'id' => 'view_tab',
             )); ?>
         </div>
-	</div>
+    </div>
 </div>
 
 <!--Registration Service Dialog -->
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-	'id'=>'registration-service-dialog',
-	'options'=>array(
+    'id'=>'registration-service-dialog',
+    'options'=>array(
         'title'=>'Registration Service',
         'autoOpen'=>false,
         'modal'=>true,
@@ -110,8 +105,8 @@ Yii::app()->clientScript->registerScript('search', "
 
 <!--Update Status Dialog -->
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-	'id'=>'update-status-dialog',
-	'options'=>array(
+    'id'=>'update-status-dialog',
+    'options'=>array(
         'title'=>'Update Status',
         'autoOpen'=>false,
         'modal'=>true,
@@ -125,8 +120,8 @@ Yii::app()->clientScript->registerScript('search', "
 
 <!--Level Dialog -->
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-	'id'=>'info-dialog',
-	'options'=>array(
+    'id'=>'info-dialog',
+    'options'=>array(
     	'title'=>'Info',
     	'autoOpen'=>false,
     	'modal'=>true,

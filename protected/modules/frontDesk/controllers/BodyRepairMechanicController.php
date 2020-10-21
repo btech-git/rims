@@ -67,21 +67,21 @@ class BodyRepairMechanicController extends Controller
         $registrationAssignmentDataProvider->criteria->together = 'true';
         $registrationAssignmentDataProvider->criteria->with = array('registrationTransaction');
         $registrationAssignmentDataProvider->criteria->addCondition("registrationTransaction.service_status != 'Finish' AND registrationTransaction.repair_type = 'BR' AND registrationTransaction.work_order_number IS NOT NULL");
-		$registrationAssignmentDataProvider->criteria->compare('t.mechanic_assigned_id', Yii::app()->user->id);
+        $registrationAssignmentDataProvider->criteria->compare('t.mechanic_assigned_id', Yii::app()->user->id);
         $registrationAssignmentDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $registrationProgressDataProvider = $registrationBodyRepairDetail->search();
         $registrationProgressDataProvider->criteria->together = 'true';
         $registrationProgressDataProvider->criteria->with = array('registrationTransaction');
         $registrationProgressDataProvider->criteria->addCondition("registrationTransaction.service_status != 'Finish' AND registrationTransaction.repair_type = 'BR' AND registrationTransaction.work_order_number IS NOT NULL");
-		$registrationProgressDataProvider->criteria->compare('t.mechanic_id', Yii::app()->user->id);
+        $registrationProgressDataProvider->criteria->compare('t.mechanic_id', Yii::app()->user->id);
         $registrationProgressDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $registrationHistoryDataProvider = $registrationBodyRepairDetail->search();
         $registrationHistoryDataProvider->criteria->together = 'true';
         $registrationHistoryDataProvider->criteria->with = array('registrationTransaction');
         $registrationHistoryDataProvider->criteria->addCondition("registrationTransaction.service_status = 'Finish' AND registrationTransaction.repair_type = 'BR' AND registrationTransaction.work_order_number IS NOT NULL");
-		$registrationHistoryDataProvider->criteria->compare('t.mechanic_id', Yii::app()->user->id);
+        $registrationHistoryDataProvider->criteria->compare('t.mechanic_id', Yii::app()->user->id);
         $registrationHistoryDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $this->render('index', array(

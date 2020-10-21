@@ -70,12 +70,15 @@ $('form').submit(function(){
                                 <div class="medium-6 columns">
                                     <?php $attribute = 'transaction_date'; ?>
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'id'=>CHtml::activeId($model, $attribute.'_0'),
                                         'model'=>$model,
                                         'attribute'=>$attribute."_from",
                                         'options'=>array(
                                             'dateFormat'=>'yy-mm-dd',
-                                            'onSelect' => '
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'style'=>'margin-bottom:0px;',
+                                            'placeholder'=>'Transaction Date From',
+                                            'onchange' => '
                                                 $.fn.yiiGridView.update("work-order-grid", {data: {RegistrationTransaction: {
                                                     transaction_date_from: $(this).val(),
                                                     transaction_number: $("#' . CHtml::activeId($model, 'transaction_number') . '").val(),
@@ -90,19 +93,18 @@ $('form').submit(function(){
                                                 } } });
                                             ',
                                         ),
-                                        'htmlOptions'=>array(
-                                            'style'=>'margin-bottom:0px;',
-                                            'placeholder'=>'Transaction Date From'
-                                        ),
                                     )); ?>
                                 </div>
                                 <div class="medium-6 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'id'=>CHtml::activeId($model, $attribute.'_1'),
                                         'model'=>$model,
                                         'attribute'=>$attribute."_to",
                                         'options'=>array(
                                             'dateFormat'=>'yy-mm-dd',
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'style'=>'margin-bottom:0px;',
+                                            'placeholder'=>'Transaction Date To',
                                             'onchange' => '
                                                 $.fn.yiiGridView.update("work-order-grid", {data: {RegistrationTransaction: {
                                                     transaction_date_to: $(this).val(),
@@ -117,10 +119,6 @@ $('form').submit(function(){
                                                     branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                                 } } });
                                             ',
-                                        ),
-                                        'htmlOptions'=>array(
-                                            'style'=>'margin-bottom:0px;',
-                                            'placeholder'=>'Transaction Date To'
                                         ),
                                     )); ?>
                                 </div>
@@ -361,15 +359,3 @@ $('form').submit(function(){
         </div>
     </div>
 </div>
-
-<?php Yii::app()->clientScript->registerScript('search',"
-    $('#RegistrationTransaction_status,#RegistrationTransaction_transaction_date_1').change(function(){
-        console.log($('#search_heading-range').serialize());
-        // if ($('#RegistrationTransaction_transaction_date_0').val().lenght != 0) {
-            $.fn.yiiGridView.update('work-order-grid', {
-                data: $('#search_heading-range').serialize()
-            });
-        // }
-        return false;
-    });
-"); ?>

@@ -8,7 +8,7 @@
                     <td>WO #</td>
                     <td>WO Status</td>
                     <td>Branch</td>
-                    <td>Service Type</td>
+                    <!--<td>Service Type</td>-->
                 </tr>
             </thead>
             <tbody>
@@ -56,16 +56,16 @@
                             )),
                         )); ?>
                     </td>
-                    <td>
-                        <?php echo CHtml::dropDownList('ServiceTypeId', $serviceTypeId, CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+<!--                    <td>
+                        <?php /*echo CHtml::dropDownList('ServiceTypeId', $serviceTypeId, CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
                                 'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
                                 'update' => '#mechanic_waitlist_table',
                             )),
-                        )); ?>
-                    </td>
+                        ));*/ ?>
+                    </td>-->
                 </tr>
             </tbody>
         </table>
@@ -78,8 +78,24 @@
 </div>
 
 <div id="mechanic_waitlist_table">
-    <?php $this->renderPartial('_waitlistTable', array(
-        'registrationService' => $registrationService,
-        'registrationServiceDataProvider' => $registrationServiceDataProvider,
+    <?php $serviceTypes = ServiceType::model()->findAll(); ?>
+    <?php foreach ($serviceTypes as $i => $serviceType): ?>
+        <?php $serviceTabs[$serviceType->name] = $this->renderPartial(
+            '_waitlistTable',
+            array(
+                'registrationService' => $registrationService,
+                'registrationServiceDataProvider' => $registrationServiceDataProvider,
+                'serviceType' => $serviceType,
+            ), true
+        ); ?>
+    <?php endforeach; ?>
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+        'tabs' => $serviceTabs,
+        // additional javascript options for the tabs plugin
+        'options' => array(
+            'collapsible' => true,
+        ),
+        // set id for this widgets
+//        'id' => 'view_tab',
     )); ?>
 </div>

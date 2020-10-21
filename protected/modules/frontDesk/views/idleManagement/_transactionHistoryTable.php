@@ -1,6 +1,6 @@
 <?php $this->widget('ext.groupgridview.GroupGridView', array(
     'id'=>'registration-transaction-grid',
-    'dataProvider'=>$registrationServiceDataProvider,
+    'dataProvider'=>$registrationServiceHistoryDataProvider,
     'filter'=>null,
     'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
     'pager'=>array(

@@ -118,6 +118,14 @@ class TransferRequestController extends Controller {
                 $transferRequest->save(false);
                 
                 $coaInterMasterGroupbranch = Coa::model()->findByAttributes(array('code' => '107.00.000'));
+                $coaInterbranchRequester = BranchCoaInterbranch::model()->findByAttributes(array(
+                    'branch_id_from' => $transferRequest->requester_branch_id, 
+                    'branch_id_to' => $transferRequest->destination_branch_id,
+                ));
+                $coaInterbranchDestination = BranchCoaInterbranch::model()->findByAttributes(array(
+                    'branch_id_from' => $transferRequest->destination_branch_id, 
+                    'branch_id_to' => $transferRequest->requester_branch_id,
+                ));
                 $jurnalUmumMasterGroupInterbranchRequester = new JurnalUmum;
                 $jurnalUmumMasterGroupInterbranchRequester->kode_transaksi = $transferRequest->transfer_request_no;
                 $jurnalUmumMasterGroupInterbranchRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
@@ -134,7 +142,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumMasterInterbranchRequester = new JurnalUmum;
                 $jurnalUmumMasterInterbranchRequester->kode_transaksi = $transferRequest->transfer_request_no;
                 $jurnalUmumMasterInterbranchRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
-                $jurnalUmumMasterInterbranchRequester->coa_id = $transferRequest->requesterBranch->coa_interbranch_inventory;
+                $jurnalUmumMasterInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
                 $jurnalUmumMasterInterbranchRequester->branch_id = $transferRequest->requester_branch_id;
                 $jurnalUmumMasterInterbranchRequester->total = $transferRequest->total_price;
                 $jurnalUmumMasterInterbranchRequester->debet_kredit = 'D';
@@ -147,7 +155,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumInterbranchRequester = new JurnalUmum;
                 $jurnalUmumInterbranchRequester->kode_transaksi = $transferRequest->transfer_request_no;
                 $jurnalUmumInterbranchRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
-                $jurnalUmumInterbranchRequester->coa_id = $transferRequest->requesterBranch->coa_interbranch_inventory;
+                $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
                 $jurnalUmumInterbranchRequester->branch_id = $transferRequest->requester_branch_id;
                 $jurnalUmumInterbranchRequester->total = $transferRequest->total_price;
                 $jurnalUmumInterbranchRequester->debet_kredit = 'D';
@@ -173,7 +181,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumMasterInterbranchDestination = new JurnalUmum;
                 $jurnalUmumMasterInterbranchDestination->kode_transaksi = $transferRequest->transfer_request_no;
                 $jurnalUmumMasterInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-                $jurnalUmumMasterInterbranchDestination->coa_id = $transferRequest->destinationBranch->coa_interbranch_inventory;
+                $jurnalUmumMasterInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
                 $jurnalUmumMasterInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
                 $jurnalUmumMasterInterbranchDestination->total = $transferRequest->total_price;
                 $jurnalUmumMasterInterbranchDestination->debet_kredit = 'K';
@@ -186,7 +194,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumInterbranchDestination = new JurnalUmum;
                 $jurnalUmumInterbranchDestination->kode_transaksi = $transferRequest->transfer_request_no;
                 $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-                $jurnalUmumInterbranchDestination->coa_id = $transferRequest->destinationBranch->coa_interbranch_inventory;
+                $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
                 $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
                 $jurnalUmumInterbranchDestination->total = $transferRequest->total_price;
                 $jurnalUmumInterbranchDestination->debet_kredit = 'K';

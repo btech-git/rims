@@ -94,7 +94,6 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'paymentOuts' => array(self::HAS_MANY, 'PaymentOut', 'purchase_order_id'),
             'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
-            //'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
             'transactionPurchaseOrderApprovals' => array(self::HAS_MANY, 'TransactionPurchaseOrderApproval', 'purchase_order_id'),
             'transactionPurchaseOrderDetails' => array(self::HAS_MANY, 'TransactionPurchaseOrderDetail', 'purchase_order_id'),
             'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'purchase_order_id'),

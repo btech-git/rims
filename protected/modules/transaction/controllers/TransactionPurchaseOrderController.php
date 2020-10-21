@@ -109,23 +109,6 @@ class TransactionPurchaseOrderController extends Controller {
             ),
         ));
 
-
-        // $request = new TransactionRequestOrder('search');
-        // 	$request->unsetAttributes();  // clear any default values
-        //      	if (isset($_GET['TransactionRequestOrder']))
-        //        	$request->attributes = $_GET['TransactionRequestOrder'];
-        // $requestCriteria = new CDbCriteria;
-        // 	$requestCriteria->compare('t.id',$request->id);
-        // 	//$requestCriteria->compare('t.request_type',$request->request_type,true);
-        // 	$requestCriteria->together = true;
-        // 	$requestCriteria->select = 't.id,t.request_order_no, t.request_order_date, rims_transaction_request_order_detail.supplier_id, rims_transaction_request_order_detail.product_id, rims_supplier.name as supplier_name';
-        // 	$requestCriteria->join = 'join rims_transaction_request_order_detail on t.id = rims_transaction_request_order_detail.request_order_id join rims_supplier on rims_transaction_request_order_detail.supplier_id = rims_supplier.id';
-        // 	$requestCriteria->group = 'rims_transaction_request_order_detail.supplier_id';
-        // 	$requestCriteria->compare('rims_supplier.name', $request->supplier_name,true);
-        // $requestDataProvider = new CActiveDataProvider('TransactionRequestOrder', array(
-        // 	'criteria'=>$requestCriteria,
-        // 	));
-
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -133,8 +116,6 @@ class TransactionPurchaseOrderController extends Controller {
         }
 
         $productCriteria = new CDbCriteria;
-//        $productCriteria->together = true;
-//        $productCriteria->with = array('supplierProducts');
         $productCriteria->compare('t.name', $product->name, true);
         $productCriteria->compare('t.manufacturer_code', $product->manufacturer_code, true);
         $productCriteria->compare('t.brand_id', $product->brand_id);
@@ -143,16 +124,7 @@ class TransactionPurchaseOrderController extends Controller {
         $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
         $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
         $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
-//        $productCriteria->compare('supplierProducts.supplier_id', $product->product_supplier);
-//        $productCriteria->together = true;
-//        $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.company as product_supplier';
-//        $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';
-//        $productCriteria->addCondition('rims_supplier_product.supplier_id', $supplier->id);
-//        $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
-//        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
-//        $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
-//        $productCriteria->compare('rims_supplier.company', $product->product_supplier, true);
-//        $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
+        
         $productDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $productCriteria,
             'sort' => array(
@@ -178,12 +150,9 @@ class TransactionPurchaseOrderController extends Controller {
         }
 
         $this->render('create', array(
-            //'model'=>$model,
             'purchaseOrder' => $purchaseOrder,
             'supplier' => $supplier,
             'supplierDataProvider' => $supplierDataProvider,
-            // 'request'=>$request,
-            // 'requestDataProvider'=>$requestDataProvider,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
             'price' => $price,
@@ -204,17 +173,6 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder->header->setCodeNumberByRevision('purchase_order_no');
 
         $this->performAjaxValidation($purchaseOrder->header);
-
-//        $supplier = new Supplier('search');
-//        $supplier->unsetAttributes();  // clear any default values
-//        if (isset($_GET['Supplier'])) {
-//            $supplier->attributes = $_GET['Supplier'];
-//        }
-//        $supplierCriteria = new CDbCriteria;
-//        $supplierCriteria->compare('name', $supplier->name, true);
-//        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
-//            'criteria' => $supplierCriteria,
-//        ));
 
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
@@ -309,14 +267,12 @@ class TransactionPurchaseOrderController extends Controller {
     }
 
     public function actionPdf($id) {
-        // var_dump(Yii::getPathOfAlias('webroot') ); die();
         $po = TransactionPurchaseOrder::model()->find('id=:id', array(':id' => $id));
         $supplier = Supplier::model()->find('id=:id', array(':id' => $po->supplier_id));
         $branch = Branch::model()->find('id=:id', array(':id' => $po->main_branch_id));
         $po_detail = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        //$stylesheet = file_get_contents(Yii::getPathOfAlias('pdfcss') . '/pdf.css');
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array('po' => $po, 'supplier' => $supplier, 'branch' => $branch, 'po_detail' => $po_detail), true));
@@ -656,55 +612,14 @@ class TransactionPurchaseOrderController extends Controller {
         echo CJSON::encode($object);
     }
 
-    // public function actionAjaxGetTotal($id)
-    // {
-    // 	if (Yii::app()->request->isAjaxRequest)
-    // 	{
-    // 		$purchaseOrder = $this->instantiate($id);
-    // 		$this->loadState($purchaseOrder);
-    // 		$ppnValue = $purchaseOrder->header->ppn;
-    // 		$ppn = 0;
-    // 		$subtotal = 0;
-    // 		$total = 0;
-    // 		$totalItems = 0;
-    // 		if(empty($ppnValue)){
-    // 			foreach ($purchaseOrder->details as $key => $detail) {
-    // 				$subtotal += $detail->subtotal;
-    // 				$totalItems += $detail->total_quantity;
-    // 			}
-    // 			$total = $subtotal;
-    // 		}
-    // 		else
-    // 		{
-    // 			foreach ($purchaseOrder->details as $key => $detail) {
-    // 				$subtotal += $detail->subtotal;
-    // 				$totalItems += $detail->total_quantity;
-    // 			}
-    // 				$ppn = ($subtotal * $ppnValue / 100);
-    // 				$total = $subtotal + $ppn;
-    // 		}
-    // 		$object = array('total'=>$total,'totalItems'=>$totalItems,'subtotal'=>$subtotal);
-    // 		echo CJSON::encode($object);
-    // 	}
-    // }
     public function actionAjaxGetTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $purchaseOrder = $this->instantiate($id);
             $this->loadState($purchaseOrder);
-            //$requestType =$purchaseOrder->header->request_type;
             $total = 0;
             $totalItems = 0;
             $priceBeforeDisc = $discount = $subtotal = $ppn = 0;
-            // if($requestType == 'Request for Purchase'){
-            // 	foreach ($purchaseOrder->details as $key => $detail) {
-            // 		$totalItems += $detail->total;
-            // 		$total += $detail->subtotal;_quantity;
-            // 	}
-            // } else if($requestType == 'Request for Transfer'){
-            // 	foreach ($purchaseOrder->transferDetails as $key => $transferDetail) {
-            // 		$totalItems += $transferDetail->quantity;
-            // 	}
-            // }
+            
             $getPpn = $_POST['TransactionPurchaseOrder']['ppn'];
             foreach ($purchaseOrder->details as $key => $detail) {
                 $totalItems += $detail->total_quantity;
@@ -836,19 +751,15 @@ class TransactionPurchaseOrderController extends Controller {
 
         $this->render('updateStatus', array(
             'model' => $model,
-                //'jenisPersediaan'=>$jenisPersediaan,
-                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
     }
 
     public function actionUpdateApproval($headerId) {
         $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($headerId);
-        //$purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByPk($detailId);
         $historis = TransactionPurchaseOrderApproval::model()->findAllByAttributes(array('purchase_order_id' => $headerId));
         $model = new TransactionPurchaseOrderApproval;
         $model->date = date('Y-m-d H:i:s');
         $branch = Branch::model()->findByPk($purchaseOrder->main_branch_id);
-        //$model = $this->loadModelDetail($detailId);
         if (isset($_POST['TransactionPurchaseOrderApproval'])) {
             $model->attributes = $_POST['TransactionPurchaseOrderApproval'];
             if ($purchaseOrder->status_document != $model->approval_type) {
@@ -857,64 +768,7 @@ class TransactionPurchaseOrderController extends Controller {
                     if ($model->approval_type == 'Approved') {
                         $purchaseOrder->approved_id = $model->supervisor_id;
 
-                        $getCoaPayableWithCode = Coa::model()->findByAttributes(array('code' => '201.00.000'));
-                        $jurnalUmumPayable = new JurnalUmum;
-                        $jurnalUmumPayable->kode_transaksi = $purchaseOrder->purchase_order_no;
-                        $jurnalUmumPayable->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                        $jurnalUmumPayable->coa_id = $getCoaPayableWithCode->id;
-                        $jurnalUmumPayable->branch_id = $purchaseOrder->main_branch_id;
-                        $jurnalUmumPayable->total = $purchaseOrder->subtotal;
-                        $jurnalUmumPayable->debet_kredit = 'D';
-                        $jurnalUmumPayable->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumPayable->transaction_subject = $purchaseOrder->supplier->name;
-                        $jurnalUmumPayable->is_coa_category = 1;
-                        $jurnalUmumPayable->transaction_type = 'PO';
-                        $jurnalUmumPayable->save();
-
-                        $coaOutstanding = Coa::model()->findByPk($purchaseOrder->supplier->coaOutstandingOrder->id);
-                        $getCoaOutstanding = $coaOutstanding->code;
-                        $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
-                        $jurnalUmumOutstanding = new JurnalUmum;
-                        $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
-                        $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                        $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
-                        $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
-                        $jurnalUmumOutstanding->total = $purchaseOrder->subtotal;
-                        $jurnalUmumOutstanding->debet_kredit = 'D';
-                        $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumOutstanding->transaction_subject = $purchaseOrder->supplier->name;
-                        $jurnalUmumOutstanding->is_coa_category = 0;
-                        $jurnalUmumOutstanding->transaction_type = 'PO';
-                        $jurnalUmumOutstanding->save();
-
                         if ($purchaseOrder->payment_type == "Cash") {
-//                            $coaOutstanding = Coa::model()->findByPk($purchaseOrder->supplier->coaOutstandingOrder->id);
-//                            $getCoaOutstanding = $branch->coa_prefix . '.' . $coaOutstanding->code;
-//                            $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
-
-                            // $jurnalUmumOutstanding = new JurnalUmum;
-                            // $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
-                            // $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                            // $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
-                            // $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
-                            // $jurnalUmumOutstanding->total = $purchaseOrder->subtotal;
-                            // $jurnalUmumOutstanding->debet_kredit = 'D';
-                            // $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-                            // $jurnalUmumOutstanding->save();
-                            // $getCoaPpn = $branch->coa_prefix.'.108.000';
-                            // $coaPpnWithCode = Coa::model()->findByAttributes(array('code'=>$getCoaPpn));
-                            // $jurnalPpn = new JurnalUmum;
-                            // $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
-                            // $jurnalPpn->tanggal_transaksi = $paymentOut->payment_date;
-                            // //$jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coaOutstandingOrder->id == ""?1:2;
-                            // $jurnalPpn->coa_id = $coaPpnWithCode->id;
-                            // $jurnalPpn->branch_id = $paymentOut->branch_id;
-                            // $jurnalPpn->total = $paymentOut->purchaseOrder->ppn == 1 ?$paymentOut->payment_amount * 0.1 : 0;
-                            // $jurnalPpn->debet_kredit = 'D';
-                            // $jurnalPpn->tanggal_posting = date('Y-m-d');
-                            // $jurnalPpn->save();
-
-
                             $getCoaKas = '101.00.000';
                             $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
                             $jurnalUmumKas = new JurnalUmum;
@@ -930,8 +784,36 @@ class TransactionPurchaseOrderController extends Controller {
                             $jurnalUmumKas->transaction_type = 'PO';
                             $jurnalUmumKas->save();
                         } else {
-                            //$getCoaHutang = $branch->coa_prefix .'.201.000';
-                            //$getCoaHutang = '201.000';
+                            $getCoaPayableWithCode = Coa::model()->findByAttributes(array('code' => '201.00.000'));
+                            $jurnalUmumPayable = new JurnalUmum;
+                            $jurnalUmumPayable->kode_transaksi = $purchaseOrder->purchase_order_no;
+                            $jurnalUmumPayable->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                            $jurnalUmumPayable->coa_id = $getCoaPayableWithCode->id;
+                            $jurnalUmumPayable->branch_id = $purchaseOrder->main_branch_id;
+                            $jurnalUmumPayable->total = $purchaseOrder->subtotal;
+                            $jurnalUmumPayable->debet_kredit = 'K';
+                            $jurnalUmumPayable->tanggal_posting = date('Y-m-d');
+                            $jurnalUmumPayable->transaction_subject = $purchaseOrder->supplier->name;
+                            $jurnalUmumPayable->is_coa_category = 1;
+                            $jurnalUmumPayable->transaction_type = 'PO';
+                            $jurnalUmumPayable->save();
+
+                            $coaOutstanding = Coa::model()->findByPk($purchaseOrder->supplier->coaOutstandingOrder->id);
+                            $getCoaOutstanding = $coaOutstanding->code;
+                            $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
+                            $jurnalUmumOutstanding = new JurnalUmum;
+                            $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
+                            $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                            $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
+                            $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
+                            $jurnalUmumOutstanding->total = $purchaseOrder->subtotal;
+                            $jurnalUmumOutstanding->debet_kredit = 'D';
+                            $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
+                            $jurnalUmumOutstanding->transaction_subject = $purchaseOrder->supplier->name;
+                            $jurnalUmumOutstanding->is_coa_category = 0;
+                            $jurnalUmumOutstanding->transaction_type = 'PO';
+                            $jurnalUmumOutstanding->save();
+
                             $coaHutang = Coa::model()->findByPk($purchaseOrder->supplier->coa->id);
                             $getcoaHutang = $coaHutang->code;
                             $coaHutangWithCode = Coa::model()->findByAttributes(array('code' => $getcoaHutang));
@@ -975,37 +857,13 @@ class TransactionPurchaseOrderController extends Controller {
                             $productPrice->hpp = $poDetail->unit_price;
                             $productPrice->quantity = $poDetail->quantity;
                             $productPrice->hpp_average = $average;
-                            //$productPrice->hpp_average =
+
                             if ($productPrice->save()) {
                                 $product = Product::model()->findByPk($poDetail->product_id);
                                 $product->hpp = $poDetail->unit_price;
                                 $product->save();
                             }
                         }
-
-                        // if($purchaseOrder->payment_type == ''){
-                        // }
-                        /* if($purchaseOrder->coa_id != ""){
-                          $coaDetail = CoaDetail::model()->findByAttributes(array('coa_id'=>$purchaseOrder->coa_id,'branch_id'=>$purchaseOrder->main_branch_id));
-                          if(count($coaDetail)> 0)
-                          {
-                          $coaDetail->debit += $purchaseOrder->total_price;
-                          //$coaDetail->save(false);
-                          }
-                          else{
-                          $coaDetail = new CoaDetail;
-                          $coaDetail->coa_id = $purchaseOrder->coa_id;
-                          $coaDetail->branch_id = $purchaseOrder->main_branch_id;
-                          $coaDetail->debit = $purchaseOrder->total_price;
-                          //$coaDetail->save(false);
-
-                          }
-                          if($coaDetail->save(false)){
-                          $coa = Coa::model()->findByPK($coaDetail->coa_id);
-                          $coa->debit += $coaDetail->debit;
-                          $coa->save(false);
-                          }
-                          } */
                     }
                     $purchaseOrder->save(false);
                     $this->redirect(array('view', 'id' => $headerId));
@@ -1063,11 +921,9 @@ class TransactionPurchaseOrderController extends Controller {
     public function instantiate($id) {
         if (empty($id)) {
             $purchaseOrder = new PurchaseOrders(new TransactionPurchaseOrder(), array());
-            //print_r("test");
         } else {
             $purchaseOrderModel = $this->loadModel($id);
             $purchaseOrder = new PurchaseOrders($purchaseOrderModel, $purchaseOrderModel->transactionPurchaseOrderDetails);
-            //print_r("test");
         }
         return $purchaseOrder;
     }
@@ -1122,16 +978,16 @@ class TransactionPurchaseOrderController extends Controller {
             $productDataProvider = new CActiveDataProvider('Product', array(
                 'criteria' => $productCriteria,
             ));
-            //$supplierId = $purchaseOrder->header->supplier_id;
+
             $purchaseOrder->addDetail($productId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            //$this->renderPartial('_detailPurchaseOrder', array('purchaseOrder'=>$purchaseOrder,'product'=>$product,'productDataProvider'=>$productDataProvider,
+
             $this->renderPartial('_detailPurchaseOrder', array(
                 'purchaseOrder' => $purchaseOrder,
                 'product' => $product,
                 'productDataProvider' => $productDataProvider,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1141,13 +997,12 @@ class TransactionPurchaseOrderController extends Controller {
             $purchaseOrder = $this->instantiate($id);
             $this->loadState($purchaseOrder);
 
-            //print_r(CJSON::encode($purchaseOrder->details));
             $purchaseOrder->removeDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $this->renderPartial('_detailPurchaseOrder', array(
                 'purchaseOrder' => $purchaseOrder,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1157,13 +1012,13 @@ class TransactionPurchaseOrderController extends Controller {
             $purchaseOrder = $this->instantiate($id);
             $this->loadState($purchaseOrder);
 
-            //print_r(CJSON::encode($purchaseOrder->details));
             $purchaseOrder->removeDetailSupplier();
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+            
             $this->renderPartial('_detailPurchaseOrder', array(
                 'purchaseOrder' => $purchaseOrder,
-                    ), false, true);
+            ));
         }
     }
 
@@ -1174,37 +1029,12 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function actionAjaxHtmlAddFormDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            // $purchaseOrder = $this->instantiate($id);
-            // $this->loadState($purchaseOrder);
             $form = new PurchaseOrderForm;
 
-            // $product = new Product('search');
-            //     	$product->unsetAttributes();  // clear any default values
-            //     	if (isset($_GET['Product']))
-            //       	$product->attributes = $_GET['Product'];
-            // $productCriteria = new CDbCriteria;
-            // $productCriteria->compare('name',$product->name,true);
-            // $productCriteria->compare('manufacturer_code',$product->manufacturer_code,true);
-            // $productCriteria->together=true;
-            // $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.name as product_supplier';
-            // $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';
-            // $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,true);
-            // $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,true);
-            // $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name,true);
-            // $productCriteria->compare('rims_supplier.name', $product->product_supplier,true);
-            // $productCriteria->compare('rims_brand.name', $product->product_brand_name,true);
-            // $productDataProvider = new CActiveDataProvider('Product', array(
-            //   	'criteria'=>$productCriteria,));
-            //$supplierId = $purchaseOrder->header->supplier_id;
-            // $purchaseOrder->addDetail();
-            // Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-            // 			Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            //$this->renderPartial('_detailPurchaseOrder', array('purchaseOrder'=>$purchaseOrder,'product'=>$product,'productDataProvider'=>$productDataProvider,
             $this->renderPartial('_formDetail', array(
                 'form' => $form,
                 'details' => $form->details,
-                    // ,'product'=>$product,'productDataProvider'=>$productDataProvider,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -1218,7 +1048,6 @@ class TransactionPurchaseOrderController extends Controller {
             $coa = $supplier->coa_id != "" ? $supplier->coa_id : '';
             $paymentEstimation = $coa == "" ? $tanggal : $tanggal_jatuh_tempo;
             $deliveryEstimation = $tanggal_jatuh_tempo;
-            //$supplier = Supplier::model()->findByPk($productPrice->supplier_id);
 
             $object = array(
                 'id' => $supplier->id,
@@ -1245,7 +1074,6 @@ class TransactionPurchaseOrderController extends Controller {
             ));
 
             $object = array(
-                //'id' => $product->id,
                 'name' => $product->name,
                 'retail_price' => $product->retail_price,
                 'unit' => $productUnit->id,
@@ -1258,10 +1086,8 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionAjaxPrice($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $price = ProductPrice::model()->findByPk($id);
-            //$supplier = Supplier::model()->findByPk($productPrice->supplier_id);
 
             $object = array(
-                //'id'=>$supplier->id,
                 'price' => $price->purchase_price,
             );
 
@@ -1281,7 +1107,6 @@ class TransactionPurchaseOrderController extends Controller {
             $object = array(
                 'estimate_payment_date_formatted' => CHtml::encode(Yii::app()->dateFormatter->format('yyyy-MM-dd', strtotime($dueDate))),
                 'estimate_payment_date_label' => CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($dueDate))),
-//                'supplier_top' => $workOrderCuttingHeader->saleHeader->supplier->invoice_due_days . ' hari',
             );
 
             echo CJSON::encode($object);
@@ -1320,18 +1145,8 @@ class TransactionPurchaseOrderController extends Controller {
         if ($company == null) {
             echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
         } else {
-            // $companyarray = [];
-            // foreach ($company as $key => $value) {
-            // 	$companyarray[] = (int) $value->company_id;
-            // }
             $data = CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name'));
-            // $criteria = new CDbCriteria;
-            // $criteria->addInCondition('company_id', $companyarray);
-            // $data = CompanyBank::model()->findAll($criteria);
-            // var_dump($data); die("S");
             if (count($data) > 0) {
-                // $bank = $data->bank->name;
-                // $data=CHtml::listData($data,'bank_id',$data);
                 echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
                 foreach ($data as $value => $name) {
                     echo CHtml::tag('option', array('value' => $name->id), CHtml::encode($name->bank->name . " " . $name->account_no . " a/n " . $name->account_name), true);
@@ -1354,7 +1169,6 @@ class TransactionPurchaseOrderController extends Controller {
         $outstandings = TransactionPurchaseOrder::model()->findAllByAttributes(array('payment_type' => 'Credit'));
         $this->render('outstanding', array(
             'outstandings' => $outstandings,
-                //'purchaseOrderDetails'=>$purchaseOrderDetails,
         ));
     }
 
@@ -1443,15 +1257,6 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionPpn($id, $ppn_type) {
         $model = $this->loadModel($id);
 
-        // $model=$this->loadModel($id);
-        // if(isset($_POST['TransactionPurchaseOrder']))
-        // {
-        // 	$model->approved_status =$_POST['TransactionPurchaseOrder']['approved_status'];
-        // 	$model->approved_by =$_POST['TransactionPurchaseOrder']['approved_by'];
-        // 	$model->decline_memo =$_POST['TransactionPurchaseOrder']['decline_memo'];
-        // 	if($model->update(array('approved_status','approved_by','decline_memo')))
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
         if ($ppn_type == 1) {
             $model->ppn = 1;
             $model->total_price = $model->subtotal * 1.1;
@@ -1509,7 +1314,6 @@ class TransactionPurchaseOrderController extends Controller {
         $criteria->addBetweenCondition('t.purchase_order_date', $tanggal_mulai, $tanggal_sampai);
         $transactions = TransactionPurchaseOrder::model()->findAll($criteria);
 
-        //$jurnals = JurnalUmum::model()->findAll($coaCriteria);
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
         if (isset($_GET['Supplier'])) {
@@ -1524,20 +1328,12 @@ class TransactionPurchaseOrderController extends Controller {
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
             'criteria' => $supplierCriteria,
         ));
-        //print_r($jurnals);
 
         if (isset($_GET['SaveExcel'])) {
             $this->getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai, $branch);
         }
-        //$dataProvider=new CActiveDataProvider('JurnalUmum');
-        // $model=new JurnalUmum('search');
-        // $model->unsetAttributes();  // clear any default values
-        // if(isset($_GET['JurnalUmum']))
-        // 	$model->attributes=$_GET['JurnalUmum'];
-
+        
         $this->render('laporanPembelian', array(
-            // 'dataProvider'=>$dataProvider,
-            //'jurnals'=>$jurnals,
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_sampai' => $tanggal_sampai,
             'transactions' => $transactions,
@@ -1553,7 +1349,6 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai, $branch) {
 
-        // var_dump($supplier); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
@@ -1613,63 +1408,47 @@ class TransactionPurchaseOrderController extends Controller {
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-                // 'fill' => array(
-                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                //     'color' => array('rgb' => 'FF0000')
-                // )
         );
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
-                ->setCellValue('A3', 'Laporan Pembelian')
-                ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
-                ->setCellValue('A6', 'TANGGAL')
-                ->setCellValue('B6', 'NO DOKUMEN')
-                ->setCellValue('C6', 'T/K')
-                ->setCellValue('D6', 'SUPPLIER')
-                ->setCellValue('H6', 'SUBTOTAL')
-                ->setCellValue('I6', 'DISCOUNT')
-                ->setCellValue('P6', 'PPN')
-                ->setCellValue('Q6', 'TOTAL')
-                ->setCellValue('A7', 'PRODUCT CODE')
-                ->setCellValue('B7', 'PRODUCT NAME')
-                ->setCellValue('C7', 'PRODUCT MASTER CATEGORY')
-                ->setCellValue('D7', 'PRODUCT SUB MASTER CATEGORY')
-                ->setCellValue('E7', 'PRODUCT SUB CATEGORY')
-                ->setCellValue('F7', 'QUANTITY')
-                ->setCellValue('G7', 'UNIT PRICE')
-                ->setCellValue('H7', 'BRUTTO')
-                ->setCellValue('I7', 'DISCOUNTS')
-                ->setCellValue('N7', 'DISCOUNT PRICE')
-                ->setCellValue('O7', 'NETTO')
-                ->setCellValue('P7', 'BIAYA')
-                ->setCellValue('Q7', 'TOTAL');
+        ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
+        ->setCellValue('A3', 'Laporan Pembelian')
+        ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
+        ->setCellValue('A6', 'TANGGAL')
+        ->setCellValue('B6', 'NO DOKUMEN')
+        ->setCellValue('C6', 'T/K')
+        ->setCellValue('D6', 'SUPPLIER')
+        ->setCellValue('H6', 'SUBTOTAL')
+        ->setCellValue('I6', 'DISCOUNT')
+        ->setCellValue('P6', 'PPN')
+        ->setCellValue('Q6', 'TOTAL')
+        ->setCellValue('A7', 'PRODUCT CODE')
+        ->setCellValue('B7', 'PRODUCT NAME')
+        ->setCellValue('C7', 'PRODUCT MASTER CATEGORY')
+        ->setCellValue('D7', 'PRODUCT SUB MASTER CATEGORY')
+        ->setCellValue('E7', 'PRODUCT SUB CATEGORY')
+        ->setCellValue('F7', 'QUANTITY')
+        ->setCellValue('G7', 'UNIT PRICE')
+        ->setCellValue('H7', 'BRUTTO')
+        ->setCellValue('I7', 'DISCOUNTS')
+        ->setCellValue('N7', 'DISCOUNT PRICE')
+        ->setCellValue('O7', 'NETTO')
+        ->setCellValue('P7', 'BIAYA')
+        ->setCellValue('Q7', 'TOTAL');
 
 
-        // ->setCellValue('L2', 'Historical');
 
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:S2');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:S3');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:S4');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I7:M7');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E7:F7');
-        //$objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:J1');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:D2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E2:G2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H2:H3');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I2:K2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('L2:L3');
 
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle('A2:S2')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A3:S3')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A4:S4')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
-        //$sheet->getStyle('A7:I7')->applyFromArray($styleBold);
-        // $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
@@ -1688,23 +1467,14 @@ class TransactionPurchaseOrderController extends Controller {
         $objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(15);
 
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-        //$objPHPExcel->getActiveSheet()->freezePane('E4');
-
         $startrow = 8;
         $grandPbd = $grandDisc = $grandPpn = $grandSubtotal = $grandTotal = 0;
         foreach ($transactions as $key => $transaction) {
 
-            //$phone = ($value->supplierPhones !=NULL)?$this->phoneNumber($value->supplierPhones):'';
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transaction->purchase_order_date);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $transaction->purchase_order_no);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $transaction->supplier->name);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->payment_type);
-            //$objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$startrow, );
-            //$suppliertype = (($value->supplier_type == 'Individual')?"P":(($value->supplier_type == 'Company')?"K":""));
-            //$objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$startrow, "");
             $startrow = $startrow + 1;
             foreach ($transaction->transactionPurchaseOrderDetails as $key => $transactionDetail) {
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transactionDetail->product->code);
@@ -1738,11 +1508,6 @@ class TransactionPurchaseOrderController extends Controller {
             $grandPpn += $transaction->ppn_price;
             $grandSubtotal += $transaction->subtotal;
             $grandTotal += $transaction->total_price;
-            // $objPHPExcel->getActiveSheet()
-            //     ->getStyle('C'.$startrow)
-            //     ->getNumberFormat()
-            //     ->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
-            // $lastkode = $jurnal->kode_transaksi;
             $startrow++;
         }
 
@@ -1754,9 +1519,6 @@ class TransactionPurchaseOrderController extends Controller {
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q' . $startrow, number_format($grandTotal, 2));
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle("G" . ($startrow) . ":Q" . ($startrow))->applyFromArray($styleBold);
-        // $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$startrow, $totalDebet);
-        // $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$startrow, $totalKredit);
-        // die();
         $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet
@@ -1793,21 +1555,16 @@ class TransactionPurchaseOrderController extends Controller {
         $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
         $supplier_id = (isset($_GET['supplier_id'])) ? $_GET['supplier_id'] : '';
         $supplier_name = (isset($_GET['supplier_name'])) ? $_GET['supplier_name'] : '';
-        // $paymentType = (isset($_GET['payment_type'])) ? $_GET['payment_type'] : '';
 
         $criteria = new CDbCriteria;
-        // if ($branch != "") {
-        // 	$criteria->addCondition("main_branch_id = ".$branch);
-        // }
-        // if ($paymentType != "") {
-        // 	$criteria->addCondition("payment_type = '".$paymentType."'");
-        // }
+        
         $criteria->with = array('transaction_po');
         if ($supplier_name != "") {
             $criteria->with = array('transaction_po' => array('together' => true, 'with' => array('supplier')));
             //$criteria->compare('supplier.id', $->supplier_id, true);
             $criteria->addCondition("supplier_id = '" . $supplier_id . "'");
         }
+        
         if ($company != "") {
             $branches = Branch::model()->findAllByAttributes(array('company_id' => $company));
             $arrBranch = array();
@@ -1824,12 +1581,12 @@ class TransactionPurchaseOrderController extends Controller {
                 $criteria->addCondition("transaction_po.main_branch_id = " . $branch);
             }
         }
+        
         $criteria->addBetweenCondition('transaction_po.purchase_order_date', $tanggal_mulai, $tanggal_sampai);
         $criteria->addBetweenCondition('t.due_date', $due_mulai, $due_sampai);
         $criteria->addCondition("type_forecasting = 'po'");
         $transactions = ForecastingPo::model()->findAll($criteria);
 
-        //$jurnals = JurnalUmum::model()->findAll($coaCriteria);
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
         if (isset($_GET['Supplier'])) {
@@ -1840,24 +1597,15 @@ class TransactionPurchaseOrderController extends Controller {
         $supplierCriteria->compare('code', $supplier->code . '%', true, 'AND', false);
         $supplierCriteria->compare('name', $supplier->name, true);
 
-
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
             'criteria' => $supplierCriteria,
         ));
-        //print_r($jurnals);
 
         if (isset($_GET['SaveExcel'])) {
             $this->getXlsOutstanding($transactions, $tanggal_mulai, $tanggal_sampai);
         }
-        //$dataProvider=new CActiveDataProvider('JurnalUmum');
-        // $model=new JurnalUmum('search');
-        // $model->unsetAttributes();  // clear any default values
-        // if(isset($_GET['JurnalUmum']))
-        // 	$model->attributes=$_GET['JurnalUmum'];
-
+        
         $this->render('laporanOutstanding', array(
-            // 'dataProvider'=>$dataProvider,
-            //'jurnals'=>$jurnals,
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_sampai' => $tanggal_sampai,
             'due_mulai' => $due_mulai,
@@ -1867,25 +1615,22 @@ class TransactionPurchaseOrderController extends Controller {
             'company' => $company,
             'supplier_id' => $supplier_id,
             'supplier_name' => $supplier_name,
-            // 'paymentType'=>$paymentType,
             'supplier' => $supplier,
             'supplierDataProvider' => $supplierDataProvider,
         ));
     }
 
     public function getXlsOutstanding($transactions, $tanggal_mulai, $tanggal_sampai) {
-        //$lastkode = "";
-        // var_dump($supplier); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
         $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-                ->setLastModifiedBy("RIMS")
-                ->setTitle("Laporan Outstanding Pembelian Data " . date('d-m-Y'))
-                ->setSubject("Outstanding Pembelian")
-                ->setDescription("Export Data Outstanding Pembelian.")
-                ->setKeywords("Outstanding Pembelian Data")
-                ->setCategory("Export Outstanding Pembelian");
+        ->setLastModifiedBy("RIMS")
+        ->setTitle("Laporan Outstanding Pembelian Data " . date('d-m-Y'))
+        ->setSubject("Outstanding Pembelian")
+        ->setDescription("Export Data Outstanding Pembelian.")
+        ->setKeywords("Outstanding Pembelian Data")
+        ->setCategory("Export Outstanding Pembelian");
 
         // style for horizontal vertical center
         $styleHorizontalVertivalCenter = array(
@@ -1935,10 +1680,6 @@ class TransactionPurchaseOrderController extends Controller {
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-                // 'fill' => array(
-                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                //     'color' => array('rgb' => 'FF0000')
-                // )
         );
         $styleBorder = array(
             'borders' => array(
@@ -1963,49 +1704,35 @@ class TransactionPurchaseOrderController extends Controller {
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
-                ->setCellValue('A3', 'Outstanding Pembelian')
-                ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
-                ->setCellValue('B7', 'NAMA SUPPLIER')
-                ->setCellValue('C7', 'TGL PEMBELIAN')
-                ->setCellValue('D7', 'TGL JATUH TEMPO')
-                ->setCellValue('E7', 'NO DOKUMEN')
-                ->setCellValue('F7', 'KODE BARANG')
-                ->setCellValue('G7', 'TOTAL PEMBELIAN')
-                ->setCellValue('H7', 'PPN')
-                ->setCellValue('I7', 'DISKON')
-                ->setCellValue('J7', 'TOTAL BAYAR')
-                ->setCellValue('K7', 'TOTAL HUTANG')
-                ->setCellValue('L7', 'TGL BAYAR')
-                ->setCellValue('M7', 'NO PELUNASAN')
-                ->setCellValue('N7', 'KODE BANK');
-
-
-        // ->setCellValue('L2', 'Historical');
+        ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
+        ->setCellValue('A3', 'Outstanding Pembelian')
+        ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
+        ->setCellValue('B7', 'NAMA SUPPLIER')
+        ->setCellValue('C7', 'TGL PEMBELIAN')
+        ->setCellValue('D7', 'TGL JATUH TEMPO')
+        ->setCellValue('E7', 'NO DOKUMEN')
+        ->setCellValue('F7', 'KODE BARANG')
+        ->setCellValue('G7', 'TOTAL PEMBELIAN')
+        ->setCellValue('H7', 'PPN')
+        ->setCellValue('I7', 'DISKON')
+        ->setCellValue('J7', 'TOTAL BAYAR')
+        ->setCellValue('K7', 'TOTAL HUTANG')
+        ->setCellValue('L7', 'TGL BAYAR')
+        ->setCellValue('M7', 'NO PELUNASAN')
+        ->setCellValue('N7', 'KODE BANK');
 
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:N2');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:N3');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:N4');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E7:F7');
-        //$objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:J1');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:D2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E2:G2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H2:H3');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I2:K2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('L2:L3');
 
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle('A2:J2')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A3:J3')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A4:J4')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
         $sheet->getStyle('A7:N7')->applyFromArray($styleBold);
         $sheet->getStyle('B7:N7')->applyFromArray($styleBorder);
         $sheet->getStyle('B7:N7')->applyFromArray($styleSize);
 
-        // $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(2);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(17);
@@ -2021,23 +1748,15 @@ class TransactionPurchaseOrderController extends Controller {
         $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(13);
         $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
 
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-        //$objPHPExcel->getActiveSheet()->freezePane('E4');
-
         $startrow = 8;
         $totalDebet = $totalKredit = 0;
         $totalPembelian = $ppn = $discount = $bayar = $hutang = 0;
         foreach ($transactions as $key => $transaction) {
-
-            //$phone = ($value->supplierPhones !=NULL)?$this->phoneNumber($value->supplierPhones):'';
             $po = TransactionPurchaseOrder::model()->findByPk($transaction->transaction_id);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $po->supplier->name);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $po->purchase_order_date);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->due_date);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $po->purchase_order_no);
-            //$suppliertype = (($value->supplier_type == 'Individual')?"P":(($value->supplier_type == 'Company')?"K":""));
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, "");
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, number_format($po->subtotal, 2));
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($po->ppn_price, 2));
@@ -2049,20 +1768,12 @@ class TransactionPurchaseOrderController extends Controller {
             $sheet->getStyle("B" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleBorder);
             $sheet->getStyle("B" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleSize);
 
-            // $objPHPExcel->getActiveSheet()->setCellValue('L'.$startrow,'see details');
-            // $objPHPExcel->getActiveSheet()->getCell('L'.$startrow)->getHyperlink()->setUrl("sheet://'Historical'!A1");
-
             $totalPembelian += $po->subtotal;
             $ppn += $po->ppn_price;
             $discount += $po->discount;
             $bayar += $transaction->realization_balance;
             $hutang += $po->total_price;
 
-            // $objPHPExcel->getActiveSheet()
-            //     ->getStyle('C'.$startrow)
-            //     ->getNumberFormat()
-            //     ->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
-            // $lastkode = $jurnal->kode_transaksi;
             $startrow++;
         }
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, "TOTAL");

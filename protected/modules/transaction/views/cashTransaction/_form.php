@@ -41,19 +41,17 @@
                 </div>
             </div>
 
-
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'transaction_number',
-                            array('class' => 'prefix')); ?>
+                        <?php /*echo $form->labelEx($cashTransaction->header, 'transaction_number', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->textField($cashTransaction->header, 'transaction_number', array('readonly' => true)); ?>
-                        <?php echo $form->error($cashTransaction->header, 'transaction_number'); ?>
+                        <?php echo $form->error($cashTransaction->header, 'transaction_number');*/ ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
             <div class="field">
                 <div class="row collapse">

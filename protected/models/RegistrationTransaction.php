@@ -465,7 +465,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
+//        $criteria->compare('transaction_date', $this->transaction_date, true);
         $criteria->compare('repair_type', $this->repair_type, true);
         $criteria->compare('problem', $this->problem, true);
         $criteria->compare('t.customer_id', $this->customer_id);
@@ -479,7 +479,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('note', $this->note, true);
 
 //        $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
-        $criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $this->transaction_date_from, $this->transaction_date_to);
+        $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
 //        $criteria->mergeWith($this->dateRangeSearchCriteria('SUBSTRING(transaction_date, 1, 10)', $arrayTransactionDate));
 
         $criteria->addCondition("t.work_order_number != ''");
