@@ -465,7 +465,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
-//        $criteria->compare('transaction_date', $this->transaction_date, true);
         $criteria->compare('repair_type', $this->repair_type, true);
         $criteria->compare('problem', $this->problem, true);
         $criteria->compare('t.customer_id', $this->customer_id);
@@ -478,16 +477,61 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.status', $this->status);
         $criteria->compare('note', $this->note, true);
 
-//        $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
-        $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
-//        $criteria->mergeWith($this->dateRangeSearchCriteria('SUBSTRING(transaction_date, 1, 10)', $arrayTransactionDate));
-
+        if (!empty($this->transaction_date_from) || !empty($this->transaction_date_to)) {
+            $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
+        }
+        
         $criteria->addCondition("t.work_order_number != ''");
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);
         $criteria->compare('vehicle.plate_number', $this->plate_number, true);
 
         $criteria->order = 'vehicle.plate_number ASC';
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    public function searchByCashier() {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'vehicle' => array(
+                'with' => array(
+                    'carMake',
+                    'carModel',
+                ),
+            ),
+            'branch',
+            'customer',
+        );
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('t.work_order_number', $this->work_order_number, true);
+        $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('note', $this->note, true);
+
+        if (!empty($this->transaction_date_from) || !empty($this->transaction_date_to)) {
+            $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
+        }
+        $criteria->addCondition("t.work_order_number != '' AND t.status <> 'Finished'");
+        $criteria->compare('carMake.id', $this->car_make_code, true);
+        $criteria->compare('carModel.id', $this->car_model_code, true);
+        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+        $criteria->compare('customer.name', $this->customer_name, true);
+        $criteria->compare('customer.customer_type', $this->customer_type, true);
+
+        $criteria->order = 't.transaction_date ASC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -583,7 +627,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             . "SELECT registration_transaction_id "
             . "FROM " . RegistrationService::model()->tableName() . " "
             . "WHERE t.id = registration_transaction_id"
-            . ") AND t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'");
+            . ") AND t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'"
+        );
         
         $criteria->order = 't.priority_level ASC, t.work_order_date DESC, t.vehicle_id ASC';
         
@@ -594,5 +639,4 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
-
 }

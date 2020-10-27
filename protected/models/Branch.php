@@ -45,6 +45,7 @@
  * @property TransactionSalesOrder[] $transactionSalesOrders
  * @property TransactionSalesOrder[] $transactionSalesOrders1
  * @property Warehouse[] $warehouses
+ * @property BranchCoaInterbranches[] $branchCoaInterbranches
  */
 class Branch extends CActiveRecord {
 
@@ -120,6 +121,7 @@ class Branch extends CActiveRecord {
             'warehouses' => array(self::HAS_MANY, 'Warehouse', 'branch_id'),
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'branch_id'),
             'coaInterbranchInventory' => array(self::BELONGS_TO, 'Coa', 'coa_interbranch_inventory'),
+            'branchCoaInterbranches' => array(self::HAS_MANY, 'BranchCoaInterbranch', 'branch_id_from'),
         );
     }
 

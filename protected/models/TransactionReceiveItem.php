@@ -33,6 +33,8 @@
  * @property integer $user_id_invoice
  * @property string $invoice_rounding_nominal
  * @property string $invoice_grand_total_rounded
+ * @property string $invoice_date_created
+ * @property string $invoice_time_created
  *
  * The followings are the available model relations:
  * @property MovementInHeader[] $movementInHeaders
@@ -93,10 +95,10 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             array('receive_item_no, request_type', 'length', 'max' => 30),
             array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
             array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total, invoice_grand_total_rounded, invoice_rounding_nominal', 'length', 'max' => 18),
-            array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note', 'safe'),
+            array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note, invoice_date_created, invoice_time_created', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_no, receive_item_date, arrival_date, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice', 'safe', 'on' => 'search'),
+            array('id, receive_item_no, receive_item_date, arrival_date, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created', 'safe', 'on' => 'search'),
         );
     }
 
@@ -321,6 +323,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('invoice_grand_total', $this->invoice_grand_total, true);
         $criteria->compare('supplier_delivery_number', $this->supplier_delivery_number, true);
         $criteria->compare('movement_out_id', $this->movement_out_id);
+        $criteria->compare('user_id_receive', $this->user_id_receive);
+        $criteria->compare('user_id_invoice', $this->user_id_invoice);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -328,5 +332,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
                 'PageSize' => 50
             ),
         ));
+    }
+    
+    public function getDateTimeCreated() {
+        return Yii::app()->dateFormatter->format("d MMM yyyy", $this->invoice_date_created) . ' ' . $this->invoice_time_created;
     }
 }

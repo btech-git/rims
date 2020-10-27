@@ -138,7 +138,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('payment_type', $this->payment_type, true);
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('t.status', $this->status, true);
         $criteria->compare('company_bank_id', $this->company_bank_id);
         $criteria->compare('nomor_giro', $this->nomor_giro, true);
         $criteria->compare('cash_payment_type', $this->cash_payment_type);

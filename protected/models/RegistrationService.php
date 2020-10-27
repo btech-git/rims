@@ -17,8 +17,8 @@
  * @property string $end
  * @property string $pause
  * @property string $resume
- * @property string $pause_time
- * @property string $total_time
+ * @property integer $pause_time
+ * @property integer $total_time
  * @property string $note
  * @property integer $is_body_repair
  * @property string $status
@@ -50,6 +50,7 @@ class RegistrationService extends CActiveRecord {
     public $total;
     public $listemployee;
     public $platnumber;
+    public $service_activity;
 
     public function tableName() {
         return '{{registration_service}}';
@@ -63,15 +64,15 @@ class RegistrationService extends CActiveRecord {
         // will receive user inputs.
         return array(
             //array('note', 'required'),
-            array('registration_transaction_id, service_id, is_quick_service, is_body_repair, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id', 'numerical', 'integerOnly' => true),
+            array('registration_transaction_id, service_id, is_quick_service, is_body_repair, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, pause_time, total_time', 'numerical', 'integerOnly' => true),
             array('claim, price,hour', 'length', 'max' => 10),
             array('total_price, discount_price', 'length', 'max' => 18),
             array('discount_type', 'length', 'max' => 50),
             array('status', 'length', 'max' => 30),
-            array('start, end, pause, resume, pause_time, total_time, note', 'safe'),
+            array('start, end, pause, resume, note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, registration_transaction_id, service_id, claim, price, total_price, discount_price, discount_type, is_quick_service, start, end, pause, resume, pause_time, total_time, note, is_body_repair, status, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, service_name, listemployee, platnumber,hour', 'safe', 'on' => 'search'),
+            array('id, registration_transaction_id, service_id, claim, price, total_price, discount_price, discount_type, is_quick_service, start, end, pause, resume, pause_time, total_time, note, is_body_repair, status, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, service_name, listemployee, platnumber,hour, service_activity', 'safe', 'on' => 'search'),
         );
     }
 
