@@ -27,7 +27,7 @@
                 array('label' => 'Payment In', 'url' => array('/transaction/paymentIn/admin'), 'visible' => Yii::app()->user->checkAccess('paymentInView')),
                 array('label' => 'Payment Out', 'url' => array('/accounting/paymentOut/admin'), 'visible' => Yii::app()->user->checkAccess('paymentOutView')),
                 array('label' => 'TUNAI', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Transaksi Tunai', 'url' => array('/transaction/cashTransaction/admin'), 'visible' => Yii::app()->user->checkAccess('cashTransactionView')),
+                array('label' => 'Transaksi Kas', 'url' => array('/transaction/cashTransaction/admin'), 'visible' => Yii::app()->user->checkAccess('cashTransactionView')),
             ),
         )); ?>
     </li>
