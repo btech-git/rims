@@ -7,13 +7,15 @@ class Branches extends CComponent {
     public $divisionDetails;
     public $phoneDetails;
     public $faxDetails;
+    public $interbranchDetails;
 
-    public function __construct($header, array $divisionDetails, array $warehouseDetails, array $phoneDetails, array $faxDetails) {
+    public function __construct($header, array $divisionDetails, array $warehouseDetails, array $phoneDetails, array $faxDetails, array $interbranchDetails) {
         $this->header = $header;
         $this->warehouseDetails = $warehouseDetails;
         $this->divisionDetails = $divisionDetails;
         $this->phoneDetails = $phoneDetails;
         $this->faxDetails = $faxDetails;
+        $this->interbranchDetails = $interbranchDetails;
     }
 
     public function addDetail($warehouseId) {
@@ -58,6 +60,32 @@ class Branches extends CComponent {
 
     public function removeFaxDetailAt($index) {
         array_splice($this->faxDetails, $index, 1);
+    }
+
+    public function addInterbranch($interbranchId) {
+        $exist = FALSE;
+        $interbranch = Branch::model()->findByPk($interbranchId);
+
+        if ($interbranch != null) {
+            foreach ($this->interbranchDetails as $detail) {
+                if ($detail->branch_id_to == $interbranch->id) {
+                    $exist = TRUE;
+                    break;
+                }
+            }
+
+            if (!$exist) {
+                $detail = new BranchCoaInterbranch();
+                $detail->branch_id_to = $interbranchId;
+                $this->interbranchDetails[] = $detail;
+            }
+        }
+        else
+            $this->header->addError('error', 'Branch tujuan tidak ada di dalam detail');
+    }
+
+    public function removeCoaDetailAt($index) {
+        array_splice($this->interbranchDetails, $index, 1);
     }
 
     public function save($dbConnection) {
@@ -119,23 +147,23 @@ class Branches extends CComponent {
         return $valid;
     }
 
-    public function validateDetailsCount() {
-        $valid = true;
-        
-        if (count($this->warehouseDetails) === 0) {
-            $valid = false;
-            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-        }
-
-        return $valid;
-    }
+//    public function validateDetailsCount() {
+//        $valid = true;
+//        
+//        if (count($this->warehouseDetails) === 0) {
+//            $valid = false;
+//            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+//        }
+//
+//        return $valid;
+//    }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
         //Update code after saving header
-        $branch = Branch::model()->findByPk($this->header->id);
+//        $branch = Branch::model()->findByPk($this->header->id);
 
         $warehouseBranches = BranchWarehouse::model()->findAllByAttributes(array('branch_id' => $this->header->id));
         $wareId = array();
@@ -195,6 +223,13 @@ class Branches extends CComponent {
 
             $valid = $faxDetail->save(false) && $valid;
             $new_fax[] = $faxDetail->id;
+        }
+
+        //Interbranch
+        foreach ($this->interbranchDetails as $interbranchDetail) {
+            $interbranchDetail->branch_id_from = $this->header->id;
+
+            $valid = $valid && $interbranchDetail->save(false);
         }
 
         //delete position

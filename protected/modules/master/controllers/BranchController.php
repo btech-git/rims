@@ -242,39 +242,61 @@ class BranchController extends Controller {
         ));
     }
 
-    public function actionAddCoaInterbranch($id) {
+    public function actionAddInterbranch($id) {
+        $branch = $this->instantiateInterbranch($id);
 
-        $branchFrom = $this->loadModel($id);
-        $branchTos = Branch::model()->findAll(array('condition' => "id NOT IN ($id)"));
-        $branchIdTo = isset($_POST['BranchIdTo']) ? isset($_POST['BranchIdTo']) : '';
-        $coaId = isset($_POST['CoaId']) ? isset($_POST['CoaId']) : '';
+        $interbranch = new Branch('search');
+        $interbranch->unsetAttributes();  // clear any default values
+        if (isset($_GET['Branch']))
+            $interbranch->attributes = $_GET['Branch'];
+
+        $interbranchCriteria = new CDbCriteria;
+        $interbranchCriteria->addCondition("id <> $id");
+        $interbranchCriteria->compare('id', $interbranch->id);
+        $interbranchCriteria->compare('t.code', $interbranch->code, true);
+        $interbranchCriteria->compare('t.name', $interbranch->name, true);
+        
+        $interbranchDataProvider = new CActiveDataProvider('Branch', array(
+            'criteria' => $interbranchCriteria,
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
 
         if (isset($_POST['Cancel']))
             $this->redirect(array('view', 'id' => $branch->header->id));
 
         if (isset($_POST['Submit'])) {
-            $dbTransaction = Yii::app()->db->beginTransaction();
-            try {
-                foreach($branchTos as $branchTo) {
-                    $branchCoaInterbranch = new BranchCoaInterbranch;
-                    $branchCoaInterbranch->branch_id_from = $id;
-                    $branchCoaInterbranch->branch_id_to = $branchIdTo;
-                    $branchCoaInterbranch->coa_id = $coaId;
-                    
-                    if ($branchCoaInterbranch->save(Yii::app()->db))
-                        $this->redirect(array('view', 'id' => $branchFrom->id));
-                }
-            } catch (Exception $e) {
-                $dbTransaction->rollback();
-            }
+            $this->loadState($branch);
+
+            if ($branch->save(Yii::app()->db))
+                $this->redirect(array('view', 'id' => $branch->header->id));
         }
 
-        $this->render('addCoaInterbranch', array(
-            'branchFrom' => $branchFrom,
-            'branchTos' => $branchTos,
-            'branchIdTo' => $branchIdTo,
-            'coaId' => $coaId,
+        $this->render('addInterbranch', array(
+            'branch' => $branch,
+            'interbranch' => $interbranch,
+            'interbranchDataProvider' => $interbranchDataProvider,
         ));
+    }
+
+    public function actionAjaxHtmlAddInterbranches($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $branch = $this->instantiateInterbranch($id);
+            $this->loadState($branch);
+
+            if (isset($_POST['selectedIds'])) {
+                $interbranchDetails = array();
+                $interbranchDetails = $_POST['selectedIds'];
+
+                foreach ($interbranchDetails as $interbranchDetail)
+                    $branch->addInterbranch($interbranchDetail);
+            }
+            
+            $this->renderPartial('_detailInterbranch', array(
+                'branch' => $branch,
+            ));
+        }
     }
 
     /**
@@ -446,6 +468,16 @@ class BranchController extends Controller {
         return $branch;
     }
 
+    public function instantiateInterbranch($id) {
+        if (empty($id)) {
+            $branch = new Branches(new Branch(), array(), array(), array(), array(), array());
+        } else {
+            $branchModel = $this->loadModel($id);
+            $branch = new Branches($branchModel, array(), array(), array(), array(), $branchModel->branchCoaInterbranches);
+        }
+        return $branch;
+    }
+
     public function loadState($branch) {
         if (isset($_POST['Branch'])) {
             $branch->header->attributes = $_POST['Branch'];
@@ -509,6 +541,21 @@ class BranchController extends Controller {
                 array_splice($branch->faxDetails, $i + 1);
         } else
             $branch->faxDetails = array();
+        
+        if (isset($_POST['BranchCoaInterbranch'])) {
+            foreach ($_POST['BranchCoaInterbranch'] as $i => $item) {
+                if (isset($branch->interbranchDetails[$i]))
+                    $branch->interbranchDetails[$i]->attributes = $item;
+                else {
+                    $detail = new BranchCoaInterbranch();
+                    $detail->attributes = $item;
+                    $branch->interbranchDetails[] = $detail;
+                }
+            }
+            if (count($_POST['BranchCoaInterbranch']) < count($branch->interbranchDetails))
+                array_splice($branch->interbranchDetails, $i + 1);
+        } else
+            $branch->interbranchDetails = array();
     }
 
     /**
