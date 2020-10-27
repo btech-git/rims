@@ -1,3 +1,36 @@
+<?php
+/* @var $this PaymentInController */
+/* @var $model PaymentIn */
+
+$this->breadcrumbs = array(
+    'Payment Out' => array('admin'),
+    'Manage',
+);
+
+Yii::app()->clientScript->registerScript('search', "
+$('.search-button').click(function(){
+    $('.search-form').slideToggle(600);
+    $('.bulk-action').toggle();
+    $(this).toggleClass('active');
+    
+    if ($(this).hasClass('active')) {
+        $(this).text('');
+    } else {
+        $(this).text('Advanced Search');
+    }
+    
+    return false;
+});
+$('.search-form form').submit(function(){
+    $('#payment-out-grid').yiiGridView('update', {
+        data: $(this).serialize()
+    });
+    
+    return false;
+});
+");
+?>
+
 <h1>Kelola Data Pembayaran Pembelian</h1>
 
 <div id="link">
@@ -15,8 +48,8 @@
     </div>
 <?php endif; ?>
 
+<?php //echo CHtml::beginForm(array(''), 'get'); ?>
 <center>
-    <?php echo CHtml::beginForm(array(''), 'get'); ?>
     <?php
     $pageSize = Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']);
     $pageSizeDropDown = CHtml::dropDownList(
@@ -30,10 +63,22 @@
     <div class="page-size-wrap">
         <span>Display by:</span><?php echo $pageSizeDropDown; ?>
     </div>
+    
+    <div class="search-bar">
+        <div class="clearfix button-bar">
+            <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>
+            <div class="clearfix"></div>
+            <div class="search-form" style="display:none">
+                <?php $this->renderPartial('_search', array(
+                    'model' => $paymentOut,
+                )); ?>
+            </div><!-- search-form -->
+        </div>
+    </div>
 </center>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'payment-grid',
+    'id' => 'payment-out-grid',
     'dataProvider' => $dataProvider,
     'filter' => $paymentOut,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -52,6 +97,12 @@
             'name' => 'payment_date',
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->payment_date)'
+        ),
+        array(
+            'header' => 'PO #',
+            'name' => 'purchase_order_number',
+            'filter' => false,
+            'value' => 'empty($data->purchase_order_id) ? "N/A" : $data->purchaseOrder->purchase_order_no '
         ),
         array(
             'header' => 'Supplier',
@@ -75,15 +126,15 @@
         ),
     ),
 )); ?>
-<?php echo CHtml::endForm(); ?>
+<?php //echo CHtml::endForm(); ?>
 
-<div id="maincontent">
+<!--<div id="maincontent">
     <div class="row">
         <div class="small-12 columns">
             <fieldset>
                 <legend>PO Pending Payment</legend>
                 <div class="grid-view">
-                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    <?php /*$this->widget('zii.widgets.grid.CGridView', array(
                         'id' => 'purchase-order-grid',
                         // 'dataProvider'=>$vehicleDataProvider,
                         'dataProvider' => $purchaseOrderDataProvider,
@@ -110,9 +161,9 @@
                                 ),
                             ),
                         ),
-                    )); ?>
+                    ));*/ ?>
                 </div>
             </fieldset>
         </div>
-    </div> <!-- end row -->
-</div>
+    </div>  end row 
+</div>-->

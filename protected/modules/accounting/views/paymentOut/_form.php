@@ -367,6 +367,16 @@
             'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
             'htmlOptions' => array('style' => 'text-align: right'),
         ),
+        array(
+            'name' => 'user_id_invoice',
+            'filter' => false,
+            'header' => 'Admin',
+            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
+        ),
+        array(
+            'header' => 'Tanggal Input',
+            'value' => '$data->dateTimeCreated',
+        ),
     ),
 )); ?>
 
