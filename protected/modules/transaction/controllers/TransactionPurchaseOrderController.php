@@ -85,10 +85,6 @@ class TransactionPurchaseOrderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        //$model=new TransactionPurchaseOrder;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
         $purchaseOrder = $this->instantiate(null);
         $purchaseOrder->header->main_branch_id = $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id;
         $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
@@ -960,6 +956,7 @@ class TransactionPurchaseOrderController extends Controller {
 
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
+            
             if (isset($_GET['Product'])) {
                 $product->attributes = $_GET['Product'];
             }
@@ -1203,7 +1200,10 @@ class TransactionPurchaseOrderController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $purchaseOrder = $this->instantiate($id);
             $this->loadState($purchaseOrder);
-
+            
+            $retailPrice = CHtml::encode($purchaseOrder->details[$index]->getRetailPriceBeforeTax($purchaseOrder->header->ppn));
+            $unitPriceBeforeDiscount = CHtml::encode($purchaseOrder->details[$index]->getUnitPriceBeforeDiscount($purchaseOrder->header->ppn));
+            $taxDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->details[$index]->getTaxAmount($purchaseOrder->header->ppn)));
             $discount1Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount1Amount')));
             $discount2Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount2Amount')));
             $discount3Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount3Amount')));
@@ -1216,18 +1216,19 @@ class TransactionPurchaseOrderController extends Controller {
             $priceAfterDiscount5 = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPriceAfterDiscount5')));
             $unitPriceAfterDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPrice')));
             $totalQuantityDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'quantityAfterBonus')));
-            $subTotalDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'subTotal')));
             $totalDiscountDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'totalDiscount')));
-            $taxDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->details[$index]->getTaxAmount($purchaseOrder->header->ppn)));
-            $grandTotalDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'grandTotal')));
+            $grandTotalDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->details[$index]->getGrandTotal($purchaseOrder->header->ppn)));
             $subTotalBeforeDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->subTotalBeforeDiscount));
             $subTotalDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->subTotalDiscount));
             $subTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->subTotal));
             $totalQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->totalQuantity));
             $taxValue = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->taxAmount));
-            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->getGrandTotal()));
+            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->grandTotal));
 
             echo CJSON::encode(array(
+                'taxDetail' => $taxDetail,
+                'unitPriceBeforeDiscount' => $unitPriceBeforeDiscount,
+                'retailPrice' => $retailPrice,
                 'discount1Nominal' => $discount1Nominal,
                 'discount2Nominal' => $discount2Nominal,
                 'discount3Nominal' => $discount3Nominal,
@@ -1240,9 +1241,7 @@ class TransactionPurchaseOrderController extends Controller {
                 'priceAfterDiscount5' => $priceAfterDiscount5,
                 'totalQuantityDetail' => $totalQuantityDetail,
                 'unitPriceAfterDiscount' => $unitPriceAfterDiscount,
-                'subTotalDetail' => $subTotalDetail,
                 'totalDiscountDetail' => $totalDiscountDetail,
-                'taxDetail' => $taxDetail,
                 'grandTotalDetail' => $grandTotalDetail,
                 'subTotalBeforeDiscount' => $subTotalBeforeDiscount,
                 'subTotalDiscount' => $subTotalDiscount,

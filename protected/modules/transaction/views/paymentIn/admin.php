@@ -36,9 +36,6 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<!--<h1>Manage Payment Ins</h1>-->
-
-
 <div id="maincontent">
     <div class="row">
         <div class="small-12 columns">
@@ -73,7 +70,7 @@ $('.search-form form').submit(function(){
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'payment-in-grid',
                     'dataProvider' => $model->search(),
-                    'filter' => $model,
+                    'filter' => NULL,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
                         'cssFile' => false,
@@ -90,7 +87,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'Plate #', 
-                            'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
+                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->vehicle->plate_number'
                         ),
                         array(
                             'name' => 'payment_number',
@@ -112,10 +109,10 @@ $('.search-form form').submit(function(){
                 )); ?>
             </div>
             
-            <fieldset>
+<!--            <fieldset>
                 <legend>Pending Invoice</legend>
                 <div class="grid-view">
-                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    <?php /*$this->widget('zii.widgets.grid.CGridView', array(
                         'id' => 'invoice-grid',
                         // 'dataProvider'=>$vehicleDataProvider,
                         'dataProvider' => $invoiceDataProvider,
@@ -151,9 +148,9 @@ $('.search-form form').submit(function(){
                                 'value' => 'AppHelper::formatMoney($data->total_price)'
                             ),
                         ),
-                    )); ?>
+                    ));*/ ?>
                 </div>
-            </fieldset>
+            </fieldset>-->
         </div>
     </div> <!-- end row -->
 </div> <!-- end maintenance -->

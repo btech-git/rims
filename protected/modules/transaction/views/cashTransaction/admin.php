@@ -17,16 +17,19 @@ $('.search-button').click(function(){
 	$('.search-form').slideToggle(600);
 	$('.bulk-action').toggle();
 	$(this).toggleClass('active');
-	if($(this).hasClass('active')){
-		$(this).text('');
-	}else {
-		$(this).text('Advanced Search');
+	if ($(this).hasClass('active')) {
+            $(this).text('');
+	} else {
+            $(this).text('Advanced Search');
 	}
 	return false;
 });
 $('.search-form form').submit(function(){
-	$('#cash-transaction-grid').yiiGridView('update', {
-		data: $(this).serialize()
+	$('#cash-transaction-in-grid').yiiGridView('update', {
+            data: $(this).serialize()
+	});
+	$('#cash-transaction-out-grid').yiiGridView('update', {
+            data: $(this).serialize()
 	});
 	return false;
 });
@@ -55,9 +58,9 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <h2>TRANSACTION IN</h2>
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
-                    'id' => 'cash-transaction-grid',
+                    'id' => 'cash-transaction-in-grid',
                     'dataProvider' => $cashInTransactionDataProvider,
-                    'filter' => $model,
+                    'filter' => null,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
                         'cssFile' => false,
@@ -121,9 +124,9 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <h2>TRANSACTION OUT</h2>
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
-                    'id' => 'cash-transaction-grid',
+                    'id' => 'cash-transaction-out-grid',
                     'dataProvider' => $cashOutTransactionDataProvider,
-                    'filter' => $model,
+                    'filter' => NULL,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
                         'cssFile' => false,

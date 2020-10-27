@@ -1,24 +1,11 @@
 <table>
     <thead>
-<!--        <tr>
-            <td colspan="8" id="request_<?php /*echo $i; ?>">
-                <?php $requestOrderDetails = TransactionRequestOrderDetail::model()->findAllByAttributes(array('product_id' => $detail->product_id));
-
-                $this->renderPartial('_detailRequest', array(
-                    'requestOrderDetails' => $requestOrderDetails,
-                    'purchaseOrder' => $purchaseOrder,
-                    'detail' => $detail,
-                    'index' => $i
-                ), false, true);*/ ?>
-            </td>
-        </tr>-->
         <tr>
             <th>Product</th>
             <th>Quantity</th>
             <th>Unit</th>
-            <th>Retail Price</th>
-            <th>Last Buying Price</th>
             <th>HPP</th>
+            <th>PPN</th>
             <th>Unit Price</th>
             <th></th>
         </tr>
@@ -36,7 +23,7 @@
                 <?php echo CHtml::error($detail, "product_id"); ?>
             </td>
             <td>
-                <?php echo CHtml::activeTextField($detail, "[$i]quantity", array('size' => 5,
+                <?php echo CHtml::activeTextField($detail, "[$i]quantity", array('size' => 3,
                     'onchange' => '
                         $.ajax({
                             type: "POST",
@@ -72,7 +59,8 @@
                 <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
             </td>
             <td>
-                <?php echo CHtml::activeTextField($detail, "[$i]retail_price", array('size' => 8,
+                <?php echo CHtml::activeTextField($detail, "[$i]retail_price", array(
+                    'readonly' => ((int)$purchaseOrder->header->ppn == 3) ? true : false,
                     'onchange' => '
                         $.ajax({
                             type: "POST",
@@ -80,6 +68,8 @@
                             url: "' . CController::createUrl('ajaxJsonTotal', array('id' => $purchaseOrder->header->id, 'index' => $i)) . '",
                             data: $("form").serialize(),
                             success: function(data) {
+                                $("#tax_amount_detail_' . $i . '").html(data.taxDetail);
+                                $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceBeforeDiscount);
                                 $("#discount_1_nominal_' . $i . '").html(data.discount1Nominal);
                                 $("#discount_2_nominal_' . $i . '").html(data.discount2Nominal);
                                 $("#discount_3_nominal_' . $i . '").html(data.discount3Nominal);
@@ -92,9 +82,8 @@
                                 $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
                                 $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
                                 $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
+//                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
                                 $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                $("#tax_detail_' . $i . '").html(data.taxDetail);
                                 $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
                                 $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                 $("#sub_total_discount").html(data.subTotalDiscount);
@@ -108,55 +97,84 @@
                 )); ?>
             </td>
             <td>
-                <?php echo CHtml::activeTextField($detail, "[$i]last_buying_price", array('size' => 5)); ?>
-                <?php echo CHtml::button('$$', array(
-                    'rel' => $i,
-                    'onclick' => '
-                        var productId = $("#' . CHtml::activeId($detail, "[$i]product_id") . '").val();
-                        var supplierId = $("#' . CHtml::activeId($purchaseOrder->header, "supplier_id") . '").val();
-                        $.fn.yiiGridView.update("product-price-grid", {
-                            data: {"ProductPrice[product_id]": productId, "ProductPrice[supplier_id]": supplierId}
-                        });
-                        $("#product-price-dialog").dialog("open");
-                        $("#DetailIndex").val(' . $i . ');
-                        return false;
-                    ',
-                )); ?>
-            </td>
-            <td>
-                <?php echo CHtml::activeTextField($detail, "[$i]hpp", array(
-                    'size' => 8,
-                    'readonly' => true,
-                    'value' => $detail->product_id != "" ? Product::model()->findByPk($detail->product_id)->hpp : '0'
-                )); ?>
+                <span id="tax_amount_detail_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
+                </span>
             </td>
             <td style="text-align: right">
-                <span id="unit_price_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'unitPrice'))); ?>
-                </span>
+                <?php echo CHtml::activeTextField($detail, "[$i]unit_price", array(
+                    'readonly' => ((int)$purchaseOrder->header->ppn == 3) ? false : true,
+                    'onchange' => '
+                        $.ajax({
+                            type: "POST",
+                            dataType: "JSON",
+                            url: "' . CController::createUrl('ajaxJsonTotal', array('id' => $purchaseOrder->header->id, 'index' => $i)) . '",
+                            data: $("form").serialize(),
+                            success: function(data) {
+                                $("#tax_amount_detail_' . $i . '").html(data.taxDetail);
+                                $("#' . CHtml::activeId($detail, "[$i]retail_price") . '").val(data.retailPrice);
+                                $("#discount_1_nominal_' . $i . '").html(data.discount1Nominal);
+                                $("#discount_2_nominal_' . $i . '").html(data.discount2Nominal);
+                                $("#discount_3_nominal_' . $i . '").html(data.discount3Nominal);
+                                $("#discount_4_nominal_' . $i . '").html(data.discount4Nominal);
+                                $("#discount_5_nominal_' . $i . '").html(data.discount5Nominal);
+                                $("#price_after_discount_1_' . $i . '").html(data.priceAfterDiscount1);
+                                $("#price_after_discount_2_' . $i . '").html(data.priceAfterDiscount2);
+                                $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
+                                $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
+                                $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
+                                $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
+                                $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
+//                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
+                                $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
+                                $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
+                                $("#sub_total_discount").html(data.subTotalDiscount);
+                                $("#sub_total").html(data.subTotal);
+                                $("#total_quantity").html(data.totalQuantity);
+                                $("#tax_value").html(data.taxValue);
+                                $("#grand_total").html(data.grandTotal);
+                            },
+                        });	
+                    ',
+                )); ?>
             </td>
             <td width="5%">
                 <?php echo CHtml::button('X', array(
                     'onclick' => CHtml::ajax(array(
                         'type' => 'POST',
-                        'url' => CController::createUrl('ajaxHtmlRemoveDetail',
-                            array('id' => $purchaseOrder->header->id, 'index' => $i)),
+                        'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $purchaseOrder->header->id, 'index' => $i)),
                         'update' => '#detail',
                     )),
                 )); ?>
             </td>
         </tr>
         <tr>
-            <td colspan="8">
-                Manufacture Code: <?php echo CHtml::Encode(CHtml::value($detail, 'product.manufacturer_code')); ?> ||
-                Category: <?php echo CHtml::Encode(CHtml::value($detail, 'product.masterSubCategoryCode')); ?> ||
-                Brand: <?php echo CHtml::Encode(CHtml::value($detail, 'product.brand.name')); ?> ||
-                Sub Brand: <?php echo CHtml::Encode(CHtml::value($detail, 'product.subBrand.name')); ?> ||
-                Brand Series: <?php echo CHtml::Encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?>
-            </td>
+            <td colspan="7">
+                Manufacture Code: <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?> ||
+                Category: <?php echo CHtml::encode(CHtml::value($detail, 'product.masterSubCategoryCode')); ?> ||
+                Brand: <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?> ||
+                Sub Brand: <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?> ||
+                Brand Series: <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?> ||
+                HPP : <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'product.hpp'))); ?> ||
+                <?php echo CHtml::activeHiddenField($detail, "[$i]last_buying_price", array('size' => 5, 'readOnly' => true)); ?>
+                <?php echo CHtml::button('Last Buying Price', array(
+                    'rel' => $i,
+                    'onclick' => '
+                        var productId = $("#' . CHtml::activeId($detail, "[$i]product_id") . '").val();
+//                        var supplierId = $("#' . CHtml::activeId($purchaseOrder->header, "supplier_id") . '").val();
+                        $.fn.yiiGridView.update("product-price-grid", {
+                            data: {"ProductPrice[product_id]": productId}
+                        });
+                        $("#product-price-dialog").dialog("open");
+                        $("#DetailIndex").val(' . $i . ');
+                        return false;
+                    ',
+                )); ?>
+            </td> 
         </tr>
         <tr>
-            <td colspan="3">
+            <td colspan="2">
                 <div class="medium-9 columns">
                     <div class="field">
                         <div class="row collapse">
@@ -175,53 +193,53 @@
                                         <?php echo CHtml::button('Add', array(
                                             'id' => 'add' . $i,
                                             'onclick' => 'var step = +jQuery("#TransactionPurchaseOrderDetail_' . $i . '_discount_step").val();
-											stepbtn' . $i . ' = step;
-											switch (step) {
-												case 1:
-												$("#step1_' . $i . '").show();
-												$("#step2_' . $i . '").hide();
-												$("#step3_' . $i . '").hide();
-												$("#step4_' . $i . '").hide();
-												$("#step5_' . $i . '").hide();
-												break;
-												case 2:
-												$("#step1_' . $i . '").show();
-												$("#step2_' . $i . '").show();
-												$("#step3_' . $i . '").hide();
-												$("#step4_' . $i . '").hide();
-												$("#step5_' . $i . '").hide();
-												break;
-												case 3:
-												$("#step1_' . $i . '").show();
-												$("#step2_' . $i . '").show();
-												$("#step3_' . $i . '").show();
-												$("#step4_' . $i . '").hide();
-												$("#step5_' . $i . '").hide();
-												break;
-												case 4:
-												$("#step1_' . $i . '").show();
-												$("#step2_' . $i . '").show();
-												$("#step3_' . $i . '").show();
-												$("#step4_' . $i . '").show();
-												$("#step5_' . $i . '").hide();
-												break;
-												case 5:
-												$("#step1_' . $i . '").show();
-												$("#step2_' . $i . '").show();
-												$("#step3_' . $i . '").show();
-												$("#step4_' . $i . '").show();
-												$("#step5_' . $i . '").show();
-												break;
+                                                stepbtn' . $i . ' = step;
+                                                switch (step) {
+                                                    case 1:
+                                                    $("#step1_' . $i . '").show();
+                                                    $("#step2_' . $i . '").hide();
+                                                    $("#step3_' . $i . '").hide();
+                                                    $("#step4_' . $i . '").hide();
+                                                    $("#step5_' . $i . '").hide();
+                                                    break;
+                                                    case 2:
+                                                    $("#step1_' . $i . '").show();
+                                                    $("#step2_' . $i . '").show();
+                                                    $("#step3_' . $i . '").hide();
+                                                    $("#step4_' . $i . '").hide();
+                                                    $("#step5_' . $i . '").hide();
+                                                    break;
+                                                    case 3:
+                                                    $("#step1_' . $i . '").show();
+                                                    $("#step2_' . $i . '").show();
+                                                    $("#step3_' . $i . '").show();
+                                                    $("#step4_' . $i . '").hide();
+                                                    $("#step5_' . $i . '").hide();
+                                                    break;
+                                                    case 4:
+                                                    $("#step1_' . $i . '").show();
+                                                    $("#step2_' . $i . '").show();
+                                                    $("#step3_' . $i . '").show();
+                                                    $("#step4_' . $i . '").show();
+                                                    $("#step5_' . $i . '").hide();
+                                                    break;
+                                                    case 5:
+                                                    $("#step1_' . $i . '").show();
+                                                    $("#step2_' . $i . '").show();
+                                                    $("#step3_' . $i . '").show();
+                                                    $("#step4_' . $i . '").show();
+                                                    $("#step5_' . $i . '").show();
+                                                    break;
 
-												default:
-												$("#step1_' . $i . '").hide();
-												$("#step2_' . $i . '").hide();
-												$("#step3_' . $i . '").hide();
-												$("#step4_' . $i . '").hide();
-												$("#step5_' . $i . '").hide();
+                                                    default:
+                                                    $("#step1_' . $i . '").hide();
+                                                    $("#step2_' . $i . '").hide();
+                                                    $("#step3_' . $i . '").hide();
+                                                    $("#step4_' . $i . '").hide();
+                                                    $("#step5_' . $i . '").hide();
 
-												break;
-                                            }'
+                                                    break;
+                                                }'
                                         )); ?>
                                     </div>
                                 </div>
@@ -559,41 +577,41 @@
     </tbody>
     <tfoot>
         <tr>
-            <td>Total Quantity</td>
-            <td>
+            <td colspan="5" style="text-align:right">Total Quantity</td>
+            <td style="text-align:right">
                 <span id="total_quantity_detail_<?php echo $i; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantityAfterBonus'))); ?>
                 </span>
             </td>
-            <td colspan="4">Sub Total</td>
-            <td>
-                <span id="sub_total_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'subTotal'))); ?>
+<!--            <td colspan="4">Sub Total</td>
+            <td style="text-align:right">
+                <span id="sub_total_detail_<?php /*echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'subTotal')));*/ ?>
                 </span>
-            </td>
+            </td>-->
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Total Discount</td>
-            <td>
+            <td colspan="5" style="text-align:right">Total Discount</td>
+            <td style="text-align:right">
                 <span id="total_discount_detail_<?php echo $i; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalDiscount'))); ?>
                 </span>
             </td>
-            <td colspan="4">PPn</td>
-            <td>
-                <span id="tax_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
+<!--            <td colspan="4">PPn</td>
+            <td style="text-align:right">
+                <span id="tax_detail_<?php /*echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn)));*/ ?>
                 </span>
-            </td>
+            </td>-->
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="2">&nbsp;</td>
-            <td colspan="4">Grand Total</td>
-            <td>
+            <!--<td colspan="2">&nbsp;</td>-->
+            <td colspan="5" style="text-align:right">Grand Total</td>
+            <td style="text-align:right">
                 <span id="grand_total_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'grandTotal'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getGrandTotal($purchaseOrder->header->ppn))); ?>
                 </span>
             </td>
             <td>&nbsp;</td>
@@ -601,57 +619,47 @@
     </tfoot>
 </table>
 
-
-<?php
-Yii::app()->clientScript->registerScript('myjqueryCount' . $i, '
-
+<?php Yii::app()->clientScript->registerScript('myjqueryCount' . $i, '
     function callme_stepbtn() {
         if (stepbtn' . $i . ' == 1 ) {
-			$("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal").keyup(function(event){
-				$("#count_step1_' . $i . '").click();
-			});
-		}else if (stepbtn' . $i . ' == 2 ) {
-			$("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal").keyup(function(event){
-				$("#count_step1_' . $i . '").click();
-				$("#count_step2_' . $i . '").click();
-			});
-		}else if (stepbtn' . $i . ' == 3 ) {
-			$("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal").keyup(function(event){
-				$("#count_step1_' . $i . '").click();
-				$("#count_step2_' . $i . '").click();
-				$("#count_step3_' . $i . '").click();
-			});
-		}else if (stepbtn' . $i . ' == 4 ) {
-			$("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount4_nominal").keyup(function(event){
-				$("#count_step1_' . $i . '").click();
-				$("#count_step2_' . $i . '").click();
-				$("#count_step3_' . $i . '").click();
-				$("#count_step4_' . $i . '").click();
-			});
-		}else if (stepbtn' . $i . ' == 5) {
-			$("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount4_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount5_nominal").keyup(function(event){
-				$("#count_step1_' . $i . '").click();
-				$("#count_step2_' . $i . '").click();
-				$("#count_step3_' . $i . '").click();
-				$("#count_step4_' . $i . '").click();
-				$("#count_step5_' . $i . '").click();
-			});
-		}
-		// $("#count_' . $i . '").click();
+            $("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal").keyup(function(event){
+                $("#count_step1_' . $i . '").click();
+            });
+        }else if (stepbtn' . $i . ' == 2 ) {
+            $("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal").keyup(function(event){
+                $("#count_step1_' . $i . '").click();
+                $("#count_step2_' . $i . '").click();
+            });
+        } else if (stepbtn' . $i . ' == 3 ) {
+            $("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal").keyup(function(event){
+                $("#count_step1_' . $i . '").click();
+                $("#count_step2_' . $i . '").click();
+                $("#count_step3_' . $i . '").click();
+            });
+        } else if (stepbtn' . $i . ' == 4 ) {
+            $("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount4_nominal").keyup(function(event){
+                $("#count_step1_' . $i . '").click();
+                $("#count_step2_' . $i . '").click();
+                $("#count_step3_' . $i . '").click();
+                $("#count_step4_' . $i . '").click();
+            });
+        } else if (stepbtn' . $i . ' == 5) {
+            $("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount4_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount5_nominal").keyup(function(event){
+                $("#count_step1_' . $i . '").click();
+                $("#count_step2_' . $i . '").click();
+                $("#count_step3_' . $i . '").click();
+                $("#count_step4_' . $i . '").click();
+                $("#count_step5_' . $i . '").click();
+            });
+        }
+        // $("#count_' . $i . '").click();
     }
 
-	$("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount4_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount5_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount_step").keyup(function(event){
-		callme_stepbtn();
-	});
+    $("#TransactionPurchaseOrderDetail_' . $i . '_quantity,#TransactionPurchaseOrderDetail_' . $i . '_discount1_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount2_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount3_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount4_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount5_nominal,#TransactionPurchaseOrderDetail_' . $i . '_discount_step").keyup(function(event){
+        callme_stepbtn();
+    });
 
-	$("#add' . $i . '").click(function() {
-		callme_stepbtn();
-	});
-');
-?>
-
-<?php
-// 	Yii::app()->clientScript->registerScript('myjavascript', '
-// 		//$(".numbers").number( true,2, ".", ",");
-//     ', CClientScript::POS_END);
-// ?>
+    $("#add' . $i . '").click(function() {
+        callme_stepbtn();
+    });
+'); ?>

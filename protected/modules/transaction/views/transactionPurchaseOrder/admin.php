@@ -136,12 +136,12 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
             )); ?>
         </div>
-        <fieldset>
+<!--        <fieldset>
             <legend>Pending Order List</legend>
             <h2>Request Order</h2>
             <div class="grid-view">
 
-                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                <?php /*$this->widget('zii.widgets.grid.CGridView', array(
                     'id'=>'transaction-request-order-grid',
                     'dataProvider'=>$requestDataProvider,
                     'filter'=>$request,
@@ -166,8 +166,8 @@ Yii::app()->clientScript->registerScript('search', "
                             } 
                         )
                     ),
-                )); ?>
+                ));*/ ?>
             </div>
-        </fieldset>
+        </fieldset>-->
     </div>
 </div>

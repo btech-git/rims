@@ -126,6 +126,7 @@ $this->breadcrumbs=array(
             <table>
                 <thead>
                     <tr>
+                        <td>SJ #</td>
                         <td>Invoice #</td>
                         <td>Invoice Date</td>
                         <td>Faktur Pajak #</td>
@@ -135,6 +136,10 @@ $this->breadcrumbs=array(
                 </thead>
                 <tbody>
                     <tr>
+                        <td>
+                            <?php echo CHtml::activeTextField($receiveItem, 'supplier_delivery_number', array('maxlength' => 50, 'size' => 30)); ?>
+                            <?php echo CHtml::error($receiveItem, 'supplier_delivery_number'); ?>
+                        </td>
                         <td>
                             <?php echo CHtml::activeTextField($receiveItem, 'invoice_number', array('maxlength' => 50, 'size' => 30)); ?>
                             <?php echo CHtml::error($receiveItem, 'invoice_number'); ?>

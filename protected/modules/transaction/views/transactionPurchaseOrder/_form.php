@@ -50,24 +50,6 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->textField($purchaseOrder->header, 'purchase_order_date', array('value'=>date('Y-m-d H:i:s'), 'readonly'=>true)); ?>
-
-                            <?php //echo $form->textField($purchaseOrder->header,'purchase_order_date'); ?>
-                            <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                    'model' => $purchaseOrder->header,
-                                    'attribute' => "purchase_order_date",
-                                    // additional javascript options for the date picker plugin
-                                    'options' => array(
-                                        'dateFormat' => 'yy-mm-dd',
-                                        'changeMonth' => true,
-                                        'changeYear' => true,
-                                        'yearRange' => '1900:2020'
-                                    ),
-                                    'htmlOptions' => array(
-                                        'value' => $purchaseOrder->header->isNewRecord ? date('Y-m-d') : $purchaseOrder->header->purchase_order_date,
-                                        //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
-                                    ),
-                                )
-                            );*/ ?>
                             <?php echo $form->error($purchaseOrder->header, 'purchase_order_date'); ?>
                         </div>
                     </div>
@@ -76,20 +58,13 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header,
-                                    'status_document'); ?></label>
+                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'status_document'); ?></label>
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->textField($purchaseOrder->header, 'status_document', array(
                                 'value' => $purchaseOrder->header->isNewRecord ? 'Draft' : $purchaseOrder->header->status_document,
-                                'readonly' => true
+                                'readonly' => true,
                             )); ?>
-                            <?php //if($purchaseOrder->header->isNewRecord){
-                            // 	echo $form->textField($purchaseOrder->header,'status_document',array('value'=>'Draft','readonly'=>true));
-                            // }else{
-                            // 	echo $form->dropDownList($purchaseOrder->header, 'status_document', array('Draft'=>'Draft','Revised' => 'Revised','Rejected'=>'Rejected','Approved'=>'Approved','Done'=>'Done'),array('prompt'=>'[--Select Status Document--]'));
-                            // }
-                            ?>
                             <?php echo $form->error($purchaseOrder->header, 'status_document'); ?>
                         </div>
                     </div>
@@ -114,19 +89,6 @@
                         </div>
                     </div>
                 </div>
-                <?php /*
-					<div class="field">
-						<div class="row collapse">
-							<div class="small-4 columns">
-								<label class="prefix"><?php echo $form->labelEx($purchaseOrder->header,'main_branch_id'); ?></label>
-							</div>
-							<div class="small-8 columns">
-								<?php echo $form->textField($purchaseOrder->header,'main_branch_id'); ?>
-								<?php echo $form->error($purchaseOrder->header,'main_branch_id'); ?>
-							</div>
-						</div>
-					</div>
-					*/ ?>
 
                 <div class="field">
                     <div class="row collapse">
@@ -135,19 +97,6 @@
                                     'main_branch_id'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php //echo $form->dropDownlist($purchaseOrder->header,'main_branch_id',CHtml::listData(Branch::model()->findAll(),'id','name'),array(
-                            // 		'prompt'=>'[--Select Branch--]',
-                            // 			'onchange'=> 'jQuery.ajax({
-                            //                 		type: "POST",
-                            //                 		url: "' . CController::createUrl('ajaxGetCompanyBank') . '",
-                            //                 		data: jQuery("form").serialize(),
-                            //                 		success: function(data){
-                            //                       	console.log(data);
-                            //                       	jQuery("#TransactionPurchaseOrder_company_bank_id").html(data);
-                            //                   	},
-                            //               	});'
-                            // ));
-                            ?>
                             <?php echo $form->hiddenField($purchaseOrder->header, 'main_branch_id', array(
                                 'value' => $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id,
                                 'readonly' => true
@@ -183,67 +132,32 @@
                         <div class="small-12 columns">
                             <?php echo CHtml::hiddenField('DetailIndex', ''); ?>
                             <?php echo CHtml::button('Add Details', array(
-                                    'id' => 'detail-button',
-                                    'name' => 'Detail',
-                                    'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
-                                    'onclick' => '$("#product-dialog").dialog("open"); return false;
-                                        jQuery.ajax({
-                                                type: "POST",
-                                                url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
-                                                data: jQuery("form").serialize(),
-                                                success: function(html) {
-                                                        jQuery("#detail").html(html);
-                                                },
-                                        });'
-                                )
-                            ); ?>
+                                'id' => 'detail-button',
+                                'name' => 'Detail',
+                                'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
+                                'onclick' => '$("#product-dialog").dialog("open"); return false;
+                                    jQuery.ajax({
+                                        type: "POST",
+                                        url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
+                                        data: jQuery("form").serialize(),
+                                        success: function(html) {
+                                            jQuery("#detail").html(html);
+                                        },
+                                    });'
+                            )); ?>
 
-                            <?php Yii::app()->clientScript->registerScript('updateGridView', '
-                                $.updateGridView = function(gridID, name, value) {
-                                    $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
-                                    $.fn.yiiGridView.update(gridID, {data: $.param(
-                                        $("#"+gridID+" .filters input, #"+gridID+" .filters select")
-                                        )});
-                                    }
-                                ', CClientScript::POS_READY
-                            ); ?>
+                            <?php Yii::app()->clientScript->registerScript('updateGridView', '$.updateGridView = function(gridID, name, value) {
+                                $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
+                                $.fn.yiiGridView.update(gridID, {data: $.param(
+                                    $("#"+gridID+" .filters input, #"+gridID+" .filters select")
+                                )});
+                            }', CClientScript::POS_READY); ?>
                         </div>
                     </div>
                 </div>
-
-<!--                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php /*echo $form->labelEx($purchaseOrder->header,
-                                    'company_bank_id'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php 
-                                $branchId = $purchaseOrder->header->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $purchaseOrder->header->main_branch_id;
-                                $branch = Branch::model()->findByPk($branchId);
-                                $company = Company::model()->findByPk($branch->company_id);
-                             ?>
-                            <?php echo $form->dropDownlist($purchaseOrder->header, 'company_bank_id', $company == NULL ? array() : CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id'=>$company->id), array('order' => 'account_name')),'id','bank.name'), array(
-                                'prompt' => '[--Select Company Bank--]',
-                                // 'onchange'=> 'jQuery.ajax({
-                                //                		type: "POST",
-                                //                		url: "' . CController::createUrl('ajaxGetCoa') . '",
-                                //                		data: jQuery("form").serialize(),
-                                //                		dataType: "json",
-                                // 			success: function(data) {
-                                //                      	console.log(data);
-                                //                      	jQuery("#TransactionPurchaseOrder_coa_id").val(data.coa);
-                                //                      	jQuery("#TransactionPurchaseOrder_coa_name").val(data.coa_name);
-                                //                  	},
-                                //              	});'
-                            )); ?>
-                            <?php echo $form->error($purchaseOrder->header, 'company_bank_id');*/ ?>
-                        </div>
-                    </div>
-                </div>-->
             </div>
+            
             <div class="small-12 medium-6 columns">
-
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -263,7 +177,6 @@
                                 'size' => 15,
                                 'maxlength' => 10,
                                 'readonly' => true,
-                                //'disabled'=>true,
                                 'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
                                 'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
                                 'value' => $purchaseOrder->header->supplier_id == "" ? '' : Supplier::model()->findByPk($purchaseOrder->header->supplier_id)->name
@@ -301,9 +214,6 @@
                                 <?php echo CHtml::activeTextField($purchaseOrder->header, 'coa_name',
                                     array('readonly' => true)); ?>
                             <?php endif ?>
-
-
-                            <?php //echo $form->error($purchaseOrder->header,'coa_id'); ?>
                         </div>
                     </div>
                 </div>
@@ -339,7 +249,6 @@
                                 ),
                                 'htmlOptions' => array(
                                     'value' => $purchaseOrder->header->isNewRecord ? date('Y-m-d') : $purchaseOrder->header->estimate_date_arrival,
-                                    //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
                                 ),
                             )); ?>
                             <?php echo $form->error($purchaseOrder->header, 'estimate_date_arrival'); ?>
@@ -375,21 +284,6 @@
                             <?php echo CHtml::openTag('span', array('id' => 'estimate_payment_date')); ?>
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", $purchaseOrder->header->estimate_payment_date)); ?>
                             <?php echo CHtml::closeTag('span'); ?>
-                            <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                    'model' => $purchaseOrder->header,
-                                    'attribute' => "estimate_payment_date",
-                                    'options' => array(
-                                        'dateFormat' => 'yy-mm-dd',
-                                        'changeMonth' => true,
-                                        'changeYear' => true,
-                                        'yearRange' => '1900:2020'
-                                    ),
-                                    'htmlOptions' => array(
-                                        //'value'=>date('Y-m-d'),
-                                        //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
-                                    ),
-                                )
-                            );*/ ?>
                             <?php echo $form->error($purchaseOrder->header, 'estimate_payment_date'); ?>
                         </div>
                     </div>
@@ -413,16 +307,14 @@
                                     array('Cash' => 'Cash', 'Credit' => 'Credit'), array(
                                         'prompt' => '[--Select Payment type--]',
                                         'onchange' => 'jQuery.ajax({
-						                  		type: "POST",
-						                  		url: "' . CController::createUrl('ajaxGetDate', array('type' => '')) . '" + $(this).val(),
-						                  		data: jQuery("form").serialize(),
-						                  		dataType: "json",
-						                  		success: function(data){
-						                        	// console.log(data.tanggal);
-						                        	// console.log(data.type);
-						                        	jQuery("#TransactionPurchaseOrder_estimate_payment_date").val(data.tanggal);
-						                    	},
-						                	});'
+                                            type: "POST",
+                                            url: "' . CController::createUrl('ajaxGetDate', array('type' => '')) . '" + $(this).val(),
+                                            data: jQuery("form").serialize(),
+                                            dataType: "json",
+                                            success: function(data){
+                                                jQuery("#TransactionPurchaseOrder_estimate_payment_date").val(data.tanggal);
+                                            },
+                                        });'
                                     )); ?>
                             </div>
 
@@ -437,8 +329,12 @@
                             <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'ppn'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php //echo $form->textArea($requestOrder->header,'status_document',array('rows'=>6, 'cols'=>50)); ?>
-                            <?php echo $form->dropDownList($purchaseOrder->header, 'ppn', array('1' => 'PPN', '2' => 'Non PPN'), array(
+                            <?php echo $form->dropDownList($purchaseOrder->header, 'ppn', array(
+                                '3' => 'Include PPN',
+                                '1' => 'Add PPN', 
+                                '2' => 'Non PPN',
+                            ), array(
+                                'empty' => '-- Pilih PPN --',
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'POST',
                                     'url' => CController::createUrl('ajaxHtmlUpdateAllTax', array('id' => $purchaseOrder->header->id)),
@@ -508,14 +404,6 @@
                                     <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'subtotal'); ?></td>
                                     <td style="text-align: center; font-weight: bold">
                                         <?php echo CHtml::label('PPN', false); ?>
-                                        <?php /*echo CHtml::activeCheckBox($purchaseOrder->header, 'ppn', array('value' => '1', 'uncheckValue'=>'2'), array(
-                                            'onchange' => CHtml::ajax(array(
-                                                'type' => 'POST',
-                                                'url' => CController::createUrl('ajaxHtmlUpdateAllTax', array('id' => $purchaseOrder->header->id)),
-                                                'update' => '#detail',
-                                            )),
-                                        )); ?>
-                                        <?php echo CHtml::error($purchaseOrder->header, 'ppn');*/ ?>
                                     </td>
                                     <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'total_price'); ?></td>
                                     <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'total_quantity'); ?></td>
@@ -580,19 +468,19 @@
         <?php $this->endWidget(); ?>
 
     </div><!-- form -->
-<?php if ($purchaseOrder->header->isNewRecord): ?>
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'supplier-dialog',
-        // additional javascript options for the dialog plugin
-        'options' => array(
-            'title' => 'Supplier',
-            'autoOpen' => false,
-            'width' => 'auto',
-            'modal' => true,
-        ),
-    )); ?>
+    <?php if ($purchaseOrder->header->isNewRecord): ?>
+        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+            'id' => 'supplier-dialog',
+            // additional javascript options for the dialog plugin
+            'options' => array(
+                'title' => 'Supplier',
+                'autoOpen' => false,
+                'width' => 'auto',
+                'modal' => true,
+            ),
+        )); ?>
 
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'supplier-grid',
             'dataProvider' => $supplierDataProvider,
             'filter' => $supplier,
@@ -654,10 +542,9 @@
                     'value' => 'empty($data->supplierPics) ? "" : $data->supplierPics[0]->name',
                 ),
             )
-        )
-    ); ?>
-    <?php $this->endWidget(); ?>
-<?php endif; ?>
+        )); ?>
+        <?php $this->endWidget(); ?>
+    <?php endif; ?>
     
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'product-dialog',
@@ -850,6 +737,7 @@
                     });
                 }',
                 'columns' => array(
+                    'id',
                     'name',
                     'manufacturer_code',
                     array(
@@ -903,19 +791,19 @@
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id){
-                $("#product-price-dialog").dialog("close");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxPrice', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-                    data: $("form").serialize(),
-                    success: function(data) {			
-                        var index = $("#DetailIndex").val();
-                        $("#TransactionPurchaseOrderDetail_"+index+"_last_buying_price").val(data.price);
-                    },
-                });
+            $("#product-price-dialog").dialog("close");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxPrice', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                data: $("form").serialize(),
+                success: function(data) {			
+                    var index = $("#DetailIndex").val();
+                    $("#TransactionPurchaseOrderDetail_"+index+"_last_buying_price").val(data.price);
+                },
+            });
 
-            }',
+        }',
         'columns' =>
             array(
                 array('header' => 'Code', 'value' => '$data->product->manufacturer_code'),
@@ -925,7 +813,7 @@
                 array('name' => 'supplier_name', 'value' => '$data->supplier->name'),
                 array(
                     'name' => 'purchase_price',
-                    'value' => 'number_format($data->purchase_price, 2)',
+                    'value' => 'number_format($data->hpp, 2)',
                     'htmlOptions' => array(
                         'style' => 'text-align: right',
                     ),
@@ -940,8 +828,7 @@
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
     <?php
-    Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js',
-        CClientScript::POS_HEAD);
+    Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
     Yii::app()->clientScript->registerScript('myjavascript', '
 		//$(".numbers").number(true,2, ".", ",");
 		

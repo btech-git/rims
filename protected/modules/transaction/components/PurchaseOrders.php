@@ -52,8 +52,10 @@ class PurchaseOrders extends CComponent {
     }
 
     public function updateTaxes() {
-        foreach ($this->details as $detail)
+        foreach ($this->details as $detail) {
             $detail->tax_amount = $detail->getTaxAmount($this->header->ppn);
+            $detail->unit_price = $detail->getUnitPriceBeforeDiscount($this->header->ppn);
+        }
     }
 
     public function save($dbConnection) {
@@ -131,7 +133,7 @@ class PurchaseOrders extends CComponent {
         foreach ($this->details as $detail) {
             $detail->purchase_order_id = $this->header->id;
             $detail->unit_price = $detail->unitPrice;
-            $detail->total_price = $detail->grandTotal;
+            $detail->total_price = $detail->getGrandTotal($this->header->ppn);
             $detail->total_quantity = $detail->quantityAfterBonus;
 
             if ($isNewRecord)
@@ -263,14 +265,14 @@ class PurchaseOrders extends CComponent {
                         $getCoaInventory = $coaInventory->code;
                         $coaInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInventory));
                         $jurnalUmumPersediaan = new JurnalUmum;
-                        $jurnalUmumPersediaan->kode_transaksi = $this->header->receive_item_no;
-                        $jurnalUmumPersediaan->tanggal_transaksi = $this->header->receive_item_date;
+                        $jurnalUmumPersediaan->kode_transaksi = $receiveItem->receive_item_no;
+                        $jurnalUmumPersediaan->tanggal_transaksi = $receiveItem->receive_item_date;
                         $jurnalUmumPersediaan->coa_id = $coaInventoryWithCode->id;
-                        $jurnalUmumPersediaan->branch_id = $this->header->recipient_branch_id;
+                        $jurnalUmumPersediaan->branch_id = $receiveItem->recipient_branch_id;
                         $jurnalUmumPersediaan->total = $jumlah;
                         $jurnalUmumPersediaan->debet_kredit = 'D';
                         $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumPersediaan->transaction_subject = $this->header->supplier->name;
+                        $jurnalUmumPersediaan->transaction_subject = $receiveItem->supplier->name;
                         $jurnalUmumPersediaan->is_coa_category = 0;
                         $jurnalUmumPersediaan->transaction_type = 'RCI';
                         $jurnalUmumPersediaan->save();
@@ -279,14 +281,14 @@ class PurchaseOrders extends CComponent {
                         $getCoaOutstanding = $coaOutstanding->code;
                         $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
                         $jurnalUmumOutstanding = new JurnalUmum;
-                        $jurnalUmumOutstanding->kode_transaksi = $this->header->receive_item_no;
-                        $jurnalUmumOutstanding->tanggal_transaksi = $this->header->receive_item_date;
+                        $jurnalUmumOutstanding->kode_transaksi = $receiveItem->receive_item_no;
+                        $jurnalUmumOutstanding->tanggal_transaksi = $receiveItem->receive_item_date;
                         $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
-                        $jurnalUmumOutstanding->branch_id = $this->header->recipient_branch_id;
+                        $jurnalUmumOutstanding->branch_id = $receiveItem->recipient_branch_id;
                         $jurnalUmumOutstanding->total = $jumlah;
                         $jurnalUmumOutstanding->debet_kredit = 'K';
                         $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
+                        $jurnalUmumOutstanding->transaction_subject = $receiveItem->supplier->name;
                         $jurnalUmumOutstanding->is_coa_category = 0;
                         $jurnalUmumOutstanding->transaction_type = 'RCI';
                         $jurnalUmumOutstanding->save();

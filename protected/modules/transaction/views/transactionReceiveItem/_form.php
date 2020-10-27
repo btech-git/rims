@@ -197,17 +197,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($receiveItem->header, 'Supplier S J #', array('class' => 'prefix')); ?>
+                            <?php /*echo $form->labelEx($receiveItem->header, 'Supplier S J #', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->textField($receiveItem->header, 'supplier_delivery_number'); ?>
-                            <?php echo $form->error($receiveItem->header, 'supplier_delivery_number'); ?>
+                            <?php echo $form->error($receiveItem->header, 'supplier_delivery_number');*/ ?>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
             
             <div class="small-12 medium-6 columns">		

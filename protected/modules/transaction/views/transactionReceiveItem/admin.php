@@ -106,10 +106,10 @@ Yii::app()->clientScript->registerScript('search', "
             )); ?>
         </div>
 
-        <fieldset>
+<!--        <fieldset>
             <legend>Pending Orders</legend>
             <div>
-                <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                <?php /*$this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => array(
                         'Purchase Order' => array(
                             'content' => $this->renderPartial(
@@ -158,8 +158,8 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     // set id for this widgets
                     'id' => 'view_tab',
-                )); ?>
+                ));*/ ?>
             </div>
-        </fieldset>
+        </fieldset>-->
     </div>
 </div>
