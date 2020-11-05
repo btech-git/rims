@@ -42,6 +42,11 @@ $this->menu=array(
                     'name' =>'purchase_type',
                     'value'=>$model->getPurchaseStatus($model->purchase_type),
                 ),
+                array(
+                    'name' =>'ppn',
+                    'label' => 'PPN/NON',
+                    'value'=>$model->getTaxStatus(),
+                ),
                 'status_document',
                 'payment_type',
                 array('name' =>'requester_id','value'=> $model->user != null ? $model->user->username : null),

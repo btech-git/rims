@@ -529,18 +529,18 @@ class RegistrationTransactionController extends Controller {
         ));
     }
 
-    public function actionAdminTest() {
-        $model = new RegistrationTransaction('search');
-
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['RegistrationTransaction'])) {
-            $model->attributes = $_GET['RegistrationTransaction'];
-        }
-
-        $this->render('admintest', array(
-            'model' => $model,
-        ));
-    }
+//    public function actionAdminTest() {
+//        $model = new RegistrationTransaction('search');
+//
+//        $model->unsetAttributes();  // clear any default values
+//        if (isset($_GET['RegistrationTransaction'])) {
+//            $model->attributes = $_GET['RegistrationTransaction'];
+//        }
+//
+//        $this->render('admintest', array(
+//            'model' => $model,
+//        ));
+//    }
 
     public function actionCashier() {
         $model = new RegistrationTransaction('search');
@@ -549,7 +549,7 @@ class RegistrationTransactionController extends Controller {
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
-
+        
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
 
@@ -2341,15 +2341,20 @@ class RegistrationTransactionController extends Controller {
 
                 if ($countTotal != 0) {
                     $invoiceData->status = 'PARTIAL PAYMENT';
+                    $model->payment_status = 'PARTIAL PAYMENT';
                 } elseif ($countTotal == 0) {
                     $invoiceData->status = 'CLEAR';
+                    $model->payment_status = 'CLEAR';
                 } else {
                     $invoiceData->status = 'NOT PAID';
+                    $model->payment_status = 'NOT PAID';
                 }
 
                 $invoiceData->payment_amount = $paymentTotal;
                 $invoiceData->payment_left = $countTotal;
                 $invoiceData->save(false);
+                $model->update(array('payment_status'));
+                
                 $this->redirect(array('billDetail', 'registrationId' => $registrationId));
             }
         }

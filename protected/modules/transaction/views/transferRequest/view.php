@@ -48,7 +48,7 @@ $this->menu = array(
                 )); ?>
         <?php endif; ?>
 
-        <h1>View TransactionTransferRequest #<?php echo $transferRequest->id; ?></h1>
+        <h1>View Transaction Transfer Request #<?php echo $transferRequest->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $transferRequest,

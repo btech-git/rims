@@ -5,8 +5,7 @@
             <th>Quantity</th>
             <th>Unit</th>
             <th>HPP</th>
-            <th>PPN</th>
-            <th>Unit Price</th>
+            <th>Price List</th>
             <th></th>
         </tr>
     </thead>
@@ -36,12 +35,25 @@
                                 $("#discount_3_nominal_' . $i . '").html(data.discount3Nominal);
                                 $("#discount_4_nominal_' . $i . '").html(data.discount4Nominal);
                                 $("#discount_5_nominal_' . $i . '").html(data.discount5Nominal);
-                                $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                $("#tax_detail_' . $i . '").html(data.taxDetail);
-                                $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                $("#price_after_discount_1_' . $i . '").html(data.priceAfterDiscount1);
+                                $("#price_after_discount_2_' . $i . '").html(data.priceAfterDiscount2);
+                                $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
+                                $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
+                                $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
+                                $("#unit_price_after_discount_' . $i . '").html(data.unitPriceAfterDiscountFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceAfterDiscount);
+                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetailFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]total_price") . '").val(data.subTotalDetail);
+                                $("#tax_detail_' . $i . '").html(data.taxAmountFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]tax_amount") . '").val(data.taxAmount);
+                                $("#price_before_tax_' . $i . '").html(data.priceBeforeTaxFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]price_before_tax") . '").val(data.priceBeforeTax);
+                                $("#total_before_tax_' . $i . '").html(data.totalPriceBeforeTaxFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]total_before_tax") . '").val(data.totalPriceBeforeTax);
+                                $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetailFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
+                                $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
                                 $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                 $("#sub_total_discount").html(data.subTotalDiscount);
                                 $("#sub_total").html(data.subTotal);
@@ -59,8 +71,11 @@
                 <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
             </td>
             <td>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]hpp"); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'product.hpp'))); ?>
+            </td>
+            <td>
                 <?php echo CHtml::activeTextField($detail, "[$i]retail_price", array(
-                    'readonly' => ((int)$purchaseOrder->header->ppn == 3) ? true : false,
                     'onchange' => '
                         $.ajax({
                             type: "POST",
@@ -68,8 +83,6 @@
                             url: "' . CController::createUrl('ajaxJsonTotal', array('id' => $purchaseOrder->header->id, 'index' => $i)) . '",
                             data: $("form").serialize(),
                             success: function(data) {
-                                $("#tax_amount_detail_' . $i . '").html(data.taxDetail);
-                                $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceBeforeDiscount);
                                 $("#discount_1_nominal_' . $i . '").html(data.discount1Nominal);
                                 $("#discount_2_nominal_' . $i . '").html(data.discount2Nominal);
                                 $("#discount_3_nominal_' . $i . '").html(data.discount3Nominal);
@@ -80,11 +93,20 @@
                                 $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
                                 $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
                                 $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
-                                $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-//                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                $("#unit_price_after_discount_' . $i . '").html(data.unitPriceAfterDiscountFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceAfterDiscount);
+                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetailFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]total_price") . '").val(data.subTotalDetail);
+                                $("#tax_detail_' . $i . '").html(data.taxAmountFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]tax_amount") . '").val(data.taxAmount);
+                                $("#price_before_tax_' . $i . '").html(data.priceBeforeTaxFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]price_before_tax") . '").val(data.priceBeforeTax);
+                                $("#total_before_tax_' . $i . '").html(data.totalPriceBeforeTaxFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]total_before_tax") . '").val(data.totalPriceBeforeTax);
+                                $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetailFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
+                                $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
+                                $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
                                 $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                 $("#sub_total_discount").html(data.subTotalDiscount);
                                 $("#sub_total").html(data.subTotal);
@@ -96,9 +118,9 @@
                     ',
                 )); ?>
             </td>
-            <td>
-                <span id="tax_amount_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
+<!--            <td>
+                <span id="tax_amount_detail_<?php //echo $i; ?>">
+                    <?php /*echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
                 </span>
             </td>
             <td style="text-align: right">
@@ -137,8 +159,8 @@
                             },
                         });	
                     ',
-                )); ?>
-            </td>
+                ));*/ ?>
+            </td>-->
             <td width="5%">
                 <?php echo CHtml::button('X', array(
                     'onclick' => CHtml::ajax(array(
@@ -156,7 +178,6 @@
                 Brand: <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?> ||
                 Sub Brand: <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?> ||
                 Brand Series: <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?> ||
-                HPP : <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'product.hpp'))); ?> ||
                 <?php echo CHtml::activeHiddenField($detail, "[$i]last_buying_price", array('size' => 5, 'readOnly' => true)); ?>
                 <?php echo CHtml::button('Last Buying Price', array(
                     'rel' => $i,
@@ -281,12 +302,20 @@
                                                         $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
                                                         $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
                                                         $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
-                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                                        $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                                        $("#tax_detail_' . $i . '").html(data.taxDetail);
-                                                        $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                                        $("#unit_price_after_discount_' . $i . '").html(data.unitPriceAfterDiscountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceAfterDiscount);
+                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_price") . '").val(data.subTotalDetail);
+                                                        $("#tax_detail_' . $i . '").html(data.taxAmountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]tax_amount") . '").val(data.taxAmount);
+                                                        $("#price_before_tax_' . $i . '").html(data.priceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]price_before_tax") . '").val(data.priceBeforeTax);
+                                                        $("#total_before_tax_' . $i . '").html(data.totalPriceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_before_tax") . '").val(data.totalPriceBeforeTax);
+                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
+                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
                                                         $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                                         $("#sub_total_discount").html(data.subTotalDiscount);
                                                         $("#sub_total").html(data.subTotal);
@@ -344,12 +373,20 @@
                                                         $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
                                                         $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
                                                         $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
-                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                                        $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                                        $("#tax_detail_' . $i . '").html(data.taxDetail);
-                                                        $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                                        $("#unit_price_after_discount_' . $i . '").html(data.unitPriceAfterDiscountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceAfterDiscount);
+                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_price") . '").val(data.subTotalDetail);
+                                                        $("#tax_detail_' . $i . '").html(data.taxAmountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]tax_amount") . '").val(data.taxAmount);
+                                                        $("#price_before_tax_' . $i . '").html(data.priceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]price_before_tax") . '").val(data.priceBeforeTax);
+                                                        $("#total_before_tax_' . $i . '").html(data.totalPriceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_before_tax") . '").val(data.totalPriceBeforeTax);
+                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
+                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
                                                         $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                                         $("#sub_total_discount").html(data.subTotalDiscount);
                                                         $("#sub_total").html(data.subTotal);
@@ -410,12 +447,20 @@
                                                         $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
                                                         $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
                                                         $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
-                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                                        $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                                        $("#tax_detail_' . $i . '").html(data.taxDetail);
-                                                        $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                                        $("#unit_price_after_discount_' . $i . '").html(data.unitPriceAfterDiscountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceAfterDiscount);
+                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_price") . '").val(data.subTotalDetail);
+                                                        $("#tax_detail_' . $i . '").html(data.taxAmountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]tax_amount") . '").val(data.taxAmount);
+                                                        $("#price_before_tax_' . $i . '").html(data.priceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]price_before_tax") . '").val(data.priceBeforeTax);
+                                                        $("#total_before_tax_' . $i . '").html(data.totalPriceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_before_tax") . '").val(data.totalPriceBeforeTax);
+                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
+                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
                                                         $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                                         $("#sub_total_discount").html(data.subTotalDiscount);
                                                         $("#sub_total").html(data.subTotal);
@@ -475,12 +520,20 @@
                                                         $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
                                                         $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
                                                         $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
-                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                                        $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                                        $("#tax_detail_' . $i . '").html(data.taxDetail);
-                                                        $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                                        $("#unit_price_after_discount_' . $i . '").html(data.unitPriceAfterDiscountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceAfterDiscount);
+                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_price") . '").val(data.subTotalDetail);
+                                                        $("#tax_detail_' . $i . '").html(data.taxAmountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]tax_amount") . '").val(data.taxAmount);
+                                                        $("#price_before_tax_' . $i . '").html(data.priceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]price_before_tax") . '").val(data.priceBeforeTax);
+                                                        $("#total_before_tax_' . $i . '").html(data.totalPriceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_before_tax") . '").val(data.totalPriceBeforeTax);
+                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
+                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
                                                         $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                                         $("#sub_total_discount").html(data.subTotalDiscount);
                                                         $("#sub_total").html(data.subTotal);
@@ -540,12 +593,20 @@
                                                         $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
                                                         $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
                                                         $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
-                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                                        $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                                        $("#tax_detail_' . $i . '").html(data.taxDetail);
-                                                        $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
+                                                        $("#unit_price_after_discount_' . $i . '").html(data.unitPriceAfterDiscountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]unit_price") . '").val(data.unitPriceAfterDiscount);
+                                                        $("#sub_total_detail_' . $i . '").html(data.subTotalDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_price") . '").val(data.subTotalDetail);
+                                                        $("#tax_detail_' . $i . '").html(data.taxAmountFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]tax_amount") . '").val(data.taxAmount);
+                                                        $("#price_before_tax_' . $i . '").html(data.priceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]price_before_tax") . '").val(data.priceBeforeTax);
+                                                        $("#total_before_tax_' . $i . '").html(data.totalPriceBeforeTaxFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_before_tax") . '").val(data.totalPriceBeforeTax);
+                                                        $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
+                                                        $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
+                                                        $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
                                                         $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
                                                         $("#sub_total_discount").html(data.subTotalDiscount);
                                                         $("#sub_total").html(data.subTotal);
@@ -577,41 +638,63 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="5" style="text-align:right">Total Quantity</td>
+            <td style="text-align:right">Total DPP</td>
             <td style="text-align:right">
-                <span id="total_quantity_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantityAfterBonus'))); ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]total_before_tax"); ?>
+                <span id="total_before_tax_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->total_before_tax)); ?>
                 </span>
             </td>
-<!--            <td colspan="4">Sub Total</td>
+            <td colspan="2" style="text-align:right">DPP</td>
             <td style="text-align:right">
-                <span id="sub_total_detail_<?php /*echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'subTotal')));*/ ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]price_before_tax"); ?>
+                <span id="price_before_tax_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->price_before_tax)); ?>
                 </span>
-            </td>-->
+            </td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="5" style="text-align:right">Total Discount</td>
+            <td colspan="2">&nbsp;</td>
+            <td  colspan="2" style="text-align:right">PPN</td>
             <td style="text-align:right">
+                <?php echo CHtml::activeHiddenField($detail, "[$i]tax_amount"); ?>
+                <span id="tax_detail_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
+                </span>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="text-align:right">Total Discount</td>
+            <td style="text-align:right">
+                <?php echo CHtml::activeHiddenField($detail, "[$i]discount"); ?>
                 <span id="total_discount_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalDiscount'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'discount'))); ?>
                 </span>
             </td>
-<!--            <td colspan="4">PPn</td>
+            <td colspan="2" style="text-align:right">Price After Discount</td>
             <td style="text-align:right">
-                <span id="tax_detail_<?php /*echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn)));*/ ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]unit_price"); ?>
+                <span id="unit_price_after_discount_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'unit_price'))); ?>
                 </span>
-            </td>-->
+            </td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <!--<td colspan="2">&nbsp;</td>-->
-            <td colspan="5" style="text-align:right">Grand Total</td>
+            <td style="text-align:right">Total Quantity</td>
             <td style="text-align:right">
-                <span id="grand_total_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getGrandTotal($purchaseOrder->header->ppn))); ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]total_quantity"); ?>
+                <span id="total_quantity_detail_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_quantity'))); ?>
+                </span>
+            </td>
+            <td colspan="2" style="text-align:right">Sub Total (DPP + PPN)</td>
+            <td style="text-align:right">
+                <?php echo CHtml::activeHiddenField($detail, "[$i]total_price"); ?>
+                <span id="sub_total_detail_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->total_price)); ?>
                 </span>
             </td>
             <td>&nbsp;</td>

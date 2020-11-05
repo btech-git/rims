@@ -163,11 +163,11 @@ class BodyRepairMechanicController extends Controller
             $registrationMemo->date_time = date('Y-m-d H:i:s');
             $registrationMemo->user_id = Yii::app()->user->id;
             $registrationMemo->save();
-        } else if (isset($_POST['_FormSubmit_']) === 'StartOrPauseTimesheet' || isset($_POST['_FormSubmit_']) === 'FinishTimesheet') {
+        } else if (isset($_POST['_FormSubmit_']) && ($_POST['_FormSubmit_'] === 'StartOrPauseTimesheet' || $_POST['_FormSubmit_'] === 'FinishTimesheet')) {
             if ($bodyRepairMechanic->runningDetail !== null) {
                 $mechanicId = $bodyRepairMechanic->runningDetail->mechanic_id;
                 if ($mechanicId === null || $mechanicId !== null && $mechanicId === Yii::app()->user->id) {
-                    if (isset($_POST['_FormSubmit_']) === 'FinishTimesheet') {
+                    if ($_POST['_FormSubmit_'] === 'FinishTimesheet') {
                         $bodyRepairMechanic->runningDetail->to_be_checked = true;
                     }
                     if ($mechanicId === null) {

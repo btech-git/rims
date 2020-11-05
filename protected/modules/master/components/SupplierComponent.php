@@ -86,6 +86,46 @@ class SupplierComponent extends CComponent {
     }
 
     public function flush() {
+        
+        if ($this->header->isNewRecord) {
+            $coaGroupHutang = Coa::model()->findByAttributes(array('code' => '201.00.000'));
+            $coaHutang = new Coa;
+            $coaHutang->getCodeNumber($coaGroupHutang->coa_sub_category_id);
+            $coaHutang->name = 'Hutang ' . $this->header->company;
+            $coaHutang->coa_category_id = $coaGroupHutang->coa_category_id;
+            $coaHutang->coa_sub_category_id = $coaGroupHutang->coa_sub_category_id;
+            $coaHutang->coa_id = $coaGroupHutang->id;
+            $coaHutang->normal_balance = 'KREDIT';
+            $coaHutang->cash_transaction = 'NO';
+            $coaHutang->opening_balance = 0;
+            $coaHutang->closing_balance = 0;
+            $coaHutang->debit = 0;
+            $coaHutang->credit = 0;
+            $coaHutang->status = 'Approved';
+            $coaHutang->date = date('Y-m-d');
+            $coaHutang->save();
+            
+            $coaGroupOutstandingOrder = Coa::model()->findByAttributes(array('code' => '202.00.000'));
+            $coaOutstandingOrder = new Coa;
+            $coaOutstandingOrder->getCodeNumber($coaGroupOutstandingOrder->coa_sub_category_id);
+            $coaOutstandingOrder->name = 'Outstanding Order - ' . $this->header->company;
+            $coaOutstandingOrder->coa_category_id = $coaGroupOutstandingOrder->coa_category_id;
+            $coaOutstandingOrder->coa_sub_category_id = $coaGroupOutstandingOrder->coa_sub_category_id;
+            $coaOutstandingOrder->coa_id = $coaGroupOutstandingOrder->id;
+            $coaOutstandingOrder->normal_balance = 'KREDIT';
+            $coaOutstandingOrder->cash_transaction = 'NO';
+            $coaOutstandingOrder->opening_balance = 0;
+            $coaOutstandingOrder->closing_balance = 0;
+            $coaOutstandingOrder->debit = 0;
+            $coaOutstandingOrder->credit = 0;
+            $coaOutstandingOrder->status = 'Approved';
+            $coaOutstandingOrder->date = date('Y-m-d');
+            $coaOutstandingOrder->save();
+
+            $this->header->coa_id = $coaHutang->id;
+            $this->header->coa_outstanding_order = $coaOutstandingOrder->id;
+        }
+        
         $valid = $this->header->save();
 
         $supplier_banks = SupplierBank::model()->findAllByAttributes(array('supplier_id' => $this->header->id));

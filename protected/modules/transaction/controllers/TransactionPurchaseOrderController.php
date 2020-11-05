@@ -929,7 +929,6 @@ class TransactionPurchaseOrderController extends Controller {
             $purchaseOrder->header->attributes = $_POST['TransactionPurchaseOrder'];
         }
 
-
         if (isset($_POST['TransactionPurchaseOrderDetail'])) {
             foreach ($_POST['TransactionPurchaseOrderDetail'] as $i => $item) {
                 if (isset($purchaseOrder->details[$i])) {
@@ -1200,10 +1199,8 @@ class TransactionPurchaseOrderController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $purchaseOrder = $this->instantiate($id);
             $this->loadState($purchaseOrder);
+            $tax = $purchaseOrder->header->ppn;
             
-            $retailPrice = CHtml::encode($purchaseOrder->details[$index]->getRetailPriceBeforeTax($purchaseOrder->header->ppn));
-            $unitPriceBeforeDiscount = CHtml::encode($purchaseOrder->details[$index]->getUnitPriceBeforeDiscount($purchaseOrder->header->ppn));
-            $taxDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->details[$index]->getTaxAmount($purchaseOrder->header->ppn)));
             $discount1Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount1Amount')));
             $discount2Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount2Amount')));
             $discount3Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount3Amount')));
@@ -1214,21 +1211,28 @@ class TransactionPurchaseOrderController extends Controller {
             $priceAfterDiscount3 = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPriceAfterDiscount3')));
             $priceAfterDiscount4 = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPriceAfterDiscount4')));
             $priceAfterDiscount5 = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPriceAfterDiscount5')));
-            $unitPriceAfterDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPrice')));
-            $totalQuantityDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'quantityAfterBonus')));
-            $totalDiscountDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'totalDiscount')));
-            $grandTotalDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->details[$index]->getGrandTotal($purchaseOrder->header->ppn)));
-            $subTotalBeforeDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->subTotalBeforeDiscount));
-            $subTotalDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->subTotalDiscount));
-            $subTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->subTotal));
+            $unitPriceAfterDiscount = $purchaseOrder->details[$index]->getUnitPrice($tax);
+            $subTotalDetail = $purchaseOrder->details[$index]->getSubTotal($tax);
+            $priceBeforeTax = $purchaseOrder->details[$index]->getPriceBeforeTax($tax);
+            $totalPriceBeforeTax = $purchaseOrder->details[$index]->getTotalPriceBeforeTax($tax);
+            $taxAmount = $purchaseOrder->details[$index]->getTaxAmount($tax);
+            $totalQuantityDetail = $purchaseOrder->details[$index]->quantityAfterBonus;
+            $totalDiscountDetail = $purchaseOrder->details[$index]->totalDiscount;
+            $unitPriceAfterDiscountFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $unitPriceAfterDiscount));
+            $subTotalDetailFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalDetail));
+            $priceBeforeTaxFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $priceBeforeTax));
+            $totalPriceBeforeTaxFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPriceBeforeTax));
+            $taxAmountFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxAmount));
+            $totalQuantityDetailFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantityDetail));
+            $totalDiscountDetailFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDiscountDetail));
+            $subTotalBeforeDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotalBeforeDiscount));
+            $subTotalDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotalDiscount));
+            $subTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotal));
             $totalQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->totalQuantity));
-            $taxValue = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->taxAmount));
-            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->grandTotal));
+            $taxValue = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->taxAmount));
+            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->grandTotal));
 
             echo CJSON::encode(array(
-                'taxDetail' => $taxDetail,
-                'unitPriceBeforeDiscount' => $unitPriceBeforeDiscount,
-                'retailPrice' => $retailPrice,
                 'discount1Nominal' => $discount1Nominal,
                 'discount2Nominal' => $discount2Nominal,
                 'discount3Nominal' => $discount3Nominal,
@@ -1241,8 +1245,19 @@ class TransactionPurchaseOrderController extends Controller {
                 'priceAfterDiscount5' => $priceAfterDiscount5,
                 'totalQuantityDetail' => $totalQuantityDetail,
                 'unitPriceAfterDiscount' => $unitPriceAfterDiscount,
+                'subTotalDetail' => $subTotalDetail,
+                'taxAmount' => $taxAmount,
+                'totalPriceBeforeTax' => $totalPriceBeforeTax,
+                'priceBeforeTax' => $priceBeforeTax,
                 'totalDiscountDetail' => $totalDiscountDetail,
-                'grandTotalDetail' => $grandTotalDetail,
+                'totalQuantityDetailFormatted' => $totalQuantityDetailFormatted,
+                'unitPriceAfterDiscountFormatted' => $unitPriceAfterDiscountFormatted,
+                'subTotalDetailFormatted' => $subTotalDetailFormatted,
+                'taxAmountFormatted' => $taxAmountFormatted,
+                'totalPriceBeforeTaxFormatted' => $totalPriceBeforeTaxFormatted,
+                'priceBeforeTaxFormatted' => $priceBeforeTaxFormatted,
+                'totalDiscountDetailFormatted' => $totalDiscountDetailFormatted,
+//                'grandTotalDetail' => $grandTotalDetail,
                 'subTotalBeforeDiscount' => $subTotalBeforeDiscount,
                 'subTotalDiscount' => $subTotalDiscount,
                 'subTotal' => $subTotal,

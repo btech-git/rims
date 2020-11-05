@@ -12,7 +12,7 @@
  * @property integer $quantity
  * @property string $unit_price
  * @property string $tax_amount
- * @property integer $amount
+ * @property string $price_before_tax
  * @property integer $discount_step
  * @property integer $discount1_type
  * @property string $discount1_nominal
@@ -35,7 +35,7 @@
  * @property integer $discount5_temp_quantity
  * @property string $discount5_temp_price
  * @property integer $total_quantity
- * @property string $subtotal
+ * @property string $total_before_tax
  * @property string $discount
  * @property string $total_price
  * @property integer $receive_quantity
@@ -77,13 +77,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_id, retail_price, quantity, unit_price, total_quantity, subtotal, discount_step, total_price', 'required'),
-            array('purchase_order_id, product_id, unit_id, quantity, amount, discount_step, discount1_type, discount1_temp_quantity, discount2_type, discount2_temp_quantity, discount3_type, discount3_temp_quantity, discount4_type, discount4_temp_quantity, discount5_type, discount5_temp_quantity, total_quantity, receive_quantity, purchase_order_quantity_left', 'numerical', 'integerOnly' => true),
-            array('last_buying_price, retail_price, unit_price, discount1_temp_price, discount2_temp_price, discount3_temp_price, discount4_temp_price, discount5_temp_price, subtotal, discount, total_price', 'length', 'max' => 18),
+            array('purchase_order_id, retail_price, quantity, unit_price, total_quantity, price_before_tax, total_before_tax, discount_step, total_price', 'required'),
+            array('purchase_order_id, product_id, unit_id, quantity, discount_step, discount1_type, discount1_temp_quantity, discount2_type, discount2_temp_quantity, discount3_type, discount3_temp_quantity, discount4_type, discount4_temp_quantity, discount5_type, discount5_temp_quantity, total_quantity, receive_quantity, purchase_order_quantity_left', 'numerical', 'integerOnly' => true),
+            array('last_buying_price, retail_price, unit_price, discount1_temp_price, discount2_temp_price, discount3_temp_price, discount4_temp_price, discount5_temp_price, price_before_tax, total_before_tax, discount, total_price', 'length', 'max' => 18),
             array('discount1_nominal, discount2_nominal, discount3_nominal, discount4_nominal, discount5_nominal, tax_amount', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, last_buying_price, purchase_order_id, product_id, unit_id, retail_price, quantity, unit_price, amount, discount_step, discount1_type, discount1_nominal, discount1_temp_quantity, discount1_temp_price, discount2_type, discount2_nominal, discount2_temp_quantity, discount2_temp_price, discount3_type, discount3_nominal, discount3_temp_quantity, discount3_temp_price, discount4_type, discount4_nominal, discount4_temp_quantity, discount4_temp_price, discount5_type, discount5_nominal, discount5_temp_quantity, discount5_temp_price, total_quantity, subtotal, discount, total_price, receive_quantity, purchase_order_quantity_left, tax_amount', 'safe', 'on' => 'search'),
+            array('id, last_buying_price, purchase_order_id, product_id, unit_id, retail_price, quantity, unit_price, price_before_tax, total_before_tax, discount_step, discount1_type, discount1_nominal, discount1_temp_quantity, discount1_temp_price, discount2_type, discount2_nominal, discount2_temp_quantity, discount2_temp_price, discount3_type, discount3_nominal, discount3_temp_quantity, discount3_temp_price, discount4_type, discount4_nominal, discount4_temp_quantity, discount4_temp_price, discount5_type, discount5_nominal, discount5_temp_quantity, discount5_temp_price, total_quantity, subtotal, discount, total_price, receive_quantity, purchase_order_quantity_left, tax_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -114,7 +114,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             'retail_price' => 'Retail Price',
             'quantity' => 'Quantity',
             'unit_price' => 'Unit Price',
-            'amount' => 'Amount',
+            'price_before_tax' => 'DPP',
             'discount_step' => 'Discount Step',
             'discount1_type' => 'Discount1 Type',
             'discount1_nominal' => 'Discount1 Nominal',
@@ -137,7 +137,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             'discount5_temp_quantity' => 'Discount5 Temp Quantity',
             'discount5_temp_price' => 'Discount5 Temp Price',
             'total_quantity' => 'Total Quantity',
-            'subtotal' => 'Subtotal',
+            'total_before_tax' => 'Total DPP',
             'discount' => 'Discount',
             'total_price' => 'Total Price',
             'receive_quantity' => 'Receive Quantity',
@@ -171,7 +171,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $criteria->compare('retail_price', $this->retail_price, true);
         $criteria->compare('quantity', $this->quantity);
         $criteria->compare('unit_price', $this->unit_price, true);
-        $criteria->compare('amount', $this->amount);
+        $criteria->compare('price_before_tax', $this->price_before_tax);
         $criteria->compare('discount_step', $this->discount_step);
         $criteria->compare('discount1_type', $this->discount1_type);
         $criteria->compare('discount1_nominal', $this->discount1_nominal, true);
@@ -194,7 +194,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $criteria->compare('discount5_temp_quantity', $this->discount5_temp_quantity);
         $criteria->compare('discount5_temp_price', $this->discount5_temp_price, true);
         $criteria->compare('total_quantity', $this->total_quantity);
-        $criteria->compare('subtotal', $this->subtotal, true);
+        $criteria->compare('total_before_tax', $this->total_before_tax, true);
         $criteria->compare('discount', $this->discount, true);
         $criteria->compare('total_price', $this->total_price, true);
         $criteria->compare('receive_quantity', $this->receive_quantity);
@@ -217,28 +217,6 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getRetailPriceBeforeTax($tax) {
-        return $this->unit_price / 1.1;
-    }
-    
-    public function getTaxAmount($tax) {
-        $taxAmount = 0;
-
-        if ($tax == 1) {
-            $taxAmount = $this->retail_price * .1;
-        } elseif ($tax == 3) {
-            $taxAmount = $this->getRetailPriceBeforeTax($tax) * .1;
-        } else {
-            $taxAmount = 0;
-        }
-
-        return $taxAmount;
-    }
-
-    public function getUnitPriceBeforeDiscount($tax) {
-        return $this->retail_price + $this->getTaxAmount($tax);
-    }
-    
     public function getDiscount1Amount() {
         $amount = 0.00;
 
@@ -324,23 +302,24 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return $this->unitPriceAfterDiscount4 - $this->discount5Amount;
     }
 
-    public function getUnitPrice() {
+    public function getUnitPrice($tax) {
         $unitPrice = 0.00;
 
-        if ($this->discount_step == 1)
+        if ($this->discount_step == 1) {
             $unitPrice = ($this->discount1_type == 3) ? $this->unitPriceAfterDiscount1 * $this->quantity / ($this->quantity + $this->discount1_nominal) : $this->unitPriceAfterDiscount1;
-        elseif ($this->discount_step == 2)
+        } elseif ($this->discount_step == 2) {
             $unitPrice = ($this->discount2_type == 3) ? $this->unitPriceAfterDiscount2 * $this->quantity / ($this->quantity + $this->discount2_nominal) : $this->unitPriceAfterDiscount2;
-        elseif ($this->discount_step == 3)
+        } elseif ($this->discount_step == 3) {
             $unitPrice = ($this->discount3_type == 3) ? $this->unitPriceAfterDiscount3 * $this->quantity / ($this->quantity + $this->discount3_nominal) : $this->unitPriceAfterDiscount3;
-        elseif ($this->discount_step == 4)
+        } elseif ($this->discount_step == 4) {
             $unitPrice = ($this->discount4_type == 3) ? $this->unitPriceAfterDiscount4 * $this->quantity / ($this->quantity + $this->discount4_nominal) : $this->unitPriceAfterDiscount4;
-        elseif ($this->discount_step == 5)
+        } elseif ($this->discount_step == 5) {
             $unitPrice = ($this->discount5_type == 3) ? $this->unitPriceAfterDiscount5 * $this->quantity / ($this->quantity + $this->discount5_nominal) : $this->unitPriceAfterDiscount5;
-        else
+        } else {
             $unitPrice = $this->retail_price;
+        }
 
-        return $unitPrice;
+        return ($tax == 1) ? $unitPrice * 1.1 : $unitPrice;
     }
 
     public function getQuantityAfterBonus() {
@@ -357,7 +336,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return $this->getDiscount1Amount() + $this->getDiscount2Amount() + $this->getDiscount3Amount() + $this->getDiscount4Amount() + $this->getDiscount5Amount();
     }
 
-    public function getSubTotal() {
+    public function getSubTotal($tax) {
         $total = 0.00;
 
         if ($this->discount_step == 1)
@@ -373,9 +352,38 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         else
             $total = $this->quantity * $this->retail_price;
 
-        return $total;
+        return ($tax == 1) ? $total * 1.1 : $total;
     }
 
+    public function getPriceBeforeTax($tax) {
+        $unitPrice = 0.00;
+
+        if ($this->discount_step == 1) {
+            $unitPrice = ($this->discount1_type == 3) ? $this->unitPriceAfterDiscount1 * $this->quantity / ($this->quantity + $this->discount1_nominal) : $this->unitPriceAfterDiscount1;
+        } elseif ($this->discount_step == 2) {
+            $unitPrice = ($this->discount2_type == 3) ? $this->unitPriceAfterDiscount2 * $this->quantity / ($this->quantity + $this->discount2_nominal) : $this->unitPriceAfterDiscount2;
+        } elseif ($this->discount_step == 3) {
+            $unitPrice = ($this->discount3_type == 3) ? $this->unitPriceAfterDiscount3 * $this->quantity / ($this->quantity + $this->discount3_nominal) : $this->unitPriceAfterDiscount3;
+        } elseif ($this->discount_step == 4) {
+            $unitPrice = ($this->discount4_type == 3) ? $this->unitPriceAfterDiscount4 * $this->quantity / ($this->quantity + $this->discount4_nominal) : $this->unitPriceAfterDiscount4;
+        } elseif ($this->discount_step == 5) {
+            $unitPrice = ($this->discount5_type == 3) ? $this->unitPriceAfterDiscount5 * $this->quantity / ($this->quantity + $this->discount5_nominal) : $this->unitPriceAfterDiscount5;
+        } else {
+            $unitPrice = $this->retail_price;
+        }
+
+        return ($tax == 3) ? $this->getUnitPrice($tax) / 1.1 : $unitPrice;
+    }
+    
+    public function getTaxAmount($tax) {
+        
+        return ($tax == 2) ? 0 : $this->getPriceBeforeTax($tax) * 0.1;
+    }
+
+    public function getTotalPriceBeforeTax($tax) {
+        return $this->getPriceBeforeTax($tax) * $this->quantity;
+    }
+    
 //    public function getTaxAmount($tax) {
 //        $taxAmount = 0;
 //
@@ -390,11 +398,11 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
 //        return $taxAmount;
 //    }
 
-    public function getGrandTotal($tax) {
+//    public function getGrandTotal($tax) {
 //        $taxAmount = empty($this->purchaseOrder) ? 0 : $this->getTaxAmount($tax);
-
-        return $this->subTotal + $this->getTaxAmount($tax);
-    }
+//
+//        return $this->subTotal + 0; //$this->getTaxAmount($tax);
+//    }
 
     public function getTotalBeforeDiscount() {
         return $this->quantity * $this->retail_price;
@@ -407,20 +415,21 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             $quantityRemaining += $detail->qty_received;
         }
 
-        return $this->quantity - $quantityRemaining;
+        return $this->total_quantity - $quantityRemaining;
     }
 
     public function getDiscountType1Literal() {
         $discountTypeLiteral = '';
 
-        if ($this->discount1_type == 1)
+        if ($this->discount1_type == 1) {
             $discountTypeLiteral = '%';
-        elseif ($this->discount1_type == 2)
+        } elseif ($this->discount1_type == 2) {
             $discountTypeLiteral = 'Rp';
-        elseif ($this->discount1_type == 3)
+        } elseif ($this->discount1_type == 3) {
             $discountTypeLiteral = 'Pcs';
-        else
-            $discountTypeLiteral;
+        } else {
+            $discountTypeLiteral = '';
+        }
 
         return $discountTypeLiteral;
     }

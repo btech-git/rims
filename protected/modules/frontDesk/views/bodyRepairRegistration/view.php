@@ -123,7 +123,7 @@ $this->breadcrumbs = array(
                 </div>
             </div>
 
-            <h1>View RegistrationTransaction #<?php echo $model->transaction_number; ?></h1>
+            <h1>View Registration Transaction #<?php echo $model->transaction_number; ?></h1>
 
             <fieldset>
                 <legend>Information</legend>

@@ -34,7 +34,7 @@
                         <?php echo CHtml::label('Request Tanggal', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($transferRequest->header, 'transfer_request_date')); ?>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($transferRequest->header, 'transfer_request_date'))); ?>
                         <?php echo CHtml::error($transferRequest->header, 'transfer_request_date'); ?>
                     </div>
                 </div>

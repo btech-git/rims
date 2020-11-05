@@ -15,6 +15,7 @@
  * @property integer $movement_type
  * @property integer $user_id
  * @property integer $supervisor_id
+ * @property integer $material_request_header_id
  * @property string $status
  *
  * The followings are the available model relations:
@@ -26,144 +27,144 @@
  * @property TransactionReturnOrder $returnOrder
  * @property RegistrationTransaction $registrationTransaction
  * @property RegistrationService $registrationService
+ * @property MaterialRequestHeader $materialRequestHeader
  */
-class MovementOutHeader extends MonthlyTransactionActiveRecord
-{
+class MovementOutHeader extends MonthlyTransactionActiveRecord {
+
     const CONSTANT = 'MO';
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return MovementOutHeader the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public $branch_name;
-	public $delivery_order_number;
-	public $return_order_number;
-	public $registration_transaction_number;
-    
-	public function tableName()
-	{
-		return '{{movement_out_header}}';
-	}
+    /**
+     * Returns the static model of the specified AR class.
+     * @param string $className active record class name.
+     * @return MovementOutHeader the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('movement_out_no, date_posting, branch_id, movement_type, user_id, status', 'required'),
-			array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id', 'numerical', 'integerOnly'=>true),
-			array('movement_out_no', 'length', 'max'=>30),
-			array('status', 'length', 'max'=>20),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, movement_out_no, date_posting, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_id, branch_name, registration_service_id', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public $branch_name;
+    public $delivery_order_number;
+    public $return_order_number;
+    public $registration_transaction_number;
+    public $material_request_number;
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'movementOutApprovals' => array(self::HAS_MANY, 'MovementOutApproval', 'movement_out_id'),
-			'movementOutDetails' => array(self::HAS_MANY, 'MovementOutDetail', 'movement_out_header_id'),
-			'deliveryOrder' => array(self::BELONGS_TO, 'TransactionDeliveryOrder', 'delivery_order_id'),
-			'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
-			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-			'returnOrder' => array(self::BELONGS_TO, 'TransactionReturnOrder', 'return_order_id'),
-			'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
-			'registrationService' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_service_id'),
-			'movementOutShippings' => array(self::HAS_MANY, 'MovementOutShipping', 'movement_out_id'),
-			'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'movement_out_id'),
-		);
-	}
+    public function tableName() {
+        return '{{movement_out_header}}';
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'movement_out_no' => 'Movement Out No',
-			'date_posting' => 'Date Posting',
-			'delivery_order_id' => 'Delivery Order',
-			'return_order_id' => 'Return Order',
-			'registration_transaction_id' => 'Registration Transaction',
-			'registration_service_id' => 'Registration Service',
-			'branch_id' => 'Branch',
-			'user_id' => 'User',
-			'supervisor_id' => 'Supervisor',
-			'status' => 'Status',
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('movement_out_no, date_posting, branch_id, movement_type, user_id, status', 'required'),
+            array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id', 'numerical', 'integerOnly' => true),
+            array('movement_out_no', 'length', 'max' => 30),
+            array('status', 'length', 'max' => 20),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, movement_out_no, date_posting, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'movementOutApprovals' => array(self::HAS_MANY, 'MovementOutApproval', 'movement_out_id'),
+            'movementOutDetails' => array(self::HAS_MANY, 'MovementOutDetail', 'movement_out_header_id'),
+            'deliveryOrder' => array(self::BELONGS_TO, 'TransactionDeliveryOrder', 'delivery_order_id'),
+            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'returnOrder' => array(self::BELONGS_TO, 'TransactionReturnOrder', 'return_order_id'),
+            'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
+            'registrationService' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_service_id'),
+            'movementOutShippings' => array(self::HAS_MANY, 'MovementOutShipping', 'movement_out_id'),
+            'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'movement_out_id'),
+            'materialRequestHeader' => array(self::BELONGS_TO, 'MaterialRequestHeader', 'material_request_header_id'),
+        );
+    }
 
-		$criteria=new CDbCriteria;
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'movement_out_no' => 'Movement Out No',
+            'date_posting' => 'Date Posting',
+            'delivery_order_id' => 'Delivery Order',
+            'return_order_id' => 'Return Order',
+            'registration_transaction_id' => 'Registration Transaction',
+            'registration_service_id' => 'Registration Service',
+            'branch_id' => 'Branch',
+            'user_id' => 'User',
+            'supervisor_id' => 'Supervisor',
+            'status' => 'Status',
+            'material_request_header_id' => 'Material Request #'
+        );
+    }
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('movement_out_no',$this->movement_out_no,true);
-		$criteria->compare('date_posting',$this->date_posting,true);
-		$criteria->compare('delivery_order_id',$this->delivery_order_id);
-		$criteria->compare('return_order_id',$this->return_order_id);
-		$criteria->compare('registration_transaction_id',$this->registration_transaction_id);
-		$criteria->compare('registration_service_id', $this->registration_service_id);
-		$criteria->compare('branch_id',$this->branch_id);
-		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('supervisor_id',$this->supervisor_id);
-		$criteria->compare('status',$this->status,true);
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function search() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
-		$criteria->together = 'true';
-		$criteria->with = array('deliveryOrder','branch','returnOrder');
-		$criteria->addSearchCondition('deliveryOrder.delivery_order_no', $this->delivery_order_number, true);
-		$criteria->addSearchCondition('returnOrder.return_order_no', $this->return_order_number, true);
-		$criteria->addSearchCondition('branch.name', $this->branch_name, true);
+        $criteria = new CDbCriteria;
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-			'sort' => array(
-            'defaultOrder' => 'date_posting DESC',
-            'attributes' => array(
-	                'branch_name' => array(
-	                    'asc' => 'branch.name ASC',
-	                    'desc' => 'branch.name DESC',
-	                ),
-	                'delivery_order_number' => array(
-	                    'asc' => 'deliveryOrder.delivery_order_no ASC',
-	                    'desc' => 'deliveryOrder.delivery_order_no DESC',
-	                ),
-	                'return_order_number' => array(
-	                    'asc' => 'returnOrder.return_order_no ASC',
-	                    'desc' => 'returnOrder.return_order_no DESC',
-	                ),
-	                '*',
-	            ),
-	        ),
-	        'pagination' => array(
-	            'pageSize' => 10,
-	        ),
-		));
-	}
+        $criteria->compare('id', $this->id);
+        $criteria->compare('movement_out_no', $this->movement_out_no, true);
+        $criteria->compare('date_posting', $this->date_posting, true);
+        $criteria->compare('delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('return_order_id', $this->return_order_id);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('registration_service_id', $this->registration_service_id);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('supervisor_id', $this->supervisor_id);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('material_request_header_id', $this->material_request_header_id);
+
+        $criteria->together = 'true';
+        $criteria->with = array('deliveryOrder', 'branch', 'returnOrder');
+        $criteria->addSearchCondition('deliveryOrder.delivery_order_no', $this->delivery_order_number, true);
+        $criteria->addSearchCondition('returnOrder.return_order_no', $this->return_order_number, true);
+        $criteria->addSearchCondition('branch.name', $this->branch_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'date_posting DESC',
+                'attributes' => array(
+                    'branch_name' => array(
+                        'asc' => 'branch.name ASC',
+                        'desc' => 'branch.name DESC',
+                    ),
+                    'delivery_order_number' => array(
+                        'asc' => 'deliveryOrder.delivery_order_no ASC',
+                        'desc' => 'deliveryOrder.delivery_order_no DESC',
+                    ),
+                    'return_order_number' => array(
+                        'asc' => 'returnOrder.return_order_no ASC',
+                        'desc' => 'returnOrder.return_order_no DESC',
+                    ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+    }
 }

@@ -149,6 +149,11 @@ class GeneralRepairMechanicController extends Controller {
             $registrationMemo->date_time = date('Y-m-d H:i:s');
             $registrationMemo->user_id = Yii::app()->user->id;
             $registrationMemo->save();
+        } else if (isset($_POST['DetailId']) && isset($_POST['_FormSubmit_']) && ($_POST['_FormSubmit_'] === 'StartService' || $_POST['_FormSubmit_'] === 'ResumeService' || $_POST['_FormSubmit_'] === 'PauseService' || $_POST['_FormSubmit_'] === 'FinishService')) {
+            $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
+            $registrationService->service_activity = $_POST['_FormSubmit_'];
+            $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
+            $generalRepairMechanic->save(Yii::app()->db);
         }
 
         $this->render('viewDetailWorkOrder', array(
@@ -237,14 +242,14 @@ class GeneralRepairMechanicController extends Controller {
             $registrationService->status = 'On Progress';
             $registrationService->pause_mechanic_id = Yii::app()->user->id;
 
-//            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-//                'registration_transaction_id' => $registrationId,
-//                'service_id' => $registrationService->service_id
-//            ));
-//            $real->checked_date = date('Y-m-d');
-//            $real->checked_by = Yii::app()->user->id;
-//            $real->detail = 'Paused (Update From Idle Management)';
-//            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
+            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
+                'registration_transaction_id' => $registrationId,
+                'service_id' => $registrationService->service_id
+            ));
+            $real->checked_date = date('Y-m-d');
+            $real->checked_by = Yii::app()->user->id;
+            $real->detail = 'Paused (Update From Idle Management)';
+            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
 
             $registrationService->save();
 
@@ -268,14 +273,14 @@ class GeneralRepairMechanicController extends Controller {
             $registrationService->status = 'On Progress';
             $registrationService->resume_mechanic_id = Yii::app()->user->id;
 
-//            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-//                'registration_transaction_id' => $registrationId,
-//                'service_id' => $registrationService->service_id
-//            ));
-//            $real->checked_date = date('Y-m-d');
-//            $real->checked_by = Yii::app()->user->id;
-//            $real->detail = 'On Progress (Update From Idle Management)';
-//            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
+            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
+                'registration_transaction_id' => $registrationId,
+                'service_id' => $registrationService->service_id
+            ));
+            $real->checked_date = date('Y-m-d');
+            $real->checked_by = Yii::app()->user->id;
+            $real->detail = 'On Progress (Update From Idle Management)';
+            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
 
             $registrationService->save();
 

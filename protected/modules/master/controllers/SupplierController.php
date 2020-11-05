@@ -47,8 +47,9 @@ class SupplierController extends Controller {
 
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id = 15");
@@ -61,8 +62,10 @@ class SupplierController extends Controller {
 
         $coaOutstanding = new Coa('search');
         $coaOutstanding->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaOutstandingCriteria = new CDbCriteria;
         $coaOutstandingCriteria->addCondition("coa_sub_category_id = 16");

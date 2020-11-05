@@ -178,33 +178,35 @@
             </div>
 
             <div class="small-12 medium-6 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($supplier->header,'coa_id'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->hiddenField($supplier->header,'coa_id'); ?>
-                            <?php echo $form->textField($supplier->header,'coa_name',array('readonly'=>true,'value'=>$supplier->header->coa_id != "" ? Coa::model()->findByPk($supplier->header->coa_id)->name : '','onclick'=>'jQuery("#coa-dialog").dialog("open"); return false;')); ?>
-                            <?php echo $form->textField($supplier->header,'coa_code',array('readonly'=>true,'value'=>$supplier->header->coa_id != "" ? Coa::model()->findByPk($supplier->header->coa_id)->code : '')); ?>
-                            <?php echo $form->error($supplier->header,'coa_id'); ?>
+                <?php if (!$supplier->header->isNewRecord): ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($supplier->header,'coa_id'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->hiddenField($supplier->header,'coa_id'); ?>
+                                <?php echo $form->textField($supplier->header,'coa_name',array('readonly'=>true,'value'=>$supplier->header->coa_id != "" ? Coa::model()->findByPk($supplier->header->coa_id)->name : '','onclick'=>'jQuery("#coa-dialog").dialog("open"); return false;')); ?>
+                                <?php echo $form->textField($supplier->header,'coa_code',array('readonly'=>true,'value'=>$supplier->header->coa_id != "" ? Coa::model()->findByPk($supplier->header->coa_id)->code : '')); ?>
+                                <?php echo $form->error($supplier->header,'coa_id'); ?>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($supplier->header,'coa_outstanding_order'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->hiddenField($supplier->header,'coa_outstanding_order'); ?>
-                            <?php echo $form->textField($supplier->header,'coa_outstanding_name',array('readonly'=>true,'value'=>$supplier->header->coa_outstanding_order != "" ? Coa::model()->findByPk($supplier->header->coa_outstanding_order)->name : '','onclick'=>'jQuery("#coa-outstanding-dialog").dialog("open"); return false;')); ?>
-                            <?php echo $form->textField($supplier->header,'coa_outstanding_code',array('readonly'=>true,'value'=>$supplier->header->coa_outstanding_order != "" ? Coa::model()->findByPk($supplier->header->coa_outstanding_order)->code : '')); ?>
-                            <?php echo $form->error($supplier->header,'coa_outstanding_order'); ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($supplier->header,'coa_outstanding_order'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->hiddenField($supplier->header,'coa_outstanding_order'); ?>
+                                <?php echo $form->textField($supplier->header,'coa_outstanding_name',array('readonly'=>true,'value'=>$supplier->header->coa_outstanding_order != "" ? Coa::model()->findByPk($supplier->header->coa_outstanding_order)->name : '','onclick'=>'jQuery("#coa-outstanding-dialog").dialog("open"); return false;')); ?>
+                                <?php echo $form->textField($supplier->header,'coa_outstanding_code',array('readonly'=>true,'value'=>$supplier->header->coa_outstanding_order != "" ? Coa::model()->findByPk($supplier->header->coa_outstanding_order)->code : '')); ?>
+                                <?php echo $form->error($supplier->header,'coa_outstanding_order'); ?>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
                 <div class="field">
                     <div class="row collapse">
@@ -348,7 +350,7 @@
         </div>
 
         <div class="field buttons text-center">
-            <?php echo CHtml::submitButton($supplier->header->isNewRecord ? 'Create' : 'Save', array('class'=>'button cbutton')); ?>
+            <?php echo CHtml::submitButton($supplier->header->isNewRecord ? 'Create' : 'Save', array('class'=>'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
         </div>
 
         <?php $this->endWidget(); ?>

@@ -22,7 +22,7 @@ class BodyRepairRegistration extends CComponent {
             'order' => ' id DESC',
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $branchId),
-                ));
+        ));
 
         if ($registrationTransaction == null) {
             $branchCode = Branch::model()->findByPk($branchId)->code;

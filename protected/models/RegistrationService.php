@@ -300,4 +300,12 @@ class RegistrationService extends CActiveRecord {
             ),
         ));
     }
+    
+    public function getFormattedTotalTime() {
+        $hours = floor($this->total_time / 3600);
+        $minutes = floor($this->total_time / 60 % 60);
+        $seconds = floor($this->total_time % 60);
+        
+        return sprintf('%dh %dm %ds', $hours, $minutes, $seconds);
+    }
 }

@@ -53,8 +53,11 @@ class PurchaseOrders extends CComponent {
 
     public function updateTaxes() {
         foreach ($this->details as $detail) {
+            $detail->total_before_tax = $detail->getTotalPriceBeforeTax($this->header->ppn);
+            $detail->price_before_tax = $detail->getPriceBeforeTax($this->header->ppn);
             $detail->tax_amount = $detail->getTaxAmount($this->header->ppn);
-            $detail->unit_price = $detail->getUnitPriceBeforeDiscount($this->header->ppn);
+            $detail->unit_price = $detail->getUnitPrice($this->header->ppn);
+            $detail->total_price = $detail->getSubTotal($this->header->ppn);
         }
     }
 
@@ -132,12 +135,15 @@ class PurchaseOrders extends CComponent {
         //save request detail
         foreach ($this->details as $detail) {
             $detail->purchase_order_id = $this->header->id;
-            $detail->unit_price = $detail->unitPrice;
-            $detail->total_price = $detail->getGrandTotal($this->header->ppn);
+            $detail->unit_price = $detail->getUnitPrice($this->header->ppn);
+            $detail->total_price = $detail->getSubTotal($this->header->ppn);
             $detail->total_quantity = $detail->quantityAfterBonus;
 
-            if ($isNewRecord)
+            if ($isNewRecord) {
                 $detail->purchase_order_quantity_left = $detail->total_quantity;
+            } else {
+                $detail->purchase_order_quantity_left = $detail->quantityReceiveRemaining;
+            }
 
             $valid = $detail->save(false) && $valid;
 
@@ -303,8 +309,9 @@ class PurchaseOrders extends CComponent {
     public function getTotalQuantity() {
         $total = 0.00;
 
-        foreach ($this->details as $detail)
+        foreach ($this->details as $detail) {
             $total += $detail->quantityAfterBonus;
+        }
 
         return $total;
     }
@@ -312,8 +319,9 @@ class PurchaseOrders extends CComponent {
     public function getSubTotalDiscount() {
         $total = 0.00;
 
-        foreach ($this->details as $detail)
+        foreach ($this->details as $detail) {
             $total += $detail->totalDiscount;
+        }
 
         return $total;
     }
@@ -321,8 +329,9 @@ class PurchaseOrders extends CComponent {
     public function getSubTotalBeforeDiscount() {
         $total = 0.00;
 
-        foreach ($this->details as $detail)
+        foreach ($this->details as $detail) {
             $total += $detail->totalBeforeDiscount;
+        }
 
         return $total;
     }
@@ -330,17 +339,30 @@ class PurchaseOrders extends CComponent {
     public function getSubTotal() {
         $total = 0.00;
 
-        foreach ($this->details as $detail)
-            $total += $detail->subTotal;
+        foreach ($this->details as $detail) {
+            $total += $detail->getUnitPrice($this->header->ppn);
+        }
 
         return $total;
     }
 
     public function getTaxAmount() {
-        return ($this->header->ppn == 1) ? $this->subTotal * 10 / 100 : 0.00;
+        $total = 0.00;
+
+        foreach ($this->details as $detail) {
+            $total += $detail->getTaxAmount($this->header->ppn);
+        }
+
+        return $total;
     }
 
     public function getGrandTotal() {
-        return $this->subTotal + $this->taxAmount;
+        $total = 0.00;
+
+        foreach ($this->details as $detail) {
+            $total += $detail->getSubTotal($this->header->ppn);
+        }
+
+        return $total;
     }
 }

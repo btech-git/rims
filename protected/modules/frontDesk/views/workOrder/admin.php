@@ -25,22 +25,23 @@ Yii::app()->clientScript->registerScript('search', "
 	return false;
 });*/
 $('form').submit(function(){
-	$('#work-order-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
+    $('#work-order-grid').yiiGridView('update', {
+            data: $(this).serialize()
+    });
+    return false;
 });
 ");
 ?>
 
+<?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
-	<div class="clearfix page-action">
-		<h1>Work Orders</h1>
-
-		<div class="search-bar">
-			<div class="clearfix button-bar">
-				<div class="left clearfix bulk-action"></div>
-				<div class="row">
+    <div class="clearfix page-action">
+        
+        <h1>Work Orders</h1>
+        <div class="search-bar">
+            <div class="clearfix button-bar">
+                <div class="left clearfix bulk-action"></div>
+                <div class="row">
                     <table>
                         <tr>
                             <td style="text-align: center; font-weight: bold">Plate #</td>
@@ -256,7 +257,7 @@ $('form').submit(function(){
                         </tr>
                     </table>
                 </div>
-     		</div>
+            </div>
         </div>
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -359,3 +360,4 @@ $('form').submit(function(){
         </div>
     </div>
 </div>
+<?php echo CHtml::endForm(); ?>

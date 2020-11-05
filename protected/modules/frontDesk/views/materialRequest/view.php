@@ -1,0 +1,91 @@
+<?php
+/* @var $this MaterialRequestController */
+/* @var $materialRequest MaterialRequest */
+
+$this->breadcrumbs = array(
+    'Material Requests' => array('admin'),
+    $materialRequest->id,
+);
+
+$this->menu = array(
+    array('label' => 'List Material Request', 'url' => array('index')),
+    array('label' => 'Create Material Request', 'url' => array('create')),
+    array('label' => 'Update Material Request', 'url' => array('update', 'id' => $materialRequest->id)),
+    array(
+        'label' => 'Delete Material Request',
+        'url' => '#',
+        'linkOptions' => array(
+            'submit' => array('delete', 'id' => $materialRequest->id),
+            'confirm' => 'Are you sure you want to delete this item?'
+        )
+    ),
+    array('label' => 'Manage Material Request', 'url' => array('admin')),
+);
+?>
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <?php $ccontroller = Yii::app()->controller->id; ?>
+        <?php $ccaction = Yii::app()->controller->action->id; ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Material Request', Yii::app()->baseUrl . '/frontDesk/materialRequest/admin', array(
+            'class' => 'button cbutton right',
+            'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.admin")
+        ));  ?>
+
+        <?php //if ($materialRequest->status != 'Approved' && $materialRequest->status != 'Rejected'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/frontDesk/materialRequest/update?id=' . $materialRequest->id, array(
+                'class' => 'button cbutton right',
+                'style' => 'margin-right:10px',
+                'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.update")
+            )); ?>
+        <?php //endif; ?>
+
+        <h1>View Permintaan Bahan #<?php echo $materialRequest->id; ?></h1>
+
+        <?php $this->widget('zii.widgets.CDetailView', array(
+            'data' => $materialRequest,
+            'attributes' => array(
+                'transaction_number',
+                'transaction_date',
+                'status',
+                'note',
+                array('name' => 'user_id', 'value' => $materialRequest->user->username),
+                array('name' => 'branch_id', 'value' => $materialRequest->branch->name),
+            ),
+        )); ?>
+
+    </div>
+</div>
+<div class="detail">
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+        'tabs' => array(
+            'Detail Item' => array(
+                'id' => 'test1',
+                'content' => $this->renderPartial('_viewDetail', array(
+                    'model' => $materialRequest
+                ), true)
+            ),
+//            'Detail Approval' => array(
+//                'id' => 'test2',
+//                'content' => $this->renderPartial(
+//                    '_viewDetailApproval',
+//                    array('model' => $materialRequest), true)
+//            ),
+
+            'Detail Movement Out' => array(
+                'id' => 'test3',
+                'content' => $this->renderPartial('_viewDetailMovementOut', array(
+                    'model' => $materialRequest
+                ), true)
+            ),
+        ),
+
+        // additional javascript options for the tabs plugin
+        'options' => array(
+            'collapsible' => true,
+        ),
+        // set id for this widgets
+        'id' => 'view_tab',
+    )); ?>
+</div>
+	
+

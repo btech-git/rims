@@ -60,6 +60,13 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
     const TIRE_LITERAL = 'Ban';
     const GENERAL_LITERAL = 'Umum / Oli';
 
+    const ADD_TAX = 1;
+    const NON_TAX = 2;
+    const INCLUDE_TAX = 3;
+    const ADD_TAX_LITERAL = 'Add PPN';
+    const NON_TAX_LITERAL = 'Non PPN';
+    const INCLUDE_TAX_LITERAL = 'Include PPN';
+
     public function tableName() {
         return '{{transaction_purchase_order}}';
     }
@@ -237,6 +244,15 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             case self::SPAREPART: return self::SPAREPART_LITERAL;
             case self::TIRE: return self::TIRE_LITERAL;
             case self::GENERAL: return self::GENERAL_LITERAL;
+            default: return '';
+        }
+    }
+
+    public function getTaxStatus() {
+        switch ($this->ppn) {
+            case self::ADD_TAX: return self::ADD_TAX_LITERAL;
+            case self::NON_TAX: return self::NON_TAX_LITERAL;
+            case self::INCLUDE_TAX: return self::INCLUDE_TAX_LITERAL;
             default: return '';
         }
     }

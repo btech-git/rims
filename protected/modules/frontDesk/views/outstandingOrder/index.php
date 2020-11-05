@@ -68,8 +68,8 @@ Yii::app()->clientScript->registerScript('report', '
                                 <?php echo CHtml::dropDownlist('status_document', $status_document, array(
                                     'Draft'=>'Draft',
                                     'Approved' => 'Approved',
-                                    'Revised' => 'Revised',
-                                    'Rejected'=>'Rejected'
+//                                    'Revised' => 'Revised',
+//                                    'Rejected'=>'Rejected'
                                 ), array('empty'=>'-- All Status Document --')); ?>
                             </div>
                         </div>
@@ -111,6 +111,15 @@ Yii::app()->clientScript->registerScript('report', '
                                 array(
                                     'saleOrderDataProvider' => $saleOrderDataProvider, 
                                     'saleOrder' => $saleOrder
+                                ), true
+                            )
+                        ),
+                        'Transfer Request' => array(
+                            'content' => $this->renderPartial(
+                                '_viewTransfer',
+                                array(
+                                    'transferRequest' => $transferRequest,
+                                    'transferRequestDataProvider' => $transferRequestDataProvider,
                                 ), true
                             )
                         ),

@@ -14,5 +14,3 @@
         } } });
     ',
 )); ?>
-
-<?php echo $model->vehicle->car_make_id . ' - 2'; ?>

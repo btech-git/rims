@@ -254,6 +254,7 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionView($id) {
+        $model = $this->loadModel($id);
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
         $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
@@ -272,8 +273,13 @@ class GeneralRepairRegistrationController extends Controller {
             $registrationMemo->save();
         }
 
+        if (isset($_POST['SubmitFinish'])) {
+            $model->status = 'Finished';
+            $model->update(array('status'));
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
             'quickServices' => $quickServices,
             'services' => $services,
             'products' => $products,
@@ -306,9 +312,9 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionGenerateInvoice($id) {
         $registration = RegistrationTransaction::model()->findByPK($id);
-        $customer = Customer::model()->findByPk($registration->customer_id);
+//        $customer = Customer::model()->findByPk($registration->customer_id);
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $registration->id));
-        $branch = Branch::model()->findByPk($registration->branch_id);
+//        $branch = Branch::model()->findByPk($registration->branch_id);
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $registration->transaction_number,
@@ -321,8 +327,8 @@ class GeneralRepairRegistrationController extends Controller {
         }
 
 //        $days = $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
-        $invoiceHeader = InvoiceHeader::model()->findAll();
-        $count = count($invoiceHeader) + 1;
+//        $invoiceHeader = InvoiceHeader::model()->findAll();
+//        $count = count($invoiceHeader) + 1;
 
         $model = new InvoiceHeader();
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registration->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registration->transaction_date)), $registration->branch_id);
@@ -350,6 +356,9 @@ class GeneralRepairRegistrationController extends Controller {
         $model->pph = $registration->pph;
 
         if ($model->save(false)) {
+            $registration->payment_status = 'INVOICING';
+            $registration->update(array('payment_status')); 
+            
             $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
             if (count($registrationProducts) != 0) {
                 foreach ($registrationProducts as $registrationProduct) {

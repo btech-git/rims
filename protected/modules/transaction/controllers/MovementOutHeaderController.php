@@ -92,8 +92,9 @@ class MovementOutHeaderController extends Controller {
         $deliveryOrderDetail = new TransactionDeliveryOrderDetail('search');
         $deliveryOrderDetail->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['TransactionDeliveryOrderDetail']))
+        if (isset($_GET['TransactionDeliveryOrderDetail'])) {
             $deliveryOrderDetail->attributes = $_GET['TransactionDeliveryOrderDetail'];
+        }
         
         $deliveryOrderDetailCriteria = new CDbCriteria;
         $deliveryOrderDetailCriteria->together = 'true';
@@ -110,8 +111,9 @@ class MovementOutHeaderController extends Controller {
         $returnOrder = new TransactionReturnOrder('search');
         $returnOrder->unsetAttributes();
         
-        if (isset($_GET['TransactionReturnOrder']))
+        if (isset($_GET['TransactionReturnOrder'])) {
             $returnOrder->attributes = $_GET['TransactionReturnOrder'];
+        }
         
         $returnOrderCriteria = new CDbCriteria;
         $returnOrderCriteria->together = 'true';
@@ -124,8 +126,9 @@ class MovementOutHeaderController extends Controller {
         $returnOrderDetail = new TransactionReturnOrderDetail('search');
         $returnOrderDetail->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['TransactionReturnOrderDetail']))
+        if (isset($_GET['TransactionReturnOrderDetail'])) {
             $returnOrderDetail->attributes = $_GET['TransactionReturnOrderDetail'];
+        }
         
         $returnOrderDetailCriteria = new CDbCriteria;
         $returnOrderDetailCriteria->together = 'true';
@@ -142,8 +145,9 @@ class MovementOutHeaderController extends Controller {
         $movementTransaction = new RegistrationTransaction('search');
         $movementTransaction->unsetAttributes();
         
-        if (isset($_GET['RegistrationTransaction']))
+        if (isset($_GET['RegistrationTransaction'])) {
             $movementTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
         
         $movementTransactionCriteria = new CDbCriteria;
         $movementTransactionCriteria->together = 'true';
@@ -155,8 +159,9 @@ class MovementOutHeaderController extends Controller {
         $movementProduct = new RegistrationProduct('search');
         $movementProduct->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['RegistrationProduct']))
+        if (isset($_GET['RegistrationProduct'])) {
             $movementProduct->attributes = $_GET['RegistrationProduct'];
+        }
         
         $movementProductCriteria = new CDbCriteria;
         $movementProductCriteria->together = 'true';
@@ -168,8 +173,20 @@ class MovementOutHeaderController extends Controller {
             'criteria' => $movementProductCriteria,
         ));
 
-        if (isset($_POST['Cancel']))
+        /* Material Request */
+        $materialRequestHeader = Search::bind(new MaterialRequestHeader('search'), isset($_GET['MaterialRequestHeader']) ? $_GET['MaterialRequestHeader'] : array());
+        $materialRequestHeaderDataProvider = $materialRequestHeader->searchByMovementOut();
+
+        $materialRequestHeaderId = isset($_GET['RegistrationTransaction']['material_request_header_id']) ? $_GET['RegistrationTransaction']['material_request_header_id'] : '' ;
+        $materialRequestDetail = Search::bind(new MaterialRequestDetail('search'), isset($_GET['MaterialRequestDetail']) ? $_GET['MaterialRequestDetail'] : array());
+        $materialRequestDetailDataProvider = $materialRequestDetail->searchByMovementOut();
+        if (!empty($materialRequestHeaderId)) {
+            $materialRequestDetailDataProvider->criteria->compare('material_request_header_id', $materialRequestHeaderId);
+        }
+
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['MovementOutHeader'])) {
             $this->loadState($movementOut);
@@ -193,6 +210,10 @@ class MovementOutHeaderController extends Controller {
             'registrationTransactionDataProvider' => $movementTransactionDataProvider,
             'registrationProduct' => $movementProduct,
             'registrationProductDataProvider' => $movementProductDataProvider,
+            'materialRequestHeader' => $materialRequestHeader,
+            'materialRequestHeaderDataProvider' => $materialRequestHeaderDataProvider,
+            'materialRequestDetail' => $materialRequestDetail,
+            'materialRequestDetailDataProvider' => $materialRequestDetailDataProvider,
         ));
     }
 
@@ -713,6 +734,18 @@ class MovementOutHeaderController extends Controller {
             $object = array(
                 'id' => $retail->id,
                 'number' => $retail->transaction_number,
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxMaterialRequest($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $materialRequest = MaterialRequestHeader::model()->findByPk($id);
+            $object = array(
+                'id' => $materialRequest->id,
+                'number' => $materialRequest->transaction_number,
             );
 
             echo CJSON::encode($object);

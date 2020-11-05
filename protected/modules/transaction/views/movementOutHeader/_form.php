@@ -72,24 +72,31 @@
                             <?php echo $form->labelEx($movementOut->header, 'movement_type', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownList($movementOut->header, 'movement_type', array('1' => 'Delivery Order', '2' => 'Return Order', '3' => 'Retail Sales'), array('prompt' => '[--Select Movement Type--]', 'onchange' => '$.ajax({
-                                type: "POST",
-                                //dataType: "JSON",
-                                url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
-                                data: $("form").serialize(),
-                                success: function(html) {
-                                    $("#mmtype").html(html);	
-
-                                },
-                            });
-                            $("#MovementOutHeader_delivery_order_id").val("");
-                            $("#MovementOutHeader_delivery_order_number").val("");
-                            $("#MovementOutHeader_reference_type").val("");
-                            $("#MovementOutHeader_reference_number").val("");
-                            $("#MovementOutHeader_return_order_id").val("");
-                            $("#MovementOutHeader_return_order_number").val("");
-                            $("#MovementOutHeader_delivery_order_id").val("");
-                            $("#MovementOutHeader_delivery_order_number").val("");')); ?>
+                            <?php echo $form->dropDownList($movementOut->header, 'movement_type', array(
+                                '1' => 'Delivery Order', 
+                                '2' => 'Return Order', 
+                                '3' => 'Retail Sales',
+                                '4' => 'Material Request',
+                            ), array(
+                                'prompt' => '[--Select Movement Type--]', 
+                                'onchange' => '$.ajax({
+                                    type: "POST",
+                                    //dataType: "JSON",
+                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
+                                    data: $("form").serialize(),
+                                    success: function(html) {
+                                        $("#mmtype").html(html);
+                                    },
+                                });
+                                $("#MovementOutHeader_delivery_order_id").val("");
+                                $("#MovementOutHeader_delivery_order_number").val("");
+                                $("#MovementOutHeader_reference_type").val("");
+                                $("#MovementOutHeader_reference_number").val("");
+                                $("#MovementOutHeader_return_order_id").val("");
+                                $("#MovementOutHeader_return_order_number").val("");
+                                $("#MovementOutHeader_material_request_header_id").val("");
+                                $("#MovementOutHeader_material_request_header_number").val("");'
+                            )); ?>
                             <?php echo $form->error($movementOut->header, 'movement_type'); ?>
                         </div>
                     </div>
@@ -101,7 +108,6 @@
                             <?php echo $form->labelEx($movementOut->header, 'branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php //echo $form->textField($movementOut->header,'branch_id'); ?>
                             <?php echo $form->dropDownlist($movementOut->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]', 'onchange' => '
                                 //$("#delivery-order-grid .filters input[name=\"TransactionDeliveryOrder[branch_name]\"]").prop("readOnly","readOnly");
                                 $.updateGridView("delivery-order-grid", "TransactionDeliveryOrder[branch_name]", $("#MovementOutHeader_branch_id option:selected").text());
@@ -114,10 +120,8 @@
                                     data: $("form").serialize(),
                                     success: function(html) {
                                         $("#mmtype").html(html);	
-
                                     },
                                 });
-
                             ')); ?>
                             <?php echo $form->error($movementOut->header, 'branch_id'); ?>
                         </div>
@@ -132,8 +136,6 @@
                                 <?php echo $form->labelEx($movementOut->header, 'delivery_order_id', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php //echo $form->textField($movementOut->header,'delivery_order_id'); ?>
-                                <?php //echo $form->error($movementOut->header,'delivery_order_id'); ?>
                                 <?php echo $form->hiddenField($movementOut->header, 'delivery_order_id'); ?>
                                 <?php echo $form->textField($movementOut->header, 'delivery_order_number', array(
                                     'value' => $movementOut->header->delivery_order_id == "" ? "" : TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id)->delivery_order_no,
@@ -171,36 +173,35 @@
                                        'header'=>'',
                                     ),
                                     'selectionChanged' => 'js:function(id){
-							               	$("#MovementOutHeader_delivery_order_id").val($.fn.yiiGridView.getSelection(id));
-							                $("#delivery-order-dialog").dialog("close");
-											$.ajax({
-							                    type: "POST",
-							                    dataType: "JSON",
-							                    url: "' . CController::createUrl('ajaxDelivery', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-							                    data: $("form").serialize(),
-							                    success: function(data) {
-							                        $("#MovementOutHeader_delivery_order_number").val(data.number);
-							                        $("#MovementOutHeader_reference_type").val(data.type);
-							                        $("#MovementOutHeader_reference_number").val(data.requestNumber);
-							                         $.updateGridView("delivery-order-detail-grid", "TransactionDeliveryOrderDetail[delivery_order_no]", data.number);
-							                         $.ajax({
-														type: "POST",
-														//dataType: "JSON",
-														url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
-														data: $("form").serialize(),
-														success: function(html) {
-			                       							$("#mmtype").attr("data-mmtype","mmtype_delivey"); 
-									                        $("#mmtype").html(html);
-															
-														},
-													});
-							                    },
-							                });
-                                            
-							                $("#delivery-order-grid").find("tr.selected").each(function(){
-							                   $(this).removeClass( "selected" );
-							                });
-							            }',
+                                        $("#MovementOutHeader_delivery_order_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#delivery-order-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxDelivery', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),
+                                            success: function(data) {
+                                                $("#MovementOutHeader_delivery_order_number").val(data.number);
+                                                $("#MovementOutHeader_reference_type").val(data.type);
+                                                $("#MovementOutHeader_reference_number").val(data.requestNumber);
+                                                 $.updateGridView("delivery-order-detail-grid", "TransactionDeliveryOrderDetail[delivery_order_no]", data.number);
+                                                 $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $("#mmtype").attr("data-mmtype","mmtype_delivey"); 
+                                                        $("#mmtype").html(html);
+                                                    },
+                                                });
+                                            },
+                                        });
+
+                                        $("#delivery-order-grid").find("tr.selected").each(function(){
+                                           $(this).removeClass( "selected" );
+                                        });
+                                    }',
                                     'columns' => array(
                                         'delivery_order_no',
                                         'delivery_date',
@@ -243,7 +244,6 @@
                         </div>
                     </div>
 
-
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
@@ -263,8 +263,6 @@
                                 <?php echo $form->labelEx($movementOut->header, 'return_order_id', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php //echo $form->textField($movementOut->header,'delivery_order_id'); ?>
-                                <?php //echo $form->error($movementOut->header,'delivery_order_id'); ?>
                                 <?php echo $form->hiddenField($movementOut->header, 'return_order_id'); ?>
                                 <?php echo $form->textField($movementOut->header, 'return_order_number', array(
                                     'value' => $movementOut->header->return_order_id == "" ? "" : TransactionReturnOrder::model()->findByPk($movementOut->header->return_order_id)->return_order_no,
@@ -303,43 +301,41 @@
                                        'header'=>'',
                                     ),
                                     'selectionChanged' => 'js:function(id){
-							               	$("#MovementOutHeader_return_order_id").val($.fn.yiiGridView.getSelection(id));
-							                $("#return-order-dialog").dialog("close");
-											$.ajax({
-							                    type: "POST",
-							                    dataType: "JSON",
-							                    url: "' . CController::createUrl('ajaxReturn', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-							                    data: $("form").serialize(),
-							                    success: function(data) {
-							                        $("#MovementOutHeader_return_order_number").val(data.number);
-							                         $.updateGridView("return-order-detail-grid", "TransactionReturnOrderDetail[return_order_no]", data.number);
-							                         $.ajax({
-														type: "POST",
-														//dataType: "JSON",
-														url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
-														data: $("form").serialize(),
-														success: function(html) {
-			                       							$("#mmtype").attr("data-mmtype","mmtype_return"); 
-									                        $("#mmtype").html(html);
-															
-														},
-													});
-							                    },
-							                });
+                                        $("#MovementOutHeader_return_order_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#return-order-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxReturn', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),
+                                            success: function(data) {
+                                                $("#MovementOutHeader_return_order_number").val(data.number);
+                                                 $.updateGridView("return-order-detail-grid", "TransactionReturnOrderDetail[return_order_no]", data.number);
+                                                 $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $("#mmtype").attr("data-mmtype","mmtype_return"); 
+                                                        $("#mmtype").html(html);
+                                                    },
+                                                });
+                                            },
+                                        });
 
-							                $("#return-order-grid").find("tr.selected").each(function(){
-							                   $(this).removeClass( "selected" );
-							                });
-											
-							            }',
-                                        'columns' => array(
-                                            'return_order_no',
-                                            array(
-                                                'name' => 'branch_name', 
-                                                'value' => '$data->recipientBranch->name',
-                                            )
-                                        )
-                                    )); ?>
+                                        $("#return-order-grid").find("tr.selected").each(function(){
+                                           $(this).removeClass( "selected" );
+                                        });
+                                    }',
+                                    'columns' => array(
+                                        'return_order_no',
+                                        array(
+                                            'name' => 'branch_name', 
+                                            'value' => '$data->recipientBranch->name',
+                                        ),
+                                    ),
+                                )); ?>
                                 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
                                 <?php echo $form->error($movementOut->header, 'return_order_id'); ?>
                             </div>
@@ -354,8 +350,6 @@
                                 <?php echo $form->labelEx($movementOut->header, 'registration_transaction_id', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php //echo $form->textField($movementOut->header,'delivery_order_id'); ?>
-                                <?php //echo $form->error($movementOut->header,'delivery_order_id'); ?>
                                 <?php echo $form->hiddenField($movementOut->header, 'registration_transaction_id'); ?>
                                 <?php echo $form->textField($movementOut->header, 'transaction_number', array(
                                     'value' => $movementOut->header->registration_transaction_id == "" ? "" : RegistrationTransaction::model()->findByPk($movementOut->header->registration_transaction_id)->transaction_number,
@@ -394,36 +388,34 @@
                                        'header'=>'',
                                     ),
                                     'selectionChanged' => 'js:function(id){
-							               	$("#MovementOutHeader_registration_transaction_id").val($.fn.yiiGridView.getSelection(id));
-							                $("#registration-transaction-dialog").dialog("close");
-											$.ajax({
-							                    type: "POST",
-							                    dataType: "JSON",
-							                    url: "' . CController::createUrl('ajaxRetail', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-							                    data: $("form").serialize(),
-							                    success: function(data) {
-							                        $("#MovementOutHeader_transaction_number").val(data.number);
-							                       
-							                         $.updateGridView("registration-transaction-detail-grid", "RegistrationProduct[transaction_number]", data.number);
-							                         $.ajax({
-														type: "POST",
-														//dataType: "JSON",
-														url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
-														data: $("form").serialize(),
-														success: function(html) {
-			                       							$("#mmtype").attr("data-mmtype","mmtype_registration"); 
-									                        $("#mmtype").html(html);
-															
-														},
-													});
-							                    },
-							                });
+                                        $("#MovementOutHeader_registration_transaction_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#registration-transaction-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxRetail', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),
+                                            success: function(data) {
+                                                $("#MovementOutHeader_transaction_number").val(data.number);
+                                                 $.updateGridView("registration-transaction-detail-grid", "RegistrationProduct[transaction_number]", data.number);
+                                                 $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $("#mmtype").attr("data-mmtype","mmtype_registration"); 
+                                                        $("#mmtype").html(html);
+                                                    },
+                                                });
+                                            },
+                                        });
 
-							                $("#registration-transaction-grid").find("tr.selected").each(function(){
-							                   $(this).removeClass( "selected" );
-							                });
-											
-							            }',
+                                        $("#registration-transaction-grid").find("tr.selected").each(function(){
+                                           $(this).removeClass( "selected" );
+                                        });
+
+                                    }',
                                         'columns' => array(
                                             'transaction_number',
                                             array('name' => 'branch_name', 'value' => '$data->branch->name',)
@@ -445,6 +437,102 @@
                     </div>
                 </div> <!-- end of Div RetailSales -->
 
+                <div id="materialRequest">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($movementOut->header, 'material_request_header_id', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->hiddenField($movementOut->header, 'material_request_header_id'); ?>
+                                <?php echo $form->textField($movementOut->header, 'material_request_number', array(
+                                    'value' => $movementOut->header->material_request_header_id == "" ? "" : MaterialRequestHeader::model()->findByPk($movementOut->header->material_request_header_id)->transaction_number,
+                                    'readonly' => true,
+                                    'onclick' => '
+                                        var branch = $("#MovementOutHeader_branch_id").val();
+                                        var branch_val = $("#MovementOutHeader_branch_id option:selected").text();
+                                        if (branch == "") {
+                                            alert("Please Choose Branch to Proceed!");
+                                        } else {
+                                            $("[name=\"RegistrationTransaction[branch_name]\"]").val(branch_val);
+                                            $("[name=\"RegistrationTransaction[branch_name]\"]").attr("readonly", "readonly");
+                                            $("#material-request-dialog").dialog("open"); return false;
+                                        }
+                                    '
+                                )); ?>
+                                <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                    'id' => 'material-request-dialog',
+                                    // additional javascript options for the dialog plugin
+                                    'options' => array(
+                                        'title' => 'Material Request',
+                                        'autoOpen' => false,
+                                        'width' => 'auto',
+                                        'modal' => true,
+                                    ),
+                                )); ?>
+
+                                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                    'id' => 'material-request-grid',
+                                    'dataProvider' => $materialRequestHeaderDataProvider,
+                                    'filter' => $materialRequestHeader,
+                                    'pager'=>array(
+                                       'cssFile'=>false,
+                                       'header'=>'',
+                                    ),
+                                    'selectionChanged' => 'js:function(id){
+                                        $("#MovementOutHeader_material_request_header_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#material-request-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxMaterialRequest', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),
+                                            success: function(data) {
+                                                $("#MovementOutHeader_material_request_number").val(data.number);
+                                                $.updateGridView("material-request-detail-grid", "MaterialRequestDetail[material_request_header_id]", data.id);
+                                                $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $("#mmtype").attr("data-mmtype","mmtype_material_request"); 
+                                                        $("#mmtype").html(html);
+                                                    },
+                                                });
+                                            },
+                                        });
+
+                                        $("#material-request-grid").find("tr.selected").each(function(){
+                                            $(this).removeClass( "selected" );
+                                        });
+                                    }',
+                                    'columns' => array(
+                                        'transaction_number',
+                                        'transaction_date',
+                                        array(
+                                            'header' => 'Branch', 
+                                            'value' => '$data->branch->name',
+                                        ),
+                                        'note',
+                                    ),
+                                )); ?>
+
+                                <?php Yii::app()->clientScript->registerScript('updateGridView', '
+                                    $.updateGridView = function(gridID, name, value) {
+                                        $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
+                                        $.fn.yiiGridView.update(gridID, {data: $.param(
+                                            $("#"+gridID+" .filters input, #"+gridID+" .filters select")
+                                        )});
+                                    }
+                                ', CClientScript::POS_READY); ?>
+                                <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+                                <?php echo $form->error($movementOut->header, 'material_request_header_id'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -491,34 +579,39 @@
                                 var return_val = $("#MovementOutHeader_return_order_number").val();
                                 var retail = $("#MovementOutHeader_registration_transaction_id").val();
                                 var retail_val = $("#MovementOutHeader_transaction_number").val();
-                                if(movement == 1){
-                                    if(branch === "" || delivery === ""){
+//                                var materialRequest = $("#MovementOutHeader_material_request_header_id").val();
+                                var material_request_val = $("#MovementOutHeader_material_request_header_id").val();
+                                if (movement == 1) {
+                                    if (branch === "" || delivery === "") {
                                         alert("Please Choose Branch and Delivery Order no to Proceed!");
-                                    }else{
+                                    } else {
                                         $("[name=\"TransactionDeliveryOrderDetail[delivery_order_no]\"]").val(delivery_val);
                                         $("[name=\"TransactionDeliveryOrderDetail[delivery_order_no]\"]").attr("readonly", "readonly");
                                         $("#delivery-order-detail-dialog").dialog("open"); return false;
 
                                     }
-                                }
-                                else if(movement == 2){
-                                    if(branch === "" || returnOrder === ""){
+                                } else if (movement == 2) {
+                                    if (branch === "" || returnOrder === "") {
                                         alert("Please Choose Branch and Return Order no to Proceed!");
-                                    }else{
+                                    } else {
                                         $("[name=\"TransactionReturnOrderDetail[return_order_no]\"]").val(return_val);
                                         $("[name=\"TransactionReturnOrderDetail[return_order_no]\"]").attr("readonly", "readonly");
                                         $("#return-order-detail-dialog").dialog("open"); return false;
-
                                     }
-                                }
-                                else if(movement == 3){
-                                    if(branch === "" || retail === ""){
+                                } else if (movement == 3) {
+                                    if (branch === "" || retail === "") {
                                         alert("Please Choose Branch and Registration no to Proceed!");
-                                    }else{
+                                    } else {
                                         $("[name=\"RegistrationProduct[transaction_number]\"]").val(retail_val);
                                         //$("[name=\"RegistrationProduct[transaction_number]\"]").attr("readonly", "readonly");
                                         $("#registration-transaction-detail-dialog").dialog("open"); return false;
-
+                                    }
+                                } else if (movement == 4) {
+                                    if (branch === "" || materialRequest === "") {
+                                        alert("Please Choose Branch and Material Request to Proceed!");
+                                    } else {
+                                        $("[name=\"MaterialRequestDetail[material_request_header_id]\"]").val(material_request_val);
+                                        $("#material-request-detail-dialog").dialog("open"); return false;
                                     }
                                 }
                                 console.log(movement);
@@ -560,29 +653,32 @@
                                 });
                             }',
                             'columns' => array(
-                                array('name' => 'delivery_order_no', 'value' => '$data->deliveryOrder->delivery_order_no'),
                                 array(
-                                    'header' => 'Product',
+                                    'name' => 'delivery_order_no', 
+                                    'value' => '$data->deliveryOrder->delivery_order_no'
+                                ),
+                                array(
+                                    'header' => 'Name',
                                     'value' => '$data->product->name'
                                 ),
                                 array(
-                                    'header' => 'Product',
+                                    'header' => 'Code',
                                     'value' => '$data->product->manufacturer_code'
                                 ),
                                 array(
-                                    'header' => 'Product',
+                                    'header' => 'Sub Category',
                                     'value' => '$data->product->masterSubCategoryCode'
                                 ),
                                 array(
-                                    'header' => 'Product',
+                                    'header' => 'Brand',
                                     'value' => '$data->product->brand->name'
                                 ),
                                 array(
-                                    'header' => 'Product',
+                                    'header' => 'Sub Brand',
                                     'value' => '$data->product->subBrand->name'
                                 ),
                                 array(
-                                    'header' => 'Product',
+                                    'header' => 'Sub Brand Series',
                                     'value' => '$data->product->subBrandSeries->name'
                                 ),
                                 array(
@@ -590,6 +686,10 @@
                                     'value' => '$data->quantity_delivery.CHTML::hiddenField("qtysum_mmtype_delivey".$data->product_id,\'0\',array(\'width\'=>20,\'maxlength\'=>3)).CHTML::hiddenField("qtyleft_mmtype_delivey".$data->product_id,$data->quantity_delivery,array(\'width\'=>20,\'maxlength\'=>3))',
                                     'type' => 'raw',
                                     'filter' => false
+                                ),
+                                array(
+                                    'header' => 'Unit',
+                                    'value' => '$data->product->unit->name'
                                 ),
                             ),
                         )); ?>
@@ -696,6 +796,92 @@
 
                         <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
                         <!-- Refresh grid with value from kode kelompok persediaan-->
+                        
+                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                            'id' => 'material-request-detail-dialog',
+                            // additional javascript options for the dialog plugin
+                            'options' => array(
+                                'title' => 'Product Request',
+                                'autoOpen' => false,
+                                'width' => 'auto',
+                                'modal' => true,
+                            ),
+                        )); ?>
+
+                        <?php $this->widget('zii.widgets.grid.CGridView', array(
+                            'id' => 'material-request-detail-grid',
+                            'dataProvider' => $materialRequestDetailDataProvider,
+                            'filter' => $materialRequestDetail,
+                            'pager'=>array(
+                               'cssFile'=>false,
+                               'header'=>'',
+                            ),
+                            'selectionChanged' => 'js:function(id){
+                                $("#material-request-detail-dialog").dialog("close");
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $movementOut->header->id, 'detailId' => '')) . '"  + $.fn.yiiGridView.getSelection(id)+"&type="+4,
+                                    data: $("form").serialize(),
+                                    success: function(html) {
+                                        $("#mmtype").html(html);
+                                    },
+                                });
+
+                                $("#material-request-detail-grid").find("tr.selected").each(function(){
+                                   $(this).removeClass( "selected" );
+                                });	
+                            }',
+                            'columns' => array(
+                                array(
+                                    'header' => 'Request #',
+                                    'name' => 'material_request_header_id',
+                                    'value' => '$data->materialRequestHeader->transaction_number',
+                                ),
+                                array(
+                                    'header' => 'Name',
+                                    'value' => '$data->product->name'
+                                ),
+                                array(
+                                    'header' => 'Code',
+                                    'value' => '$data->product->manufacturer_code'
+                                ),
+                                array(
+                                    'header' => 'Sub Category',
+                                    'value' => '$data->product->masterSubCategoryCode'
+                                ),
+                                array(
+                                    'header' => 'Brand',
+                                    'value' => '$data->product->brand->name'
+                                ),
+                                array(
+                                    'header' => 'Sub Brand',
+                                    'value' => '$data->product->subBrand->name'
+                                ),
+                                array(
+                                    'header' => 'Sub Brand Series',
+                                    'value' => '$data->product->subBrandSeries->name'
+                                ),
+                                array(
+                                    'header' => 'Quantity Req',
+                                    'value' => '$data->quantity',
+                                    'type' => 'raw',
+                                    'filter' => false,
+                                ),
+                                array(
+                                    'header' => 'Quantity Remaining',
+                                    'value' => '$data->quantity_remaining',
+                                    'type' => 'raw',
+                                    'filter' => false,
+                                ),
+                                array(
+                                    'header' => 'Unit',
+                                    'value' => '$data->product->unit->name'
+                                ),
+                            ),
+                        )); ?>
+
+                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
                     </div>
                     <!-- <div class="small-4 columns">
@@ -779,51 +965,69 @@
     // if ()
     // console.log(sum + ' ' + thisted);
     });
-    if($("#MovementOutHeader_movement_type").val() == "1") {
-    $("#deliveryOrder").show();
-    $("#returnOrder").hide();
-    $("#retailSales").hide();
-    } else if($("#MovementOutHeader_movement_type").val() == "2") {
-    $("#deliveryOrder").hide();
-    $("#returnOrder").show();
-    $("#retailSales").hide();
-    } else if($("#MovementOutHeader_movement_type").val() == "3") {
-    $("#deliveryOrder").hide();
-    $("#returnOrder").hide();
-    $("#retailSales").show();
-    } 
-    else{
-    $("#deliveryOrder").hide();
-    $("#returnOrder").hide();
-    $("#retailSales").hide();
+    if ($("#MovementOutHeader_movement_type").val() == "1") {
+        $("#deliveryOrder").show();
+        $("#returnOrder").hide();
+        $("#retailSales").hide();
+        $("#materialRequest").hide();
+    } else if ($("#MovementOutHeader_movement_type").val() == "2") {
+        $("#deliveryOrder").hide();
+        $("#returnOrder").show();
+        $("#retailSales").hide();
+        $("#materialRequest").hide();
+    } else if ($("#MovementOutHeader_movement_type").val() == "3") {
+        $("#deliveryOrder").hide();
+        $("#returnOrder").hide();
+        $("#retailSales").show();
+        $("#materialRequest").hide();
+    } else if ($("#MovementOutHeader_movement_type").val() == "4") {
+        $("#deliveryOrder").hide();
+        $("#returnOrder").hide();
+        $("#retailSales").hide();
+        $("#materialRequest").show();
+    } else {
+        $("#deliveryOrder").hide();
+        $("#returnOrder").hide();
+        $("#retailSales").hide();
+        $("#materialRequest").hide();
     }
-    $("#MovementOutHeader_movement_type").change(function(){
+    $("#MovementOutHeader_movement_type").change(function() {
     //ClearFields();
-    $("#MovementOutHeader_delivery_order_id").val("");
-    $("#MovementOutHeader_delivery_order_number").val("");
-    $("#MovementOutHeader_reference_type").val("");
-    $("#MovementOutHeader_reference_number").val("");
-    $("#MovementOutHeader_return_order_id").val("");
-    $("#MovementOutHeader_return_order_number").val("");
-    $("#MovementOutHeader_registration_transaction_id").val("");
-    $("#MovementOutHeader_transaction_number").val("");
-    if($("#MovementOutHeader_movement_type").val() == "1") {
-    $("#deliveryOrder").show();
-    $("#returnOrder").hide();
-    $("#retailSales").hide();
-    } else if($("#MovementOutHeader_movement_type").val() == "2") {
-    $("#deliveryOrder").hide();
-    $("#returnOrder").show();
-    $("#retailSales").hide();
-    } else if($("#MovementOutHeader_movement_type").val() == "3") {
-    $("#deliveryOrder").hide();
-    $("#returnOrder").hide();
-    $("#retailSales").show();
-    } 
-    else{
-    $("#deliveryOrder").hide();
-    $("#returnOrder").hide();
-    $("#retailSales").hide();
-    }
+        $("#MovementOutHeader_delivery_order_id").val("");
+        $("#MovementOutHeader_delivery_order_number").val("");
+        $("#MovementOutHeader_reference_type").val("");
+        $("#MovementOutHeader_reference_number").val("");
+        $("#MovementOutHeader_return_order_id").val("");
+        $("#MovementOutHeader_return_order_number").val("");
+        $("#MovementOutHeader_registration_transaction_id").val("");
+        $("#MovementOutHeader_transaction_number").val("");
+        $("#MovementOutHeader_material_request_id").val("");
+        
+        if ($("#MovementOutHeader_movement_type").val() == "1") {
+            $("#deliveryOrder").show();
+            $("#returnOrder").hide();
+            $("#retailSales").hide();
+            $("#materialRequest").hide();
+        } else if ($("#MovementOutHeader_movement_type").val() == "2") {
+            $("#deliveryOrder").hide();
+            $("#returnOrder").show();
+            $("#retailSales").hide();
+            $("#materialRequest").hide();
+        } else if ($("#MovementOutHeader_movement_type").val() == "3") {
+            $("#deliveryOrder").hide();
+            $("#returnOrder").hide();
+            $("#retailSales").show();
+            $("#materialRequest").hide();
+        } else if ($("#MovementOutHeader_movement_type").val() == "4") {
+            $("#deliveryOrder").hide();
+            $("#returnOrder").hide();
+            $("#retailSales").hide();
+            $("#materialRequest").show();
+        } else {
+            $("#deliveryOrder").hide();
+            $("#returnOrder").hide();
+            $("#retailSales").hide();
+            $("#materialRequest").hide();
+        }
     });
 </script>

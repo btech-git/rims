@@ -54,6 +54,13 @@ class MovementOuts extends CComponent {
             $detail->product_id = $registrationProduct->product_id;
             $detail->quantity_transaction = $registrationProduct->quantity;
             $this->details[] = $detail;
+        } elseif ($type == 4) {
+            $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detailId);
+            $detail = new MovementOutDetail();
+            $detail->material_request_detail_id = $detailId;
+            $detail->product_id = $materialRequestDetail->product_id;
+            $detail->quantity_transaction = $materialRequestDetail->quantity;
+            $this->details[] = $detail;
         }
     }
 
@@ -99,19 +106,19 @@ class MovementOuts extends CComponent {
         return $valid;
     }
 
-    public function validateDetailsCount() {
-        $valid = true;
-        
-        if (count($this->details) === 0) {
-            $valid = false;
-            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-        }
-
-        return $valid;
-    }
+//    public function validateDetailsCount() {
+//        $valid = true;
+//        
+//        if (count($this->details) === 0) {
+//            $valid = false;
+//            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+//        }
+//
+//        return $valid;
+//    }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
         $movementOutDetails = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $this->header->id));
@@ -133,17 +140,12 @@ class MovementOuts extends CComponent {
                 if (count($moveDetail) != 0) {
                     $moveDetail->quantity += $detail->quantity;
                     $moveDetail->save() && $valid;
-                    //echo "test";
                 } else {
                     $detail->movement_out_header_id = $this->header->id;
-                    //$detail->request_order_quantity_rest = $detail->quantity;
                     $valid = $detail->save() && $valid;
-                    //echo $detail->movement_out_header_id;
                 }
-            }//end if
-            else {
+            } else {
                 $detail->movement_out_header_id = $this->header->id;
-                //$detail->request_order_quantity_rest = $detail->quantity;
                 $valid = $detail->save() && $valid;
             }
 
@@ -196,6 +198,17 @@ class MovementOuts extends CComponent {
                 $deliveryDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
                 $deliveryDetail->quantity_movement = $quantity + $detail->quantity;
                 $deliveryDetail->save(false);
+            } elseif ($movementType == 4) {
+                
+                $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detail->material_request_detail_id);
+                $materialRequestDetail->quantity_movement_out = $materialRequestDetail->getTotalQuantityMovementOut();
+                $materialRequestDetail->quantity_remaining = $materialRequestDetail->quantity - $materialRequestDetail->quantity_movement_out;
+                $materialRequestDetail->update(array('quantity_movement_out', 'quantity_remaining'));
+                
+                $materialRequestHeader = MaterialRequestHeader::model()->findByPk($materialRequestDetail->material_request_header_id);
+                $materialRequestHeader->total_quantity_movement_out = $materialRequestHeader->getTotalQuantityMovementOut();
+                $materialRequestHeader->total_quantity_remaining = $materialRequestHeader->total_quantity - $materialRequestHeader->total_quantity_movement_out;
+                $materialRequestHeader->update(array('total_quantity_movement_out', 'total_quantity_remaining'));
             }
 
             $new_detail[] = $detail->id;

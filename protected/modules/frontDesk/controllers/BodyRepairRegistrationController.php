@@ -386,21 +386,21 @@ class BodyRepairRegistrationController extends Controller {
     public function actionGenerateInvoice($id)
     {
         $registration = RegistrationTransaction::model()->findByPK($id);
-        $customer = Customer::model()->findByPk($registration->customer_id);
+//        $customer = Customer::model()->findByPk($registration->customer_id);
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $registration->id));
-        $branch = Branch::model()->findByPk($registration->branch_id);
+//        $branch = Branch::model()->findByPk($registration->branch_id);
         
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $registration->transaction_number,
             'branch_id' => $registration->branch_id,
         ));
 
-        $days =
+//        $days =
             // $duedate = date('Y-m-d', strtotime('+'.$days.' days'));
             // $nextmonth = date('Y-m-d',strtotime('+1 months'));
 //        $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
-        $invoiceHeader = InvoiceHeader::model()->findAll();
-        $count = count($invoiceHeader) + 1;
+//        $invoiceHeader = InvoiceHeader::model()->findAll();
+//        $count = count($invoiceHeader) + 1;
         $model = new InvoiceHeader();
 //        $model->invoice_number = 'INV_' . $count;
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registration->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registration->transaction_date)), $registration->branch_id);
@@ -428,6 +428,9 @@ class BodyRepairRegistrationController extends Controller {
         $model->pph = $registration->pph;
         //$model->save(false);
         if ($model->save(false)) {
+            $registration->payment_status = 'INVOICING';
+            $registration->update(array('payment_status')); 
+            
             $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
             if (count($registrationProducts) != 0) {
                 foreach ($registrationProducts as $registrationProduct) {

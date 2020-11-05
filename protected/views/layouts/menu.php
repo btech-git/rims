@@ -52,6 +52,7 @@
                 array('label' => 'Gudang', 'url' => array('/master/inventory/admin'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
                 array('label' => 'Stok Gudang', 'url' => array('/frontDesk/inventory/check'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
                 array('label' => 'Analisa Stok Barang', 'url' => array('/master/forecastingProduct/admin'), 'visible' => Yii::app()->user->checkAccess('forecastingProductView')),
+                array('label' => 'Permintaan Bahan', 'url' => array('/frontDesk/materialRequest/admin'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
             ),
         )); ?>
     </li>

@@ -68,8 +68,8 @@ Yii::app()->clientScript->registerScript('report', '
                                 <?php echo CHtml::dropDownlist('status_document', $status_document, array(
                                     'Draft'=>'Draft',
                                     'Approved' => 'Approved',
-                                    'Revised' => 'Revised',
-                                    'Rejected'=>'Rejected'
+//                                    'Revised' => 'Revised',
+//                                    'Rejected'=>'Rejected'
                                 ), array('empty'=>'-- All Status Document --')); ?>
                             </div>
                         </div>
@@ -87,7 +87,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 <?php echo CHtml::dropDownlist('destination_approval_status', $destination_approval_status, array(
                                     '0' => 'Pending',
                                     '1' => 'Approved',
-                                    '2' => 'Rejected',
+//                                    '2' => 'Rejected',
                                 ), array('empty'=>'-- All Approval Status --')); ?>
                             </div>
                         </div>

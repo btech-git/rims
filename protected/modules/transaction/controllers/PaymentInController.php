@@ -96,6 +96,7 @@ class PaymentInController extends Controller {
     public function actionCreate($invoiceId) {
         $model = new PaymentIn;
         $invoice = InvoiceHeader::model()->findByPk($invoiceId);
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($invoice->registration_transaction_id);
         $model->invoice_id = $invoiceId;
         $model->invoice_number = $invoice->invoice_number;
         $model->customer_id = $invoice->customer_id;
@@ -116,6 +117,11 @@ class PaymentInController extends Controller {
             $model->attributes = $_POST['PaymentIn'];
 
             if ($model->save()) {
+                if (!empty($registrationTransaction)) {
+                    $registrationTransaction->payment_status = 'CLEAR';
+                    $registrationTransaction->update(array('payment_status'));
+                }
+                
                 //update Invoice
                 $invoice->payment_amount = $invoice->getTotalPayment();
                 $invoice->payment_left = $invoice->getTotalRemaining();
@@ -123,7 +129,7 @@ class PaymentInController extends Controller {
             
                 $criteria = new CDbCriteria;
                 $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
-                $payment = PaymentIn::model()->findAll($criteria);
+//                $payment = PaymentIn::model()->findAll($criteria);
 
                 if (isset($images) && !empty($images)) {
                     foreach ($model->images as $i => $image) {

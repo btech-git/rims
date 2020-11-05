@@ -12,7 +12,33 @@ $this->menu = array(
     array('label' => 'Create RegistrationTransaction', 'url' => array('index')),
 );
 
-Yii::app()->clientScript->registerScript('search', "
+$str = '';
+$currentTime = strtotime(date(DATE_ATOM));
+foreach ($registration->registrationServices as $registrationService) {
+    if ($registrationService->start !== null && $registrationService->end === null) {
+        $str .= "setInterval(function() {
+            var timeDiffSelector = $('table div#time_diff_" . $registrationService->id . "');
+            var now = parseInt(Date.now() / 1000);
+            var expected = " . (strtotime($registrationService->start) + $registrationService->hour * 3600) . ";
+            var diff = timeDiffSelector.html();
+            if (diff == '') {
+                diff = " . $currentTime . " - now;
+                timeDiffSelector.html(diff);
+            }
+            diff = parseInt(diff);
+            var distance = expected - now + diff;
+            if (distance < 0) {
+                distance = 0;
+            }
+            var hours = Math.floor(distance / 3600);
+            var minutes = Math.floor(distance / 60 % 60);
+            var seconds = Math.floor(distance % 60);
+            $('table td#countdown_" . $registrationService->id . "').html(hours + 'h ' + minutes + 'm ' + seconds + 's ');
+        }, 1000);";
+    }
+}
+
+Yii::app()->clientScript->registerScript('search', $str . "
     $('.search-button').click(function(){
 	$('.search-form').slideToggle(600);
 	$('.bulk-action').toggle();
@@ -125,155 +151,43 @@ Yii::app()->clientScript->registerScript('search', "
                         <th>Service</th>
                         <th>Duration</th>
                         <th>Countdown</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Total Time</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $currentTimestamp = strtotime(date(DATE_ATOM)); ?>
                     <?php foreach ($registration->registrationServices as $registrationService): ?>
                     <tr>
                         <td><?php echo CHtml::encode(CHtml::value($registrationService, 'service.name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($registrationService, 'hour')); ?></td>
+                        <td id="countdown_<?php echo $registrationService->id; ?>"></td>
                         <td><?php echo CHtml::encode(CHtml::value($registrationService, 'start')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($registrationService, 'end')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($registrationService, 'total_time')); ?></td>
-                        <td><?php echo CHtml::button('test', array('onclick' => 'setInterval(function() { $("#aaa").html("abc"); }, 1000);')); ?></td>
-                        <td><?php echo CHtml::submitButton('Start', array('name' => 'StartOrPauseTimesheet', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($registrationService, 'formattedTotalTime')); ?></td>
+                        <td>
+                            <div id="time_diff_<?php echo $registrationService->id; ?>" style="display: none"></div>
+                            <div class="detail_id" style="display: none">
+                                <?php echo CHtml::encode(CHtml::value($registrationService, 'id')); ?>
+                            </div>
+                            <?php if ($registrationService->start === null && $registrationService->end === null): ?>
+                                <?php echo CHtml::submitButton('Start', array('name' => 'StartService', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                            <?php elseif ($registrationService->start !== null && $registrationService->end === null && $registrationService->pause !== null && ($registrationService->resume === null || $registrationService->resume < $registrationService->pause)): ?>
+                                <?php echo CHtml::submitButton('Resume', array('name' => 'ResumeService', 'confirm' => 'Are you sure you want to resume?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                            <?php elseif ($registrationService->start !== null && $registrationService->end === null && ($registrationService->resume === null && $registrationService->pause === null || $registrationService->resume > $registrationService->pause)): ?>
+                                <?php echo CHtml::submitButton('Pause', array('name' => 'PauseService', 'confirm' => 'Are you sure you want to pause?', 'class' => 'button cbuton warning', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                                <?php echo CHtml::submitButton('Finish', array('name' => 'FinishService', 'confirm' => 'Are you sure you want to finish?', 'class' => 'button cbuton alert', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id' => 'registration-service-grid',
-                'dataProvider' => $registrationServiceDataProvider,
-                'filter' => null,
-                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                'pager' => array(
-                    'cssFile' => false,
-                    'header' => '',
-                ),
-                'columns' => array(
-                    array(
-                        'header' => "No",
-                        'value' => '$this->grid->dataProvider->pagination->offset + $row+1',
-                    ),
-                    array(
-                        'name' => 'service_id',
-                        'value' => 'substr($data->service->name, 0, 50)',
-                    ),
-                    array(
-                        'header' => 'Category',
-                        'value' => '$data->service->serviceCategory->name'
-                    ),
-                    array(
-                        'header' => 'Duration',
-                        'value' => '$data->hour'
-                    ),
-                    array(
-                        'type' => 'raw',
-                        'cssClassExpression' => '"countdown"',
-                        'header' => 'Countdown',
-                        'value' => ''
-                    ),
-                    'start',
-                    'end',
-                    array(
-                        'name' => 'total_time',
-                        'value' => '$data->total_time',
-                        'footer' => $registrationService->getTotal($_GET["registrationId"])
-                    ),
-                    array(
-                        'header' => 'Service Status',
-                        'value' => '$data->status',
-                        'type' => 'raw',
-                        'filter' => CHtml::dropDownList('RegistrationService[status]', $registrationService->status, array(
-                            '' => 'All',
-                            'Pending' => 'Pending',
-                            'Available' => 'Available',
-                            'On Progress' => 'On Progress',
-                            'Finished' => 'Finished'
-                        )),
-                    ),
-                    array(
-                        'header' => 'Mechanic',
-                        'value' => '$data->startMechanicName',
-                    ),
-                    array(
-                        'class' => 'CButtonColumn',
-                        'template' => '{start} {pause} {resume} {finish}',
-                        'buttons' => array(
-                            'start' => array(
-                                'label' => 'Start',
-                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/workOrderStartService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
-                                'options' => array('class' => 'registration-service-start'),
-                                'click' => "js:function(e){
-                                    e.preventDefault();
-                                    var url = $(this).attr('href');
-                                    //  do your post request here
-                                    console.log(url);
-                                    setInterval(function() {
-                                        var distance = 3600000;
-                                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                                        $(this).closest('tr').find('td.countdown').html(hours + 'h '
-  + minutes + 'm ' + seconds + 's ');
-                                    }, 1000);
-//                                    $.post(url,function(html){
-//                                        $.fn.yiiGridView.update('registration-service-grid');
-//                                    });
-                                }",
-                                'visible' => '$data->start==NULL or $data->start=="0000-00-00 00:00:00" or ($data->end != "0000-00-00 00:00:00" and $data->registrationTransaction->is_passed == 0)'
-                            ),
-                            'pause' => array(
-                                'label' => 'Pause',
-                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/WorkOrderPauseService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
-                                'options' => array('class' => 'registration-service-pause'),
-                                'click' => "js:function(){
-                                    var url = $(this).attr('href');
-                                    //  do your post request here
-                                    console.log(url);
-                                    $.post(url,function(html){
-                                        $.fn.yiiGridView.update('registration-service-grid');
-                                    });
-                                    return false;
-                                }",
-                                'visible' => '(($data->start!=NULL and $data->start!="0000-00-00 00:00:00") and $data->resume >= $data->pause) and (($data->end==NULL or $data->end=="0000-00-00 00:00:00" and $data->resume >= $data->pause))'
-                            ),
-                            'resume' => array(
-                                'label' => 'Resume',
-                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/workOrderResumeService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
-                                'options' => array('class' => 'registration-service-resume'),
-                                'click' => "js:function(){
-                                    var url = $(this).attr('href');
-                                    //  do your post request here
-                                    console.log(url);
-                                    $.post(url,function(html){
-                                        $.fn.yiiGridView.update('registration-service-grid');
-                                    });
-                                    return false;
-                                }",
-                                'visible' => '($data->end==NULL or $data->end=="0000-00-00 00:00:00") and $data->resume < $data->pause'
-                            ),
-                            'finish' => array(
-                                'label' => 'Finish',
-                                'url' => 'Yii::app()->createUrl("frontDesk/generalRepairMechanic/workOrderFinishService", array("serviceId"=>$data->service_id,"registrationId"=>' . $_GET["registrationId"] . '))',
-                                'options' => array('class' => 'registration-service-finish'),
-                                'click' => "js:function(){
-                                    var url = $(this).attr('href');
-                                    //  do your post request here
-                                    console.log(url);
-                                    $.post(url,function(html){
-                                        $.fn.yiiGridView.update('registration-service-grid');
-                                    });
-                                    return false;
-                                }",
-                                'visible' => '($data->start!=NULL and $data->start!="0000-00-00 00:00:00") and $data->resume >= $data->pause and $data->status != "Finished"'
-                            ),
-                        ),
-                        'htmlOptions' => array('style' => 'width: 15%'),
-                    ),
-                ),
-            )); ?>
         </div>
     </div>
 </div>
+<?php echo CHtml::hiddenField('DetailId', ''); ?>
+<?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
 <?php echo CHtml::endForm(); ?>

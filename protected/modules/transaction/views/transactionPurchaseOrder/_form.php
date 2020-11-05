@@ -299,12 +299,10 @@
                         <div class="small-8 columns">
 
                             <div id="payment_text">
-                                <?php echo $form->textField($purchaseOrder->header, 'payment_type',
-                                    array('readonly' => true, 'value' => 'Cash')); ?>
+                                <?php echo $form->textField($purchaseOrder->header, 'payment_type', array('readonly' => true, 'value' => 'Cash')); ?>
                             </div>
                             <div id="payment_ddl">
-                                <?php echo $form->dropDownList($purchaseOrder->header, 'payment_type',
-                                    array('Cash' => 'Cash', 'Credit' => 'Credit'), array(
+                                <?php echo $form->dropDownList($purchaseOrder->header, 'payment_type', array('Cash' => 'Cash', 'Credit' => 'Credit'), array(
                                         'prompt' => '[--Select Payment type--]',
                                         'onchange' => 'jQuery.ajax({
                                             type: "POST",
@@ -399,18 +397,22 @@
                         <table>
                             <thead>
                                 <tr>
+                                    <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'total_quantity'); ?></td>
                                     <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'price_before_discount'); ?></td>
                                     <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'discount'); ?></td>
                                     <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'subtotal'); ?></td>
-                                    <td style="text-align: center; font-weight: bold">
-                                        <?php echo CHtml::label('PPN', false); ?>
-                                    </td>
+                                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::label('PPN', false); ?></td>
                                     <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'total_price'); ?></td>
-                                    <td style="text-align: center; font-weight: bold"><?php echo $form->labelEx($purchaseOrder->header, 'total_quantity'); ?></td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td style="text-align: right">
+                                        <span id="total_quantity">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->totalQuantity)); ?>
+                                        </span>
+                                        <?php echo $form->error($purchaseOrder->header, 'total_quantity'); ?>
+                                    </td>
                                     <td style="text-align: right">
                                         <span id="sub_total_before_discount">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotalBeforeDiscount)); ?>
@@ -444,12 +446,6 @@
                                         </span>
                                         <?php echo $form->hiddenField($purchaseOrder->header, 'total_price', array('size' => 18, 'maxlength' => 18, 'readonly' => 'true')); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'total_price'); ?>
-                                    </td>
-                                    <td style="text-align: right">
-                                        <span id="total_quantity">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->totalQuantity)); ?>
-                                        </span>
-                                        <?php echo $form->error($purchaseOrder->header, 'total_quantity'); ?>
                                     </td>
                                 </tr>
                             </tbody>
