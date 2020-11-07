@@ -57,6 +57,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_type', 'length', 'max' => 20),
             array('debit_amount, credit_amount', 'length', 'max' => 18),
             array('status', 'length', 'max' => 30),
+            array('transaction_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, transaction_number, transaction_date, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),

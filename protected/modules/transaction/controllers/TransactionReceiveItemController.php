@@ -121,9 +121,8 @@ class TransactionReceiveItemController extends Controller {
         $consignmentCriteria->compare('consignment_in_number', $consignment->consignment_in_number . '%', true, 'AND', false);
         $consignmentCriteria->addCondition("status_document = 'Approved'");
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
-                    'criteria' => $consignmentCriteria,
-                ));
-
+            'criteria' => $consignmentCriteria,
+        ));
 
         $receiveItem = $this->instantiate(null);
         $receiveItem->header->receive_item_date = date('Y-m-d');
@@ -138,8 +137,8 @@ class TransactionReceiveItemController extends Controller {
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionReceiveItem'])) {
-
             $this->loadState($receiveItem);
+            $receiveItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($receiveItem->header->receive_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($receiveItem->header->receive_item_date)), $receiveItem->header->recipient_branch_id);
 
             if ($receiveItem->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $receiveItem->header->id));

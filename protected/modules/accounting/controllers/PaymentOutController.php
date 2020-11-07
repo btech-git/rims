@@ -62,6 +62,7 @@ class PaymentOutController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
+            $paymentOut->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentOut->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentOut->header->payment_date)), $paymentOut->header->branch_id);
 
             if ($paymentOut->save(Yii::app()->db)) {                
                 $this->redirect(array('view', 'id' => $paymentOut->header->id));

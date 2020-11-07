@@ -87,8 +87,8 @@ class TransactionReturnOrderController extends Controller {
         $receiveCriteria->compare('supplier.name', $receive->supplier_name, true);
 
         $receiveDataProvider = new CActiveDataProvider('TransactionReceiveItem', array(
-                    'criteria' => $receiveCriteria,
-                ));
+            'criteria' => $receiveCriteria,
+        ));
 
         $returnOrder = $this->instantiate(null);
         $returnOrder->header->recipient_branch_id = $returnOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnOrder->header->recipient_branch_id;
@@ -99,8 +99,8 @@ class TransactionReturnOrderController extends Controller {
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionReturnOrder'])) {
-
             $this->loadState($returnOrder);
+            $returnOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnOrder->header->return_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnOrder->header->return_order_date)), $returnOrder->header->recipient_branch_id);
 
             if ($returnOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $returnOrder->header->id));

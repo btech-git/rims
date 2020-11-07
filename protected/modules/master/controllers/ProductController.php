@@ -74,24 +74,11 @@ class ProductController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        //$model=new Product;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        /* if(isset($_POST['Product']))
-          {
-          $model->attributes=$_POST['Product'];
-          if($model->save())
-          $this->redirect(array('view','id'=>$model->id));
-          }
-
-          $this->render('create',array(
-          'model'=>$model,
-          )); */
-
+        
         $product = $this->instantiate(null);
         $product->header->date_posting = date('Y-m-d H:i:s');
         $product->header->ppn = 2;
+        $product->header->user_id = Yii::app()->user->getId();;
         $product->header->user_id_approval = null;
         $product->header->date_approval = null;
         $productSpecificationBattery = new ProductSpecificationBattery;
@@ -486,16 +473,6 @@ class ProductController extends Controller {
     }
 
     public function actionAjaxGetSubBrandSeries() {
-//		if(isset($_POST['ProductSpecificationBattery'])){
-//			$data = SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id'=>$_POST['ProductSpecificationBattery']['sub_brand_id']), array('order' => 'name'));
-//		}
-//		if(isset($_POST['ProductSpecificationOil'])){
-//			$data = SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id'=>$_POST['ProductSpecificationOil']['sub_brand_id']), array('order' => 'name'));
-//		}
-//		if(isset($_POST['ProductSpecificationTire'])){
-//			$data = SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id'=>$_POST['ProductSpecificationTire']['sub_brand_id']), array('order' => 'name'));
-//		}
-
         $data = SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id' => $_POST['Product']['sub_brand_id']), array('order' => 'name'));
         if (count($data) > 0) {
             $data = CHtml::listData($data, 'id', 'name');

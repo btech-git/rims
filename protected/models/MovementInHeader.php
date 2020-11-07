@@ -57,6 +57,7 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
             array('movement_in_number, date_posting, branch_id, movement_type, user_id, status', 'required'),
             array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id', 'numerical', 'integerOnly' => true),
             array('movement_in_number, status', 'length', 'max' => 30),
+            array('movement_in_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, movement_in_number, date_posting, branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, status, receive_item_number,return_item_number', 'safe', 'on' => 'search'),

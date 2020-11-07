@@ -1,7 +1,7 @@
 <?php
 
-class ConsignmentInHeaderController extends Controller
-{
+class ConsignmentInHeaderController extends Controller {
+
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -24,11 +24,10 @@ class ConsignmentInHeaderController extends Controller
      * This method is used by the 'accessControl' filter.
      * @return array access control rules
      */
-    public function accessRules()
-    {
+    public function accessRules() {
         return array(
             array(
-                'allow',  // allow all users to perform 'index' and 'view' actions
+                'allow', // allow all users to perform 'index' and 'view' actions
                 'actions' => array('index', 'view'),
                 'users' => array('*'),
             ),
@@ -52,7 +51,7 @@ class ConsignmentInHeaderController extends Controller
                 'users' => array('Admin'),
             ),
             array(
-                'deny',  // deny all users
+                'deny', // deny all users
                 'users' => array('*'),
             ),
         );
@@ -62,8 +61,7 @@ class ConsignmentInHeaderController extends Controller
      * Displays a particular model.
      * @param integer $id the ID of the model to be displayed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         $details = ConsignmentInDetail::model()->findAllByAttributes(array('consignment_in_id' => $id));
         $historis = ConsignmentInApproval::model()->findAllByAttributes(array('consignment_in_id' => $id));
         $this->render('view', array(
@@ -77,10 +75,8 @@ class ConsignmentInHeaderController extends Controller
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         //$model=new ConsignmentInHeader;
-
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
@@ -105,24 +101,24 @@ class ConsignmentInHeaderController extends Controller
 
 
 // var_dump($supplierCriteria); die("s");
-        /*$product = new Product('search');
-            $product->unsetAttributes();  // clear any default values
-            if (isset($_GET['Product']))
-              $product->attributes = $_GET['Product'];
+        /* $product = new Product('search');
+          $product->unsetAttributes();  // clear any default values
+          if (isset($_GET['Product']))
+          $product->attributes = $_GET['Product'];
 
           $productCriteria = new CDbCriteria;
           $productCriteria->compare('name',$product->name,true);
           $productCriteria->compare('manufacturer_code',$product->manufacturer_code,true);
           $productCriteria->together=true;
           $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name';
-                  $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
-                  $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,true);
-                  $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,true);
-                  $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name,true);
-                  $productCriteria->compare('rims_brand.name', $product->product_brand_name,true);
+          $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
+          $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,true);
+          $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,true);
+          $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name,true);
+          $productCriteria->compare('rims_brand.name', $product->product_brand_name,true);
           $productDataProvider = new CActiveDataProvider('Product', array(
-                  'criteria'=>$productCriteria,));
-`		*/
+          'criteria'=>$productCriteria,));
+          ` */
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -151,15 +147,15 @@ class ConsignmentInHeaderController extends Controller
             'criteria' => $productCriteria,
         ));
 
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['ConsignmentInHeader'])) {
-            // $model->attributes=$_POST['ConsignmentInHeader'];
-            // if($model->save())
-            // 	$this->redirect(array('view','id'=>$model->id));
 
             $this->loadState($consignmentIn);
+            $consignmentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentIn->header->date_posting)), $consignmentIn->header->receive_branch);
+            
             if ($consignmentIn->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $consignmentIn->header->id));
             }
@@ -180,8 +176,7 @@ class ConsignmentInHeaderController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         //$model=$this->loadModel($id);
 
         $supplier = new Supplier('search');
@@ -212,8 +207,7 @@ class ConsignmentInHeaderController extends Controller
         $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name';
         $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
         $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
-        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,
-            true);
+        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
         $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
         $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
         $productDataProvider = new CActiveDataProvider('Product', array(
@@ -227,8 +221,8 @@ class ConsignmentInHeaderController extends Controller
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        
-        if (isset($_POST['Cancel'])) 
+
+        if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['ConsignmentInHeader'])) {
@@ -261,8 +255,7 @@ class ConsignmentInHeaderController extends Controller
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -274,8 +267,7 @@ class ConsignmentInHeaderController extends Controller
     /**
      * Lists all models.
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $dataProvider = new CActiveDataProvider('ConsignmentInHeader');
         $this->render('index', array(
             'dataProvider' => $dataProvider,
@@ -285,8 +277,7 @@ class ConsignmentInHeaderController extends Controller
     /**
      * Manages all models.
      */
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
         $model = new ConsignmentInHeader('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['ConsignmentInHeader'])) {
@@ -305,8 +296,7 @@ class ConsignmentInHeaderController extends Controller
      * @return ConsignmentInHeader the loaded model
      * @throws CHttpException
      */
-    public function loadModel($id)
-    {
+    public function loadModel($id) {
         $model = ConsignmentInHeader::model()->findByPk($id);
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
@@ -318,16 +308,14 @@ class ConsignmentInHeaderController extends Controller
      * Performs the AJAX validation.
      * @param ConsignmentInHeader $model the model to be validated
      */
-    protected function performAjaxValidation($model)
-    {
+    protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'consignment-in-header-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
 
-	public function actionAjaxHtmlUpdateProductSubBrandSelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
 
@@ -336,9 +324,8 @@ class ConsignmentInHeaderController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
 
@@ -347,9 +334,8 @@ class ConsignmentInHeaderController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubMasterCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
 
@@ -358,9 +344,8 @@ class ConsignmentInHeaderController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
 
@@ -369,9 +354,8 @@ class ConsignmentInHeaderController extends Controller
             ));
         }
     }
-    
-    public function instantiate($id)
-    {
+
+    public function instantiate($id) {
         if (empty($id)) {
             $consignmentIn = new ConsignmentIns(new ConsignmentInHeader(), array());
         } else {
@@ -382,8 +366,7 @@ class ConsignmentInHeaderController extends Controller
         return $consignmentIn;
     }
 
-    public function loadState($consignmentIn)
-    {
+    public function loadState($consignmentIn) {
         if (isset($_POST['ConsignmentInHeader'])) {
             $consignmentIn->header->attributes = $_POST['ConsignmentInHeader'];
         }
@@ -393,12 +376,10 @@ class ConsignmentInHeaderController extends Controller
             foreach ($_POST['ConsignmentInDetail'] as $i => $item) {
                 if (isset($consignmentIn->details[$i])) {
                     $consignmentIn->details[$i]->attributes = $item;
-
                 } else {
                     $detail = new ConsignmentInDetail();
                     $detail->attributes = $item;
                     $consignmentIn->details[] = $detail;
-
                 }
             }
             if (count($_POST['ConsignmentInDetail']) < count($consignmentIn->details)) {
@@ -406,14 +387,11 @@ class ConsignmentInHeaderController extends Controller
             }
         } else {
             $consignmentIn->details = array();
-
         }
-
     }
 
     //Add Detail
-    public function actionAjaxHtmlAddDetail($id, $productId)
-    {
+    public function actionAjaxHtmlAddDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
@@ -433,7 +411,7 @@ class ConsignmentInHeaderController extends Controller
             $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
             $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
             $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
-            
+
             $productDataProvider = new CActiveDataProvider('Product', array(
                 'criteria' => $productCriteria,
             ));
@@ -449,13 +427,11 @@ class ConsignmentInHeaderController extends Controller
                 'consignmentIn' => $consignmentIn,
                 'product' => $product,
                 'productDataProvider' => $productDataProvider,
-
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $product = new Product('search');
@@ -470,10 +446,8 @@ class ConsignmentInHeaderController extends Controller
             $productCriteria->together = true;
             $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name';
             $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
-            $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,
-                true);
-            $productCriteria->compare('rims_product_sub_master_category.name',
-                $product->product_sub_master_category_name, true);
+            $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
+            $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
             $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
             $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
             $productDataProvider = new CActiveDataProvider('Product', array(
@@ -491,13 +465,11 @@ class ConsignmentInHeaderController extends Controller
                 'consignmentIn' => $consignmentIn,
                 'product' => $product,
                 'productDataProvider' => $productDataProvider,
-
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxProduct($id)
-    {
+    public function actionAjaxProduct($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $product = Product::model()->findByPk($id);
 
@@ -512,8 +484,7 @@ class ConsignmentInHeaderController extends Controller
         }
     }
 
-    public function actionAjaxGetTotal($id)
-    {
+    public function actionAjaxGetTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $consignmentIn = $this->instantiate($id);
             $this->loadState($consignmentIn);
@@ -526,9 +497,7 @@ class ConsignmentInHeaderController extends Controller
             }
             $object = array('total' => $total, 'total_items' => $total_items);
             echo CJSON::encode($object);
-
         }
-
     }
 
     public function actionAjaxJsonTotal($id, $index) {
@@ -548,8 +517,7 @@ class ConsignmentInHeaderController extends Controller
         }
     }
 
-    public function actionAjaxSupplier($id)
-    {
+    public function actionAjaxSupplier($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $supplier = Supplier::model()->findByPk($id);
@@ -561,15 +529,14 @@ class ConsignmentInHeaderController extends Controller
             $object = array(
                 //'id'=>$supplier->id,
                 'name' => $supplier->name,
-                //'paymentEstimation'=>$paymentEstimation,
+                    //'paymentEstimation'=>$paymentEstimation,
             );
 
             echo CJSON::encode($object);
         }
     }
 
-    public function actionUpdateApproval($headerId)
-    {
+    public function actionUpdateApproval($headerId) {
         $consignment = ConsignmentInHeader::model()->findByPK($headerId);
         $historis = ConsignmentInApproval::model()->findAllByAttributes(array('consignment_in_id' => $headerId));
         $model = new ConsignmentInApproval;
@@ -582,7 +549,7 @@ class ConsignmentInHeaderController extends Controller
                 $consignment->status_document = $model->approval_type;
                 $consignment->save(false);
                 if ($consignment->status_document == "Approved") {
-                    
+
                     $coaHutang = Coa::model()->findByPk($consignment->supplier->coa_id);
                     $getCoaHutang = $coaHutang->code;
                     $coaHutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHutang));
@@ -598,7 +565,7 @@ class ConsignmentInHeaderController extends Controller
                     $jurnalUmumHutang->is_coa_category = 0;
                     $jurnalUmumHutang->transaction_type = 'CSI';
                     $jurnalUmumHutang->save();
-                    
+
                     $coaOutstanding = Coa::model()->findByPk($consignment->supplier->coa_outstanding_order);
                     $jurnalUmumOutstanding = new JurnalUmum;
                     $jurnalUmumOutstanding->kode_transaksi = $consignment->consignment_in_number;
@@ -612,7 +579,7 @@ class ConsignmentInHeaderController extends Controller
                     $jurnalUmumOutstanding->is_coa_category = 0;
                     $jurnalUmumOutstanding->transaction_type = 'CSI';
                     $jurnalUmumOutstanding->save();
-                    
+
                     foreach ($consignment->consignmentInDetails as $key => $ciDetail) {
                         $coaMasterGroupConsignment = Coa::model()->findByAttributes(array('code' => '106.00.000'));
                         $jurnalUmumMasterGroupConsignment = new JurnalUmum;
@@ -686,8 +653,8 @@ class ConsignmentInHeaderController extends Controller
             'model' => $model,
             'consignment' => $consignment,
             'historis' => $historis,
-            //'jenisPersediaan'=>$jenisPersediaan,
-            //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
+                //'jenisPersediaan'=>$jenisPersediaan,
+                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
     }
 

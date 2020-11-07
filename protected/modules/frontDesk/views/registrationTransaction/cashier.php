@@ -32,6 +32,7 @@ $('form').submit(function(){
 });
 "); ?>
 
+<?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
     <div class="clearfix page-action">
 
@@ -156,7 +157,11 @@ $('form').submit(function(){
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                         } } });
-                                    ',
+                                    ' . CHtml::ajax(array(
+                                        'type' => 'GET',
+                                        'url' => CController::createUrl('ajaxHtmlUpdateCarModelSelect'),
+                                        'update' => '#car_model',
+                                    )),
                                 )); ?>
                             </td>
                             <td>
@@ -374,6 +379,7 @@ $('form').submit(function(){
         </div>
     </div>
 </div>
+<?php echo CHtml::endForm(); ?>
 
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

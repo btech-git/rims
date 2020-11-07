@@ -36,6 +36,7 @@ class MaterialRequestController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($materialRequest);
+            $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
 
             if ($materialRequest->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $materialRequest->header->id));

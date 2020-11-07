@@ -54,6 +54,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
             array('transaction_number', 'length', 'max' => 50),
             array('status', 'length', 'max' => 20),
             array('note', 'safe'),
+            array('transaction_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, transaction_number, transaction_date, transaction_time, status, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining', 'safe', 'on' => 'search'),

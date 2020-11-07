@@ -63,8 +63,10 @@ class PaymentInController extends Controller {
     public function actionInvoiceList() {
         $invoice = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
         $invoice->unsetAttributes();
+        
         if (isset($_GET['InvoiceHeader']))
             $invoice->attributes = $_GET['InvoiceHeader'];
+        
         $invoiceCriteria = new CDbCriteria;
         $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.status != "PAID" AND t.payment_left > 0');
         $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
@@ -115,8 +117,9 @@ class PaymentInController extends Controller {
 
         if (isset($_POST['PaymentIn'])) {
             $model->attributes = $_POST['PaymentIn'];
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
 
-            if ($model->save()) {
+            if ($model->save(Yii::app()->db)) {
                 if (!empty($registrationTransaction)) {
                     $registrationTransaction->payment_status = 'CLEAR';
                     $registrationTransaction->update(array('payment_status'));

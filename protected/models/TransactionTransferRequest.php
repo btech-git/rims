@@ -68,6 +68,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
             array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity, destination_approval_status', 'numerical', 'integerOnly' => true),
             array('transfer_request_no, status_document', 'length', 'max' => 30),
             array('total_price', 'length', 'max' => 18),
+            array('transfer_request_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, transfer_request_no, transfer_request_date, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status', 'safe', 'on' => 'search'),

@@ -134,6 +134,7 @@ class MovementInHeaderController extends Controller {
 
         if (isset($_POST['MovementInHeader'])) {
             $this->loadState($movementIn);
+            $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
             
             if ($movementIn->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $movementIn->header->id));

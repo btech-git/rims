@@ -61,6 +61,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             array('payment_amount', 'length', 'max' => 18),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_type, status', 'length', 'max' => 30),
+            array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images', 'safe', 'on' => 'search'),

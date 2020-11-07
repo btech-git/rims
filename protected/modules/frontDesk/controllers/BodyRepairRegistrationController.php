@@ -43,6 +43,7 @@ class BodyRepairRegistrationController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($bodyRepairRegistration);
+            $bodyRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);
 
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));

@@ -210,18 +210,17 @@ class GeneralRepairMechanicController extends Controller {
             $registrationService->start = date('Y-m-d H:i:s');
             $registrationService->status = 'On Progress';
             $registrationService->start_mechanic_id = Yii::app()->user->id;
+            $registrationService->save();
 
             //Ada error di bagian ini
-            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-                'registration_transaction_id' => $registrationId,
-                'service_id' => $serviceId,
-            ));
-            $real->checked_date = date('Y-m-d');
-            $real->checked_by = Yii::app()->user->id;
-            $real->detail = 'On Progress (Update From Idle Management)';
-            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
-
-            $registrationService->save();
+//            $real = RegistrationRealizationProcess::model()->findByAttributes(array(
+//                'registration_transaction_id' => $registrationId,
+//                'service_id' => $serviceId,
+//            ));
+//            $real->checked_date = date('Y-m-d');
+//            $real->checked_by = Yii::app()->user->id;
+//            $real->detail = 'On Progress (Update From Idle Management)';
+//            $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
 
             $model = $this->loadModel($registrationId);
             $model->status = 'On Progress';

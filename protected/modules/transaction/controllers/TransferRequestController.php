@@ -42,6 +42,7 @@ class TransferRequestController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($transferRequest);
+            $transferRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($transferRequest->header->transfer_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($transferRequest->header->transfer_request_date)), $transferRequest->header->requester_branch_id);
             
             if ($transferRequest->save(Yii::app()->db)) 
                 $this->redirect(array('view', 'id' => $transferRequest->header->id));

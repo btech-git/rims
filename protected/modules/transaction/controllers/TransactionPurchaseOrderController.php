@@ -140,6 +140,8 @@ class TransactionPurchaseOrderController extends Controller {
 
         if (isset($_POST['TransactionPurchaseOrder'])) {
             $this->loadState($purchaseOrder);
+            $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
+            
             if ($purchaseOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $purchaseOrder->header->id));
             }

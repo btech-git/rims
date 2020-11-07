@@ -455,6 +455,10 @@ class GeneralRepairRegistration extends CComponent {
         foreach ($this->serviceDetails as $serviceDetail) {
             $serviceDetail->registration_transaction_id = $this->header->id;
             $serviceDetail->total_price = $serviceDetail->totalAmount;
+            $serviceDetail->start = NULL;
+            $serviceDetail->end = NULL;
+            $serviceDetail->pause = NULL;
+            $serviceDetail->resume = NULL;
             $valid = $serviceDetail->save(false) && $valid;
 
             $new_service[] = $serviceDetail->id;

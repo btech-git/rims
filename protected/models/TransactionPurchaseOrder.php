@@ -85,6 +85,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
             array('estimate_date_arrival', 'safe'),
             array('payment_status', 'length', 'max' => 50),
+            array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, estimate_payment_date, main_branch_name, approved_name, requester_name, purchase_type', 'safe', 'on' => 'search'),

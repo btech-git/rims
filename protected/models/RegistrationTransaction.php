@@ -114,6 +114,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, down_payment_amount', 'length', 'max' => 18),
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
             array('status', 'length', 'max' => 50),
+            array('transaction_number', 'unique'),
             array('transaction_date, problem, work_order_date, sales_order_date, note, customer_type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

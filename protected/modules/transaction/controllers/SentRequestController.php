@@ -41,6 +41,7 @@ class SentRequestController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($sentRequest);
+            $sentRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($sentRequest->header->sent_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($sentRequest->header->sent_request_date)), $sentRequest->header->requester_branch_id);
             
             if ($sentRequest->save(Yii::app()->db)) 
                 $this->redirect(array('view', 'id' => $sentRequest->header->id));

@@ -1,149 +1,137 @@
 <?php
 
-class AdjustmentController extends Controller
-{
-	public $layout='//layouts/column1';
+class AdjustmentController extends Controller {
 
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('Admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
-    
-	public function actionCreate()
-	{
-		$adjustment = $this->instantiate(null);
-		$adjustment->header->user_id = Yii::app()->user->id;
-		$adjustment->header->status = 'Draft';
-		$adjustment->header->date_posting = date('Y-m-d');
+    public $layout = '//layouts/column1';
+
+    public function accessRules() {
+        return array(
+            array('allow', // allow all users to perform 'index' and 'view' actions
+                'actions' => array('index', 'view'),
+                'users' => array('*'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('create', 'update'),
+                'users' => array('@'),
+            ),
+            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+                'actions' => array('admin', 'delete'),
+                'users' => array('Admin'),
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    public function actionCreate() {
+        $adjustment = $this->instantiate(null);
+        $adjustment->header->user_id = Yii::app()->user->id;
+        $adjustment->header->status = 'Draft';
+        $adjustment->header->date_posting = date('Y-m-d');
         $adjustment->header->branch_id = $adjustment->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $adjustment->header->branch_id;
-		$adjustment->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($adjustment->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($adjustment->header->date_posting)), $adjustment->header->branch_id);
+        $adjustment->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($adjustment->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($adjustment->header->date_posting)), $adjustment->header->branch_id);
 
-		$product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
-		
-		if (isset($_POST['Submit']))
-		{
-			$this->loadState($adjustment);
 
-			if ($adjustment->save(Yii::app()->db))
-				$this->redirect(array('view', 'id' => $adjustment->header->id));
-		}
+        if (isset($_POST['Submit'])) {
+            $this->loadState($adjustment);
+            $adjustment->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($adjustment->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($adjustment->header->date_posting)), $adjustment->header->branch_id);
 
-        if (isset($_POST['Cancel'])) 
+            if ($adjustment->save(Yii::app()->db))
+                $this->redirect(array('view', 'id' => $adjustment->header->id));
+        }
+
+        if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-		$this->render('create', array(
-			'adjustment' => $adjustment,
-			'product' => $product,
+        $this->render('create', array(
+            'adjustment' => $adjustment,
+            'product' => $product,
             'productDataProvider' => $productDataProvider,
-		));
-	}
+        ));
+    }
 
-	public function actionView($id)
-	{
-		$listApproval = StockAdjustmentApproval::model()->findAllByAttributes(array('stock_adjustment_header_id'=>$id));
-		$product = new Product('search');
-		$warehouse = Warehouse::model()->findAll();
+    public function actionView($id) {
+        $listApproval = StockAdjustmentApproval::model()->findAllByAttributes(array('stock_adjustment_header_id' => $id));
+        $product = new Product('search');
+        $warehouse = Warehouse::model()->findAll();
 
 
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-			'product'=>$product,
-			'warehouse'=>$warehouse,
-			'listApproval'=>$listApproval,
-		));
-	}
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
+            'product' => $product,
+            'warehouse' => $warehouse,
+            'listApproval' => $listApproval,
+        ));
+    }
 
-	public function actionAdmin()
-	{
-		$model=new StockAdjustmentHeader('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['StockAdjustmentHeader']))
-			$model->attributes=$_GET['StockAdjustmentHeader'];
+    public function actionAdmin() {
+        $model = new StockAdjustmentHeader('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['StockAdjustmentHeader']))
+            $model->attributes = $_GET['StockAdjustmentHeader'];
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
-	}
-	public function actionAjaxHtmlAddProduct($id)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$adjustment = $this->instantiate($id);
-			$this->loadState($adjustment);
+        $this->render('admin', array(
+            'model' => $model,
+        ));
+    }
 
-			if (isset($_POST['ProductId']))
-				$adjustment->addDetail($_POST['ProductId']);
+    public function actionAjaxHtmlAddProduct($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $adjustment = $this->instantiate($id);
+            $this->loadState($adjustment);
 
-			$this->renderPartial('_detail', array(
-				'adjustment' => $adjustment,
-			));
-		}
-	}
+            if (isset($_POST['ProductId']))
+                $adjustment->addDetail($_POST['ProductId']);
 
-	public function actionAjaxHtmlRemoveProduct($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$adjustment = $this->instantiate($id);
-			$this->loadState($adjustment);
+            $this->renderPartial('_detail', array(
+                'adjustment' => $adjustment,
+            ));
+        }
+    }
 
-			$adjustment->removeProductAt($index);
+    public function actionAjaxHtmlRemoveProduct($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $adjustment = $this->instantiate($id);
+            $this->loadState($adjustment);
 
-			$this->renderPartial('_detail', array(
-				'adjustment' => $adjustment,
-			));
-		}
-	}
+            $adjustment->removeProductAt($index);
 
-	public function actionAjaxHtmlUpdateAllProduct($id)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$adjustment = $this->instantiate($id);
-			$this->loadState($adjustment);
+            $this->renderPartial('_detail', array(
+                'adjustment' => $adjustment,
+            ));
+        }
+    }
 
-			$adjustment->updateProducts();
+    public function actionAjaxHtmlUpdateAllProduct($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $adjustment = $this->instantiate($id);
+            $this->loadState($adjustment);
 
-			$this->renderPartial('_detail', array(
-				'adjustment' => $adjustment,
-			));
-		}
-	}
-	
-	public function actionAjaxJsonDifference($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$adjustment = $this->instantiate($id);
-			$this->loadState($adjustment);
-			
-			$quantityDifference = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustment->details[$index]->getQuantityDifference($_POST['StockAdjustmentHeader']['warehouse_id'])));
+            $adjustment->updateProducts();
 
-			echo CJSON::encode(array(
-				'quantityDifference'=>$quantityDifference,
-			));
-		}
-	}
+            $this->renderPartial('_detail', array(
+                'adjustment' => $adjustment,
+            ));
+        }
+    }
 
-	public function actionAjaxHtmlUpdateProductSubBrandSelect()
-	{
+    public function actionAjaxJsonDifference($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $adjustment = $this->instantiate($id);
+            $this->loadState($adjustment);
+
+            $quantityDifference = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustment->details[$index]->getQuantityDifference($_POST['StockAdjustmentHeader']['warehouse_id'])));
+
+            echo CJSON::encode(array(
+                'quantityDifference' => $quantityDifference,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
 
@@ -152,9 +140,8 @@ class AdjustmentController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
 
@@ -163,9 +150,8 @@ class AdjustmentController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubMasterCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
 
@@ -174,9 +160,8 @@ class AdjustmentController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
 
@@ -185,45 +170,39 @@ class AdjustmentController extends Controller
             ));
         }
     }
-    
-	public function instantiate($id)
-	{
-		if (empty($id))
-			$adjustment = new Adjustment(new StockAdjustmentHeader(), array());
-		else
-		{
-			$adjustmentHeader = $this->loadModel($id);
-			$adjustment = new Adjustment($adjustmentHeader, $adjustmentHeader->stockAdjustmentDetails);
-		}
-		
-		return $adjustment;
-	}
-	
-	public function loadModel($id)
-	{
-		$model = StockAdjustmentHeader::model()->findByPk($id);
-		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
-		return $model;
-	}
-	
-	protected function loadState(&$adjustment)
-	{
-		if (isset($_POST['StockAdjustmentHeader']))
-			$adjustment->header->attributes = $_POST['StockAdjustmentHeader'];
-        
-		if (isset($_POST['StockAdjustmentDetail']))
-		{
-			foreach ($_POST['StockAdjustmentDetail'] as $item)
-			{
-				$detail = new StockAdjustmentDetail();
-				$detail->attributes = $item;
-				$adjustment->details[] = $detail;
-			}
-			if (count($_POST['StockAdjustmentDetail']) < count($adjustment->details))
-				array_splice($adjustment->details, $i + 1);
-		}
-		else
-			$adjustment->details = array();
-	}
+
+    public function instantiate($id) {
+        if (empty($id))
+            $adjustment = new Adjustment(new StockAdjustmentHeader(), array());
+        else {
+            $adjustmentHeader = $this->loadModel($id);
+            $adjustment = new Adjustment($adjustmentHeader, $adjustmentHeader->stockAdjustmentDetails);
+        }
+
+        return $adjustment;
+    }
+
+    public function loadModel($id) {
+        $model = StockAdjustmentHeader::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        return $model;
+    }
+
+    protected function loadState(&$adjustment) {
+        if (isset($_POST['StockAdjustmentHeader']))
+            $adjustment->header->attributes = $_POST['StockAdjustmentHeader'];
+
+        if (isset($_POST['StockAdjustmentDetail'])) {
+            foreach ($_POST['StockAdjustmentDetail'] as $item) {
+                $detail = new StockAdjustmentDetail();
+                $detail->attributes = $item;
+                $adjustment->details[] = $detail;
+            }
+            if (count($_POST['StockAdjustmentDetail']) < count($adjustment->details))
+                array_splice($adjustment->details, $i + 1);
+        } else
+            $adjustment->details = array();
+    }
+
 }

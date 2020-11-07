@@ -549,7 +549,7 @@ class RegistrationTransactionController extends Controller {
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
-        
+
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
 
@@ -643,10 +643,10 @@ class RegistrationTransactionController extends Controller {
         $registrationCriteria->addCondition("vehicle_id = 4");
         $registrationCriteria->order = 'work_order_date DESC';
         $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array(), $registrationCriteria);
-        
+
         $this->renderPartial('_idle-management-info', array(
             'registrationTransactions' => $registrationTransactions,
-        ), false, true);
+                ), false, true);
     }
 
     /**
@@ -780,6 +780,7 @@ class RegistrationTransactionController extends Controller {
                 $this->redirect(array('idleManagementServices', 'registrationId' => $registrationId));
             } else {
                 foreach ($registrationService->employeeDetails as $key => $employeeDetail) {
+                    
                 }
             }
         }
@@ -832,7 +833,7 @@ class RegistrationTransactionController extends Controller {
                 'registration_transaction_id' => $registrationId,
                 'name' => $registrationService->service->name
             ));
-            
+
             $real->checked_date = date('Y-m-d');
             $real->checked_by = Yii::app()->user->id;
             $real->detail = 'On Progress (Update From Idle Management)';
@@ -843,7 +844,6 @@ class RegistrationTransactionController extends Controller {
             $model = $this->loadModel($registrationId);
             $model->status = 'On Progress';
             $model->save();
-
         }
     }
 
@@ -856,7 +856,7 @@ class RegistrationTransactionController extends Controller {
                 'service_id' => $serviceId,
                 'registration_transaction_id' => $registrationId
             ));
-            
+
             $registrationService->pause = date('Y-m-d H:i:s');
             $registrationService->status = 'On Progress';
             $registrationService->pause_mechanic_id = Yii::app()->user->id;
@@ -923,7 +923,6 @@ class RegistrationTransactionController extends Controller {
             $model = $this->loadModel($registrationId);
             $model->status = 'On Progress';
             $model->save();
-
         }
     }
 
@@ -1499,12 +1498,12 @@ class RegistrationTransactionController extends Controller {
             $registrationTransaction->addQuickServiceDetail($quickServiceId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailQuickService', array(
                 'registrationTransaction' => $registrationTransaction,
                 'employee' => $employee,
                 'employeeDataProvider' => $employeeDataProvider
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -1516,7 +1515,7 @@ class RegistrationTransactionController extends Controller {
             $registrationTransaction->addQsServiceDetail($quickServiceId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
@@ -1532,7 +1531,7 @@ class RegistrationTransactionController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeQuickServiceDetailAt($index);
-            
+
             $this->renderPartial('_detailQuickService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
@@ -1546,7 +1545,7 @@ class RegistrationTransactionController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeQuickServiceAll();
-            
+
             $this->renderPartial('_detailQuickService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
@@ -1567,7 +1566,7 @@ class RegistrationTransactionController extends Controller {
             $employeeDataProvider = new CActiveDataProvider('Employee', array(
                 'criteria' => $employeeCriteria,
             ));
-            
+
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
 
@@ -1575,12 +1574,12 @@ class RegistrationTransactionController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailService', array(
                 'registrationTransaction' => $registrationTransaction,
                 'employee' => $employee,
                 'employeeDataProvider' => $employeeDataProvider
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -1610,7 +1609,7 @@ class RegistrationTransactionController extends Controller {
                 'registrationTransaction' => $registrationTransaction,
                 'employee' => $employee,
                 'employeeDataProvider' => $employeeDataProvider
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -1620,11 +1619,11 @@ class RegistrationTransactionController extends Controller {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $registrationTransaction->removeServiceDetailAt($index);
             $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
@@ -1635,11 +1634,11 @@ class RegistrationTransactionController extends Controller {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeServiceDetailAll();
-            
+
             $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction), false, true);
         }
     }
@@ -1673,7 +1672,7 @@ class RegistrationTransactionController extends Controller {
                 'registrationTransaction' => $registrationTransaction,
                 'employee' => $employee,
                 'employeeDataProvider' => $employeeDataProvider
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -2354,7 +2353,7 @@ class RegistrationTransactionController extends Controller {
                 $invoiceData->payment_left = $countTotal;
                 $invoiceData->save(false);
                 $model->update(array('payment_status'));
-                
+
                 $this->redirect(array('billDetail', 'registrationId' => $registrationId));
             }
         }
@@ -3130,6 +3129,23 @@ class RegistrationTransactionController extends Controller {
             } else {
                 echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
             }
+        }
+    }
+
+    public function actionAjaxHtmlUpdateCarModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $model = new RegistrationTransaction('search');
+            $model->unsetAttributes();  // clear any default values
+            if (isset($_GET['RegistrationTransaction'])) {
+                $model->attributes = $_GET['RegistrationTransaction'];
+            }
+
+            $carMakeId = isset($_GET['RegistrationTransaction']['car_make_code']) ? $_GET['RegistrationTransaction']['car_make_code'] : '';
+
+            $this->renderPartial('_carModelSelect', array(
+                'model' => $model,
+                'carMakeId' => $carMakeId,
+            ));
         }
     }
 

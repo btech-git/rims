@@ -99,25 +99,19 @@ class ConsignmentOutHeaderController extends Controller {
         $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
         $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
         $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
-//			$productCriteria->together=true;
-//			$productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name';
-//					$productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
-//					$productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,true);
-//					$productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,true);
-//					$productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name,true);
-//					$productCriteria->compare('rims_brand.name', $product->product_brand_name,true);
         $productDataProvider = new CActiveDataProvider('Product', array(
-                    'criteria' => $productCriteria,));
-
-        if (isset($_POST['Cancel']))
+            'criteria' => $productCriteria,
+        ));
+ 
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['ConsignmentOutHeader'])) {
-            // $model->attributes=$_POST['ConsignmentOutHeader'];
-            // if($model->save())
-            // 	$this->redirect(array('view','id'=>$model->id));
 
             $this->loadState($consignmentOut);
+            $consignmentOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentOut->header->date_posting)), $consignmentOut->header->branch_id);
+            
             if ($consignmentOut->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $consignmentOut->header->id));
             }

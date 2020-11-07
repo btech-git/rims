@@ -95,6 +95,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             array('receive_item_no, request_type', 'length', 'max' => 30),
             array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
             array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total, invoice_grand_total_rounded, invoice_rounding_nominal', 'length', 'max' => 18),
+            array('receive_item_no', 'unique'),
             array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note, invoice_date_created, invoice_time_created', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.

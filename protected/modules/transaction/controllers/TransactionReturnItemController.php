@@ -118,8 +118,8 @@ class TransactionReturnItemController extends Controller {
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionReturnItem'])) {
-
             $this->loadState($returnItem);
+            $returnItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnItem->header->return_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnItem->header->return_item_date)), $returnItem->header->recipient_branch_id);
 
             if ($returnItem->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $returnItem->header->id));

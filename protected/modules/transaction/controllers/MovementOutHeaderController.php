@@ -190,6 +190,7 @@ class MovementOutHeaderController extends Controller {
 
         if (isset($_POST['MovementOutHeader'])) {
             $this->loadState($movementOut);
+            $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
             
             if ($movementOut->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $movementOut->header->id));

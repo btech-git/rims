@@ -47,6 +47,7 @@ class GeneralRepairRegistrationController extends Controller {
         if (isset($_POST['Submit'])) {
 //            if ($_POST['_FormSubmit_'] === 'Submit') {
             $this->loadState($generalRepairRegistration);
+            $generalRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
 
             if ($generalRepairRegistration->save(Yii::app()->db))
                 $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));

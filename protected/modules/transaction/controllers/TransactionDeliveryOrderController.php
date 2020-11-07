@@ -144,6 +144,7 @@ class TransactionDeliveryOrderController extends Controller {
 
         if (isset($_POST['TransactionDeliveryOrder'])) {
             $this->loadState($deliveryOrder);
+            $deliveryOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($deliveryOrder->header->delivery_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($deliveryOrder->header->delivery_date)), $deliveryOrder->header->sender_branch_id);
 
             if ($deliveryOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $deliveryOrder->header->id));

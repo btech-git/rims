@@ -104,14 +104,14 @@ class PaymentOutController extends Controller {
         $purchaseOrderCriteria->with = array('supplier');
         $purchaseOrderCriteria->compare('supplier.name', $purchaseOrder->supplier_name, true);
         $purchaseOrderDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
-                    'criteria' => $purchaseOrderCriteria,
-                    'sort' => array(
-                        'defaultOrder' => 'purchase_order_date DESC',
-                    ),
-                    'pagination' => array(
-                        'pageSize' => 10,
-                    )
-                ));
+            'criteria' => $purchaseOrderCriteria,
+            'sort' => array(
+                'defaultOrder' => 'purchase_order_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            )
+        ));
 
         $model->branch_id = $model->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $model->branch_id;
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
@@ -126,6 +126,8 @@ class PaymentOutController extends Controller {
 
         if (isset($_POST['PaymentOut'])) {
             $model->attributes = $_POST['PaymentOut'];
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
+            
             $po = TransactionPurchaseOrder::model()->findByPk($model->purchase_order_id);
             if ($po->supplier->coa->id != "") {
                 if ($model->save()) {

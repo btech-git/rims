@@ -37,7 +37,8 @@
                             <?php echo $form->labelEx($movementIn->header, 'movement_in_number', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($movementIn->header, 'movement_in_number', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
+                            <?php //echo $form->textField($movementIn->header, 'movement_in_number', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
+                            <?php echo CHtml::encode(CHtml::value($movementIn->header, 'movement_in_number')); ?>
                             <?php echo $form->error($movementIn->header, 'movement_in_number'); ?>
                         </div>
                     </div>

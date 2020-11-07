@@ -114,41 +114,22 @@ class TransactionSalesOrderController extends Controller {
             'criteria' => $productCriteria,
         ));
 
-//			$productCriteria->with = array('productSubMasterCategory','productMasterCategory','productSubCategory','brand', 'subBrand', 'subBrandSeries');
-//			$productCriteria->compare('productMasterCategory.code',$product->product_master_category_code,true);
-//			$productCriteria->compare('productMasterCategory.name',$product->product_master_category_name,true);
-//			$productCriteria->compare('productSubMasterCategory.code',$product->product_sub_master_category_code,true);
-//			$productCriteria->compare('productSubMasterCategory.name',$product->product_sub_master_category_name,true);
-//            $productCriteria->compare('productSubCategory.name', $product->product_sub_category_name,true);
-//			$productCriteria->compare('brand.name',$product->product_brand_name,true);
-//			$productCriteria->compare('subBrand.name',$product->product_sub_brand_name,true);
-//			$productCriteria->compare('subBrandSeries.name',$product->product_sub_brand_series_name,true);
-        // $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.name as product_supplier';
-        // $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';
-        //$productCriteria->addCondition('rims_supplier_product.supplier_id'=$supplier->id);
-        // $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,true);
-        // $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,true);
-        // $productCriteria->compare('rims_supplier.name', $product->product_supplier,true);
-        // $productCriteria->compare('rims_brand.name', $product->product_brand_name,true);
-
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionSalesOrder'])) {
-
             $this->loadState($salesOrder);
+            $salesOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($salesOrder->header->sale_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($salesOrder->header->sale_order_date)), $salesOrder->header->requester_branch_id);
+            
             if ($salesOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $salesOrder->header->id));
             }
         }
 
         $this->render('create', array(
-            //'model'=>$model,
             'salesOrder' => $salesOrder,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
-            // 'request'=>$request,
-            // 'requestDataProvider'=>$requestDataProvider,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
         ));

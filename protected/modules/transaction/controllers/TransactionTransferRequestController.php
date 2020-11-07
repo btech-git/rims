@@ -132,9 +132,10 @@ class TransactionTransferRequestController extends Controller
         $transferRequest->header->requester_branch_id = $transferRequest->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $transferRequest->header->requester_branch_id;
         $transferRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($transferRequest->header->transfer_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($transferRequest->header->transfer_request_date)), $transferRequest->header->requester_branch_id);
         $this->performAjaxValidation($transferRequest->header);
+        
         if (isset($_POST['TransactionTransferRequest'])) {
-
             $this->loadState($transferRequest);
+            $transferRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($transferRequest->header->transfer_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($transferRequest->header->transfer_request_date)), $transferRequest->header->requester_branch_id);
 
             if ($transferRequest->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $transferRequest->header->id));
