@@ -166,20 +166,7 @@ class RegistrationTransactionController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($type, $id) {
-        // $model=new RegistrationTransaction;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['RegistrationTransaction']))
-        // {
-        // 	$model->attributes=$_POST['RegistrationTransaction'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('create',array(
-        // 	'model'=>$model,
-        // 	'customer'=>$customer,
-        // 	'customerDataProvider'=>$customerDataProvider,
-        // ));
+        
         $data = array();
         if ($type == 1) {
             $data = Customer::model()->findByPk($id);
@@ -528,19 +515,6 @@ class RegistrationTransactionController extends Controller {
             'model' => $model,
         ));
     }
-
-//    public function actionAdminTest() {
-//        $model = new RegistrationTransaction('search');
-//
-//        $model->unsetAttributes();  // clear any default values
-//        if (isset($_GET['RegistrationTransaction'])) {
-//            $model->attributes = $_GET['RegistrationTransaction'];
-//        }
-//
-//        $this->render('admintest', array(
-//            'model' => $model,
-//        ));
-//    }
 
     public function actionCashier() {
         $model = new RegistrationTransaction('search');
@@ -2315,13 +2289,14 @@ class RegistrationTransactionController extends Controller {
         $registrationQuickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
 
         $payment = new PaymentIn;
-        $payment->branch_id = $payment->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $payment->branch_id;
+        $payment->branch_id = isset($_GET['PaymentIn']['branch_id']) ? $_GET['PaymentIn']['branch_id'] : '';
         $payment->payment_date = date('Y-m-d');
-        $payment->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($payment->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($payment->payment_date)), $payment->branch_id);
+//        $payment->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($payment->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($payment->payment_date)), $payment->branch_id);
 
         if (isset($_POST['PaymentIn'])) {
             $payment->attributes = $_POST['PaymentIn'];
             $payment->status = "CLEAR";
+            $payment->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($payment->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($payment->payment_date)), $payment->branch_id);
 
             if ($payment->save(false)) {
                 $criteria = new CDbCriteria;

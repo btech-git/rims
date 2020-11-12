@@ -79,8 +79,12 @@ Yii::app()->clientScript->registerScript('search', "
                         'value'=>'$data->user->username',
                     ),
                     array(
-                        'header' => 'Status',
-                        'value' => '$data->status',
+                        'header' => 'Status Document',
+                        'value' => '$data->status_document',
+                    ),
+                    array(
+                        'header' => 'Status Progress',
+                        'value' => '$data->status_progress',
                     ),
                     array(
                         'class'=>'CButtonColumn',
@@ -89,7 +93,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("frontDesk/materialRequest/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionMaterialRequest.update")',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionMaterialRequest.update")',
                             ),
                         ),
                     ),

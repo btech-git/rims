@@ -11,13 +11,15 @@
  * @property integer $total_quantity
  * @property integer $total_quantity_movement_out
  * @property integer $total_quantity_remaining
- * @property string $status
+ * @property string $status_document
+ * @property string $status_progress
  * @property string $note
  * @property integer $branch_id
  * @property integer $user_id
  *
  * The followings are the available model relations:
  * @property MaterialRequestDetail[] $materialRequestDetails
+ * @property MaterialRequestApproval[] $materialRequestApprovals
  * @property Branch $branch
  * @property Users $user
  * @property MovementOutHeader[] $movementOutHeaders
@@ -51,13 +53,12 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         return array(
             array('transaction_number, transaction_date, transaction_time, branch_id, user_id', 'required'),
             array('branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining', 'numerical', 'integerOnly' => true),
-            array('transaction_number', 'length', 'max' => 50),
-            array('status', 'length', 'max' => 20),
+            array('transaction_number, status_document, status_progress', 'length', 'max' => 50),
             array('note', 'safe'),
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, status, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, status_document, status_progress, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining', 'safe', 'on' => 'search'),
         );
     }
 
@@ -69,6 +70,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'materialRequestDetails' => array(self::HAS_MANY, 'MaterialRequestDetail', 'material_request_header_id'),
+            'materialRequestApprovals' => array(self::HAS_MANY, 'MaterialRequestApproval', 'material_request_header_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'movementOutHeaders' => array(self::HAS_MANY, 'MovementOutHeader', 'material_request_header_id'),
@@ -87,7 +89,8 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
             'total_quantity' => 'Total Quantity',
             'total_quantity_movement_out' => 'Total Quantity Movement Out',
             'total_quantity_remaining' => 'Total Quantity Remaining',
-            'status' => 'Status',
+            'status_document' => 'Status Document',
+            'status_progress' => 'Status Progress',
             'note' => 'Note',
             'branch_id' => 'Branch',
             'user_id' => 'User',
@@ -111,7 +114,8 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('total_quantity', $this->total_quantity);
         $criteria->compare('total_quantity_movement_out', $this->total_quantity_movement_out);
         $criteria->compare('total_quantity_remaining', $this->total_quantity_remaining);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('status_document', $this->status_document, true);
+        $criteria->compare('status_progress', $this->status_progress, true);
         $criteria->compare('note', $this->note, true);
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
@@ -131,7 +135,8 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('total_quantity', $this->total_quantity);
         $criteria->compare('total_quantity_movement_out', $this->total_quantity_movement_out);
         $criteria->compare('total_quantity_remaining', $this->total_quantity_remaining);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('status_document', $this->status_document, true);
+        $criteria->compare('status_progress', $this->status_progress, true);
         $criteria->compare('note', $this->note, true);
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
@@ -161,5 +166,9 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         }
         
         return $total;
+    }
+    
+    public function getDateTime() {
+        return $this->transaction_date . ' ' . $this->transaction_time;
     }
 }

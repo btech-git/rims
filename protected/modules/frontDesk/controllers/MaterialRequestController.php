@@ -28,12 +28,16 @@ class MaterialRequestController extends Controller {
         $materialRequest->header->user_id = Yii::app()->user->id;
         $materialRequest->header->transaction_date = date('Y-m-d');
         $materialRequest->header->transaction_time = date('H:i:s');
+        $materialRequest->header->status_document = 'PENDING';
+        $materialRequest->header->status_progress = 'NO MOVEMENT';
         $materialRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
         $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
 
+        $branches = Branch::model()->findAll();
+        
         if (isset($_POST['Submit'])) {
             $this->loadState($materialRequest);
             $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
@@ -50,6 +54,7 @@ class MaterialRequestController extends Controller {
             'materialRequest' => $materialRequest,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
+            'branches' => $branches,
         ));
     }
 
@@ -123,6 +128,31 @@ class MaterialRequestController extends Controller {
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
+    public function actionUpdateApproval($headerId) {
+        $materialRequest = $this->instantiate($headerId);
+        $historis = MaterialRequestApproval::model()->findAllByAttributes(array('material_request_header_id' => $headerId));
+        $model = new MaterialRequestApproval;
+        $model->date = date('Y-m-d');
+        $model->time = date('H:i:s');
+
+        if (isset($_POST['MaterialRequestApproval'])) {
+            $model->attributes = $_POST['MaterialRequestApproval'];
+            
+            if ($model->save()) {
+                $materialRequest->header->status_document = $model->approval_type;
+                $materialRequest->header->update(array('status_document'));
+                
+                $this->redirect(array('view', 'id' => $headerId));
+            }
+        }
+
+        $this->render('updateApproval', array(
+            'model' => $model,
+            'materialRequest' => $materialRequest,
+            'historis' => $historis,
+        ));
+    }
+
     public function actionAjaxJsonTotal($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $materialRequest = $this->instantiate($id);
@@ -141,12 +171,15 @@ class MaterialRequestController extends Controller {
             $materialRequest = $this->instantiate($id);
             $this->loadState($materialRequest);
 
+            $branches = Branch::model()->findAll();
+        
             if (isset($_POST['ProductId'])) {
                 $materialRequest->addDetail($_POST['ProductId']);
             }
 
             $this->renderPartial('_detail', array(
                 'materialRequest' => $materialRequest,
+                'branches' => $branches,
             ));
         }
     }

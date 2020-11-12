@@ -208,7 +208,8 @@ class MovementOuts extends CComponent {
                 $materialRequestHeader = MaterialRequestHeader::model()->findByPk($materialRequestDetail->material_request_header_id);
                 $materialRequestHeader->total_quantity_movement_out = $materialRequestHeader->getTotalQuantityMovementOut();
                 $materialRequestHeader->total_quantity_remaining = $materialRequestHeader->total_quantity - $materialRequestHeader->total_quantity_movement_out;
-                $materialRequestHeader->update(array('total_quantity_movement_out', 'total_quantity_remaining'));
+                $materialRequestHeader->status_progress = ($materialRequestHeader->total_quantity_remaining > 0) ? 'PARTIAL MOVEMENT' : 'COMPLETED';
+                $materialRequestHeader->update(array('total_quantity_movement_out', 'total_quantity_remaining', 'status_progress'));
             }
 
             $new_detail[] = $detail->id;

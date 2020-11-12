@@ -79,8 +79,9 @@
                                                 <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'transaction_number'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepairRegistration->header,'transaction_number',array('size'=>30,'maxlength'=>30, 'readonly' => true)); ?>
-                                                <?php echo $form->error($bodyRepairRegistration->header,'transaction_number'); ?>
+                                                <?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header,'transaction_number')); ?>
+                                                <?php //echo $form->textField($bodyRepairRegistration->header,'transaction_number',array('size'=>30,'maxlength'=>30, 'readonly' => true)); ?>
+                                                <?php //echo $form->error($bodyRepairRegistration->header,'transaction_number'); ?>
                                             </div>
                                         </div>
                                     </div>

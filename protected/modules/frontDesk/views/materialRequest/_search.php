@@ -48,10 +48,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model, 'status', array('class' => 'prefix')); ?>
+                        <?php echo $form->label($model, 'status_document', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'status', array('size' => 30, 'maxlength' => 30)); ?>
+                        <?php echo $form->textField($model, 'status_document', array('size' => 30, 'maxlength' => 30)); ?>
                     </div>
                 </div>
             </div>

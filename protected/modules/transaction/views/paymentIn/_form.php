@@ -27,8 +27,9 @@
                         <?php echo $form->labelEx($model, 'payment_number'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'payment_number', array('size' => 50, 'maxlength' => 50, 'readonly' => true)); ?>
-                        <?php echo $form->error($model, 'payment_number'); ?>
+                        <?php echo CHtml::encode(CHtml::value($model, 'payment_number')); ?>
+                        <?php //echo $form->textField($model, 'payment_number', array('size' => 50, 'maxlength' => 50, 'readonly' => true)); ?>
+                        <?php //echo $form->error($model, 'payment_number'); ?>
                     </div>
                 </div>
             </div>		

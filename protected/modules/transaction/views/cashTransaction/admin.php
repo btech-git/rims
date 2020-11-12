@@ -73,7 +73,7 @@ $('.search-form form').submit(function(){
                             'type' => 'raw'
                         ),
                         'transaction_date',
-//                        'transaction_type',
+                        'transaction_time',
                         array(
                             'header' => 'COA Credit',
                             'name' => 'coa_name', 

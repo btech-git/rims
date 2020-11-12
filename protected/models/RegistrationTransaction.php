@@ -532,7 +532,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('customer.name', $this->customer_name, true);
         $criteria->compare('customer.customer_type', $this->customer_type, true);
 
-        $criteria->order = 't.transaction_date ASC';
+        $criteria->order = 't.transaction_date DESC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

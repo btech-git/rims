@@ -37,6 +37,7 @@ $this->menu = array(
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.update")
             )); ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.materialRequest.updateApproval"))) ?>
         <?php //endif; ?>
 
         <h1>View Permintaan Bahan #<?php echo $materialRequest->id; ?></h1>
@@ -45,8 +46,9 @@ $this->menu = array(
             'data' => $materialRequest,
             'attributes' => array(
                 'transaction_number',
-                'transaction_date',
-                'status',
+                'dateTime',
+                'status_document',
+                'status_progress',
                 'note',
                 array('name' => 'user_id', 'value' => $materialRequest->user->username),
                 array('name' => 'branch_id', 'value' => $materialRequest->branch->name),

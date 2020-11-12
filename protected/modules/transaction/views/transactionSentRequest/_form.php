@@ -35,9 +35,9 @@
                                 array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($sentRequest->header, 'sent_request_no',
-                                array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
-                            <?php echo $form->error($sentRequest->header, 'sent_request_no'); ?>
+                            <?php echo CHtml::encode(CHtml::value($sentRequest->header, 'sent_request_no')); ?>
+                            <?php //echo $form->textField($sentRequest->header, 'sent_request_no', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
+                            <?php //echo $form->error($sentRequest->header, 'sent_request_no'); ?>
                         </div>
                     </div>
                 </div>

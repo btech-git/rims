@@ -21,7 +21,7 @@
             'value' => $paymentOut->payment_number,
         ),
         array(
-            'label' => 'Tanggal',
+            'label' => 'Tanggal Payment',
             'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOut->payment_date),
         ),
         array(
@@ -59,6 +59,10 @@
         array(
             'label' => 'Admin',
             'value' => $paymentOut->user->username,
+        ),
+        array(
+            'label' => 'Tanggal Input',
+            'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOut->date_created),
         ),
         array(
             'label' => 'Catatan',

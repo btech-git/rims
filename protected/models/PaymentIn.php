@@ -8,6 +8,7 @@
  * @property integer $invoice_id
  * @property string $payment_number
  * @property string $payment_date
+ * @property string $payment_time
  * @property string $payment_amount
  * @property string $notes
  * @property integer $customer_id
@@ -56,7 +57,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_id, payment_number, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status', 'required'),
+            array('invoice_id, payment_number, payment_time, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status', 'required'),
             array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount', 'length', 'max' => 18),
@@ -97,6 +98,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'invoice_id' => 'Invoice',
             'payment_number' => 'Payment Number',
             'payment_date' => 'Payment Date',
+            'payment_time' => 'Payment Time',
             'payment_amount' => 'Payment Amount',
             'notes' => 'Notes',
             'customer_id' => 'Customer',
@@ -134,6 +136,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.invoice_id', $this->invoice_id);
         $criteria->compare('payment_number', $this->payment_number, true);
         $criteria->compare('payment_date', $this->payment_date, true);
+        $criteria->compare('payment_time', $this->payment_time, true);
         $criteria->compare('payment_amount', $this->payment_amount, true);
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('t.customer_id', $this->customer_id);

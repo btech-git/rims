@@ -30,7 +30,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6" style="text-align: right; font-weight: bold">Total Quantity</td>
+                <td colspan="6" style="text-align: right; font-weight: bold">Total</td>
                 <td style="text-align: center; font-weight: bold"><?php echo $model->totalQuantity; ?></td>
                 <td>&nbsp;</td>
             </tr>

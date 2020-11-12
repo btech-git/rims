@@ -82,7 +82,10 @@
     <br /><br />
     
     <div id="detail_div">
-        <?php $this->renderPartial('_detail', array('materialRequest' => $materialRequest)); ?>
+        <?php $this->renderPartial('_detail', array(
+            'materialRequest' => $materialRequest,
+            'branches' => $branches,
+        )); ?>
     </div>
 
     <div class="row buttons">

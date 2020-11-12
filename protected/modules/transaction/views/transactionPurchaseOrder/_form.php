@@ -30,13 +30,12 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header,
-                                    'purchase_order_no'); ?></label>
+                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'purchase_order_no'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($purchaseOrder->header, 'purchase_order_no',
-                                array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
-                            <?php echo $form->error($purchaseOrder->header, 'purchase_order_no'); ?>
+                            <?php echo CHtml::encode(CHtml::value($purchaseOrder->header, 'purchase_order_no')); ?>
+                            <?php //echo $form->textField($purchaseOrder->header, 'purchase_order_no', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
+                            <?php //echo $form->error($purchaseOrder->header, 'purchase_order_no'); ?>
                         </div>
                     </div>
                 </div>

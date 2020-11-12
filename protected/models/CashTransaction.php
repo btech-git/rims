@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $transaction_number
  * @property string $transaction_date
+ * @property string $transaction_time
  * @property string $transaction_type
  * @property integer $coa_id
  * @property string $debit_amount
@@ -51,7 +52,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id', 'required'),
+            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id', 'required'),
             array('coa_id, branch_id, user_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('transaction_type', 'length', 'max' => 20),
@@ -60,7 +61,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -88,6 +89,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             'id' => 'ID',
             'transaction_number' => 'Transaction Number',
             'transaction_date' => 'Transaction Date',
+            'transaction_time' => 'Transaction Time',
             'transaction_type' => 'Transaction Type',
             'coa_id' => 'Coa',
             'debit_amount' => 'Debit Amount',
@@ -118,6 +120,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
         $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('transaction_time', $this->transaction_time, true);
         $criteria->compare('transaction_type', $this->transaction_type, true);
         $criteria->compare('coa_id', $this->coa_id);
         $criteria->compare('debit_amount', $this->debit_amount, true);

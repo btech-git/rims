@@ -30,23 +30,6 @@ $this->menu = array(
         <?php endif ?>
         <h1>View Cash Transaction #<?php echo $model->id; ?></h1>
 
-        <?php
-        //$this->widget('zii.widgets.CDetailView', array(
-        // 	'data'=>$model,
-        // 	'attributes'=>array(
-        // 		'id',
-        // 		'transaction_number',
-        // 		'transaction_date',
-        // 		'transaction_type',
-        // 		'coa_id',
-        // 		'debit_amount',
-        // 		'credit_amount',
-        // 		'branch_id',
-        // 		'user_id',
-        // 	),
-        // )); 
-        ?>
-
         <div class="row">
             <div class="large-12 columns">
                 <div class="row">
@@ -79,6 +62,16 @@ $this->menu = array(
                                 </div>
                                 <div class="small-8 columns">
                                     <input type="text" readonly="true" value="<?php echo $model->transaction_date; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Transaction Time</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo $model->transaction_time; ?>"> 
                                 </div>
                             </div>
                         </div>

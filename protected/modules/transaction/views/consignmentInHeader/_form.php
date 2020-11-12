@@ -34,9 +34,9 @@
                                 array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($consignmentIn->header, 'consignment_in_number',
-                                array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
-                            <?php echo $form->error($consignmentIn->header, 'consignment_in_number'); ?>
+                            <?php echo CHtml::encode(CHtml::value($consignmentIn->header, 'consignment_in_number')); ?>
+                            <?php //echo $form->textField($consignmentIn->header, 'consignment_in_number', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
+                            <?php //echo $form->error($consignmentIn->header, 'consignment_in_number'); ?>
                         </div>
                     </div>
                 </div>

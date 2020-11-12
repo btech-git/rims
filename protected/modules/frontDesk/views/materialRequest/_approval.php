@@ -6,49 +6,106 @@
 <div class="form">
 
     <?php $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'transaction-request-order-form',
+        'id' => 'material-request-form',
         'enableAjaxValidation' => false,
     )); ?>
 
+        <!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
     <div class="row">
         <div class="large-12 columns">
             <div class="field">
                 <div class="row collapse">
-                    <h2>Cash Transaction</h2>
+                    <h2>Material Request</h2>
                 </div>
             </div>
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix">Cash Transaction No</label>
+                        <label class="prefix">Material Request No</label>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction, 'transaction_number', array('value' => $cashTransaction->transaction_number, 'readonly' => true)); ?>
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <label class="prefix">Date Posting</label>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction, 'transaction_date', array('value' => $cashTransaction->transaction_date, 'readonly' => true)); ?>
+                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'transaction_number')); ?>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix">Status</label>
+                        <label class="prefix">Date Transaction</label>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction, 'status', array('value' => $cashTransaction->status, 'readonly' => true)); ?>
+                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'dateTime')); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix">Status Document</label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'status_document')); ?>
                     </div>
                 </div>
             </div>
             <hr />
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-12 columns">
+                        <h2>Product Detail</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Product</td>
+                            <td>Code</td>
+                            <td>Category</td>
+                            <td>Brand</td>
+                            <td>Sub Brand</td>
+                            <td>Sub Brand Series</td>
+                            <td>Quantity</td>
+                            <td>Unit</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($materialRequest->details as $key => $detail): ?>
+                        <?php $productInfo = $detail->product; ?>
+                            <tr>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($productInfo, 'name')); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($productInfo, 'manufacturer_code')); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($productInfo, 'masterSubCategoryCode')); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($productInfo, 'brand.name')); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($productInfo, 'subBrand.name')); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($productInfo, 'subBrandSeries.name')); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'quantity'))); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($productInfo, 'unit.name')); ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
+            <hr />
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-12 columns">
@@ -64,11 +121,11 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Approval type</th>
-                                        <th>Revision</th>
-                                        <th>date</th>
-                                        <th>note</th>
-                                        <th>supervisor</th>
+                                        <td>Approval type</td>
+                                        <td>Revision</td>
+                                        <td>Date</td>
+                                        <td>Note</td>
+                                        <td>Supervisor</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -78,16 +135,13 @@
                                             <td><?php echo $history->revision; ?></td>
                                             <td><?php echo $history->date; ?></td>
                                             <td><?php echo $history->note; ?></td>
-                                            <td><?php echo $history->supervisor->username; ?></td>
+                                            <td><?php echo $history->supervisor_id; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
-
-                        <?php else:
-                            echo "No Revision History";
-                        ?>		
-                        <?php endif; ?>
+                        <?php else: echo "No Revision History"; ?>		
+                        <?php endif; ?>			 
                     </div>
                 </div>
             </div>
@@ -113,7 +167,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <?php echo $form->hiddenField($model, 'cash_transaction_id',array('value'=>$cashTransaction->id)); ?>		
+                            <?php echo $form->hiddenField($model, 'material_request_header_id',array('value'=>$materialRequest->header->id)); ?>		
                             <?php echo $form->dropDownList($model, 'approval_type', array(
                                 'Revised' => 'Need Revision',
                                 'Rejected'=>'Rejected',
@@ -122,7 +176,7 @@
                             <?php echo $form->error($model,'approval_type'); ?>
                         </td>
                         <td>
-                            <?php $revisions = CashTransactionApproval::model()->findAllByAttributes(array('cash_transaction_id' => $cashTransaction->id)); ?>
+                            <?php $revisions = MaterialRequestApproval::model()->findAllByAttributes(array('material_request_header_id'=>$materialRequest->header->id)); ?>
                             <?php echo $form->textField($model, 'revision',array('value' => count($revisions) != 0 ? count($revisions) : 0, 'readonly' => true)); ?>		
                             <?php echo $form->error($model,'revision'); ?>
                         </td>
@@ -144,11 +198,11 @@
             </div>
             
             <hr />
-
+            
             <div class="field buttons text-center">
                 <?php echo CHtml::submitButton('Save', array('class' => 'button cbutton')); ?>
             </div>
-        </div>	
+        </div>
     </div>
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 </div><!-- form -->

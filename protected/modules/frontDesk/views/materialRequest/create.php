@@ -9,6 +9,7 @@
     <?php echo $this->renderPartial('_form', array(
         'materialRequest' => $materialRequest,
         'product' => $product,
-        'productDataProvider' => $productDataProvider,     
+        'productDataProvider' => $productDataProvider,
+        'branches' => $branches,
     ));?>
 </div>
