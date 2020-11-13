@@ -31,18 +31,18 @@
 
         <div class="row">
             <div class="small-12 medium-6 columns">
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($movementIn->header, 'movement_in_number', array('class' => 'prefix')); ?>
+                            <?php //echo $form->labelEx($movementIn->header, 'movement_in_number', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php //echo $form->textField($movementIn->header, 'movement_in_number', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
-                            <?php echo CHtml::encode(CHtml::value($movementIn->header, 'movement_in_number')); ?>
-                            <?php echo $form->error($movementIn->header, 'movement_in_number'); ?>
+                            <?php //echo CHtml::encode(CHtml::value($movementIn->header, 'movement_in_number')); ?>
+                            <?php //echo $form->error($movementIn->header, 'movement_in_number'); ?>
                         </div>
                     </div>
-                </div>		
+                </div>		-->
 
                 <div class="field">
                     <div class="row collapse">

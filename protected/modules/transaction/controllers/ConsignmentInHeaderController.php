@@ -76,19 +76,19 @@ class ConsignmentInHeaderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        //$model=new ConsignmentInHeader;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
+        
         $consignmentIn = $this->instantiate(null);
         $consignmentIn->header->receive_branch = $consignmentIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $consignmentIn->header->receive_branch;
-        $consignmentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentIn->header->date_posting)), $consignmentIn->header->receive_branch);
+//        $consignmentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentIn->header->date_posting)), $consignmentIn->header->receive_branch);
         $this->performAjaxValidation($consignmentIn->header);
+        
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['Supplier'])) {
             $supplier->attributes = $_GET['Supplier'];
         }
+        
         $supplierCriteria = new CDbCriteria;
         $supplierCriteria->compare('t.name', $supplier->name, true);
         $supplierCriteria->together = true;
@@ -99,28 +99,9 @@ class ConsignmentInHeaderController extends Controller {
             'criteria' => $supplierCriteria,
         ));
 
-
-// var_dump($supplierCriteria); die("s");
-        /* $product = new Product('search');
-          $product->unsetAttributes();  // clear any default values
-          if (isset($_GET['Product']))
-          $product->attributes = $_GET['Product'];
-
-          $productCriteria = new CDbCriteria;
-          $productCriteria->compare('name',$product->name,true);
-          $productCriteria->compare('manufacturer_code',$product->manufacturer_code,true);
-          $productCriteria->together=true;
-          $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name';
-          $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
-          $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,true);
-          $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,true);
-          $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name,true);
-          $productCriteria->compare('rims_brand.name', $product->product_brand_name,true);
-          $productDataProvider = new CActiveDataProvider('Product', array(
-          'criteria'=>$productCriteria,));
-          ` */
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
         }
@@ -134,15 +115,7 @@ class ConsignmentInHeaderController extends Controller {
         $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
         $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
         $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
-//        $productCriteria->together = true;
-//        $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.name as product_supplier';
-//        $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';
-//        //$productCriteria->addCondition('rims_supplier_product.supplier_id'=$supplier->id);
-//        $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
-//        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
-//        $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
-//        $productCriteria->compare('rims_supplier.name', $product->product_supplier, true);
-//        $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
+
         $productDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $productCriteria,
         ));

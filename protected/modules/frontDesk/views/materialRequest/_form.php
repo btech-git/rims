@@ -17,17 +17,17 @@
     <?php echo CHtml::errorSummary($materialRequest->header); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Request #', ''); ?>
+                        <?php //echo CHtml::label('Request #', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'transaction_number')); ?>
-                        <?php echo CHtml::error($materialRequest->header, 'transaction_number'); ?>
+                        <?php //echo CHtml::encode(CHtml::value($materialRequest->header, 'transaction_number')); ?>
+                        <?php //echo CHtml::error($materialRequest->header, 'transaction_number'); ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">

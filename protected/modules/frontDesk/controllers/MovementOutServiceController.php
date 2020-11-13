@@ -71,7 +71,7 @@ class MovementOutServiceController extends Controller
         $movementOut->header->branch_id = $movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementOut->header->branch_id;
         $movementOut->header->user_id = Yii::app()->user->id;
         $movementOut->header->registration_service_id = $registrationTransactionId;
-        $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
+//        $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
 
         if (!empty($registrationTransactionId))
             $movementOut->addDetails($registrationTransactionId);

@@ -31,18 +31,18 @@
 
         <div class="row">
             <div class="small-12 medium-6 columns">	 
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($returnItem->header, 'return_item_no', array('class' => 'prefix')); ?>
+                            <?php //echo $form->labelEx($returnItem->header, 'return_item_no', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($returnItem->header, 'return_item_no')); ?>
+                            <?php //echo CHtml::encode(CHtml::value($returnItem->header, 'return_item_no')); ?>
                             <?php //echo $form->textField($returnItem->header, 'return_item_no', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
                             <?php //echo $form->error($returnItem->header, 'return_item_no'); ?>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="field">
                     <div class="row collapse">

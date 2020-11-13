@@ -267,10 +267,11 @@ class RegistrationTransactionController extends Controller {
 
         $registrationTransaction = $this->instantiate(null);
         $registrationTransaction->header->branch_id = $registrationTransaction->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $registrationTransaction->header->branch_id;
-        $registrationTransaction->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registrationTransaction->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registrationTransaction->header->transaction_date)), $registrationTransaction->header->branch_id);
+        
         if (isset($_POST['RegistrationTransaction'])) {
-
             $this->loadState($registrationTransaction);
+            $registrationTransaction->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registrationTransaction->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registrationTransaction->header->transaction_date)), $registrationTransaction->header->branch_id);
+        
             if ($registrationTransaction->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $registrationTransaction->header->id));
             }
@@ -2291,6 +2292,7 @@ class RegistrationTransactionController extends Controller {
         $payment = new PaymentIn;
         $payment->branch_id = isset($_GET['PaymentIn']['branch_id']) ? $_GET['PaymentIn']['branch_id'] : '';
         $payment->payment_date = date('Y-m-d');
+        $payment->payment_time = date('H:i:s');
 //        $payment->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($payment->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($payment->payment_date)), $payment->branch_id);
 
         if (isset($_POST['PaymentIn'])) {

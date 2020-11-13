@@ -3,17 +3,17 @@
     <?php echo CHtml::errorSummary($paymentOut->header); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Payment Out #', false); ?>
+                        <?php //echo CHtml::label('Payment Out #', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'payment_number')); ?>
-                        <?php echo CHtml::error($paymentOut->header, 'payment_number'); ?>
+                        <?php //echo CHtml::encode(CHtml::value($paymentOut->header, 'payment_number')); ?>
+                        <?php //echo CHtml::error($paymentOut->header, 'payment_number'); ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
             
             <div class="field">
                 <div class="row collapse">

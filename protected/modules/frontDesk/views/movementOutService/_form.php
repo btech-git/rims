@@ -58,18 +58,18 @@
 
                             <div class="row">
                                 <div class="medium-6 columns">
-                                    <div class="field">
+<!--                                    <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($movementOut->header, 'movement_out_no'); ?></label>
+                                                <label class="prefix"><?php //echo $form->labelEx($movementOut->header, 'movement_out_no'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'movement_out_no')); ?>
+                                                <?php //echo CHtml::encode(CHtml::value($movementOut->header, 'movement_out_no')); ?>
                                                 <?php //echo $form->textField($movementOut->header,'movement_out_no',array('size'=>30,'maxlength'=>30, 'readonly' => true)); ?>
                                                 <?php //echo $form->error($movementOut->header,'movement_out_no'); ?>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="field">
                                         <div class="row collapse">

@@ -31,7 +31,7 @@ class MaterialRequestController extends Controller {
         $materialRequest->header->status_document = 'PENDING';
         $materialRequest->header->status_progress = 'NO MOVEMENT';
         $materialRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
-        $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
+//        $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();

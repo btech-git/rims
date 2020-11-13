@@ -19,18 +19,19 @@
     <?php echo $form->errorSummary($consignmentOut->header); ?>
 
     <div class="row">
-        <div class="large-6 columns">
+<!--        <div class="large-6 columns">
             <div class="row collapse prefix-radius">
                 <div class="small-4 columns">
-                    <?php echo $form->labelEx($consignmentOut->header, 'consignment_out_no', array('class' => 'prefix')); ?>
+                    <?php //echo $form->labelEx($consignmentOut->header, 'consignment_out_no', array('class' => 'prefix')); ?>
                 </div>
                 <div class="small-8 columns">
-                    <?php echo CHtml::encode(CHtml::value($consignmentOut->header, 'consignment_out_no')); ?>
+                    <?php //echo CHtml::encode(CHtml::value($consignmentOut->header, 'consignment_out_no')); ?>
                     <?php //echo $form->textField($consignmentOut->header, 'consignment_out_no', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
                     <?php //echo $form->error($consignmentOut->header, 'consignment_out_no'); ?>
                 </div>
             </div>
-        </div>
+        </div>-->
+        
         <div class="large-6 columns">
             <div class="row collapse prefix-radius">
                 <div class="small-4 columns">

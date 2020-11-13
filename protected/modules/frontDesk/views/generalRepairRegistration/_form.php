@@ -73,18 +73,18 @@
 
                             <div class="row">
                                 <div class="medium-6 columns">
-                                    <div class="field">
+<!--                                    <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'transaction_number'); ?></label>
+                                                <label class="prefix"><?php //echo $form->labelEx($generalRepairRegistration->header,'transaction_number'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header,'transaction_number')); ?>
+                                                <?php //echo CHtml::encode(CHtml::value($generalRepairRegistration->header,'transaction_number')); ?>
                                                 <?php //echo $form->textField($generalRepairRegistration->header,'transaction_number',array('size'=>30,'maxlength'=>30, 'readonly' => true)); ?>
                                                 <?php //echo $form->error($generalRepairRegistration->header,'transaction_number'); ?>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <?php if(!$generalRepairRegistration->header->isNewRecord): ?>
                                         <?php if($generalRepairRegistration->header->work_order_number != ""): ?>

@@ -77,22 +77,6 @@ class TransactionSentRequestController extends Controller
      */
     public function actionCreate()
     {
-        // $model=new TransactionSentRequest;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        // if(isset($_POST['TransactionSentRequest']))
-        // {
-        // 	$model->attributes=$_POST['TransactionSentRequest'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-
-        // $this->render('create',array(
-        // 	'model'=>$model,
-        // ));
-
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -108,13 +92,6 @@ class TransactionSentRequestController extends Controller
         $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
         $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
         $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
-//        $productCriteria->together = true;
-//        $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name';
-//        $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
-//        $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
-//        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
-//        $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
-//        $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
         $productDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $productCriteria,
         ));
@@ -122,18 +99,20 @@ class TransactionSentRequestController extends Controller
         $sentRequest = $this->instantiate(null);
         $sentRequest->header->requester_branch_id = $sentRequest->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $sentRequest->header->requester_branch_id;
         $sentRequest->header->sent_request_date = date('Y-m-d H:i:s');
-        $sentRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($sentRequest->header->sent_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($sentRequest->header->sent_request_date)), $sentRequest->header->requester_branch_id);
+//        $sentRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($sentRequest->header->sent_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($sentRequest->header->sent_request_date)), $sentRequest->header->requester_branch_id);
         $this->performAjaxValidation($sentRequest->header);
         
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionSentRequest'])) {
             $this->loadState($sentRequest);
             $sentRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($sentRequest->header->sent_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($sentRequest->header->sent_request_date)), $sentRequest->header->requester_branch_id);
 
-            if ($sentRequest->save(Yii::app()->db)) 
+            if ($sentRequest->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $sentRequest->header->id));
+            }
         }
 
         $this->render('create', array(

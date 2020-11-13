@@ -27,32 +27,27 @@
             <?php echo $form->errorSummary($consignmentIn->header); ?>
 
             <div class="row">
-                <div class="large-6 columns">
+<!--                <div class="large-6 columns">
                     <div class="row collapse prefix-radius">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($consignmentIn->header, 'consignment_in_number',
-                                array('class' => 'prefix')); ?>
+                            <?php //echo $form->labelEx($consignmentIn->header, 'consignment_in_number', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($consignmentIn->header, 'consignment_in_number')); ?>
+                            <?php //echo CHtml::encode(CHtml::value($consignmentIn->header, 'consignment_in_number')); ?>
                             <?php //echo $form->textField($consignmentIn->header, 'consignment_in_number', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
                             <?php //echo $form->error($consignmentIn->header, 'consignment_in_number'); ?>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="large-6 columns">
                     <div class="row collapse prefix-radius">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($consignmentIn->header, 'receive_id',
-                                array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($consignmentIn->header, 'receive_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($consignmentIn->header, 'receive_id', array(
-                                'size' => 30,
-                                'maxlength' => 30,
                                 'value' => $consignmentIn->header->isNewRecord ? Yii::app()->user->getId() : $consignmentIn->header->receive_id,
-                                'readonly' => true
                             )); ?>
                             <?php echo $consignmentIn->header->isNewRecord ? Yii::app()->user->getName() : CHtml::encode(CHtml::value($consignmentIn->header, 'user.username')); ?>
                             <?php echo $form->error($consignmentIn->header, 'receive_id'); ?>

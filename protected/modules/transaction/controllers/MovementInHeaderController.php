@@ -69,23 +69,25 @@ class MovementInHeaderController extends Controller {
 
         $movementIn = $this->instantiate(null);
         $movementIn->header->branch_id = $movementIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementIn->header->branch_id;
-        $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
+//        $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
         $this->performAjaxValidation($movementIn->header);
 
         /* Receive Item */
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
 
-        if (isset($_GET['TransactionReceiveItem']))
+        if (isset($_GET['TransactionReceiveItem'])) {
             $receiveItem->attributes = $_GET['TransactionReceiveItem'];
+        }
 
         $receiveItemDataProvider = $receiveItem->searchByMovementIn();
 
         $receiveItemDetail = new TransactionReceiveItemDetail('search');
         $receiveItemDetail->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['TransactionReceiveItemDetail']))
+        if (isset($_GET['TransactionReceiveItemDetail'])) {
             $receiveItemDetail->attributes = $_GET['TransactionReceiveItemDetail'];
+        }
 
         $receiveItemDetailCriteria = new CDbCriteria;
         $receiveItemDetailCriteria->together = 'true';
@@ -102,8 +104,9 @@ class MovementInHeaderController extends Controller {
         $returnItem = new TransactionReturnItem('search');
         $returnItem->unsetAttributes();
         
-        if (isset($_GET['TransactionReturnItem']))
+        if (isset($_GET['TransactionReturnItem'])) {
             $returnItem->attributes = $_GET['TransactionReturnItem'];
+        }
         
         $returnItemCriteria = new CDbCriteria;
         $returnItemCriteria->together = 'true';
@@ -115,8 +118,9 @@ class MovementInHeaderController extends Controller {
         $returnItemDetail = new TransactionReturnItemDetail('search');
         $returnItemDetail->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['TransactionReturnItemDetail']))
+        if (isset($_GET['TransactionReturnItemDetail'])) {
             $returnItemDetail->attributes = $_GET['TransactionReturnItemDetail'];
+        }
         
         $returnItemDetailCriteria = new CDbCriteria;
         $returnItemDetailCriteria->together = 'true';
@@ -129,8 +133,9 @@ class MovementInHeaderController extends Controller {
             'criteria' => $returnItemDetailCriteria,
         ));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['MovementInHeader'])) {
             $this->loadState($movementIn);

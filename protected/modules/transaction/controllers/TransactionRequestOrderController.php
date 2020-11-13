@@ -178,7 +178,7 @@ class TransactionRequestOrderController extends Controller
 
         $requestOrder = $this->instantiate(null);
         $requestOrder->header->requester_branch_id = $requestOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $requestOrder->header->requester_branch_id;
-        $requestOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($requestOrder->header->request_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($requestOrder->header->request_order_date)), $requestOrder->header->requester_branch_id);
+//        $requestOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($requestOrder->header->request_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($requestOrder->header->request_order_date)), $requestOrder->header->requester_branch_id);
         $this->performAjaxValidation($requestOrder->header);
 
         if (isset($_POST['Cancel'])) 

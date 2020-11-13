@@ -61,19 +61,7 @@ class TransactionReturnOrderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        // $model=new TransactionReturnOrder;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['TransactionReturnOrder']))
-        // {
-        // 	$model->attributes=$_POST['TransactionReturnOrder'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('create',array(
-        // 	'model'=>$model,
-        // ));
-
+        
         $receive = new TransactionReceiveItem('search');
         $receive->unsetAttributes();  // clear any default values
         if (isset($_GET['TransactionReceiveItem']))
@@ -92,7 +80,7 @@ class TransactionReturnOrderController extends Controller {
 
         $returnOrder = $this->instantiate(null);
         $returnOrder->header->recipient_branch_id = $returnOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnOrder->header->recipient_branch_id;
-        $returnOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnOrder->header->return_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnOrder->header->return_order_date)), $returnOrder->header->recipient_branch_id);
+//        $returnOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnOrder->header->return_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnOrder->header->return_order_date)), $returnOrder->header->recipient_branch_id);
         $this->performAjaxValidation($returnOrder->header);
 
         if (isset($_POST['Cancel']))

@@ -72,12 +72,16 @@ class ConsignmentOutHeaderController extends Controller {
 
         $consignmentOut = $this->instantiate(null);
         $consignmentOut->header->branch_id = $consignmentOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $consignmentOut->header->branch_id;
-        $consignmentOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentOut->header->date_posting)), $consignmentOut->header->branch_id);
+//        $consignmentOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentOut->header->date_posting)), $consignmentOut->header->branch_id);
         $this->performAjaxValidation($consignmentOut->header);
+        
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
-        if (isset($_GET['Customer']))
+        
+        if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
+        }
+    
         $customerCriteria = new CDbCriteria;
         $customerCriteria->addCondition('customer_type = "company"');
         $customerCriteria->compare('t.name', $customer->name, true);
@@ -108,7 +112,6 @@ class ConsignmentOutHeaderController extends Controller {
         }
 
         if (isset($_POST['ConsignmentOutHeader'])) {
-
             $this->loadState($consignmentOut);
             $consignmentOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentOut->header->date_posting)), $consignmentOut->header->branch_id);
             

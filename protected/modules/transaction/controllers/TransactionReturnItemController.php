@@ -75,43 +75,49 @@ class TransactionReturnItemController extends Controller {
         // ));
         $transfer = new TransactionSentRequest('search');
         $transfer->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionSentRequest']))
+        
+        if (isset($_GET['TransactionSentRequest'])) {
             $transfer->attributes = $_GET['TransactionSentRequest'];
+        }
 
         $transferCriteria = new CDbCriteria;
         $transferCriteria->compare('sent_request_no', $transfer->sent_request_no . '%', true, 'AND', false);
 
         $transferDataProvider = new CActiveDataProvider('TransactionSentRequest', array(
-                    'criteria' => $transferCriteria,
-                ));
+            'criteria' => $transferCriteria,
+        ));
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionSalesOrder']))
+        
+        if (isset($_GET['TransactionSalesOrder'])) {
             $sales->attributes = $_GET['TransactionSalesOrder'];
+        }
 
         $salesCriteria = new CDbCriteria;
         $salesCriteria->compare('sale_order_no', $sales->sale_order_no . '%', true, 'AND', false);
 
         $salesDataProvider = new CActiveDataProvider('TransactionSalesOrder', array(
-                    'criteria' => $salesCriteria,
-                ));
+            'criteria' => $salesCriteria,
+        ));
 
         $delivery = new TransactionDeliveryOrder('search');
         $delivery->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionDeliveryOrder']))
+        
+        if (isset($_GET['TransactionDeliveryOrder'])) {
             $delivery->attributes = $_GET['TransactionDeliveryOrder'];
+        }
 
         $deliveryCriteria = new CDbCriteria;
         $deliveryCriteria->compare('delivery_order_no', $delivery->delivery_order_no . '%', true, 'AND', false);
 
         $deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
-                    'criteria' => $deliveryCriteria,
-                ));
+            'criteria' => $deliveryCriteria,
+        ));
 
         $returnItem = $this->instantiate(null);
         $returnItem->header->recipient_branch_id = $returnItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnItem->header->recipient_branch_id;
-        $returnItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnItem->header->return_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnItem->header->return_item_date)), $returnItem->header->recipient_branch_id);
+//        $returnItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnItem->header->return_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnItem->header->return_item_date)), $returnItem->header->recipient_branch_id);
         $this->performAjaxValidation($returnItem->header);
 
         if (isset($_POST['Cancel']))

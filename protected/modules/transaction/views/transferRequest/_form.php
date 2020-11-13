@@ -17,17 +17,17 @@
     <?php echo CHtml::errorSummary($transferRequest->header); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Request #', ''); ?>
+                        <?php //echo CHtml::label('Request #', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($transferRequest->header, 'transfer_request_no')); ?>
-                        <?php echo CHtml::error($transferRequest->header, 'transfer_request_no'); ?>
+                        <?php //echo CHtml::encode(CHtml::value($transferRequest->header, 'transfer_request_no')); ?>
+                        <?php //echo CHtml::error($transferRequest->header, 'transfer_request_no'); ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
