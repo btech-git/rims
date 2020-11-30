@@ -99,6 +99,7 @@ class PaymentInController extends Controller {
         $model = new PaymentIn;
         $invoice = InvoiceHeader::model()->findByPk($invoiceId);
         $registrationTransaction = RegistrationTransaction::model()->findByPk($invoice->registration_transaction_id);
+        
         $model->invoice_id = $invoiceId;
         $model->invoice_number = $invoice->invoice_number;
         $model->customer_id = $invoice->customer_id;
@@ -113,8 +114,9 @@ class PaymentInController extends Controller {
 
         $images = $model->images = CUploadedFile::getInstances($model, 'images');
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['PaymentIn'])) {
             $model->attributes = $_POST['PaymentIn'];
@@ -129,7 +131,7 @@ class PaymentInController extends Controller {
                 //update Invoice
                 $invoice->payment_amount = $invoice->getTotalPayment();
                 $invoice->payment_left = $invoice->getTotalRemaining();
-                $valid = $invoice->update(array('payment_amount', 'payment_left')) && $valid;
+                $invoice->update(array('payment_amount', 'payment_left'));
             
                 $criteria = new CDbCriteria;
                 $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
@@ -494,10 +496,10 @@ class PaymentInController extends Controller {
         $historis = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $headerId));
         $model = new PaymentInApproval;
         $model->date = date('Y-m-d H:i:s');
-        $branch = Branch::model()->findByPk($paymentIn->branch_id);
+//        $branch = Branch::model()->findByPk($paymentIn->branch_id);
         $invoiceHeader = InvoiceHeader::model()->findByPk($paymentIn->invoice_id);
-        $getCoa = "";
-        $getCoaDetail = "";
+//        $getCoa = "";
+//        $getCoaDetail = "";
         //$model = $this->loadModelDetail($detailId);
         if (isset($_POST['PaymentInApproval'])) {
             $model->attributes = $_POST['PaymentInApproval'];
@@ -506,18 +508,20 @@ class PaymentInController extends Controller {
                 $paymentIn->save(false);
 
                 if ($model->approval_type == 'Approved') {
-                    if ($invoiceHeader->payment_amount == 0)
-                        $invoiceHeader->payment_amount = $paymentIn->payment_amount;
-                    else
-                        $invoiceHeader->payment_amount += $paymentIn->payment_amount;
+//                    if ($invoiceHeader->payment_amount == 0) {
+//                        $invoiceHeader->payment_amount = $paymentIn->payment_amount;
+//                    } else {
+//                        $invoiceHeader->payment_amount += $paymentIn->payment_amount;
+//                    }
 
-                    $invoiceHeader->payment_left -= $paymentIn->payment_amount;
-                    if ($invoiceHeader->payment_left > 0.00)
+//                    $invoiceHeader->payment_left -= $paymentIn->payment_amount;
+                    if ($invoiceHeader->payment_left > 0.00) {
                         $invoiceHeader->status = 'PARTIALLY PAID';
-                    else
+                    } else {
                         $invoiceHeader->status = 'PAID';
+                    }
 
-                    $invoiceHeader->update(array('payment_amount', 'payment_left', 'status'));
+                    $invoiceHeader->update(array('status'));
 
                     JurnalUmum::model()->deleteAllByAttributes(array(
                         'kode_transaksi' => $paymentIn->payment_number,

@@ -40,6 +40,7 @@ $this->breadcrumbs = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 
+        <?php echo CHtml::link('<span class="fa fa-print"></span>Print Vehicle Inspection', Yii::app()->createUrl('/frontDesk/vehicleInspection/printPdf', array('id' => $vehicleInspection->header->id)), array('class' => 'button success', 'target' => '_blank', 'visible' => Yii::app()->user->checkAccess("frontDesk.vehicleInspection.admin"))) ?>
         <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Vehicle Inspection', Yii::app()->baseUrl . '/frontDesk/vehicleInspection/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("frontDesk.vehicleInspection.admin"))) ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->createUrl('/frontDesk/' . $ccontroller . '/update', array('id' => $vehicleInspection->header->id)) . '&vehicleId=' . $vehicleInspection->header->vehicle_id . '&wonumber=' . $vehicleInspection->header->work_order_number, array('class' => 'button cbutton right', 'style' => 'margin-right: 10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.vehicleInspection.update"))) ?>
 
@@ -86,8 +87,6 @@ $this->breadcrumbs = array(
             <thead>
                 <tr>
                     <th colspan="2"></th>
-                    <!-- <th><a href="#" class="sort-link">Level</a></th>
-                    <th><a href="#" class="sort-link"></a></th> -->
                 </tr>
             </thead>
             <tbody >
@@ -101,54 +100,41 @@ $this->breadcrumbs = array(
                             <?php
                             if ($i == 0) {
                                 $section = $vehicleInspectionDetail->section_id;
-                                echo '<p style="background-color: #aaa; font-size: 1.5em">' . $vehicleInspectionDetail->section->name . '<p>';
+                                echo '<p style="font-size: 1.5em; font-weight: bold; text-decoration: underline">' . $vehicleInspectionDetail->section->name . '<p>';
                             }
 
                             $currSection = $vehicleInspectionDetail->section_id;
 
                             if ($currSection != $section) {
                                 $section = $vehicleInspectionDetail->section_id;
-                                echo '<p style="background-color: #aaa; font-size: 1.5em">' . $vehicleInspectionDetail->section->name . '<p>';
+                                echo '<p style="font-size: 1.5em; font-weight: bold; text-decoration: underline">' . $vehicleInspectionDetail->section->name . '<p>';
                             }
-
-                            //Print hidden fields
-                            echo CHtml::activeHiddenField($vehicleInspectionDetail, "[$i]section_id", array('value' => $vehicleInspectionDetail->section_id));
-                            echo CHtml::activeHiddenField($vehicleInspectionDetail, "[$i]module_id", array('value' => $vehicleInspectionDetail->module_id));
-                            echo CHtml::activeHiddenField($vehicleInspectionDetail, "[$i]checklist_type_id", array('value' => $vehicleInspectionDetail->checklist_type_id));
-
 
                             $checklistTypeModules = InspectionChecklistTypeModule::model()->findAllByAttributes(array('checklist_type_id' => $vehicleInspectionDetail->checklist_type_id));
-
-                            $text = '';
-                            $checked = '';
-                            $radio = '<span id="VehicleInspectionDetail_' . $i . '_checklist_module_id">';
-
-                            foreach ($checklistTypeModules as $key => $checklistTypeModule) {
-                                if ($checklistTypeModule->checklistType->type == "Radio") {
-                                    if ($vehicleInspectionDetail->checklist_module_id == $checklistTypeModule->checklistModule->id) {
-                                        $checked = 'checked';
-                                    } else {
-                                        $checked = '';
-                                    }
-
-                                    $radio .= '<input id="VehicleInspectionDetail_' . $i . '_checklist_module_id_' . $i . '" class="' . strtolower($checklistTypeModule->checklistModule->color_indicator) . '" value="' . $checklistTypeModule->checklistModule->id . '" ' . $checked . ' disabled name="VehicleInspectionDetail[' . $i . '][checklist_module_id]" type="radio">' . CHtml::activeLabel($vehicleInspectionDetail, "[$i]checklist_module_id", array('label' => $checklistTypeModule->checklistType->show_label == 'Yes' ? $checklistTypeModule->checklistModule->name : '', 'style' => 'display:inline')) . '<label style="display:inline;" for="VehicleInspectionDetail_' . $i . '_checklist_module_id_' . $i . '"></label>';
-                                } else {
-                                    $text .= '<br /> <span style="font-weight: bold">Pre Inspection:</span> ' . CHtml::encode(CHtml::value($vehicleInspectionDetail, "value")) . ' || <span style="font-weight: bold">Post Service:</span> ' .  CHtml::encode(CHtml::value($vehicleInspectionDetail, "value_after_service")) . '<br />';
-                                }
-                            }
-                            $radio .= '</span>';
-
-                            if ($radio != '<span id="VehicleInspectionDetail_' . $i . '_checklist_module_id"></span>') {
-                                echo 'Pre Inspection: ' . $radio . $vehicleInspectionDetail->module->name . ' || Post Service: <span style="color: '. strtolower($vehicleInspectionDetail->checklistModule->color_indicator) .'">' . CHtml::encode(CHtml::value($vehicleInspectionDetail, 'checklistModuleAfterService.name')) . '</span> <br />';
-                            }
-
-                            if ($text != '') {
-                                echo '<span style="font-weight: bold; font-size: larger">' . $vehicleInspectionDetail->module->name . '</span>' . $text . "<br />";
-                            }
                             ?>
 
-                        <?php endforeach ?>
-
+                            <table>
+                                <tr>
+                                    <td style='width: 30%'><?php echo CHtml::encode(CHtml::value($vehicleInspectionDetail, 'module.name')); ?></td>
+                                        <?php if ($vehicleInspectionDetail->checklistModule->type == 'Text'): ?>
+                                            <td colspan="2"><?php echo CHtml::encode(CHtml::value($vehicleInspectionDetail, 'value')); ?></td>
+                                        <?php else: ?>
+                                        <td style='width: 30%'>
+                                            PRE: &nbsp; &nbsp;
+                                            <span style="color: <?php echo strtolower($vehicleInspectionDetail->checklistModule->color_indicator); ?>">
+                                                <?php echo CHtml::encode(CHtml::value($vehicleInspectionDetail, 'checklistModule.name')); ?>
+                                            </span>
+                                        </td>
+                                        <td style='width: 30%'>
+                                            POST: &nbsp; &nbsp;
+                                            <span style="color: <?php echo empty($vehicleInspectionDetail->checklist_module_id_after_service) ? 'black' : strtolower($vehicleInspectionDetail->checklistModuleAfterService->color_indicator); ?>">
+                                                <?php echo CHtml::encode(CHtml::value($vehicleInspectionDetail, 'checklistModuleAfterService.name')); ?>
+                                            </span>
+                                        </td>
+                                    <?php endif; ?>
+                                </tr>
+                            </table>
+                        <?php endforeach; ?>
                     </td>
                 </tr>
             </tbody>

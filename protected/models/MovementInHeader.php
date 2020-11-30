@@ -151,4 +151,18 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+    
+    public function getMovementTypeChar() {
+        return ((int)$this->movement_type == 1) ? 'Receive Item': 'Return Item' ;
+    }
+    
+    public function getTotalQuantity() {
+        $total = 0;
+        
+        foreach($this->movementInDetails as $detail) {
+            $total += $detail->quantity;
+        }
+        
+        return $total;
+    }
 }

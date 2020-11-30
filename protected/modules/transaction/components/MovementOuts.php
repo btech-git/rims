@@ -35,32 +35,76 @@ class MovementOuts extends CComponent {
 
         if ($type == 1) {
             $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByPk($detailId);
-            $detail = new MovementOutDetail();
-            $detail->delivery_order_detail_id = $deliveryOrderDetail->id;
-            $detail->product_id = $deliveryOrderDetail->product_id;
-            $detail->quantity_transaction = $deliveryOrderDetail->quantity_delivery;
-            $this->details[] = $detail;
+            
+            $exist = false;
+            foreach ($this->details as $i => $detail) {
+                if ($deliveryOrderDetail->id === $detail->delivery_order_detail_id) {
+                    $exist = true;
+                    break;
+                }
+            }
+
+            if (!$exist) {
+                $detail = new MovementOutDetail();
+                $detail->delivery_order_detail_id = $deliveryOrderDetail->id;
+                $detail->product_id = $deliveryOrderDetail->product_id;
+                $detail->quantity_transaction = $deliveryOrderDetail->quantity_delivery;
+                $this->details[] = $detail;
+            }
         } elseif ($type == 2) {
             $returnOrderDetail = TransactionReturnOrderDetail::model()->findByPk($detailId);
-            $detail = new MovementOutDetail();
-            $detail->return_order_detail_id = $returnOrderDetail->id;
-            $detail->product_id = $returnOrderDetail->product_id;
-            $detail->quantity_transaction = $returnOrderDetail->qty_reject;
-            $this->details[] = $detail;
+            
+            $exist = false;
+            foreach ($this->details as $i => $detail) {
+                if ($returnOrderDetail->id === $detail->return_order_detail_id) {
+                    $exist = true;
+                    break;
+                }
+            }
+
+            if (!$exist) {
+                $detail = new MovementOutDetail();
+                $detail->return_order_detail_id = $returnOrderDetail->id;
+                $detail->product_id = $returnOrderDetail->product_id;
+                $detail->quantity_transaction = $returnOrderDetail->qty_reject;
+                $this->details[] = $detail;
+            }
         } elseif ($type == 3) {
             $registrationProduct = RegistrationProduct::model()->findByPk($detailId);
-            $detail = new MovementOutDetail();
-            $detail->registration_product_id = $registrationProduct->id;
-            $detail->product_id = $registrationProduct->product_id;
-            $detail->quantity_transaction = $registrationProduct->quantity;
-            $this->details[] = $detail;
+            
+            $exist = false;
+            foreach ($this->details as $i => $detail) {
+                if ($registrationProduct->id === $detail->registration_product_id) {
+                    $exist = true;
+                    break;
+                }
+            }
+
+            if (!$exist) {
+                $detail = new MovementOutDetail();
+                $detail->registration_product_id = $registrationProduct->id;
+                $detail->product_id = $registrationProduct->product_id;
+                $detail->quantity_transaction = $registrationProduct->quantity;
+                $this->details[] = $detail;
+            }
         } elseif ($type == 4) {
             $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detailId);
-            $detail = new MovementOutDetail();
-            $detail->material_request_detail_id = $detailId;
-            $detail->product_id = $materialRequestDetail->product_id;
-            $detail->quantity_transaction = $materialRequestDetail->quantity;
-            $this->details[] = $detail;
+            
+            $exist = false;
+            foreach ($this->details as $i => $detail) {
+                if ($materialRequestDetail->id === $detail->material_request_detail_id) {
+                    $exist = true;
+                    break;
+                }
+            }
+
+            if (!$exist) {
+                $detail = new MovementOutDetail();
+                $detail->material_request_detail_id = $detailId;
+                $detail->product_id = $materialRequestDetail->product_id;
+                $detail->quantity_transaction = $materialRequestDetail->quantity;
+                $this->details[] = $detail;
+            }
         }
     }
 

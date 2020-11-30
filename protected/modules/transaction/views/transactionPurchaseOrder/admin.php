@@ -78,8 +78,11 @@ Yii::app()->clientScript->registerScript('search', "
                     'header'=>'',
                 ),
                 'columns'=>array(
-                    //'id',
-                    array('name'=>'purchase_order_no', 'value'=>'CHTml::link($data->purchase_order_no, array("view", "id"=>$data->id))', 'type'=>'raw'),
+                    array(
+                        'name'=>'purchase_order_no', 
+                        'value'=>'CHTml::link($data->purchase_order_no, array("view", "id"=>$data->id))', 
+                        'type'=>'raw'
+                    ),
                     'purchase_order_date',
                     array(
                         'name'=>'purchase_type',
@@ -99,7 +102,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'name' => 'requester_id',
                         'header' => 'Created By',
                         'filter' => false,
-                        'value' => '$data->user->username',
+                        'value' => 'empty($data->user_id) ? "N/A" : $data->user->username',
                     ),
                     array(
                         'name' => 'approved_id',

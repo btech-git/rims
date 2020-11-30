@@ -33,14 +33,26 @@ class PurchaseOrders extends CComponent {
     }
 
     public function addDetail($productId) {
-        $detail = new TransactionPurchaseOrderDetail();
-        $detail->product_id = $productId;
+        
         $product = Product::model()->findByPK($productId);
-        $detail->unit_id = $product->unit_id;
-        $detail->retail_price = $product->retail_price;
-        $detail->hpp = $product->hpp;
+        
+        $exist = false;
+        foreach ($this->details as $i => $detail) {
+            if ($product->id === $detail->product_id) {
+                $exist = true;
+                break;
+            }
+        }
 
-        $this->details[] = $detail;
+        if (!$exist) {
+            $detail = new TransactionPurchaseOrderDetail();
+            $detail->product_id = $productId;
+            $detail->unit_id = $product->unit_id;
+            $detail->retail_price = $product->retail_price;
+            $detail->hpp = $product->hpp;
+
+            $this->details[] = $detail;
+        }
     }
 
     public function removeDetailAt($index) {

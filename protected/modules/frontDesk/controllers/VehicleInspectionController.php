@@ -231,6 +231,25 @@ class VehicleInspectionController extends Controller {
         ));
     }
 
+    public function actionPrintPdf($id) {
+        $vehicleInspection = $this->loadModel($id);
+
+        $vehicle = Vehicle::model()->findByPk($vehicleInspection->vehicle_id);
+        $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('work_order_number' => $vehicleInspection->work_order_number));
+        $modules = InspectionChecklistModule::model()->findAllByAttributes(array('id' => array(1, 2, 3, 4)));
+        
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('printPdf', array(
+            'vehicleInspection' => $vehicleInspection, 
+            'vehicle' => $vehicle, 
+            'modules' => $modules,
+            'registrationTransaction' => $registrationTransaction,
+        ), true));
+        $mPDF1->Output();
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

@@ -44,7 +44,7 @@ class Vehicle extends CActiveRecord {
     public $car_make;
     public $car_model;
     public $car_sub_model;
-    public $color;
+//    public $color;
     public $car_make_code;
     public $car_model_code;
     public $car_color;

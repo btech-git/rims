@@ -311,31 +311,14 @@ $('form').submit(function(){
                         'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1', //  row is zero based
                     ),
                     'transaction_number',
-//                    'work_order_number',
                     array(
                         'name' => 'transaction_date',
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)',
                     ),
-//                    'repair_type',
                     array(
                         'name' => 'plate_number', 
                         'value' => '$data->vehicle->plate_number',
                     ),
-//                    array(
-//                        'header' => 'Car Make',
-//                        'name' => 'car_make_code',
-//                        'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
-//                    ),
-//                    array(
-//                        'header' => 'Car Model',
-//                        'name' => 'car_model_code',
-//                        'value' => 'empty($data->vehicle->carModel) ? "" : $data->vehicle->carModel->name'
-//                    ),
-//                    array(
-//                        'header' => 'Color',
-//                        'name' => 'car_color',
-//                        'value' => '$data->vehicle->getColor($data->vehicle,"color_id")',
-//                    ),
                     array(
                         'name' => 'customer_name', 
                         'value' => '$data->customer != null? $data->customer->name : "-"'
@@ -360,7 +343,7 @@ $('form').submit(function(){
                         'buttons' => array(
                             'views' => array(
                                 'label' => 'bill detail',
-                                'url' => 'Yii::app()->createUrl("frontDesk/registrationTransaction/billDetail",array("registrationId"=>$data->id))',
+                                'url' => 'Yii::app()->createUrl("transaction/paymentIn/create",array("invoiceId"=>$data->invoiceHeaders[0]->id))',
                                 'visible' => 'Yii::app()->user->checkAccess("frontDesk.registrationTransaction.billDetail") && !empty($data->invoiceHeaders)',
                                 'click' => "js:function(){
                                     var url = $(this).attr('href');

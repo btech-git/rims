@@ -76,6 +76,8 @@ $this->menu = array(
                 <th>Category</th>
                 <th>Type</th>
                 <th>Flat Rate Hour</th>
+                <th>Standard Flat Rate</th>
+                <th>Price</th>
             </tr>
         </thead>
         <tbody>
@@ -86,6 +88,8 @@ $this->menu = array(
                 <td><?php echo CHtml::encode(CHtml::value($detail, 'service.serviceCategory.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($detail, 'service.serviceType.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($detail, 'flat_rate_hour')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'standard_flat_rate_per_hour')); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'price'))); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
