@@ -13,6 +13,7 @@ $this->menu=array(
 <div id="maincontent">
 <?php echo $this->renderPartial('_form', array(
     'model'=>$model,
+    'employees' => $employees,
 //        'profile'=>$profile
 )); ?>
 </div>

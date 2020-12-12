@@ -1,21 +1,21 @@
 <?php
 
-class AdminController extends Controller
-{
+class AdminController extends Controller {
+
     public $defaultAction = 'admin';
     public $layout = '//layouts/column2';
-
     private $_model;
 
     /**
      * @return array action filters
      */
-    /*public function filters()
-    {
-        return CMap::mergeArray(parent::filters(),array(
-            'accessControl', // perform access control for CRUD operations
-        ));
-    }*/
+    /* public function filters()
+      {
+      return CMap::mergeArray(parent::filters(),array(
+      'accessControl', // perform access control for CRUD operations
+      ));
+      } */
+
     /**
      * Specifies the access control rules.
      * This method is used by the 'accessControl' filter.
@@ -63,8 +63,7 @@ class AdminController extends Controller
     /**
      * Manages all models.
      */
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
         $model = new User('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['User'])) {
@@ -74,23 +73,21 @@ class AdminController extends Controller
         $this->render('index', array(
             'model' => $model,
         ));
-        /*$dataProvider=new CActiveDataProvider('User', array(
-            'pagination'=>array(
-                'pageSize'=>Yii::app()->controller->module->user_page_size,
-            ),
-        ));
+        /* $dataProvider=new CActiveDataProvider('User', array(
+          'pagination'=>array(
+          'pageSize'=>Yii::app()->controller->module->user_page_size,
+          ),
+          ));
 
-        $this->render('index',array(
-            'dataProvider'=>$dataProvider,
-        ));//*/
+          $this->render('index',array(
+          'dataProvider'=>$dataProvider,
+          ));// */
     }
-
 
     /**
      * Displays a particular model.
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         $model = $this->loadModel();
         //$model = Users::model()->findByPk($id);
         $attendances = EmployeeAttendance::model()->findAllByAttributes(array('user_id' => $model->id));
@@ -103,13 +100,12 @@ class AdminController extends Controller
     /**
      * Displays a particular model.
      */
-    public function actionProfile($id)
-    {
-		$this->layout = '//layouts/column1';
-        
+    public function actionProfile($id) {
+        $this->layout = '//layouts/column1';
+
         $model = $this->loadModel();
         $attendances = EmployeeAttendance::model()->findAllByAttributes(array('user_id' => $model->id));
-        
+
         $this->render('profile', array(
             'model' => $model,
             'attendances' => $attendances,
@@ -120,27 +116,32 @@ class AdminController extends Controller
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new User;
         $model->create_at = date('Y-m-d H:i:s');
+        $employees = Employee::model()->findAll();
+        
 //        $profile = new Profile;
         $this->performAjaxValidation(array($model));
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+            $model->employee_id = $_POST['User']['employee_id'];
             $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
 //            $profile->attributes = $_POST['Profile'];
 //            $profile->user_id = 0;
             if ($model->validate()) {
                 $model->password = Yii::app()->controller->module->encrypting($model->password);
+                
                 if ($model->save()) {
 //                    $profile->user_id = $model->id;
 //                    $profile->save();
                     $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
                     $authorizer->authManager->assign('Authenticated', $model->id);
-                    if ((int)$model->superuser === 1)
+                    if ((int) $model->superuser === 1) {
                         $authorizer->authManager->assign('Admin', $model->id);
+                    }
                 }
+                
                 $this->redirect(array('view', 'id' => $model->id));
             } else {
 //                $profile->validate();
@@ -149,6 +150,7 @@ class AdminController extends Controller
 
         $this->render('create', array(
             'model' => $model,
+            'employees' => $employees,
 //            'profile' => $profile,
         ));
     }
@@ -157,8 +159,7 @@ class AdminController extends Controller
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionUpdate()
-    {
+    public function actionUpdate() {
         $model = $this->loadModel();
 //        $profile = $model->profile;
         $this->performAjaxValidation(array($model));
@@ -177,7 +178,7 @@ class AdminController extends Controller
                 $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
                 $authorizer->authManager->assign('Authenticated', $model->id);
                 $this->redirect(array('view', 'id' => $model->id));
-            } 
+            }
 //            else {
 //                $profile->validate();
 //            }
@@ -189,20 +190,19 @@ class AdminController extends Controller
         ));
     }
 
-    public function actionEdit()
-    {
-		$this->layout = '//layouts/column1';
-        
+    public function actionEdit() {
+        $this->layout = '//layouts/column1';
+
         $model = User::model()->findbyPk($_GET['id']);
         $this->performAjaxValidation(array($model));
-        
+
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
 
             if ($model->validate()) {
                 $old_password = User::model()->findByPk($model->id);
 //                if ($old_password->password != $model->password) {
-                    $model->password = Yii::app()->controller->module->encrypting($model->password);
+                $model->password = Yii::app()->controller->module->encrypting($model->password);
 //                    $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
 //                }
                 $model->save();
@@ -221,8 +221,7 @@ class AdminController extends Controller
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      */
-    public function actionDelete()
-    {
+    public function actionDelete() {
         if (Yii::app()->request->isPostRequest) {
             // we only allow deletion via POST request
             $model = $this->loadModel();
@@ -240,36 +239,43 @@ class AdminController extends Controller
         }
     }
 
-	public function actionAjaxHtmlUpdateEmployeeSelect()
-	{
+    public function actionAjaxHtmlUpdateEmployeeSelect() {
         if (Yii::app()->request->isAjaxRequest) {
+//            $employeeId = '';
+            $model = new User;
             $branchId = isset($_POST['User']['branch_id']) ? $_POST['User']['branch_id'] : 0;
 
+            $employees = Employee::model()->findAllByAttributes(
+                array(
+                    'branch_id' => $branchId
+                ), array(
+                    'order' => 'name ASC'
+                )
+            );
+
             $this->renderPartial('_employeeSelect', array(
-                'branchId' => $branchId,
+                'model' => $model,
+                'employees' => $employees,
             ));
         }
     }
-    
+
     /**
      * Performs the AJAX validation.
      * @param CModel the model to be validated
      */
-    protected function performAjaxValidation($validate)
-    {
+    protected function performAjaxValidation($validate) {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-form') {
             echo CActiveForm::validate($validate);
             Yii::app()->end();
         }
     }
 
-
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
      */
-    public function loadModel()
-    {
+    public function loadModel() {
         if ($this->_model === null) {
             if (isset($_GET['id'])) {
                 $this->_model = User::model()->notsafe()->findbyPk($_GET['id']);

@@ -34,7 +34,6 @@
                                 array('label'=>'Company', 'url'=>array('/master/company/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.Company.View')),
                                 array('label'=>'Insurance Company', 'url'=>array('/master/insuranceCompany/admin'), 'visible'=>Yii::app()->user->checkAccess('masterInsuranceCompanyView')),
                                 array('label'=>'Branch', 'url'=>array('/master/branch/admin'), 'visible'=>Yii::app()->user->checkAccess('masterBranchView')),
-                                array('label'=>'Customer', 'url'=>array('/master/customer/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.Customer.View')),
                                 array('label'=>'Supplier', 'url'=>array('/master/supplier/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.Supplier.View')),
                                 array('label'=>'Employee', 'url'=>array('/master/employee/admin'),'linkOptions' =>array('class' => 'titleNav'), 'visible'=>Yii::app()->user->checkAccess('Master.Employee.View')),
                                 array('label'=>'Deduction', 'url'=>array('/master/deduction/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.Deduction.View')),
@@ -125,6 +124,7 @@
                                 <?php $this->widget('zii.widgets.CMenu',array(
                                     'items'=>array(
                                         array('label'=>'Manage Customer Vehicle', 'url'=>array('/master/vehicle/admin'),'linkOptions' =>array('class' => 'titleNav'), 'visible'=>Yii::app()->user->checkAccess('Master.Vehicle.View')),
+                                        array('label'=>'Customer', 'url'=>array('/master/customer/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.Customer.View')),
                                         array('label'=>'Vehicle Car Make', 'url'=>array('/master/vehicleCarMake/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.VehicleCarMake.View')),
                                         array('label'=>'Vehicle Car Model', 'url'=>array('/master/vehicleCarModel/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.VehicleCarModel.View')),
                                         array('label'=>'Vehicle Car Sub Model', 'url'=>array('/master/vehicleCarSubModel/admin'), 'visible'=>Yii::app()->user->checkAccess('Master.VehicleCarSubModel.View')),

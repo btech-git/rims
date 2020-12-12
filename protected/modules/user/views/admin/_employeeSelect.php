@@ -1,1 +1,3 @@
-<?php echo CHtml::activeDropDownList(User::model(), 'employee_id', CHtml::listData(Employee::model()->findAllByAttributes(array('branch_id' => $branchId)), 'id', 'name'), array('empty' => '-- Pilih Employee --')); ?>
+<div id="employee_list">
+    <?php echo CHtml::activeDropDownList($model, 'employee_id', CHtml::listData($employees, 'id', 'name'), array('empty' => '-- Pilih Employee --')); ?>
+</div>

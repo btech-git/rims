@@ -342,8 +342,10 @@ class PaymentInController extends Controller {
     public function actionAdmin() {
         $invoice = new InvoiceHeader('search');
         $invoice->unsetAttributes();
-        if (isset($_GET['InvoiceHeader']))
+        
+        if (isset($_GET['InvoiceHeader'])) {
             $invoice->attributes = $_GET['InvoiceHeader'];
+        }
 
         $invoiceCriteria = new CDbCriteria;
         $invoiceCriteria->addCondition('t.status IN ("INVOICING", "PARTIAL PAYMENT", "NOT PAID", "PARTIALLY PAID")');
@@ -351,13 +353,14 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
         $invoiceCriteria->compare('due_date', $invoice->due_date, true);
         $invoiceCriteria->compare('total_price', $invoice->total_price, true);
+        
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer');
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
             'criteria' => $invoiceCriteria,
             'sort' => array(
-                'defaultOrder' => 'invoice_date DESC',
+                'defaultOrder' => 'payment_date DESC',
             ),
             'pagination' => array(
                 'pageSize' => 10,

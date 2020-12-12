@@ -487,7 +487,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('carModel.id', $this->car_model_code, true);
         $criteria->compare('vehicle.plate_number', $this->plate_number, true);
 
-        $criteria->order = 'vehicle.plate_number ASC';
+        $criteria->order = 't.transaction_date DESC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

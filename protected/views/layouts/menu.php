@@ -1,35 +1,113 @@
 <ul class="right clearfix">
+    <li class="mdropdown"><a href="#">PENDING</a>
+        <?php $this->widget('zii.widgets.CMenu', array(
+            'items' => array(
+                array(
+                    'label' => 'Daftar Transaksi Pending', 
+                    'url' => array('/transaction/pendingTransaction/index'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Order Outstanding', 
+                    'url' => array('/frontDesk/outstandingOrder/index'), 
+                    'visible' => Yii::app()->user->checkAccess('outstandingOrderView')
+                ),
+                array(
+                    'label' => 'Approval Permintaan', 
+                    'url' => array('/frontDesk/pendingRequest/index'), 
+                    'visible' => Yii::app()->user->checkAccess('Transaction.TransactionTransferRequest.Admin')
+                ),
+            ),
+        )); ?>
+    </li>
     <li class="mdropdown"><a href="#">RESEPSIONIS</a>
         <?php $this->widget('zii.widgets.CMenu', array(
             'items' => array(
-                array('label' => 'Pendaftaran Customer', 'url' => array('/frontDesk/customerRegistration/vehicleList'), 'visible' => Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.Admin')),
-                array('label' => 'General Repair', 'url' => array('/frontDesk/generalRepairRegistration/admin'), 'visible' => Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.Admin')),
-                array('label' => 'Body Repair', 'url' => array('/frontDesk/bodyRepairRegistration/admin'), 'visible' => Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.Admin')),
-//					array('label'=>'Pendaftaran Kendaraan Customer', 'url'=>array('/frontDesk/registrationTransaction/admin'), 'visible'=>Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.Admin')),
-                array('label' => 'Inspeksi Kendaraan', 'url' => array('/frontDesk/vehicleInspection/admin'), 'visible' => Yii::app()->user->checkAccess('FrontDesk.VehicleInspection.Admin')),
-                array('label' => 'SPK', 'url' => array('/frontDesk/workOrder/admin'), 'visible' => Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.AdminWo')),
-                array('label' => 'Kasir', 'url' => array('/frontDesk/registrationTransaction/cashier'), 'visible' => Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.Cashier')),
-                array('label' => 'Daftar Antrian Customer', 'url' => array('/frontDesk/registrationTransaction/customerWaitlist'), 'visible' => Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.CustomerWaitlist')),
+                array(
+                    'label' => 'Pendaftaran Customer', 
+                    'url' => array('/frontDesk/customerRegistration/vehicleList'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'General Repair', 
+                    'url' => array('/frontDesk/generalRepairRegistration/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'Body Repair', 
+                    'url' => array('/frontDesk/bodyRepairRegistration/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'Inspeksi Kendaraan', 
+                    'url' => array('/frontDesk/vehicleInspection/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('maintenanceMechanicStaff') || Yii::app()->user->checkAccess('bodyRepairMechanicStaff') || Yii::app()->user->checkAccess('carSalonStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'SPK', 
+                    'url' => array('/frontDesk/workOrder/admin'),
+                    'visible' => (Yii::app()->user->checkAccess('maintenanceMechanicStaff') || Yii::app()->user->checkAccess('bodyRepairMechanicStaff') || Yii::app()->user->checkAccess('carSalonStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'Kasir', 
+                    'url' => array('/frontDesk/registrationTransaction/cashier'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Daftar Antrian Customer', 
+                    'url' => array('/frontDesk/registrationTransaction/customerWaitlist'), 
+                    'visible' => (Yii::app()->user->checkAccess('maintenanceMechanicStaff') || Yii::app()->user->checkAccess('bodyRepairMechanicStaff') || Yii::app()->user->checkAccess('carSalonStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
             ),
         )); ?>
     </li>
     <li class="mdropdown"> <a href="#">TRANSAKSI</a>							
         <?php $this->widget('zii.widgets.CMenu', array(
             'items' => array(
-                array('label' => 'Daftar Transaksi Pending', 'url' => array('/transaction/pendingTransaction/index'), 'visible' => Yii::app()->user->checkAccess('pendingOrderView')),
-                array('label' => 'Order Outstanding', 'url' => array('/frontDesk/outstandingOrder/index'), 'visible' => Yii::app()->user->checkAccess('outstandingOrderView')),
                 array('label' => 'PEMBELIAN', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Order Permintaan', 'url' => array('/transaction/transactionRequestOrder/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionRequestOrder.Admin')),
-                array('label' => 'Order Pembelian', 'url' => array('/transaction/transactionPurchaseOrder/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionPurchaseOrder.Admin')),
-                array('label' => 'Perbandingan', 'url' => array('/transaction/compare/step1'), 'visible' => Yii::app()->user->checkAccess('Transaction.compare.step1')),
+                array(
+                    'label' => 'Order Permintaan', 
+                    'url' => array('/transaction/transactionRequestOrder/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Order Pembelian', 
+                    'url' => array('/transaction/transactionPurchaseOrder/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Perbandingan', 
+                    'url' => array('/transaction/compare/step1'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
                 array('label' => 'PENJUALAN', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Order Penjualan', 'url' => array('/transaction/transactionSalesOrder/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionSalesOrder.Admin')),
-                array('label' => 'Faktur Penjualan', 'url' => array('/transaction/invoiceHeader/admin'), 'visible' => Yii::app()->user->checkAccess('invoiceView')),
+                array(
+                    'label' => 'Order Penjualan', 
+                    'url' => array('/transaction/transactionSalesOrder/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Faktur Penjualan', 
+                    'url' => array('/transaction/invoiceHeader/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('bodyRepairMechanicStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
                 array('label' => 'PELUNASAN', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Payment In', 'url' => array('/transaction/paymentIn/admin'), 'visible' => Yii::app()->user->checkAccess('paymentInView')),
-                array('label' => 'Payment Out', 'url' => array('/accounting/paymentOut/admin'), 'visible' => Yii::app()->user->checkAccess('paymentOutView')),
+                array(
+                    'label' => 'Payment In', 
+                    'url' => array('/transaction/paymentIn/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Payment Out', 
+                    'url' => array('/accounting/paymentOut/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
                 array('label' => 'TUNAI', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Transaksi Kas', 'url' => array('/transaction/cashTransaction/admin'), 'visible' => Yii::app()->user->checkAccess('cashTransactionView')),
+                array(
+                    'label' => 'Transaksi Kas', 
+                    'url' => array('/transaction/cashTransaction/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
             ),
         )); ?>
     </li>
@@ -37,22 +115,69 @@
         <?php $this->widget('zii.widgets.CMenu', array(
             'items' => array(
                 array('label' => 'OPERASIONAL', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Approval Permintaan', 'url' => array('/frontDesk/pendingRequest/index'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionTransferRequest.Admin')),
-                array('label' => 'Permintaan Transfer', 'url' => array('/transaction/transferRequest/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionTransferRequest.Admin')),
-                array('label' => 'Permintaan Kirim', 'url' => array('/transaction/transactionSentRequest/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionSentRequest.Admin')),
-                array('label' => 'Retur Beli', 'url' => array('/transaction/transactionReturnItem/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionReturnItem.View')),
-                array('label' => 'Retur Jual', 'url' => array('/transaction/transactionReturnOrder/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionReturnOrder.View')),
-                array('label' => 'Pengiriman Barang', 'url' => array('/transaction/transactionDeliveryOrder/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionDeliveryOrder.Admin')),
-                array('label' => 'Penerimaan Barang', 'url' => array('/transaction/transactionReceiveItem/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.TransactionReceiveItem.Admin')),
-                array('label' => 'Penerimaan Konsinyasi', 'url' => array('/transaction/consignmentInHeader/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.ConsignmentInHeader.Admin')),
-                array('label' => 'Pengeluaran Konsinyasi', 'url' => array('/transaction/consignmentOutHeader/admin'), 'visible' => Yii::app()->user->checkAccess('Transaction.ConsignmentOutHeader.Admin')),
+                array(
+                    'label' => 'Permintaan Transfer', 
+                    'url' => array('/transaction/transferRequest/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Permintaan Kirim', 
+                    'url' => array('/transaction/transactionSentRequest/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Retur Beli', 
+                    'url' => array('/transaction/transactionReturnItem/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'Retur Jual', 
+                    'url' => array('/transaction/transactionReturnOrder/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'Pengiriman Barang', 
+                    'url' => array('/transaction/transactionDeliveryOrder/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Penerimaan Barang', 
+                    'url' => array('/transaction/transactionReceiveItem/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Penerimaan Konsinyasi', 
+                    'url' => array('/transaction/consignmentInHeader/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+                array(
+                    'label' => 'Pengeluaran Konsinyasi', 
+                    'url' => array('/transaction/consignmentOutHeader/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
                 array('label' => 'GUDANG', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Barang Masuk Gudang', 'url' => array('/transaction/movementInHeader/admin'), 'visible' => Yii::app()->user->checkAccess('movementInView')),
-                array('label' => 'Barang Keluar Gudang', 'url' => array('/transaction/movementOutHeader/admin'), 'visible' => Yii::app()->user->checkAccess('movementOutView')),
+                array(
+                    'label' => 'Barang Masuk Gudang', 
+                    'url' => array('/transaction/movementInHeader/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
+                array(
+                    'label' => 'Barang Keluar Gudang', 
+                    'url' => array('/transaction/movementOutHeader/admin'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff') || Yii::app()->user->checkAccess('businessDevelopmentStaff'))
+                ),
                 array('label' => 'Pengeluaran Bahan Pemakaian', 'url' => array('/frontDesk/movementOutService/registrationTransactionList'), 'visible' => Yii::app()->user->checkAccess('movementOutView')),
-                array('label' => 'Penyesuaian Stok', 'url' => array('/frontDesk/adjustment/admin'), 'visible' => Yii::app()->user->checkAccess('stockAdjustmentCrud')),
-                array('label' => 'Gudang', 'url' => array('/master/inventory/admin'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
-                array('label' => 'Stok Gudang', 'url' => array('/frontDesk/inventory/check'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
+                array(
+                    'label' => 'Penyesuaian Stok', 
+                    'url' => array('/frontDesk/adjustment/admin'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
+//                array('label' => 'Gudang', 'url' => array('/master/inventory/admin'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
+                array(
+                    'label' => 'Stok Gudang', 
+                    'url' => array('/frontDesk/inventory/check'), 
+                    'visible' => Yii::app()->user->checkAccess('businessDevelopmentStaff')
+                ),
                 array('label' => 'Analisa Stok Barang', 'url' => array('/master/forecastingProduct/admin'), 'visible' => Yii::app()->user->checkAccess('forecastingProductView')),
                 array('label' => 'Permintaan Bahan', 'url' => array('/frontDesk/materialRequest/admin'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
             ),
@@ -62,15 +187,35 @@
         <?php $this->widget('zii.widgets.CMenu', array(
             'items' => array(
                 array('label' => 'GENERAL REPAIR', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Mechanic POV', 'url' => array('/frontDesk/generalRepairMechanic/index'), 'visible' => Yii::app()->user->checkAccess('maintenanceMechanicStaff')),
-                array('label' => 'Head POV', 'url' => array('/frontDesk/idleManagement/indexHead'), 'visible' => Yii::app()->user->checkAccess('maintenanceMechanicHead')),
+                array(
+                    'label' => 'Mechanic POV', 
+                    'url' => array('/frontDesk/generalRepairMechanic/index'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff'))
+                ),
+                array(
+                    'label' => 'Head POV', 
+                    'url' => array('/frontDesk/idleManagement/indexHead'), 
+                    'visible' => (Yii::app()->user->checkAccess('serviceAdvisorHead') || Yii::app()->user->checkAccess('maintenanceMechanicHead') || Yii::app()->user->checkAccess('bodyRepairAdminHead') || Yii::app()->user->checkAccess('bodyRepairQualityControlHead') || Yii::app()->user->checkAccess('bodyRepairMechanicHead'))
+                ),
                 array('label' => 'BODY REPAIR', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
-                array('label' => 'Mechanic POV', 'url' => array('/frontDesk/bodyRepairMechanic/index'), 'visible' => Yii::app()->user->checkAccess('bodyRepairMechanicStaff')),
-                array('label' => 'Head POV', 'url' => array('/frontDesk/bodyRepairManagement/index'), 'visible' => Yii::app()->user->checkAccess('bodyRepairMechanicHead')),
+                array(
+                    'label' => 'Mechanic POV', 
+                    'url' => array('/frontDesk/bodyRepairMechanic/index'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff'))
+                ),
+                array(
+                    'label' => 'Head POV', 
+                    'url' => array('/frontDesk/bodyRepairManagement/index'), 
+                    'visible' => (Yii::app()->user->checkAccess('serviceAdvisorHead') || Yii::app()->user->checkAccess('maintenanceMechanicHead') || Yii::app()->user->checkAccess('bodyRepairAdminHead') || Yii::app()->user->checkAccess('bodyRepairQualityControlHead') || Yii::app()->user->checkAccess('bodyRepairMechanicHead'))
+                ),
 //				array('label'=>'Idle Management', 'url'=>array('/frontDesk/registrationTransaction/idleManagement'), 'visible'=>Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.IdleManagement')),
                 array('label' => 'HRD', 'url' => array('#'), 'itemOptions' => array('class' => 'title')),
                 array('label' => 'Daftar Kehadiran', 'url' => array('/master/employeeAttendance/index'), 'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Index')),
-                array('label' => 'Absensi', 'url' => array('/master/employeeAttendance/attendance'), 'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Attendance')),
+                array(
+                    'label' => 'Absensi', 
+                    'url' => array('/master/employeeAttendance/attendance'), 
+                    'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff') || Yii::app()->user->checkAccess('cashier') || Yii::app()->user->checkAccess('bodyRepairAdminStaff') || Yii::app()->user->checkAccess('bodyRepairQualityControlStaff'))
+                ),
                 array('label' => 'Gaji', 'url' => array('/master/employeeAttendance/salary'), 'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Salary')),
                 array('label' => 'Libur Karyawan', 'url' => array('/master/employeeDayoff/admin'), 'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')),
             ),
@@ -126,6 +271,12 @@
                 array('label' => 'Laporan Penjualan Retail Summary', 'url' => array('/report/saleRetail/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
                 array('label' => 'Laporan Penjualan Retail Product', 'url' => array('/report/saleRetailProduct/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
                 array('label' => 'Laporan Penjualan Retail Service', 'url' => array('/report/saleRetailService/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
+                array('label' => 'Laporan Pengiriman', 'url' => array('/report/delivery/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
+                array('label' => 'Laporan Pembelian', 'url' => array('/report/purchaseOrder/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
+                array('label' => 'Laporan Penerimaan Barang', 'url' => array('/report/receiveItem/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
+                array('label' => 'Laporan Order Penjualan', 'url' => array('/report/saleOrder/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
+                array('label' => 'Laporan Sent Request', 'url' => array('/report/sentRequest/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
+                array('label' => 'Laporan Transfer Request', 'url' => array('/report/transferRequest/summary'), 'visible' => Yii::app()->user->checkAccess('accountReceivableReport')),
             ),
         )); ?>
     </li>

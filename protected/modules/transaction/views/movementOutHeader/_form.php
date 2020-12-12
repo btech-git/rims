@@ -659,12 +659,12 @@
                                     'value' => '$data->deliveryOrder->delivery_order_no'
                                 ),
                                 array(
-                                    'header' => 'Name',
-                                    'value' => '$data->product->name'
-                                ),
-                                array(
                                     'header' => 'Code',
                                     'value' => '$data->product->manufacturer_code'
+                                ),
+                                array(
+                                    'header' => 'Name',
+                                    'value' => '$data->product->name'
                                 ),
                                 array(
                                     'header' => 'Sub Category',

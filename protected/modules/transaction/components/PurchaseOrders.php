@@ -352,7 +352,7 @@ class PurchaseOrders extends CComponent {
         $total = 0.00;
 
         foreach ($this->details as $detail) {
-            $total += $detail->getUnitPrice($this->header->ppn);
+            $total += $detail->getUnitPrice($this->header->ppn) * $detail->quantity;
         }
 
         return $total;

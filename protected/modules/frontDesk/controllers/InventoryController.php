@@ -23,7 +23,7 @@ class InventoryController extends Controller {
 
     public function actionDetail($id) {
         $product = Product::model()->findByPk($id);
-        $details = InventoryDetail::model()->with(array('warehouse' => array('condition' => 'status="Active"')))->findAll('product_id = ' . $id . ' AND inventory_id !=""');
+        $details = InventoryDetail::model()->with(array('warehouse' => array('condition' => 'status="Active"')))->findAll(array('condition' => 'product_id = ' . $id . ' AND inventory_id !=""', 'order' => 'transaction_date DESC'));
 
         $this->render('detail', array(
             'details' => $details,

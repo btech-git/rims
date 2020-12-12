@@ -431,13 +431,15 @@ class PaymentOutController extends Controller {
         $purchaseOrderCriteria->compare('purchase_order_no', $purchaseOrder->purchase_order_no, true);
         $purchaseOrderCriteria->compare('purchase_order_date', $purchaseOrder->purchase_order_date, true);
         $purchaseOrderCriteria->compare('total_price', $purchaseOrder->total_price, true);
+        
         $purchaseOrderCriteria->together = true;
         $purchaseOrderCriteria->with = array('supplier');
+        
         $purchaseOrderCriteria->compare('supplier.name', $purchaseOrder->supplier_name, true);
         $purchaseOrderDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
             'criteria' => $purchaseOrderCriteria,
             'sort' => array(
-                'defaultOrder' => 'purchase_order_date DESC',
+                'defaultOrder' => 'payment_date DESC',
             ),
             'pagination' => array(
                 'pageSize' => 10,

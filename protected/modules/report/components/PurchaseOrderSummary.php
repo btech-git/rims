@@ -1,6 +1,6 @@
 <?php
 
-class CashTransactionSummary extends CComponent {
+class PurchaseOrderSummary extends CComponent {
 
     public $dataProvider;
 
@@ -10,10 +10,9 @@ class CashTransactionSummary extends CComponent {
 
     public function setupLoading() {
         $this->dataProvider->criteria->with = array(
-            'cashTransactionDetails',
-            'coa',
-            'branch',
+            'supplier',
             'user',
+            'mainBranch',
         );
     }
 
@@ -27,25 +26,14 @@ class CashTransactionSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.transaction_date', 't.branch_id');
+        $this->dataProvider->sort->attributes = array('t.purchase_order_date', 't.main_branch_id');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($startDate, $endDate, $branch) {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('t.branch_id', $branch);
+        $this->dataProvider->criteria->addBetweenCondition('t.purchase_order_date', $startDate, $endDate);
+        $this->dataProvider->criteria->compare('t.main_branch_id', $branch);
     }
-
-    public function reportGrandTotal() {
-        $grandTotal = 0.00;
-
-        foreach ($this->dataProvider->data as $data) {
-            $grandTotal += $data->amount;
-        }
-
-        return $grandTotal;
-    }
-
 }

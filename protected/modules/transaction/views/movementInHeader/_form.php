@@ -451,8 +451,34 @@
                             'rowCssClassExpression' => '"row_".$data->product_id',
                             'columns' => array(
                                 //'jenis_persediaan_id',
-                                array('name' => 'receive_item_no', 'value' => '$data->receiveItem->receive_item_no'),
-                                array('header' => 'Product', 'value' => '$data->product->name'),
+                                array(
+                                    'name' => 'receive_item_no', 
+                                    'value' => '$data->receiveItem->receive_item_no'
+                                ),
+                                array(
+                                    'header' => 'Manufacturer Code', 
+                                    'value' => '$data->product->manufacturer_code'
+                                ),
+                                array(
+                                    'header' => 'Product', 
+                                    'value' => '$data->product->name'
+                                ),
+                                array(
+                                    'header' => 'Sub Category',
+                                    'value' => '$data->product->masterSubCategoryCode'
+                                ),
+                                array(
+                                    'header' => 'Brand',
+                                    'value' => '$data->product->brand->name'
+                                ),
+                                array(
+                                    'header' => 'Sub Brand',
+                                    'value' => '$data->product->subBrand->name'
+                                ),
+                                array(
+                                    'header' => 'Sub Brand Series',
+                                    'value' => '$data->product->subBrandSeries->name'
+                                ),
                                 array(
                                     'header' => 'Quantity',
                                     'value' => '$data->qty_received.CHTML::hiddenField("qtysum_mmtype_receive".$data->product_id,\'0\',array(\'width\'=>20,\'maxlength\'=>3)).CHTML::hiddenField("qtyleft_mmtype_receive".$data->product_id,$data->qty_received,array(\'width\'=>20,\'maxlength\'=>3))',
@@ -502,8 +528,34 @@
                             'rowCssClassExpression' => '"row_".$data->product_id',
                             'columns' => array(
                                 //'jenis_persediaan_id',
-                                array('name' => 'return_item_no', 'value' => '$data->returnItem->return_item_no'),
-                                array('header' => 'Product', 'value' => '$data->product->name'),
+                                array(
+                                    'name' => 'return_item_no', 
+                                    'value' => '$data->returnItem->return_item_no'
+                                    ),
+                                array(
+                                    'header' => 'Manufacturer Code', 
+                                    'value' => '$data->product->manufacturer_code'
+                                    ),
+                                array(
+                                    'header' => 'Product', 
+                                    'value' => '$data->product->name'
+                                    ),
+                                array(
+                                    'header' => 'Sub Category',
+                                    'value' => '$data->product->masterSubCategoryCode'
+                                ),
+                                array(
+                                    'header' => 'Brand',
+                                    'value' => '$data->product->brand->name'
+                                ),
+                                array(
+                                    'header' => 'Sub Brand',
+                                    'value' => '$data->product->subBrand->name'
+                                ),
+                                array(
+                                    'header' => 'Sub Brand Series',
+                                    'value' => '$data->product->subBrandSeries->name'
+                                ),
                                 array(
                                     'header' => 'Quantity',
                                     'value' => '$data->quantity_delivery.CHTML::hiddenField("qtysum_mmtype_return".$data->product_id,\'0\',array(\'width\'=>20,\'maxlength\'=>3)).CHTML::hiddenField("qtyleft_mmtype_return".$data->product_id,$data->quantity_delivery,array(\'width\'=>20,\'maxlength\'=>3))',
