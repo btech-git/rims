@@ -375,15 +375,15 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return ($tax == 3) ? $this->getUnitPrice($tax) / 1.1 : $unitPrice;
     }
     
-    public function getTaxAmount($tax) {
-        
-        return ($tax == 2) ? 0 : $this->getPriceBeforeTax($tax) * 0.1;
-    }
-
     public function getTotalPriceBeforeTax($tax) {
         return $this->getPriceBeforeTax($tax) * $this->quantity;
     }
     
+    public function getTaxAmount($tax) {
+        
+        return ($tax == 2) ? 0 : $this->getTotalPriceBeforeTax($tax) * 0.1;
+    }
+
 //    public function getTaxAmount($tax) {
 //        $taxAmount = 0;
 //

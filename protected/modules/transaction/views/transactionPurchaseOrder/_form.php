@@ -408,42 +408,44 @@
                                 <tr>
                                     <td style="text-align: right">
                                         <span id="total_quantity">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->totalQuantity)); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->total_quantity)); ?>
                                         </span>
+                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'total_quantity'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'total_quantity'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="sub_total_before_discount">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotalBeforeDiscount)); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->price_before_discount)); ?>
                                         </span>
+                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'price_before_discount'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'price_before_discount'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="sub_total_discount">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotalDiscount)); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->discount)); ?>
                                         </span>
+                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'discount'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'discount'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="sub_total">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotal)); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->subtotal)); ?>
                                         </span>
-                                        <?php echo $form->hiddenField($purchaseOrder->header, 'subtotal',
-                                            array('size' => 18, 'maxlength' => 18, 'readonly' => 'true')); ?>
+                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'subtotal'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'subtotal'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="tax_value">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->taxAmount)); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->ppn_price)); ?>
                                         </span>
-                                        <?php echo $form->hiddenField($purchaseOrder->header, 'ppn_price', array('readonly' => 'true')); ?>
+                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'ppn_price'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'ppn_price'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="grand_total">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->grandTotal)); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->total_price)); ?>
                                         </span>
-                                        <?php echo $form->hiddenField($purchaseOrder->header, 'total_price', array('size' => 18, 'maxlength' => 18, 'readonly' => 'true')); ?>
+                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'total_price'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'total_price'); ?>
                                     </td>
                                 </tr>

@@ -126,12 +126,12 @@ class PurchaseOrders extends CComponent {
             ));
         }
         
-        $this->header->total_quantity = $this->totalQuantity;
-        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
-        $this->header->discount = $this->subTotalDiscount;
-        $this->header->ppn_price = $this->taxAmount;
-        $this->header->subtotal = $this->subTotal;
-        $this->header->total_price = $this->grandTotal;
+//        $this->header->total_quantity = $this->totalQuantity;
+//        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
+//        $this->header->discount = $this->subTotalDiscount;
+//        $this->header->ppn_price = $this->taxAmount;
+//        $this->header->subtotal = $this->subTotal;
+//        $this->header->total_price = $this->grandTotal;
         $this->header->payment_amount = 0;
         $this->header->payment_left = $this->grandTotal;
         $valid = $this->header->save();
@@ -352,7 +352,7 @@ class PurchaseOrders extends CComponent {
         $total = 0.00;
 
         foreach ($this->details as $detail) {
-            $total += $detail->getUnitPrice($this->header->ppn) * $detail->quantity;
+            $total += $detail->getTotalPriceBeforeTax($this->header->ppn);
         }
 
         return $total;

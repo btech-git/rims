@@ -23,7 +23,14 @@ class InventoryController extends Controller {
 
     public function actionDetail($id) {
         $product = Product::model()->findByPk($id);
-        $details = InventoryDetail::model()->with(array('warehouse' => array('condition' => 'status="Active"')))->findAll(array('condition' => 'product_id = ' . $id . ' AND inventory_id !=""', 'order' => 'transaction_date DESC'));
+        $details = InventoryDetail::model()->with(array(
+            'warehouse' => array(
+                'condition' => 'status="Active"',
+            )
+        ))->findAll(array(
+            'condition' => 'product_id = ' . $id . ' AND inventory_id !=""', 
+            'order' => 'transaction_date DESC'
+        ));
 
         $this->render('detail', array(
             'details' => $details,
@@ -85,4 +92,16 @@ class InventoryController extends Controller {
         }
     }
 
+    public function actionRedirectTransaction($codeNumber) {
+        list($leftPart,, ) = explode('/', $codeNumber);
+        list(, $codeNumberConstant) = explode('.', $leftPart);
+
+        if ($codeNumberConstant === 'MI') {
+            $model = MovementInHeader::model()->findByAttributes(array('movement_in_number' => $codeNumber));
+            $this->redirect(array('/transaction/movementInHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'MO') {
+            $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
+            $this->redirect(array('/frontDesk/movementOutHeader/view', 'id' => $model->id));
+        }
+    }
 }

@@ -70,7 +70,7 @@ $this->breadcrumbs=array(
                         $tableContent .= '
                             <tr>
                                 <td>' . $detail->transaction_type . '</td>
-                                <td>' . $detail->transaction_number . '</td>
+                                <td>' . CHtml::link($detail->transaction_number, Yii::app()->createUrl("frontDesk/inventory/redirectTransaction", array("codeNumber" => $detail->transaction_number)), array('target' => '_blank')) . '</td>
                                 <td>' . $detail->transaction_date . '</td>
                                 <td>' . $detail->stock_in . '</td>
                                 <td>' . $detail->stock_out . '</td>

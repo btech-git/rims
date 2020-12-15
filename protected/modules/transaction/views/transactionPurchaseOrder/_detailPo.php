@@ -54,12 +54,18 @@
                                 $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
                                 $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
                                 $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
-                                $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                $("#sub_total_discount").html(data.subTotalDiscount);
-                                $("#sub_total").html(data.subTotal);
-                                $("#total_quantity").html(data.totalQuantity);
-                                $("#tax_value").html(data.taxValue);
-                                $("#grand_total").html(data.grandTotal);
+                                $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "price_before_discount") . '").val(data.subTotalBeforeDiscount);
+                                $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "discount") . '").val(data.subTotalDiscount);
+                                $("#sub_total").html(data.subTotalFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "subtotal") . '").val(data.subTotal);
+                                $("#total_quantity").html(data.totalQuantityFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "total_quantity") . '").val(data.totalQuantity);
+                                $("#tax_value").html(data.taxValueFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "ppn_price") . '").val(data.taxValue);
+                                $("#grand_total").html(data.grandTotalFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "total_price") . '").val(data.grandTotal);
                             },
                         });	
                     ',
@@ -107,12 +113,18 @@
                                 $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
                                 $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
                                 $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
-                                $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                $("#sub_total_discount").html(data.subTotalDiscount);
-                                $("#sub_total").html(data.subTotal);
-                                $("#total_quantity").html(data.totalQuantity);
-                                $("#tax_value").html(data.taxValue);
-                                $("#grand_total").html(data.grandTotal);
+                                $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "price_before_discount") . '").val(data.subTotalBeforeDiscount);
+                                $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "discount") . '").val(data.subTotalDiscount);
+                                $("#sub_total").html(data.subTotalFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "subtotal") . '").val(data.subTotal);
+                                $("#total_quantity").html(data.totalQuantityFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "total_quantity") . '").val(data.totalQuantity);
+                                $("#tax_value").html(data.taxValueFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "ppn_price") . '").val(data.taxValue);
+                                $("#grand_total").html(data.grandTotalFormatted);
+                                $("#' . CHtml::activeId($purchaseOrder->header, "total_price") . '").val(data.grandTotal);
                             },
                         });	
                     ',
@@ -316,12 +328,18 @@
                                                         $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
                                                         $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
                                                         $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
-                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                                        $("#sub_total_discount").html(data.subTotalDiscount);
-                                                        $("#sub_total").html(data.subTotal);
-                                                        $("#total_quantity").html(data.totalQuantity);
-                                                        $("#tax_value").html(data.taxValue);
-                                                        $("#grand_total").html(data.grandTotal);
+                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "price_before_discount") . '").val(data.subTotalBeforeDiscount);
+                                                        $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "discount") . '").val(data.subTotalDiscount);
+                                                        $("#sub_total").html(data.subTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "subtotal") . '").val(data.subTotal);
+                                                        $("#total_quantity").html(data.totalQuantityFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_quantity") . '").val(data.totalQuantity);
+                                                        $("#tax_value").html(data.taxValueFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "ppn_price") . '").val(data.taxValue);
+                                                        $("#grand_total").html(data.grandTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_price") . '").val(data.grandTotal);
                                                     },
                                                 });	
                                             ',
@@ -387,12 +405,18 @@
                                                         $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
                                                         $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
                                                         $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
-                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                                        $("#sub_total_discount").html(data.subTotalDiscount);
-                                                        $("#sub_total").html(data.subTotal);
-                                                        $("#total_quantity").html(data.totalQuantity);
-                                                        $("#tax_value").html(data.taxValue);
-                                                        $("#grand_total").html(data.grandTotal);
+                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "price_before_discount") . '").val(data.subTotalBeforeDiscount);
+                                                        $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "discount") . '").val(data.subTotalDiscount);
+                                                        $("#sub_total").html(data.subTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "subtotal") . '").val(data.subTotal);
+                                                        $("#total_quantity").html(data.totalQuantityFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_quantity") . '").val(data.totalQuantity);
+                                                        $("#tax_value").html(data.taxValueFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "ppn_price") . '").val(data.taxValue);
+                                                        $("#grand_total").html(data.grandTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_price") . '").val(data.grandTotal);
                                                     },
                                                 });	
                                             ',
@@ -461,12 +485,18 @@
                                                         $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
                                                         $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
                                                         $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
-                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                                        $("#sub_total_discount").html(data.subTotalDiscount);
-                                                        $("#sub_total").html(data.subTotal);
-                                                        $("#total_quantity").html(data.totalQuantity);
-                                                        $("#tax_value").html(data.taxValue);
-                                                        $("#grand_total").html(data.grandTotal);
+                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "price_before_discount") . '").val(data.subTotalBeforeDiscount);
+                                                        $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "discount") . '").val(data.subTotalDiscount);
+                                                        $("#sub_total").html(data.subTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "subtotal") . '").val(data.subTotal);
+                                                        $("#total_quantity").html(data.totalQuantityFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_quantity") . '").val(data.totalQuantity);
+                                                        $("#tax_value").html(data.taxValueFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "ppn_price") . '").val(data.taxValue);
+                                                        $("#grand_total").html(data.grandTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_price") . '").val(data.grandTotal);
                                                     },
                                                 });	
                                             ',
@@ -534,12 +564,18 @@
                                                         $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
                                                         $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
                                                         $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
-                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                                        $("#sub_total_discount").html(data.subTotalDiscount);
-                                                        $("#sub_total").html(data.subTotal);
-                                                        $("#total_quantity").html(data.totalQuantity);
-                                                        $("#tax_value").html(data.taxValue);
-                                                        $("#grand_total").html(data.grandTotal);
+                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "price_before_discount") . '").val(data.subTotalBeforeDiscount);
+                                                        $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "discount") . '").val(data.subTotalDiscount);
+                                                        $("#sub_total").html(data.subTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "subtotal") . '").val(data.subTotal);
+                                                        $("#total_quantity").html(data.totalQuantityFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_quantity") . '").val(data.totalQuantity);
+                                                        $("#tax_value").html(data.taxValueFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "ppn_price") . '").val(data.taxValue);
+                                                        $("#grand_total").html(data.grandTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_price") . '").val(data.grandTotal);
                                                     },
                                                 });	
                                             ',
@@ -607,12 +643,18 @@
                                                         $("#' . CHtml::activeId($detail, "[$i]total_quantity") . '").val(data.totalQuantityDetail);
                                                         $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetailFormatted);
                                                         $("#' . CHtml::activeId($detail, "[$i]discount") . '").val(data.totalDiscountDetail);
-                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                                        $("#sub_total_discount").html(data.subTotalDiscount);
-                                                        $("#sub_total").html(data.subTotal);
-                                                        $("#total_quantity").html(data.totalQuantity);
-                                                        $("#tax_value").html(data.taxValue);
-                                                        $("#grand_total").html(data.grandTotal);
+                                                        $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "price_before_discount") . '").val(data.subTotalBeforeDiscount);
+                                                        $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "discount") . '").val(data.subTotalDiscount);
+                                                        $("#sub_total").html(data.subTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "subtotal") . '").val(data.subTotal);
+                                                        $("#total_quantity").html(data.totalQuantityFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_quantity") . '").val(data.totalQuantity);
+                                                        $("#tax_value").html(data.taxValueFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "ppn_price") . '").val(data.taxValue);
+                                                        $("#grand_total").html(data.grandTotalFormatted);
+                                                        $("#' . CHtml::activeId($purchaseOrder->header, "total_price") . '").val(data.grandTotal);
                                                     },
                                                 });	
                                             ',
@@ -638,11 +680,11 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align:right">Total DPP</td>
+            <td style="text-align:right">Price After Discount</td>
             <td style="text-align:right">
-                <?php echo CHtml::activeHiddenField($detail, "[$i]total_before_tax"); ?>
-                <span id="total_before_tax_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->total_before_tax)); ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]unit_price"); ?>
+                <span id="unit_price_after_discount_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'unit_price'))); ?>
                 </span>
             </td>
             <td colspan="2" style="text-align:right">DPP</td>
@@ -656,11 +698,11 @@
         </tr>
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td  colspan="2" style="text-align:right">PPN</td>
+            <td  colspan="2" style="text-align:right">Total DPP</td>
             <td style="text-align:right">
-                <?php echo CHtml::activeHiddenField($detail, "[$i]tax_amount"); ?>
-                <span id="tax_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]total_before_tax"); ?>
+                <span id="total_before_tax_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->total_before_tax)); ?>
                 </span>
             </td>
             <td>&nbsp;</td>
@@ -673,11 +715,11 @@
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'discount'))); ?>
                 </span>
             </td>
-            <td colspan="2" style="text-align:right">Price After Discount</td>
+            <td colspan="2" style="text-align:right">PPN</td>
             <td style="text-align:right">
-                <?php echo CHtml::activeHiddenField($detail, "[$i]unit_price"); ?>
-                <span id="unit_price_after_discount_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'unit_price'))); ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]tax_amount"); ?>
+                <span id="tax_detail_<?php echo $i; ?>">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
                 </span>
             </td>
             <td>&nbsp;</td>

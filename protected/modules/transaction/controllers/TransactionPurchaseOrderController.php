@@ -1220,6 +1220,12 @@ class TransactionPurchaseOrderController extends Controller {
             $taxAmount = $purchaseOrder->details[$index]->getTaxAmount($tax);
             $totalQuantityDetail = $purchaseOrder->details[$index]->quantityAfterBonus;
             $totalDiscountDetail = $purchaseOrder->details[$index]->totalDiscount;
+            $subTotalBeforeDiscount = $purchaseOrder->subTotalBeforeDiscount;
+            $subTotalDiscount = $purchaseOrder->subTotalDiscount;
+            $subTotal = $purchaseOrder->subTotal;
+            $totalQuantity = $purchaseOrder->totalQuantity;
+            $taxValue = $purchaseOrder->taxAmount;
+            $grandTotal = $purchaseOrder->grandTotal;
             $unitPriceAfterDiscountFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $unitPriceAfterDiscount));
             $subTotalDetailFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalDetail));
             $priceBeforeTaxFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $priceBeforeTax));
@@ -1227,12 +1233,12 @@ class TransactionPurchaseOrderController extends Controller {
             $taxAmountFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxAmount));
             $totalQuantityDetailFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantityDetail));
             $totalDiscountDetailFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDiscountDetail));
-            $subTotalBeforeDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotalBeforeDiscount));
-            $subTotalDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotalDiscount));
-            $subTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->subTotal));
-            $totalQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrder->totalQuantity));
-            $taxValue = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->taxAmount));
-            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->grandTotal));
+            $subTotalBeforeDiscountFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalBeforeDiscount));
+            $subTotalDiscountFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalDiscount));
+            $subTotalFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotal));
+            $totalQuantityFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity));
+            $taxValueFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxValue));
+            $grandTotalFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotal));
 
             echo CJSON::encode(array(
                 'discount1Nominal' => $discount1Nominal,
@@ -1259,13 +1265,18 @@ class TransactionPurchaseOrderController extends Controller {
                 'totalPriceBeforeTaxFormatted' => $totalPriceBeforeTaxFormatted,
                 'priceBeforeTaxFormatted' => $priceBeforeTaxFormatted,
                 'totalDiscountDetailFormatted' => $totalDiscountDetailFormatted,
-//                'grandTotalDetail' => $grandTotalDetail,
                 'subTotalBeforeDiscount' => $subTotalBeforeDiscount,
                 'subTotalDiscount' => $subTotalDiscount,
                 'subTotal' => $subTotal,
                 'totalQuantity' => $totalQuantity,
                 'grandTotal' => $grandTotal,
                 'taxValue' => $taxValue,
+                'subTotalBeforeDiscountFormatted' => $subTotalBeforeDiscountFormatted,
+                'subTotalDiscountFormatted' => $subTotalDiscountFormatted,
+                'subTotalFormatted' => $subTotalFormatted,
+                'totalQuantityFormatted' => $totalQuantityFormatted,
+                'grandTotalFormatted' => $grandTotalFormatted,
+                'taxValueFormatted' => $taxValueFormatted,
             ));
         }
     }

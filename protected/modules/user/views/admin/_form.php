@@ -14,9 +14,9 @@ Yii::app()->clientScript->registerScript('userRoles', "
     }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 31);
-        checkRoles(1, 2, 31);
-        checkRoles(2, 3, 31);
+        checkRoles(0, 1, 93);
+        checkRoles(1, 2, 93);
+        checkRoles(2, 3, 14);
         checkRoles(3, 4, 4);
         checkRoles(5, 6, 6);
         checkRoles(8, 9, 9);
@@ -172,17 +172,17 @@ Yii::app()->clientScript->registerScript('userRoles', "
                 </div>
             </div>
 
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($model, 'superuser', array('class' => 'prefix')); ?>
+                        <?php /*echo $form->labelEx($model, 'superuser', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->dropDownList($model, 'superuser', User::itemAlias('AdminStatus')); ?>
-                        <?php echo $form->error($model, 'superuser'); ?>
+                        <?php echo $form->error($model, 'superuser');*/ ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
             <div class="field">
                 <div class="row collapse">
@@ -220,10 +220,14 @@ Yii::app()->clientScript->registerScript('userRoles', "
                         <?php echo 'Employee'; ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php $this->renderPartial('_employeeSelect', array(
-                            'model'=>$model,
-                            'employees' => $employees,
-                        )); ?>
+                        <?php if ($model->isNewRecord): ?>
+                            <?php $this->renderPartial('_employeeSelect', array(
+                                'model'=>$model,
+                                'employees' => $employees,
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($model, 'employee.name')); ?>
+                        <?php endif; ?>
                         <?php echo CHtml::error($model, 'employee_id'); ?>
                     </div>
                 </div>
