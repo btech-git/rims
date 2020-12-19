@@ -4,24 +4,29 @@ class ServiceGroupController extends Controller {
 
     public $layout = '//layouts/backend';
 
-    public function accessRules() {
+    public function filters() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'ajaxGetCity', 'ajaxHtmlAddPhoneDetail', 'ajaxHtmlRemovePhoneDetail', 'ajaxHtmlAddMobileDetail', 'ajaxHtmlRemoveMobileDetail', 'ajaxHtmlAddBankDetail', 'ajaxHtmlRemoveBankDetail', 'ajaxBank', 'ajaxHtmlAddPicDetail', 'ajaxHtmlRemovePicDetail', 'ajaxHtmlAddProductDetail', 'ajaxHtmlAddSingleProductDetail', 'ajaxHtmlRemoveProductDetail', 'ajaxGetProductSubMasterCategory', 'ajaxGetProductSubCategory', 'updateBank', 'updatePic', 'ajaxGetCityPic', 'ajaxGetCityPicIndex'),
-                'users' => array('Admin'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
+            'access',
         );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'edit' || 
+            $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'delete' || 
+            $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'addVehicle' || 
+            $filterChain->action->id === 'addService'
+        ) {
+            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('operationHead')))
+                $this->redirect(array('/site/login'));
+        }
+
+        $filterChain->run();
     }
 
     /**
@@ -215,10 +220,10 @@ class ServiceGroupController extends Controller {
      */
     public function loadModel($id) {
         $model = ServiceGroup::model()->findByPk($id);
-        
+
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
-        
+
         return $model;
     }
 
@@ -301,4 +306,5 @@ class ServiceGroupController extends Controller {
         } else
             $serviceGroup->pricelistDetails = array();
     }
+
 }

@@ -8,112 +8,32 @@ class RegistrationTransactionController extends Controller {
      */
     public $layout = '//layouts/column1';
 
-    /**
-     * @return array action filters
-     */
-    // public function filters()
-    // {
-    // 	return array(
-    // 		'accessControl', // perform access control for CRUD operations
-    // 		'postOnly + delete', // we only allow deletion via POST request
-    // 	);
-    // }
-
-    /*     * f
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules() {
+    public function filters() {
         return array(
-            array(
-                'allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array(
-                'allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
-            array(
-                'allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array(
-                    'admin',
-                    'idleManagement',
-                    'idleManagementAjaxInfo',
-                    'idleManagementUpdate',
-                    'idleManagementServices',
-                    'idleManagementServiceUpdate',
-                    'idleManagementServiceView',
-                    'idleManagementStartService',
-                    'idleManagementPauseService',
-                    'idleManagementResumeService',
-                    'idleManagementFinishService',
-                    'ajaxHtmlAddEmployeeDetail',
-                    'ajaxHtmlRemoveEmployeeDetail',
-                    'ajaxHtmlAddSupervisorDetail',
-                    'ajaxHtmlRemoveSupervisorDetail',
-                    'delete',
-                    'ajaxCustomer',
-                    'ajaxGetCustomerPic',
-                    'ajaxPic',
-                    'ajaxGetCustomerVehicle',
-                    'ajaxVehicle',
-                    'ajaxGetServiceRate',
-                    'ajaxHtmlAddQuickServiceDetail',
-                    'ajaxHtmlRemoveQuickServiceDetail',
-                    'ajaxEmployee',
-                    'ajaxHtmlAddServiceDetail',
-                    'ajaxHtmlRemoveServiceDetail',
-                    'ajaxHtmlAddProductDetail',
-                    'ajaxHtmlRemoveProductDetail',
-                    'ajaxEstimateBilling',
-                    'ajaxCountProduct',
-                    'ajaxHtmlRemoveQuickServiceDetailAll',
-                    'ajaxGetHistory',
-                    'ajaxCheckQuickService',
-                    'ajaxHtmlAddDamageDetail',
-                    'ajaxHtmlRemoveDamageDetail',
-                    'ajaxProduct',
-                    'ajaxService',
-                    'ajaxHtmlAddInsuranceDetail',
-                    'ajaxHtmlRemoveInsuranceDetail',
-                    'ajaxGetCity',
-                    'ajaxGetCityDriver',
-                    'ajaxShowPricelist',
-                    'ajaxHtmlAddServiceInsuranceDetail',
-                    'ajaxHtmlRemoveInsuranceDetailAll',
-                    'ajaxHtmlRemoveDamageDetailAll',
-                    'generateWorkOrder',
-                    'ajaxHtmlAddQsServiceDetail',
-                    'showRealization',
-                    'ajaxHtmlUpdate',
-                    'updateSpk',
-                    'adminWo',
-                    'viewWo',
-                    'updateImages',
-                    'deleteImage',
-                    'deleteFeatured',
-                    'cashier',
-                    'billDetail',
-                    'customerData',
-                    'deleteImageRealization',
-                    'customerWaitlist',
-                    'getMaterial',
-                    'vehicleData',
-                    'ajaxHtmlRemoveServiceDetailAll',
-                    'generateInvoice',
-                    'generateSalesOrder',
-                    'receive'
-                ),
-                'users' => array('Admin'),
-            ),
-            array(
-                'deny', // deny all users
-                'users' => array('*'),
-            ),
+            'access',
         );
+    }
+
+    public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'cashier') {
+            if (!(Yii::app()->user->checkAccess('cashierCreate')) || !(Yii::app()->user->checkAccess('cashierEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+        
+        if ($filterChain->action->id === 'customerWaitlist') {
+            if (
+                    !(Yii::app()->user->checkAccess('generalRepairCreate')) || 
+                    !(Yii::app()->user->checkAccess('generalRepairEdit')) || 
+                    !(Yii::app()->user->checkAccess('bodyRepairCreate')) || 
+                    !(Yii::app()->user->checkAccess('bodyRepairEdit'))
+            ) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+
+        $filterChain->run();
     }
 
     /**

@@ -9,40 +9,29 @@ class PaymentInController extends Controller {
     public $layout = '//layouts/column1';
     public $defaultAction = 'admin';
 
-    /**
-     * @return array action filters
-     */
-    // public function filters()
-    // {
-    // 	return array(
-    // 		'accessControl', // perform access control for CRUD operations
-    // 		'postOnly + delete', // we only allow deletion via POST request
-    // 	);
-    // }
-
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules() {
+    public function filters() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('Admin'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
+            'access',
         );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'create' ||
+            $filterChain->action->id === 'delete' ||
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'invoiceList' ||
+            $filterChain->action->id === 'update' ||
+            $filterChain->action->id === 'updateApproval' ||
+            $filterChain->action->id === 'view'
+        ) {
+            if (!(Yii::app()->user->checkAccess('paymentInCreate')) || !(Yii::app()->user->checkAccess('paymentInEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        $filterChain->run();
     }
 
     /**

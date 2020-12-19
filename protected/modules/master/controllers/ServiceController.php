@@ -8,40 +8,29 @@ class ServiceController extends Controller {
      */
     public $layout = '//layouts/backend';
 
-    /**
-     * @return array action filters
-     */
-    /* public function filters()
-      {
-      return array(
-      'accessControl', // perform access control for CRUD operations
-      // 'postOnly + delete', // we only allow deletion via POST request
-      );
-      }
-
-      /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules() {
+    public function filters() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'ajaxHtmlAddEquipmentDetail', 'ajaxHtmlRemoveEquipmentDetail', 'ajaxGetServiceCategory', 'ajaxGetCode', 'ajaxHtmlAddPriceDetail', 'ajaxHtmlRemovePriceDetail', 'ajaxGetModel', 'ajaxGetSubModel', 'ajaxGetPrice', 'ajaxHtmlAddComplementDetail', 'ajaxHtmlRemoveComplementDetail', 'ajaxHtmlAddMaterialDetail', 'restore', 'ajaxSetValue'),
-                'users' => array('Admin'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
+            'access',
         );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'profile' || 
+            $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'delete' || 
+            $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'restore' || 
+            $filterChain->action->id === 'addProduct'
+        ) {
+            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('operationHead')))
+                $this->redirect(array('/site/login'));
+        }
+
+        $filterChain->run();
     }
 
     /**
@@ -126,7 +115,7 @@ class ServiceController extends Controller {
 
         $complement = new Service('search');
         $complement->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Service']))
             $complement->attributes = $_GET['Service'];
 
@@ -139,7 +128,7 @@ class ServiceController extends Controller {
 
         $equipment = new Equipments('search');
         $equipment->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Equipments']))
             $equipment->attributes = $_GET['Equipments'];
 
@@ -218,8 +207,8 @@ class ServiceController extends Controller {
         $complementCriteria->compare('name', $complement->name, true);
 
         $complementDataProvider = new CActiveDataProvider('Service', array(
-                    'criteria' => $complementCriteria,
-                ));
+            'criteria' => $complementCriteria,
+        ));
 
         $equipment = new Equipments('search');
         $equipment->unsetAttributes();  // clear any default values
@@ -231,8 +220,8 @@ class ServiceController extends Controller {
         $equipmentCriteria->compare('name', $equipment->name, true);
 
         $equipmentDataProvider = new CActiveDataProvider('Equipments', array(
-                    'criteria' => $equipmentCriteria,
-                ));
+            'criteria' => $equipmentCriteria,
+        ));
 
         $material = new Product('search');
         $material->unsetAttributes();  // clear any default values
@@ -244,8 +233,8 @@ class ServiceController extends Controller {
         $materialCriteria->compare('name', $material->name, true);
 
         $materialDataProvider = new CActiveDataProvider('Product', array(
-                    'criteria' => $materialCriteria,
-                ));
+            'criteria' => $materialCriteria,
+        ));
 
         $service = $this->instantiate($id);
 
@@ -606,7 +595,7 @@ class ServiceController extends Controller {
         if (isset($_POST['Service'])) {
             $service->header->attributes = $_POST['Service'];
         }
-        
+
         if (isset($_POST['ServiceEquipment'])) {
             foreach ($_POST['ServiceEquipment'] as $i => $item) {
                 if (isset($service->equipmentDetails[$i]))
@@ -619,8 +608,7 @@ class ServiceController extends Controller {
             }
             if (count($_POST['ServiceEquipment']) < count($service->equipmentDetails))
                 array_splice($service->equipmentDetails, $i + 1);
-        }
-        else
+        } else
             $service->equipmentDetails = array();
 
         if (isset($_POST['ServicePricelist'])) {
@@ -635,8 +623,7 @@ class ServiceController extends Controller {
             }
             if (count($_POST['ServicePricelist']) < count($service->priceDetails))
                 array_splice($service->priceDetails, $i + 1);
-        }
-        else
+        } else
             $service->priceDetails = array();
 
         if (isset($_POST['ServiceComplement'])) {
@@ -651,8 +638,7 @@ class ServiceController extends Controller {
             }
             if (count($_POST['ServiceComplement']) < count($service->complementDetails))
                 array_splice($service->complementDetails, $i + 1);
-        }
-        else
+        } else
             $service->complementDetails = array();
 
         if (isset($_POST['ServiceProduct'])) {
@@ -667,10 +653,9 @@ class ServiceController extends Controller {
             }
             if (count($_POST['ServiceProduct']) < count($service->productDetails))
                 array_splice($service->productDetails, $i + 1);
-        }
-        else
+        } else
             $service->productDetails = array();
-        
+
         if (isset($_POST['ServiceMaterial'])) {
             foreach ($_POST['ServiceMaterial'] as $i => $item) {
                 if (isset($service->materialDetails[$i]))
@@ -683,8 +668,7 @@ class ServiceController extends Controller {
             }
             if (count($_POST['ServiceMaterial']) < count($service->materialDetails))
                 array_splice($service->materialDetails, $i + 1);
-        }
-        else
+        } else
             $service->materialDetails = array();
     }
 
@@ -709,7 +693,7 @@ class ServiceController extends Controller {
     public function actionAjaxSetValue() {
         $standardValue = GeneralStandardValue::model()->findByPK(1);
         $standardRate = GeneralStandardFr::model()->findByPK(1);
-        
+
         $object = array(
             'difficulty' => $standardValue->difficulty,
             'difficulty_value' => $standardValue->difficulty_value,
@@ -720,7 +704,7 @@ class ServiceController extends Controller {
             'flat_rate_hour' => $standardValue->flat_rate_hour,
             'standard_rate' => $standardRate->flat_rate,
         );
-        
+
         echo CJSON::encode($object);
     }
 

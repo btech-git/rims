@@ -6,41 +6,6 @@ class AdminController extends Controller {
     public $layout = '//layouts/column2';
     private $_model;
 
-    /**
-     * @return array action filters
-     */
-    /* public function filters()
-      {
-      return CMap::mergeArray(parent::filters(),array(
-      'accessControl', // perform access control for CRUD operations
-      ));
-      } */
-
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-//    public function accessRules()
-//    {
-//        return array(
-//            array(
-//                'allow', // allow authenticated user to perform 'profile' and 'edit' actions
-//                'actions' => array('profile', 'edit'),
-//                'users' => array('@'),
-//            ),
-//            array(
-//                'allow', // allow admin user to perform 'admin' and 'delete' actions
-//                'actions' => array('admin', 'delete', 'create', 'update', 'view'),
-//                'users' => UserModule::getAdmins(),
-//            ),
-//            array(
-//                'deny',  // deny all users
-//                'users' => array('*'),
-//            ),
-//        );
-//    }
-
     public function filters() {
         return array(
             'access',
@@ -48,12 +13,16 @@ class AdminController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'view' || $filterChain->action->id === 'profile' || $filterChain->action->id === 'edit') {
-            if (!(Yii::app()->user->checkAccess('Authenticated')))
-                $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'update' || $filterChain->action->id === 'admin' || $filterChain->action->id === 'delete') {
-            if (!Yii::app()->user->checkAccess('Authenticated'))
+        if (
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'profile' || 
+            $filterChain->action->id === 'edit' || 
+            $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('generalManager')))
                 $this->redirect(array('/site/login'));
         }
 

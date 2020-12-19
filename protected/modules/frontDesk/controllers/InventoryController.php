@@ -4,6 +4,25 @@ class InventoryController extends Controller {
 
     public $layout = '//layouts/column1';
 
+    public function filters() {
+        return array(
+            'access',
+        );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+            $filterChain->action->id === 'check' || 
+            $filterChain->action->id === 'detail' || 
+            $filterChain->action->id === 'redirectTransaction'
+        ) {
+            if (!(Yii::app()->user->checkAccess('inventoryHead')) || !(Yii::app()->user->checkAccess('consignmentOutEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        $filterChain->run();
+    }
+
     public function actionCheck() {
         $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
@@ -23,17 +42,34 @@ class InventoryController extends Controller {
 
     public function actionDetail($id) {
         $product = Product::model()->findByPk($id);
-        $details = InventoryDetail::model()->with(array(
-            'warehouse' => array(
-                'condition' => 'status="Active"',
-            )
-        ))->findAll(array(
-            'condition' => 'product_id = ' . $id . ' AND inventory_id !=""', 
-            'order' => 'transaction_date DESC'
-        ));
+//        $details = InventoryDetail::model()->with(array(
+//            'warehouse' => array(
+//                'condition' => 'status="Active"',
+//            )
+//        ))->findAll(array(
+//            'condition' => 'product_id = ' . $id . ' AND inventory_id !=""', 
+//            'order' => 'transaction_date DESC'
+//        ));
+        
+        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
+        $detailTabs = array();
+        foreach ($branches as $branch) {
+            $tabContent = $this->renderPartial('_viewStock', array(
+                'dataProvider' => $this->getInventoryDetailDataProvider($product->id, $branch->id, 0),
+                'productId' => $product->id,
+                'branchId' => $branch->id,
+            ), true);
+            $detailTabs[$branch->name] = array('content' => $tabContent);
+        }
+        $tabContent = $this->renderPartial('_viewStock', array(
+            'dataProvider' => $this->getInventoryDetailDataProvider($product->id, '', 0),
+            'productId' => $product->id,
+            'branchId' => '',
+        ), true);
+        $detailTabs['All'] = array('content' => $tabContent);
 
         $this->render('detail', array(
-            'details' => $details,
+            'detailTabs' => $detailTabs,
             'product' => $product,
         ));
     }
@@ -103,5 +139,23 @@ class InventoryController extends Controller {
             $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
             $this->redirect(array('/frontDesk/movementOutHeader/view', 'id' => $model->id));
         }
+    }
+
+    public function actionAjaxHtmlUpdateInventoryDetailGrid($productId, $branchId, $currentPage) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $this->renderPartial('_viewStock', array(
+                'dataProvider' => $this->getInventoryDetailDataProvider($productId, $branchId, $currentPage),
+                'productId' => $productId,
+                'branchId' => $branchId,
+            ));
+        }
+    }
+    
+    public function getInventoryDetailDataProvider($productId, $branchId, $currentPage) {
+        $inventoryDetail = Search::bind(new InventoryDetail(), '');
+        $inventoryDetail->product_id = $productId;
+        $inventoryDetailDataProvider = $inventoryDetail->searchByStock($branchId, $currentPage);
+        
+        return $inventoryDetailDataProvider;
     }
 }

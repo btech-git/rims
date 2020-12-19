@@ -30,7 +30,7 @@
                     array(
                         'label' => 'Pendaftaran Customer', 
                         'url' => array('/frontDesk/customerRegistration/vehicleList'), 
-                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit') || Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate'))
                     ),
                     array(
                         'label' => 'General Repair', 

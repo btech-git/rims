@@ -17,7 +17,7 @@
                         <?php if ($paymentTypeId > 0): ?>
                             <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail), array('javascript:;'), array(
                                 'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/create', array(
-                                    "transactionDate"=>$transactionDate, 
+                                    "transactionDate" => $transactionDate, 
                                     "branchId" => $paymentInRetailBranchId, 
                                     "paymentTypeId" => $paymentTypeId
                                 )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
@@ -31,7 +31,13 @@
                     <?php endif; ?>
                 <?php endforeach; ?>
                 <td style="text-align: right; font-weight: bold">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $total)); ?>
+                    <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $total), array('javascript:;'), array(
+                        'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/approval', array(
+                            "transactionDate" => $transactionDate, 
+                            "branchId" => $paymentInRetailBranchId, 
+                        )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
+                    )); ?>
+                    <?php //echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $total), array("/accounting/cashDailySummary/approval", "transactionDate" => $transactionDate, "branchId" => $paymentInRetailBranchId, ), array('target' => '_blank')); ?>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -15,20 +15,16 @@ class IdleManagementController extends Controller
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'indexHead' || 
-            $filterChain->action->id === 'viewHeadWorkOrder' || 
-            $filterChain->action->id === 'viewEmployeeDetail'
+            $filterChain->action->id === 'indexHead' ||
+            $filterChain->action->id === 'viewDetailWorkOrder' ||
+            $filterChain->action->id === 'viewEmployeeDetail' ||
+            $filterChain->action->id === 'viewHeadWorkOrder' ||
+            $filterChain->action->id === 'workOrderFinishService' ||
+            $filterChain->action->id === 'workOrderPauseService' ||
+            $filterChain->action->id === 'workOrderResumeService' ||
+            $filterChain->action->id === 'workOrderStartService'
         ) {
-            if (!(Yii::app()->user->checkAccess('maintenanceMechanicHead')))
-                $this->redirect(array('/site/login'));
-        }
-        
-        if (
-            $filterChain->action->id === 'indexMechanic' || 
-            $filterChain->action->id === 'viewDetailWorkOrder' || 
-            $filterChain->action->id === 'viewEmployeeDetail'
-        ) {
-            if (!(Yii::app()->user->checkAccess('maintenanceMechanicStaff')))
+            if (!(Yii::app()->user->checkAccess('idleManagement')))
                 $this->redirect(array('/site/login'));
         }
 

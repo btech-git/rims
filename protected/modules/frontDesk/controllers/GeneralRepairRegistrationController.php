@@ -13,16 +13,16 @@ class GeneralRepairRegistrationController extends Controller {
     public function filterAccess($filterChain) {
         if (
             $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'addProductService' ||
             $filterChain->action->id === 'create' ||
-            $filterChain->action->id === 'generateInvoice' ||
             $filterChain->action->id === 'generateSalesOrder' ||
             $filterChain->action->id === 'generateWorkOrder' ||
-            $filterChain->action->id === 'receive' ||
+            $filterChain->action->id === 'generateInvoice' ||
             $filterChain->action->id === 'view' ||
             $filterChain->action->id === 'showRealization' ||
             $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeStaff')))
+            if (!(Yii::app()->user->checkAccess('generalRepairCreate')) || !(Yii::app()->user->checkAccess('generalRepairEdit')))
                 $this->redirect(array('/site/login'));
         }
 
@@ -753,88 +753,88 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity) {
-
-        $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);
-        $registration = RegistrationTransaction::model()->findByPk($registrationProduct->registration_transaction_id);
-        $movementOutDetail = MovementOutDetail::model()->findByPk($movementOutDetailId);
-        $movementOut = MovementOutHeader::model()->findByPk($movementOutDetail->movement_out_header_id);
-
-        $receiveHeader = new TransactionReceiveItem();
-        $receiveHeader->receive_item_no = 'RI_' . $registration->id . mt_rand();
-        $receiveHeader->receive_item_date = date('Y-m-d');
-        $receiveHeader->arrival_date = date('Y-m-d');
-        $receiveHeader->recipient_id = Yii::app()->user->getId();
-        $receiveHeader->recipient_branch_id = $registration->branch_id;
-        $receiveHeader->request_type = 'Retail Sales';
-        $receiveHeader->request_date = $movementOut->date_posting;
-        $receiveHeader->destination_branch = $registration->branch_id;
-        $receiveHeader->movement_out_id = $movementOut->id;
-        
-        if ($receiveHeader->save(false)) {
-            $receiveDetail = new TransactionReceiveItemDetail();
-            $receiveDetail->receive_item_id = $receiveHeader->id;
-            $receiveDetail->movement_out_detail_id = $movementOutDetail->id;
-            $receiveDetail->product_id = $registrationProduct->product_id;
-            $receiveDetail->qty_request = $registrationProduct->quantity;
-            $receiveDetail->qty_received = $quantity;
-            
-            if ($receiveDetail->save(false)) {
-
-                $criteria = new CDbCriteria;
-                $criteria->together = 'true';
-                $criteria->with = array('receiveItem');
-                $criteria->condition = "receiveItem.movement_out_id =" . $movementOut->id . " AND receive_item_id != " . $receiveHeader->id;
-                $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
-
-                $quantity = 0;
-
-                foreach ($receiveItemDetails as $receiveItemDetail) {
-                    $quantity += $receiveItemDetail->qty_received;
-                }
-
-                $moveOutDetail = MovementOutDetail::model()->findByAttributes(array(
-                    'id' => $movementOutDetailId,
-                    'movement_out_header_id' => $movementOut->id
-                ));
-
-                $moveOutDetail->quantity_receive_left = $moveOutDetail->quantity - ($receiveDetail->qty_received + $quantity);
-                $moveOutDetail->quantity_receive = $quantity + $receiveDetail->qty_received;
-
-                if ($moveOutDetail->save(false)) {
-                    $mcriteria = new CDbCriteria;
-                    $mcriteria->together = 'true';
-                    $mcriteria->with = array('movementOutHeader');
-                    $mcriteria->condition = "movementOutHeader.registration_transaction_id =" . $registration->id . " AND movement_out_header_id != " . $movementOut->id;
-                    $moDetails = MovementOutDetail::model()->findAll($mcriteria);
-
-                    $mquantity = 0;
-                    foreach ($moDetails as $moDetail) {
-                        $mquantity += $moDetail->quantity_receive;
-                    }
-
-                    $rpDetail = RegistrationProduct::model()->findByAttributes(array(
-                        'id' => $registrationProductId,
-                        'registration_transaction_id' => $registration->id
-                    ));
-
-                    $rpDetail->quantity_receive_left = $rpDetail->quantity - ($movementOutDetail->quantity_receive + $mquantity);
-                    $rpDetail->quantity_receive = $mquantity + $movementOutDetail->quantity_receive;
-
-                    if ($rpDetail->save(false)) {
-                        $registrationRealization = new RegistrationRealizationProcess();
-                        $registrationRealization->registration_transaction_id = $registration->id;
-                        $registrationRealization->name = 'Receive Item';
-                        $registrationRealization->checked = 1;
-                        $registrationRealization->checked_by = Yii::app()->user->id;
-                        $registrationRealization->checked_date = date('Y-m-d');
-                        $registrationRealization->detail = 'Receive Item for Product : ' . $registrationProduct->product->name . ' from Movement Out #: ' . $movementOut->movement_out_no . ' Quantity : ' . $quantity;
-                        $registrationRealization->save();
-                    }
-                }
-            }
-        }
-    }
+//    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity) {
+//
+//        $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);
+//        $registration = RegistrationTransaction::model()->findByPk($registrationProduct->registration_transaction_id);
+//        $movementOutDetail = MovementOutDetail::model()->findByPk($movementOutDetailId);
+//        $movementOut = MovementOutHeader::model()->findByPk($movementOutDetail->movement_out_header_id);
+//
+//        $receiveHeader = new TransactionReceiveItem();
+//        $receiveHeader->receive_item_no = 'RI_' . $registration->id . mt_rand();
+//        $receiveHeader->receive_item_date = date('Y-m-d');
+//        $receiveHeader->arrival_date = date('Y-m-d');
+//        $receiveHeader->recipient_id = Yii::app()->user->getId();
+//        $receiveHeader->recipient_branch_id = $registration->branch_id;
+//        $receiveHeader->request_type = 'Retail Sales';
+//        $receiveHeader->request_date = $movementOut->date_posting;
+//        $receiveHeader->destination_branch = $registration->branch_id;
+//        $receiveHeader->movement_out_id = $movementOut->id;
+//        
+//        if ($receiveHeader->save(false)) {
+//            $receiveDetail = new TransactionReceiveItemDetail();
+//            $receiveDetail->receive_item_id = $receiveHeader->id;
+//            $receiveDetail->movement_out_detail_id = $movementOutDetail->id;
+//            $receiveDetail->product_id = $registrationProduct->product_id;
+//            $receiveDetail->qty_request = $registrationProduct->quantity;
+//            $receiveDetail->qty_received = $quantity;
+//            
+//            if ($receiveDetail->save(false)) {
+//
+//                $criteria = new CDbCriteria;
+//                $criteria->together = 'true';
+//                $criteria->with = array('receiveItem');
+//                $criteria->condition = "receiveItem.movement_out_id =" . $movementOut->id . " AND receive_item_id != " . $receiveHeader->id;
+//                $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
+//
+//                $quantity = 0;
+//
+//                foreach ($receiveItemDetails as $receiveItemDetail) {
+//                    $quantity += $receiveItemDetail->qty_received;
+//                }
+//
+//                $moveOutDetail = MovementOutDetail::model()->findByAttributes(array(
+//                    'id' => $movementOutDetailId,
+//                    'movement_out_header_id' => $movementOut->id
+//                ));
+//
+//                $moveOutDetail->quantity_receive_left = $moveOutDetail->quantity - ($receiveDetail->qty_received + $quantity);
+//                $moveOutDetail->quantity_receive = $quantity + $receiveDetail->qty_received;
+//
+//                if ($moveOutDetail->save(false)) {
+//                    $mcriteria = new CDbCriteria;
+//                    $mcriteria->together = 'true';
+//                    $mcriteria->with = array('movementOutHeader');
+//                    $mcriteria->condition = "movementOutHeader.registration_transaction_id =" . $registration->id . " AND movement_out_header_id != " . $movementOut->id;
+//                    $moDetails = MovementOutDetail::model()->findAll($mcriteria);
+//
+//                    $mquantity = 0;
+//                    foreach ($moDetails as $moDetail) {
+//                        $mquantity += $moDetail->quantity_receive;
+//                    }
+//
+//                    $rpDetail = RegistrationProduct::model()->findByAttributes(array(
+//                        'id' => $registrationProductId,
+//                        'registration_transaction_id' => $registration->id
+//                    ));
+//
+//                    $rpDetail->quantity_receive_left = $rpDetail->quantity - ($movementOutDetail->quantity_receive + $mquantity);
+//                    $rpDetail->quantity_receive = $mquantity + $movementOutDetail->quantity_receive;
+//
+//                    if ($rpDetail->save(false)) {
+//                        $registrationRealization = new RegistrationRealizationProcess();
+//                        $registrationRealization->registration_transaction_id = $registration->id;
+//                        $registrationRealization->name = 'Receive Item';
+//                        $registrationRealization->checked = 1;
+//                        $registrationRealization->checked_by = Yii::app()->user->id;
+//                        $registrationRealization->checked_date = date('Y-m-d');
+//                        $registrationRealization->detail = 'Receive Item for Product : ' . $registrationProduct->product->name . ' from Movement Out #: ' . $movementOut->movement_out_no . ' Quantity : ' . $quantity;
+//                        $registrationRealization->save();
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public function actionPdf($id) {
         $generalRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));

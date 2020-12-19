@@ -6,17 +6,20 @@ class MaterialRequestController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'view' || $filterChain->action->id === 'create' || $filterChain->action->id === 'update' || $filterChain->action->id === 'admin' || $filterChain->action->id === 'memo') {
-            if (!(Yii::app()->user->checkAccess('purchaseCreate') || Yii::app()->user->checkAccess('purchaseEdit')))
-                $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'admin' || $filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('deleteTransaction')))
+        if (
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'delete' || 
+            $filterChain->action->id === 'updateApproval' || 
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'update'
+        ) {
+            if (!(Yii::app()->user->checkAccess('materialRequestCreate')) || !(Yii::app()->user->checkAccess('materialRequestEdit')))
                 $this->redirect(array('/site/login'));
         }
 

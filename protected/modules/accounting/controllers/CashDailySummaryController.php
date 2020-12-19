@@ -150,6 +150,55 @@ class CashDailySummaryController extends Controller {
         ));
     }
 
+    public function actionApproval($transactionDate, $branchId) {
+        
+        $cashDaily = new CashDailySummary();
+        $cashDaily->transaction_date = $transactionDate;
+        $cashDaily->branch_id = $branchId;
+        $cashDaily->user_id = Yii::app()->user->id;
+
+        $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
+                FROM " . PaymentIn::model()->tableName() . "
+                WHERE payment_date = :payment_date AND branch_id = :branch_id";
+        
+        $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':payment_date' => $transactionDate,
+            ':branch_id' => $branchId,
+        ));
+        
+        $cashDaily->amount = $paymentInRetailAmount;
+        
+        $paymentIns = PaymentIn::model()->findAllByAttributes(array(
+            'payment_date' => $transactionDate, 
+            'branch_id' => $branchId, 
+        ));
+        
+        if (isset($_POST['CashDailySummary'])) {
+            $cashDaily->attributes = $_POST['CashDailySummary'];
+            $cashDaily->images = CUploadedFile::getInstances($cashDaily, 'images');
+            
+            if ($cashDaily->save(Yii::app()->db)) {
+                foreach ($cashDaily->images as $file) {
+                    $contentImage = new CashDailyImages;
+                    $contentImage->cash_daily_summary_id = $cashDaily->id;
+                    $contentImage->extension = $file->extensionName;
+                    $contentImage->save(false);
+
+                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashDaily/' . $contentImage->filename;
+                    $file->saveAs($originalPath);
+                }
+
+                echo CHtml::script('window.opener.location.reload(false); window.close();');
+                Yii::app()->end();
+            } 
+        }
+
+        $this->render('approval', array(
+            'cashDaily' => $cashDaily,
+            'paymentIns' => $paymentIns,
+        ));
+    }
+
     public function actionView($id) {
         
         $model = CashDailySummary::model()->findByPk($id);

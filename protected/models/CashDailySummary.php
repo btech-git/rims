@@ -46,7 +46,7 @@ class CashDailySummary extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_date, branch_id, user_id, payment_type_id', 'required'),
+            array('transaction_date, branch_id, user_id', 'required'),
             array('branch_id, user_id, payment_type_id', 'numerical', 'integerOnly' => true),
             array('amount', 'length', 'max' => 18),
             array('memo', 'length', 'max' => 100),

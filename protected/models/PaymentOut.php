@@ -129,10 +129,10 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('purchase_order_id', $this->purchase_order_id);
-        $criteria->compare('payment_number', $this->payment_number, true);
-        $criteria->compare('payment_date', $this->payment_date, true);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.purchase_order_id', $this->purchase_order_id);
+        $criteria->compare('t.payment_number', $this->payment_number, true);
+        $criteria->compare('t.payment_date', $this->payment_date, true);
         $criteria->compare('supplier_id', $this->supplier_id);
         $criteria->compare('payment_amount', $this->payment_amount, true);
         $criteria->compare('notes', $this->notes, true);

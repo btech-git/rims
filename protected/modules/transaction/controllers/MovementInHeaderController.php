@@ -8,40 +8,29 @@ class MovementInHeaderController extends Controller {
      */
     public $layout = '//layouts/column1';
 
-    /**
-     * @return array action filters
-     */
-    /* public function filters()
-      {
-      return array(
-      'accessControl', // perform access control for CRUD operations
-      'postOnly + delete', // we only allow deletion via POST request
-      );
-      } */
-
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules() {
+    public function filters() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete', 'ajaxHtmlAddDetail', 'ajaxHtmlRemoveDetail', 'ajaxReceive', 'ajaxHtmlRemoveDetailAll', 'updateStatus', 'updateApproval', 'ajaxReturn', 'updateDelivered', 'updateReceived'),
-                'users' => array('Admin'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
+            'access',
         );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'delete' || 
+            $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'updateApproval' || 
+            $filterChain->action->id === 'updateReceived' || 
+            $filterChain->action->id === 'updateStatus' || 
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'update'
+        ) {
+            if (!(Yii::app()->user->checkAccess('movementInCreate')) || !(Yii::app()->user->checkAccess('movementInEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        $filterChain->run();
     }
 
     /**

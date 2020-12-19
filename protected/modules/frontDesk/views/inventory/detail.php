@@ -14,7 +14,7 @@ $this->breadcrumbs=array(
         <a class="button success right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/inventory/check';?>"><span class="fa fa-plus"></span>Stock Check</a>
         <?php } ?>
 
-        <?php $product = Product::model()->findByPk($_GET['id']); ?>
+        <?php //$product = Product::model()->findByPk($_GET['id']); ?>
         <h2>Stok Detail for <?php echo $product->name; ?></h2>
         <table style="border: 1px solid">
             <tr>
@@ -34,9 +34,19 @@ $this->breadcrumbs=array(
                 <td><?php echo $product->unit->name; ?></td>
             </tr>
         </table>
+        
         <h3>Total Stock : <span id="stockme"></span></h3>
         
-        <?php $warehouses = InventoryDetail::model()->with(array(
+        <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+            'tabs' => $detailTabs,
+            // additional javascript options for the tabs plugin
+            'options' => array(
+                'collapsible' => true,
+            ),
+            // set id for this widgets
+            'id' => 'view_tab',
+        )); ?>
+        <?php /*$warehouses = InventoryDetail::model()->with(array(
             'warehouse'=>array('condition'=>'status="Active"')
             ))->findAll(array(
             // $warehouses = InventoryDetail::model()->findAll(array(
@@ -136,7 +146,7 @@ $this->breadcrumbs=array(
                     'collapsible' => true,        
                 ),
                 'id'=>'MyTab-Menu1'
-            ));
+            ));*/
         ?> 
     </div>
 </div>

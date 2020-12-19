@@ -6,13 +6,13 @@ class PaymentInController extends Controller {
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('stockAdjustmentReport') ))
+            if (!(Yii::app()->user->checkAccess('paymentInReport') ))
                 $this->redirect(array('/site/login'));
         }
 

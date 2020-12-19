@@ -107,11 +107,11 @@ $this->menu=array(
                     <?php foreach ($productPrices as $key => $pp): ?>
                         <tr>
                             <td><?php echo $pp->supplier_id != "" ? $pp->supplier->name:''; ?></td>
-                            <td><?php echo $pp->quantity; ?></td>
-                            <td><?php echo $pp->purchase_price != "" ? $pp->purchase_price:'0'; ?></td>
-                            <td><?php echo $pp->purchase_date != "" ? $pp->purchase_date:'-'; ?></td>
-                            <td><?php echo $pp->hpp != "" ? $pp->hpp:'-'; ?></td>
-                            <td><?php echo $pp->hpp_average != "" ? $pp->hpp_average:'-'; ?></td>
+                            <td><?php echo Yii::app()->numberFormatter->format("#,##0", $pp->quantity); ?></td>
+                            <td><?php echo $pp->purchase_price != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->purchase_price) : '0'; ?></td>
+                            <td><?php echo $pp->purchase_date != "" ? $pp->purchase_date : '-'; ?></td>
+                            <td><?php echo $pp->hpp != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->hpp) : '-'; ?></td>
+                            <td><?php echo $pp->hpp_average != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->hpp_average) : '-'; ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

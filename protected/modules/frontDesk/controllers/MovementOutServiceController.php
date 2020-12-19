@@ -2,31 +2,28 @@
 
 class MovementOutServiceController extends Controller
 {
-	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
-	 */
-	public $layout='//layouts/column1';
+    /**
+     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
+     * using two-column layout. See 'protected/views/layouts/column2.php'.
+     */
+    public $layout='//layouts/column1';
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('deliveryCreate')))
-                $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('deliveryEdit')))
-                $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'view'
-                || $filterChain->action->id === 'memo'
-                || $filterChain->action->id === 'admin') {
-            if (!(Yii::app()->user->checkAccess('deliveryCreate') || Yii::app()->user->checkAccess('deliveryEdit')))
+        if (
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'delete' || 
+            $filterChain->action->id === 'registrationTransactionList' || 
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'update'
+        ) {
+            if (!(Yii::app()->user->checkAccess('movementServiceCreate')) || !(Yii::app()->user->checkAccess('movementServiceEdit')))
                 $this->redirect(array('/site/login'));
         }
 

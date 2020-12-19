@@ -12,13 +12,13 @@ class BodyRepairManagementController extends Controller
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'assignMechanic' || 
-            $filterChain->action->id === 'checkQuality' || 
-            $filterChain->action->id === 'viewDetailWorkOrder' || 
-            $filterChain->action->id === 'viewEmployeeDetail'
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'viewDetailWorkOrder' ||
+            $filterChain->action->id === 'viewEmployeeDetail' ||
+            $filterChain->action->id === 'assignMechanic' ||
+            $filterChain->action->id === 'checkQuality'
         ) {
-            if (!(Yii::app()->user->checkAccess('bodyRepairMechanicStaff')))
+            if (!(Yii::app()->user->checkAccess('idleManagement')))
                 $this->redirect(array('/site/login'));
         }
 

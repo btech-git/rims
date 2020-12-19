@@ -11,8 +11,15 @@ class BodyRepairMechanicController extends Controller
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'index' || $filterChain->action->id === 'viewDetailWorkOrder') {
-            if (!(Yii::app()->user->checkAccess('bodyRepairMechanicStaff')))
+        if (
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'viewDetailWorkOrder' ||
+            $filterChain->action->id === 'workOrderFinishService' ||
+            $filterChain->action->id === 'workOrderPauseService' ||
+            $filterChain->action->id === 'workOrderResumeService' ||
+            $filterChain->action->id === 'workOrderStartService'
+        ) {
+            if (!(Yii::app()->user->checkAccess('brMechanicCreate')) || !(Yii::app()->user->checkAccess('brMechanicEdit')))
                 $this->redirect(array('/site/login'));
         }
 

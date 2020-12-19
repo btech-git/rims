@@ -240,7 +240,12 @@ $('.search-form form').submit(function(){
                         'filter' => false,
                         'value' => 'CHtml::value($data, "customer.customer_type")',
                     ),
-                    'plate_number',
+                    array(
+                        'header' => 'Plate #',
+                        'name' => 'plate_number',
+                        'value' => 'CHtml::link($data->plate_number, array("/master/vehicle/view", "id"=>$data->id), array("target" => "_blank"))',
+                        'type'=>'raw',
+                    ),
                     array(
                         'header' => 'Car Make',
                         'name' => 'car_make_id',
