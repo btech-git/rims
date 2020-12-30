@@ -245,4 +245,15 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $this->total_price - $this->getTotalPayment();
     }
 
+    public function getRemainingDueDate() {
+        $date = date('Y-m-d');
+
+        $date1 = new DateTime($date);
+        $date2 = new DateTime($this->due_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
+
 }

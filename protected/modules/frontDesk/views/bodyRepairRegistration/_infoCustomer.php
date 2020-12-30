@@ -17,8 +17,8 @@
                 <?php echo CHtml::error($bodyRepairRegistration->header,'customer_id'); ?>
             </td>
             <td><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></td>
-            <td><?php echo CHtml::encode(CHtml::value($customer, 'email')); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($customer, 'address')); ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($customer, 'email')); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($customer, 'flat_rate')); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($customer, 'birthdate')); ?></td>
         </tr>

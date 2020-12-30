@@ -49,7 +49,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tr>
     <?php foreach ($sentRequestSummary->dataProvider->data as $header): ?>
         <tr class="items1">
-            <td class="width1-1"><?php echo CHtml::encode($header->sent_request_no); ?></td>
+            <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->sent_request_no), array("/transaction/transactionSentRequest/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
             <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->sent_request_date))); ?></td>
             <td class="width1-3"><?php echo CHtml::encode(($header->status_document)); ?></td>
             <td class="width1-4"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->estimate_arrival_date))); ?></td>

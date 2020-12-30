@@ -10,24 +10,37 @@ class Adjustment extends CComponent {
         $this->details = $details;
     }
 
-//    public function generateCodeNumber($currentMonth, $currentYear) {
-//        $adjustmentHeader = StockAdjustmentHeader::model()->find(array(
-//            'order' => 'id DESC',
-//                ));
-//
-//        if ($adjustmentHeader !== null)
-//            $this->header->setCodeNumber($adjustmentHeader->cn_ordinal, $adjustmentHeader->cn_month, $adjustmentHeader->cn_year);
-//
-//        $this->header->setCodeNumberByNext($currentMonth, $currentYear);
-//    }
+    public function addDetail($id, $branchId) {
+        $product = Product::model()->findByPk($id);
+        
+        if ($product !== null) {
+            $exist = false;
+
+            foreach ($this->details as $i => $detail) {
+                if ($product->id === $detail->product_id) {
+                    $exist = true;
+                    break;
+                }
+            }
+
+            if (!$exist) {
+                $detail = new StockAdjustmentDetail();
+                $detail->product_id = $product->id;
+                $detail->warehouse_id = $detail->getWarehouseId($id, $branchId);
+                $detail->quantity_current = $detail->getCurrentStock($id, $branchId);
+                $this->details[] = $detail;
+            }
+        }
+    }
 
     public function removeProductAt($index) {
         array_splice($this->details, $index, 1);
     }
 
     public function updateProducts() {
-        foreach ($this->details as $detail)
-            $detail->quantity_current = $detail->getCurrentStock($this->header->warehouse_id);
+        foreach ($this->details as $detail) {
+            $detail->quantity_current = $detail->getCurrentStock($this->header->branch_id);
+        }
     }
 
     public function validate() {
@@ -43,28 +56,6 @@ class Adjustment extends CComponent {
             $valid = false;
 
         return $valid;
-    }
-
-    public function addDetail($id) {
-        $product = Product::model()->findByPk($id);
-
-        if ($product !== null) {
-            $exist = false;
-
-            foreach ($this->details as $i => $detail) {
-                if ($product->id === $detail->product_id) {
-                    $exist = true;
-                    break;
-                }
-            }
-
-            if (!$exist) {
-                $detail = new StockAdjustmentDetail();
-                $detail->product_id = $product->id;
-                $detail->quantity_current = $detail->getCurrentStock($this->header->warehouse_id);
-                $this->details[] = $detail;
-            }
-        }
     }
 
     public function flush() {

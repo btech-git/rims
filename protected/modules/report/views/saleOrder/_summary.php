@@ -52,7 +52,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tr>
     <?php foreach ($saleOrderSummary->dataProvider->data as $header): ?>
         <tr class="items1">
-            <td class="width1-1"><?php echo CHtml::encode($header->sale_order_no); ?></td>
+            <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->sale_order_no), array("/transaction/transactionSaleOrder/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
             <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->sale_order_date))); ?></td>
             <td class="width1-3"><?php echo CHtml::encode(($header->status_document)); ?></td>
             <td class="width1-4"><?php echo CHtml::encode($header->payment_type); ?></td>

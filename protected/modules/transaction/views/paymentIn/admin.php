@@ -61,6 +61,7 @@ $('.search-form form').submit(function(){
                     <div class="search-form" style="display:none">
                         <?php $this->renderPartial('_search', array(
                             'model' => $model,
+                            'customerType' => $customerType,
                         )); ?>
                     </div><!-- search-form -->
                 </div>
@@ -69,7 +70,7 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'payment-in-grid',
-                    'dataProvider' => $model->search(),
+                    'dataProvider' => $dataProvider,
                     'filter' => NULL,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
@@ -104,6 +105,11 @@ $('.search-form form').submit(function(){
                             'header' => 'Invoice Status',
                             'name' => 'invoice_status',
                             'value' => '$data->invoice->status',
+                        ),
+                        array(
+                            'name' => 'user_id', 
+                            'header' => 'Pembuat',
+                            'value' => '$data->user->username'
                         ),
                     ),
                 )); ?>

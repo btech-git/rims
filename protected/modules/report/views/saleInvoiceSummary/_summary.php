@@ -41,7 +41,7 @@
         <tr class="items1">
             <td class="width1-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
             <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?></td>
-            <td class="width1-3"><?php echo CHtml::encode($header->invoice_number); ?></td>
+            <td class="width1-3"><?php echo CHtml::link(CHtml::encode($header->invoice_number), array("/transaction/invoiceHeader/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
             <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'customer.customer_type')); ?></td>
             <td class="width1-6" style="text-align: right"><?php echo CHtml::encode($header->vehicle->plate_number); ?></td>

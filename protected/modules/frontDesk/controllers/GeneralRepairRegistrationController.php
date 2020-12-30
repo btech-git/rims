@@ -1034,6 +1034,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $generalRepairRegistration = $this->instantiate($id);
             $this->loadState($generalRepairRegistration);
+            $branches = Branch::model()->findAll();
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
@@ -1041,6 +1042,7 @@ class GeneralRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailProduct', array(
                 'generalRepairRegistration' => $generalRepairRegistration,
+                'branches' => $branches,
             ), false, true);
         }
     }

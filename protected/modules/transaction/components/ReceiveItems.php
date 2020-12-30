@@ -269,66 +269,6 @@ class ReceiveItems extends CComponent {
                         $jurnalUmumOutstandingOrder->transaction_type = 'RCI';
                         $jurnalUmumOutstandingOrder->save();
 
-                        //save coa persediaan sub master category 
-//                    $coaPersediaan = Coa::model()->findByPk($detail->product->productSubMasterCategory->coaPersediaanBarangDagang->id);
-//                    $getCoaPersediaan = $coaPersediaan->code;
-//                    $coaPersediaanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPersediaan));
-//                    $jurnalUmumPersediaan = new JurnalUmum;
-//                    $jurnalUmumPersediaan->kode_transaksi = $this->header->receive_item_no;
-//                    $jurnalUmumPersediaan->tanggal_transaksi = $this->header->receive_item_date;
-//                    $jurnalUmumPersediaan->coa_id = $coaPersediaanWithCode->id;
-//                    $jurnalUmumPersediaan->branch_id = $this->header->recipient_branch_id;
-//                    $jurnalUmumPersediaan->total = $hppPrice;
-//                    $jurnalUmumPersediaan->debet_kredit = 'D';
-//                    $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumPersediaan->transaction_subject = $this->header->destinationBranch->name;
-//                    $jurnalUmumPersediaan->is_coa_category = 0;
-//                    $jurnalUmumPersediaan->transaction_type = 'RCI';
-//                    $jurnalUmumPersediaan->save();
-//
-//                    $coaMasterGroupInterbranch = Coa::model()->findByAttributes(array('code' => '107.00.000'));
-//                    $jurnalUmumMasterGroupInterbranch = new JurnalUmum;
-//                    $jurnalUmumMasterGroupInterbranch->kode_transaksi = $this->header->receive_item_no;
-//                    $jurnalUmumMasterGroupInterbranch->tanggal_transaksi = $this->header->receive_item_date;
-//                    $jurnalUmumMasterGroupInterbranch->coa_id = $coaMasterGroupInterbranch->coa_id;
-//                    $jurnalUmumMasterGroupInterbranch->branch_id = $this->header->recipient_branch_id;
-//                    $jurnalUmumMasterGroupInterbranch->total = $hppPrice;
-//                    $jurnalUmumMasterGroupInterbranch->debet_kredit = 'K';
-//                    $jurnalUmumMasterGroupInterbranch->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumMasterGroupInterbranch->transaction_subject = $this->header->destinationBranch->name;
-//                    $jurnalUmumMasterGroupInterbranch->is_coa_category = 1;
-//                    $jurnalUmumMasterGroupInterbranch->transaction_type = 'RCI';
-//                    $jurnalUmumMasterGroupInterbranch->save();
-//                    
-//                    $coaInterbranch = Coa::model()->findByPk($this->header->destinationBranch->coa_interbranch_inventory);
-//                    $getCoaInterbranch = $coaInterbranch->code;
-//                    $coaInterbranchWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInterbranch));
-//                    
-//                    $jurnalUmumMasterInterbranch = new JurnalUmum;
-//                    $jurnalUmumMasterInterbranch->kode_transaksi = $this->header->receive_item_no;
-//                    $jurnalUmumMasterInterbranch->tanggal_transaksi = $this->header->receive_item_date;
-//                    $jurnalUmumMasterInterbranch->coa_id = $coaInterbranchWithCode->coa_id;
-//                    $jurnalUmumMasterInterbranch->branch_id = $this->header->recipient_branch_id;
-//                    $jurnalUmumMasterInterbranch->total = $hppPrice;
-//                    $jurnalUmumMasterInterbranch->debet_kredit = 'K';
-//                    $jurnalUmumMasterInterbranch->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumMasterInterbranch->transaction_subject = $this->header->destinationBranch->name;
-//                    $jurnalUmumMasterInterbranch->is_coa_category = 1;
-//                    $jurnalUmumMasterInterbranch->transaction_type = 'RCI';
-//                    $jurnalUmumMasterInterbranch->save();
-//                    
-//                    $jurnalUmumInterbranch = new JurnalUmum;
-//                    $jurnalUmumInterbranch->kode_transaksi = $this->header->receive_item_no;
-//                    $jurnalUmumInterbranch->tanggal_transaksi = $this->header->receive_item_date;
-//                    $jurnalUmumInterbranch->coa_id = $coaInterbranchWithCode->id;
-//                    $jurnalUmumInterbranch->branch_id = $this->header->recipient_branch_id;
-//                    $jurnalUmumInterbranch->total = $hppPrice;
-//                    $jurnalUmumInterbranch->debet_kredit = 'K';
-//                    $jurnalUmumInterbranch->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumInterbranch->transaction_subject = $this->header->destinationBranch->name;
-//                    $jurnalUmumInterbranch->is_coa_category = 0;
-//                    $jurnalUmumInterbranch->transaction_type = 'RCI';
-//                    $jurnalUmumInterbranch->save();
                     }
                 } else if ($this->header->request_type == 'Consignment In') {
                     $criteria = new CDbCriteria;

@@ -49,7 +49,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tr>
     <?php foreach ($movementInSummary->dataProvider->data as $header): ?>
         <tr class="items1">
-            <td class="width1-1"><?php echo CHtml::encode($header->movement_in_number); ?></td>
+            <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->movement_in_number), array("/transaction/movementIn/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
             <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->date_posting))); ?></td>
             <td class="width1-3"><?php echo CHtml::encode($header->status); ?></td>
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'movementTypeChar')); ?></td>

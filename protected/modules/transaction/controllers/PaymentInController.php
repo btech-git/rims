@@ -42,6 +42,13 @@ class PaymentInController extends Controller {
         $model = $this->loadModel($id);
         $revisionHistories = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $model->id));
         $postImages = PaymentInImages::model()->findAllByAttributes(array('payment_in_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
+        
+        if (isset($_POST['SubmitFinish'])) {
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($model->invoice->registration_transaction_id);
+            $registrationTransaction->status = 'Finished';
+            $registrationTransaction->update(array('status'));
+        }
+
         $this->render('view', array(
             'model' => $model,
             'postImages' => $postImages,
@@ -67,7 +74,7 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
             'criteria' => $invoiceCriteria, 'sort' => array(
-                'defaultOrder' => 'invoice_date DESC',
+                'defaultOrder' => 'invoice_date ASC',
             ),
             'pagination' => array(
                 'pageSize' => 10,
@@ -361,11 +368,23 @@ class PaymentInController extends Controller {
 
         if (isset($_GET['PaymentIn']))
             $model->attributes = $_GET['PaymentIn'];
+        
+        $dataProvider = $model->search();
+        $dataProvider->criteria->with = array(
+            'customer',
+        );
+        $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '' ;
 
+        if (!empty($customerType)) {
+            $dataProvider->criteria->compare('customer.customer_type', $customerType);        
+        }
+        
         $this->render('admin', array(
             'model' => $model,
             'invoice' => $invoice,
             'invoiceDataProvider' => $invoiceDataProvider,
+            'customerType' => $customerType,
+            'dataProvider' => $dataProvider,
         ));
     }
 

@@ -5,16 +5,14 @@
 ?>
 
 <div class="wide form" id="advSearch">
-
-<?php $form=$this->beginWidget('CActiveForm', array(
+    <?php $form=$this->beginWidget('CActiveForm', array(
 	'action'=>Yii::app()->createUrl($this->route),
 	'method'=>'get',
-)); ?>
+    )); ?>
 
-	<div class="row">
-		<div class="small-12 medium-6 columns">
-
-		<!-- BEGIN FIELDS -->
+    <div class="row">
+        <div class="small-12 medium-6 columns">
+            <!-- BEGIN FIELDS -->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -45,7 +43,6 @@
                         <?php echo $form->label($model,'payment_date', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php //echo $form->textField($model,'payment_date'); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                             'model' => $model,
                             'attribute' => "payment_date",
@@ -53,56 +50,15 @@
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
                                 'changeYear'=>true,
-                                'yearRange'=>'1900:2020'
                             ),
                             'htmlOptions'=>array(
-//                                'value'=>date('Y-m-d'),
                                 'readonly' => true,
                             ),
                         )); ?>
                     </div>
                 </div>
-            </div>	
-        </div>
-        <div class="small-12 medium-6 columns">
-
-            <!-- BEGIN FIELDS -->
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php /*echo $form->label($model,'payment_amount', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model,'payment_amount',array('size'=>18,'maxlength'=>18)); ?>
-                    </div>
-                </div>
-            </div>	
-
-            <!-- BEGIN FIELDS -->
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->label($model,'notes', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model,'notes');*/ ?>
-                    </div>
-                </div>
-            </div>	-->
-
-            <!-- BEGIN FIELDS -->
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->label($model,'customer_id', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model,'customer_name'); ?>
-                    </div>
-                </div>
-            </div>	
-
-            <!-- BEGIN FIELDS -->
+            </div>
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -120,6 +76,45 @@
                     </div>
                 </div>
             </div>	
+        </div>
+            
+        <div class="small-12 medium-6 columns">
+            <!-- BEGIN FIELDS -->
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'customer_id', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->textField($model,'customer_name'); ?>
+                    </div>
+                </div>
+            </div>	
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'Customer Type', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::dropDownList('CustomerType', $customerType, array(
+                            'Individual' => 'Individual',
+                            'Company' => 'Company',
+                        ), array('empty' => '-- all --')); ?>
+                    </div>
+                </div>
+            </div>	
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'branch_id', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->dropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
+                    </div>
+                </div>
+            </div>
 
             <div class="field buttons text-right">
                 <?php echo CHtml::submitButton('Search',array('class'=>'button cbutton')); ?>

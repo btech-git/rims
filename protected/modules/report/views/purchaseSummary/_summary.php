@@ -39,7 +39,7 @@
         <tr class="items1">
             <td class="width1-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->purchase_order_date))); ?></td>
             <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->estimate_payment_date))); ?></td>
-            <td class="width1-3"><?php echo CHtml::encode($header->purchase_order_no); ?></td>
+            <td class="width1-3"><?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
             <td class="width1-5" style="text-align: right"><?php echo CHtml::encode($header->payment_type); ?></td>
             <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'mainBranch.code')); ?></td>

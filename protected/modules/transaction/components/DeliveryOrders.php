@@ -297,177 +297,6 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumPersediaan->transaction_type = 'DO';
                 $jurnalUmumPersediaan->save();
 
-                //}
-
-                /* $salesOrder = TransactionSalesOrder::model()->findByPk($this->header->sales_order_id);
-                  foreach($salesOrder->transactionSalesOrderDetails as $key =>$soDetail )
-                  {
-                  //$coa = $soDetail->product->productSubMasterCategory->coa->id;
-                  $cPenjualan = CoaDetail::model()->findByAttributes(array('coa_id'=>$soDetail->product->productSubMasterCategory->coaPenjualanBarangDagang->id,'branch_id'=>$soDetail->salesOrder->requester_branch_id));
-                  if(count($cPenjualan)!= 0){
-                  if($soDetail->product->productSubMasterCategory->coaPenjualanBarangDagang->normal_balance == "D"){
-                  $cPenjualan->debit += $soDetail->subtotal;
-                  }
-                  else{
-                  $cPenjualan->credit += $soDetail->subtotal;
-                  }
-                  //$cPersediaan->save(false);
-                  }
-                  else{
-                  $cPenjualan = new CoaDetail;
-                  $cPenjualan->coa_id = $soDetail->product->productSubMasterCategory->coaPenjualanBarangDagang->id;
-                  $cPenjualan->branch_id = $salesOrder->requester_branch_id;
-                  if($soDetail->product->productSubMasterCategory->coaPenjualanBarangDagang->normal_balance == "D"){
-                  $cPenjualan->debit += $soDetail->subtotal;
-                  }
-                  else{
-                  $cPenjualan->credit += $soDetail->subtotal;
-                  }
-
-                  }
-                  $cPenjualan->save(false);
-
-                  $cDiskon = CoaDetail::model()->findByAttributes(array('coa_id'=>$soDetail->product->productSubMasterCategory->coaDiskonPenjualan->id,'branch_id'=>$salesOrder->requester_branch_id));
-                  if(count($cDiskon)!=0){
-                  if($soDetail->product->productSubMasterCategory->coaDiskonPenjualan->normal_balance == "D"){
-                  $cDiskon->debit += $soDetail->discount;
-                  }
-                  else{
-                  $cDiskon->credit += $soDetail->discount;
-                  }
-
-                  }
-                  else{
-                  $cDiskon = new CoaDetail;
-                  $cDiskon->coa_id = $soDetail->product->productSubMasterCategory->coaDiskonPenjualan->id;
-                  $cDiskon->branch_id = $salesOrder->requester_branch_id;
-                  if($soDetail->product->productSubMasterCategory->coaDiskonPenjualan->normal_balance == "D"){
-                  $cDiskon->debit += $soDetail->discount;
-                  }
-                  else{
-                  $cDiskon->credit += $soDetail->discount;
-                  }
-
-                  }
-                  $cDiskon->save(false);
-                  if($salesOrder->ppn == 1){
-                  $coaPpn = Coa::model()->findByPk(287);
-                  $cPpnKeluaran = CoaDetail::model()->findByAttributes(array('coa_id'=>$coaPpn->id,'branch_id'=>$salesOrder->requester_branch_id));
-                  if(count($cPpnKeluaran)!=0){
-                  if($coaPpn->normal_balance == "D"){
-                  $cPpnKeluaran->debit += ($soDetail->subtotal - $soDetail->discount)*0.10;
-                  }
-                  else{
-                  $cPpnKeluaran->credit += ($soDetail->subtotal - $soDetail->discount)*0.10;
-                  }
-                  }
-                  else{
-                  $cPpnKeluaran = new CoaDetail;
-                  $cPpnKeluaran->coa_id = 287;
-                  $cPpnKeluaran->branch_id = $salesOrder->requester_branch_id;
-                  if($coaPpn->normal_balance == "D"){
-                  $cPpnKeluaran->debit += ($soDetail->subtotal - $soDetail->discount)*0.10;
-                  }
-                  else{
-                  $cPpnKeluaran->credit += ($soDetail->subtotal - $soDetail->discount)*0.10;
-                  }
-                  }
-                  $cPpnKeluaran->save(false);
-                  $jurnalUmumPpn = new JurnalUmum;
-                  $jurnalUmumPpn->kode_transaksi = $salesOrder->sale_order_no;
-                  $jurnalUmumPpn->tanggal_transaksi = $salesOrder->sale_order_date;
-                  $jurnalUmumPpn->coa_id = 287;
-                  $jurnalUmumPpn->total = ($soDetail->subtotal - $soDetail->discount)*0.10;
-                  $jurnalUmumPpn->debet_kredit = 'K';
-                  $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-                  $jurnalUmumPpn->save();
-                  }
-
-                  $jurnalUmumPersediaan = new JurnalUmum;
-                  $jurnalUmumPersediaan->kode_transaksi = $salesOrder->sale_order_no;
-                  $jurnalUmumPersediaan->tanggal_transaksi = $salesOrder->sale_order_date;
-                  $jurnalUmumPersediaan->coa_id = $soDetail->product->productSubMasterCategory->coaPenjualanBarangDagang->id;
-                  $jurnalUmumPersediaan->total = $soDetail->subtotal;
-                  $jurnalUmumPersediaan->debet_kredit = 'K';
-                  $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                  $jurnalUmumPersediaan->save();
-
-                  $jurnalUmumDiskon = new JurnalUmum;
-                  $jurnalUmumDiskon->kode_transaksi = $salesOrder->sale_order_no;
-                  $jurnalUmumDiskon->tanggal_transaksi = $salesOrder->sale_order_date;
-                  $jurnalUmumDiskon->coa_id = $soDetail->product->productSubMasterCategory->coaDiskonPenjualan->id;
-                  $jurnalUmumDiskon->total = $soDetail->discount;
-                  $jurnalUmumDiskon->debet_kredit = 'K';
-                  $jurnalUmumDiskon->tanggal_posting = date('Y-m-d');
-                  $jurnalUmumDiskon->save();
-
-                  $coaHpp = CoaDetail::model()->findByAttributes(array('coa_id'=>$soDetail->product->productSubMasterCategory->coaHpp->id,'branch_id'=>$salesOrder->requester_branch_id));
-                  if(count($coaHpp)!=0){
-                  $coaHpp->debit += $salesOrder->total_price;
-                  }
-                  else{
-                  $coaHpp = new CoaDetail;
-                  $coaHpp->coa_id = $soDetail->product->productSubMasterCategory->coaHpp->id;
-                  $coaHpp->branch_id = $salesOrder->requester_branch_id;
-                  $coaHpp->debit += $salesOrder->total_price;
-                  }
-                  $coaHpp->save(false);
-                  $jurnalUmum = new JurnalUmum;
-                  $jurnalUmum->kode_transaksi = $salesOrder->sale_order_no;
-                  $jurnalUmum->tanggal_transaksi = $salesOrder->sale_order_date;
-                  $jurnalUmum->coa_id = $soDetail->product->productSubMasterCategory->coaHpp->id;
-                  $jurnalUmum->total = $salesOrder->total_price;
-                  $jurnalUmum->debet_kredit = 'D';
-                  $jurnalUmum->tanggal_posting = date('Y-m-d');
-                  $jurnalUmum->save();
-
-
-                  }
-                  if($salesOrder->payment_type == 'Cash'){
-                  $coaCash = CoaDetail::model()->findByAttributes(array('coa_id'=>3,'branch_id'=>$salesOrder->requester_branch_id));
-                  if(count($coaCash)!=0){
-                  $coaCash->debit += $salesOrder->total_price;
-                  }
-                  else{
-                  $coaCash = new CoaDetail;
-                  $coaCash->coa_id = 3;
-                  $coaCash->branch_id = $salesOrder->requester_branch_id;
-                  $coaCash->debit += $salesOrder->total_price;
-                  }
-                  $coaCash->save(false);
-                  $jurnalUmum = new JurnalUmum;
-                  $jurnalUmum->kode_transaksi = $salesOrder->sale_order_no;
-                  $jurnalUmum->tanggal_transaksi = $salesOrder->sale_order_date;
-                  $jurnalUmum->coa_id = 3;
-                  $jurnalUmum->total = $salesOrder->total_price;
-                  $jurnalUmum->debet_kredit = 'D';
-                  $jurnalUmum->tanggal_posting = date('Y-m-d');
-                  $jurnalUmum->save();
-                  }
-                  elseif($salesOrder->payment_type == 'Credit'){
-                  if($salesOrder->customer->coa != "")
-                  {
-                  $coaCredit = CoaDetail::model()->findByAttributes(array('coa_id'=>$salesOrder->customer->coa->id,'branch_id'=>$salesOrder->requester_branch_id));
-                  if(count($coaCredit)!=0){
-                  $coaCredit->debit += $salesOrder->total_price;
-                  }
-                  else{
-                  $coaCredit = new CoaDetail;
-                  $coaCredit->coa_id = $salesOrder->customer->coa->id;
-                  $coaCredit->branch_id = $salesOrder->requester_branch_id;
-                  $coaCredit->debit += $salesOrder->total_price;
-                  }
-                  $coaCredit->save(false);
-                  $jurnalUmum = new JurnalUmum;
-                  $jurnalUmum->kode_transaksi = $salesOrder->sale_order_no;
-                  $jurnalUmum->tanggal_transaksi = $salesOrder->sale_order_date;
-                  $jurnalUmum->coa_id = $salesOrder->customer->coa->id;
-                  $jurnalUmum->total = $salesOrder->total_price;
-                  $jurnalUmum->debet_kredit = 'D';
-                  $jurnalUmum->tanggal_posting = date('Y-m-d');
-                  $jurnalUmum->save();
-                  }
-                  } */
             } else if ($this->header->request_type == 'Sent Request') {
                 $criteria = new CDbCriteria;
                 $criteria->together = 'true';
@@ -593,20 +422,14 @@ class DeliveryOrders extends CComponent {
                 $criteria->with = array('deliveryOrder');
                 $criteria->condition = "deliveryOrder.consignment_out_id =" . $this->header->consignment_out_id . " AND delivery_order_id != " . $this->header->id;
                 $deliveryItemDetails = TransactionDeliveryOrderDetail::model()->findAll($criteria);
-                //$criteria = new CDbCriteria;
-//				$quantity = 0;
-//				//print_r($receiveItemDetails);
-//				foreach($deliveryItemDetails as $deliveryItemDetail)
-//					$quantity += $deliveryItemDetail->quantity_delivery;
 
                 $consignmentDetail = ConsignmentOutDetail::model()->findByAttributes(array('id' => $detail->consignment_out_detail_id, 'consignment_out_id' => $this->header->consignment_out_id));
-
                 $consignmentDetail->qty_request_left = $detail->quantity_request - $detail->quantity_delivery - $consignmentDetail->getTotalQuantityDelivered();
                 $consignmentDetail->qty_sent = $detail->quantity_delivery + $consignmentDetail->getTotalQuantityDelivered();
                 $left_quantity = $consignmentDetail->qty_request_left;
 
                 $consignmentDetail->save(false);
-                $consignment = ConsignmentOutHeader::model()->findByPk($this->header->consignment_out_id);
+//                $consignment = ConsignmentOutHeader::model()->findByPk($this->header->consignment_out_id);
                 $branch = Branch::model()->findByPk($this->header->sender_branch_id);
 
                 //coa piutang ganti dengan consignment Inventory

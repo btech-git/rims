@@ -4,6 +4,27 @@ class CashDailySummaryController extends Controller {
 
     public $layout = '//layouts/column1';
 
+    public function filters() {
+        return array(
+            'access',
+        );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+            $filterChain->action->id === 'summary' || 
+            $filterChain->action->id === 'approval' || 
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'view'
+        ) {
+            if (!(Yii::app()->user->checkAccess('accountingReport')) || !(Yii::app()->user->checkAccess('financeReport')))
+                $this->redirect(array('/site/login'));
+        }
+
+        $filterChain->run();
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

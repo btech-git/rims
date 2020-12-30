@@ -466,12 +466,15 @@ class GeneralRepairRegistration extends CComponent {
             if ($this->header->repair_type == 'BR') {
                 $serviceDetail->status = 'Finished';
             } else {
-                $registrationRealization = new RegistrationRealizationProcess();
-                $registrationRealization->registration_transaction_id = $this->header->id;
-                $registrationRealization->name = $serviceDetail->service->name;
-                $registrationRealization->service_id = $serviceDetail->service_id;
-                $registrationRealization->detail = 'Pending';
-                $registrationRealization->save();
+                $registrationRealizationService = RegistrationRealizationProcess::model()->findByAttributes(array('registration_transaction_id' => $this->header->id, 'service_id' => $serviceDetail->service_id));
+                if (empty($registrationRealizationService)) {
+                    $registrationRealization = new RegistrationRealizationProcess();
+                    $registrationRealization->registration_transaction_id = $this->header->id;
+                    $registrationRealization->name = $serviceDetail->service->name;
+                    $registrationRealization->service_id = $serviceDetail->service_id;
+                    $registrationRealization->detail = 'Pending';
+                    $registrationRealization->save();
+                }
             }
         }
 

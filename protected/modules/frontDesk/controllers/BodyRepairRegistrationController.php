@@ -1367,8 +1367,11 @@ class BodyRepairRegistrationController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $bodyRepairRegistration->removeProductDetailAt($index);
             
+            $branches = Branch::model()->findAll(); 
+            
             $this->renderPartial('_detailProduct', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
+                'branches' => $branches,
             ), false, true);
         }
     }

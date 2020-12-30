@@ -205,12 +205,14 @@ class PurchaseOrders extends CComponent {
             if ($this->header->payment_type == "Cash") {
                 $getCoaKas = '101.00.000';
                 $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+                $subTotal = $this->header->subtotal;
+                
                 $jurnalUmumKas = new JurnalUmum;
                 $jurnalUmumKas->kode_transaksi = $this->header->purchase_order_no;
                 $jurnalUmumKas->tanggal_transaksi = $this->header->purchase_order_date;
                 $jurnalUmumKas->coa_id = $coaKasWithCode->id;
                 $jurnalUmumKas->branch_id = $this->header->main_branch_id;
-                $jurnalUmumKas->total = $this->header->subtotal;
+                $jurnalUmumKas->total = $subTotal;
                 $jurnalUmumKas->debet_kredit = 'K';
                 $jurnalUmumKas->tanggal_posting = date('Y-m-d');
                 $jurnalUmumKas->transaction_subject = $this->header->supplier->name;
@@ -224,7 +226,7 @@ class PurchaseOrders extends CComponent {
                 $jurnalUmumPayable->tanggal_transaksi = $this->header->purchase_order_date;
                 $jurnalUmumPayable->coa_id = $getCoaPayableWithCode->id;
                 $jurnalUmumPayable->branch_id = $this->header->main_branch_id;
-                $jurnalUmumPayable->total = $this->header->subtotal;
+                $jurnalUmumPayable->total = $subTotal;
                 $jurnalUmumPayable->debet_kredit = 'D';
                 $jurnalUmumPayable->tanggal_posting = date('Y-m-d');
                 $jurnalUmumPayable->transaction_subject = $this->header->supplier->name;
@@ -240,7 +242,7 @@ class PurchaseOrders extends CComponent {
                 $jurnalUmumOutstanding->tanggal_transaksi = $this->header->purchase_order_date;
                 $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
                 $jurnalUmumOutstanding->branch_id = $this->header->main_branch_id;
-                $jurnalUmumOutstanding->total = $this->header->subtotal;
+                $jurnalUmumOutstanding->total = $subTotal;
                 $jurnalUmumOutstanding->debet_kredit = 'D';
                 $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
                 $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
@@ -256,7 +258,7 @@ class PurchaseOrders extends CComponent {
                 $jurnalUmumHutang->tanggal_transaksi = $this->header->purchase_order_date;
                 $jurnalUmumHutang->coa_id = $coaHutangWithCode->id;
                 $jurnalUmumHutang->branch_id = $this->header->main_branch_id;
-                $jurnalUmumHutang->total = $this->header->subtotal;
+                $jurnalUmumHutang->total = $subTotal;
                 $jurnalUmumHutang->debet_kredit = 'K';
                 $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
                 $jurnalUmumHutang->transaction_subject = $this->header->supplier->name;

@@ -137,9 +137,8 @@ class Invoices extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
-        //echo "valid";
 
         $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('invoice_id' => $this->header->id));
         $detail_id = array();
@@ -153,9 +152,7 @@ class Invoices extends CComponent {
             $detail->invoice_id = $this->header->id;
             $valid = $detail->save() && $valid;
             $new_detail[] = $detail->id;
-            //echo 'test';
         }
-
 
         //delete pricelist
         $delete_array = array_diff($detail_id, $new_detail);
@@ -164,7 +161,6 @@ class Invoices extends CComponent {
             $criteria->addInCondition('id', $delete_array);
             InvoiceDetail::model()->deleteAll($criteria);
         }
-
 
         return $valid;
     }

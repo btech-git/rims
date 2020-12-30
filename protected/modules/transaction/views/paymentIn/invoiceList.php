@@ -103,10 +103,16 @@
                 $(this).removeClass( "selected" );
             });
         }',
+        'rowCssClassExpression' => '($data->remainingDueDate < 0) ? "hijau" : "merah"',
         'columns' => array(
             'invoice_number',
             'invoice_date',
             'due_date',
+            array(
+                'header' => 'Days +/-', 
+                'type' => 'raw',
+                'value' => '$data->remainingDueDate',
+            ),
             'status',
             array(
                 'name' => 'reference_type', 

@@ -509,13 +509,14 @@ class TransactionSalesOrderController extends Controller {
 
                     foreach ($salesOrder->transactionSalesOrderDetails as $key => $soDetail) {
                         $getHpp = ProductPrice::model()->findByAttributes(array('product_id' => $soDetail->product_id), array('order' => 'purchase_date DESC'));
+                        $hppPrice = $getHpp->hpp * $soDetail->quantity;
                         $coaMasterGroupHpp = Coa::model()->findByAttributes(array('code' => '520.00.000'));
                         $jurnalUmumMasterGroupHpp = new JurnalUmum;
                         $jurnalUmumMasterGroupHpp->kode_transaksi = $salesOrder->sale_order_no;
                         $jurnalUmumMasterGroupHpp->tanggal_transaksi = $salesOrder->sale_order_date;
                         $jurnalUmumMasterGroupHpp->coa_id = $coaMasterGroupHpp->id;
                         $jurnalUmumMasterGroupHpp->branch_id = $salesOrder->requester_branch_id;
-                        $jurnalUmumMasterGroupHpp->total = empty($getHpp) ? 0 : $getHpp->hpp * $soDetail->quantity;
+                        $jurnalUmumMasterGroupHpp->total = empty($getHpp) ? 0 : $hppPrice;
                         $jurnalUmumMasterGroupHpp->debet_kredit = 'D';
                         $jurnalUmumMasterGroupHpp->tanggal_posting = date('Y-m-d');
                         $jurnalUmumMasterGroupHpp->transaction_subject = $salesOrder->customer->name;
@@ -533,7 +534,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumMasterHpp->tanggal_transaksi = $salesOrder->sale_order_date;
                         $jurnalUmumMasterHpp->coa_id = $coaHppWithCode->coa_id;
                         $jurnalUmumMasterHpp->branch_id = $salesOrder->requester_branch_id;
-                        $jurnalUmumMasterHpp->total = empty($getHpp) ? 0 : $getHpp->hpp * $soDetail->quantity;
+                        $jurnalUmumMasterHpp->total = empty($getHpp) ? 0 : $hppPrice;
                         $jurnalUmumMasterHpp->debet_kredit = 'D';
                         $jurnalUmumMasterHpp->tanggal_posting = date('Y-m-d');
                         $jurnalUmumMasterHpp->transaction_subject = $salesOrder->customer->name;
@@ -546,7 +547,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumHpp->tanggal_transaksi = $salesOrder->sale_order_date;
                         $jurnalUmumHpp->coa_id = $coaHppWithCode->id;
                         $jurnalUmumHpp->branch_id = $salesOrder->requester_branch_id;
-                        $jurnalUmumHpp->total = empty($getHpp) ? 0 : $getHpp->hpp * $soDetail->quantity;
+                        $jurnalUmumHpp->total = empty($getHpp) ? 0 : $hppPrice;
                         $jurnalUmumHpp->debet_kredit = 'D';
                         $jurnalUmumHpp->tanggal_posting = date('Y-m-d');
                         $jurnalUmumHpp->transaction_subject = $salesOrder->customer->name;
@@ -650,7 +651,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumMasterGroupInventory->tanggal_transaksi = $salesOrder->sale_order_date;
                         $jurnalUmumMasterGroupInventory->coa_id = $coaMasterGroupInventory->id;
                         $jurnalUmumMasterGroupInventory->branch_id = $salesOrder->requester_branch_id;
-                        $jurnalUmumMasterGroupInventory->total = empty($getHpp) ? 0 : $getHpp->hpp * $soDetail->quantity;
+                        $jurnalUmumMasterGroupInventory->total = empty($getHpp) ? 0 : $hppPrice;
                         $jurnalUmumMasterGroupInventory->debet_kredit = 'K';
                         $jurnalUmumMasterGroupInventory->tanggal_posting = date('Y-m-d');
                         $jurnalUmumMasterGroupInventory->transaction_subject = $salesOrder->customer->name;
@@ -667,7 +668,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumMasterInventory->tanggal_transaksi = $salesOrder->sale_order_date;
                         $jurnalUmumMasterInventory->coa_id = $coaInventoryWithCode->coa_id;
                         $jurnalUmumMasterInventory->branch_id = $salesOrder->requester_branch_id;
-                        $jurnalUmumMasterInventory->total = empty($getHpp) ? 0 : $getHpp->hpp * $soDetail->quantity;
+                        $jurnalUmumMasterInventory->total = empty($getHpp) ? 0 : $hppPrice;
                         $jurnalUmumMasterInventory->debet_kredit = 'K';
                         $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
                         $jurnalUmumMasterInventory->transaction_subject = $salesOrder->customer->name;
@@ -680,7 +681,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumInventory->tanggal_transaksi = $salesOrder->sale_order_date;
                         $jurnalUmumInventory->coa_id = $coaInventoryWithCode->id;
                         $jurnalUmumInventory->branch_id = $salesOrder->requester_branch_id;
-                        $jurnalUmumInventory->total = empty($getHpp) ? 0 : $getHpp->hpp * $soDetail->quantity;
+                        $jurnalUmumInventory->total = empty($getHpp) ? 0 : $hppPrice;
                         $jurnalUmumInventory->debet_kredit = 'K';
                         $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
                         $jurnalUmumInventory->transaction_subject = $salesOrder->customer->name;
