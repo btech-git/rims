@@ -208,7 +208,7 @@ class User extends CActiveRecord {
 
         $auth = Yii::app()->authManager;
 
-        $authItems = array_keys($auth->getAuthItems(null, $this->id));
+        $authItems = array_keys($auth->getAuthItems(null, $this->id, false));
         $this->roles = empty($authItems) ? array() : array_combine($authItems, $authItems);
     }
 
@@ -222,7 +222,7 @@ class User extends CActiveRecord {
                 $auth->assign($role, $this->id);
             }
         } else {
-            $authItems = array_keys($auth->getAuthItems(null, $this->id));
+            $authItems = array_keys($auth->getAuthItems(null, $this->id, false));
             $assignedRoles = empty($authItems) ? array() : array_combine($authItems, $authItems);
 
             foreach ($this->roles as $role) {

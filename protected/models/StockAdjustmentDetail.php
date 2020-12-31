@@ -148,16 +148,16 @@ class StockAdjustmentDetail extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
-    public function getWarehouseId($productId = null, $branchId = null) {
+    public function getWarehouseId($branchId = null) {
         $sql = "
             SELECT i.warehouse_id
             FROM " . Inventory::model()->tableName() . " i
-            INNER JOIN " . Warehouse::model()->tableName() . " w
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
             WHERE i.product_id = :product_id AND w.branch_id = :branch_id
         ";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':product_id' => $productId,
+            ':product_id' => $this->product_id,
             ':branch_id' => $branchId,
         ));
 

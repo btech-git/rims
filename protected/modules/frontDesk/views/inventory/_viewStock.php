@@ -59,25 +59,27 @@
 <script>
     $('ul#<?php echo $pagerId; ?> > li').click(function(e) {
         e.preventDefault();
-        var url = '<?php echo CController::createUrl('ajaxHtmlUpdateInventoryDetailGrid', array('productId' => $productId, 'branchId' => $branchId, 'currentPage' => '')); ?>';
-        var pageNumber = 0;
-        var num = 1;
-        if ($(this).hasClass('previous')) {
-            num = parseInt($(this).closest('ul').find('li.selected a').text()) - 1;
-        } else if ($(this).hasClass('next')) {
-            num = parseInt($(this).closest('ul').find('li.selected a').text()) + 1;
-        } else {
-            num = parseInt($('a', this).text());
-        }
-        pageNumber = num - 1;
-        url += pageNumber;
-        var el = this;
-        $.ajax({
-            type: 'POST',
-            url: url,
-            success: function(html) {
-                $(el).closest('div.ui-tabs-panel').html(html);
+        if (!$(this).hasClass('hidden')) {
+            var url = '<?php echo CController::createUrl('ajaxHtmlUpdateInventoryDetailGrid', array('productId' => $productId, 'branchId' => $branchId, 'currentPage' => '')); ?>';
+            var pageNumber = 0;
+            var num = 1;
+            if ($(this).hasClass('previous')) {
+                num = parseInt($(this).closest('ul').find('li.selected a').text()) - 1;
+            } else if ($(this).hasClass('next')) {
+                num = parseInt($(this).closest('ul').find('li.selected a').text()) + 1;
+            } else {
+                num = parseInt($('a', this).text());
             }
-        });
+            pageNumber = num - 1;
+            url += pageNumber;
+            var el = this;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function(html) {
+                    $(el).closest('div.ui-tabs-panel').html(html);
+                }
+            });
+        }
     });
 </script>

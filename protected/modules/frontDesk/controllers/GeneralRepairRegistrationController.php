@@ -980,7 +980,7 @@ class GeneralRepairRegistrationController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
 
             $generalRepairRegistration = $this->instantiate($id);
-            $this->loadState($generalRepairRegistration);
+            $this->loadStateDetails($generalRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
@@ -1033,7 +1033,7 @@ class GeneralRepairRegistrationController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
 
             $generalRepairRegistration = $this->instantiate($id);
-            $this->loadState($generalRepairRegistration);
+            $this->loadStateDetails($generalRepairRegistration);
             $branches = Branch::model()->findAll();
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -1205,9 +1205,9 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function loadStateDetails($generalRepairRegistration) {
-        if (isset($_POST['RegistrationTransaction'])) {
-            $generalRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
-        }
+//        if (isset($_POST['RegistrationTransaction'])) {
+//            $generalRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
+//        }
 
         if (isset($_POST['RegistrationQuickService'])) {
             foreach ($_POST['RegistrationQuickService'] as $i => $item) {
