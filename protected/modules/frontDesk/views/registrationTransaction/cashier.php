@@ -17,10 +17,10 @@ Yii::app()->clientScript->registerScript('search', "
 	$('.search-form').slideToggle(600);
 	$('.bulk-action').toggle();
 	$(this).toggleClass('active');
-	if($(this).hasClass('active')){
-		$(this).text('');
-	}else {
-		$(this).text('Customer Filter');
+	if ($(this).hasClass('active')){
+            $(this).text('');
+	} else {
+            $(this).text('Customer Filter');
 	}
 	return false;
 });*/
@@ -43,11 +43,12 @@ $('form').submit(function(){
                     <table>
                         <tr>
                             <td style="text-align: center; font-weight: bold">Transaction #</td>
-                            <td style="text-align: center; font-weight: bold">Date</td>
+                            <td style="text-align: center; font-weight: bold" colspan="2">Date</td>
                             <td style="text-align: center; font-weight: bold">Plate #</td>
                             <td style="text-align: center; font-weight: bold">Car Make</td>
                             <td style="text-align: center; font-weight: bold">Car Model</td>
                         </tr>
+                        
                         <tr>
                             <td>
                                 <?php echo CHtml::activeTextField($model, 'transaction_number', array(
@@ -55,20 +56,22 @@ $('form').submit(function(){
                                         $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
                                             transaction_number: $(this).val(),
                                             transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                             transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
                                             status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
+                            
                             <td>
-                                <div class="medium-6 columns">
+                                <div>
                                     <?php $attribute = 'transaction_date'; ?>
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model'=>$model,
@@ -91,12 +94,16 @@ $('form').submit(function(){
                                                     status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                                     repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                                     branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                                    customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                                 } } });
                                             ',
                                         ),
                                     )); ?>
                                 </div>
-                                <div class="medium-6 columns">
+                            </td>
+                            
+                            <td>                                
+                                <div>
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'model'=>$model,
                                         'attribute'=>$attribute."_to",
@@ -118,12 +125,14 @@ $('form').submit(function(){
                                                     status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                                     repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                                     branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                                    customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                                 } } });
                                             ',
                                         ),
                                     )); ?>
                                 </div>
                             </td>
+                            
                             <td>
                                 <?php echo CHtml::activeTextField($model, 'plate_number', array(
                                     'onchange' => '
@@ -138,10 +147,12 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
+                            
                             <td>
                                 <?php echo CHtml::activeDropDownList($model, 'car_make_code', CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
                                     'empty' => '-- All --',
@@ -156,6 +167,7 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                         } } });
                                     ' . CHtml::ajax(array(
                                         'type' => 'GET',
@@ -164,6 +176,7 @@ $('form').submit(function(){
                                     )),
                                 )); ?>
                             </td>
+                            
                             <td>
                                 <div id="car_model">
                                     <?php echo CHtml::activeDropDownList($model, 'car_model_code', CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array(
@@ -179,19 +192,23 @@ $('form').submit(function(){
                                                 status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                                 repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                                 branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                                customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                             } } });
                                         ',
                                     )); ?>
                                 </div>
                             </td>
                         </tr>
+                        
                         <tr>
                             <td style="text-align: center; font-weight: bold">WO #</td>
-                            <td style="text-align: center; font-weight: bold">Customer</td>
+                            <td style="text-align: center; font-weight: bold">Customer Name</td>
+                            <td style="text-align: center; font-weight: bold">Customer Type</td>
                             <td style="text-align: center; font-weight: bold">WO Status</td>
                             <td style="text-align: center; font-weight: bold">Type</td>
                             <td style="text-align: center; font-weight: bold">Branch</td>
                         </tr>
+                        
                         <tr>
                             <td>
                                 <?php echo CHtml::activeTextField($model, 'work_order_number', array(
@@ -206,10 +223,12 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
+                            
                             <td>
                                 <?php echo CHtml::activeTextField($model, 'customer_name', array(
                                     'onchange' => '
@@ -224,10 +243,36 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_type: $("#' . CHtml::activeId($model, 'customer_type') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
+                            
+                            <td>
+                                <?php echo CHtml::activeDropDownList($model, 'customer_type', array(
+                                    '' => '-- All --',
+                                    'Company' => 'Company',
+                                    'Individual' => 'Individual',
+                                ),  array(
+                                    'onchange' => '
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
+                                            customer_type: $(this).val(),
+                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
+                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
+                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
+                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
+                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
+                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
+                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                        } } });
+                                    ',
+                                )); ?>
+                            </td>
+                            
                             <td>
                                 <?php echo CHtml::activeDropDownList($model, 'status', array(
                                     '' => '-- All --',
@@ -247,10 +292,12 @@ $('form').submit(function(){
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
+                            
                             <td>
                                 <?php echo CHtml::activeDropDownList($model, 'repair_type', array(
                                     '' => '-- All --',
@@ -268,10 +315,12 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
+                            
                             <td>
                                 <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
                                     'empty' => '-- All --',
@@ -286,6 +335,7 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($model, 'status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -295,6 +345,7 @@ $('form').submit(function(){
                 </div>
             </div>
         </div>
+        
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'registration-transaction-grid',

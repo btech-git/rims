@@ -454,6 +454,7 @@ class RegistrationTransactionController extends Controller {
 
         $customerCriteria = new CDbCriteria;
         $customerCriteria->compare('name', $customer->name, true);
+        $customerCriteria->compare('customer_type', $customer->customer_type, true);
         $customerCriteria->compare('email', $customer->email . '%', true, 'AND', false);
 
         $customerDataProvider = new CActiveDataProvider('Customer', array(

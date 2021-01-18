@@ -199,8 +199,7 @@
                     </div>
                     <div class="small-8 columns">
                         <?php //echo $form->textField($model,'branch_id',array('size'=>50,'maxlength'=>50)); ?>
-                        <?php
-                        echo $form->dropDownlist($model, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]',
+                        <?php echo $form->dropDownlist($model, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]',
                             'onchange' => 'jQuery.ajax({
                                     type: "POST",
                                     url: "' . CController::createUrl('ajaxGetCompanyBank') . '",
@@ -227,7 +226,7 @@
                         $branch = Branch::model()->findByPk($branchId);
                         $company = Company::model()->findByPk($branch->company_id);
                         ?>
-                        <?php echo $form->dropDownlist($model, 'company_bank_id', $company == NULL ? array() : CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name')), 'id', 'bank.name'), array('prompt' => '[--Select Company Bank--]')); ?>
+                        <?php echo $form->dropDownlist($model, 'company_bank_id', $company == NULL ? array() : CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array('prompt' => '[--Select Company Bank--]')); ?>
                         <?php echo $form->error($model, 'company_bank_id'); ?>
                     </div>
                 </div>
@@ -245,8 +244,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -260,7 +257,8 @@
                             'Invoice'=>array(
                                 'id'=>'test1',
                                 'content'=>$this->renderPartial('_viewInvoice',  array(
-                                    'model'=>$model
+                                    'model'=>$model,
+                                    'invoice' => $invoice,
                                 ),TRUE)
                             ),
                             'Customer'=>array(

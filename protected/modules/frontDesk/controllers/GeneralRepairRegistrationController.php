@@ -1205,9 +1205,9 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function loadStateDetails($generalRepairRegistration) {
-//        if (isset($_POST['RegistrationTransaction'])) {
-//            $generalRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
-//        }
+        if (isset($_POST['RegistrationTransaction'])) {
+            $generalRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
+        }
 
         if (isset($_POST['RegistrationQuickService'])) {
             foreach ($_POST['RegistrationQuickService'] as $i => $item) {

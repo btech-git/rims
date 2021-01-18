@@ -8,7 +8,9 @@
             <th style="text-align: center; font-weight: bold">Total</th>
         </tr>
     </thead>
+    
     <tbody>
+        <?php $totalDaily = 0.00; ?>
         <?php foreach ($paymentInRetailList as $paymentInRetailBranchId => $paymentInRetailItem): ?>
             <?php $total = 0.00; ?>
             <tr>
@@ -21,7 +23,7 @@
                                     "branchId" => $paymentInRetailBranchId, 
                                     "paymentTypeId" => $paymentTypeId
                                 )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                            )); ?>
+                            )); ?> 
                         <?php else: ?>
                             <?php echo CHtml::encode($paymentInRetail); ?>
                         <?php endif; ?>
@@ -37,9 +39,22 @@
                             "branchId" => $paymentInRetailBranchId, 
                         )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                     )); ?>
-                    <?php //echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $total), array("/accounting/cashDailySummary/approval", "transactionDate" => $transactionDate, "branchId" => $paymentInRetailBranchId, ), array('target' => '_blank')); ?>
                 </td>
             </tr>
+            <?php $totalDaily += $total; ?>
         <?php endforeach; ?>
     </tbody>
+    
+    <tfoot>
+        <tr>
+            <td style="text-align: right">Total Daily Cash</td>
+            <?php foreach ($paymentTypes as $paymentType): ?>
+                <td style="text-align: center">&nbsp;</td>
+            <?php endforeach; ?>
+            <td style="text-align: right; font-weight: bold">
+                <?php echo CHtml::hiddenField('TotalDaily', $totalDaily); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDaily)); ?>
+            </td>
+        </tr>
+    </tfoot>
 </table>

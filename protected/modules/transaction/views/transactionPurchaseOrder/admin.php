@@ -26,21 +26,21 @@ $this->menu=array(
 // ");
 Yii::app()->clientScript->registerScript('search', "
 	$('.search-button').click(function(){
-		$('.search-form').slideToggle(600);
-		$('.bulk-action').toggle();
-		$(this).toggleClass('active');
-		if($(this).hasClass('active')){
-			$(this).text('');
-		}else {
-			$(this).text('Advanced Search');
-		}
-		return false;
+            $('.search-form').slideToggle(600);
+            $('.bulk-action').toggle();
+            $(this).toggleClass('active');
+            if ($(this).hasClass('active')){
+                $(this).text('');
+            } else {
+                $(this).text('Advanced Search');
+            }
+            return false;
 	});
 	$('.search-form form').submit(function(){
-		$('#transaction-purchase-order-grid').yiiGridView('update', {
-			data: $(this).serialize()
-		});
-		return false;
+            $('#transaction-purchase-order-grid').yiiGridView('update', {
+                data: $(this).serialize()
+            });
+            return false;
 	});
 ");
 ?>

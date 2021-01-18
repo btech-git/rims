@@ -94,7 +94,7 @@ $this->menu = array(
                                     <span class="prefix">User</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->user_id; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo $model->user->username; ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -144,7 +144,7 @@ $this->menu = array(
                                 <td><?php echo $history->revision; ?></td>
                                 <td><?php echo $history->date; ?></td>
                                 <td><?php echo $history->note; ?></td>
-                                <td><?php echo $history->supervisor_id; ?></td>
+                                <td><?php echo $history->supervisor->username; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

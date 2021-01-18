@@ -5,7 +5,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">Invoice Date</span>
+                        <span class="prefix">Date</span>
                     </div>
                     <div class="small-8 columns">
                         <input type="text" readonly="true" id="Invoice_invoice_date" value="<?php echo $model->invoice_id != "" ? $model->invoice->invoice_date : '' ?>" > 
@@ -15,7 +15,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">Due Date </span>
+                        <span class="prefix">Due Date</span>
                     </div>
                     <div class="small-8 columns">
                         <input type="text" readonly="true" id="Invoice_due_date" value="<?php echo $model->invoice_id != "" ? $model->invoice->due_date : '' ?>"> 
@@ -37,17 +37,17 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">Reference Type</span>
+                        <span class="prefix">Ref Type</span>
                     </div>
                     <div class="small-8 columns">
-                        <input type="text" readonly="true" id="Invoice_reference_type" value="<?php echo $model->invoice_id != "" ? $model->invoice->reference_type : '' ?>"> 
+                        <input type="text" readonly="true" id="Invoice_reference_type" value="<?php echo $model->invoice_id != "" ? $model->invoice->referenceTypeLiteral : '' ?>"> 
                     </div>
                 </div>
             </div>
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">Reference Number</span>
+                        <span class="prefix">Sales Number</span>
                     </div>
                     <div class="small-8 columns">
                         <input type="text" readonly="true" id="Invoice_reference_number"> 
@@ -80,7 +80,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">Payment Left</span>
+                        <span class="prefix">Remaining</span>
                     </div>
                     <div class="small-8 columns">
                         <input type="text" readonly="true" id="Invoice_payment_left" value="<?php echo $model->invoice_id != "" ? $model->invoice->payment_left : '0,00' ?>"> 
@@ -88,5 +88,38 @@
                 </div>
             </div>
         </div>
+    </fieldset>
+</div>
+
+<div id="payment">
+    <fieldset>
+        <legend>Payment</legend>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($invoice->paymentIns as $paymentIn): ?>
+                        <tr>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_date')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_amount')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'status')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'note')); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        
     </fieldset>
 </div>

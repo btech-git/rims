@@ -98,7 +98,8 @@ $('.search-form form').submit(function(){
                         'payment_date',
                         array(
                             'name' => 'payment_amount', 
-                            'value' => 'AppHelper::formatMoney($data->payment_amount)'
+                            'value' => 'AppHelper::formatMoney($data->payment_amount)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
                         ),
                         'notes',
                         array(

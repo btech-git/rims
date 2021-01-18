@@ -31,6 +31,7 @@
                             )),
                         )); ?>
                     </td>
+                    
                     <td>
                         <div id="product_sub_brand">
                             <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(), 'id', 'name'), array(
@@ -49,6 +50,7 @@
                             )); ?>
                         </div>
                     </td>
+                    
                     <td>
                         <div id="product_sub_brand_series">
                             <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(), 'id', 'name'), array(
@@ -62,6 +64,7 @@
                             )); ?>
                         </div>
                     </td>
+                    
                     <td>
                         <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(), 'id', 'name'), array(
                             'empty' => '-- All --',
@@ -78,6 +81,7 @@
                             )),
                         )); ?>
                     </td>
+                    
                     <td>
                         <div id="product_sub_master_category">
                             <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(), 'id', 'name'), array(
@@ -96,6 +100,7 @@
                             )); ?>
                         </div>
                     </td>
+                    
                     <td>
                         <div id="product_sub_category">
                             <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(), 'id', 'name'), array(
@@ -112,16 +117,28 @@
                 </tr>
             </tbody>
         </table>
+        
         <table>
             <thead>
                 <tr>
+                    <td>ID</td>
                     <td>Code</td>
                     <td>Name</td>
-<!--                    <td>Current Page</td>-->
                 </tr>
             </thead>
+            
             <tbody>
                 <tr>
+                    <td>
+                        <?php echo CHtml::activeTextField($product, 'id', array(
+                            'onchange' => CHtml::ajax(array(
+                                'type' => 'GET',
+                                'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                                'update' => '#product_stock_table',
+                            )),
+                        )); ?>
+                    </td>
+                    
                     <td>
                         <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
                             'onchange' => CHtml::ajax(array(
@@ -131,6 +148,7 @@
                             )),
                         )); ?>
                     </td>
+                    
                     <td>
                         <?php echo CHtml::activeTextField($product, 'name', array(
                             'onchange' => CHtml::ajax(array(
@@ -143,8 +161,8 @@
                 </tr>
             </tbody>
         </table>
+        
         <div>
-            <?php //echo CHtml::textField('page', $pageNumber, array('size' => 2)); ?>
             <?php echo CHtml::submitButton('Clear', array('name' => 'Clear')); ?>
         </div>
     </div>

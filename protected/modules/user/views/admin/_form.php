@@ -14,91 +14,56 @@ Yii::app()->clientScript->registerScript('userRoles', "
     }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 93);
-        checkRoles(1, 2, 93);
+        checkRoles(0, 1, 90);
+        checkRoles(1, 2, 90);
         checkRoles(2, 3, 14);
-        checkRoles(3, 4, 4);
-        checkRoles(5, 6, 6);
-        checkRoles(8, 9, 9);
-        checkRoles(10, 11, 11);
-        checkRoles(12, 13, 13);
-        checkRoles(14, 15, 15);
-        checkRoles(16, 17, 17);
-        checkRoles(18, 19, 19);
-        checkRoles(20, 21, 21);
-        checkRoles(22, 23, 23);
-        checkRoles(24, 25, 25);
-        checkRoles(26, 27, 27);
-        checkRoles(28, 29, 29);
-        checkRoles(30, 31, 31);
+        checkRoles(15, 16, 21);
+        checkRoles(22, 23, 28);
+        checkRoles(29, 30, 38);
+        checkRoles(39, 40, 63);
+        checkRoles(64, 65, 79);
+        checkRoles(80, 81, 86);
+        checkRoles(87, 88, 89);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_0').click(function(){
-        checkRoles(0, 1, 31);
+        checkRoles(0, 1, 90);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_1').click(function(){
-        checkRoles(1, 2, 31);
+        checkRoles(1, 2, 90);
     })
 
     $('#" . CHtml::activeId($model, 'roles') . "_2').click(function(){
-        checkRoles(2, 3, 31);
+        checkRoles(2, 3, 14);
     });
 
-    $('#" . CHtml::activeId($model, 'roles') . "_3').click(function(){
-        checkRoles(3, 4, 4);
+    $('#" . CHtml::activeId($model, 'roles') . "_15').click(function(){
+        checkRoles(15, 16, 21);
     });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_5').click(function(){
-        checkRoles(5, 6, 6);
-    });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_8').click(function(){
-        checkRoles(8, 9, 9);
-    });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_10').click(function(){
-        checkRoles(10, 11, 11);
-    });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_12').click(function(){
-        checkRoles(12, 13, 13);
-    });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_14').click(function(){
-        checkRoles(14, 15, 15);
-    });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_16').click(function(){
-        checkRoles(16, 17, 17);
-    })
-
-    $('#" . CHtml::activeId($model, 'roles') . "_18').click(function(){
-        checkRoles(18, 19, 19);
-    });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_20').click(function(){
-        checkRoles(20, 21, 21);
-    });
-
+	
     $('#" . CHtml::activeId($model, 'roles') . "_22').click(function(){
-        checkRoles(22, 23, 23);
+        checkRoles(22, 23, 28);
     });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_24').click(function(){
-        checkRoles(24, 25, 25);
+	
+    $('#" . CHtml::activeId($model, 'roles') . "_29').click(function(){
+        checkRoles(29, 30, 38);
     });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_26').click(function(){
-        checkRoles(26, 27, 27);
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_39').click(function(){
+        checkRoles(39, 40, 63);
     });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_28').click(function(){
-        checkRoles(28, 29, 29);
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_64').click(function(){
+        checkRoles(64, 65, 79);
     });
-
-    $('#" . CHtml::activeId($model, 'roles') . "_30').click(function(){
-        checkRoles(30, 31, 31);
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_80').click(function(){
+        checkRoles(80, 81, 86);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_87').click(function(){
+        checkRoles(87, 88, 89);
     });
 	
 ");
@@ -243,6 +208,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
     </div>
 
     <hr />
+    
     <div class="field buttons text-center">
         <?php echo CHtml::submitButton($model->isNewRecord ? UserModule::t('Create') : UserModule::t('Save'), array('class' => 'button cbutton')); ?>
     </div>

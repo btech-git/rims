@@ -15,9 +15,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                RESEPSIONIS
-                <?php echo CHtml::checkBox("User[roles][frontOfficeHead]", CHtml::resolveValue($model, "roles[frontOfficeHead]"), array('id' => 'User_roles_' . $counter++, 'value' => 'frontOfficeHead')); ?>
-                
+                <?php echo CHtml::checkBox("User[roles][frontOfficeHead]", CHtml::resolveValue($model, "roles[frontOfficeHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'frontOfficeHead')); ?>
+                <?php echo CHtml::label('RESEPSIONIS', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -56,8 +55,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                PEMBELIAN
-                <?php echo CHtml::checkBox("User[roles][purchaseHead]", CHtml::resolveValue($model, "roles[purchaseHead]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseHead')); ?>
+                <?php echo CHtml::checkBox("User[roles][purchaseHead]", CHtml::resolveValue($model, "roles[purchaseHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'purchaseHead')); ?>
+                <?php echo CHtml::label('PEMBELIAN', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -84,8 +83,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                PENJUALAN
-                <?php echo CHtml::checkBox("User[roles][salesHead]", CHtml::resolveValue($model, "roles[salesHead]"), array('id' => 'User_roles_' . $counter++, 'value' => 'salesHead')); ?>
+                <?php echo CHtml::checkBox("User[roles][salesHead]", CHtml::resolveValue($model, "roles[salesHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'salesHead')); ?>
+                <?php echo CHtml::label('PENJUALAN', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -112,8 +111,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                PELUNASAN
-                <?php echo CHtml::checkBox("User[roles][accountingHead]", CHtml::resolveValue($model, "roles[accountingHead]"), array('id' => 'User_roles_' . $counter++, 'value' => 'accountingHead')); ?>
+                <?php echo CHtml::checkBox("User[roles][accountingHead]", CHtml::resolveValue($model, "roles[accountingHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'accountingHead')); ?>
+                <?php echo CHtml::label('PELUNASAN', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -146,8 +145,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                OPERASIONAL
-                <?php echo CHtml::checkBox("User[roles][operationHead]", CHtml::resolveValue($model, "roles[operationHead]"), array('id' => 'User_roles_' . $counter++, 'value' => 'operationHead')); ?>
+                <?php echo CHtml::checkBox("User[roles][operationHead]", CHtml::resolveValue($model, "roles[operationHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'operationHead')); ?>
+                <?php echo CHtml::label('OPERASIONAL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -210,8 +209,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                GUDANG
-                <?php echo CHtml::checkBox("User[roles][inventoryHead]", CHtml::resolveValue($model, "roles[inventoryHead]"), array('id' => 'User_roles_' . $counter++, 'value' => 'inventoryHead')); ?>
+                <?php echo CHtml::checkBox("User[roles][inventoryHead]", CHtml::resolveValue($model, "roles[inventoryHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'inventoryHead')); ?>
+                <?php echo CHtml::label('GUDANG', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -256,8 +255,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                IDLE MANAGEMENT
-                <?php echo CHtml::checkBox("User[roles][idleManagement]", CHtml::resolveValue($model, "roles[idleManagement]"), array('id' => 'User_roles_' . $counter++, 'value' => 'idleManagement')); ?>
+                <?php echo CHtml::checkBox("User[roles][idleManagement]", CHtml::resolveValue($model, "roles[idleManagement]"), array('id' => 'User_roles_' . $counter, 'value' => 'idleManagement')); ?>
+                <?php echo CHtml::label('IDLE MANAGEMENT', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -284,8 +283,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                ACCOUNTING/FINANCE
-                <?php echo CHtml::checkBox("User[roles][financeHead]", CHtml::resolveValue($model, "roles[financeHead]"), array('id' => 'User_roles_' . $counter++, 'value' => 'financeHead')); ?>
+                <?php echo CHtml::checkBox("User[roles][financeHead]", CHtml::resolveValue($model, "roles[financeHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'financeHead')); ?>
+                <?php echo CHtml::label('ACCOUNTING/FINANCE', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Report</th>
         </tr>

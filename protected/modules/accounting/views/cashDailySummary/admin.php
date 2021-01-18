@@ -38,30 +38,38 @@
     'filter' => $model,
     'columns' => array(
         array(
-            'header' => 'Tanggal',
+            'header' => 'Tanggal Transaksi',
             'name' => 'transaction_date',
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
         ),
-        'paymentType.name: Payment Type',
         array(
-            'name' => 'amount', 
-            'value' => 'number_format($data->amount, 0)',
-            'htmlOptions' => array(
-                'style' => 'text-align: right'         
-            ),
+            'header' => 'Hari Transaksi',
+            'filter' => false,
+            'value' => 'date("l", strtotime(CHtml::value($data, "transaction_date")))',
         ),
-        'memo',
-        'branch.name: Branch',
+//        array(
+//            'name' => 'amount', 
+//            'value' => 'number_format($data->amount, 0)',
+//            'htmlOptions' => array(
+//                'style' => 'text-align: right'         
+//            ),
+//        ),
         array(
             'header' => 'Approved By',
             'value' => 'CHtml::value($data, "user.username")',
         ),
         array(
-            'class' => 'CButtonColumn',
-            'template' => '{view}',
-            'afterDelete' => 'function(){ location.reload(); }'
+            'header' => 'Tanggal Approval',
+            'name' => 'approval_date',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->approval_date)'
         ),
+//        array(
+//            'class' => 'CButtonColumn',
+//            'template' => '{view}',
+//            'afterDelete' => 'function(){ location.reload(); }'
+//        ),
     ),
 )); ?>
 <?php echo CHtml::endForm(); ?>

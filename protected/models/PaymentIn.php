@@ -152,7 +152,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('payment_type_id', $this->payment_type_id);
 
         $criteria->together = 'true';
-        $criteria->with = array('invoice', 'customer');
+        $criteria->with = array('invoice');
         $criteria->compare('invoice.invoice_number', $this->invoice_number, true);
         $criteria->compare('invoice.status', $this->invoice_status, true);
         $criteria->compare('customer.name', $this->customer_name, true);

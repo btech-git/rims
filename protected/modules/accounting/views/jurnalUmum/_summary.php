@@ -38,7 +38,7 @@
                                 <?php echo $lastkode == $jurnal->kode_transaksi ? "" : $jurnal->tanggal_posting; ?>
                             </td>
                             <td>
-                                <?php echo $lastkode == $jurnal->kode_transaksi ? "" : CHtml::link($jurnal->kode_transaksi, Yii::app()->createUrl("accounting/JurnalUmum/redirectTransaction", array("codeNumber" => $jurnal->kode_transaksi)), array('target' => '_blank')); ?>
+                                <?php echo $lastkode == $jurnal->kode_transaksi ? "" : CHtml::link($jurnal->kode_transaksi, Yii::app()->createUrl("accounting/jurnalUmum/redirectTransaction", array("codeNumber" => $jurnal->kode_transaksi)), array('target' => '_blank')); ?>
                             </td>
                             <td colspan="2" style="font-weight: bold; text-align: center"><?php echo $lastkode == $jurnal->kode_transaksi ? "" : $jurnal->transaction_subject; ?></td>
                             <td style="font-weight: bold; text-align: center"><?php echo number_format($jurnal->getSubTotalDebit($jurnal->kode_transaksi), 2) ?></td>

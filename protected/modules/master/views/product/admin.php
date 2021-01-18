@@ -19,29 +19,33 @@ $('.search-button').click(function(){
 	$('.search-form').slideToggle(600);
 	$('.bulk-action').toggle();
 	$(this).toggleClass('active');
+        
 	if ($(this).hasClass('active')) {
             $(this).text('');
             $('#Product_findkeyword').hide();
-	}else {
+	} else {
             $('#Product_findkeyword').show();
             $(this).text('Advanced Search');
 	}
+        
 	return false;
 });
 
 /*$('.search-form form').submit(function(){
-	$('#product-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
+    $('#product-grid').yiiGridView('update', {
+        data: $(this).serialize()
+    });
+    
+    return false;
 });
 */
 
 $('form').submit(function(){
-       $.fn.yiiGridView.update('product-grid', {
-             data: $(this).serialize()
-        });
-         return false;
+   $.fn.yiiGridView.update('product-grid', {
+        data: $(this).serialize()
+    });
+    
+    return false;
 });
 
 ");
@@ -68,11 +72,16 @@ $('form').submit(function(){
                             'action' => Yii::app()->createUrl($this->route),
                             'method' => 'get',
                         )); ?>
-                        <div class="medium-6 columns">
-                            <?php echo $form->textField($model, 'manufacturer_code', array('placeholder' => 'Code', "style" => "margin-bottom:0px;")); ?>
+                        <div class="medium-3 columns">
+                            <?php echo CHtml::activeTextField($model, 'id', array('placeholder' => 'ID', "style" => "margin-bottom:0px;")); ?>
                         </div>
+                        
+                        <div class="medium-3 columns">
+                            <?php echo CHtml::activeTextField($model, 'manufacturer_code', array('placeholder' => 'Code', "style" => "margin-bottom:0px;")); ?>
+                        </div>
+                        
                         <div class="medium-6 columns">
-                            <?php echo $form->textField($model, 'name', array('placeholder' => 'Name', "style" => "margin-bottom:0px;")); ?>
+                            <?php echo CHtml::activeTextField($model, 'name', array('placeholder' => 'Name', "style" => "margin-bottom:0px;")); ?>
                         </div>
                         <?php $this->endWidget(); ?>
                     </div>
@@ -105,6 +114,7 @@ $('form').submit(function(){
                                 } } });',
                             )); ?>
                         </div>
+                        
                         <div class="medium-2 columns" id="product_sub_brand">
                             <?php echo CHtml::activeDropDownList($model, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(), 'id', 'name'), array(
                                 'empty' => '-- All Sub Brand --',
@@ -116,6 +126,7 @@ $('form').submit(function(){
                                 )),
                             )); ?>
                         </div>
+                        
                         <div class="medium-2 columns" id="product_sub_brand_series">
                             <?php echo CHtml::activeDropDownList($model, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(), 'id', 'name'), array(
                                 'empty' => '-- All Sub Brand Series --',
@@ -127,6 +138,7 @@ $('form').submit(function(){
                                 )),
                             )); ?>
                         </div>
+                        
                         <div class="medium-2 columns">
                             <?php echo CHtml::activeDropDownList($model, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(), 'id', 'name'), array(
                                 'empty' => '-- All Master Category --',
@@ -147,6 +159,7 @@ $('form').submit(function(){
                                 } } });',
                             )); ?>
                         </div>
+                        
                         <div class="medium-2 columns" id="product_sub_master_category">
                             <?php echo CHtml::activeDropDownList($model, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(), 'id', 'name'), array(
                                 'empty' => '-- All Sub Master Category--',
@@ -158,6 +171,7 @@ $('form').submit(function(){
                                 )),
                             )); ?>
                         </div>
+                        
                         <div class="medium-2 columns" id="product_sub_category">
                             <?php echo CHtml::activeDropDownList($model, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(), 'id', 'name'), array(
                                 'empty' => '-- All Sub Category--',
@@ -169,6 +183,7 @@ $('form').submit(function(){
                                 )),
                             )); ?>
                         </div>
+                        
                         <?php echo CHtml::endForm(); ?>
                         <?php $this->endWidget(); ?>
                     </div>
@@ -199,11 +214,11 @@ $('form').submit(function(){
                 'header' => '',
             ),
             'afterAjaxUpdate' => 'function(id, data){
-                    var textbold = $("#Product_findkeyword").val();
-                    var j = jQuery.noConflict();
-                    j("td").mark(textbold, {
-                        "className": "higlig"
-                    });
+                var textbold = $("#Product_findkeyword").val();
+                var j = jQuery.noConflict();
+                j("td").mark(textbold, {
+                    "className": "higlig"
+                });
             }',
             'columns' => array(
                 array(
@@ -292,7 +307,7 @@ $('form').submit(function(){
     ),
 )); ?>
 
-    <div id="price_div"></div>
+<div id="price_div"></div>
 
 <?php $this->endWidget(); ?>
 
@@ -302,13 +317,13 @@ $('form').submit(function(){
     Yii::app()->clientScript->registerScript('search', "
 
     	$('#Product_findkeyword').keypress(function(e) {
-		    if(e.which == 13) {
-				$.fn.yiiGridView.update('product-grid', {
-					data: $(this).serialize()
-				});
-		        return false;
-		    }
-		});
+            if (e.which == 13) {
+                $.fn.yiiGridView.update('product-grid', {
+                        data: $(this).serialize()
+                });
+                return false;
+            }
+        });
 
         $('#Product_product_master_category_id,#Product_product_sub_master_category_id,#Product_product_sub_category_id,#Product_brand_id,#Product_sub_brand_id,#Product_sub_brand_series_id,#Product_name,#Product_manufacturer_code').change(function(){
             $.fn.yiiGridView.update('product-grid', {

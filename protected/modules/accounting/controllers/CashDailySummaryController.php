@@ -30,10 +30,11 @@ class CashDailySummaryController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionSummary() {
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 10;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 10;
+//        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
+        $totalDaily = isset($_GET['TotalDaily']) ? $_GET['TotalDaily'] : 0.00;
         $paymentTypes = PaymentType::model()->findAll(); 
         
         $branchConditionSql = '';
@@ -98,6 +99,20 @@ class CashDailySummaryController extends Controller {
             $lastBranchId = $paymentInRetailRow['branch_id'];
         }
 
+        $existingDate = CashDailyApproval::model()->findByAttributes(array('transaction_date' => $transactionDate));
+        if (isset($_GET['Approve']) && empty($existingDate)) {
+            $cashDailyApproval = new CashDailyApproval;
+            $cashDailyApproval->transaction_date = $transactionDate;
+            $cashDailyApproval->amount = $totalDaily;
+            $cashDailyApproval->user_id = Yii::app()->user->id;
+            $cashDailyApproval->approval_date = date('Y-m-d');
+            $cashDailyApproval->approval_time = date('H:i:s');
+
+            if ($cashDailyApproval->save(Yii::app()->db)) {                
+                $this->redirect(array('summary'));
+            }
+        }
+
         $this->render('summary', array(
             'paymentTypes' => $paymentTypes,
             'paymentInWholesale' => $paymentInWholesale,
@@ -111,6 +126,7 @@ class CashDailySummaryController extends Controller {
             'transactionDate' => $transactionDate,
             'paymentInRetailResultSet' => $paymentInRetailResultSet,
             'paymentInRetailList' => $paymentInRetailList,
+            'existingDate' => $existingDate,
         ));
     }
 
@@ -252,14 +268,14 @@ class CashDailySummaryController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        $model = new CashDailySummary('search');
+        $model = new CashDailyApproval('search');
         $model->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['CashDailySummary']))
-            $model->attributes = $_GET['CashDailySummary'];
+        if (isset($_GET['CashDailyApproval']))
+            $model->attributes = $_GET['CashDailyApproval'];
 
         $modelCriteria = new CDbCriteria;
-        $dataProvider = new CActiveDataProvider('CashDailySummary', array(
+        $dataProvider = new CActiveDataProvider('CashDailyApproval', array(
             'criteria' => $modelCriteria,
             'sort' => array(
                 'defaultOrder' => 'transaction_date DESC',

@@ -90,7 +90,11 @@ $('.search-form form').submit(function(){
                         'payment_type',
                         'payment_date',
                         array('name' => 'supplier_name', 'value' => '$data->supplier->name'),
-                        array('name' => 'payment_amount', 'value' => 'AppHelper::formatMoney($data->payment_amount)'),
+                        array(
+                            'name' => 'payment_amount', 
+                            'value' => 'AppHelper::formatMoney($data->payment_amount)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
                         array(
                             'name' => 'branch_id', 
                             'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
@@ -124,34 +128,36 @@ $('.search-form form').submit(function(){
             </div>
             <fieldset>
                 <legend>PO Pending Payment</legend>
+                
                 <div class="grid-view">
                     <?php $this->widget('zii.widgets.grid.CGridView', array(
-                            'id' => 'purchase-order-grid',
-                            // 'dataProvider'=>$vehicleDataProvider,
-                            'dataProvider' => $purchaseOrderDataProvider,
-                            'filter' => $purchaseOrder,
-                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                            'pager' => array(
-                                'cssFile' => false,
-                                'header' => '',
-                            ),
+                        'id' => 'purchase-order-grid',
+                        // 'dataProvider'=>$vehicleDataProvider,
+                        'dataProvider' => $purchaseOrderDataProvider,
+                        'filter' => $purchaseOrder,
+                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                        'pager' => array(
+                            'cssFile' => false,
+                            'header' => '',
+                        ),
 
-                            'columns' => array(
-                                array(
-                                    'name' => 'purchase_order_no',
-                                    'value' => 'CHTml::link($data->purchase_order_no, array("transactionPurchaseOrder/view", "id"=>$data->id))',
-                                    'type' => 'raw'
-                                ),
-                                //'invoice_number',
-                                'purchase_order_date',
-                                //'due_date',
-                                'status_document',
-                                array('name' => 'supplier_name', 'value' => '$data->supplier->name'),
-                                array('name' => 'total_price', 'value' => 'AppHelper::formatMoney($data->total_price)'),
+                        'columns' => array(
+                            array(
+                                'name' => 'purchase_order_no',
+                                'value' => 'CHTml::link($data->purchase_order_no, array("transactionPurchaseOrder/view", "id"=>$data->id))',
+                                'type' => 'raw'
                             ),
-                        )
-                    );
-                    ?>
+                            //'invoice_number',
+                            'purchase_order_date',
+                            //'due_date',
+                            'status_document',
+                            array('name' => 'supplier_name', 'value' => '$data->supplier->name'),
+                            array(
+                                'name' => 'total_price', 
+                                'value' => 'AppHelper::formatMoney($data->total_price)'
+                            ),
+                        ),
+                    )); ?>
                 </div>
             </fieldset>
         </div>

@@ -28,4 +28,5 @@ $this->menu=array(
     'transactionDate' => $transactionDate,
     'paymentInRetailResultSet' => $paymentInRetailResultSet,
     'paymentInRetailList' => $paymentInRetailList,
+    'existingDate' => $existingDate,
 )); ?>

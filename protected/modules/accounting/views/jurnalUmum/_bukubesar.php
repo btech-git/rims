@@ -122,21 +122,21 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                             </td>
                         </tr>
                         <?php foreach ($coaJurnals as $key => $jurnal): ?>
+                            <?php $totalDebit = $jurnal->debet_kredit == 'D'? $jurnal->total : 0; ?>
+                            <?php $totalCredit = $jurnal->debet_kredit == 'K'? $jurnal->total : 0; ?>
+                            <?php $balance = $beginningBalance + $totalDebit - $totalCredit; ?>
                             <tr>
                                 <td><?php echo $jurnal->tanggal_posting; ?></td>
                                 <td><?php echo $jurnal->kode_transaksi; ?></td>
                                 <td><?php echo $jurnal->branch->name; ?></td>
                                 <td><?php echo $jurnal->transaction_subject ?></td>
                                 <td style="text-align: right">
-                                    <?php $totalDebit = $jurnal->debet_kredit == 'D'? $jurnal->total : 0; ?>
                                     <?php echo number_format($totalDebit, 0); ?>
                                 </td>
                                 <td style="text-align: right">
-                                    <?php $totalCredit = $jurnal->debet_kredit == 'K'? $jurnal->total : 0; ?>
                                     <?php echo number_format($totalCredit, 0); ?>
                                 </td>
                                 <td style="text-align: right">
-                                    <?php $balance = $beginningBalance + $totalCredit - $totalDebit; ?>
                                     <?php echo number_format($balance, 0); ?>
                                 </td>
                                 
@@ -155,6 +155,7 @@ $tanggal_sampai = $tanggal_sampai == "" ? date('Y-m-d') : $tanggal_sampai; ?>
                                 <?php if ($jurnal->debet_kredit == 'K') {
                                     $totalkredit += $jurnal->total;
                                 } ?>
+                                <?php $balance += $totalDebet - $totalkredit; ?>
 
                             </tr>
                             <?php $lastkode = $jurnal->kode_transaksi; ?>

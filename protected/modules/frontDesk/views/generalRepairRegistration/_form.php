@@ -213,8 +213,8 @@
 </div>
 
 <?php
-	Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
-	Yii::app()->clientScript->registerScript('myjavascript', '
-		$(".numbers").number( true,2, ".", ",");
+    Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
+    Yii::app()->clientScript->registerScript('myjavascript', '
+        $(".numbers").number( true,2, ".", ",");
     ', CClientScript::POS_END);
 ?>

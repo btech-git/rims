@@ -600,11 +600,11 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ($this->header->ppn == 1) ? $this->subTotalTransaction * .1 : 0;
+        return ((int)$this->header->ppn == 1) ? $this->subTotalTransaction * .1 : 0;
     }
 
     public function getTaxServiceAmount() {
-        return ($this->header->pph == 1) ? ($this->subTotalQuickService + $this->grandTotalService) * .025 : 0;
+        return ((int)$this->header->pph == 1) ? ($this->subTotalQuickService + $this->grandTotalService) * .025 : 0;
     }
 
     public function getGrandTotalTransaction() {

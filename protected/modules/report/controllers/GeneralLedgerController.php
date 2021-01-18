@@ -2,6 +2,7 @@
 
 class GeneralLedgerController extends Controller {
 
+    public $layout = '//layouts/column1';
     public function filters() {
         return array(
 //            'access',
@@ -19,7 +20,7 @@ class GeneralLedgerController extends Controller {
 
     public function actionSummary() {
         set_time_limit(0);
-		ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '1024M');
         
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
 
@@ -29,19 +30,21 @@ class GeneralLedgerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
-        $accountId = (isset($_GET['AccountId'])) ? $_GET['AccountId'] : '';
+        $accountId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
 
-        $accounts = Coa::model()->findAll();
+        $accounts = Coa::model()->findAll(array(
+            'order' => 'code ASC',
+        ));
 
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
         $generalLedgerSummary->setupLoading($startDate, $endDate, $accountId);
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
         $generalLedgerSummary->setupFilter($startDate, $endDate, $accountId);
-//        $generalLedgerSummary->getSaldo($startDate);
+        $generalLedgerSummary->getSaldo($startDate);
 
-//        if (isset($_GET['SaveExcel']))
-//            $this->saveToExcel($generalLedgerSummary, $generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+        if (isset($_GET['SaveExcel']))
+            $this->saveToExcel($generalLedgerSummary, $generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
 
         $this->render('summary', array(
             'account' => $account,
@@ -58,35 +61,36 @@ class GeneralLedgerController extends Controller {
     protected function reportGrandTotal($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->amountPaid;
+        }
 
         return $grandTotal;
     }
 
-//    public function actionAjaxHtmlAccount() {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $startAccount = (isset($_GET['StartAccount'])) ? $_GET['StartAccount'] : '';
-//            $endAccount = (isset($_GET['EndAccount'])) ? $_GET['EndAccount'] : '';
-//
-//            $accounts = Account::model()->findAllByAttributes(
-//                array(
-//                    'branch_id' => $_POST['BranchId'],
-//                ), array(
-//                    'order' => 'code ASC',
-//                )
-//            );
-//
-//            $account = Search::bind(new Account('search'), isset($_GET['Account']) ? $_GET['Account'] : array());
-//
-//            $this->renderPartial('_account', array(
-//                'account' => $account,
-//                'accounts' => $accounts,
-//                'startAccount' => $startAccount,
-//                'endAccount' => $endAccount,
-//            ));
-//        }
-//    }
+    public function actionAjaxHtmlAccount() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $startAccount = (isset($_GET['StartAccount'])) ? $_GET['StartAccount'] : '';
+            $endAccount = (isset($_GET['EndAccount'])) ? $_GET['EndAccount'] : '';
+
+            $accounts = Account::model()->findAllByAttributes(
+                array(
+                    'branch_id' => $_POST['BranchId'],
+                ), array(
+                    'order' => 'code ASC',
+                )
+            );
+
+            $account = Search::bind(new Account('search'), isset($_GET['Account']) ? $_GET['Account'] : array());
+
+            $this->renderPartial('_account', array(
+                'account' => $account,
+                'accounts' => $accounts,
+                'startAccount' => $startAccount,
+                'endAccount' => $endAccount,
+            ));
+        }
+    }
 
     protected function saveToExcel($generalLedgerSummary, $dataProvider, array $options = array()) {
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
@@ -99,7 +103,7 @@ class GeneralLedgerController extends Controller {
         $objPHPExcel = new PHPExcel();
 
         $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('PT. Karya Tirta Perkasa');
+        $documentProperties->setCreator('PT. Raperind Motor');
         $documentProperties->setTitle('Laporan Buku Besar');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
@@ -182,8 +186,8 @@ class GeneralLedgerController extends Controller {
 
         for ($col = 'A'; $col !== 'G'; $col++) {
             $objPHPExcel->getActiveSheet()
-                    ->getColumnDimension($col)
-                    ->setAutoSize(true);
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         header('Content-Type: application/xlsx');
@@ -195,4 +199,45 @@ class GeneralLedgerController extends Controller {
 
         Yii::app()->end();
     }
+    
+    public function actionRedirectTransaction($codeNumber) {
+        list($leftPart,, ) = explode('/', $codeNumber);
+        list(, $codeNumberConstant) = explode('.', $leftPart);
+
+        if ($codeNumberConstant === 'PO') {
+            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'RG') {
+            $model = RegistrationTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/frontDesk/registrationTransaction/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'DO') {
+            $model = TransactionDeliveryOrder::model()->findByAttributes(array('delivery_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionDeliveryOrder/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'RCI') {
+            $model = TransactionReceiveItem::model()->findByAttributes(array('receive_item_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionReceiveItem/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'CASH') {
+            $model = CashTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/transaction/cashTransaction/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'CSI') {
+            $model = ConsignmentInHeader::model()->findByAttributes(array('consignment_in_number' => $codeNumber));
+            $this->redirect(array('/transaction/consignmentInHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'CSO') {
+            $model = ConsignmentOutHeader::model()->findByAttributes(array('consignment_out_no' => $codeNumber));
+            $this->redirect(array('/transaction/consignmentOutHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'MO') {
+            $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
+            $this->redirect(array('/transaction/movementOutHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'Pin') {
+            $model = PaymentIn::model()->findByAttributes(array('payment_number' => $codeNumber));
+            $this->redirect(array('/transaction/paymentIn/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'Pout') {
+            $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
+            $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'RTI') {
+            $model = TransactionReturnItem::model()->findByAttributes(array('return_item_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionReturnItem/view', 'id' => $model->id));
+        }
+    }
+
 }

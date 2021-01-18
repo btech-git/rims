@@ -221,7 +221,7 @@ class Coa extends CActiveRecord {
 
         return $resultSet;
     }
-    
+
     public function getReportBeginningBalanceDebit($startDate, $branchId) {
         $branchConditionSql = '';
         $params = array(
@@ -232,17 +232,17 @@ class Coa extends CActiveRecord {
             $branchConditionSql = ' AND dc.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
-        
+
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
                 WHERE dc.tanggal_transaksi < :start_date AND dc.coa_id = :coa_id" . $branchConditionSql . " AND debet_kredit = 'D'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
-        
+
         return ($value === false) ? 0 : $value;
     }
-    
+
     public function getReportBeginningBalanceCredit($startDate, $branchId) {
         $branchConditionSql = '';
         $params = array(
@@ -253,28 +253,107 @@ class Coa extends CActiveRecord {
             $branchConditionSql = ' AND dc.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
-        
+
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
                 WHERE dc.tanggal_transaksi < :start_date AND dc.coa_id = :coa_id" . $branchConditionSql . " AND debet_kredit = 'K'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
-        
+
         return ($value === false) ? 0 : $value;
     }
-    
-    public function getReportForecastData($transactionDate) {
+
+    public function getReportForecastData($accountId, $transactionDate) {
         $sql = "SELECT transaction_subject, total, debet_kredit
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE coa_id = :coa_id AND tanggal_transaksi = :transaction_date";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':coa_id' => $this->id,
+            ':coa_id' => $accountId,
             ':transaction_date' => $transactionDate,
         ));
 
         return $resultSet;
     }
-    
+
+    public function getBeginningBalanceLedger($startDate) {
+        $sql = "
+            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
+            FROM (
+                SELECT coa_id, tanggal_transaksi, total AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'D'
+                UNION ALL
+                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'K'
+            ) j
+            INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
+            WHERE j.coa_id = :account_id AND j.tanggal_transaksi < :start_date
+            GROUP BY j.coa_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':account_id' => $this->id,
+            ':start_date' => $startDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getEndingBalanceLedger($accountId, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(j.total), 0) AS beginning_balance 
+            FROM " . JurnalUmum::model()->tableName() . " j
+            INNER JOIN " . Account::model()->tableName() . " a ON a.id = dc.detail_account_id
+            WHERE dc.account_id = :account_id AND dc.date <= :end_date
+        ";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':account_id' => $accountId,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getBalanceTotal($endDate, $branchId) {
+        $balanceTotal = 0.00;
+        $branchConditionSql = '';
+        $params = array(
+            ':endDate' => $endDate,
+            ':coa_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+
+        $accountingJournals = $this->getRelated('jurnalUmums', false, array(
+            'condition' => "tanggal_transaksi <= :endDate AND coa_id = :coa_id" . $branchConditionSql,
+            'params' => $params,
+        ));
+
+        if ($accountingJournals != null) {
+            foreach ($accountingJournals as $accountingJournal) {
+                $debitAmount = $accountingJournal->debet_kredit == 'D' ? $accountingJournal->total : 0;
+                $creditAmount = $accountingJournal->debet_kredit == 'K' ? $accountingJournal->total : 0;
+                if (
+                    $this->coa_category_id == 3 ||
+                    $this->coa_category_id == 4 || 
+                    $this->coa_category_id == 5
+                ) {
+                    $balanceTotal += $creditAmount - $debitAmount;
+                } else if ($this->coa_category_id == 1 || $this->coa_category_id == 2) {
+                    $balanceTotal += $debitAmount - $creditAmount;
+                } else {
+                    $balanceTotal = 0.00;
+                }
+            }
+        }
+        
+        return $balanceTotal;
+    }
 }

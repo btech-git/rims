@@ -176,4 +176,19 @@ class JurnalUmum extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
+//    public function getReportTotalBalance() {
+//        $params = array(
+//            ':transaction_date' => $this->tanggal_transaksi,
+//        );
+//        
+//        $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
+//                FROM " . JurnalUmum::model()->tableName() . " dc
+//                INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
+//                WHERE dc.tanggal_transaksi = :transaction_date AND dc.coa_id = :coa_id AND debet_kredit = 'D'";
+//
+//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+//        
+//        return ($value === false) ? 0 : $value;
+//    }
+    
 }

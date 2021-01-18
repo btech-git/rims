@@ -312,19 +312,25 @@ class PaymentInController extends Controller {
     public function actionIndex() {
         $invoice = new InvoiceHeader('search');
         $invoice->unsetAttributes();
+        
         if (isset($_GET['InvoiceHeader']))
             $invoice->attributes = $_GET['InvoiceHeader'];
+        
         $invoiceCriteria = new CDbCriteria;
         $invoiceCriteria->addCondition('t.status != "CANCELLED" && t.status != "PAID"');
-        $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
-        $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
-        $invoiceCriteria->compare('due_date', $invoice->due_date, true);
-        $invoiceCriteria->compare('total_price', $invoice->total_price, true);
+        $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
+        $invoiceCriteria->compare('t.invoice_date', $invoice->invoice_date, true);
+        $invoiceCriteria->compare('t.due_date', $invoice->due_date, true);
+        $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
+        $invoiceCriteria->compare('t.status', $invoice->status, true);
+        $invoiceCriteria->compare('t.reference_type', $invoice->reference_type);
+        
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer');
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array('criteria' => $invoiceCriteria));
         $dataProvider = new CActiveDataProvider('PaymentIn');
+        
         $this->render('index', array(
             'dataProvider' => $dataProvider,
             'invoice' => $invoice,
@@ -372,6 +378,7 @@ class PaymentInController extends Controller {
         $dataProvider = $model->search();
         $dataProvider->criteria->with = array(
             'customer',
+            'invoice',
         );
         $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '' ;
 

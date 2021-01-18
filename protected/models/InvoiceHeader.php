@@ -256,4 +256,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return (int)$diff;
     }
 
+    public function getReferenceTypeLiteral() {
+        return $this->reference_type  == 1 ? 'Sales Order' : 'Retail Sales';
+    }
 }
