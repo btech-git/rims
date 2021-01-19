@@ -1,48 +1,64 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
-	$("#header").addClass("hide");
-	$("#mainmenu").addClass("hide");
-	$(".breadcrumbs").addClass("hide");
-	$("#footer").addClass("hide");
-
-	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
-<div class="form" style="text-align: center">
+<div class="form">
 
     <?php echo CHtml::beginForm(array(''), 'get'); ?>
 
-    <div class="row" style="background-color: #DFDFDF">
-        Cabang
-        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- all --')); ?>
+    <div class="row">
+        <div class="medium-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <span class="prefix">Branch </span>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">
-        Tanggal Akhir Periode
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-            'name' => 'EndDate',
-            'options' => array(
-                'dateFormat' => 'yy-mm-dd',
-            ),
-            'htmlOptions' => array(
-                'readonly' => true,
-            ),
-        )); ?>
+        <div class="medium-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <span class="prefix">Year to Date:</span>
+                    </div>
+
+                    <div class="small-8 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'name' => 'EndDate',
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                                'placeholder' => 'Sampai',
+                            ),
+                        )); ?>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <div class="row button">
-        <?php echo CHtml::submitButton('Show'); ?>
-        <?php echo CHtml::resetButton('Clear'); ?>
-    </div>
-
-    <div class="row button">
-        <?php //echo CHtml::submitButton('Save to Excel', array('name' => 'SaveExcel')); ?>
+    <div class="clear"></div>
+    <div class="row buttons">
+        <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
+        <?php echo CHtml::submitButton('Hapus', array('onclick' => 'resetForm($("#myform"));')); ?>
+        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
     </div>
 
     <?php echo CHtml::endForm(); ?>
+    <div class="clear"></div>
 
 </div>
 
@@ -51,7 +67,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
     <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-    <div style="font-size: larger">Laporan Balance Sheet</div>
+    <div style="font-size: larger">Laporan Profit/Loss</div>
     <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -111,11 +127,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             </td>
         </tr>
     <?php endforeach; ?>
-        <tr>
-            <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
-            
-            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryType->getProfitLossAmount($endDate, $branchId))); ?>
-            </td>
-        </tr>
+    <tr>
+        <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
+
+        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryType->getProfitLossAmount($endDate, $branchId))); ?>
+        </td>
+    </tr>
 </table>

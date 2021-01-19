@@ -31,6 +31,7 @@ class GeneralLedgerController extends Controller {
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
         $accountId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $accounts = Coa::model()->findAll(array(
             'order' => 'code ASC',
@@ -40,7 +41,7 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupLoading($startDate, $endDate, $accountId);
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
-        $generalLedgerSummary->setupFilter($startDate, $endDate, $accountId);
+        $generalLedgerSummary->setupFilter($startDate, $endDate, $accountId, $branchId);
         $generalLedgerSummary->getSaldo($startDate);
 
         if (isset($_GET['SaveExcel']))
@@ -55,6 +56,7 @@ class GeneralLedgerController extends Controller {
             'number' => $number,
             'accounts' => $accounts,
             'accountId' => $accountId,
+            'branchId' => $branchId,
         ));
     }
 
