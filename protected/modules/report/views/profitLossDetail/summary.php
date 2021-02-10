@@ -81,13 +81,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
     <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-    <div style="font-size: larger">Laporan Profit/Loss</div>
+    <div style="font-size: larger">Laporan Profit/Loss Standar</div>
     <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
 
 <table style="width: 60%; margin: 0 auto; border-spacing: 0pt">
+    <?php $profitLossAmount = 0.00; ?>
     <?php foreach ($accountCategoryTypes as $accountCategoryType): ?>
 	<?php $accountCategoryTypeBalance = 0.00; ?>
         <tr>
@@ -105,9 +106,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
                     <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                 </td>
-                <td style="text-align: right; font-weight: bold">
-                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategory->getBalanceTotal($endDate, $branchId))); ?>
-                </td>
+                <td style="text-align: right; font-weight: bold"></td>
             </tr>
 		<?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $account): ?>
@@ -132,7 +131,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 
                 <td style="text-align: right; font-weight: bold; border-top: 1px solid">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
-                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategory->getProfitLossBalance($startDate, $endDate, $branchId))); ?>
                 </td>
             </tr>
 		<?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
@@ -151,12 +149,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryTypeBalance)); ?>
             </td>
         </tr>
+        <?php if ($accountCategoryType->id == 7 || $accountCategoryType->id == 8 || $accountCategoryType->id == 10): ?>
+            <?php $profitLossAmount -= $accountCategoryTypeBalance; ?>
+        <?php else: ?>
+            <?php $profitLossAmount += $accountCategoryTypeBalance; ?>
+        <?php endif; ?>
     <?php endforeach; ?>
     <tr>
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
 
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryType->getProfitLossAmount($startDate, $endDate, $branchId))); ?>
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossAmount)); ?>
         </td>
     </tr>
 </table>

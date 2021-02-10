@@ -23,24 +23,18 @@ class BalanceSheetDetailController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        //$startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 
-        $accountCategoryTypes = CoaCategory::model()->with(array(
-            'coaSubCategories' => array(
-                'with' => array(
-                    'coas' 
-                ),
-            ),
-        ))->findAll("t.id IN (1, 2, 3, 4, 5)");
+        $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id = 12'));
+        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
 
-        if (isset($_GET['SaveExcel']))
-            $this->saveToExcel($accountCategoryTypes, $endDate, $branchId);
+//        if (isset($_GET['SaveExcel']))
+//            $this->saveToExcel($accountCategoryTypes, $endDate, $branchId);
 
 
         $this->render('summary', array(
-            'accountCategoryTypes' => $accountCategoryTypes,
-            //'startDate' => $startDate,
+            'accountCategoryAssets' => $accountCategoryAssets,
+            'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
             'endDate' => $endDate,
             'branchId' => $branchId,
         ));

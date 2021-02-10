@@ -26,20 +26,15 @@ class BalanceSheetController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 
-        $accountCategoryTypes = CoaCategory::model()->with(array(
-            'coaSubCategories' => array(
-                'with' => array(
-                    'coas' 
-                ),
-            ),
-        ))->findAll("t.id IN (1, 2, 3, 4, 5)");
+        $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id IN (12)'));
+        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id IN (13)'));
 
-        if (isset($_GET['SaveExcel']))
-            $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
-
+//        if (isset($_GET['SaveExcel']))
+//            $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
 
         $this->render('summary', array(
-            'accountCategoryTypes' => $accountCategoryTypes,
+            'accountCategoryAssets' => $accountCategoryAssets,
+            'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,

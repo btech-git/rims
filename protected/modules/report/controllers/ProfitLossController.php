@@ -26,17 +26,10 @@ class ProfitLossController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 
-        $accountCategoryTypes = CoaCategory::model()->with(array(
-            'coaSubCategories' => array(
-                'with' => array(
-                    'coas' 
-                ),
-            ),
-        ))->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
+        $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
-        if (isset($_GET['SaveExcel']))
-            $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
-
+//        if (isset($_GET['SaveExcel']))
+//            $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
 
         $this->render('summary', array(
             'accountCategoryTypes' => $accountCategoryTypes,

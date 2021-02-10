@@ -53,7 +53,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -72,10 +71,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <?php $this->renderPartial('_summary', array(
+                        'accountCategoryAssets' => $accountCategoryAssets,
+                        'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
+                        'endDate' => $endDate,
+                        'branchId' => $branchId,
+                    )); ?>
+                </div>
+                <div class="clear"></div>
+                
+                <?php /*
+                <div class="relative">
                     <div style="font-weight: bold; text-align: center">
                         <?php $branch = Branch::model()->findByPk($branchId); ?>
                         <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-                        <div style="font-size: larger">Laporan Balance Sheet</div>
+                        <div style="font-size: larger">Laporan Balance Sheet Standar</div>
                         <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
                     </div>
 
@@ -105,18 +115,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </tr>
 				<?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
                                 <?php foreach ($coas as $account): ?>
-					<?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
-					<?php //if ($accountBalance > 0): ?>
+                                    <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                    <?php //if ($accountBalance > 0): ?>
                                     <tr>
                                         <td style="padding-left: 50px">
                                             <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
                                             <?php //echo CHtml::encode(CHtml::value($account, 'name')); ?>
-                   	<?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
                                         </td>
                                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
                                     </tr>
-					<?php $accountCategoryBalance += $accountBalance; ?>
-					<?php //endif; ?>
+                                    <?php $accountCategoryBalance += $accountBalance; ?>
+                                    <?php //endif; ?>
                                 <?php endforeach; ?>
                                 <tr>
                                     <td style="text-align: right; font-weight: bold">
@@ -155,18 +165,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div class="hide">
                 <div class="right"></div>
                 <div class="clear"></div>
-            </div>
+            </div> */ ?>
         </div>
     </div>
-</div>
-
-<div class="hide">
-    <div class="right">
-        <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $cashTransactionSummary->dataProvider->pagination->itemCount,
-            'pageSize' => $cashTransactionSummary->dataProvider->pagination->pageSize,
-            'currentPage' => $cashTransactionSummary->dataProvider->pagination->getCurrentPage(false),
-        ));*/ ?>
-    </div>
-    <div class="clear"></div>
 </div>
