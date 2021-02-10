@@ -95,4 +95,18 @@ class CashDailyApproval extends CActiveRecord {
         ));
     }
 
+    public function getApprovalList($month, $year) {
+        $sql = "SELECT c.transaction_date, u.username, c.approval_date, c.amount
+                FROM rims_cash_daily_approval c
+                INNER JOIN users u ON u.id = c.user_id
+                WHERE SUBSTRING_INDEX(c.transaction_date, '-', 1) = :year AND SUBSTRING_INDEX(SUBSTRING_INDEX(c.transaction_date, '-', 2), '-', -1) = :month
+                ORDER BY c.transaction_date ASC";
+        
+        $resultSet = CActiveRecord::$db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+            ':month' => $month,
+        ));
+
+        return $resultSet;
+    }
 }

@@ -42,6 +42,7 @@ class PaymentInController extends Controller {
         $model = $this->loadModel($id);
         $revisionHistories = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $model->id));
         $postImages = PaymentInImages::model()->findAllByAttributes(array('payment_in_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
+        $invoice = InvoiceHeader::model()->findByPk($model->invoice_id);
         
         if (isset($_POST['SubmitFinish'])) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($model->invoice->registration_transaction_id);
@@ -53,6 +54,7 @@ class PaymentInController extends Controller {
             'model' => $model,
             'postImages' => $postImages,
             'revisionHistories' => $revisionHistories,
+            'invoice' => $invoice,
         ));
     }
 

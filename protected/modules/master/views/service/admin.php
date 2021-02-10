@@ -62,7 +62,9 @@ Yii::app()->clientScript->registerScript('search', "
         </div>
 
         <div class="grid-view">
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
+
+            <?php
+            $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'service-grid',
                 'dataProvider' => $model->search(),
                 'filter' => $model,
@@ -119,7 +121,8 @@ Yii::app()->clientScript->registerScript('search', "
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit} {hapus} {restore}',
-                        'buttons' => array(
+                        'buttons' => array
+                            (
                             'edit' => array(
                                 'label' => 'edit',
                                 // 'visible'=>'($data->is_deleted == 0)? TRUE:FALSE',
@@ -147,7 +150,8 @@ Yii::app()->clientScript->registerScript('search', "
                         ),
                     ),
                 ),
-            )); ?>
+            ));
+            ?>
         </div>
     </div>
 </div>

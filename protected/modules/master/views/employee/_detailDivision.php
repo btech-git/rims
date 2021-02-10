@@ -25,7 +25,8 @@
 				?>
 
 				<td>
-					<?php echo CHtml::activeDropDownList($divisionDetail,"[$i]division_id", CHtml::listData(Division::model()->findAll($divisioncriteria), 'id', 'name'),array(
+					<?php 
+					echo CHtml::activeDropDownList($divisionDetail,"[$i]division_id", CHtml::listData(Division::model()->findAll($divisioncriteria), 'id', 'name'),array(
 						'prompt'=>'[--Select Division--]',
 						'onchange'=> 'jQuery.ajax({
 							type: "POST",

@@ -318,6 +318,7 @@ class GeneralRepairRegistration extends CComponent {
         
         if ($isNewRecord) {
             $this->header->status = 'Registration';
+            $this->header->vehicle_status = 'ON-PREMISE';
             $this->header->repair_type = 'GR';
             $this->header->service_status = 'Pending';
             $this->header->priority_level = 2;

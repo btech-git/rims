@@ -168,32 +168,4 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
-    
-    public function getMovementTypeChar() {
-        $typeChar = '';
-        
-        if ((int)$this->movement_type == 1) {
-            $typeChar = 'Delivery Order';
-        } elseif ((int)$this->movement_type == 2) {
-            $typeChar = 'Return Order';
-        } elseif ((int)$this->movement_type == 3) {
-            $typeChar = 'Retail Sales';
-        } elseif ((int)$this->movement_type == 4) {
-            $typeChar = 'Material Request';
-        } else {
-            $typeChar = '';
-        }
-        
-        return $typeChar;
-    }
-    
-    public function getTotalQuantity() {
-        $total = 0;
-        
-        foreach($this->movementOutDetails as $detail) {
-            $total += $detail->quantity;
-        }
-        
-        return $total;
-    }
 }

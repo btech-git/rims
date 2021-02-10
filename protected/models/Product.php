@@ -226,7 +226,7 @@ class Product extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.code', $this->code, true);
         $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
         $criteria->compare('barcode', $this->barcode, true);
@@ -271,27 +271,27 @@ class Product extends CActiveRecord {
         $criteria->compare('subBrand.name', $this->product_sub_brand_name, true);
         $criteria->compare('subBrandSeries.name', $this->product_sub_brand_series_name, true);
 
-//        $explodeKeyword = explode(" ", $this->findkeyword);
+        $explodeKeyword = explode(" ", $this->findkeyword);
 
-//        foreach ($explodeKeyword as $key) {
+        foreach ($explodeKeyword as $key) {
 
-//            $criteria->compare('t.code', $key, true, 'OR');
-//            $criteria->compare('production_year', $key, true, 'OR');
-//            $criteria->compare('manufacturer_code', $key, true, 'OR');
-//            $criteria->compare('barcode', $key, true, 'OR');
-//            $criteria->compare('t.name', $key, true, 'OR');
-//            $criteria->compare('t.description', $key, true, 'OR');
-//            $criteria->compare('extension', $key, true, 'OR');
+            $criteria->compare('t.code', $key, true, 'AND');
+            $criteria->compare('production_year', $key, true, 'AND');
+            $criteria->compare('manufacturer_code', $key, true, 'AND');
+            $criteria->compare('barcode', $key, true, 'AND');
+            $criteria->compare('t.name', $key, true, 'AND');
+            $criteria->compare('t.description', $key, true, 'AND');
+            $criteria->compare('extension', $key, true, 'AND');
 
-//            $criteria->compare('productMasterCategory.code', $key, true, 'OR');
-//            $criteria->compare('productMasterCategory.name', $key, true, 'OR');
-//            $criteria->compare('productSubMasterCategory.code', $key, true, 'OR');
-//            $criteria->compare('productSubMasterCategory.name', $key, true, 'OR');
+            $criteria->compare('productMasterCategory.code', $key, true, 'AND');
+            $criteria->compare('productMasterCategory.name', $key, true, 'AND');
+            $criteria->compare('productSubMasterCategory.code', $key, true, 'AND');
+            $criteria->compare('productSubMasterCategory.name', $key, true, 'AND');
             // $criteria->compare('productSubCategory.code',$key,true,'OR');
             // $criteria->compare('productSubCategory.name',$key,true,'OR');
 
-//            $criteria->compare('brand.name', $key, true, 'OR');
-//        }
+            $criteria->compare('brand.name', $key, true, 'AND');
+        }
         // $criteria->compare('productSubCategory.code',$this->findkeyword,true,'OR');
         // $criteria->compare('productSubCategory.name',$this->findkeyword,true,'OR');
 

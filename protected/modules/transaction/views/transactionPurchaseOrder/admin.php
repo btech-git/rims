@@ -26,21 +26,21 @@ $this->menu=array(
 // ");
 Yii::app()->clientScript->registerScript('search', "
 	$('.search-button').click(function(){
-            $('.search-form').slideToggle(600);
-            $('.bulk-action').toggle();
-            $(this).toggleClass('active');
-            if ($(this).hasClass('active')){
-                $(this).text('');
-            } else {
-                $(this).text('Advanced Search');
-            }
-            return false;
+		$('.search-form').slideToggle(600);
+		$('.bulk-action').toggle();
+		$(this).toggleClass('active');
+		if($(this).hasClass('active')){
+			$(this).text('');
+		}else {
+			$(this).text('Advanced Search');
+		}
+		return false;
 	});
 	$('.search-form form').submit(function(){
-            $('#transaction-purchase-order-grid').yiiGridView('update', {
-                data: $(this).serialize()
-            });
-            return false;
+		$('#transaction-purchase-order-grid').yiiGridView('update', {
+			data: $(this).serialize()
+		});
+		return false;
 	});
 ");
 ?>
@@ -78,11 +78,8 @@ Yii::app()->clientScript->registerScript('search', "
                     'header'=>'',
                 ),
                 'columns'=>array(
-                    array(
-                        'name'=>'purchase_order_no', 
-                        'value'=>'CHTml::link($data->purchase_order_no, array("view", "id"=>$data->id))', 
-                        'type'=>'raw'
-                    ),
+                    //'id',
+                    array('name'=>'purchase_order_no', 'value'=>'CHTml::link($data->purchase_order_no, array("view", "id"=>$data->id))', 'type'=>'raw'),
                     'purchase_order_date',
                     array(
                         'name'=>'purchase_type',
@@ -102,7 +99,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'name' => 'requester_id',
                         'header' => 'Created By',
                         'filter' => false,
-                        'value' => 'empty($data->user_id) ? "N/A" : $data->user->username',
+                        'value' => '$data->user->username',
                     ),
                     array(
                         'name' => 'approved_id',

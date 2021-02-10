@@ -82,9 +82,8 @@ class AdjustmentController extends Controller {
             $adjustment = $this->instantiate($id);
             $this->loadState($adjustment);
 
-            if (isset($_POST['ProductId'])) {
-                $adjustment->addDetail($_POST['ProductId'], $_POST['StockAdjustmentHeader']['branch_id']);
-            }
+            if (isset($_POST['ProductId']))
+                $adjustment->addDetail($_POST['ProductId']);
 
             $this->renderPartial('_detail', array(
                 'adjustment' => $adjustment,
@@ -123,7 +122,7 @@ class AdjustmentController extends Controller {
             $adjustment = $this->instantiate($id);
             $this->loadState($adjustment);
 
-            $quantityDifference = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustment->details[$index]->getQuantityDifference()));
+            $quantityDifference = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustment->details[$index]->getQuantityDifference($_POST['StockAdjustmentHeader']['warehouse_id'])));
 
             echo CJSON::encode(array(
                 'quantityDifference' => $quantityDifference,

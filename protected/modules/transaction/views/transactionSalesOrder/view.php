@@ -64,16 +64,16 @@ $this->menu = array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
                 'onclick' => ' 
-                    $.ajax({
-                        type: "POST",
-                        //dataType: "JSON",
-                        url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-                        data: $("form").serialize(),
-                        success: function(html) {
-                            alert("Invoice Succesfully Generated");
-                            location.reload();
-                        },
-                    })
+						$.ajax({
+						type: "POST",
+						//dataType: "JSON",
+						url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
+						data: $("form").serialize(),
+						success: function(html) {
+							
+							alert("Invoice Succesfully Generated");
+							location.reload();
+						},})
 				'
             )); ?>
         <?php else: ?>
@@ -83,21 +83,22 @@ $this->menu = array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
                 'onclick' => ' 
-                    if (confirm("Invoice for this sales order has been created. are you sure to reGENERATE it?")){
-                        $.ajax({
-                            type: "POST",
-                            //dataType: "JSON",
-                            url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-                            data: $("form").serialize(),
-                            success: function(html) {
-                                alert("Invoice Succesfully Generated");
-                                location.reload();
-                            },
-                        })
-                    } else {
-                        alert("No new invoice generated.");
-                    }
-                '
+						if(confirm("Invoice for this sales order has been created. are you sure to reGENERATE it?")){
+							$.ajax({
+							type: "POST",
+							//dataType: "JSON",
+							url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
+							data: $("form").serialize(),
+							success: function(html) {
+								
+								alert("Invoice Succesfully Generated");
+								location.reload();
+							},})
+						}
+						else{
+							alert("No new invoice generated.");
+						}
+				'
             )); ?>
         <?php endif ?>
 

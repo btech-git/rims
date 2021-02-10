@@ -109,10 +109,23 @@ class CoaCategory extends CActiveRecord {
         return $balanceTotal;
     }
     
+    public function getProfitLossBalance($startDate, $endDate, $branchId) {
+        $balanceTotal = 0.00;
+        $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $this->id, 'status' => 'Approved'));
+
+        foreach ($coas as $account) {
+        	if ($account->status === 'Approved') {
+            $balanceTotal +=  $account->getProfitLossBalance($startDate, $endDate, $branchId);
+            	}
+        }
+
+        return $balanceTotal;
+    }
+    
     public function getProfitLossAmount($endDate, $branchId) {
         
-        $earningAmount = $this->code === 400 ? $this->getBalanceTotal($endDate, $branchId) : 0;
-        $expenseAmount = $this->code === 500 ? $this->getBalanceTotal($endDate, $branchId) : 0;
+        $earningAmount = $this->code === 400 ? $this->getProfitLossBalance($startDate, $endDate, $branchId) : 0;
+        $expenseAmount = $this->code === 500 ? $this->getProfitLossBalance($startDate, $endDate, $branchId) : 0;
         
         return $earningAmount - $expenseAmount;
     }

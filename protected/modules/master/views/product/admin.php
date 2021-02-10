@@ -325,7 +325,7 @@ $('form').submit(function(){
             }
         });
 
-        $('#Product_product_master_category_id,#Product_product_sub_master_category_id,#Product_product_sub_category_id,#Product_brand_id,#Product_sub_brand_id,#Product_sub_brand_series_id,#Product_name,#Product_manufacturer_code').change(function(){
+        $('#Product_product_master_category_id, #Product_product_sub_master_category_id,#Product_product_sub_category_id,#Product_brand_id,#Product_sub_brand_id,#Product_sub_brand_series_id,#Product_name,#Product_manufacturer_code,#Product_id').change(function(){
             $.fn.yiiGridView.update('product-grid', {
                 data: $(this).serialize()
             });

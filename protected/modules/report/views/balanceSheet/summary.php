@@ -90,33 +90,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </td>
                                 <td></td>
                             </tr>
-                            <?php foreach ($accountCategoryType->coaSubCategories as $accountCategory): ?>
+				<?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code')); ?>
+				<?php //sort($coaSubCategoryCodes); ?> 
+                            <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                                 <tr>
                                     <td style="padding-left: 25px; font-weight: bold; text-transform: capitalize">
                                         <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
                                         <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategory->getBalanceTotal($endDate, $branchId))); ?>
-                                    </td>
-                                </tr>
-                                <?php foreach ($accountCategory->coas as $account): ?>
-                                    <tr>
-                                        <td style="padding-left: 50px">
-                                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                            <?php echo CHtml::encode(CHtml::value($account, 'name')); ?>
-                                        </td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $account->getBalanceTotal($endDate, $branchId))); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                <tr>
-                                    <td style="text-align: right; font-weight: bold">
-                                        TOTAL
-                                        <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                                    </td>
-
-                                    <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                        <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategory->getBalanceTotal($endDate, $branchId))); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategory->getBalanceTotal($endDate, $branchId))); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

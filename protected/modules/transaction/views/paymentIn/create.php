@@ -16,9 +16,8 @@ $this->breadcrumbs=array(
 <!--<h1>Create PaymentIn</h1>-->
 
 <div id="maincontent">
-    <?php $this->renderPartial('_form', array(
-        'model'=>$model,
-        'invoice'=>$invoice,
+	<?php $this->renderPartial('_form', array(
+		'model'=>$model,
+		'invoice'=>$invoice,
 //		'invoiceDataProvider'=>$invoiceDataProvider,
-    )); ?>
-</div>
+		)); ?></div>

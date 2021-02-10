@@ -112,7 +112,7 @@
                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_number')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_date')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_amount')); ?></td>
+                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'payment_amount'))); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'status')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'note')); ?></td>
                         </tr>

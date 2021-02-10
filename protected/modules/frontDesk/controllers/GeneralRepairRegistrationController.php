@@ -279,6 +279,11 @@ class GeneralRepairRegistrationController extends Controller {
             $model->update(array('status'));
         }
 
+        if (isset($_POST['SubmitOffPremise'])) {
+            $model->vehicle_status = 'Off-Premise';
+            $model->update(array('vehicle_status'));
+        }
+
         $this->render('view', array(
             'model' => $model,
             'quickServices' => $quickServices,
@@ -313,9 +318,7 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionGenerateInvoice($id) {
         $registration = RegistrationTransaction::model()->findByPK($id);
-//        $customer = Customer::model()->findByPk($registration->customer_id);
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $registration->id));
-//        $branch = Branch::model()->findByPk($registration->branch_id);
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $registration->transaction_number,
@@ -326,10 +329,6 @@ class GeneralRepairRegistrationController extends Controller {
             $invoice->status = "CANCELLED";
             $invoice->save(false);
         }
-
-//        $days = $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
-//        $invoiceHeader = InvoiceHeader::model()->findAll();
-//        $count = count($invoiceHeader) + 1;
 
         $model = new InvoiceHeader();
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($registration->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($registration->transaction_date)), $registration->branch_id);
@@ -355,6 +354,8 @@ class GeneralRepairRegistrationController extends Controller {
         $model->pph_total = $registration->pph_price;
         $model->ppn = $registration->ppn;
         $model->pph = $registration->pph;
+        $model->payment_date_estimate = date('Y-m-d');
+        $model->coa_bank_id_estimate = 7;
 
         if ($model->save(false)) {
             $registration->payment_status = 'INVOICING';

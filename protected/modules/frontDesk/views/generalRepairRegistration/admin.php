@@ -129,6 +129,7 @@ $('.search-form form').submit(function(){
             ),
             'service_status',
             'payment_status',
+            'vehicle_status',
             array(
                 'name' => 'branch_id',
                 'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),

@@ -264,13 +264,13 @@ class Coa extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
-    public function getReportForecastData($accountId, $transactionDate) {
+    public function getReportForecastData($transactionDate) {
         $sql = "SELECT transaction_subject, total, debet_kredit
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE coa_id = :coa_id AND tanggal_transaksi = :transaction_date";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':coa_id' => $accountId,
+            ':coa_id' => $this->id,
             ':transaction_date' => $transactionDate,
         ));
 
@@ -355,5 +355,51 @@ class Coa extends CActiveRecord {
         }
         
         return $balanceTotal;
+    }
+    
+    public function getProfitLossBalance($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        /*if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }*/
+        
+        $sql = "SELECT SUM(total) AS balance
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date
+                GROUP BY coa_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getFinancialForecastReport() {
+        
+        $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit AS debit, credit AS credit
+                FROM (
+                    SELECT invoice_number AS transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, total_price AS debit, 0 AS credit
+                    FROM " . InvoiceHeader::model()->tableName() . "
+                    UNION
+                    SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit
+                    FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                ) transaction
+                WHERE payment_date_estimate > :payment_date_estimate AND coa_bank_id_estimate = :coa_id
+                ORDER BY payment_date_estimate ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':payment_date_estimate' => date('Y-m-d'),
+            ':coa_id' => $this->id,
+//            ':branch_id' => $branchId,
+        ));
+        
+        return $resultSet;
     }
 }

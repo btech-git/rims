@@ -8,6 +8,7 @@
  * @property string $stock_adjustment_number
  * @property string $date_posting
  * @property integer $branch_id
+ * @property integer $warehouse_id
  * @property integer $user_id
  * @property integer $supervisor_id
  * @property string $status
@@ -38,14 +39,14 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('stock_adjustment_number, date_posting, branch_id, user_id, status', 'required'),
-            array('branch_id, user_id, supervisor_id', 'numerical', 'integerOnly' => true),
+            array('stock_adjustment_number, date_posting, branch_id, warehouse_id, user_id, status', 'required'),
+            array('branch_id, warehouse_id, user_id, supervisor_id', 'numerical', 'integerOnly' => true),
             array('stock_adjustment_number, status', 'length', 'max' => 30),
             array('stock_adjustment_number', 'unique'),
             // array('note', 'length', 'max'=>30),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, stock_adjustment_number, date_posting, branch_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note', 'safe', 'on' => 'search'),
+            array('id, stock_adjustment_number, date_posting, branch_id, warehouse_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note', 'safe', 'on' => 'search'),
         );
     }
 
@@ -59,6 +60,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
             'stockAdjustmentDetails' => array(self::HAS_MANY, 'StockAdjustmentDetail', 'stock_adjustment_header_id'),
             'supervisor' => array(self::BELONGS_TO, 'User', 'supervisor_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'warehouse' => array(self::BELONGS_TO, 'Warehouse', 'warehouse_id'),
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
         );
     }
@@ -72,6 +74,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
             'stock_adjustment_number' => 'Stock Adjustment Number',
             'date_posting' => 'Date Posting',
             'branch_id' => 'Branch',
+            'warehouse_id' => 'Warehouse',
             'user_id' => 'User',
             'supervisor_id' => 'Supervisor',
             'status' => 'Status',
@@ -100,6 +103,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.stock_adjustment_number', $this->stock_adjustment_number, true);
         $criteria->compare('t.date_posting', $this->date_posting, true);
         $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.warehouse_id', $this->warehouse_id);
         $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('t.supervisor_id', $this->supervisor_id);
         $criteria->compare('t.status', $this->status, true);

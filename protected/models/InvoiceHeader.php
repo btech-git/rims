@@ -8,6 +8,8 @@
  * @property string $invoice_number
  * @property string $invoice_date
  * @property string $due_date
+ * @property string $payment_date_estimate
+ * @property integer $coa_bank_id_estimate
  * @property integer $reference_type
  * @property integer $sales_order_id
  * @property integer $registration_transaction_id
@@ -40,6 +42,7 @@
  * @property Customer $customer
  * @property Vehicle $vehicle
  * @property Branch $branch
+ * @property CoaBank $coaBankIdEstimate
  * @property PaymentIn[] $invoiceHeaders
  */
 class InvoiceHeader extends MonthlyTransactionActiveRecord {
@@ -75,15 +78,15 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_price', 'required'),
-            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service', 'numerical', 'integerOnly' => true),
+            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate', 'numerical', 'integerOnly' => true),
             array('invoice_number', 'length', 'max' => 50),
             array('status', 'length', 'max' => 30),
             array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_price, payment_amount, payment_left', 'length', 'max' => 18),
-            array('in_words, note', 'safe'),
+            array('in_words, note, payment_date_estimate', 'safe'),
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate', 'safe', 'on' => 'search'),
         );
     }
 
@@ -100,6 +103,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'coaBankIdEstimate' => array(self::BELONGS_TO, 'CompanyBank', 'coa_bank_id_estimate'),
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'invoice_id'),
         );
     }
@@ -113,6 +118,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             'invoice_number' => 'Invoice Number',
             'invoice_date' => 'Invoice Date',
             'due_date' => 'Due Date',
+            'payment_date_estimate' => 'Payment Date',
+            'coa_bank_id_estimate' => 'Company Bank',
             'invoice_date_to' => 'Invoice Date To',
             'due_date_to' => 'Due Date To',
             'reference_type' => 'Reference Type',
@@ -161,6 +168,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
         $criteria->compare('customer_id', $this->customer_id);
         $criteria->compare('vehicle_id', $this->vehicle_id);
+        $criteria->compare('coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('payment_date_estimate', $this->payment_date_estimate);
         $criteria->compare('ppn', $this->ppn);
         $criteria->compare('pph', $this->pph);
         $criteria->compare('branch_id', $this->branch_id);

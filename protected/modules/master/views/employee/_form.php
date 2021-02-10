@@ -53,7 +53,9 @@
                         <?php echo $form->dropDownList($employee->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'),array(
                             'prompt' => '[--Select Branch--]',
                             'onchange' => ''
-                        )); ?>
+                            )
+                        ); 
+                        ?>
 
                         <?php echo $form->error($employee->header,'branch_id'); ?>
                     </div>

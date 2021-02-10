@@ -230,13 +230,4 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    public function getTotalQuantity() {
-        $total = 0;
-        
-        foreach ($this->transactionDeliveryOrderDetails as $detail) {
-            $total += $detail->quantity_delivery;
-        }
-        
-        return $total;
-    }
 }

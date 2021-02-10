@@ -62,6 +62,25 @@ class InvoiceHeaderController extends Controller {
         ));
     }
 
+    public function actionUpdateEstimateDate($id) {
+        $model = $this->loadModel($id);
+        $details = InvoiceDetail::model()->findAllByAttributes(array('invoice_id' => $id));
+        $payments = PaymentIn::model()->findAllByAttributes(array('invoice_id' => $id));
+        
+        if (isset($_POST['Update'])) {
+            $model->payment_date_estimate = $_POST['InvoiceHeader']['payment_date_estimate'];
+            $model->coa_bank_id_estimate = $_POST['InvoiceHeader']['coa_bank_id_estimate'];
+            $model->update(array('coa_bank_id_estimate', 'payment_date_estimate'));
+
+            $this->redirect(array('view', 'id' => $model->id));
+        }
+
+        $this->render('updateEstimateDate', array(
+            'model' => $model,
+            'details' => $details,
+            'payments' => $payments,
+        ));
+    }
 //    public function actionTest() {
 //        // $this->layout='//layouts/invoice';
 //        (!empty(Yii::app()->session['pr'])) ? $pr = Yii::app()->session['pr'] : $pr = array();

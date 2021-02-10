@@ -77,7 +77,7 @@ class VehicleInspections extends CComponent {
     }
 
     public function flush() {
-//        $isNewRecord = $this->header->isNewRecord;
+        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
         $vehicleInspectionDetails = VehicleInspectionDetail::model()->findAllByAttributes(array('vehicle_inspection_id' => $this->header->id));

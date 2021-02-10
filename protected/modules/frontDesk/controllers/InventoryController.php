@@ -117,7 +117,7 @@ class InventoryController extends Controller {
     public function actionAjaxHtmlUpdateProductStockTable() {
         if (Yii::app()->request->isAjaxRequest) {
             $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
-            $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
             $productDataProvider = $product->searchByStockCheck($pageNumber);
             $branches = Branch::model()->findAll();
 

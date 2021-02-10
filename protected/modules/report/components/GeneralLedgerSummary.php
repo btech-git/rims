@@ -34,7 +34,9 @@ class GeneralLedgerSummary extends CComponent {
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
 
-        $this->dataProvider->criteria->compare('t.id', $accountId);
+        if (!empty($accountId)) {
+        	$this->dataProvider->criteria->compare('t.id', $accountId);
+	}
         
         if (!empty($branchId)) {
             $this->dataProvider->criteria->compare('jurnalUmums.branch_id', $branchId);

@@ -107,14 +107,14 @@ $this->breadcrumbs = array(
                                 //'disabled'=>$model->sales_order_number == "" ? true : false,
                                 'onclick' => ' 
                                     $.ajax({
-										type: "POST",
-										//dataType: "JSON",
-										url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-										data: $("form").serialize(),
-										success: function(html) {
-											alert("Invoice Succesfully Generated");
-											location.reload();
-										},
+                                        type: "POST",
+                                        //dataType: "JSON",
+                                        url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
+                                        data: $("form").serialize(),
+                                        success: function(html) {
+                                                alert("Invoice Succesfully Generated");
+                                                location.reload();
+                                        },
                                     })
                                 '
                             )); ?>

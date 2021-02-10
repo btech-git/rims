@@ -54,7 +54,12 @@ $this->menu=array(
                 array('name' => 'approved_id', 'value'=> $model->approval != null ? $model->approval->username : null),
                 array('name'=>'supplier_name','value'=>$model->supplier->name),
                 'estimate_date_arrival',
-                'estimate_payment_date',
+                'payment_date_estimate',
+                array(
+                    'name' =>'coa_bank_id_estimate',
+                    'label' => 'Akun Bank Estimasi',
+                    'value'=>$model->coaBankIdEstimate->name,
+                ),
             ),
         )); ?>
     </div>

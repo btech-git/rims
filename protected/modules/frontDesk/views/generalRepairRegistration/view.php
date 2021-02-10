@@ -20,7 +20,8 @@ $this->breadcrumbs = array(
                     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Registration', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.generalRepairRegistration.admin"))) ?>
              
                     <?php if ($model->status != 'Finished'): ?>
-                        <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning right')); ?>
+                        <?php echo CHtml::submitButton('Finish Transaction', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning right', 'style' => 'margin-right:10px')); ?>
+                        <?php echo CHtml::submitButton('Vehicle Off Premise', array('name' => 'SubmitOffPremise', 'confirm' => 'Are you sure you want to set this vehice off-premise?', 'class' => 'button success right', 'style' => 'margin-right:10px')); ?>
                         
                         <?php if (count($invoices) == 0): ?>
                             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.generalRepairRegistration.update"))) ?>

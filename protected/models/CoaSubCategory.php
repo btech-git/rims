@@ -109,4 +109,12 @@ class CoaSubCategory extends CActiveRecord {
         return $balanceTotal;
     }
 
+    public function getProfitLossBalance($startDate, $endDate, $branchId) {
+        $balanceTotal = 0.00;
+
+        foreach ($this->coas as $accountCategory)
+            $balanceTotal += $accountCategory->getProfitLossBalance($startDate, $endDate, $branchId);
+
+        return $balanceTotal;
+    }
 }

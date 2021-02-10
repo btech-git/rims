@@ -32,7 +32,7 @@ class ProfitLossController extends Controller {
                     'coas' 
                 ),
             ),
-        ))->findAll("t.id IN (6, 7)");
+        ))->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
         if (isset($_GET['SaveExcel']))
             $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);

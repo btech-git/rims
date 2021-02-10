@@ -428,6 +428,8 @@ class BodyRepairRegistrationController extends Controller {
         $model->pph_total = $registration->pph_price;
         $model->ppn = $registration->ppn;
         $model->pph = $registration->pph;
+        $model->payment_date_estimate = date('Y-m-d');
+        $model->coa_bank_id_estimate = 7;
         //$model->save(false);
         if ($model->save(false)) {
             $registration->payment_status = 'INVOICING';

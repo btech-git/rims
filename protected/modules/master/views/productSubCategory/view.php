@@ -32,9 +32,9 @@ $this->menu=array(
 		'attributes'=>array(
 			'id',
 			//'product_master_category',
-			array('name'=>'product_master_category', 'value'=>$model->productMasterCategory->code),
+			array('name'=>'product_master_category', 'value'=>$model->productMasterCategory->name),
 			//'product_sub_master_category_id',
-			array('name'=>'product_sub_master_category', 'value'=>$model->productSubMasterCategory->code),
+			array('name'=>'product_sub_master_category', 'value'=>$model->productSubMasterCategory->name),
 			'code',
 			'name',
 			'description',

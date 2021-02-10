@@ -10,16 +10,14 @@
  * @property string $transaction_time
  * @property string $transaction_type
  * @property integer $coa_id
- * @property string $debit_amounet
+ * @property string $debit_amount
  * @property string $credit_amount
- * @property integer $payment_typ_id
  * @property integer $branch_id
  * @property integer $user_id
  * @property string $status
  *
  * The followings are the available model relations:
  * @property Coa $coa
- * @property PaymentType $paymentType
  * @property Branch $branch
  * @property Users $user
  * @property CashTransactionApproval[] $cashTransactionApprovals
@@ -54,8 +52,8 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, payment_type_id', 'required'),
-            array('coa_id, branch_id, user_id, payment_type_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id', 'required'),
+            array('coa_id, branch_id, user_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('transaction_type', 'length', 'max' => 20),
             array('debit_amount, credit_amount', 'length', 'max' => 18),
@@ -63,7 +61,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, payment_type_id, branch_id, user_id, status', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -77,7 +75,6 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-            'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
             'cashTransactionApprovals' => array(self::HAS_MANY, 'CashTransactionApproval', 'cash_transaction_id'),
             'cashTransactionDetails' => array(self::HAS_MANY, 'CashTransactionDetail', 'cash_transaction_id'),
             'cashTransactionImages' => array(self::HAS_MANY, 'CashTransactionImages', 'cash_transaction_id'),
@@ -98,7 +95,6 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             'debit_amount' => 'Debit Amount',
             'credit_amount' => 'Credit Amount',
             'branch_id' => 'Branch',
-            'payment_type_id' => 'Payment Type',
             'user_id' => 'User',
             'status' => 'Status',
         );
@@ -130,7 +126,6 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('debit_amount', $this->debit_amount, true);
         $criteria->compare('credit_amount', $this->credit_amount, true);
         $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('payment_type_id', $this->payment_type_id);
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
 

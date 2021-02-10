@@ -46,6 +46,7 @@
  * @property string $note
  * @property string $is_passed
  * @property string $service_status
+ * @property string $vehicle_status
  * @property integer $total_time
  * @property integer $priority_level
  * @property string $customer_work_order_number
@@ -108,9 +109,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('customer_id, vehicle_id, service_status', 'required'),
+            array('customer_id, vehicle_id, service_status, vehicle_status', 'required'),
             array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed', 'numerical', 'integerOnly' => true),
-            array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number', 'length', 'max' => 30),
+            array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, vehicle_status', 'length', 'max' => 30),
             array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, down_payment_amount', 'length', 'max' => 18),
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
             array('status', 'length', 'max' => 50),
@@ -118,7 +119,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_date, problem, work_order_date, sales_order_date, note, customer_type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -205,6 +206,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'is_passed' => 'Quality Control',
             'total_time' => 'Total Time',
             'service_status' => 'Service Status',
+            'vehicle_status' => 'Vehicle Status',
             'priority_level' => 'Priority Level',
             'customer_work_order_number' => 'SPK #',
         );
@@ -269,6 +271,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('note', $this->note, true);
         $criteria->compare('is_passed', $this->is_passed);
         $criteria->compare('total_time', $this->total_time);
+        $criteria->compare('vehicle_status', $this->vehicle_status);
         $criteria->compare('priority_level', $this->priority_level);
         $criteria->compare('customer_work_order_number', $this->customer_work_order_number);
 

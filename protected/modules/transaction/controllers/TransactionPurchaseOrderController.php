@@ -53,6 +53,7 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionCreate() {
         $purchaseOrder = $this->instantiate(null);
         $purchaseOrder->header->main_branch_id = $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id;
+        $purchaseOrder->header->coa_bank_id_estimate = 7;
 //        $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
         $this->performAjaxValidation($purchaseOrder->header);
 
@@ -107,6 +108,7 @@ class TransactionPurchaseOrderController extends Controller {
         if (isset($_POST['TransactionPurchaseOrder'])) {
             $this->loadState($purchaseOrder);
             $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
+            $purchaseOrder->header->payment_date_estimate = date('Y-m-d');
             
             if ($purchaseOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $purchaseOrder->header->id));

@@ -147,16 +147,16 @@ class Branches extends CComponent {
         return $valid;
     }
 
-//    public function validateDetailsCount() {
-//        $valid = true;
-//        
-//        if (count($this->warehouseDetails) === 0) {
-//            $valid = false;
-//            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-//        }
-//
-//        return $valid;
-//    }
+    public function validateDetailsCount() {
+        $valid = true;
+        
+        if (count($this->warehouseDetails) === 0) {
+            $valid = false;
+            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+        }
+
+        return $valid;
+    }
 
     public function flush() {
 //        $isNewRecord = $this->header->isNewRecord;

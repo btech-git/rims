@@ -46,7 +46,7 @@ class CashDailySummaryController extends Controller {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT pi.branch_id, pi.payment_type_id, b.name as branch_name, pt.name as payment_type_name, COALESCE(SUM(payment_amount), 0) as total_amount
+        $sql = "SELECT pi.branch_id, pi.payment_type_id, b.name as branch_name, pt.name as payment_type_name, COALESCE(SUM(pi.payment_amount), 0) as total_amount
                 FROM " . PaymentIn::model()->tableName() . " pi
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
@@ -268,25 +268,47 @@ class CashDailySummaryController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        $model = new CashDailyApproval('search');
-        $model->unsetAttributes();  // clear any default values
+        $model = new CashDailyApproval();
         
-        if (isset($_GET['CashDailyApproval']))
-            $model->attributes = $_GET['CashDailyApproval'];
-
-        $modelCriteria = new CDbCriteria;
-        $dataProvider = new CActiveDataProvider('CashDailyApproval', array(
-            'criteria' => $modelCriteria,
-            'sort' => array(
-                'defaultOrder' => 'transaction_date DESC',
-            ),
-            'pagination' => array(
-                'pageSize' => 30,
-            )
-        ));
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        
+        $month = isset($_GET['Month']) ? $_GET['Month'] : $currentMonth;
+        $year = isset($_GET['Year']) ? $_GET['Year'] : $currentYear;
+        
+        $approvalList = $model->getApprovalList($month, $year);
+        
+        $approvalsRefs = array();
+        foreach ($approvalList as $approval) {
+            $approvalsRefs[$approval['transaction_date']] = array();
+            $approvalsRefs[$approval['transaction_date']][0] = $approval['username'];
+            $approvalsRefs[$approval['transaction_date']][1] = $approval['approval_date'];
+            $approvalsRefs[$approval['transaction_date']][2] = $approval['amount'];
+        }
+        
+        $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        
+        $approvals = array();
+        for ($d = 0; $d < $numberOfDaysInMonth; $d++) {
+            $currentDate = sprintf('%04d-%02d-%02d', $year, $month, $d + 1);
+            $approvals[$d] = array();
+            $approvals[$d]['transaction_date'] = $currentDate;
+            $approvals[$d]['transaction_day_of_week'] = date('l', strtotime($currentDate));
+            $approvals[$d]['username'] = isset($approvalsRefs[$currentDate][0]) ? $approvalsRefs[$currentDate][0] : '';
+            $approvals[$d]['approval_date'] = isset($approvalsRefs[$currentDate][1]) ? $approvalsRefs[$currentDate][1] : '';
+            $approvals[$d]['amount'] = isset($approvalsRefs[$currentDate][2]) ? $approvalsRefs[$currentDate][2] : '';
+        }
+        
+        $yearList = array();
+        for ($y = $currentYear - 4; $y <= $currentYear; $y++) {
+            $yearList[$y] = $y;
+        }
+        
         $this->render('admin', array(
-            'model' => $model,
-            'dataProvider' => $dataProvider,
+            'approvals' => $approvals,
+            'month' => $month,
+            'year' => $year,
+            'yearList' => $yearList,
         ));
     }
 

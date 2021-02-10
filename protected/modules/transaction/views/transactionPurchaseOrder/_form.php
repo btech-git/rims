@@ -275,15 +275,15 @@
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label class="prefix">
-                                <?php echo $form->labelEx($purchaseOrder->header, 'estimate_payment_date'); ?>
+                                <?php echo $form->labelEx($purchaseOrder->header, 'payment_date_estimate'); ?>
                             </label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'estimate_payment_date'); ?>
+                            <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'payment_date_estimate'); ?>
                             <?php echo CHtml::openTag('span', array('id' => 'estimate_payment_date')); ?>
-                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", $purchaseOrder->header->estimate_payment_date)); ?>
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", $purchaseOrder->header->payment_date_estimate)); ?>
                             <?php echo CHtml::closeTag('span'); ?>
-                            <?php echo $form->error($purchaseOrder->header, 'estimate_payment_date'); ?>
+                            <?php echo $form->error($purchaseOrder->header, 'payment_date_estimate'); ?>
                         </div>
                     </div>
                 </div>

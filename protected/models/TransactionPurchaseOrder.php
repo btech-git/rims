@@ -26,7 +26,8 @@
  * @property integer $company_bank_id
  * @property string $payment_status
  * @property integer $coa_id
- * @property string $estimate_payment_date
+ * @property string $payment_date_estimate
+ * @property integer $coa_bank_id_estimate
  * @property integer $purchase_type
  *
  * The followings are the available model relations:
@@ -38,6 +39,7 @@
  * @property TransactionPurchaseOrderDetail[] $transactionPurchaseOrderDetails
  * @property TransactionReceiveItem[] $transactionReceiveItems
  * @property TransactionReturnOrder[] $transactionReturnOrders
+ * @property CoaBank $coaBankIdEstimate
  */
 class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
@@ -78,17 +80,17 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_no, purchase_order_date, status_document, payment_type, estimate_payment_date, purchase_type', 'required'),
-            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type', 'numerical', 'integerOnly' => true),
+            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type', 'required'),
+            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
-            array('estimate_date_arrival', 'safe'),
+            array('estimate_date_arrival, payment_date_estimate', 'safe'),
             array('payment_status', 'length', 'max' => 50),
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, estimate_payment_date, main_branch_name, approved_name, requester_name, purchase_type', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate', 'safe', 'on' => 'search'),
         );
     }
 
@@ -110,6 +112,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'approval' => array(self::BELONGS_TO, 'User', 'approved_id'),
             'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
             'requesterBranch' => array(self::BELONGS_TO, 'Branch', 'requester_branch_id'),
+            'coaBankIdEstimate' => array(self::BELONGS_TO, 'Coa', 'coa_bank_id_estimate'),
         );
     }
 
@@ -139,9 +142,9 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'payment_left' => 'Payment Left',
             'company_bank_id' => 'Company Bank',
             'payment_status' => 'Payment Status',
-            'estimate_payment_date' => 'Estimate Payment Date',
+            'payment_date_estimate' => 'Estimate Payment Date',
             'purchase_type' => 'Purchase Type',
-                //'coa_id' => 'Coa',
+            'coa_bank_id_estimate' => 'Coa Bank',
         );
     }
 
@@ -183,7 +186,8 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('payment_left', $this->payment_left, true);
         $criteria->compare('company_bank_id', $this->company_bank_id);
         $criteria->compare('payment_status', $this->payment_status, true);
-        $criteria->compare('estimate_payment_date', $this->estimate_payment_date, true);
+        $criteria->compare('coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('payment_date_estimate', $this->payment_date_estimate);
         $criteria->compare('purchase_type', $this->purchase_type, true);
 
         $criteria->together = 'true';

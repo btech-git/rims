@@ -26,7 +26,6 @@ class Employees extends CComponent
 		$phoneDetail = new EmployeePhone();
 		$this->phoneDetails[] = $phoneDetail;
 	}
-    
 	public function addMobileDetail()
 	{
 		$mobileDetail = new EmployeeMobile();

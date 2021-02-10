@@ -15,61 +15,71 @@
     </div>
 <?php endif; ?>
 
-<center>
-    <?php echo CHtml::beginForm(array(''), 'get'); ?>
-    <?php /*
-    $pageSize = Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']);
-    $pageSizeDropDown = CHtml::dropDownList(
-        'pageSize', $pageSize, array(10 => 10, 25 => 25, 50 => 50, 100 => 100), array(
-            'class' => 'change-pagesize',
-            'onchange' => "$.fn.yiiGridView.update('payment-grid',{data:{pageSize:$(this).val()}});",
-        )
-    );*/
-    ?>
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
 
-<!--    <div class="page-size-wrap">
-        <span>Display by:</span><?php //echo $pageSizeDropDown; ?>
-    </div>-->
-</center>
+<div class="row">
+    <div class="medium-12 columns">
+        <div class="field">
+            <div class="row collapse">
+                <div class="small-4 columns">
+                    <span class="prefix">Periode </span>
+                </div>
+                
+                <div class="small-4 columns">
+                    <?php echo CHtml::dropDownList('Month', $month, array(
+                        '1' => 'Jan',
+                        '2' => 'Feb',
+                        '3' => 'Mar',
+                        '4' => 'Apr',
+                        '5' => 'May',
+                        '6' => 'Jun',
+                        '7' => 'Jul',
+                        '8' => 'Aug',
+                        '9' => 'Sep',
+                        '10' => 'Oct',
+                        '11' => 'Nov',
+                        '12' => 'Dec',
+                    )); ?>
+                </div>
+                
+                <div class="small-4 columns">
+                    <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'cash-daily-grid',
-    'dataProvider' => $dataProvider,
-    'filter' => $model,
-    'columns' => array(
-        array(
-            'header' => 'Tanggal Transaksi',
-            'name' => 'transaction_date',
-            'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
-        ),
-        array(
-            'header' => 'Hari Transaksi',
-            'filter' => false,
-            'value' => 'date("l", strtotime(CHtml::value($data, "transaction_date")))',
-        ),
-//        array(
-//            'name' => 'amount', 
-//            'value' => 'number_format($data->amount, 0)',
-//            'htmlOptions' => array(
-//                'style' => 'text-align: right'         
-//            ),
-//        ),
-        array(
-            'header' => 'Approved By',
-            'value' => 'CHtml::value($data, "user.username")',
-        ),
-        array(
-            'header' => 'Tanggal Approval',
-            'name' => 'approval_date',
-            'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->approval_date)'
-        ),
-//        array(
-//            'class' => 'CButtonColumn',
-//            'template' => '{view}',
-//            'afterDelete' => 'function(){ location.reload(); }'
-//        ),
-    ),
-)); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center">
+    <?php echo CHtml::submitButton('Submit'); ?>
+</div>
+
+<br /><br />
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal Transaksi</th>
+                <th>Hari Transaksi</th>
+                <th>Amount</th>
+                <th>Approved By</th>
+                <th>Tanggal Approval</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($approvals as $approval): ?>
+                <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($approval, 'transaction_date')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($approval, 'transaction_day_of_week')); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($approval, 'amount'))); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($approval, 'username')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($approval, 'approval_date')); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
 <?php echo CHtml::endForm(); ?>

@@ -73,8 +73,10 @@ class TransactionSalesOrderController extends Controller {
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['Customer']))
             $customer->attributes = $_GET['Customer'];
+        
         $customerCriteria = new CDbCriteria;
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('email', $customer->email, true);
@@ -857,10 +859,12 @@ class TransactionSalesOrderController extends Controller {
         $salesOrder = TransactionSalesOrder::model()->findByPK($id);
         $customer = Customer::model()->findByPk($salesOrder->customer_id);
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $salesOrder->id));
+        
         foreach ($invoices as $invoice) {
             $invoice->status = "CANCELLED";
             $invoice->save(false);
         }
+        
         $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
         $invoiceHeader = InvoiceHeader::model()->findAll();
         $count = count($invoiceHeader) + 1;
@@ -869,6 +873,8 @@ class TransactionSalesOrderController extends Controller {
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->invoice_date)), $salesOrder->requester_branch_id);
         $model->invoice_date = date('Y-m-d');
         $model->due_date = $duedate;
+        $model->payment_date_estimate = $duedate;
+        $model->coa_bank_id_estimate = 7;
         $model->reference_type = 1;
         $model->sales_order_id = $id;
         $model->customer_id = $salesOrder->customer_id;

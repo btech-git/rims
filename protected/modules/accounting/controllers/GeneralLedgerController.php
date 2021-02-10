@@ -31,14 +31,16 @@ class GeneralLedgerController extends Controller {
         $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
         $accountId = (isset($_GET['AccountId'])) ? $_GET['AccountId'] : '';
 
-        $accounts = Coa::model()->findAll();
+        $accounts = Coa::model()->findAll(array(
+            'order' => 'code ASC',
+        ));
 
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
         $generalLedgerSummary->setupLoading($startDate, $endDate, $accountId);
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
         $generalLedgerSummary->setupFilter($startDate, $endDate, $accountId);
-//        $generalLedgerSummary->getSaldo($startDate);
+        $generalLedgerSummary->getSaldo($startDate);
 
 //        if (isset($_GET['SaveExcel']))
 //            $this->saveToExcel($generalLedgerSummary, $generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));

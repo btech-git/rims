@@ -262,6 +262,36 @@ $this->menu = array(
                     </fieldset>
 
                     <fieldset>
+                        <legend>Payment History</legend>
+                        <div class="large-12 columns">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($invoice->paymentIns as $paymentIn): ?>
+                        <tr>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_date')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>
+                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'payment_amount'))); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'status')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'note')); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
                         <legend>Customer</legend>
                         <div class="large-6 columns">
                             <div class="field">
@@ -357,6 +387,7 @@ $this->menu = array(
                             </div>
                         </div>
                     </fieldset>
+
                     <?php if ($model->vehicle_id != ""): ?>
                         <fieldset>
                             <legend>Vehicle</legend>

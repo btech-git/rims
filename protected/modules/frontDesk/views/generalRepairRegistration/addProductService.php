@@ -3,8 +3,8 @@
 /* @var $model RegistrationTransaction */
 
 $this->breadcrumbs=array(
-    'General Repair Registration'=>array('admin'),
-    'Add Product Service',
+	'General Repair Registration'=>array('admin'),
+	'Add Product Service',
 );
 ?>
 <div id="maincontent">
@@ -119,6 +119,8 @@ $this->breadcrumbs=array(
                                                     'success' => 'function(data) {
                                                         $("#grand_total_transaction").html(data.grandTotal);
                                                         $("#tax_service_amount").html(data.taxServiceAmount);
+                                                        $("#total_quick_service_quantity").html(data.totalQuickServiceQuantity);
+                                                        $("#sub_total_quick_service").html(data.subTotalQuickService);
                                                     }',
                                                 )),
                                             )); ?>
@@ -322,9 +324,7 @@ $this->breadcrumbs=array(
 
                                 </div>
                             </div>
-                            
                             <hr />
-                            
                             <div class="row">
                                 <div class="field">
                                     <table>
@@ -347,7 +347,6 @@ $this->breadcrumbs=array(
                                                 <?php echo $form->error($generalRepairRegistration->header,'total_quickservice_price'); ?>
                                             </td>
                                         </tr>
-                                        
                                         <tr>
                                             <td><?php echo $form->labelEx($generalRepairRegistration->header,'total_service'); ?></td>
                                             <td style="text-align: right">
@@ -382,7 +381,6 @@ $this->breadcrumbs=array(
                                                 <?php echo $form->error($generalRepairRegistration->header,'total_service_price'); ?>
                                             </td>
                                         </tr>
-                                        
                                         <tr>
                                             <td><?php echo $form->labelEx($generalRepairRegistration->header,'total_product'); ?></td>
                                             <td style="text-align: right">
@@ -417,7 +415,6 @@ $this->breadcrumbs=array(
                                                 <?php echo $form->error($generalRepairRegistration->header,'total_product_price'); ?>
                                             </td>
                                         </tr>
-                                        
                                         <tr>
                                             <td style="font-weight: bold"><?php echo $form->labelEx($generalRepairRegistration->header,'subtotal'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
@@ -429,7 +426,7 @@ $this->breadcrumbs=array(
                                             </td>
                                             <td style="font-weight: bold"><?php echo $form->labelEx($generalRepairRegistration->header,'ppn_price'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
-                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'ppn_price'); ?>
+                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'ppn_price',array('size'=>18,'maxlength'=>18,'readonly'=>true,)); ?>
                                                 <span id="tax_item_amount">
                                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'ppn_price'))); ?>
                                                 </span>
@@ -437,7 +434,7 @@ $this->breadcrumbs=array(
                                             </td>
                                             <td style="font-weight: bold"><?php echo $form->labelEx($generalRepairRegistration->header,'pph_price'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
-                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'pph_price'); ?>
+                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'pph_price',array('size'=>18,'maxlength'=>18,'readonly'=>true,)); ?>
                                                 <span id="tax_service_amount">
                                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'pph_price'))); ?>
                                                 </span>
@@ -445,7 +442,7 @@ $this->breadcrumbs=array(
                                             </td>
                                             <td style="font-weight: bold"><?php echo $form->labelEx($generalRepairRegistration->header,'grand_total'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
-                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'grand_total'); ?>
+                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'grand_total',array('size'=>18,'maxlength'=>18,'readonly'=>true)); ?>
                                                 <span id="grand_total_transaction">
                                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'grand_total'))); ?>
                                                 </span>

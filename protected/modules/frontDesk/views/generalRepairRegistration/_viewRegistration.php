@@ -36,7 +36,6 @@
                     </div>
                 </div>
 
-
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -47,6 +46,40 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Service Status</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->service_status; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Payment Status</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->payment_status; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Vehicle Status</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->vehicle_status; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">

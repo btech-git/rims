@@ -25,10 +25,25 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
+                                        <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">COA</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('CoaId', $accountId, CHtml::listData(Coa::model()->findAll(array('condition' => 'coa_id IS NOT NULL')), 'id', 'name'), array('empty' => '-- All COA --')); ?>
                                     </div>
                                 </div>
                             </div>
