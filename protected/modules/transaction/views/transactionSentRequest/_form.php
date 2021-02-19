@@ -100,7 +100,7 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020'
+//                                    'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
                                     'value' => $sentRequest->header->isNewRecord ? date('Y-m-d') : $sentRequest->header->estimate_arrival_date,

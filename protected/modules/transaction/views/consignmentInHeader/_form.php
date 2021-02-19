@@ -170,7 +170,7 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020'
+//                                    'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
                                     'value' => date('Y-m-d'),

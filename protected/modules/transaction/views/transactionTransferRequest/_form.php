@@ -72,7 +72,7 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020'
+//                                    'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
                                     'value' => $transferRequest->header->isNewRecord ? date('Y-m-d') : $transferRequest->header->transfer_request_date,
@@ -128,7 +128,7 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020'
+//                                    'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
                                     'value' => $transferRequest->header->isNewRecord ? date('Y-m-d') : $transferRequest->header->estimate_arrival_date,

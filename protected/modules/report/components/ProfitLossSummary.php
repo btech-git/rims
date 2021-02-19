@@ -30,8 +30,8 @@ class ProfitLossSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate, $accountId, $branchId) {
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
+//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
 
         $this->dataProvider->criteria->compare('t.id', $accountId);
@@ -43,7 +43,7 @@ class ProfitLossSummary extends CComponent {
 
     public function getSaldo($startDate) {
         foreach ($this->dataProvider->data as $data) {
-            $saldo = $data->getBeginningBalanceLedger($startDate);
+            $saldo = 0; //$data->getBeginningBalanceLedger($startDate);
 
             foreach ($data->jurnalUmums as $detail) {
                 $debitAmount = ($detail->debet_kredit === 'D') ? $detail->total : 0 ;

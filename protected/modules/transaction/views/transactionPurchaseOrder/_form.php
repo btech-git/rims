@@ -232,7 +232,7 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020',
+//                                    'yearRange' => '1900:2020',
                                     'onSelect' => 'js:function(dateText, inst) {
                                         $.ajax({
                                             type: "POST",
