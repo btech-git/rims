@@ -13,7 +13,7 @@
         <span></span><br />
         <div>Tanggal Cetak: <?php echo date('d/m/Y'); ?></div>
     </div>
-    <p></p>
+
     <table>
         <thead>
             <th>NO</th>
@@ -32,6 +32,8 @@
             <?php foreach ($jurnals as $key => $jurnal): ?>
                 <?php if ($jurnal->is_coa_category == 0): ?>
                     <?php if ($lastkode != $jurnal->kode_transaksi): ?>
+                        <?php $transactionTotalDebit = 0; ?> 
+                        <?php $transactionTotalCredit = 0; ?>
                         <tr>
                             <td><?php echo $number; ?></td>
                             <td>
@@ -41,8 +43,8 @@
                                 <?php echo $lastkode == $jurnal->kode_transaksi ? "" : CHtml::link($jurnal->kode_transaksi, Yii::app()->createUrl("accounting/jurnalUmum/redirectTransaction", array("codeNumber" => $jurnal->kode_transaksi)), array('target' => '_blank')); ?>
                             </td>
                             <td colspan="2" style="font-weight: bold; text-align: center"><?php echo $lastkode == $jurnal->kode_transaksi ? "" : $jurnal->transaction_subject; ?></td>
-                            <td style="font-weight: bold; text-align: center"><?php echo number_format($jurnal->getSubTotalDebit($jurnal->kode_transaksi), 2) ?></td>
-                            <td style="font-weight: bold; text-align: center"><?php echo number_format($jurnal->getSubTotalKredit($jurnal->kode_transaksi), 2) ?></td>
+                            <td style="font-weight: bold; text-align: center"><?php //echo number_format($jurnal->getSubTotalDebit($jurnal->kode_transaksi), 2) ?></td>
+                            <td style="font-weight: bold; text-align: center"><?php //echo number_format($jurnal->getSubTotalKredit($jurnal->kode_transaksi), 2) ?></td>
                         </tr>
                         <?php $number += 1; ?>
                     <?php endif; ?>
@@ -50,26 +52,35 @@
                         <td colspan="3">&nbsp;</td>
                         <td><?php echo empty($jurnal->coa) ? "" : $jurnal->branchAccountCode; ?></td>
                         <td><?php echo empty($jurnal->coa) ? "" : $jurnal->branchAccountName ?></td>
-                        <td><?php echo $jurnal->debet_kredit == 'D' ? number_format($jurnal->total, 2) : '' ?></td>
-                        <td><?php echo $jurnal->debet_kredit == 'K' ? number_format($jurnal->total, 2) : '' ?></td>
+                        <td style="text-align: right"><?php echo $jurnal->debet_kredit == 'D' ? number_format($jurnal->total, 2) : '' ?></td>
+                        <td style="text-align: right"><?php echo $jurnal->debet_kredit == 'K' ? number_format($jurnal->total, 2) : '' ?></td>
                         <?php
                         if ($jurnal->debet_kredit == 'D') {
                             $totalDebet += $jurnal->total;
+                            $transactionTotalDebit += $jurnal->total;
                         }
                         ?>
                         <?php
                         if ($jurnal->debet_kredit == 'K') {
                             $totalkredit += $jurnal->total;
+                            $transactionTotalCredit += $jurnal->total;
                         }
                         ?>
                     </tr>
-                <?php $lastkode = $jurnal->kode_transaksi; ?>
-            <?php endif; ?>
-        <?php endforeach; ?>
+                    <?php if ($lastkode != $jurnal->kode_transaksi): ?>
+                        <tr>
+                            <td colspan="5" style="font-weight: bold; text-align: right">Total</td>
+                            <td style="font-weight: bold; text-align: right"><b><?php echo number_format($transactionTotalDebit, 2); ?></b></td>
+                            <td style="font-weight: bold; text-align: right"><b><?php echo number_format($transactionTotalCredit, 2); ?></b></td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php $lastkode = $jurnal->kode_transaksi; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
             <tr>
-                <td colspan="5" style="font-weight: bold">Total</td>
-                <td style="font-weight: bold"><b><?php echo number_format($totalDebet, 2); ?></b></td>
-                <td style="font-weight: bold"><b><?php echo number_format($totalkredit, 2); ?></b></td>
+                <td colspan="5" style="font-weight: bold; text-align: right">Total</td>
+                <td style="font-weight: bold; text-align: right"><b><?php echo number_format($totalDebet, 2); ?></b></td>
+                <td style="font-weight: bold; text-align: right"><b><?php echo number_format($totalkredit, 2); ?></b></td>
             </tr>
         </tbody>
     </table>

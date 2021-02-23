@@ -1,6 +1,7 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
 
+	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
 	$("#PageSize").val("' . $generalLedgerSummary->dataProvider->pagination->pageSize . '");
 	$("#CurrentPage").val("' . ($generalLedgerSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
