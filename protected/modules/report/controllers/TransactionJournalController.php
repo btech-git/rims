@@ -23,9 +23,9 @@ class TransactionJournalController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+//        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+//        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
+//        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -34,7 +34,7 @@ class TransactionJournalController extends Controller {
         $jurnalUmumSummary->setupLoading();
         $jurnalUmumSummary->setupPaging($pageSize, $currentPage);
         $jurnalUmumSummary->setupSorting();
-        $jurnalUmumSummary->setupFilter($startDate, $endDate, $companyId, $branchId, $transactionType, $coaId);
+        $jurnalUmumSummary->setupFilter($startDate, $endDate);
 
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
@@ -44,7 +44,7 @@ class TransactionJournalController extends Controller {
         }
 
         $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("coa_category_id != 0 AND coa_id != 0");
+        $coaCriteria->addCondition("status = 'Approved' AND coa_id IS NOT NULL");
         $coaCriteria->compare('code', $coa->code, true);
         $coaCriteria->compare('name', $coa->name, true);
         $coaCriteria->compare('coa_category_id', $coa->coa_category_id);
@@ -63,9 +63,9 @@ class TransactionJournalController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'companyId' => $companyId,
-            'branchId' => $branchId,
-            'transactionType' => $transactionType,
-            'coaId' => $coaId,
+//            'branchId' => $branchId,
+//            'transactionType' => $transactionType,
+//            'coaId' => $coaId,
             'coa' => $coa,
             'coaDataProvider' => $coaDataProvider,
             'currentSort' => $currentSort,

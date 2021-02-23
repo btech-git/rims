@@ -50,9 +50,9 @@ Yii::app()->clientScript->registerScript('report', '
                                 
                                 <div class="small-8 columns">
                                     <?php if ($companyId == ""): ?>
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
                                     <?php else: ?>
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active', 'company_id' => $company)), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active', 'company_id' => $company)), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownlist('TransactionType', $transactionType, array(
+                                    <?php echo CHtml::activeDropDownlist($jurnalUmum, 'transaction_type', array(
                                         'PO' => 'PURCHASE',
                                         'RG' => 'BR / GR',
                                         'DO' => 'DELIVERY',
@@ -99,8 +99,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::hiddenField('CoaId', $coaId); ?>
-                                    <?php echo CHtml::textField('CoaName', $coaId != "" ? COA::model()->findByPK($coaId)->name : '', array('onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;')); ?>
+                                    <?php echo CHtml::activeTextField($jurnalUmum, 'coa_id', array('onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;')); ?>
                                 </div>
                             </div>
                         </div>
@@ -114,6 +113,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 <div class="small-2 columns">
                                     <span class="prefix">Tanggal </span>
                                 </div>
+                                
                                 <div class="small-5 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
@@ -171,9 +171,9 @@ Yii::app()->clientScript->registerScript('report', '
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                     'companyId' => $companyId,
-                    'branchId' => $branchId,
-                    'transactionType' => $transactionType,
-                    'coaId' => $coaId,
+//                    'branchId' => $branchId,
+//                    'transactionType' => $transactionType,
+//                    'coaId' => $coaId,
                     'coa' => $coa,
                     'coaDataProvider' => $coaDataProvider,
                 )); ?>
@@ -194,6 +194,7 @@ Yii::app()->clientScript->registerScript('report', '
             'modal' => true,
         ),
     )); ?>
+    
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id'=>'coa-grid',
             'dataProvider'=>$coaDataProvider,
@@ -226,5 +227,6 @@ Yii::app()->clientScript->registerScript('report', '
                 'coaCategory.name: Kategori',
             ),
         )); ?>
+    
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

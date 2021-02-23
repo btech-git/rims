@@ -34,10 +34,11 @@ class TransactionJournalSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $companyId, $branchId, $transactionType, $coaId) {
+    public function setupFilter($startDate, $endDate) {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
+        $this->dataProvider->criteria->addCondition("coa.status = 'Approved' AND substring(coa.code, 8, 3) <> 000");
 //        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
 //        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
 //        $this->dataProvider->criteria->compare('branch.company_id', $companyId);        
