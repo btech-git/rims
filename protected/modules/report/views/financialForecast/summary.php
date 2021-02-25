@@ -21,10 +21,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <!--<span class="prefix">Branch </span>-->
+                                        <span class="prefix">Company</span>
                                     </div>
+                                    
                                     <div class="small-8 columns">
-                                        <?php //echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::dropDownlist('CompanyId', $companyId, CHtml::listData(Company::model()->findAllbyAttributes(array('is_deleted' => 0)), 'id', 'name'), array(
+                                            'empty' => '-- All Company --',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateCompanyBankSelect'),
+                                                'update' => '#company_bank',
+                                            ))
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -38,8 +46,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-4 columns">
                                         <span class="prefix">Bank:</span>
                                     </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CoaId', $coaId, CHtml::listData(Coa::model()->findAllbyAttributes(array('coa_sub_category_id' => '2')), 'id', 'name'), array('empty' => '-- All Banks --')); ?>
+                                    
+                                    <div class="small-8 columns" id="company_bank">
+                                        <?php echo CHtml::dropDownlist('CoaId', $coaId, CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyId)), 'coa_id', 'account_name'), array('empty' => '-- All Bank --')); ?>
                                     </div>
                                 </div>
                             </div>

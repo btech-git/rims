@@ -294,6 +294,16 @@ class CashTransactionController extends Controller {
         ));
     }
 
+    public function actionAjaxHtmlUpdateSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $categoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
+
+            $this->renderPartial('_subCategorySelect', array(
+                'categoryId' => $categoryId,
+            ), false, true);
+        }
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

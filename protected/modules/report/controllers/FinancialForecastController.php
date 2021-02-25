@@ -24,6 +24,8 @@ class FinancialForecastController extends Controller {
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
+        $endDate = date('Y-m-d');
 
         $payableTransaction = Search::bind(new TransactionPurchaseOrder(), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $payableTransactionDataProvider = $payableTransaction->search();
@@ -35,7 +37,9 @@ class FinancialForecastController extends Controller {
         
         $this->render('summary', array(
             'coaId' => $coaId,
+            'companyId' => $companyId,
             'branchId' => $branchId,
+            'endDate' => $endDate,
             'payableTransaction' => $payableTransaction,
             'payableTransactionDataProvider' => $payableTransactionDataProvider,
             'receivableTransaction' => $receivableTransaction,
@@ -53,6 +57,18 @@ class FinancialForecastController extends Controller {
         } else if ($codeNumberConstant === 'INV') {
             $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
             $this->redirect(array('/transaction/invoiceHeader/updateEstimateDate', 'id' => $model->id));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateCompanyBankSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $companyId = isset($_GET['CompanyId']) ? $_GET['CompanyId'] : 0;
+            $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+
+            $this->renderPartial('_companyBankSelect', array(
+                'companyId' => $companyId,
+                'coaId' => $coaId,
+            ), false, true);
         }
     }
 

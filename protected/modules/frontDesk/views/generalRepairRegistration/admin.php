@@ -96,23 +96,23 @@ $('.search-form form').submit(function(){
                 'value' => '$data->customer->name',
             ),
             'work_order_number',
-            array(
-                'header' => 'Invoice #',
-                'filter' => false,
-                'value' => function($data) {
-                    $invoiceCriteria = new CDbCriteria;
-                    $invoiceCriteria->addCondition("status !='CANCELLED'");
-                    $invoiceCriteria->addCondition("registration_transaction_id = " . $data->id);
-                    $invoice = InvoiceHeader::model()->find($invoiceCriteria);
-                    $invoiceNumber = "";
-
-                    if (count($invoice) != 0) {
-                        $invoiceNumber = $invoice->invoice_number;
-                    }
-
-                    return $invoiceNumber;
-                }
-            ),
+//            array(
+//                'header' => 'Invoice #',
+//                'filter' => false,
+//                'value' => function($data) {
+//                    $invoiceCriteria = new CDbCriteria;
+//                    $invoiceCriteria->addCondition("status !='CANCELLED'");
+//                    $invoiceCriteria->addCondition("registration_transaction_id = " . $data->id);
+//                    $invoice = InvoiceHeader::model()->findAll($invoiceCriteria);
+//                    $invoiceNumber = "";
+//
+//                    if (count($invoice) > 0) {
+//                        $invoiceNumber = $invoice->invoice_number;
+//                    }
+//
+//                    return $invoiceNumber;
+//                }
+//            ),
             array(
                 'header' => 'WO Status',
                 'name' => 'status',

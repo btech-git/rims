@@ -144,9 +144,25 @@ class GeneralRepairMechanicController extends Controller {
             $registrationMemo->date_time = date('Y-m-d H:i:s');
             $registrationMemo->user_id = Yii::app()->user->id;
             $registrationMemo->save();
-        } else if (isset($_POST['DetailId']) && isset($_POST['_FormSubmit_']) && ($_POST['_FormSubmit_'] === 'StartService' || $_POST['_FormSubmit_'] === 'ResumeService' || $_POST['_FormSubmit_'] === 'PauseService' || $_POST['_FormSubmit_'] === 'FinishService')) {
+//        } else if (isset($_POST['DetailId']) && isset($_POST['_FormSubmit_']) && ($_POST['_FormSubmit_'] === 'StartService' || $_POST['_FormSubmit_'] === 'ResumeService' || $_POST['_FormSubmit_'] === 'PauseService' || $_POST['_FormSubmit_'] === 'FinishService')) {
+        } else if (isset($_POST['DetailId']) && isset($_POST['StartService'])) {
             $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
-            $registrationService->service_activity = $_POST['_FormSubmit_'];
+            $registrationService->service_activity = 'StartService';
+            $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
+            $generalRepairMechanic->save(Yii::app()->db);
+        } else if (isset($_POST['DetailId']) && isset($_POST['ResumeService'])) {
+            $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
+            $registrationService->service_activity = 'ResumeService';
+            $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
+            $generalRepairMechanic->save(Yii::app()->db);
+        } else if (isset($_POST['DetailId']) && isset($_POST['PauseService'])) {
+            $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
+            $registrationService->service_activity = 'PauseService';
+            $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
+            $generalRepairMechanic->save(Yii::app()->db);
+        } else if (isset($_POST['DetailId']) && isset($_POST['FinishService'])) {
+            $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
+            $registrationService->service_activity = 'FinishService';
             $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
             $generalRepairMechanic->save(Yii::app()->db);
         }

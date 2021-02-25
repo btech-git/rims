@@ -109,8 +109,11 @@ $('.search-form form').submit(function(){
                     $invoiceCriteria->addCondition("registration_transaction_id = " . $data->id);
                     $invoice = InvoiceHeader::model()->find($invoiceCriteria);
                     $invoiceNumber = "";
-                    if (count($invoice) != 0)
+                    
+                    if (!empty($invoice)) {
                         $invoiceNumber = $invoice->invoice_number;
+                    }
+                    
                     return $invoiceNumber;
                 }
             ),

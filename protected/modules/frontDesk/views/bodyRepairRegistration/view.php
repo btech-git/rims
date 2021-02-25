@@ -28,7 +28,7 @@ $this->breadcrumbs = array(
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php if (Yii::app()->user->checkAccess("transaction.bodyRepairRegistration.generateSalesOrder") && empty($model->sales_order_number)): ?>
+                        <?php if ((Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")) && empty($model->sales_order_number)): ?>
                             <?php echo CHtml::button('Generate Sales Order', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
@@ -64,7 +64,7 @@ $this->breadcrumbs = array(
                                 'onclick' => ''
                             )); ?>
                         <?php else : */?>
-                            <?php if (!empty($servicesReg) && empty($model->work_order_number) && Yii::app()->user->checkAccess("transaction.registrationTrasaction.generateWorkOrder")): ?>
+                            <?php if (!empty($servicesReg) && empty($model->work_order_number) && (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"))): ?>
                                 <?php echo CHtml::button('Generate Work Order', array(
                                     'id' => 'detail-button',
                                     'name' => 'Detail',
@@ -88,7 +88,7 @@ $this->breadcrumbs = array(
                         <?php //endif; ?>		
                     <?php endif; ?>
                     
-                    <?php if (Yii::app()->user->checkAccess("transaction.registrationTrasaction.showRealization")): ?>
+                    <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
                         <?php echo CHtml::button('Show Realization', array(
                             'id' => 'real-button',
                             'name' => 'Real',
@@ -96,7 +96,8 @@ $this->breadcrumbs = array(
                             'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
                         )); ?>
                     <?php endif; ?>
-                    <?php if (Yii::app()->user->checkAccess("transaction.registrationTrasaction.generateInvoice")): ?>
+                    
+                    <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
 
                         <?php if (count($invoices) == 0): ?>
                             <?php echo CHtml::button('Generate Invoice', array(
@@ -112,8 +113,8 @@ $this->breadcrumbs = array(
                                         url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
                                         data: $("form").serialize(),
                                         success: function(html) {
-                                                alert("Invoice Succesfully Generated");
-                                                location.reload();
+                                            alert("Invoice Succesfully Generated");
+                                            location.reload();
                                         },
                                     })
                                 '

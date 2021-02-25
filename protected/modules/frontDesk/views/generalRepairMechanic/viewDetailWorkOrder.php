@@ -173,12 +173,16 @@ Yii::app()->clientScript->registerScript('search', $str . "
                                 <?php echo CHtml::encode(CHtml::value($registrationService, 'id')); ?>
                             </div>
                             <?php if ($registrationService->start === null && $registrationService->end === null): ?>
-                                <?php echo CHtml::submitButton('Start', array('name' => 'StartService', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                                <?php echo CHtml::submitButton('Start', array('name' => 'StartService', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text());')); ?>
+                                <?php //echo CHtml::submitButton('Start', array('name' => 'StartService', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
                             <?php elseif ($registrationService->start !== null && $registrationService->end === null && $registrationService->pause !== null && ($registrationService->resume === null || $registrationService->resume < $registrationService->pause)): ?>
-                                <?php echo CHtml::submitButton('Resume', array('name' => 'ResumeService', 'confirm' => 'Are you sure you want to resume?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                                <?php echo CHtml::submitButton('Resume', array('name' => 'ResumeService', 'confirm' => 'Are you sure you want to resume?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text());')); ?>
+                                <?php //echo CHtml::submitButton('Resume', array('name' => 'ResumeService', 'confirm' => 'Are you sure you want to resume?', 'class' => 'button cbuton success', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
                             <?php elseif ($registrationService->start !== null && $registrationService->end === null && ($registrationService->resume === null && $registrationService->pause === null || $registrationService->resume > $registrationService->pause)): ?>
-                                <?php echo CHtml::submitButton('Pause', array('name' => 'PauseService', 'confirm' => 'Are you sure you want to pause?', 'class' => 'button cbuton warning', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
-                                <?php echo CHtml::submitButton('Finish', array('name' => 'FinishService', 'confirm' => 'Are you sure you want to finish?', 'class' => 'button cbuton alert', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                                <?php echo CHtml::submitButton('Pause', array('name' => 'PauseService', 'confirm' => 'Are you sure you want to pause?', 'class' => 'button cbuton warning', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text());')); ?>
+                                <?php echo CHtml::submitButton('Finish', array('name' => 'FinishService', 'confirm' => 'Are you sure you want to finish?', 'class' => 'button cbuton alert', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text());')); ?>
+                                <?php //echo CHtml::submitButton('Pause', array('name' => 'PauseService', 'confirm' => 'Are you sure you want to pause?', 'class' => 'button cbuton warning', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                                <?php //echo CHtml::submitButton('Finish', array('name' => 'FinishService', 'confirm' => 'Are you sure you want to finish?', 'class' => 'button cbuton alert', 'onclick' => '$("#DetailId").val($(this).parent().find("div.detail_id").text()); $("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -189,5 +193,5 @@ Yii::app()->clientScript->registerScript('search', $str . "
     </div>
 </div>
 <?php echo CHtml::hiddenField('DetailId', ''); ?>
-<?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
+<?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
 <?php echo CHtml::endForm(); ?>
