@@ -57,9 +57,8 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
             
             <tr>
-                <td colspan="3">&nbsp;</td>
-                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
+                <td colspan="2"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
+                <td colspan="3"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
                 <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
                 <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
             </tr>

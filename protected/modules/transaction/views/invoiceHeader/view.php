@@ -71,6 +71,15 @@ $this->menu = array(
                 <td width="10%">Payment Est Date</td>
                 <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
             </tr>
+            
+            <tr>
+                <?php $registration = RegistrationTransaction::model()->findByPk($model->registration_transaction_id); ?>
+                <td width="10%">SO #</td>
+                <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
+                </td>
+                <td width="10%">Registration #</td>
+                <td width="30%"><?php echo empty($registration) ? '' :  $registration->transaction_number; ?></td>
+            </tr>
         </table>
         
         <?php

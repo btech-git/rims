@@ -87,6 +87,7 @@ class TransactionDeliveryOrderController extends Controller {
 
         $deliveryOrder = $this->instantiate(null);
         $deliveryOrder->header->posting_date = date('Y-m-d');
+        $deliveryOrder->header->estimate_arrival_date = null;
         $deliveryOrder->header->sender_branch_id = $deliveryOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $deliveryOrder->header->sender_branch_id;
 //        $deliveryOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($deliveryOrder->header->delivery_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($deliveryOrder->header->delivery_date)), $deliveryOrder->header->sender_branch_id);
         $this->performAjaxValidation($deliveryOrder->header);
@@ -504,7 +505,7 @@ class TransactionDeliveryOrderController extends Controller {
             $transfer = TransactionTransferRequest::model()->findByPk($id);
             
             if ($transfer->destination_branch_id != "") {
-                $branch = Branch::model()->findByPk($transfer->destination_branch_id);
+                $branch = Branch::model()->findByPk($transfer->requester_branch_id);
                 $branch_name = $branch->name;
             }
 
@@ -513,7 +514,7 @@ class TransactionDeliveryOrderController extends Controller {
                 'no' => $transfer->transfer_request_no,
                 'date' => $transfer->transfer_request_date,
                 'eta' => $transfer->estimate_arrival_date,
-                'branch' => $transfer->destination_branch_id,
+                'branch' => $transfer->requester_branch_id,
                 'branch_name' => $branch_name,
             );
 

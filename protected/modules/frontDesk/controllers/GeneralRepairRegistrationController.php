@@ -473,7 +473,7 @@ class GeneralRepairRegistrationController extends Controller {
                         $jurnalUmumMasterGroupDiskon->tanggal_transaksi = $registration->transaction_date;
                         $jurnalUmumMasterGroupDiskon->coa_id = $coaMasterGroupDiskon->id;
                         $jurnalUmumMasterGroupDiskon->branch_id = $registration->branch_id;
-                        $jurnalUmumMasterGroupDiskon->total = $rProduct->discount;
+                        $jurnalUmumMasterGroupDiskon->total = $rProduct->discountAmount;
                         $jurnalUmumMasterGroupDiskon->debet_kredit = 'D';
                         $jurnalUmumMasterGroupDiskon->tanggal_posting = date('Y-m-d');
                         $jurnalUmumMasterGroupDiskon->transaction_subject = $registration->customer->name;
@@ -490,7 +490,7 @@ class GeneralRepairRegistrationController extends Controller {
                         $jurnalUmumMasterDiskon->tanggal_transaksi = $registration->transaction_date;
                         $jurnalUmumMasterDiskon->coa_id = $coaMasterDiskonWithCode->id;
                         $jurnalUmumMasterDiskon->branch_id = $registration->branch_id;
-                        $jurnalUmumMasterDiskon->total = $rProduct->discount;
+                        $jurnalUmumMasterDiskon->total = $rProduct->discountAmount;
                         $jurnalUmumMasterDiskon->debet_kredit = 'D';
                         $jurnalUmumMasterDiskon->tanggal_posting = date('Y-m-d');
                         $jurnalUmumMasterDiskon->transaction_subject = $registration->customer->name;
@@ -507,7 +507,7 @@ class GeneralRepairRegistrationController extends Controller {
                         $jurnalUmumDiskon->tanggal_transaksi = $registration->transaction_date;
                         $jurnalUmumDiskon->coa_id = $coaDiskonWithCode->id;
                         $jurnalUmumDiskon->branch_id = $registration->branch_id;
-                        $jurnalUmumDiskon->total = $rProduct->discount;
+                        $jurnalUmumDiskon->total = $rProduct->discountAmount;
                         $jurnalUmumDiskon->debet_kredit = 'D';
                         $jurnalUmumDiskon->tanggal_posting = date('Y-m-d');
                         $jurnalUmumDiskon->transaction_subject = $registration->customer->name;
@@ -620,7 +620,7 @@ class GeneralRepairRegistrationController extends Controller {
                     $price = $rService->is_quick_service == 1 ? $rService->price : $rService->total_price;
 
                     // save service type coa
-                    $coaMasterGroupPendapatanJasa = Coa::model()->findByAttributes(array('code' => '401.00.000'));
+                    $coaMasterGroupPendapatanJasa = Coa::model()->findByAttributes(array('code' => '411.00.000'));
                     $jurnalUmumKategoriPendapatanJasa = new JurnalUmum;
                     $jurnalUmumKategoriPendapatanJasa->kode_transaksi = $registration->transaction_number;
                     $jurnalUmumKategoriPendapatanJasa->tanggal_transaksi = $registration->transaction_date;

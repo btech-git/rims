@@ -21,7 +21,7 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 1000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 100000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -38,7 +38,8 @@ class TransactionJournalSummary extends CComponent {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
-        $this->dataProvider->criteria->addCondition("coa.status = 'Approved' AND substring(coa.code, 8, 3) <> 000");
+        $this->dataProvider->criteria->addCondition("is_coa_category = 0");
+//        $this->dataProvider->criteria->addCondition("coa.status = 'Approved' AND substring(coa.code, 8, 3) <> 000");
 //        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
 //        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
 //        $this->dataProvider->criteria->compare('branch.company_id', $companyId);        

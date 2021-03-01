@@ -598,22 +598,26 @@ class PaymentInController extends Controller {
                             $jurnalUmumKas->transaction_type = 'Pin';
                             $jurnalUmumKas->save();
                         } else {
-                            $getCoaKasBank = '102.00.000';
-                            $coaKasBankWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKasBank));
-                            $jurnalUmumKasBank = new JurnalUmum;
-                            $jurnalUmumKasBank->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalUmumKasBank->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalUmumKasBank->coa_id = $coaKasBankWithCode->id;
-                            $jurnalUmumKasBank->branch_id = $paymentIn->branch_id;
-                            $jurnalUmumKasBank->total = $paymentIn->payment_amount;
-                            $jurnalUmumKasBank->debet_kredit = 'D';
-                            $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumKasBank->transaction_subject = $paymentIn->customer->name;
-                            $jurnalUmumKasBank->is_coa_category = 1;
-                            $jurnalUmumKasBank->transaction_type = 'Pin';
-                            $jurnalUmumKasBank->save();
-                            $jurnalUmumKasBank = new JurnalUmum;
+                            if (!empty($paymentIn->bank_id)) {
+                                $getCoaKasBank = '102.00.000';
+                                $coaKasBankWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKasBank));
 
+                                $jurnalUmumKasBank = new JurnalUmum;
+                                $jurnalUmumKasBank->kode_transaksi = $paymentIn->payment_number;
+                                $jurnalUmumKasBank->tanggal_transaksi = $paymentIn->payment_date;
+                                $jurnalUmumKasBank->coa_id = $coaKasBankWithCode->id;
+                                $jurnalUmumKasBank->branch_id = $paymentIn->branch_id;
+                                $jurnalUmumKasBank->total = $paymentIn->payment_amount;
+                                $jurnalUmumKasBank->debet_kredit = 'D';
+                                $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
+                                $jurnalUmumKasBank->transaction_subject = $paymentIn->customer->name;
+                                $jurnalUmumKasBank->is_coa_category = 1;
+                                $jurnalUmumKasBank->transaction_type = 'Pin';
+                                $jurnalUmumKasBank->save();
+                                $jurnalUmumKasBank = new JurnalUmum;
+                            }
+
+                            $jurnalUmumBank = new JurnalUmum;
                             $jurnalUmumBank->kode_transaksi = $paymentIn->payment_number;
                             $jurnalUmumBank->tanggal_transaksi = $paymentIn->payment_date;
                             $jurnalUmumBank->coa_id = $paymentIn->companyBank->coa_id;
@@ -643,33 +647,35 @@ class PaymentInController extends Controller {
                             $jurnalUmumKas->transaction_type = 'Pin';
                             $jurnalUmumKas->save();
                         } else {
-                            $getCoaKasBank = '102.00.000';
-                            $coaKasBankWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKasBank));
-                            $jurnalUmumKasBank = new JurnalUmum;
-                            $jurnalUmumKasBank->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalUmumKasBank->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalUmumKasBank->coa_id = $coaKasBankWithCode->id;
-                            $jurnalUmumKasBank->branch_id = $paymentIn->branch_id;
-                            $jurnalUmumKasBank->total = $paymentIn->payment_amount;
-                            $jurnalUmumKasBank->debet_kredit = 'D';
-                            $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumKasBank->transaction_subject = $paymentIn->customer->name;
-                            $jurnalUmumKasBank->is_coa_category = 1;
-                            $jurnalUmumKasBank->transaction_type = 'Pin';
-                            $jurnalUmumKasBank->save();
+                            if (!empty($paymentIn->bank_id)) {
+                                $getCoaKasBank = '102.00.000';
+                                $coaKasBankWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKasBank));
+                                $jurnalUmumKasBank = new JurnalUmum;
+                                $jurnalUmumKasBank->kode_transaksi = $paymentIn->payment_number;
+                                $jurnalUmumKasBank->tanggal_transaksi = $paymentIn->payment_date;
+                                $jurnalUmumKasBank->coa_id = $coaKasBankWithCode->id;
+                                $jurnalUmumKasBank->branch_id = $paymentIn->branch_id;
+                                $jurnalUmumKasBank->total = $paymentIn->payment_amount;
+                                $jurnalUmumKasBank->debet_kredit = 'D';
+                                $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
+                                $jurnalUmumKasBank->transaction_subject = $paymentIn->customer->name;
+                                $jurnalUmumKasBank->is_coa_category = 1;
+                                $jurnalUmumKasBank->transaction_type = 'Pin';
+                                $jurnalUmumKasBank->save();
+                            }
 
-                            $jurnalUmumKasBank = new JurnalUmum;
-                            $jurnalUmumKasBank->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalUmumKasBank->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalUmumKasBank->coa_id = $paymentIn->companyBank->coa_id;
-                            $jurnalUmumKasBank->branch_id = $paymentIn->branch_id;
-                            $jurnalUmumKasBank->total = $paymentIn->payment_amount;
-                            $jurnalUmumKasBank->debet_kredit = 'D';
-                            $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumKasBank->transaction_subject = $paymentIn->customer->name;
-                            $jurnalUmumKasBank->is_coa_category = 0;
-                            $jurnalUmumKasBank->transaction_type = 'Pin';
-                            $jurnalUmumKasBank->save();
+                            $jurnalUmumBank = new JurnalUmum;
+                            $jurnalUmumBank->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalUmumBank->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalUmumBank->coa_id = $paymentIn->companyBank->coa_id;
+                            $jurnalUmumBank->branch_id = $paymentIn->branch_id;
+                            $jurnalUmumBank->total = $paymentIn->payment_amount;
+                            $jurnalUmumBank->debet_kredit = 'D';
+                            $jurnalUmumBank->tanggal_posting = date('Y-m-d');
+                            $jurnalUmumBank->transaction_subject = $paymentIn->customer->name;
+                            $jurnalUmumBank->is_coa_category = 0;
+                            $jurnalUmumBank->transaction_type = 'Pin';
+                            $jurnalUmumBank->save();
                         }
                         $criteria = new CDbCriteria;
                         // $criteria->together = 'true';

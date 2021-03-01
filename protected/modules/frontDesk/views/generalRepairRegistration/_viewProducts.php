@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th>Code</th>
             <th>Product name</th>
             <th>Quantity</th>
             <th>Retail Price</th>
@@ -19,6 +20,7 @@
         <?php if (count($products) > 0): ?>
             <?php foreach ($products as $i => $product): ?>
                 <tr>
+                    <td><?php echo $product->product->manufacturer_code; ?></td>
                     <td><?php echo $product->product->name; ?></td>
                     <td><?php echo $product->quantity; ?></td>
                     <td><?php echo number_format($product->retail_price,2); ?></td>

@@ -151,4 +151,37 @@ class InventoryDetail extends CActiveRecord {
         ));
     }
 
+    public function getFastMovingItems() {
+        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out), 0) AS total_sale
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                INNER JOIN " . ProductMasterCategory::model()->tableName() . " c ON c.id = p.product_master_category_id
+                INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
+                INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
+                INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
+                GROUP BY i.product_id
+                ORDER BY total_sale DESC
+                LIMIT 50";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll();
+
+        return $resultSet;
+    }
+
+    public function getSlowMovingItems() {
+        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out), 0) AS total_sale
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                INNER JOIN " . ProductMasterCategory::model()->tableName() . " c ON c.id = p.product_master_category_id
+                INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
+                INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
+                INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
+                GROUP BY i.product_id
+                ORDER BY total_sale ASC
+                LIMIT 50";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll();
+
+        return $resultSet;
+    }
 }
