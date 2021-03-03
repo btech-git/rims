@@ -750,7 +750,7 @@ class TransactionPurchaseOrderController extends Controller {
                             $jurnalUmumKas->transaction_type = 'PO';
                             $jurnalUmumKas->save();
                         } else {
-                            $getCoaPayableWithCode = Coa::model()->findByAttributes(array('code' => '201.00.000'));
+                            $getCoaPayableWithCode = Coa::model()->findByAttributes(array('code' => '211.00.001'));
                             $jurnalUmumPayable = new JurnalUmum;
                             $jurnalUmumPayable->kode_transaksi = $purchaseOrder->purchase_order_no;
                             $jurnalUmumPayable->tanggal_transaksi = $purchaseOrder->purchase_order_date;

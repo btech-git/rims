@@ -122,7 +122,7 @@ $this->menu = array(
     <?php if ($model->movement_type == 1): ?>
         <?php
         $delivery = TransactionDeliveryOrder::model()->findByPk($model->delivery_order_id);
-        if (count($delivery) != 0) {
+        if (!empty($delivery)) {
             if ($delivery->request_type == "Sales Order") {
                 $type = "Sales Order";
                 $requestNumber = $delivery->salesOrder->sale_order_no;
@@ -212,6 +212,10 @@ $this->menu = array(
             'Detail Distribution' => array(
                 'id' => 'test3', 
                 'content' => $this->renderPartial('_viewDetailShipping', array('shippings' => $shippings), TRUE)
+            ),
+            'Journal' => array(
+                'id' => 'test4', 
+                'content' => $this->renderPartial('_viewJournal', array('model' => $model), TRUE)
             ),
         ),
         // additional javascript options for the tabs plugin

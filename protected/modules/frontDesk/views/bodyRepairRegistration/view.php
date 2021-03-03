@@ -225,6 +225,12 @@ $this->breadcrumbs = array(
                         'model'=>$model
                     ),TRUE)
                 );
+                $tabsArray['Journal'] = array(
+                    'id' => 'journal',
+                    'content' => $this->renderPartial('_viewJournal', array(
+                        'model' => $model
+                    ), TRUE)
+                );
                 ?>
                 <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => $tabsArray,

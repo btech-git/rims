@@ -158,7 +158,7 @@ class DeliveryOrders extends CComponent {
             'branch_id' => $this->header->sender_branch_id,
         ));
 
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
         $requestDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $this->header->id));

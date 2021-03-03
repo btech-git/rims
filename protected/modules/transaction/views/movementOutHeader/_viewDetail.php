@@ -31,7 +31,7 @@
                     <td><?php echo $detail->quantity_transaction; ?></td>
                     <td><?php echo $detail->quantity; ?></td>
                     <?php $stockInventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id)); ?>
-                    <td><?php echo count($stockInventory) != 0 ? $stockInventory->total_stock : ''; ?></td>
+                    <td><?php echo !empty($stockInventory) ? $stockInventory->total_stock : ''; ?></td>
                     <td><?php echo empty($stockInventory) ? 'N/A' : $stockInventory->total_stock > $detail->quantity ? 'V' : 'X'; ?></td>
                 </tr>
             <?php endforeach; ?>

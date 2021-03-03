@@ -142,6 +142,30 @@ class TransactionReceiveItemDetail extends CActiveRecord {
         ));
     }
 
+    
+    public function getUnitPrice() {
+        $unitPrice = 0;
+        
+        if (!empty($this->purchase_order_detail_id)) {
+            $unitPrice = $this->purchaseOrderDetail->unit_price;
+        } elseif (!empty($this->transfer_request_detail_id)) {
+            $unitPrice = $this->transferRequestDetail->unit_price;
+        } elseif (!empty($this->consignment_in_detail_id)) {
+            $unitPrice = $this->consignmentInDetail->price;
+        } elseif (!empty($this->movement_out_detail_id)) {
+            $unitPrice = 0;
+        } else {
+            $unitPrice = 0;
+        }
+        
+        return $unitPrice;
+    }
+    
+    public function getTotalPurchaseReceived() {
+        
+        return $this->qty_received * $this->getUnitPrice();
+    }
+    
     public function getTotalPrice() {
         $unitPrice = empty($this->purchase_order_detail_id) ? $this->consignmentInDetail->price : $this->purchaseOrderDetail->unit_price;
         

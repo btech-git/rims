@@ -1,7 +1,7 @@
 
 <?php //foreach ($requestDetails as $key => $requestDetail): ?>	
 <?php $receive = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id'=>$model->id)); ?>
-<?php if (count($receive) > 0): ?>
+<?php if (!empty($receive)): ?>
     <?php foreach ($model->transactionReceiveItems as $receiveHeader): ?>
         <table>
             <tr>

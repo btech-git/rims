@@ -12,7 +12,7 @@
     
     <tbody>
         <?php $totalDebit = 0; $totalCredit = 0; ?>
-        <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->transaction_number, 'is_coa_category' => 0)); ?>
+        <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->purchase_order_no, 'is_coa_category' => 0)); ?>
         <?php foreach ($transactions as $i => $header): ?>
         
             <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>

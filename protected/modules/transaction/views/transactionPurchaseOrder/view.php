@@ -58,7 +58,7 @@ $this->menu=array(
                 array(
                     'name' =>'coa_bank_id_estimate',
                     'label' => 'Akun Bank Estimasi',
-                    'value'=>$model->coaBankIdEstimate->name,
+                    'value'=>empty($model->coa_bank_id_stimate) ? '' : $model->coaBankIdEstimate->name,
                 ),
             ),
         )); ?>
@@ -95,6 +95,12 @@ $this->menu=array(
                 'id'=>'test4',
                 'content'=>$this->renderPartial('_viewDetailInvoice', array(
                     'purchaseOrderDetails'=>$purchaseOrderDetails,
+                    'model'=>$model
+                ),TRUE)
+            ),
+            'Journal'=>array(
+                'id'=>'test5',
+                'content'=>$this->renderPartial('_viewJournal', array(
                     'model'=>$model
                 ),TRUE)
             ),

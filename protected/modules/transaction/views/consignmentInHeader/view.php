@@ -59,6 +59,11 @@ $this->menu=array(
                     'historis'=>$historis
                 ),TRUE)
             ),
+            'Journal'=>array(
+                'id'=>'test3','content'=>$this->renderPartial('_viewJournal', array(
+                    'model' => $model,
+                ),TRUE)
+            ),
         ),                       
 
         // additional javascript options for the tabs plugin

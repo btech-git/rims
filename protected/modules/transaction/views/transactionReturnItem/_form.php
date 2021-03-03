@@ -277,6 +277,7 @@
                                     'delivery_order_no',
                                     'delivery_date',
                                     'customer.name: Customer',
+                                    'request_type',
                                 ),
                             )); ?>
                             <?php $this->endWidget(); ?>

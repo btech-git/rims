@@ -515,8 +515,8 @@ class PaymentOutController extends Controller {
                         'branch_id' => $paymentOut->branch_id,
                     ));
 
-                    $priceBefore = $paymentOut->purchaseOrder->ppn == 1 ? $paymentOut->payment_amount / 1.1 : $paymentOut->payment_amount;
-                    $ppn = $paymentOut->purchaseOrder->ppn == 1 ? $priceBefore * 0.1 : 0;
+//                    $priceBefore = $paymentOut->purchaseOrder->ppn == 1 ? $paymentOut->payment_amount / 1.1 : $paymentOut->payment_amount;
+//                    $ppn = $paymentOut->purchaseOrder->ppn == 1 ? $priceBefore * 0.1 : 0;
                     if ($paymentOut->payment_type == "Cash") {
                         $getCoaHutang = '201.00.000';
                         
@@ -528,7 +528,7 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
                         $jurnalHutang->coa_id = $coaHutangWithCode->id;
                         $jurnalHutang->branch_id = $paymentOut->branch_id;
-                        $jurnalHutang->total = $priceBefore;
+                        $jurnalHutang->total = $paymentOut->payment_amount;
                         $jurnalHutang->debet_kredit = 'D';
                         $jurnalHutang->tanggal_posting = date('Y-m-d');
                         $jurnalHutang->transaction_subject = $paymentOut->supplier->name;
@@ -536,22 +536,22 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->transaction_type = 'Pout';
                         $jurnalHutang->save();
 
-                        if ($paymentOut->purchaseOrder->ppn == 1) {
-                            $getCoaPpn = '108.000';
-                            $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
-                            $jurnalPpn = new JurnalUmum;
-                            $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
-                            $jurnalPpn->tanggal_transaksi = $paymentOut->payment_date;
-                            $jurnalPpn->coa_id = $coaPpnWithCode->id;
-                            $jurnalPpn->branch_id = $paymentOut->branch_id;
-                            $jurnalPpn->total = $ppn;
-                            $jurnalPpn->debet_kredit = 'D';
-                            $jurnalPpn->tanggal_posting = date('Y-m-d');
-                            $jurnalPpn->transaction_subject = $paymentOut->supplier->name;
-                            $jurnalPpn->is_coa_category = 0;
-                            $jurnalPpn->transaction_type = 'Pout';
-                            $jurnalPpn->save();
-                        }
+//                        if ($paymentOut->purchaseOrder->ppn == 1) {
+//                            $getCoaPpn = '108.000';
+//                            $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
+//                            $jurnalPpn = new JurnalUmum;
+//                            $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
+//                            $jurnalPpn->tanggal_transaksi = $paymentOut->payment_date;
+//                            $jurnalPpn->coa_id = $coaPpnWithCode->id;
+//                            $jurnalPpn->branch_id = $paymentOut->branch_id;
+//                            $jurnalPpn->total = $ppn;
+//                            $jurnalPpn->debet_kredit = 'D';
+//                            $jurnalPpn->tanggal_posting = date('Y-m-d');
+//                            $jurnalPpn->transaction_subject = $paymentOut->supplier->name;
+//                            $jurnalPpn->is_coa_category = 0;
+//                            $jurnalPpn->transaction_type = 'Pout';
+//                            $jurnalPpn->save();
+//                        }
 
                         $getCoaKas = '101.00.000';
                         $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
@@ -575,7 +575,7 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
                         $jurnalHutang->coa_id = $coaHutangWithCode->id;
                         $jurnalHutang->branch_id = $paymentOut->branch_id;
-                        $jurnalHutang->total = $priceBefore;
+                        $jurnalHutang->total = $paymentOut->payment_amount;
                         $jurnalHutang->debet_kredit = 'D';
                         $jurnalHutang->tanggal_posting = date('Y-m-d');
                         $jurnalHutang->transaction_subject = $paymentOut->supplier->name;
@@ -583,22 +583,22 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->transaction_type = 'Pout';
                         $jurnalHutang->save();
 
-                        if ($paymentOut->purchaseOrder->ppn == 1) {
-                            $getCoaPpn = '108.00.000';
-                            $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
-                            $jurnalPpn = new JurnalUmum;
-                            $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
-                            $jurnalPpn->tanggal_transaksi = $paymentOut->payment_date;
-                            $jurnalPpn->coa_id = $coaPpnWithCode->id;
-                            $jurnalPpn->branch_id = $paymentOut->branch_id;
-                            $jurnalPpn->total = $ppn;
-                            $jurnalPpn->debet_kredit = 'D';
-                            $jurnalPpn->tanggal_posting = date('Y-m-d');
-                            $jurnalPpn->transaction_subject = $paymentOut->supplier->name;
-                            $jurnalPpn->is_coa_category = 0;
-                            $jurnalPpn->transaction_type = 'Pout';
-                            $jurnalPpn->save();
-                        }
+//                        if ($paymentOut->purchaseOrder->ppn == 1) {
+//                            $getCoaPpn = '108.00.000';
+//                            $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
+//                            $jurnalPpn = new JurnalUmum;
+//                            $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
+//                            $jurnalPpn->tanggal_transaksi = $paymentOut->payment_date;
+//                            $jurnalPpn->coa_id = $coaPpnWithCode->id;
+//                            $jurnalPpn->branch_id = $paymentOut->branch_id;
+//                            $jurnalPpn->total = $ppn;
+//                            $jurnalPpn->debet_kredit = 'D';
+//                            $jurnalPpn->tanggal_posting = date('Y-m-d');
+//                            $jurnalPpn->transaction_subject = $paymentOut->supplier->name;
+//                            $jurnalPpn->is_coa_category = 0;
+//                            $jurnalPpn->transaction_type = 'Pout';
+//                            $jurnalPpn->save();
+//                        }
                         
                         $getCoaKasBank = '102.00.000';
                         $coaKasBankWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKasBank));

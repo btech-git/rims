@@ -99,6 +99,14 @@ class TransactionDeliveryOrderController extends Controller {
         if (isset($_POST['TransactionDeliveryOrder'])) {
             $this->loadState($deliveryOrder);
             $deliveryOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($deliveryOrder->header->delivery_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($deliveryOrder->header->delivery_date)), $deliveryOrder->header->sender_branch_id);
+            
+            if (!empty($deliveryOrder->header->sales_order_id)) {
+                $deliveryOrder->header->customer_id = $deliveryOrder->header->salesOrder->customer_id;
+            } elseif (!empty($deliveryOrder->header->consignment_out_id)) {
+                $deliveryOrder->header->customer_id = $deliveryOrder->header->consignmentOut->customer_id;
+            } else {
+                $deliveryOrder->header->customer_id = null;
+            }
 
             if ($deliveryOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $deliveryOrder->header->id));

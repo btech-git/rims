@@ -61,9 +61,11 @@ $this->menu = array(
     </div>
 </div>
 
+<hr />
+    
 <div class="detail">
-    <hr />
     <h3>Details</h3>
+    
     <?php if ($model->request_type == 'Purchase Order'): ?>
         <div class="row">
             <div class="small-12 columns">
@@ -72,26 +74,31 @@ $this->menu = array(
                         <div class="small-4 columns">
                             <label for="label">PO no</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->purchase_order_id == NULL ? '-' : CHTml::link($model->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$model->purchaseOrder->id)); ?></label>
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label for="label">PO note</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo empty($model->purchaseOrderApprovals) ? "" : $model->purchaseOrderApprovals[0]->note; ?></label>
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label for="label">Supplier</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->supplier_id == NULL ? '-' : $model->supplier->name; ?></label>
                         </div>
@@ -118,7 +125,6 @@ $this->menu = array(
                     </div>
                 </div>-->
             </div>
-
         </div>
 
     <?php elseif ($model->request_type == 'Internal Delivery Order') : ?>
@@ -129,16 +135,19 @@ $this->menu = array(
                         <div class="small-4 columns">
                             <label for="label">Delivery Order no</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->delivery_order_id == NULL ? '-' : $model->deliveryOrder->delivery_order_no; ?></label>
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label for="label">Destination Branch</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->destination_branch == NULL ? '-' : $model->destinationBranch->name; ?></label>
                         </div>
@@ -154,16 +163,19 @@ $this->menu = array(
                         <div class="small-4 columns">
                             <label for="label">Consignment no</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->consignment_in_id == NULL ? '-' : $model->consignmentIn->consignment_in_number; ?></label>
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label for="label">Supplier</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->supplier_id == NULL ? '-' : $model->supplier->name; ?></label>
                         </div>
@@ -175,16 +187,19 @@ $this->menu = array(
                         <div class="small-4 columns">
                             <label for="label">Invoice No</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->invoice_number; ?></label>
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label for="label">Invoice Date</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->invoice_date; ?></label>
                         </div>
@@ -200,16 +215,19 @@ $this->menu = array(
                         <div class="small-4 columns">
                             <label for="label">Movement Out no</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->movement_out_id == NULL ? '-' : $model->movementOut->movement_out_no; ?></label>
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label for="label">Destination Branch</label>
                         </div>
+                        
                         <div class="small-8 columns">
                             <label for="label"><?php echo $model->destination_branch == NULL ? '-' : $model->destinationBranch->name; ?></label>
                         </div>
@@ -238,8 +256,11 @@ $this->menu = array(
                     <td>QTY Movement</td>
                     <td>QTY Movement Left</td>
                     <td>QTY Request Left</td>
+                    <th>HPP</th>
+                    <th>Price</th>
+                    <th>Total</th>
                     <td>Note</td>
-                    <td>Barcode Product</td>
+                    <!--<td>Barcode Product</td>-->
                 </tr>
             </thead>
             
@@ -261,8 +282,11 @@ $this->menu = array(
                         <td><?php echo $recieveDetail->quantity_movement; ?></td>
                         <td><?php echo $recieveDetail->quantity_movement_left; ?></td>
                         <td><?php echo $recieveDetail->qty_request_left; ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->product->hpp)); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->unitPrice)); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->totalPurchaseReceived)); ?></td>
                         <td><?php echo $recieveDetail->note == NULL ? '-' : $recieveDetail->note; ?></td>
-                        <td><?php echo $recieveDetail->barcode_product == NULL ? '-' : $recieveDetail->barcode_product; ?></td>
+                        <!--<td><?php // echo $recieveDetail->barcode_product == NULL ? '-' : $recieveDetail->barcode_product; ?></td>-->
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -271,6 +295,55 @@ $this->menu = array(
         <?php echo 'No Details Available'; ?>
     <?php endif ?>
     
+    <br />
+
+    <fieldset>
+        <legend>Journal Transactions</legend>
+        <table class="report">
+            <thead>
+                <tr id="header1">
+                    <th style="width: 5%">No</th>
+                    <th style="width: 15%">Kode COA</th>
+                    <th>Nama COA</th>
+                    <th style="width: 15%">Debit</th>
+                    <th style="width: 15%">Kredit</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php $totalDebit = 0; $totalCredit = 0; ?>
+                <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->receive_item_no, 'is_coa_category' => 0)); ?>
+                <?php foreach ($transactions as $i => $header): ?>
+
+                    <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
+                    <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
+
+                    <tr>
+                        <td style="text-align: center"><?php echo $i + 1; ?></td>
+                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
+                        <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
+                        <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
+                        <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
+                    </tr>
+
+                    <?php $totalDebit += $amountDebit; ?>
+                    <?php $totalCredit += $amountCredit; ?>
+
+                <?php endforeach; ?>
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
+                    <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?></td>
+                    <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?></td>
+                </tr>        
+            </tfoot>
+        </table>
+    </fieldset>
+
+    <br />
+
     <hr />
     
     <?php
