@@ -251,7 +251,7 @@ class PaymentOutController extends Controller {
 //                        $jurnalHutang->save();
 
                         if ($ppn == 1) {
-                            $getCoaPpn = '108.000';
+                            $getCoaPpn = '143.00.001';
                             $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
                             $jurnalPpn = new JurnalUmum;
                             $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
@@ -298,7 +298,7 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->save();
 
                         if ($ppn == 1) {
-                            $getCoaPpn = '108.00.000';
+                            $getCoaPpn = '143.00.001';
                             $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
                             $jurnalPpn = new JurnalUmum;
                             $jurnalPpn->kode_transaksi = $paymentOut->payment_number;

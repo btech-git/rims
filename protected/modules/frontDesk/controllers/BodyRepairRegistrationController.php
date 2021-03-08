@@ -504,7 +504,7 @@ class BodyRepairRegistrationController extends Controller {
             $jurnalUmumPiutang->save();
             
             if ($registration->ppn_price > 0.00) {
-                $coaPpn = Coa::model()->findByAttributes(array('code' => '206.00.000'));
+                $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
                 $jurnalUmumPpn = new JurnalUmum;
                 $jurnalUmumPpn->kode_transaksi = $registration->transaction_number;
                 $jurnalUmumPpn->tanggal_transaksi = $registration->transaction_date;
@@ -520,7 +520,7 @@ class BodyRepairRegistrationController extends Controller {
             }
             
             if ($registration->pph_price > 0.00) {
-                $coaPph = Coa::model()->findByAttributes(array('code' => '526.00.004'));
+                $coaPph = Coa::model()->findByAttributes(array('code' => '224.00.004'));
                 $jurnalUmumPph = new JurnalUmum;
                 $jurnalUmumPph->kode_transaksi = $registration->transaction_number;
                 $jurnalUmumPph->tanggal_transaksi = $registration->transaction_date;

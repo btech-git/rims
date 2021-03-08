@@ -143,7 +143,9 @@ class RegistrationProduct extends CActiveRecord
 	}
     
     public function getDiscountAmount() {
-        return ($this->discount_type == 'Nominal') ? $this->discount : $this->quantity * $this->sale_price * $this->discount / 100 ;
+        $discount = empty($this->discount) ? 0 : $this->discount;
+        
+        return ($this->discount_type == 'Nominal') ? $discount : $this->quantity * $this->sale_price * $discount / 100 ;
     }
     
     public function getTotalAmountProduct() {

@@ -408,7 +408,7 @@ class GeneralRepairRegistrationController extends Controller {
             $jurnalUmumPiutang->tanggal_transaksi = $registration->transaction_date;
             $jurnalUmumPiutang->coa_id = $registration->customer->coa_id;
             $jurnalUmumPiutang->branch_id = $registration->branch_id;
-            $jurnalUmumPiutang->total = $registration->grand_total;
+            $jurnalUmumPiutang->total = $registration->subtotal;
             $jurnalUmumPiutang->debet_kredit = 'D';
             $jurnalUmumPiutang->tanggal_posting = date('Y-m-d');
             $jurnalUmumPiutang->transaction_subject = $registration->customer->name;
@@ -416,105 +416,24 @@ class GeneralRepairRegistrationController extends Controller {
             $jurnalUmumPiutang->transaction_type = 'RG';
             $jurnalUmumPiutang->save();
 
+            if ($registration->ppn_price > 0.00) {
+                $coaPpn = Coa::model()->findByAttributes(array('code' => '526.00.000'));
+                $jurnalUmumPpn = new JurnalUmum;
+                $jurnalUmumPpn->kode_transaksi = $registration->transaction_number;
+                $jurnalUmumPpn->tanggal_transaksi = $registration->transaction_date;
+                $jurnalUmumPpn->coa_id = $coaPpn->id;
+                $jurnalUmumPpn->branch_id = $registration->branch_id;
+                $jurnalUmumPpn->total = $registration->ppn_price;
+                $jurnalUmumPpn->debet_kredit = 'D';
+                $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+                $jurnalUmumPpn->transaction_subject = $registration->customer->name;
+                $jurnalUmumPpn->is_coa_category = 0;
+                $jurnalUmumPpn->transaction_type = 'RG';
+                $jurnalUmumPpn->save();
+            }
+
             if (count($registrationProducts) > 0) {
                 foreach ($registration->registrationProducts as $key => $rProduct) {
-                    $coaMasterGroupHpp = Coa::model()->findByAttributes(array('code' => '520.00.000'));
-                    $jurnalUmumMasterGroupHpp = new JurnalUmum;
-                    $jurnalUmumMasterGroupHpp->kode_transaksi = $registration->transaction_number;
-                    $jurnalUmumMasterGroupHpp->tanggal_transaksi = $registration->transaction_date;
-                    $jurnalUmumMasterGroupHpp->coa_id = $coaMasterGroupHpp->id;
-                    $jurnalUmumMasterGroupHpp->branch_id = $registration->branch_id;
-                    $jurnalUmumMasterGroupHpp->total = $rProduct->quantity * $rProduct->hpp;
-                    $jurnalUmumMasterGroupHpp->debet_kredit = 'D';
-                    $jurnalUmumMasterGroupHpp->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterGroupHpp->transaction_subject = $registration->customer->name;
-                    $jurnalUmumMasterGroupHpp->is_coa_category = 1;
-                    $jurnalUmumMasterGroupHpp->transaction_type = 'RG';
-                    $jurnalUmumMasterGroupHpp->save();
-
-                    // save product master category coa hpp
-                    $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coa_hpp);
-                    $getCoaMasterHpp = $coaMasterHpp->code;
-                    $coaMasterHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterHpp));
-                    $jurnalUmumMasterHpp = new JurnalUmum;
-                    $jurnalUmumMasterHpp->kode_transaksi = $registration->transaction_number;
-                    $jurnalUmumMasterHpp->tanggal_transaksi = $registration->transaction_date;
-                    $jurnalUmumMasterHpp->coa_id = $coaMasterHppWithCode->id;
-                    $jurnalUmumMasterHpp->branch_id = $registration->branch_id;
-                    $jurnalUmumMasterHpp->total = $rProduct->quantity * $rProduct->hpp;
-                    $jurnalUmumMasterHpp->debet_kredit = 'D';
-                    $jurnalUmumMasterHpp->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterHpp->transaction_subject = $registration->customer->name;
-                    $jurnalUmumMasterHpp->is_coa_category = 1;
-                    $jurnalUmumMasterHpp->transaction_type = 'RG';
-                    $jurnalUmumMasterHpp->save();
-
-                    // save product sub master category coa hpp
-                    $coaHpp = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaHpp->id);
-                    $getCoaHpp = $coaHpp->code;
-                    $coaHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHpp));
-                    $jurnalUmumHpp = new JurnalUmum;
-                    $jurnalUmumHpp->kode_transaksi = $registration->transaction_number;
-                    $jurnalUmumHpp->tanggal_transaksi = $registration->transaction_date;
-                    $jurnalUmumHpp->coa_id = $coaHppWithCode->id;
-                    $jurnalUmumHpp->branch_id = $registration->branch_id;
-                    $jurnalUmumHpp->total = $rProduct->quantity * $rProduct->hpp;
-                    $jurnalUmumHpp->debet_kredit = 'D';
-                    $jurnalUmumHpp->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumHpp->transaction_subject = $registration->customer->name;
-                    $jurnalUmumHpp->is_coa_category = 0;
-                    $jurnalUmumHpp->transaction_type = 'RG';
-                    $jurnalUmumHpp->save();
-
-                    if ($rProduct->discount > 0) {
-                        $coaMasterGroupDiskon = Coa::model()->findByAttributes(array('code' => '412.00.000'));
-                        $jurnalUmumMasterGroupDiskon = new JurnalUmum;
-                        $jurnalUmumMasterGroupDiskon->kode_transaksi = $registration->transaction_number;
-                        $jurnalUmumMasterGroupDiskon->tanggal_transaksi = $registration->transaction_date;
-                        $jurnalUmumMasterGroupDiskon->coa_id = $coaMasterGroupDiskon->id;
-                        $jurnalUmumMasterGroupDiskon->branch_id = $registration->branch_id;
-                        $jurnalUmumMasterGroupDiskon->total = $rProduct->discountAmount;
-                        $jurnalUmumMasterGroupDiskon->debet_kredit = 'D';
-                        $jurnalUmumMasterGroupDiskon->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumMasterGroupDiskon->transaction_subject = $registration->customer->name;
-                        $jurnalUmumMasterGroupDiskon->is_coa_category = 1;
-                        $jurnalUmumMasterGroupDiskon->transaction_type = 'RG';
-                        $jurnalUmumMasterGroupDiskon->save();
-
-                        // save product master coa diskon penjualan
-                        $coaMasterDiskon = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaDiskonPenjualan->id);
-                        $getCoaMasterDiskon = $coaMasterDiskon->code;
-                        $coaMasterDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterDiskon));
-                        $jurnalUmumMasterDiskon = new JurnalUmum;
-                        $jurnalUmumMasterDiskon->kode_transaksi = $registration->transaction_number;
-                        $jurnalUmumMasterDiskon->tanggal_transaksi = $registration->transaction_date;
-                        $jurnalUmumMasterDiskon->coa_id = $coaMasterDiskonWithCode->id;
-                        $jurnalUmumMasterDiskon->branch_id = $registration->branch_id;
-                        $jurnalUmumMasterDiskon->total = $rProduct->discountAmount;
-                        $jurnalUmumMasterDiskon->debet_kredit = 'D';
-                        $jurnalUmumMasterDiskon->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumMasterDiskon->transaction_subject = $registration->customer->name;
-                        $jurnalUmumMasterDiskon->is_coa_category = 1;
-                        $jurnalUmumMasterDiskon->transaction_type = 'RG';
-                        $jurnalUmumMasterDiskon->save();
-
-                        // save product sub master coa diskon penjualan
-                        $coaDiskon = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaDiskonPenjualan->id);
-                        $getCoaDiskon = $coaDiskon->code;
-                        $coaDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaDiskon));
-                        $jurnalUmumDiskon = new JurnalUmum;
-                        $jurnalUmumDiskon->kode_transaksi = $registration->transaction_number;
-                        $jurnalUmumDiskon->tanggal_transaksi = $registration->transaction_date;
-                        $jurnalUmumDiskon->coa_id = $coaDiskonWithCode->id;
-                        $jurnalUmumDiskon->branch_id = $registration->branch_id;
-                        $jurnalUmumDiskon->total = $rProduct->discountAmount;
-                        $jurnalUmumDiskon->debet_kredit = 'D';
-                        $jurnalUmumDiskon->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumDiskon->transaction_subject = $registration->customer->name;
-                        $jurnalUmumDiskon->is_coa_category = 0;
-                        $jurnalUmumDiskon->transaction_type = 'RG';
-                        $jurnalUmumDiskon->save();
-                    }
 
                     //save product master category coa penjualan barang
                     $coaMasterGroupPenjualan = Coa::model()->findByAttributes(array('code' => '411.00.000'));
@@ -564,8 +483,106 @@ class GeneralRepairRegistrationController extends Controller {
                     $jurnalUmumPenjualan->is_coa_category = 0;
                     $jurnalUmumPenjualan->transaction_type = 'RG';
                     $jurnalUmumPenjualan->save();
+                    
+                    if ($rProduct->discount > 0) {
+                        $coaMasterGroupDiskon = Coa::model()->findByAttributes(array('code' => '412.00.000'));
+                        $jurnalUmumMasterGroupDiskon = new JurnalUmum;
+                        $jurnalUmumMasterGroupDiskon->kode_transaksi = $registration->transaction_number;
+                        $jurnalUmumMasterGroupDiskon->tanggal_transaksi = $registration->transaction_date;
+                        $jurnalUmumMasterGroupDiskon->coa_id = $coaMasterGroupDiskon->id;
+                        $jurnalUmumMasterGroupDiskon->branch_id = $registration->branch_id;
+                        $jurnalUmumMasterGroupDiskon->total = $rProduct->discountAmount;
+                        $jurnalUmumMasterGroupDiskon->debet_kredit = 'D';
+                        $jurnalUmumMasterGroupDiskon->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumMasterGroupDiskon->transaction_subject = $registration->customer->name;
+                        $jurnalUmumMasterGroupDiskon->is_coa_category = 1;
+                        $jurnalUmumMasterGroupDiskon->transaction_type = 'RG';
+                        $jurnalUmumMasterGroupDiskon->save();
 
-                    $coaMasterGroupInventory = Coa::model()->findByAttributes(array('code' => '105.00.000'));
+                        // save product master coa diskon penjualan
+                        $coaMasterDiskon = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaDiskonPenjualan->id);
+                        $getCoaMasterDiskon = $coaMasterDiskon->code;
+                        $coaMasterDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterDiskon));
+                        $jurnalUmumMasterDiskon = new JurnalUmum;
+                        $jurnalUmumMasterDiskon->kode_transaksi = $registration->transaction_number;
+                        $jurnalUmumMasterDiskon->tanggal_transaksi = $registration->transaction_date;
+                        $jurnalUmumMasterDiskon->coa_id = $coaMasterDiskonWithCode->id;
+                        $jurnalUmumMasterDiskon->branch_id = $registration->branch_id;
+                        $jurnalUmumMasterDiskon->total = $rProduct->discountAmount;
+                        $jurnalUmumMasterDiskon->debet_kredit = 'D';
+                        $jurnalUmumMasterDiskon->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumMasterDiskon->transaction_subject = $registration->customer->name;
+                        $jurnalUmumMasterDiskon->is_coa_category = 1;
+                        $jurnalUmumMasterDiskon->transaction_type = 'RG';
+                        $jurnalUmumMasterDiskon->save();
+
+                        // save product sub master coa diskon penjualan
+                        $coaDiskon = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaDiskonPenjualan->id);
+                        $getCoaDiskon = $coaDiskon->code;
+                        $coaDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaDiskon));
+                        $jurnalUmumDiskon = new JurnalUmum;
+                        $jurnalUmumDiskon->kode_transaksi = $registration->transaction_number;
+                        $jurnalUmumDiskon->tanggal_transaksi = $registration->transaction_date;
+                        $jurnalUmumDiskon->coa_id = $coaDiskonWithCode->id;
+                        $jurnalUmumDiskon->branch_id = $registration->branch_id;
+                        $jurnalUmumDiskon->total = $rProduct->discountAmount;
+                        $jurnalUmumDiskon->debet_kredit = 'D';
+                        $jurnalUmumDiskon->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumDiskon->transaction_subject = $registration->customer->name;
+                        $jurnalUmumDiskon->is_coa_category = 0;
+                        $jurnalUmumDiskon->transaction_type = 'RG';
+                        $jurnalUmumDiskon->save();
+                    }
+                    
+                    $coaMasterGroupHpp = Coa::model()->findByAttributes(array('code' => '501.00.000'));
+                    $jurnalUmumMasterGroupHpp = new JurnalUmum;
+                    $jurnalUmumMasterGroupHpp->kode_transaksi = $registration->transaction_number;
+                    $jurnalUmumMasterGroupHpp->tanggal_transaksi = $registration->transaction_date;
+                    $jurnalUmumMasterGroupHpp->coa_id = $coaMasterGroupHpp->id;
+                    $jurnalUmumMasterGroupHpp->branch_id = $registration->branch_id;
+                    $jurnalUmumMasterGroupHpp->total = $rProduct->quantity * $rProduct->hpp;
+                    $jurnalUmumMasterGroupHpp->debet_kredit = 'D';
+                    $jurnalUmumMasterGroupHpp->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterGroupHpp->transaction_subject = $registration->customer->name;
+                    $jurnalUmumMasterGroupHpp->is_coa_category = 1;
+                    $jurnalUmumMasterGroupHpp->transaction_type = 'RG';
+                    $jurnalUmumMasterGroupHpp->save();
+
+                    // save product master category coa hpp
+                    $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coa_hpp);
+                    $getCoaMasterHpp = $coaMasterHpp->code;
+                    $coaMasterHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterHpp));
+                    $jurnalUmumMasterHpp = new JurnalUmum;
+                    $jurnalUmumMasterHpp->kode_transaksi = $registration->transaction_number;
+                    $jurnalUmumMasterHpp->tanggal_transaksi = $registration->transaction_date;
+                    $jurnalUmumMasterHpp->coa_id = $coaMasterHppWithCode->id;
+                    $jurnalUmumMasterHpp->branch_id = $registration->branch_id;
+                    $jurnalUmumMasterHpp->total = $rProduct->quantity * $rProduct->hpp;
+                    $jurnalUmumMasterHpp->debet_kredit = 'D';
+                    $jurnalUmumMasterHpp->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterHpp->transaction_subject = $registration->customer->name;
+                    $jurnalUmumMasterHpp->is_coa_category = 1;
+                    $jurnalUmumMasterHpp->transaction_type = 'RG';
+                    $jurnalUmumMasterHpp->save();
+
+                    // save product sub master category coa hpp
+                    $coaHpp = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaHpp->id);
+                    $getCoaHpp = $coaHpp->code;
+                    $coaHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHpp));
+                    $jurnalUmumHpp = new JurnalUmum;
+                    $jurnalUmumHpp->kode_transaksi = $registration->transaction_number;
+                    $jurnalUmumHpp->tanggal_transaksi = $registration->transaction_date;
+                    $jurnalUmumHpp->coa_id = $coaHppWithCode->id;
+                    $jurnalUmumHpp->branch_id = $registration->branch_id;
+                    $jurnalUmumHpp->total = $rProduct->quantity * $rProduct->hpp;
+                    $jurnalUmumHpp->debet_kredit = 'D';
+                    $jurnalUmumHpp->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumHpp->transaction_subject = $registration->customer->name;
+                    $jurnalUmumHpp->is_coa_category = 0;
+                    $jurnalUmumHpp->transaction_type = 'RG';
+                    $jurnalUmumHpp->save();
+
+                    $coaMasterGroupInventory = Coa::model()->findByAttributes(array('code' => '132.00.000'));
                     $jurnalUmumMasterGroupInventory = new JurnalUmum;
                     $jurnalUmumMasterGroupInventory->kode_transaksi = $registration->transaction_number;
                     $jurnalUmumMasterGroupInventory->tanggal_transaksi = $registration->transaction_date;
@@ -668,15 +685,31 @@ class GeneralRepairRegistrationController extends Controller {
                     $jurnalUmumPendapatanJasa->transaction_type = 'RG';
                     $jurnalUmumPendapatanJasa->save();
                 }
+
+                if ($registration->pph_price > 0.00) {
+                    $coaPph = Coa::model()->findByAttributes(array('code' => '224.00.002'));
+                    $jurnalUmumPph = new JurnalUmum;
+                    $jurnalUmumPph->kode_transaksi = $registration->transaction_number;
+                    $jurnalUmumPph->tanggal_transaksi = $registration->transaction_date;
+                    $jurnalUmumPph->coa_id = $coaPph->id;
+                    $jurnalUmumPph->branch_id = $registration->branch_id;
+                    $jurnalUmumPph->total = $registration->pph_price;
+                    $jurnalUmumPph->debet_kredit = 'K';
+                    $jurnalUmumPph->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumPph->transaction_subject = $registration->customer->name;
+                    $jurnalUmumPph->is_coa_category = 0;
+                    $jurnalUmumPph->transaction_type = 'RG';
+                    $jurnalUmumPph->save();
+                }
             }
         }// end if model save
 
-        if (count($invoices) > 0) {
+        if (!empty($invoices)) {
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $registration->id,
                 'name' => 'Invoice'
             ));
-            if (count($real) != 0) {
+            if (!empty($real)) {
                 $real->checked_date = date('Y-m-d');
                 $real->detail = 'ReGenerate Invoice with number #' . $model->invoice_number;
                 $real->save(false);

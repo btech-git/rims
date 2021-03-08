@@ -168,7 +168,7 @@ class CashTransactionController extends Controller {
             $coaKas->attributes = $_GET['Coa'];
         
         $coaKasCriteria = new CDbCriteria;
-        $coaKasCriteria->addCondition("coa_id IS NOT NULL AND SUBSTRING(code, -3 , 3) <> 000 AND coa_sub_category_id BETWEEN 1 AND 3");
+        $coaKasCriteria->addCondition("SUBSTRING(code, -3 , 3) <> 000 AND coa_sub_category_id BETWEEN 1 AND 3 AND status = 'Approved'");
         $coaKasCriteria->compare('code', $coaKas->code . '%', true, 'AND', false);
         $coaKasCriteria->compare('name', $coaKas->name, true);
         $coaKasCriteria->compare('normal_balance', $coaKas->normal_balance, true);
@@ -182,15 +182,17 @@ class CashTransactionController extends Controller {
             $coaDetail->attributes = $_GET['Coa'];
         
         $coaDetailCriteria = new CDbCriteria;
-        $coaDetailCriteria->addCondition("coa_id IS NOT NULL AND SUBSTRING(code, -3 , 3) <> 000");
+        $coaDetailCriteria->addCondition("SUBSTRING(code, -3 , 3) <> 000 AND status = 'Approved'");
         $coaDetailCriteria->compare('code', $coaDetail->code . '%', true, 'AND', false);
         $coaDetailCriteria->compare('name', $coaDetail->name, true);
+        $coaDetailCriteria->compare('t.coa_category_id', $coaDetail->coa_category_id);
+        $coaDetailCriteria->compare('t.coa_sub_category_id', $coaDetail->coa_sub_category_id);
         $coaDetailCriteria->compare('normal_balance', $coaDetail->normal_balance, true);
         $coaDetailCriteria->order = 'code ASC';
         $coaDetailDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaDetailCriteria,
         ));
-
+        
         $images = $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
         $postImages = CashTransactionImages::model()->findAllByAttributes(array('cash_transaction_id' => $cashTransaction->header->id, 'is_inactive' => 0));
         $countPostImage = count($postImages);
