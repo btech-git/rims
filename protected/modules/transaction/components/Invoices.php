@@ -138,6 +138,7 @@ class Invoices extends CComponent {
 
     public function flush() {
 //        $isNewRecord = $this->header->isNewRecord;
+        $this->header->payment_date_estimate = $this->header->due_date;
         $valid = $this->header->save();
 
         $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('invoice_id' => $this->header->id));

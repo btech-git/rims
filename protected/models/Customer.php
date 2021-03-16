@@ -93,6 +93,7 @@ class Customer extends CActiveRecord {
             'color' => array(self::BELONGS_TO, 'Colors', 'color_id'),
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'customer_id'),
+            'invoiceHeaders' => array(self::HAS_MANY, 'InvoiceHeader', 'customer_id'),
             'transactionDeliveryOrders' => array(self::HAS_MANY, 'TransactionDeliveryOrder', 'customer_id'),
             'transactionReturnItems' => array(self::HAS_MANY, 'TransactionReturnItem', 'customer_id'),
             'transactionSalesOrders' => array(self::HAS_MANY, 'TransactionSalesOrder', 'customer_id'),
@@ -215,4 +216,41 @@ class Customer extends CActiveRecord {
         return $this->plate_number = implode('', $plate);
     }
 
+    public function getReceivableLedgerReport($startDate, $endDate) {
+        
+        $sql = "SELECT transaction_number, transaction_date, transaction_type, remark, amount, sale_amount, payment_amount, customer
+                FROM (
+                    SELECT invoice_number AS transaction_number, invoice_date AS transaction_date, 'Faktur Penjualan' AS transaction_type, note AS remark, total_price AS amount, total_price AS sale_amount, 0 AS payment_amount, customer_id AS customer
+                    FROM " . InvoiceHeader::model()->tableName() . "
+                    UNION
+                    SELECT payment_number AS transaction_number, payment_date AS transaction_date, 'Pelunasan Penjualan' AS transaction_type, notes AS remark, (payment_amount * -1) AS amount, 0 AS sale_amount, (payment_amount * -1) AS payment_amount, customer_id AS customer
+                    FROM " . PaymentIn::model()->tableName() . "
+                ) transaction
+                WHERE transaction_date BETWEEN :start_date AND :end_date AND customer = :customer_id
+                ORDER BY transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':customer_id' => $this->id,
+        ));
+        
+        return $resultSet;
+    }
+    
+    public function getBeginningBalanceReceivable($startDate) {
+        $sql = "
+            SELECT COALESCE(SUM(payment_left), 0) AS beginning_balance 
+            FROM " . InvoiceHeader::model()->tableName() . "
+            WHERE customer_id = :customer_id AND invoice_date < :start_date
+            GROUP BY customer_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':customer_id' => $this->id,
+            ':start_date' => $startDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
 }

@@ -5,7 +5,7 @@
         $vehicleId = $plate = $machine = $frame = $chasis = $power = $carMake = $carModel = $carSubModel = $carColor = "";
         if ($model->vehicle_id != "") {
             $vehicle = Vehicle::model()->findByPk($model->vehicle_id);
-            if (count($vehicle) != 0) {
+            if (!empty($vehicle)) {
                 $vehicleId = $vehicle->id;
                 $plate = $vehicle->plate_number != "" ? $vehicle->plate_number : '';
                 $machine = $vehicle->machine_number != "" ? $vehicle->machine_number : '';

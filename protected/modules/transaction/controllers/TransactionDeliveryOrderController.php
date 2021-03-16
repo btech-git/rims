@@ -191,11 +191,6 @@ class TransactionDeliveryOrderController extends Controller {
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionDeliveryOrder'])) {
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $deliveryOrder->header->delivery_order_no,
-                'branch_id' => $deliveryOrder->header->sender_branch_id,
-            ));
-
             $this->loadState($deliveryOrder);
             $deliveryOrder->header->setCodeNumberByRevision('delivery_order_no');
 

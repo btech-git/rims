@@ -296,7 +296,7 @@ class CashDailySummaryController extends Controller {
             $approvals[$d]['transaction_day_of_week'] = date('l', strtotime($currentDate));
             $approvals[$d]['username'] = isset($approvalsRefs[$currentDate][0]) ? $approvalsRefs[$currentDate][0] : '';
             $approvals[$d]['approval_date'] = isset($approvalsRefs[$currentDate][1]) ? $approvalsRefs[$currentDate][1] : '';
-            $approvals[$d]['amount'] = isset($approvalsRefs[$currentDate][2]) ? $approvalsRefs[$currentDate][2] : '';
+            $approvals[$d]['amount'] = isset($approvalsRefs[$currentDate][2]) ? $approvalsRefs[$currentDate][2] : '0.00';
         }
         
         $yearList = array();

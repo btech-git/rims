@@ -195,10 +195,6 @@ class TransactionReceiveItemController extends Controller {
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionReceiveItem'])) {
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $receiveItem->header->receive_item_no,
-                'branch_id' => $receiveItem->header->recipient_branch_id,
-            ));
             
             $this->loadState($receiveItem);
             $receiveItem->header->setCodeNumberByRevision('receive_item_no');

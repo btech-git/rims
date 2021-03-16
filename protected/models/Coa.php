@@ -383,20 +383,20 @@ class Coa extends CActiveRecord {
 
     public function getFinancialForecastReport() {
         
-        $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit AS debit, credit AS credit
+        $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit, credit, remaining
                 FROM (
-                    SELECT invoice_number AS transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, total_price AS debit, 0 AS credit
+                    SELECT invoice_number AS transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, total_price AS debit, 0 AS credit, payment_left AS remaining
                     FROM " . InvoiceHeader::model()->tableName() . "
                     UNION
-                    SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit
+                    SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit, payment_left AS remaining
                     FROM " . TransactionPurchaseOrder::model()->tableName() . "
                 ) transaction
-                WHERE payment_date_estimate > :payment_date_estimate AND coa_bank_id_estimate = :coa_id
+                WHERE remaining > 0 OR remaining = 0 AND payment_date_estimate > :payment_date_estimate
                 ORDER BY payment_date_estimate ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':payment_date_estimate' => date('Y-m-d'),
-            ':coa_id' => $this->id,
+//            ':coa_id' => $this->id,
 //            ':branch_id' => $branchId,
         ));
         

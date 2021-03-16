@@ -73,7 +73,7 @@
                 <tr>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'transaction_date')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'transaction_day_of_week')); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($approval, 'amount'))); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($approval, 'amount'))); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'username')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'approval_date')); ?></td>
                 </tr>

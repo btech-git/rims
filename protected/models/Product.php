@@ -421,4 +421,37 @@ class Product extends CActiveRecord {
 
         return $masterCategoryCode . $subMasterCategory . $subCategoryCode;
     }
+
+    public function getInventoryStockReport($startDate, $endDate) {
+        
+        $sql = "SELECT i.transaction_number, i.transaction_date, i.transaction_type, i.notes, i.stock_in, i.stock_out, w.name
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date AND i.product_id = :product_id
+                ORDER BY i.transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':product_id' => $this->id,
+        ));
+        
+        return $resultSet;
+    }
+    
+    public function getBeginningStockReport($startDate) {
+        $sql = "
+            SELECT COALESCE(SUM(stock_in - stock_out), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . "
+            WHERE product_id = :product_id AND transaction_date < :start_date
+            GROUP BY product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
 }

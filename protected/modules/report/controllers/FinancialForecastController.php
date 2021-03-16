@@ -22,10 +22,10 @@ class FinancialForecastController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
-        $endDate = date('Y-m-d');
+        $numberOfPeriod = (isset($_GET['NumberOfPeriod'])) ? $_GET['NumberOfPeriod'] : '1';
+        
+        $companyBanks = CompanyBank::model()->findAllByAttributes(array('company_id' => $companyId));
 
         $payableTransaction = Search::bind(new TransactionPurchaseOrder(), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $payableTransactionDataProvider = $payableTransaction->search();
@@ -35,11 +35,23 @@ class FinancialForecastController extends Controller {
         $receivableTransactionDataProvider = $receivableTransaction->search();
         $receivableTransactionDataProvider->criteria->addCondition('t.payment_left > 0 AND t.status <> "CANCELLED"');
         
+        $year = date('Y');
+        $month = date('m');
+        $numberOfDays = 0;
+        for ($i = 0; $i < (int) $numberOfPeriod; $i++) {
+            $month = $month === 1 ? 12 : $month - 1;
+            $year = $month === 12 ? $year - 1 : $year;
+            $numberOfDaysinMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            $numberOfDays += $numberOfDaysinMonth;
+        }
+        $dateNow = date('Y-m-d');
+        $datePrevious = date('Y-m-d', strtotime($dateNow . ' -' . $numberOfDays . ' days'));
+        
         $this->render('summary', array(
-            'coaId' => $coaId,
+            'companyBanks' => $companyBanks,
             'companyId' => $companyId,
-            'branchId' => $branchId,
-            'endDate' => $endDate,
+            'datePrevious' => $datePrevious,
+            'numberOfPeriod' => $numberOfPeriod,
             'payableTransaction' => $payableTransaction,
             'payableTransactionDataProvider' => $payableTransactionDataProvider,
             'receivableTransaction' => $receivableTransaction,

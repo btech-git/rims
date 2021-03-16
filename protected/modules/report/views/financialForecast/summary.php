@@ -1,7 +1,7 @@
 <?php
-Yii::app()->clientScript->registerScript('report', '
-	$("#EndDate").val("' . $endDate . '");
-');
+//Yii::app()->clientScript->registerScript('report', '
+//	$("#EndDate").val("' . $endDate . '");
+//');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -25,14 +25,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                     
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CompanyId', $companyId, CHtml::listData(Company::model()->findAllbyAttributes(array('is_deleted' => 0)), 'id', 'name'), array(
-                                            'empty' => '-- All Company --',
-                                            'onchange' => CHtml::ajax(array(
-                                                'type' => 'GET',
-                                                'url' => CController::createUrl('ajaxHtmlUpdateCompanyBankSelect'),
-                                                'update' => '#company_bank',
-                                            ))
-                                        )); ?>
+                                        <?php echo CHtml::dropDownlist('CompanyId', $companyId, CHtml::listData(Company::model()->findAllbyAttributes(array('is_deleted' => 0)), 'id', 'name'), array('empty' => '-- Pilih Company --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -44,11 +37,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Bank:</span>
+                                        <span class="prefix">Periode:</span>
                                     </div>
                                     
                                     <div class="small-8 columns" id="company_bank">
-                                        <?php echo CHtml::dropDownlist('CoaId', $coaId, CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyId)), 'coa_id', 'account_name'), array('empty' => '-- All Bank --')); ?>
+                                        <?php echo CHtml::dropDownlist('NumberOfPeriod', $numberOfPeriod, array('1' => '1 Bulan', '3' => '3 Bulan', '6' => '6 Bulan')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +65,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <div style="font-weight: bold; text-align: center">
-                        <?php $branch = Branch::model()->findByPk($branchId); ?>
+                        <?php //$branch = Branch::model()->findByPk($branchId); ?>
                         <div style="font-size: larger"><?php //echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
                         <div style="font-size: larger">Financial Forecast</div>
                         <div>
@@ -83,10 +76,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                     <br />
 
-                    <?php if (!empty($coaId)): ?>
-                        <table style="width: 80%; margin: 0 auto; border-spacing: 0pt">
+                    <?php //if (!empty($coaId)): ?>
+                    <table style="width: 80%; margin: 0 auto; border-spacing: 0pt">
+                        <?php foreach ($companyBanks as $companyBank): ?>
                             <tr>
-                                <?php $coa = Coa::model()->findByPk($coaId); ?>
+                                <?php $coa = Coa::model()->findByPk($companyBank->coa_id); ?>
                                 <td style="font-size: larger; font-weight: bold; text-transform: uppercase">
                                     Bank:
                                 </td>
@@ -109,7 +103,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <?php if (empty($coa)): ?>
                                         <?php echo '0' ;?>
                                     <?php else: ?>
-                                        <?php $saldo = $coa->getBalanceTotal($endDate, $branchId); ?>
+                                        <?php $saldo = $coa->getBalanceTotal($datePrevious, null); ?>
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
                                     <?php endif; ?>
                                 </td>
@@ -137,8 +131,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
                                 </tr>
                             <?php endforeach; ?>
-                        </table>
-                    <?php endif; ?>
+                        <?php endforeach; ?>
+                    </table>
+                    <?php //endif; ?>
                 </div>
                 <div class="clear"></div>
             </div>

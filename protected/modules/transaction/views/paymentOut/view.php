@@ -175,81 +175,83 @@ $this->menu = array(
                 </table>
             </fieldset>
 
-            <fieldset>
-                <legend>Purchase Order</legend>
-                <div class="large-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Purchase Date</span>
+            <?php if (!empty($model->purchase_order_id)): ?>
+                <fieldset>
+                    <legend>Purchase Order</legend>
+                    <div class="large-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Purchase Date</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Purchase_purchase_order_date" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->purchase_order_date : '' ?>" > 
+                                </div>
                             </div>
-                            
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Purchase_purchase_order_date" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->purchase_order_date : '' ?>" > 
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Status</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Purchase_status_document" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->status_document : '' ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Payment Status</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Purchase_payment_status" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->payment_status : '' ?>"> 
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Status</span>
-                            </div>
-                            
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Purchase_status_document" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->status_document : '' ?>"> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Payment Status</span>
-                            </div>
-                            
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Purchase_payment_status" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->payment_status : '' ?>"> 
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <div class="large-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Total Price</span>
+                                </div>
 
-                <div class="large-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Total Price</span>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Purchase_total_price" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->total_price : '' ?>"> 
+                                </div>
                             </div>
-                            
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Purchase_total_price" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->total_price : '' ?>"> 
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Payment Amount</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Purchase_payment_amount" value="<?php echo empty($model->purchase_order_id) ? 0 : $model->purchaseOrder->payment_amount; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Payment Left</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo empty($model->purchase_order_id) ? 0 : $model->purchaseOrder->payment_left; ?>"> 
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Payment Amount</span>
-                            </div>
-                            
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Purchase_payment_amount" value="<?php echo $model->purchaseOrder->payment_amount != "" ? $model->purchaseOrder->payment_amount : '0,00' ?>"> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Payment Left</span>
-                            </div>
-                            
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->purchaseOrder->payment_left != "" ? $model->purchaseOrder->payment_left : '0,00' ?>"> 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+                </fieldset>
+            <?php endif; ?>
             
             <fieldset>
                 <legend>Supplier</legend>
@@ -261,7 +263,7 @@ $this->menu = array(
                             </div>
                             
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Supplier_supplier_name" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->supplier->name : '' ?>"> 
+                                <input type="text" readonly="true" id="Supplier_supplier_name" value="<?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -272,7 +274,7 @@ $this->menu = array(
                             </div>
                             
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Supplier_email_personal" value="<?php echo $model->supplier_id != "" ? $model->supplier->email_personal : ''; ?>"> 
+                                <input type="text" readonly="true" id="Supplier_email_personal" value="<?php echo CHtml::encode(CHtml::value($supplier, 'email_personal')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -284,7 +286,7 @@ $this->menu = array(
                             </div>
                             
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Supplier_company" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->supplier->company : '' ?>"> 
+                                <input type="text" readonly="true" id="Supplier_company" value="<?php echo CHtml::encode(CHtml::value($supplier, 'company')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -296,7 +298,7 @@ $this->menu = array(
                             </div>
                             
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Supplier_email_company" value="<?php echo $model->purchase_order_id != "" ? $model->purchaseOrder->supplier->email_company : '' ?>"> 
+                                <input type="text" readonly="true" id="Supplier_email_company" value="<?php echo CHtml::encode(CHtml::value($supplier, 'email_company')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -308,7 +310,7 @@ $this->menu = array(
                             </div>
                             
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Supplier_company_attribute" value="<?php echo $model->supplier_id != "" ? $model->supplier->company_attribute : '' ?>"> 
+                                <input type="text" readonly="true" id="Supplier_company_attribute" value="<?php echo CHtml::encode(CHtml::value($supplier, 'company_attribute')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -320,7 +322,9 @@ $this->menu = array(
                             </div>
                             
                             <div class="small-8 columns">
-                                <textarea name="" id="Supplier_supplier_address" cols="30" rows="5" readonly="true"><?php echo $model->supplier_id != "" ? $model->supplier->address . '&#13;&#10;' . $model->supplier->province->name . '&#13;&#10;' . $model->supplier->city->name . '&#13;&#10;' . $model->supplier->zipcode : ''; ?></textarea>
+                                <textarea name="" id="Supplier_supplier_address" cols="30" rows="5" readonly="true">
+                                    <?php echo CHtml::encode(CHtml::value($supplier, 'address')) . ', ' . CHtml::encode(CHtml::value($supplier, 'province.name')) . ', ' . CHtml::encode(CHtml::value($supplier, 'city.name')) . ', ' . CHtml::encode(CHtml::value($supplier, 'zipcode')); ?>
+                                </textarea>
                             </div>
                         </div>
                     </div>
@@ -376,59 +380,61 @@ $this->menu = array(
                 </div>
             </fieldset>
             
-            <fieldset>
-                <legend>Product</legend>
-                <table>
-                    <thead>
-                        <tr>
-                            <td>Manufacture Code</td>
-                            <td>Name</td>
-                            <td>Qty</td>
-                            <td>Unit</td>
-                            <td>Unit Price</td>
-                            <td>Total</td>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        <?php $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($model->purchase_order_id); ?>
-                        <?php foreach ($purchaseOrderHeader->transactionPurchaseOrderDetails as $purchaseOrderDetail): ?>
+            <?php if (!empty($model->purchase_order_id)): ?>
+                <fieldset>
+                    <legend>Product</legend>
+                    <table>
+                        <thead>
                             <tr>
-                                <?php $product = Product::model()->findByPK($purchaseOrderDetail->product_id); ?>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($purchaseOrderDetail, 'quantity')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'unit_price'))); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'total_price'))); ?></td>
+                                <td>Manufacture Code</td>
+                                <td>Name</td>
+                                <td>Qty</td>
+                                <td>Unit</td>
+                                <td>Unit Price</td>
+                                <td>Total</td>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </fieldset>
-            
-            <fieldset>
-                <legend>Attached Images</legend>
+                        </thead>
 
-                <?php foreach ($postImages as $postImage):
-                    $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $model->id . '/' . $postImage->filename;
-                    $src = Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $model->id . '/' . $postImage->filename;
-                ?>
-                    <div class="row">
-                        <div class="small-3 columns">
-                            <div style="margin-bottom:.5rem">
-                                <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
+                        <tbody>
+                            <?php $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($model->purchase_order_id); ?>
+                            <?php foreach ($purchaseOrderHeader->transactionPurchaseOrderDetails as $purchaseOrderDetail): ?>
+                                <tr>
+                                    <?php $product = Product::model()->findByPK($purchaseOrderDetail->product_id); ?>
+                                    <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($purchaseOrderDetail, 'quantity')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
+                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'unit_price'))); ?></td>
+                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'total_price'))); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Attached Images</legend>
+
+                    <?php foreach ($postImages as $postImage):
+                        $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $model->id . '/' . $postImage->filename;
+                        $src = Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $model->id . '/' . $postImage->filename;
+                    ?>
+                        <div class="row">
+                            <div class="small-3 columns">
+                                <div style="margin-bottom:.5rem">
+                                    <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
+                                </div>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
+                                    <?php echo (Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $model->id . '/' . $postImage->filename); ?>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="small-8 columns">
-                            <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-                                <?php echo (Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $model->id . '/' . $postImage->filename); ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </fieldset>
+                    <?php endforeach; ?>
+                </fieldset>
+            <?php endif; ?>
         </div>
     </div>
 </div>
