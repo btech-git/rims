@@ -1,18 +1,14 @@
 <?php
 
-class ConsignmentIns extends CComponent
-{
-	public $header;
-	public $details;
-	
-	
+class ConsignmentIns extends CComponent {
 
-	public function __construct($header, array $details)
-	{
-		$this->header = $header;
-		$this->details = $details;
-		
-	}
+    public $header;
+    public $details;
+
+    public function __construct($header, array $details) {
+        $this->header = $header;
+        $this->details = $details;
+    }
 
     public function generateCodeNumber($currentMonth, $currentYear, $requesterBranchId) {
         $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
@@ -23,7 +19,7 @@ class ConsignmentIns extends CComponent
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND receive_branch = :receive_branch",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':receive_branch' => $requesterBranchId),
         ));
-        
+
         if ($consignmentInHeader == null) {
             $branchCode = Branch::model()->findByPk($requesterBranchId)->code;
         } else {
@@ -33,145 +29,122 @@ class ConsignmentIns extends CComponent
 
         $this->header->setCodeNumberByNext('consignment_in_number', $branchCode, ConsignmentInHeader::CONSTANT, $currentMonth, $currentYear);
     }
-	
-	public function addDetail($productId)
-	{
-		
-		// $detail = new ConsignmentInDetail();
-	
-		// $this->details[] = $detail;
 
-		$detail = new ConsignmentInDetail();
-			$detail->product_id = $productId;
-			$product = Product::model()->findByPK($productId);
-			$detail->barcode_product = $product->barcode;
-			
-			$this->details[] = $detail;
-		
-	}
-	
+    public function addDetail($productId) {
 
-	public function removeDetailAt($index)
-	{
-		array_splice($this->details, $index, 1);
-		//var_dump(CJSON::encode($this->details));
-	}
+        $product = Product::model()->findByPK($productId);
+        
+        $detail = new ConsignmentInDetail();
+        $detail->product_id = $productId;
+        $detail->barcode_product = $product->barcode;
 
-	public function save($dbConnection)
-	{
-		$dbTransaction = $dbConnection->beginTransaction();
-		try
-		{
-			$valid = $this->validate() && $this->flush();
-			if ($valid){
-				$dbTransaction->commit();
-				//print_r('1');
-			} else {
-				$dbTransaction->rollback();
-				//print_r('2');
-			}
+        $this->details[] = $detail;
+    }
 
-		}
-		catch (Exception $e)
-		{
-			$dbTransaction->rollback();
-			$valid = false;
-			//print_r($e);
-		}
+    public function removeDetailAt($index) {
+        array_splice($this->details, $index, 1);
+    }
 
-		return $valid;
-		//print_r('success');
-	}
+    public function save($dbConnection) {
+        $dbTransaction = $dbConnection->beginTransaction();
+        try {
+            $valid = $this->validate() && $this->flush();
+            if ($valid) {
+                $dbTransaction->commit();
+                //print_r('1');
+            } else {
+                $dbTransaction->rollback();
+                //print_r('2');
+            }
+        } catch (Exception $e) {
+            $dbTransaction->rollback();
+            $valid = false;
+            //print_r($e);
+        }
 
-	public function validate()
-	{
-		$valid = $this->header->validate();
+        return $valid;
+        //print_r('success');
+    }
 
-		
-		if (count($this->details) > 0)
-		{
-			foreach ($this->details as $detail)
-			{
-
-				$fields = array('price, quantity');
-				$valid = $detail->validate($fields) && $valid;
-			}
-		}
-		else {
-			$valid = true;
-		}
-		
-		return $valid;
-	}
-
-	public function validateDetailsCount()
-	{
-		$valid = true;
-		if (count($this->details) === 0)
-		{
-			$valid = false;
-			$this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-		}
-
-		return $valid;
-	}
+    public function validate() {
+        $valid = $this->header->validate();
 
 
-	public function flush()
-	{
-		$isNewRecord = $this->header->isNewRecord;
+        if (count($this->details) > 0) {
+            foreach ($this->details as $detail) {
+
+                $fields = array('price, quantity');
+                $valid = $detail->validate($fields) && $valid;
+            }
+        } else {
+            $valid = true;
+        }
+
+        return $valid;
+    }
+
+    public function validateDetailsCount() {
+        $valid = true;
+        if (count($this->details) === 0) {
+            $valid = false;
+            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+        }
+
+        return $valid;
+    }
+
+    public function flush() {
+        $isNewRecord = $this->header->isNewRecord;
         $this->header->total_price = $this->totalPrice;
         $this->header->total_quantity = $this->totalQuantity;
-		$valid = $this->header->save();
-		//echo "valid";
+        $valid = $this->header->save();
+        //echo "valid";
 
-		$consignmentDetails  = ConsignmentInDetail::model()->findAllByAttributes(array('consignment_in_id'=>$this->header->id));
-		$detail_id = array();
-		foreach($consignmentDetails as $consignmentDetail)
-		{
-			$detail_id[]=$consignmentDetail->id;
-		}
-		$new_detail= array();
+        $consignmentDetails = ConsignmentInDetail::model()->findAllByAttributes(array('consignment_in_id' => $this->header->id));
+        $detail_id = array();
+        foreach ($consignmentDetails as $consignmentDetail) {
+            $detail_id[] = $consignmentDetail->id;
+        }
+        $new_detail = array();
 
-		//save request detail
-		foreach ($this->details as $detail)
-		{
-			$detail->consignment_in_id = $this->header->id;
-			$detail->total_price = $detail->total;
+        //save request detail
+        foreach ($this->details as $detail) {
+            $detail->consignment_in_id = $this->header->id;
+            $detail->total_price = $detail->total;
             $detail->qty_request_left = $detail->quantity;
-			$valid = $detail->save(false) && $valid;
-			$new_detail[] = $detail->id;
-		}
+            $valid = $detail->save(false) && $valid;
+            $new_detail[] = $detail->id;
+        }
 
 
-		//delete details
-		$delete_array= array_diff($detail_id, $new_detail);
-		if($delete_array != NULL)
-		{
-			$criteria = new CDbCriteria;
-			$criteria->addInCondition('id',$delete_array);
-			ConsignmentInDetail::model()->deleteAll($criteria);
-		}
+        //delete details
+        $delete_array = array_diff($detail_id, $new_detail);
+        if ($delete_array != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_array);
+            ConsignmentInDetail::model()->deleteAll($criteria);
+        }
 
-		
-		return $valid;
 
-	}
+        return $valid;
+    }
+
     public function getTotalQuantity() {
         $total = 0.00;
-        
+
         foreach ($this->details as $detail)
             $total += $detail->quantity;
 
         return $total;
     }
-    
+
     public function getTotalPrice() {
         $total = 0.00;
-        
+
         foreach ($this->details as $detail)
             $total += $detail->total;
 
         return $total;
     }
+
 }

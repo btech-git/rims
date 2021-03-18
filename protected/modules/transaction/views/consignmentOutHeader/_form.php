@@ -89,26 +89,7 @@
     </div>
 
     <div class="row">
-        <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->labelEx($consignmentOut->header, 'status', array('class' => 'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php //echo $form->textField($consignmentOut->header,'status',array('size'=>10,'maxlength'=>10)); ?>
-                        <?php
-                        if ($consignmentOut->header->isNewRecord) {
-                            echo $form->textField($consignmentOut->header, 'status', array('value' => 'Draft', 'readonly' => true));
-                        } else {
-                            echo $form->dropDownList($consignmentOut->header, 'status', array('Draft' => 'Draft', 'Revised' => 'Revised', 'Rejected' => 'Rejected', 'Approved' => 'Approved', 'Done' => 'Done'), array('prompt' => '[--Select status Document--]'));
-                        }
-                        ?>
-                        <?php echo $form->error($consignmentOut->header, 'status'); ?>
-                    </div>
-                </div>
-            </div>		
-
+        <div class="large-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -169,8 +150,33 @@
                         <?php echo $form->error($consignmentOut->header, 'customer_id'); ?>
                     </div>
                 </div>
-            </div>		
-
+            </div>
+        </div>
+        
+        <div class="large-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($consignmentOut->header, 'status', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php //echo $form->textField($consignmentOut->header,'status',array('size'=>10,'maxlength'=>10)); ?>
+                        <?php
+                        if ($consignmentOut->header->isNewRecord) {
+                            echo $form->textField($consignmentOut->header, 'status', array('value' => 'Draft', 'readonly' => true));
+                        } else {
+                            echo $form->dropDownList($consignmentOut->header, 'status', array('Draft' => 'Draft', 'Revised' => 'Revised', 'Rejected' => 'Rejected', 'Approved' => 'Approved', 'Done' => 'Done'), array('prompt' => '[--Select status Document--]'));
+                        }
+                        ?>
+                        <?php echo $form->error($consignmentOut->header, 'status'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="large-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -194,8 +200,10 @@
                         <?php echo $form->error($consignmentOut->header, 'delivery_date'); ?>
                     </div>
                 </div>
-            </div>	
-
+            </div>
+        </div>
+        
+        <div class="large-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -210,11 +218,10 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+    
     <div class="row">
-
         <div class="large-6 columns">
             <div class="row collapse prefix-radius">
                 <div class="small-4 columns">

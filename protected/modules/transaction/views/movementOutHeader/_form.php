@@ -218,7 +218,7 @@
                     <?php
                     $type = $requestNumber = "";
                     $delivery = TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id);
-                    if (count($delivery) != 0) {
+                    if (!empty($delivery)) {
                         if ($delivery->request_type == "Sales Order") {
                             $type = "Sales Order";
                             $requestNumber = $delivery->salesOrder->sale_order_no;

@@ -342,6 +342,7 @@ class ConsignmentInHeaderController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
+            
             if (isset($_GET['Product'])) {
                 $product->attributes = $_GET['Product'];
             }
@@ -374,7 +375,7 @@ class ConsignmentInHeaderController extends Controller {
                 'consignmentIn' => $consignmentIn,
                 'product' => $product,
                 'productDataProvider' => $productDataProvider,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -513,34 +514,34 @@ class ConsignmentInHeaderController extends Controller {
                     $jurnalUmumHutang->transaction_type = 'CSI';
                     $jurnalUmumHutang->save();
 
-                    $coaOutstanding = Coa::model()->findByPk($consignment->supplier->coa_outstanding_order);
-                    $jurnalUmumOutstanding = new JurnalUmum;
-                    $jurnalUmumOutstanding->kode_transaksi = $consignment->consignment_in_number;
-                    $jurnalUmumOutstanding->tanggal_transaksi = $consignment->date_posting;
-                    $jurnalUmumOutstanding->coa_id = $coaOutstanding->id;
-                    $jurnalUmumOutstanding->branch_id = $consignment->receive_branch;
-                    $jurnalUmumOutstanding->total = $consignment->total_price;
-                    $jurnalUmumOutstanding->debet_kredit = 'K';
-                    $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumOutstanding->transaction_subject = $consignment->supplier->name;
-                    $jurnalUmumOutstanding->is_coa_category = 0;
-                    $jurnalUmumOutstanding->transaction_type = 'CSI';
-                    $jurnalUmumOutstanding->save();
+//                    $coaOutstanding = Coa::model()->findByPk($consignment->supplier->coa_outstanding_order);
+//                    $jurnalUmumOutstanding = new JurnalUmum;
+//                    $jurnalUmumOutstanding->kode_transaksi = $consignment->consignment_in_number;
+//                    $jurnalUmumOutstanding->tanggal_transaksi = $consignment->date_posting;
+//                    $jurnalUmumOutstanding->coa_id = $coaOutstanding->id;
+//                    $jurnalUmumOutstanding->branch_id = $consignment->receive_branch;
+//                    $jurnalUmumOutstanding->total = $consignment->total_price;
+//                    $jurnalUmumOutstanding->debet_kredit = 'K';
+//                    $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
+//                    $jurnalUmumOutstanding->transaction_subject = $consignment->supplier->name;
+//                    $jurnalUmumOutstanding->is_coa_category = 0;
+//                    $jurnalUmumOutstanding->transaction_type = 'CSI';
+//                    $jurnalUmumOutstanding->save();
 
                     foreach ($consignment->consignmentInDetails as $key => $ciDetail) {
                         $coaMasterGroupConsignment = Coa::model()->findByAttributes(array('code' => '106.00.000'));
-                        $jurnalUmumMasterGroupConsignment = new JurnalUmum;
-                        $jurnalUmumMasterGroupConsignment->kode_transaksi = $consignment->consignment_in_number;
-                        $jurnalUmumMasterGroupConsignment->tanggal_transaksi = $consignment->date_posting;
-                        $jurnalUmumMasterGroupConsignment->coa_id = $coaMasterGroupConsignment->id;
-                        $jurnalUmumMasterGroupConsignment->branch_id = $consignment->receive_branch;
-                        $jurnalUmumMasterGroupConsignment->total = $ciDetail->total_price;
-                        $jurnalUmumMasterGroupConsignment->debet_kredit = 'D';
-                        $jurnalUmumMasterGroupConsignment->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumMasterGroupConsignment->transaction_subject = $consignment->supplier->name;
-                        $jurnalUmumMasterGroupConsignment->is_coa_category = 1;
-                        $jurnalUmumMasterGroupConsignment->transaction_type = 'CSI';
-                        $jurnalUmumMasterGroupConsignment->save();
+//                        $jurnalUmumMasterGroupConsignment = new JurnalUmum;
+//                        $jurnalUmumMasterGroupConsignment->kode_transaksi = $consignment->consignment_in_number;
+//                        $jurnalUmumMasterGroupConsignment->tanggal_transaksi = $consignment->date_posting;
+//                        $jurnalUmumMasterGroupConsignment->coa_id = $coaMasterGroupConsignment->id;
+//                        $jurnalUmumMasterGroupConsignment->branch_id = $consignment->receive_branch;
+//                        $jurnalUmumMasterGroupConsignment->total = $ciDetail->total_price;
+//                        $jurnalUmumMasterGroupConsignment->debet_kredit = 'D';
+//                        $jurnalUmumMasterGroupConsignment->tanggal_posting = date('Y-m-d');
+//                        $jurnalUmumMasterGroupConsignment->transaction_subject = $consignment->supplier->name;
+//                        $jurnalUmumMasterGroupConsignment->is_coa_category = 1;
+//                        $jurnalUmumMasterGroupConsignment->transaction_type = 'CSI';
+//                        $jurnalUmumMasterGroupConsignment->save();
 
                         //save product master category coa consignment Inventory
                         $coaMasterConsignment = Coa::model()->findByPk($ciDetail->product->productMasterCategory->coaConsignmentInventory->id);
@@ -577,19 +578,19 @@ class ConsignmentInHeaderController extends Controller {
                         $jurnalUmumConsignment->save();
 
                         //save product sub master category coa consignment Inventory
-                        $coaPersediaan = Coa::model()->findByPk($ciDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang);
-                        $jurnalUmumPersediaan = new JurnalUmum;
-                        $jurnalUmumPersediaan->kode_transaksi = $consignment->consignment_in_number;
-                        $jurnalUmumPersediaan->tanggal_transaksi = $consignment->date_posting;
-                        $jurnalUmumPersediaan->coa_id = $coaPersediaan->id;
-                        $jurnalUmumPersediaan->branch_id = $consignment->receive_branch;
-                        $jurnalUmumPersediaan->total = $ciDetail->total_price;
-                        $jurnalUmumPersediaan->debet_kredit = 'D';
-                        $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumPersediaan->transaction_subject = $consignment->supplier->name;
-                        $jurnalUmumPersediaan->is_coa_category = 0;
-                        $jurnalUmumPersediaan->transaction_type = 'CSI';
-                        $jurnalUmumPersediaan->save();
+//                        $coaPersediaan = Coa::model()->findByPk($ciDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang);
+//                        $jurnalUmumPersediaan = new JurnalUmum;
+//                        $jurnalUmumPersediaan->kode_transaksi = $consignment->consignment_in_number;
+//                        $jurnalUmumPersediaan->tanggal_transaksi = $consignment->date_posting;
+//                        $jurnalUmumPersediaan->coa_id = $coaPersediaan->id;
+//                        $jurnalUmumPersediaan->branch_id = $consignment->receive_branch;
+//                        $jurnalUmumPersediaan->total = $ciDetail->total_price;
+//                        $jurnalUmumPersediaan->debet_kredit = 'D';
+//                        $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
+//                        $jurnalUmumPersediaan->transaction_subject = $consignment->supplier->name;
+//                        $jurnalUmumPersediaan->is_coa_category = 0;
+//                        $jurnalUmumPersediaan->transaction_type = 'CSI';
+//                        $jurnalUmumPersediaan->save();
                     }
                 }
                 $this->redirect(array('view', 'id' => $headerId));

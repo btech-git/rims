@@ -636,8 +636,7 @@ class TransactionSalesOrderController extends Controller {
             }
 
             $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
-//            $invoiceHeader = InvoiceHeader::model()->findAll();
-    //        $count = count($invoiceHeader) + 1;
+
             $model = new InvoiceHeader();
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->invoice_date)), $salesOrder->requester_branch_id);
             $model->invoice_date = date('Y-m-d');

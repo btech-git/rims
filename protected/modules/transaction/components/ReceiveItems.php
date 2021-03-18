@@ -288,6 +288,32 @@ class ReceiveItems extends CComponent {
                     $jumlah = $detail->qty_received * $detail->consignmentInDetail->price;
 
                     if ($detail->qty_received > 0) {
+                        $jurnalUmumInventoryInTransit = new JurnalUmum;
+                        $jurnalUmumInventoryInTransit->kode_transaksi = $this->header->receive_item_no;
+                        $jurnalUmumInventoryInTransit->tanggal_transaksi = $this->header->receive_item_date;
+                        $jurnalUmumInventoryInTransit->coa_id = $detail->consignmentInDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+                        $jurnalUmumInventoryInTransit->branch_id = $this->header->recipient_branch_id;
+                        $jurnalUmumInventoryInTransit->total = $jumlah;
+                        $jurnalUmumInventoryInTransit->debet_kredit = 'D';
+                        $jurnalUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumInventoryInTransit->transaction_subject = $this->header->supplier->name;
+                        $jurnalUmumInventoryInTransit->is_coa_category = 0;
+                        $jurnalUmumInventoryInTransit->transaction_type = 'RCI';
+                        $jurnalUmumInventoryInTransit->save();
+                        
+                        $jurnalUmumConsignmentInventory = new JurnalUmum;
+                        $jurnalUmumConsignmentInventory->kode_transaksi = $this->header->receive_item_no;
+                        $jurnalUmumConsignmentInventory->tanggal_transaksi = $this->header->receive_item_date;
+                        $jurnalUmumConsignmentInventory->coa_id = $detail->consignmentInDetail->product->productSubMasterCategory->coa_consignment_inventory;
+                        $jurnalUmumConsignmentInventory->branch_id = $this->header->recipient_branch_id;
+                        $jurnalUmumConsignmentInventory->total = $jumlah;
+                        $jurnalUmumConsignmentInventory->debet_kredit = 'K';
+                        $jurnalUmumConsignmentInventory->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumConsignmentInventory->transaction_subject = $this->header->supplier->name;
+                        $jurnalUmumConsignmentInventory->is_coa_category = 0;
+                        $jurnalUmumConsignmentInventory->transaction_type = 'RCI';
+                        $jurnalUmumConsignmentInventory->save();
+                        
 //                        $coaMasterGroupInventory = Coa::model()->findByAttributes(array('code' => '104.00.000'));
 //                        $jurnalUmumMasterGroupPersediaan = new JurnalUmum;
 //                        $jurnalUmumMasterGroupPersediaan->kode_transaksi = $this->header->receive_item_no;
@@ -303,56 +329,56 @@ class ReceiveItems extends CComponent {
 //                        $jurnalUmumMasterGroupPersediaan->save();
 
                         //save coa product master category
-                        $coaMasterInventory = Coa::model()->findByPk($detail->consignmentInDetail->product->productSubMasterCategory->coaPersediaanBarangDagang->id);
-                        $getCoaMasterInventory = $coaMasterInventory->code;
-                        $coaMasterInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterInventory));
-                        $jurnalUmumMasterPersediaan = new JurnalUmum;
-                        $jurnalUmumMasterPersediaan->kode_transaksi = $this->header->receive_item_no;
-                        $jurnalUmumMasterPersediaan->tanggal_transaksi = $this->header->receive_item_date;
-                        $jurnalUmumMasterPersediaan->coa_id = $coaMasterInventoryWithCode->id;
-                        $jurnalUmumMasterPersediaan->branch_id = $this->header->recipient_branch_id;
-                        $jurnalUmumMasterPersediaan->total = $jumlah;
-                        $jurnalUmumMasterPersediaan->debet_kredit = 'D';
-                        $jurnalUmumMasterPersediaan->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumMasterPersediaan->transaction_subject = $this->header->supplier->name;
-                        $jurnalUmumMasterPersediaan->is_coa_category = 1;
-                        $jurnalUmumMasterPersediaan->transaction_type = 'RCI';
-                        $jurnalUmumMasterPersediaan->save();
+//                        $coaMasterInventory = Coa::model()->findByPk($detail->consignmentInDetail->product->productSubMasterCategory->coaPersediaanBarangDagang->id);
+//                        $getCoaMasterInventory = $coaMasterInventory->code;
+//                        $coaMasterInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterInventory));
+//                        $jurnalUmumMasterPersediaan = new JurnalUmum;
+//                        $jurnalUmumMasterPersediaan->kode_transaksi = $this->header->receive_item_no;
+//                        $jurnalUmumMasterPersediaan->tanggal_transaksi = $this->header->receive_item_date;
+//                        $jurnalUmumMasterPersediaan->coa_id = $coaMasterInventoryWithCode->id;
+//                        $jurnalUmumMasterPersediaan->branch_id = $this->header->recipient_branch_id;
+//                        $jurnalUmumMasterPersediaan->total = $jumlah;
+//                        $jurnalUmumMasterPersediaan->debet_kredit = 'D';
+//                        $jurnalUmumMasterPersediaan->tanggal_posting = date('Y-m-d');
+//                        $jurnalUmumMasterPersediaan->transaction_subject = $this->header->supplier->name;
+//                        $jurnalUmumMasterPersediaan->is_coa_category = 1;
+//                        $jurnalUmumMasterPersediaan->transaction_type = 'RCI';
+//                        $jurnalUmumMasterPersediaan->save();
 
                         //save coa sub master category
-                        $coaInventory = Coa::model()->findByPk($detail->consignmentInDetail->product->productSubMasterCategory->coaPersediaanBarangDagang->id);
-                        $getCoaInventory = $coaInventory->code;
-                        $coaInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInventory));
-                        $jurnalUmumPersediaan = new JurnalUmum;
-                        $jurnalUmumPersediaan->kode_transaksi = $this->header->receive_item_no;
-                        $jurnalUmumPersediaan->tanggal_transaksi = $this->header->receive_item_date;
-                        $jurnalUmumPersediaan->coa_id = $coaInventoryWithCode->id;
-                        $jurnalUmumPersediaan->branch_id = $this->header->recipient_branch_id;
-                        $jurnalUmumPersediaan->total = $jumlah;
-                        $jurnalUmumPersediaan->debet_kredit = 'D';
-                        $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumPersediaan->transaction_subject = $this->header->supplier->name;
-                        $jurnalUmumPersediaan->is_coa_category = 0;
-                        $jurnalUmumPersediaan->transaction_type = 'RCI';
-                        $jurnalUmumPersediaan->save();
+//                        $coaInventory = Coa::model()->findByPk($detail->consignmentInDetail->product->productSubMasterCategory->coaPersediaanBarangDagang->id);
+//                        $getCoaInventory = $coaInventory->code;
+//                        $coaInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInventory));
+//                        $jurnalUmumPersediaan = new JurnalUmum;
+//                        $jurnalUmumPersediaan->kode_transaksi = $this->header->receive_item_no;
+//                        $jurnalUmumPersediaan->tanggal_transaksi = $this->header->receive_item_date;
+//                        $jurnalUmumPersediaan->coa_id = $coaInventoryWithCode->id;
+//                        $jurnalUmumPersediaan->branch_id = $this->header->recipient_branch_id;
+//                        $jurnalUmumPersediaan->total = $jumlah;
+//                        $jurnalUmumPersediaan->debet_kredit = 'D';
+//                        $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
+//                        $jurnalUmumPersediaan->transaction_subject = $this->header->supplier->name;
+//                        $jurnalUmumPersediaan->is_coa_category = 0;
+//                        $jurnalUmumPersediaan->transaction_type = 'RCI';
+//                        $jurnalUmumPersediaan->save();
 
                         //$jumlah = $detail->quantity_received * $poDetail->unit_price;
-                        $coaOutstanding = Coa::model()->findByPk($consignment->supplier->coaOutstandingOrder->id);
-                        $getCoaOutstanding = $coaOutstanding->code;
-                        $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
-                        $jurnalUmumOutstanding = new JurnalUmum;
-                        $jurnalUmumOutstanding->kode_transaksi = $this->header->receive_item_no;
-                        $jurnalUmumOutstanding->tanggal_transaksi = $this->header->receive_item_date;
-                        // $jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coaOutstandingOrder->id==""?6:7;
-                        $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
-                        $jurnalUmumOutstanding->branch_id = $this->header->recipient_branch_id;
-                        $jurnalUmumOutstanding->total = $jumlah;
-                        $jurnalUmumOutstanding->debet_kredit = 'K';
-                        $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
-                        $jurnalUmumOutstanding->is_coa_category = 0;
-                        $jurnalUmumOutstanding->transaction_type = 'RCI';
-                        $jurnalUmumOutstanding->save();
+//                        $coaOutstanding = Coa::model()->findByPk($consignment->supplier->coaOutstandingOrder->id);
+//                        $getCoaOutstanding = $coaOutstanding->code;
+//                        $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
+//                        $jurnalUmumOutstanding = new JurnalUmum;
+//                        $jurnalUmumOutstanding->kode_transaksi = $this->header->receive_item_no;
+//                        $jurnalUmumOutstanding->tanggal_transaksi = $this->header->receive_item_date;
+//                        // $jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coaOutstandingOrder->id==""?6:7;
+//                        $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
+//                        $jurnalUmumOutstanding->branch_id = $this->header->recipient_branch_id;
+//                        $jurnalUmumOutstanding->total = $jumlah;
+//                        $jurnalUmumOutstanding->debet_kredit = 'K';
+//                        $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
+//                        $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
+//                        $jurnalUmumOutstanding->is_coa_category = 0;
+//                        $jurnalUmumOutstanding->transaction_type = 'RCI';
+//                        $jurnalUmumOutstanding->save();
                     }
                 }
                 
