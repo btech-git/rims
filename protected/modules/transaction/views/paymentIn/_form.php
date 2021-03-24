@@ -173,7 +173,7 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->hiddenField($model, 'user_id', array('value' => $model->isNewRecord ? Yii::app()->user->getId() : $model->user_id, 'readonly' => true)); ?>
-                        <?php echo $form->textField($model, 'user_name', array('size' => 30, 'maxlength' => 30, 'value' => $model->isNewRecord ? Yii::app()->user->getName() : $model->user_name, 'readonly' => true)); ?>
+                        <?php echo $form->textField($model, 'user.username', array('size' => 30, 'maxlength' => 30, 'value' => $model->isNewRecord ? Yii::app()->user->getName() : $model->user->username, 'readonly' => true)); ?>
                         <?php echo $form->error($model, 'user_id'); ?>
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                     </div>
                     <div class="small-8 columns">
                         <?php
-                        $branchId = $model->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $model->requester_branch_id;
+                        $branchId = $model->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $model->branch_id;
                         $branch = Branch::model()->findByPk($branchId);
                         $company = Company::model()->findByPk($branch->company_id);
                         ?>

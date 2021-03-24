@@ -157,12 +157,12 @@
                         </div>
                         <div class="small-8 columns">
                             <?php
-                            $invoiceCriteria = new CDbCriteria;
-                            $invoiceCriteria->addCondition("status != 'CANCELLED'");
-                            $invoiceCriteria->addCondition("registration_transaction_id = " . $model->id);
+//                            $invoiceCriteria = new CDbCriteria;
+//                            $invoiceCriteria->addCondition("status != 'CANCELLED'");
+//                            $invoiceCriteria->addCondition("registration_transaction_id = " . $model->id);
                             ?>
-                            <?php $invoice = InvoiceHeader::model()->findAll($invoiceCriteria) ?>
-                            <input type="text" readonly="true" value="<?php echo count($invoice) > 0 ? $invoice->invoice_number : ''; ?>"> 
+                            <?php $invoice = InvoiceHeader::model()->find(array('condition' => 'status != "CANCELLED" AND registration_transaction_id = ' . $model->id)) ?>
+                            <input type="text" readonly="true" value="<?php echo !empty($invoice) ? $invoice->invoice_number : ''; ?>"> 
                         </div>
                     </div>
                 </div>

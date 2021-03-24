@@ -88,7 +88,7 @@
                         <?php echo $form->label($model,'plate_number', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'plate_number'); ?>
+                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
                     </div>
                 </div>
             </div>	
@@ -96,10 +96,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'car_make_code', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($model, 'Car Make', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'car_make_code',array('size'=>18,'maxlength'=>18)); ?>
+                        <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>	
@@ -107,10 +107,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'car_model_code', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($model,'car_model', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'car_model_code',array('size'=>18,'maxlength'=>18)); ?>
+                        <?php echo CHtml::dropDownList('CarModel', $carModel, CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>	
@@ -127,7 +127,7 @@
                         <?php echo $form->label($model,'customer_name', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'customer_name'); ?>
+                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
                     </div>
                 </div>
             </div>		

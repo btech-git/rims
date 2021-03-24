@@ -37,21 +37,22 @@ $('.search-form form').submit(function(){
         </div>
         <div class="clearfix"></div>
         <div class="search-form" style="display:none">
-            <?php
-            $this->renderPartial('_search', array(
+            <?php $this->renderPartial('_search', array(
                 'model' => $model,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
-            ));
-            ?>
+                'plateNumber' => $plateNumber,
+                'carMake' => $carMake,
+                'carModel' => $carModel,
+                'customerName' => $customerName,
+            )); ?>
         </div><!-- search-form -->
     </div>
     <div class="clearfix"></div>
 </div>
 <br />
 <div class="grid-view">
-    <?php
-    $this->widget('zii.widgets.grid.CGridView', array(
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'registration-transaction-grid',
         'dataProvider' => $dataProvider,
         'filter' => null,
@@ -75,12 +76,10 @@ $('.search-form form').submit(function(){
             array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
             array(
                 'header' => 'Car Make',
-                'name' => 'car_make_code',
                 'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
             ),
             array(
                 'header' => 'Car Model',
-                'name' => 'car_model_code',
                 'value' => '$data->vehicle->carModel->name'
             ),
             array(
@@ -92,7 +91,6 @@ $('.search-form form').submit(function(){
             ),
             array(
                 'header' => 'Customer Name',
-                'name' => 'customer_name',
                 'value' => '$data->customer->name',
             ),
             'work_order_number',
@@ -158,6 +156,5 @@ $('.search-form form').submit(function(){
                 ),
             ),
         ),
-    ));
-    ?>
+    )); ?>
 </div>

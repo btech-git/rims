@@ -137,12 +137,12 @@
                     ),
                     array(
                         'label' => 'Retur Beli', 
-                        'url' => array('/transaction/transactionReturnItem/admin'), 
+                        'url' => array('/transaction/transactionReturnOrder/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('purchaseReturnCreate') || Yii::app()->user->checkAccess('purchaseReturnEdit'))
                     ),
                     array(
                         'label' => 'Retur Jual', 
-                        'url' => array('/transaction/transactionReturnOrder/admin'), 
+                        'url' => array('/transaction/transactionReturnItem/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('saleReturnCreate') || Yii::app()->user->checkAccess('saleReturnEdit'))
                     ),
                     array(

@@ -98,7 +98,6 @@ $this->breadcrumbs = array(
                     <?php endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
-
                         <?php if (count($invoices) == 0): ?>
                             <?php echo CHtml::button('Generate Invoice', array(
                                 'id' => 'invoice-button',
