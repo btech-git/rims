@@ -78,6 +78,28 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
+                                    <span class="prefix">Payment Type</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo $model->paymentType->name; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Company Bank</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'companyBank.bank.name')); ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
                                     <span class="prefix">Status</span>
                                 </div>
                                 <div class="small-8 columns">

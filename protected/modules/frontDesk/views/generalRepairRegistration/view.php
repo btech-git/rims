@@ -95,7 +95,7 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
                     
-                    <?php //if (count($invoices) == 0 && !empty($model->sales_order_number) && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
+                    <?php if (count($invoices) == 0 && !empty($model->sales_order_number) && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
                         <?php echo CHtml::button('Generate Invoice', array(
                             'id' => 'invoice-button',
                             'name' => 'Invoice',
@@ -112,7 +112,7 @@ $this->breadcrumbs = array(
                                 },
                             })'
                         )); ?>
-                    <?php //endif; ?>
+                    <?php endif; ?>
                 </div>
             </div>
 
