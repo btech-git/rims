@@ -65,7 +65,11 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <td colspan="6" style="text-align: right; font-weight: bold">Saldo awal</td>
                         <td class="width2-7" style="text-align: right; font-weight: bold">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getBeginningBalanceLedger($startDate))); ?>
+                            <?php if ($header->coa_category_id > 5 && $header->coa_category_id < 11): ?>
+                                <?php echo '0'; ?>
+                            <?php else: ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getBeginningBalanceLedger($startDate))); ?>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php foreach ($header->jurnalUmums as $detail): ?>

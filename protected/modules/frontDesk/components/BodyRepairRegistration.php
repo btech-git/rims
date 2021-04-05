@@ -611,10 +611,10 @@ class BodyRepairRegistration extends CComponent {
 
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
         if (count($invoices) > 0) {
-            foreach ($invoices as $invoice) {
-                $invoice->status = "CANCELLED";
-                $invoice->save(false);
-            }
+//            foreach ($invoices as $invoice) {
+//                $invoice->status = "CANCELLED";
+//                $invoice->save(false);
+//            }
 
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $this->header->id,

@@ -235,6 +235,12 @@ class JurnalUmumController extends Controller {
         } else if ($codeNumberConstant === 'RTI') {
             $model = TransactionReturnItem::model()->findByAttributes(array('return_item_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionReturnItem/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'TR') {
+            $model = TransactionTransferRequest::model()->findByAttributes(array('transfer_request_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionTransferRequest/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'SR') {
+            $model = TransactionSentRequest::model()->findByAttributes(array('sent_request_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionSentRequest/view', 'id' => $model->id));
         }
     }
 

@@ -567,7 +567,7 @@ class PaymentInController extends Controller {
                             $jurnalPiutang->save();
 
                             if ($paymentIn->payment_type_id == 1) {
-                                $getCoaKas = '101.00.001';
+                                $getCoaKas = '111.00.001';
                                 $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
                                 $jurnalUmumKas = new JurnalUmum;
                                 $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;

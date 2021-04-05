@@ -185,13 +185,13 @@ class SalesOrders extends CComponent {
         $customer = Customer::model()->findByPk($this->header->customer_id);
         $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
 
-        $invoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $this->header->id));
-        if (count($invoices) > 0) {
-            foreach ($invoices as $invoice) {
-                $invoice->status = "CANCELLED";
-                $valid = $invoice->save(false);
-            }
-        }
+//        $invoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $this->header->id));
+//        if (count($invoices) > 0) {
+//            foreach ($invoices as $invoice) {
+//                $invoice->status = "CANCELLED";
+//                $valid = $invoice->save(false);
+//            }
+//        }
 
         $model = new InvoiceHeader();
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->invoice_date)), $this->header->requester_branch_id);

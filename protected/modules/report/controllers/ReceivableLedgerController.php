@@ -34,11 +34,11 @@ class ReceivableLedgerController extends Controller {
         $receivableLedgerSummary->setupLoading();
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
-        $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        );
-        $receivableLedgerSummary->setupFilter($filters);
+//        $filters = array(
+//            'startDate' => $startDate,
+//            'endDate' => $endDate,
+//        );
+//        $receivableLedgerSummary->setupFilter($filters);
         
         $this->render('summary', array(
             'customer' => $customer,

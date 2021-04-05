@@ -42,7 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($payableLedgerSummary->dataProvider->data as $header): ?>
                 <tr class="items1">
-                    <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                    <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
 
                     <td style="text-align: right; font-weight: bold">
                         <?php $saldo = $header->getBeginningBalancePayable($startDate); ?>

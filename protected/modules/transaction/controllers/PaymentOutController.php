@@ -538,8 +538,8 @@ class PaymentOutController extends Controller {
 
     //                    $priceBefore = $paymentOut->purchaseOrder->ppn == 1 ? $paymentOut->payment_amount / 1.1 : $paymentOut->payment_amount;
     //                    $ppn = $paymentOut->purchaseOrder->ppn == 1 ? $priceBefore * 0.1 : 0;
-                        if ($paymentOut->payment_type == "Cash") { 
-                            $getCoaKas = '121.00.002';
+                        if ($paymentOut->payment_type_id == 1) { 
+                            $getCoaKas = '111.00.001';
                             $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
 
                             $jurnalUmumKas = new JurnalUmum;
