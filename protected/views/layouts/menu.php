@@ -276,7 +276,8 @@
                     array('label' => 'Laporan Kas Harian', 'url' => array('/report/kasharian/report'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                     array('label' => 'Approval Kas Harian', 'url' => array('/accounting/cashDailySummary/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                     array('label' => 'Summary Kas Harian', 'url' => array('/accounting/cashDailySummary/admin'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
+                    array('label' => 'Financial Forecast', 'url' => array('/report/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
+//                    array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                 ),
             )); ?>
         </li>

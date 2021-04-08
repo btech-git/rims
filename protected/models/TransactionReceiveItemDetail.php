@@ -167,8 +167,15 @@ class TransactionReceiveItemDetail extends CActiveRecord {
     }
     
     public function getTotalPrice() {
-        $unitPrice = empty($this->purchase_order_detail_id) ? $this->consignmentInDetail->price : $this->purchaseOrderDetail->unit_price;
+        $unitPrice = 0.00; 
         
+        if (!empty($this->purchase_order_detail_id)) {
+            $unitPrice = $this->purchaseOrderDetail->unit_price;
+        } elseif (!empty($this->consignment_in_detail_id)) {
+            $unitPrice = $this->consignmentInDetail->price;
+        } else {
+            $unitPrice = $this->product->hpp;
+        }
         return $this->qty_received * $unitPrice;
     }
 }

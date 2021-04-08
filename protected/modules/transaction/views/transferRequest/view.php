@@ -96,6 +96,11 @@ $this->menu = array(
                     '_viewDetailReceive',
                     array('transferDetails' => $transferDetails, 'model' => $transferRequest), true)
             ),
+            
+            'Journal' => array(
+                'id' => 'test4',
+                'content' => $this->renderPartial('_viewJournal', array('model' => $transferRequest), true)
+            ),
         ),
 
         // additional javascript options for the tabs plugin

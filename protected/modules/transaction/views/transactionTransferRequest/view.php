@@ -96,6 +96,11 @@ $this->menu = array(
                     '_viewDetailReceive',
                     array('transferDetails' => $transferDetails, 'model' => $model), true)
             ),
+            
+            'Journal' => array(
+                'id' => 'test4',
+                'content' => $this->renderPartial('_viewJournal', array('model' => $model), true)
+            ),
         ),
 
 

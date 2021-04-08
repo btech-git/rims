@@ -80,6 +80,30 @@
                     </div>
                 </div>
             </div>
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Cabang Tujuan', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $transferRequest->header,
+                            'attribute' => "estimate_arrival_date",
+                            // additional javascript options for the date picker plugin
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+        //                                    'yearRange' => '1900:2020'
+                            ),
+                            'htmlOptions' => array(
+                                'value' => $transferRequest->header->isNewRecord ? date('Y-m-d') : $transferRequest->header->estimate_arrival_date,
+                            ),
+                        )); ?>
+                        <?php echo CHtml::error($transferRequest->header, 'estimate_arrival_date'); ?>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
