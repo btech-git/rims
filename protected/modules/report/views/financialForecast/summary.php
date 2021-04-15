@@ -117,7 +117,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">Saldo</td>
                             </tr>
 
-                            <?php $forecastData = $coa->getFinancialForecastReport(); ?>
+                            <?php $forecastData = $coa->getFinancialForecastReport($datePrevious); ?>
                             <?php foreach ($forecastData as $forecastRow): ?>
                                 <?php $transactionNumber = $forecastRow['transaction_number']; ?>
                                 <?php $debitAmount = $forecastRow['debit']; ?>

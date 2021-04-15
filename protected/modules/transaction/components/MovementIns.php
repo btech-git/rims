@@ -131,7 +131,7 @@ class MovementIns extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
         //echo "valid";
 
@@ -140,23 +140,20 @@ class MovementIns extends CComponent {
         foreach ($movementInDetails as $movementInDetail) {
             $detail_id[] = $movementInDetail->id;
         }
+        
         $new_detail = array();
 
-        //print_r($this->details);
         //save request detail
         foreach ($this->details as $detail) {
 
             if ($detail->id == "") {
                 $moveDetail = MovementInDetail::model()->findByAttributes(array('movement_in_header_id' => $this->header->id, 'product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
-                if (count($moveDetail) != 0) {
+                if (!empty($moveDetail) != 0) {
                     $moveDetail->quantity += $detail->quantity;
                     $moveDetail->save() && $valid;
-                    //echo "test";
                 } else {
                     $detail->movement_in_header_id = $this->header->id;
-                    //$detail->request_order_quantity_rest = $detail->quantity;
                     $valid = $detail->save(false) && $valid;
-                    //echo "2";
                 }
             } // endif
             else {
@@ -166,16 +163,17 @@ class MovementIns extends CComponent {
             }
 
             if ($this->header->movement_type == 1) {
-
                 $criteria = new CDbCriteria;
                 $criteria->together = 'true';
                 $criteria->with = array('movementInHeader');
                 $criteria->condition = "movementInHeader.receive_item_id =" . $this->header->receive_item_id . " AND movement_in_header_id != " . $this->header->id;
                 $mvmntDetails = MovementInDetail::model()->findAll($criteria);
                 $quantity = 0;
+                
                 foreach ($mvmntDetails as $mvmntDetail) {
                     $quantity += $mvmntDetail->quantity;
                 }
+                
                 $receiveDetail = TransactionReceiveItemDetail::model()->findByAttributes(array('id' => $detail->receive_item_detail_id, 'receive_item_id' => $this->header->receive_item_id));
                 $receiveDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
                 $receiveDetail->quantity_movement = $quantity + $detail->quantity;
@@ -187,24 +185,19 @@ class MovementIns extends CComponent {
                 $criteria->condition = "movementInHeader.return_item_id =" . $this->header->return_item_id . " AND movement_in_header_id != " . $this->header->id;
                 $mvmntDetails = MovementInDetail::model()->findAll($criteria);
                 $quantity = 0;
+                
                 foreach ($mvmntDetails as $mvmntDetail) {
                     $quantity += $mvmntDetail->quantity;
                 }
+                
                 $receiveDetail = TransactionReturnItemDetail::model()->findByAttributes(array('id' => $detail->return_item_detail_id, 'return_item_id' => $this->header->return_item_id));
                 $receiveDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
                 $receiveDetail->quantity_movement = $quantity + $detail->quantity;
                 $receiveDetail->save(false);
             }
 
-
-
-
-
             $new_detail[] = $detail->id;
-            //echo 'test';
         }
-
-
 
         //delete details
         $delete_array = array_diff($detail_id, $new_detail);
@@ -213,7 +206,6 @@ class MovementIns extends CComponent {
             $criteria->addInCondition('id', $delete_array);
             MovementInDetail::model()->deleteAll($criteria);
         }
-
 
         return $valid;
     }

@@ -110,6 +110,12 @@ class TransferRequestController extends Controller {
             $model->attributes = $_POST['TransactionTransferRequestApproval'];
 
             if ($model->save()) {
+                
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $transferRequest->transfer_request_no,
+//                    'branch_id' => $transferRequest->requester_branch_id,
+                ));
+
                 $transferRequest->status_document = $model->approval_type;
 
                 if ($model->approval_type == 'Approved') {
@@ -219,7 +225,6 @@ class TransferRequestController extends Controller {
                         $jurnalUmumOutstandingPartDestination->transaction_type = 'TR';
                         $jurnalUmumOutstandingPartDestination->save();
                     }
-
                 }
 
                 $transferRequest->save(false);

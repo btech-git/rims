@@ -37,18 +37,21 @@ class ReceiveItems extends CComponent {
             //$purchaseOrder = TransactionPurchaseOrder::model()->findByPk($requestId);
             $purchases = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $requestId));
             foreach ($purchases as $key => $purchase) {
-                $detail = new TransactionReceiveItemDetail();
-                $detail->product_id = $purchase->product_id;
-                $receiveDetail = TransactionReceiveItemDetail::model()->findAllByAttributes(array('purchase_order_detail_id' => $requestId, 'receive_item_id' => $this->header->id));
-                if (count($receiveDetail) == 0) {
-                    $detail->qty_request = $purchase->total_quantity;
-                } else {
-                    $detail->qty_request = $purchase->purchase_order_quantity_left;
-                }
+                if ($purchase->purchase_order_quantity_left > 0) {
+                    $detail = new TransactionReceiveItemDetail();
+                    $detail->product_id = $purchase->product_id;
+                    $receiveDetail = TransactionReceiveItemDetail::model()->findAllByAttributes(array('purchase_order_detail_id' => $requestId, 'receive_item_id' => $this->header->id));
+                    
+                    if (count($receiveDetail) == 0) {
+                        $detail->qty_request = $purchase->total_quantity;
+                    } else {
+                        $detail->qty_request = $purchase->purchase_order_quantity_left;
+                    }
 
-                $detail->qty_request_left = $purchase->purchase_order_quantity_left;
-                $detail->purchase_order_detail_id = $purchase->id;
-                $this->details[] = $detail;
+                    $detail->qty_request_left = $purchase->purchase_order_quantity_left;
+                    $detail->purchase_order_detail_id = $purchase->id;
+                    $this->details[] = $detail;
+                }
             } //endforeach
         }//end if
         elseif ($requestType == 2) {
@@ -148,7 +151,6 @@ class ReceiveItems extends CComponent {
             'branch_id' => $this->header->recipient_branch_id,
         ));
 
-//        $isNewRecord = $this->header->isNewRecord;
         if ($this->header->request_type == 'Internal Delivery Order') {
             $this->header->invoice_sub_total = 0;
             $this->header->invoice_tax_nominal = 0;
@@ -176,6 +178,7 @@ class ReceiveItems extends CComponent {
         foreach ($this->details as $detail) {
             $detail->receive_item_id = $this->header->id;
             $left_quantity = 0;
+            
             if ($this->header->request_type == 'Purchase Order') {
                 $left_quantity = $detail->purchaseOrderDetail->purchase_order_quantity_left;
             } elseif ($this->header->request_type == 'Internal Delivery Order') {
@@ -186,13 +189,13 @@ class ReceiveItems extends CComponent {
             } else {
                 $left_quantity = 0;
             }
-                $detail->qty_request_left = $left_quantity;
-                $detail->quantity_movement = 0;
-                $detail->quantity_movement_left = $detail->qty_received;
-                $detail->total_price = $detail->totalPrice;
+            $detail->qty_request_left = $left_quantity - $detail->qty_received;
+            $detail->quantity_movement = 0;
+            $detail->quantity_movement_left = $detail->qty_received;
+            $detail->total_price = $detail->totalPrice;
 
-                $valid = $detail->save() && $valid;
-                $new_detail[] = $detail->id;
+            $valid = $detail->save() && $valid;
+            $new_detail[] = $detail->id;
 
             if ($detail->qty_received > 0) {
                 if ($this->header->request_type == 'Purchase Order') {
@@ -203,8 +206,9 @@ class ReceiveItems extends CComponent {
                     $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
 
                     $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id, 'purchase_order_id' => $this->header->purchase_order_id));
-                    $purchaseOrderDetail->purchase_order_quantity_left = $detail->qty_request - $detail->qty_received - $purchaseOrderDetail->getTotalQuantityReceived();
-                    $purchaseOrderDetail->receive_quantity = $detail->qty_received + $purchaseOrderDetail->getTotalQuantityReceived();
+                    $totalQuantityReceived = $purchaseOrderDetail->getTotalQuantityReceived();
+                    $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->quantity - $totalQuantityReceived;
+                    $purchaseOrderDetail->receive_quantity = $detail->qty_received + $totalQuantityReceived;
 
                     $purchaseOrderDetail->save(false);
 //                    $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);

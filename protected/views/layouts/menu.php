@@ -115,6 +115,11 @@
                         'url' => array('/transaction/cashTransaction/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('cashTransactionCreate') || Yii::app()->user->checkAccess('cashTransactionEdit'))
                     ),
+                    array(
+                        'label' => 'Transaksi Jurnal Umum', 
+                        'url' => array('/accounting/jurnalPenyesuaian/admin'), 
+                        'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))
+                    ),
                 ),
             )); ?>
         </li>
@@ -265,7 +270,6 @@
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
                     array('label' => 'Analisa Keuangan', 'url' => array('/accounting/forecasting/admin'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Jurnal Penyesuaian', 'url' => array('/accounting/jurnalPenyesuaian/admin'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                     array('label' => 'Laporan Posisi Keuangan (Neraca)', 'url' => array('/accounting/neraca/index'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                     array('label' => 'Laporan Laba Rugi', 'url' => array('/report/labaRugi/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                     array('label' => 'Buku Besar', 'url' => array('/accounting/jurnalUmum/buku'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* @var $this TransactionTransferRequestController */
 /* @var $transferRequest TransactionTransferRequest */
 
@@ -60,7 +60,6 @@ $this->menu = array(
                 'estimate_arrival_date',
                 array('name' => 'requester_id', 'value' => $transferRequest->user->username),
                 array('name' => 'requester_branch_id', 'value' => $transferRequest->requesterBranch->name),
-//                'destination_id',
                 array('name' => 'destination_branch_id', 'value' => $transferRequest->destinationBranch->name),
                 array(
                     'name' => 'approved_by', 
@@ -69,9 +68,9 @@ $this->menu = array(
 //                array('name' => 'total_price', 'value' => $this->format_money($transferRequest->total_price))
             ),
         )); ?>
-
     </div>
 </div>
+
 <div class="detail">
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(

@@ -358,7 +358,7 @@ class Coa extends CActiveRecord {
     }
     
     public function getProfitLossBalance($startDate, $endDate, $branchId) {
-        $branchConditionSql = '';
+//        $branchConditionSql = '';
         
         $params = array(
             ':coa_id' => $this->id,
@@ -381,7 +381,7 @@ class Coa extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
-    public function getFinancialForecastReport() {
+    public function getFinancialForecastReport($datePrevious) {
         
         $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit, credit, remaining
                 FROM (
@@ -391,12 +391,13 @@ class Coa extends CActiveRecord {
                     SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit, payment_left AS remaining
                     FROM " . TransactionPurchaseOrder::model()->tableName() . "
                 ) transaction
-                WHERE remaining > 0 OR remaining = 0 AND payment_date_estimate > :payment_date_estimate
+                WHERE remaining > 0 AND payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
                 ORDER BY payment_date_estimate ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':payment_date_estimate' => date('Y-m-d'),
-//            ':coa_id' => $this->id,
+            ':date_now' => date('Y-m-d'),
+            ':payment_date_estimate' => $datePrevious,
+            ':coa_bank_id_estimate' => $this->id,
 //            ':branch_id' => $branchId,
         ));
         

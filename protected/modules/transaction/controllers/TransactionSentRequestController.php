@@ -177,6 +177,12 @@ class TransactionSentRequestController extends Controller
             $model->attributes = $_POST['TransactionSentRequestApproval'];
 
             if ($model->save()) {
+                
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $sentRequest->sent_request_no,
+                    'branch_id' => $sentRequest->requester_branch_id,
+                ));
+
                 $sentRequest->status_document = $model->approval_type;
                 if ($model->approval_type == 'Approved') {
                     $sentRequest->approved_by = $model->supervisor_id;

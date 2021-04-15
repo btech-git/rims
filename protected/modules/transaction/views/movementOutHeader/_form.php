@@ -47,7 +47,7 @@
                             <?php echo $form->labelEx($movementOut->header, 'date_posting', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($movementOut->header, 'date_posting', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
+                            <?php echo $form->textField($movementOut->header, 'date_posting', array('value' => date('Y-m-d H:i:s'), 'readonly' => true,)); ?>
                             <?php /* $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                               'model' => $movementOut->header,
                               'attribute' => "date_posting",

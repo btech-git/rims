@@ -16,18 +16,17 @@ $this->menu = array(
 );
 ?>
 
-<!--<h1>View PaymentOut #<?php echo $model->id; ?></h1>-->
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment Out', Yii::app()->baseUrl . '/transaction/paymentOut/admin', array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.paymentOut.admin"))) ?>
         <?php if (!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
-            <?php //echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentOut/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.update"))) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentOut/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.update"))) ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentOut/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.paymentOut.updateApproval"))) ?>
         <?php endif; ?>
+        
         <h1>View PaymentOut #<?php echo $model->id; ?></h1>
-
     </div>
     
     <div class="row">

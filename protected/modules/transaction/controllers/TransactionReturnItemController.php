@@ -483,6 +483,7 @@ class TransactionReturnItemController extends Controller {
         $model = new TransactionReturnItemApproval;
         $model->date = date('Y-m-d H:i:s');
         $branch = Branch::model()->findByPk($returnItem->recipient_branch_id);
+        
 //        $getCoa = "";
 //        $getCoaDetail = "";
         //$branch = Branch::model()->findByPk($paymentOut->branch_id);
@@ -490,6 +491,12 @@ class TransactionReturnItemController extends Controller {
         if (isset($_POST['TransactionReturnItemApproval'])) {
             $model->attributes = $_POST['TransactionReturnItemApproval'];
             if ($model->save()) {
+
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $returnItem->return_item_no,
+                    'branch_id' => $returnItem->recipient_branch_id,
+                ));
+
                 $returnItem->status = $model->approval_type;
                 $returnItem->save(false);
 //                $delivery = TransactionDeliveryOrder::model()->findByPk($returnItem->delivery_order_id);

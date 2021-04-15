@@ -78,15 +78,4 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $lastId = $header->kode_transaksi; ?>
         <?php endforeach; ?>
     </tbody>
-    
-    <tfoot>
-        <tr>
-            <td></td>
-        </tr>
-        
-        <tr>
-            <td></td>
-        </tr>
-        
-    </tfoot>
 </table>
