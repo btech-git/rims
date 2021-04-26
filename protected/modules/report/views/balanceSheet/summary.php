@@ -1,5 +1,6 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
+	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -35,10 +36,23 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Year to Date:</span>
+                                    <span class="prefix">Periode:</span>
                                 </div>
 
-                                <div class="small-8 columns">
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'StartDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Mulai',
+                                        ),
+                                    )); ?>
+                                </div>
+
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'EndDate',
                                         'options' => array(
@@ -121,7 +135,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                         <?php foreach ($coas as $account): ?>
-                                            <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                            <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                             <?php $accountCategoryBalance += $accountBalance; ?>
                                         <?php endforeach; ?>
 
@@ -220,7 +234,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                         <?php foreach ($coas as $account): ?>
-                                            <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                            <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                             <?php $accountCategoryBalance += $accountBalance; ?>
                                         <?php endforeach; ?>
 
@@ -242,7 +256,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </tr>
 
                                     <?php if ($accountCategorySub->id == 3): ?>
-                                          
                                         <?php $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code')); ?>
                                         <?php foreach ($coaCategorySecondaries as $coaCategorySecondary): ?>
                                             <?php $accountCategorySecondaryBalance = 0.00; ?>
@@ -263,7 +276,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                                     <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                                     <?php foreach ($coas as $account): ?>
-                                                        <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                                        <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                                         <?php $accountCategoryBalance += $accountBalance; ?>
                                                     <?php endforeach; ?>
 
@@ -306,7 +319,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                                 <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                                 <?php foreach ($coas as $account): ?>
-                                                    <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                                    <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                                     <?php $accountCategoryBalance += $accountBalance; ?>
                                                 <?php endforeach; ?>
 

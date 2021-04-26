@@ -318,10 +318,11 @@ class Coa extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
-    public function getBalanceTotal($endDate, $branchId) {
+    public function getBalanceTotal($startDate, $endDate, $branchId) {
         $balanceTotal = 0.00;
         $branchConditionSql = '';
         $params = array(
+            ':startDate' => $startDate,
             ':endDate' => $endDate,
             ':coa_id' => $this->id,
         );
@@ -332,7 +333,7 @@ class Coa extends CActiveRecord {
         }
 
         $accountingJournals = $this->getRelated('jurnalUmums', false, array(
-            'condition' => "tanggal_transaksi <= :endDate AND coa_id = :coa_id" . $branchConditionSql,
+            'condition' => "tanggal_transaksi BETWEEN :startDate AND :endDate AND coa_id = :coa_id" . $branchConditionSql,
             'params' => $params,
         ));
 

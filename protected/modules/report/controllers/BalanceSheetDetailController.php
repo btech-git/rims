@@ -23,6 +23,7 @@ class BalanceSheetDetailController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 
         $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id = 12'));
@@ -35,6 +36,7 @@ class BalanceSheetDetailController extends Controller {
         $this->render('summary', array(
             'accountCategoryAssets' => $accountCategoryAssets,
             'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
+            'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
         ));

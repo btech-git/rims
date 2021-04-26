@@ -83,8 +83,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 </tr>
                 <tr>
                     <td colspan="4" style="text-align: right; font-weight: bold">Perubahan Bersih</td>
-                    <?php $differenceAmount = $positiveAmount + $negativeAmount; ?>
-                    <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $differenceAmount); ?></td>
+                    <?php //$differenceAmount = $positiveAmount + $negativeAmount; ?>
+                    <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $saldo); ?></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>

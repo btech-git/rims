@@ -69,6 +69,9 @@ class Vehicle extends CActiveRecord {
             array('car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, power, plate_number_prefix_id', 'numerical', 'integerOnly' => true),
             array('year, drivetrain, plate_number_suffix', 'length', 'max' => 10),
             array('plate_number', 'unique', 'message' => 'Plate number already exists.'),
+            array('plate_number_prefix_id', 'unique', 'criteria' => array(
+                'condition' => 'plate_number_ordinal = :plate_number_ordinal'
+            ), 'message' => 'Plate number already exists.'),
             array('machine_number, frame_number, chasis_code, transmission', 'length', 'max' => 30),
             array('plate_number, fuel_type, plate_number_ordinal', 'length', 'max' => 20),
             array('notes', 'safe'),

@@ -50,7 +50,7 @@
                         </tr>
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                         <?php foreach ($coas as $account): ?>
-                            <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                            <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                 <?php //if ($accountBalance > 0): ?>
                                 <tr>
                                     <td style="padding-left: 90px">
@@ -163,7 +163,7 @@
 
                             <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                             <?php foreach ($coas as $account): ?>
-                                <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                     <?php //if ($accountBalance > 0): ?>
                                     <tr>
                                         <td style="padding-left: 90px">
@@ -220,7 +220,7 @@
 
                                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                         <?php foreach ($coas as $account): ?>
-                                            <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                            <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                             <?php //if ($accountBalance > 0): ?>
                                             <tr>
                                                 <td style="padding-left: 110px">
@@ -278,7 +278,7 @@
                                 
                                 <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                 <?php foreach ($coas as $account): ?>
-                                    <?php $accountBalance = $account->getBalanceTotal($endDate, $branchId); ?>
+                                    <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                     <?php //if ($accountBalance > 0): ?>
                                     <tr>
                                         <td style="padding-left: 95px">

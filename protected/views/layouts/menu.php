@@ -117,7 +117,7 @@
                     ),
                     array(
                         'label' => 'Transaksi Jurnal Umum', 
-                        'url' => array('/accounting/jurnalPenyesuaian/admin'), 
+                        'url' => array('/accounting/journalAdjustment/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))
                     ),
                 ),

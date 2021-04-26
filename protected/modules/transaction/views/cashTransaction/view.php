@@ -16,7 +16,7 @@ $this->menu = array(
 );
 ?>
 
-<!--<h1>View Cash Transaction #<?php echo $model->id; ?></h1>-->
+<!--<h1>View Cash Transaction #<?php //echo $model->id; ?></h1>-->
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
