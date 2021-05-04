@@ -28,6 +28,9 @@ class BalanceSheetDetailController extends Controller {
 
         $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id = 12'));
         $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
+        $accountProfitLossPrevious = Coa::model()->findByPk(1475);
+        $accountProfitLoss = Coa::model()->findByPk(1476);
+        $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
 //        if (isset($_GET['SaveExcel']))
 //            $this->saveToExcel($accountCategoryTypes, $endDate, $branchId);
@@ -36,6 +39,9 @@ class BalanceSheetDetailController extends Controller {
         $this->render('summary', array(
             'accountCategoryAssets' => $accountCategoryAssets,
             'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
+            'accountProfitLoss' => $accountProfitLoss,
+            'accountProfitLossPrevious' => $accountProfitLossPrevious,
+            'accountCategoryTypes' => $accountCategoryTypes,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,

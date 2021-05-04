@@ -7,8 +7,8 @@
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'vehicle-form',
     )); ?>
-	<div class="row">
-        <?php echo $form->errorSummary($model); ?>
+    <div class="row">
+        <span style="color: red; font-weight: bold"><?php echo $form->errorSummary($model); ?></span>
         <div id="maincontent">
             <h2>Customer</h2>
             <div id="customer">

@@ -1,6 +1,6 @@
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/journalVoucher/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/journalAdjustment/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
         <h1><?php if ($journalVoucher->header->isNewRecord){ echo "New Jurnal Penyesuaian"; }else{ echo "Update Jurnal Penyesuaian";}?></h1>
 
         <div class="form">
@@ -112,11 +112,16 @@
             <hr />
 
             <div class="row">
-                <?php echo CHtml::button('Tambah Akun', array(
+                <?php /*echo CHtml::button('Tambah Akun', array(
                     'onclick' => '$("#account-dialog").dialog("open"); return false;',
                     'onkeypress' => 'if (event.keyCode == 13) { $("#account-dialog").dialog("open"); return false; }'
                 )); ?>
-                <?php echo CHtml::hiddenField('CoaId'); ?>
+                <?php echo CHtml::hiddenField('CoaId');*/ ?>
+            </div>
+
+            <div class="row">
+                <?php echo CHtml::button('Tambah Akun', array('name' => 'Search', 'onclick' => '$("#account-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#account-dialog").dialog("open"); return false; }')); ?>
+                <?php //echo CHtml::hiddenField('CoaId'); ?>
             </div>
 
             <br />
@@ -141,13 +146,14 @@
     'id' => 'account-dialog',
     // additional javascript options for the dialog plugin
     'options' => array(
-        'title' => 'Accounts',
+        'title' => 'COA',
         'autoOpen' => false,
         'width' => 'auto',
         'modal' => true,
     ),
 )); ?>
 
+<?php echo CHtml::beginForm('', 'post'); ?>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'account-grid',
     'dataProvider' => $dataProvider,
@@ -157,17 +163,12 @@
         'cssFile' => false,
         'header' => '',
     ),
-    'selectionChanged' => 'js:function(id) {
-        $("#CoaId").val($.fn.yiiGridView.getSelection(id));
-        $("#account-dialog").dialog("close");
-        $.ajax({
-            type: "POST",
-            url: "' . CController::createUrl('AjaxHtmlAddDetail', array('id' => $journalVoucher->header->id)) . '",
-            data: $("form").serialize(),
-            success: function(html) { $("#detail_div").html(html); },
-        });
-    }',
     'columns' => array(
+        array(
+            'id' => 'selectedIds',
+            'class' => 'CCheckBoxColumn',
+            'selectableRows' => '50',
+        ),
         'code: Kode',
         'name:nama Akun',
         array(
@@ -186,5 +187,16 @@
         ),
     ),
 )); ?>
+
+<?php echo CHtml::ajaxSubmitButton('Add COA', CController::createUrl('AjaxHtmlAddDetail', array('id' => $journalVoucher->header->id)), array(
+    'type' => 'POST',
+    'data' => 'js:$("form").serialize()',
+    'success' => 'js:function(html) {
+        $("#detail_div").html(html);
+        $("#account-dialog").dialog("close");
+    }'
+)); ?>
+
+<?php echo CHtml::endForm(); ?>
 
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>

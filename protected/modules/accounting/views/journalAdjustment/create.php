@@ -6,7 +6,7 @@ $this->breadcrumbs=array(
 ?>
 
 <div id="maincontent">
-    <?php echo $this->renderPartial('_form', array(
+    <?php $this->renderPartial('_form', array(
         'journalVoucher' => $journalVoucher,
         'account' => $account,
         'dataProvider' => $dataProvider,

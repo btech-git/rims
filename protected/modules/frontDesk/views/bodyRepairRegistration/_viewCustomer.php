@@ -46,14 +46,15 @@
                             <span class="prefix">Phone</span>
                         </div>
                         <div class="small-8 columns">
-                            <?php $phones = CustomerPhone::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
+                            <?php /*$phones = CustomerPhone::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
                             <?php if (count($phones) > 0): ?>
                                 <?php foreach ($phones as $key => $phone): ?>
                                     <input type="text" readonly="true" value="<?php echo $phone->phone_no; ?>"> 
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <input type="text" readonly="true" value="<?php echo 'No Phone Registered to this Customer'; ?>">
-                            <?php endif; ?>
+                            <?php endif;*/ ?>
+                            <input type="text" readonly="true" value="<?php echo $model->customer->phone; ?>"> 
                         </div>
                     </div>
                 </div>
@@ -63,14 +64,15 @@
                             <span class="prefix">Mobile</span>
                         </div>
                         <div class="small-8 columns">
-                            <?php $mobiles = CustomerMobile::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
+                            <?php /*$mobiles = CustomerMobile::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
                             <?php if (count($mobiles) > 0): ?>
                                 <?php foreach ($mobiles as $key => $mobile): ?>
                                     <input type="text" readonly="true" value="<?php echo $mobile->mobile_no; ?>">
                                 <?php endforeach ?>
                             <?php else: ?>
                                 <input type="text" readonly="true" value="<?php echo 'No Mobile Phone Registered to this Customer'; ?>">
-                            <?php endif ?>
+                            <?php endif*/ ?>
+                            <input type="text" readonly="true" value="<?php echo $model->customer->mobile_phone; ?>">
                         </div>
                     </div>
                 </div>

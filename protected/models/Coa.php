@@ -381,7 +381,24 @@ class Coa extends CActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
+    
+    public function getProfitLossPreviousBalance($startDate, $endDate) {
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+        );
+        
+        $sql = "SELECT SUM(total) AS balance
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date
+                GROUP BY coa_id";
 
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
     public function getFinancialForecastReport($datePrevious) {
         
         $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit, credit, remaining

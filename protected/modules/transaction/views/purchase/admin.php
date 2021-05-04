@@ -72,21 +72,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'selectionChanged' => 'function(id){ location.href = "' . $this->createUrl('view') . '/id/"+$.fn.yiiGridView.getSelection(id);}',
     'columns' => array(
         array(
-            'name' => 'cn_ordinal',
+            'name' => 'purchase_order_no',
             'header' => 'Pembelian #',
-            'filter' => '<div style="display: inline-block">' . CHtml::activeTextField($purchase, 'cn_ordinal', array('maxLength' => 4, 'size' => 2)) . '</div>' .
-            '<div style="display: inline-block"> &nbsp; /' . PurchaseHeader::CN_CONSTANT . '/ &nbsp; </div>' .
-            '<div style="display: inline-block">' . CHtml::activeDropDownList($purchase, 'cn_month', array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'), array('empty' => '')) . '</div>' .
-            '<div style="display: inline-block"> &nbsp; / &nbsp; </div>' .
-            '<div style="display: inline-block">' . CHtml::activeTextField($purchase, 'cn_year', array('maxLength' => 2, 'size' => 2)) . '</div>',
-            'value' => '$data->getCodeNumber(PurchaseHeader::CN_CONSTANT)',
-            'htmlOptions' => array('style' => 'width: 300px'),
+            'value' => '$data->purchase_order_no',
         ),
         array(
             'header' => 'Tanggal',
-            'name' => 'date',
+            'name' => 'purchase_order_date',
             'filter' => false, 
-            'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($data, "date")))',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::encode(CHtml::value($data, "purchase_order_date")))',
             'htmlOptions' => array('style' => 'width: 200px'),
         ),
         array(

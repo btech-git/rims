@@ -170,7 +170,7 @@ class Purchase extends CComponent {
 
         foreach ($this->details as $detail)
 //            if ($detail->is_inactive == 0)
-                $total += $detail->total;
+                $total += $detail->getSubTotal (1);
 
         return $total;
     }

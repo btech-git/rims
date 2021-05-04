@@ -69,27 +69,21 @@ class PurchaseController extends Controller {
 
         //update filter if one of product, color or category is selected
 
-        $day = Yii::app()->dateFormatter->format('dd', strtotime($purchase->header->date));
-        $month = Yii::app()->dateFormatter->format('MM', strtotime($purchase->header->date));
-        $year = Yii::app()->dateFormatter->format('y', strtotime($purchase->header->date));
+        $day = Yii::app()->dateFormatter->format('dd', strtotime($purchase->header->purchase_order_date));
+        $month = Yii::app()->dateFormatter->format('MM', strtotime($purchase->header->purchase_order_date));
+        $year = Yii::app()->dateFormatter->format('y', strtotime($purchase->header->purchase_order_date));
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
 
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
-
-        $details = array();
-        foreach ($purchase->details as $detail) {
-            if ($detail->is_inactive == 0)
-                $details[] = $detail;
-        }
-        $purchase->details = $details;
+        $supplierDataProvider = $supplier->search();
 
         if (isset($_POST['Submit'])) {
 
             $this->loadState($purchase);
-            $purchase->header->cn_year = Yii::app()->dateFormatter->format('yy', strtotime($purchase->header->date));
-            $purchase->header->cn_month = Yii::app()->dateFormatter->format('M', strtotime($purchase->header->date));
+//            $purchase->header->cn_year = Yii::app()->dateFormatter->format('yy', strtotime($purchase->header->purchase_order_date));
+//            $purchase->header->cn_month = Yii::app()->dateFormatter->format('M', strtotime($purchase->header->purchase_order_date));
 
             if ($purchase->save(Yii::app()->db))
                 $this->redirect(array('view', 'id' => $purchase->header->id));
@@ -100,6 +94,7 @@ class PurchaseController extends Controller {
             'product' => $product,
             'productDataProvider' => $productDataProvider,
             'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
         ));
     }
 
@@ -156,7 +151,7 @@ class PurchaseController extends Controller {
             unset($_GET['pageSize']);
         }
 
-        $dataProvider = $purchase->resetScope()->searchWithPaging();
+        $dataProvider = $purchase->resetScope()->search();
         $dataProvider->criteria->with = array('supplier:resetScope');
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
@@ -176,9 +171,7 @@ class PurchaseController extends Controller {
         }
 
         if (!empty($date))
-            $dataProvider->criteria->compare('t.date', $date, TRUE);
-
-        $dataProvider->criteria->compare('t.is_inactive', 0);
+            $dataProvider->criteria->compare('t.purchase_order_date', $date, TRUE);
 
         $this->render('admin', array(
             'purchase' => $purchase,
@@ -290,7 +283,6 @@ class PurchaseController extends Controller {
     public function actionAjaxHtmlAddDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $purchase = $this->instantiate($id);
-
             $this->loadState($purchase);
 
             if (isset($_POST['ProductId']))

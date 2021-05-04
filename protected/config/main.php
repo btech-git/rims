@@ -17,6 +17,7 @@ return array(
         'application.models.*',
         'application.components.*',
         'application.components.helpers.*',
+        'application.components.validators.*',
         'application.modules.user.models.*',
         'application.modules.user.components.*',
         'application.modules.rights.*',

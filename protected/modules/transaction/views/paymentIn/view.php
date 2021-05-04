@@ -358,7 +358,7 @@ $this->menu = array(
                                     </div>
                                     
                                     <div class="small-8 columns">
-                                        <?php $getPhone = ""; ?>
+                                        <?php /*$getPhone = ""; ?>
                                         <?php if ($model->customer_id != ""): ?>
                                             <?php $phones = CustomerPhone::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
 
@@ -367,9 +367,8 @@ $this->menu = array(
                                                     <?php $getPhone = $phone->phone_no . '&#13;&#10;'; ?>
                                                 <?php endforeach ?>
                                             <?php endif; ?>
-
-                                        <?php endif; ?>
-                                        <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo $getPhone; ?></textarea>
+                                        <?php endif;*/ ?>
+                                        <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo $model->customer->phone; ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -381,7 +380,7 @@ $this->menu = array(
                                     </div>
                                     
                                     <div class="small-8 columns">
-                                        <?php $getMobile = "" ?>
+                                        <?php /*$getMobile = "" ?>
                                         <?php if ($model->customer_id != ""): ?>
                                             <?php $mobiles = CustomerMobile::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
 
@@ -390,8 +389,8 @@ $this->menu = array(
                                                     <?php $getMobile .= $mobile->mobile_no . '&#13;&#10;'; ?>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
-                                        <?php endif; ?>
-                                        <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo $getMobile ?></textarea>
+                                        <?php endif;*/ ?>
+                                        <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo $model->customer->mobile_phone ?></textarea>
                                     </div>
                                 </div>
                             </div>

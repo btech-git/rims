@@ -168,8 +168,13 @@ class JournalAdjustmentController extends Controller {
             $journalVoucher = $this->instantiate($id);
             $this->loadState($journalVoucher);
 
-            if (isset($_POST['CoaId'])) {
-                $journalVoucher->addDetail($_POST['CoaId']);
+            if (isset($_POST['selectedIds'])) {
+                $coaIds = array();
+                $coaIds = $_POST['selectedIds'];
+
+                foreach ($coaIds as $coaId) {
+                    $journalVoucher->addDetail($coaId);
+                }
             }
 
             $this->renderPartial('_detail', array(
@@ -248,10 +253,14 @@ class JournalAdjustmentController extends Controller {
         }
         
         if (isset($_POST['JournalAdjustmentDetail'])) {
-            foreach ($_POST['JournalAdjustmentDetail'] as $item) {
-                $detail = new JournalAdjustmentDetail();
-                $detail->attributes = $item;
-                $journalVoucher->details[] = $detail;
+            foreach ($_POST['JournalAdjustmentDetail'] as $i => $item) {
+                if (isset($journalVoucher->details[$i])) {
+                    $journalVoucher->details[$i]->attributes = $item;
+                } else {
+                    $detail = new JournalAdjustmentDetail();
+                    $detail->attributes = $item;
+                    $journalVoucher->details[] = $detail;
+                }
             }
         } else {
             $journalVoucher->details = array();

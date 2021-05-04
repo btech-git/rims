@@ -7,11 +7,10 @@ $this->breadcrumbs = array(
 
 <h1>Pembelian Barang</h1>
 
-<?php
-echo $this->renderPartial('_form', array(
+<?php echo $this->renderPartial('_form', array(
     'purchase' => $purchase,
     'product' => $product,
     'productDataProvider' => $productDataProvider,
     'supplier' => $supplier,
-));
-?>
+    'supplierDataProvider' => $supplierDataProvider,
+)); ?>

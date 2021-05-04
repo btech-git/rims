@@ -470,12 +470,17 @@ class GeneralRepairRegistration extends CComponent {
                 if ($this->header->repair_type == 'BR') {
                     $serviceDetail->status = 'Finished';
                 } else {
-                    $registrationRealizationService = RegistrationRealizationProcess::model()->findByAttributes(array('registration_transaction_id' => $this->header->id, 'service_id' => $serviceDetail->service_id));
+                    $registrationRealizationService = RegistrationRealizationProcess::model()->findByAttributes(array(
+                        'registration_transaction_id' => $this->header->id, 
+                        'service_id' => $serviceDetail->service_id
+                    ));
+                    
                     if (empty($registrationRealizationService)) {
                         $registrationRealizationService = new RegistrationRealizationProcess();
                         $registrationRealizationService->registration_transaction_id = $this->header->id;
                         $registrationRealizationService->name = $serviceDetail->service->name;
                         $registrationRealizationService->service_id = $serviceDetail->service_id;
+                        $registrationRealizationService->registration_service_id = $serviceDetail->id;
                         $registrationRealizationService->detail = 'Pending';
                         $registrationRealizationService->save();
                     }
@@ -486,6 +491,11 @@ class GeneralRepairRegistration extends CComponent {
         //delete 
         $delete_service_array = array_diff($service_id, $new_service);
         if ($delete_service_array != NULL) {
+            
+            $criteriaRealization = new CDbCriteria;
+            $criteriaRealization->addInCondition('registration_service_id', $delete_service_array);
+            RegistrationRealizationProcess::model()->deleteAll($criteriaRealization);
+            
             $criteria = new CDbCriteria;
             $criteria->addInCondition('id', $delete_service_array);
             RegistrationService::model()->deleteAll($criteria);

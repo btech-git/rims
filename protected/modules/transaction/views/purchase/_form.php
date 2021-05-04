@@ -21,7 +21,7 @@
         <div class="span-12">
             <div class="row">
                 <?php echo CHtml::label('Tanggal', false); ?>
-                <?php echo $form->textField($purchase->header, 'purchase_order_date', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
+                <?php echo CHtml::activeTextField($purchase->header, 'purchase_order_date', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
                 <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
                     'model' => $purchase->header,
                     'attribute' => 'purchase_order_date',
@@ -49,7 +49,7 @@
        
             </div>
             <div class="row">
-                <?php echo CHtml::label('Estimate Payment Date', false); ?>
+                <?php /*echo CHtml::label('Estimate Payment Date', false); ?>
                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                     'model' => $purchase->header,
                     'attribute' => 'estimate_payment_date',
@@ -59,7 +59,7 @@
                         'dateFormat' => 'yy-mm-dd',
                     ),
                 )); ?>
-                <?php echo CHtml::error($purchase->header, 'estimate_payment_date'); ?>
+                <?php echo CHtml::error($purchase->header, 'estimate_payment_date');*/ ?>
        
             </div>
 

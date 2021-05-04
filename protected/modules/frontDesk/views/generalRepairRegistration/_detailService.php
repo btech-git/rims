@@ -117,6 +117,21 @@
                                     'type' => 'POST',
                                     'url' => CController::createUrl('ajaxHtmlRemoveServiceDetail', array('id' => $generalRepairRegistration->header->id, 'index' => $i)),
                                     'update' => '#service',
+                                )) . 
+                                CHtml::ajax(array(
+                                    'type'=>'POST',
+                                    'dataType'=>'JSON',
+                                    'url'=>CController::createUrl('ajaxJsonGrandTotal', array('id'=>$generalRepairRegistration->header->id)),
+                                    'success'=>'function(data) {
+                                        $("#total_quantity_service").html(data.totalQuantityService);
+                                        $("#sub_total_service").html(data.subTotalService);
+                                        $("#total_discount_service").html(data.totalDiscountService);
+                                        $("#grand_total_service").html(data.grandTotalService);
+                                        $("#sub_total_transaction").html(data.subTotalTransaction);
+                                        $("#tax_item_amount").html(data.taxItemAmount);
+                                        $("#tax_service_amount").html(data.taxServiceAmount);
+                                        $("#grand_total_transaction").html(data.grandTotal);
+                                    }',
                                 )),
                             )); ?>
                         </td>
