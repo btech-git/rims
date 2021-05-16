@@ -95,6 +95,7 @@ class BodyRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($bodyRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $branches = Branch::model()->findAll(); 
+        $bodyRepairRegistration->header->pph = 1;
 
         $damage = new Service('search');
         $damage->unsetAttributes();  // clear any default values

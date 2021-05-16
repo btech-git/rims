@@ -294,31 +294,65 @@
                         <?php echo $form->labelEx($model, 'payment_amount'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'payment_amount', array('size' => 18, 'maxlength' => 18, 'readonly' => $model->isNewRecord ? false : true,
+                        <?php echo $form->textField($model, 'payment_amount', array(
+                            'size' => 18, 
+                            'maxlength' => 18, 
+                            'readonly' => $model->isNewRecord ? false : true,
                             'onchange' => '
-								var relCount = $("#PaymentIn_invoice_id").attr("rel");
-								var count = 0;
-								var paymentAmount = $("#PaymentIn_payment_amount").val();
-								var invoiceAmount = $("#Invoice_total_price").val();
-								var invoiceLeft = $("#Invoice_payment_left").val();
-								console.log(paymentAmount);
-								console.log(invoiceAmount);
-								console.log(invoiceLeft);
-								if(relCount == 1)
-									count = invoiceAmount - paymentAmount;
-								else
-									count = invoiceLeft - paymentAmount;
-								if(count < 0)
-								{
-									alert("Payment Amount could not be higher than Invoice Amount");
-									$("#PaymentIn_payment_amount").val("");
-								}
-
-								')); ?>
+                                var relCount = $("#PaymentIn_invoice_id").attr("rel");
+                                var count = 0;
+                                var paymentAmount = $("#PaymentIn_payment_amount").val();
+                                var invoiceAmount = $("#Invoice_total_price").val();
+                                var invoiceLeft = $("#Invoice_payment_left").val();
+                                console.log(paymentAmount);
+                                console.log(invoiceAmount);
+                                console.log(invoiceLeft);
+                                if (relCount == 1)
+                                    count = invoiceAmount - paymentAmount;
+                                else
+                                    count = invoiceLeft - paymentAmount;
+                                if (count < 0)
+                                {
+                                    alert("Payment Amount could not be higher than Invoice Amount");
+                                    $("#PaymentIn_payment_amount").val("");
+                                }
+                            '
+                        )); ?>
                         <?php echo $form->error($model, 'payment_amount'); ?>
                     </div>
                 </div>
             </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'is_tax_service'); ?>
+                    </div>
+                    <div class="small-2 columns">
+                        <?php echo $form->checkBox($model, 'is_tax_service', array(
+                            'onchange' => '$.ajax({
+                                type: "POST",
+                                dataType: "JSON",
+                                url: "' . CController::createUrl('ajaxJsonTaxService', array('id' => $model->id, 'invoiceId' => $invoice->id)) . '",
+                                data: $("form").serialize(),
+                                success: function(data) {
+                                    $("#tax_service_amount").html(data.taxServiceAmountFormatted);
+                                    $("#' . CHtml::activeId($model, 'tax_service_amount') . '").val(data.taxServiceAmount);
+                                },
+                            });'
+                        )); ?>
+                        <?php echo $form->error($model, 'is_tax_service'); ?>
+                    </div>
+                    <div class="small-6 columns">
+                        <?php echo $form->hiddenField($model, 'tax_service_amount'); ?>
+                        <span id="tax_service_amount">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($model, 'tax_service_amount'))); ?>
+                        </span>
+                        <?php echo $form->error($model, 'tax_service_amount'); ?>
+                    </div>
+                </div>
+            </div>
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -327,8 +361,7 @@
                     <div class="small-8 columns">
                         <?php if ($model->isNewRecord): ?>
                             <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                            <?php
-                            $this->widget('CMultiFileUpload', array(
+                            <?php $this->widget('CMultiFileUpload', array(
                                 'model' => $model,
                                 'attribute' => 'images',
                                 'accept' => 'jpg|jpeg|png|gif',
@@ -336,13 +369,11 @@
                                 'max' => 10,
                                 'remove' => 'x',
                                     //'duplicate' => 'Already Selected',
-                            ));
-                            ?>
+                            )); ?>
                         <?php else:
                             if ($allowedImages != 0): ?>
                                 <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                                <?php
-                                $this->widget('CMultiFileUpload', array(
+                                <?php $this->widget('CMultiFileUpload', array(
                                     'model' => $model,
                                     'attribute' => 'images',
                                     'accept' => 'jpg|jpeg|png|gif',
@@ -350,8 +381,7 @@
                                     'max' => 10,
                                     'remove' => 'x',
                                         //'duplicate' => 'Already Selected',
-                                ));
-                                ?>
+                                )); ?>
                             <?php endif;
 
                             if ($postImages !== null): ?>

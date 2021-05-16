@@ -19,6 +19,8 @@
  * @property string $status
  * @property integer $company_bank_id
  * @property integer $payment_type_id
+ * @property integer $is_tax_service
+ * @property string $tax_service_amount
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -57,16 +59,16 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_id, payment_number, payment_time, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status', 'required'),
-            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id', 'numerical', 'integerOnly' => true),
+            array('invoice_id, payment_number, payment_time, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount', 'required'),
+            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
-            array('payment_amount', 'length', 'max' => 18),
+            array('payment_amount, tax_service_amount', 'length', 'max' => 18),
             array('payment_type, status', 'length', 'max' => 30),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, payment_amount, notes, customer_id, vehicle_id, payment_type, user_id, branch_id,invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, payment_amount, notes, customer_id, vehicle_id, payment_type, user_id, branch_id,invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -112,6 +114,8 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'cash_payment_type' => 'Cash Payment Type',
             'bank_id' => 'Bank',
             'payment_type_id' => 'Payment Type',
+            'is_tax_service' => 'PPh',
+            'tax_service_amount' => 'PPh Amount',
         );
     }
 
@@ -150,6 +154,8 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('cash_payment_type', $this->cash_payment_type);
         $criteria->compare('bank_id', $this->bank_id);
         $criteria->compare('payment_type_id', $this->payment_type_id);
+        $criteria->compare('is_tax_service', $this->is_tax_service);
+        $criteria->compare('tax_service_amount', $this->tax_service_amount);
 
         $criteria->together = 'true';
         $criteria->with = array('invoice');
@@ -220,6 +226,11 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
                 'pageSize' => 50,
             ),
         ));
+    }
+    
+    public function getTaxServiceAmount() {
+        
+        return empty($this->invoice->registration_transaction_id) ? 0 : $this->invoice->registrationTransaction->pph_price;
     }
 
 //    public function getTotalAmountWholesale($branchId, $transactionDate) {

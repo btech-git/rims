@@ -83,7 +83,7 @@ $this->breadcrumbs=array(
                                         <th>Branch</th>
                                         <th>User</th>
                                         <th>PPn</th>
-                                        <th>PPh</th>
+                                        <!--<th>PPh</th>-->
                                         <?php if($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <th>WO #</th>
                                         <?php endif; ?>
@@ -110,8 +110,8 @@ $this->breadcrumbs=array(
                                                 )),
                                             )); ?>
                                         </td>
-                                        <td>
-                                            <?php echo CHtml::activeCheckBox($generalRepairRegistration->header,'pph', array(
+<!--                                        <td>
+                                            <?php /*echo CHtml::activeCheckBox($generalRepairRegistration->header,'pph', array(
                                                 'onchange' => CHtml::ajax(array(
                                                     'type' => 'POST',
                                                     'dataType' => 'JSON',
@@ -123,9 +123,9 @@ $this->breadcrumbs=array(
                                                         $("#sub_total_quick_service").html(data.subTotalQuickService);
                                                     }',
                                                 )),
-                                            )); ?>
-                                        </td>
-                                        <?php if($generalRepairRegistration->header->work_order_number != ""): ?>
+                                            ));*/ ?>
+                                        </td>-->
+                                        <?php if ($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'work_order_number')); ?></td>
                                         <?php endif; ?>
                                     </tr>

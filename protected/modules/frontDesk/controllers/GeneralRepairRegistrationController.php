@@ -66,6 +66,7 @@ class GeneralRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($generalRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $branches = Branch::model()->findAll();
+        $generalRepairRegistration->header->pph = 1;
 
         $qs = new QuickService('search');
         $qs->unsetAttributes();  // clear any default values

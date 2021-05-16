@@ -290,6 +290,7 @@ class JurnalUmumController extends Controller {
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addInCondition('id', $arrCoa);
+        $coaCriteria->addCondition('status = "Approved"');
         $allCoa = Coa::model()->findAll($coaCriteria);
 
         //$jurnals = JurnalUmum::model()->findAll($coaCriteria);

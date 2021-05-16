@@ -33,9 +33,10 @@ class GeneralLedgerController extends Controller {
         $accountId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $accounts = Coa::model()->findAll(array(
-            'order' => 'code ASC',
-        ));
+//        $accounts = Coa::model()->findAll(array(
+//            'condition' => 'status = "Approved"',
+//            'order' => 'code ASC',
+//        ));
 
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
         $generalLedgerSummary->setupLoading($startDate, $endDate, $accountId);
@@ -54,7 +55,7 @@ class GeneralLedgerController extends Controller {
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'number' => $number,
-            'accounts' => $accounts,
+//            'accounts' => $accounts,
             'accountId' => $accountId,
             'branchId' => $branchId,
         ));

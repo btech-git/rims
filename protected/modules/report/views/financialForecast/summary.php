@@ -103,7 +103,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <?php if (empty($coa)): ?>
                                         <?php echo '0' ;?>
                                     <?php else: ?>
-                                        <?php $saldo = $coa->getBalanceTotal($datePrevious, null); ?>
+                                        <?php $saldo = $coa->getBalanceTotal($datePrevious, $endDate, null); ?>
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
                                     <?php endif; ?>
                                 </td>

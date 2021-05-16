@@ -244,9 +244,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </tr>
                                     <?php $accountCategoryPrimaryBalance += $accountCategoryBalance; ?>
                                 <?php endforeach; ?>
-                                <tr>
+<!--                                <tr>
                                     <td style="padding-left: 75px; font-weight: bold; text-transform: capitalize">
-                                        <?php echo CHtml::encode(CHtml::value($accountProfitLossPrevious, 'code')); ?> - 
+                                        <?php /*echo CHtml::encode(CHtml::value($accountProfitLossPrevious, 'code')); ?> - 
                                         <?php echo CHtml::encode(CHtml::value($accountProfitLossPrevious, 'name')); ?>
                                     </td>
 
@@ -300,9 +300,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 <?php $profitLossAmount += $accountCategoryTypeBalance; ?>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossAmount)); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossAmount));*/ ?>
                                    </td>
-                                </tr>
+                                </tr>-->
                             <?php else : ?>
                                 <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
                                 <?php foreach ($accountCategorySubs as $accountCategorySub): ?>

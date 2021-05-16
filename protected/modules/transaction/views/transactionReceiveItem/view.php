@@ -256,9 +256,9 @@ $this->menu = array(
                     <td>QTY Movement</td>
                     <td>QTY Movement Left</td>
                     <td>QTY Request Left</td>
-                    <th>HPP</th>
+<!--                    <th>HPP</th>
                     <th>Price</th>
-                    <th>Total</th>
+                    <th>Total</th>-->
                     <td>Note</td>
                     <!--<td>Barcode Product</td>-->
                 </tr>
@@ -282,9 +282,9 @@ $this->menu = array(
                         <td><?php echo $recieveDetail->quantity_movement; ?></td>
                         <td><?php echo $recieveDetail->quantity_movement_left; ?></td>
                         <td><?php echo $recieveDetail->qty_request_left; ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->product->hpp)); ?></td>
+                        <td><?php /*echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->product->hpp)); ?></td>
                         <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->unitPrice)); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->totalPurchaseReceived)); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $recieveDetail->totalPurchaseReceived));*/ ?></td>
                         <td><?php echo $recieveDetail->note == NULL ? '-' : $recieveDetail->note; ?></td>
                         <!--<td><?php // echo $recieveDetail->barcode_product == NULL ? '-' : $recieveDetail->barcode_product; ?></td>-->
                     </tr>

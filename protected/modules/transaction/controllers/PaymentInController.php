@@ -606,7 +606,7 @@ class PaymentInController extends Controller {
                                 $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
                                 $jurnalPph->coa_id = $coaPphWithCode->id;
                                 $jurnalPph->branch_id = $paymentIn->branch_id;
-                                $jurnalPph->total = $paymentIn->invoice->pph_total;
+                                $jurnalPph->total = $paymentIn->tax_service_amount;
                                 $jurnalPph->debet_kredit = 'D';
                                 $jurnalPph->tanggal_posting = date('Y-m-d');
                                 $jurnalPph->transaction_subject = $paymentIn->customer->name;
@@ -655,6 +655,19 @@ class PaymentInController extends Controller {
             } else {
                 echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
             }
+        }
+    }
+
+    public function actionAjaxJsonTaxService($id, $invoiceId) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $invoice = InvoiceHeader::model()->findByPk($invoiceId);
+            $taxServiceAmount = $invoice->registrationTransaction->pph_price;
+
+            $object = array(
+                'taxServiceAmount' => $taxServiceAmount,
+                'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
+            );
+            echo CJSON::encode($object);
         }
     }
 
