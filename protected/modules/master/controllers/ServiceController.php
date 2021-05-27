@@ -38,11 +38,23 @@ class ServiceController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
         $serviceEquipments = ServiceEquipment::model()->findAllByAttributes(array('service_id' => $id));
         $pricelists = ServicePricelist::model()->findAllByAttributes(array('service_id' => $id));
         $complements = ServiceComplement::model()->findAllByAttributes(array('service_id' => $id));
+        
+        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
+            $model->is_approved = 1;
+            $model->date_approval = date('Y-m-d');
+            
+            if ($model->save(true, array('is_approved', 'date_approval')))
+                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
+            else
+                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
             'serviceEquipments' => $serviceEquipments,
             'pricelists' => $pricelists,
             'complements' => $complements,

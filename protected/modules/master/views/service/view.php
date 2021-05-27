@@ -194,3 +194,16 @@ $this->breadcrumbs = array(
         </tbody>
     </table>
 </div>
+
+<br/>
+
+<div>
+    <?php if ((int) $model->is_approved === 0): ?>
+        <div style="float: left; margin-left: 20px;">
+            <?php echo CHtml::beginForm(); ?>
+                <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
+            <?php echo CHtml::endForm(); ?>
+        </div>
+    <?php endif; ?>
+    <div class="clear"></div>
+</div>

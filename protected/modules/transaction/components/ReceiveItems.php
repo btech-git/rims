@@ -174,6 +174,22 @@ class ReceiveItems extends CComponent {
         $new_detail = array();
 
         $branch = Branch::model()->findByPk($this->header->recipient_branch_id);
+        
+        $transactionType = 'RCI';
+        $postingDate = date('Y-m-d');
+        $transactionCode = $this->header->receive_item_no;
+        $transactionDate = $this->header->receive_item_date;
+        $branchId = $this->header->recipient_branch_id;
+        $transactionSubject = '';
+        
+        if ($this->header->request_type == 'Purchase Order' || $this->header->request_type == 'Consignment In') {
+            $transactionSubject = $this->header->supplier->name;
+        } else if ($this->header->request_type == 'Internal Delivery Order') {
+            $transactionSubject = $this->header->destinationBranch->name;
+        }
+
+        $journalReferences = array();
+        
         //save request detail
         foreach ($this->details as $detail) {
             $detail->receive_item_id = $this->header->id;
@@ -196,160 +212,111 @@ class ReceiveItems extends CComponent {
 
             $valid = $detail->save() && $valid;
             $new_detail[] = $detail->id;
-
+            
             if ($detail->qty_received > 0) {
                 if ($this->header->request_type == 'Purchase Order') {
-                    $criteria = new CDbCriteria;
-                    $criteria->together = 'true';
-                    $criteria->with = array('receiveItem');
-                    $criteria->condition = "receiveItem.purchase_order_id =" . $this->header->purchase_order_id . " AND receive_item_id != " . $this->header->id;
-                    $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
-
-                    $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id, 'purchase_order_id' => $this->header->purchase_order_id));
-                    $totalQuantityReceived = $purchaseOrderDetail->getTotalQuantityReceived();
-                    $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->quantity - $totalQuantityReceived;
-                    $purchaseOrderDetail->receive_quantity = $detail->qty_received + $totalQuantityReceived;
-
-                    $purchaseOrderDetail->save(false);
-//                    $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
-
-                    //foreach ($purchaseOrder->transactionPurchaseOrderDetails as $key => $poDetail) {
-
-                    $jumlah = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
-
-                    //save coa product sub master category
-                    $coaInventory = Coa::model()->findByPk($detail->purchaseOrderDetail->product->productSubMasterCategory->coa_inventory_in_transit);
-                    $getCoaInventory = $coaInventory->code;
-                    $coaInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInventory));
-                    $jurnalUmumPersediaan = new JurnalUmum;
-                    $jurnalUmumPersediaan->kode_transaksi = $this->header->receive_item_no;
-                    $jurnalUmumPersediaan->tanggal_transaksi = $this->header->receive_item_date;
-                    $jurnalUmumPersediaan->coa_id = $coaInventoryWithCode->id;
-                    $jurnalUmumPersediaan->branch_id = $this->header->recipient_branch_id;
-                    $jurnalUmumPersediaan->total = $jumlah;
-                    $jurnalUmumPersediaan->debet_kredit = 'D';
-                    $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumPersediaan->transaction_subject = $this->header->supplier->name;
-                    $jurnalUmumPersediaan->is_coa_category = 0;
-                    $jurnalUmumPersediaan->transaction_type = 'RCI';
-                    $jurnalUmumPersediaan->save();
-
-                    $coaOutstanding = Coa::model()->findByPk($this->header->supplier->coaOutstandingOrder->id);
-                    $getCoaOutstanding = $coaOutstanding->code;
-                    $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
-                    $jurnalUmumOutstanding = new JurnalUmum;
-                    $jurnalUmumOutstanding->kode_transaksi = $this->header->receive_item_no;
-                    $jurnalUmumOutstanding->tanggal_transaksi = $this->header->receive_item_date;
-                    $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
-                    $jurnalUmumOutstanding->branch_id = $this->header->recipient_branch_id;
-                    $jurnalUmumOutstanding->total = $jumlah;
-                    $jurnalUmumOutstanding->debet_kredit = 'K';
-                    $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
-                    $jurnalUmumOutstanding->is_coa_category = 0;
-                    $jurnalUmumOutstanding->transaction_type = 'RCI';
-                    $jurnalUmumOutstanding->save();
-
+                    $value = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
+                    $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $value;
                 } else if ($this->header->request_type == 'Internal Delivery Order') {
+                    $value = $detail->qty_received * $detail->product->hpp;
+                    $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaId = $detail->product->productMasterCategory->coa_outstanding_part_id;
+                    $journalReferences[$coaId]['debet_kredit'] = 'K';
+                    $journalReferences[$coaId]['is_coa_category'] = 1;
+                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaId = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+                    $journalReferences[$coaId]['debet_kredit'] = 'K';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $value;
+                } else if ($this->header->request_type == 'Consignment In') {
+                    $value = $detail->qty_received * $detail->consignmentInDetail->price;
+                    $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaId = $detail->product->productSubMasterCategory->coa_consignment_inventory;
+                    $journalReferences[$coaId]['debet_kredit'] = 'K';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $value;
+                }
+            }
+
+            if ($this->header->request_type == 'Purchase Order') {
+//                $criteria = new CDbCriteria;
+//                $criteria->together = 'true';
+//                $criteria->with = array('receiveItem');
+//                $criteria->condition = "receiveItem.purchase_order_id =" . $this->header->purchase_order_id . " AND receive_item_id != " . $this->header->id;
+//                $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
+
+                $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id, 'purchase_order_id' => $this->header->purchase_order_id));
+                $totalQuantityReceived = $purchaseOrderDetail->getTotalQuantityReceived();
+                $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->quantity - $totalQuantityReceived;
+                $purchaseOrderDetail->receive_quantity = $detail->qty_received + $totalQuantityReceived;
+
+                $purchaseOrderDetail->save(false);
+
+            } else if ($this->header->request_type == 'Internal Delivery Order') {
 //                    $criteria = new CDbCriteria;
 //                    $criteria->together = 'true';
 //                    $criteria->with = array('receiveItem');
 //                    $criteria->condition = "receiveItem.delivery_order_id =" . $this->header->delivery_order_id . " AND receive_item_id != " . $this->header->id;
 //                    $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
-                    $branch = Branch::Model()->findByPk($this->header->recipient_branch_id);
+                $branch = Branch::Model()->findByPk($this->header->recipient_branch_id);
 
-                    $deliveryOrderDetail = $detail->deliveryOrderDetail; //TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
-                    $deliveryOrderDetail->quantity_receive_left = $detail->qty_request - $detail->qty_received; // - $deliveryOrderDetail->getTotalQuantityReceived();
-                    $deliveryOrderDetail->quantity_receive = $detail->qty_received + $deliveryOrderDetail->getTotalQuantityReceived();
-                    $deliveryOrderDetail->save(false);
+                $deliveryOrderDetail = $detail->deliveryOrderDetail; //TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
+                $deliveryOrderDetail->quantity_receive_left = $detail->qty_request - $detail->qty_received; // - $deliveryOrderDetail->getTotalQuantityReceived();
+                $deliveryOrderDetail->quantity_receive = $detail->qty_received + $deliveryOrderDetail->getTotalQuantityReceived();
+                $deliveryOrderDetail->save(false);
 
-                    $hppPrice = $detail->product->hpp * $detail->qty_received;
+            } else if ($this->header->request_type == 'Consignment In') {
+//                $criteria = new CDbCriteria;
+//                $criteria->together = 'true';
+//                $criteria->with = array('receiveItem');
+//                $criteria->condition = "receiveItem.consignment_in_id =" . $this->header->consignment_in_id . " AND receive_item_id != " . $this->header->id;
+//                $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
 
-                    $jurnalUmumInventoryInTransit = new JurnalUmum;
-                    $jurnalUmumInventoryInTransit->kode_transaksi = $this->header->receive_item_no;
-                    $jurnalUmumInventoryInTransit->tanggal_transaksi = $this->header->receive_item_date;
-                    $jurnalUmumInventoryInTransit->coa_id = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $jurnalUmumInventoryInTransit->branch_id = $this->header->recipient_branch_id;
-                    $jurnalUmumInventoryInTransit->total = $hppPrice;
-                    $jurnalUmumInventoryInTransit->debet_kredit = 'D';
-                    $jurnalUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInventoryInTransit->transaction_subject = $this->header->destinationBranch->name;
-                    $jurnalUmumInventoryInTransit->is_coa_category = 0;
-                    $jurnalUmumInventoryInTransit->transaction_type = 'RCI';
-                    $jurnalUmumInventoryInTransit->save();
-
-                    //save coa persediaan product master
-                    $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
-                    $jurnalUmumMasterOutstandingPartDestination->kode_transaksi = $this->header->receive_item_no;
-                    $jurnalUmumMasterOutstandingPartDestination->tanggal_transaksi = $this->header->receive_item_date;
-                    $jurnalUmumMasterOutstandingPartDestination->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
-                    $jurnalUmumMasterOutstandingPartDestination->branch_id = $this->header->recipient_branch_id;
-                    $jurnalUmumMasterOutstandingPartDestination->total = $hppPrice;
-                    $jurnalUmumMasterOutstandingPartDestination->debet_kredit = 'K';
-                    $jurnalUmumMasterOutstandingPartDestination->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterOutstandingPartDestination->transaction_subject = $this->header->destinationBranch->name;
-                    $jurnalUmumMasterOutstandingPartDestination->is_coa_category = 1;
-                    $jurnalUmumMasterOutstandingPartDestination->transaction_type = 'RCI';
-                    $jurnalUmumMasterOutstandingPartDestination->save();
-
-                    $jurnalUmumOutstandingPart = new JurnalUmum;
-                    $jurnalUmumOutstandingPart->kode_transaksi = $this->header->receive_item_no;
-                    $jurnalUmumOutstandingPart->tanggal_transaksi = $this->header->receive_item_date;
-                    $jurnalUmumOutstandingPart->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
-                    $jurnalUmumOutstandingPart->branch_id = $this->header->recipient_branch_id;
-                    $jurnalUmumOutstandingPart->total = $hppPrice;
-                    $jurnalUmumOutstandingPart->debet_kredit = 'K';
-                    $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumOutstandingPart->transaction_subject = $this->header->destinationBranch->name;
-                    $jurnalUmumOutstandingPart->is_coa_category = 0;
-                    $jurnalUmumOutstandingPart->transaction_type = 'RCI';
-                    $jurnalUmumOutstandingPart->save();
-
-                } else if ($this->header->request_type == 'Consignment In') {
-                    $criteria = new CDbCriteria;
-                    $criteria->together = 'true';
-                    $criteria->with = array('receiveItem');
-                    $criteria->condition = "receiveItem.consignment_in_id =" . $this->header->consignment_in_id . " AND receive_item_id != " . $this->header->id;
-                    $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
-
-                    $consignmentDetail = ConsignmentInDetail::model()->findByAttributes(array('id' => $detail->consignment_in_detail_id, 'consignment_in_id' => $this->header->consignment_in_id));
-
-                    $consignmentDetail->qty_request_left = $detail->qty_request - $detail->qty_received - $consignmentDetail->getTotalQuantityReceived();
-                    $consignmentDetail->qty_received = $detail->qty_received + $consignmentDetail->getTotalQuantityReceived();
-                    
-                    $consignmentDetail->save(false);
-//                    $consignment = ConsignmentInHeader::model()->findByPk($this->header->consignment_in_id);
-
-                    $jumlah = $detail->qty_received * $detail->consignmentInDetail->price;
-
-                    $jurnalUmumInventoryInTransit = new JurnalUmum;
-                    $jurnalUmumInventoryInTransit->kode_transaksi = $this->header->receive_item_no;
-                    $jurnalUmumInventoryInTransit->tanggal_transaksi = $this->header->receive_item_date;
-                    $jurnalUmumInventoryInTransit->coa_id = $detail->consignmentInDetail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $jurnalUmumInventoryInTransit->branch_id = $this->header->recipient_branch_id;
-                    $jurnalUmumInventoryInTransit->total = $jumlah;
-                    $jurnalUmumInventoryInTransit->debet_kredit = 'D';
-                    $jurnalUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInventoryInTransit->transaction_subject = $this->header->supplier->name;
-                    $jurnalUmumInventoryInTransit->is_coa_category = 0;
-                    $jurnalUmumInventoryInTransit->transaction_type = 'RCI';
-                    $jurnalUmumInventoryInTransit->save();
-
-                    $jurnalUmumConsignmentInventory = new JurnalUmum;
-                    $jurnalUmumConsignmentInventory->kode_transaksi = $this->header->receive_item_no;
-                    $jurnalUmumConsignmentInventory->tanggal_transaksi = $this->header->receive_item_date;
-                    $jurnalUmumConsignmentInventory->coa_id = $detail->consignmentInDetail->product->productSubMasterCategory->coa_consignment_inventory;
-                    $jurnalUmumConsignmentInventory->branch_id = $this->header->recipient_branch_id;
-                    $jurnalUmumConsignmentInventory->total = $jumlah;
-                    $jurnalUmumConsignmentInventory->debet_kredit = 'K';
-                    $jurnalUmumConsignmentInventory->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumConsignmentInventory->transaction_subject = $this->header->supplier->name;
-                    $jurnalUmumConsignmentInventory->is_coa_category = 0;
-                    $jurnalUmumConsignmentInventory->transaction_type = 'RCI';
-                    $jurnalUmumConsignmentInventory->save();
-                        
-                }
+                $consignmentDetail = ConsignmentInDetail::model()->findByAttributes(array('id' => $detail->consignment_in_detail_id, 'consignment_in_id' => $this->header->consignment_in_id));
+                $consignmentDetail->qty_request_left = $detail->qty_request - $detail->qty_received - $consignmentDetail->getTotalQuantityReceived();
+                $consignmentDetail->qty_received = $detail->qty_received + $consignmentDetail->getTotalQuantityReceived();
+                $consignmentDetail->save(false);
             }
+        }
+        
+        foreach ($journalReferences as $coaId => $journalReference) {
+            $jurnalUmumPersediaan = new JurnalUmum();
+            $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+            $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+            $jurnalUmumPersediaan->coa_id = $coaId;
+            $jurnalUmumPersediaan->branch_id = $branchId;
+            $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+            $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+            $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+            $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+            $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+            $jurnalUmumPersediaan->transaction_type = $transactionType;
+            $jurnalUmumPersediaan->save();
+        }
+
+        if ($this->header->request_type == 'Purchase Order') {
+            $coaOutstanding = Coa::model()->findByPk($this->header->supplier->coaOutstandingOrder->id);
+            $jurnalUmumOutstanding = new JurnalUmum();
+            $jurnalUmumOutstanding->kode_transaksi = $this->header->receive_item_no;
+            $jurnalUmumOutstanding->tanggal_transaksi = $this->header->receive_item_date;
+            $jurnalUmumOutstanding->coa_id = $coaOutstanding->id;
+            $jurnalUmumOutstanding->branch_id = $this->header->recipient_branch_id;
+            $jurnalUmumOutstanding->total = $this->header->subTotal;
+            $jurnalUmumOutstanding->debet_kredit = 'K';
+            $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
+            $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
+            $jurnalUmumOutstanding->is_coa_category = 0;
+            $jurnalUmumOutstanding->transaction_type = 'RCI';
+            $jurnalUmumOutstanding->save();
         }
 
         //delete pricelist

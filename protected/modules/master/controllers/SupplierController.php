@@ -204,10 +204,12 @@ class SupplierController extends Controller {
     }
 
     public function actionView($id) {
+        $model = $this->loadModel($id);
         $picDetails = SupplierPic::model()->findAllByAttributes(array('supplier_id' => $id));
         $supplierBanks = SupplierBank::model()->findAllByAttributes(array('supplier_id' => $id));
         $supplierProduct = new SupplierProduct('search');
         $supplierProduct->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['SupplierProduct']))
             $supplierProduct->attributes = $_GET['SupplierProduct'];
 
@@ -223,8 +225,19 @@ class SupplierController extends Controller {
         $supplierProductDataProvider = new CActiveDataProvider('SupplierProduct', array(
             'criteria' => $supplierProductCriteria,
         ));
+        
+        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
+            $model->is_approved = 1;
+            $model->date_approval = date('Y-m-d');
+            
+            if ($model->save(true, array('is_approved', 'date_approval')))
+                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
+            else
+                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
             'picDetails' => $picDetails,
             'supplierBanks' => $supplierBanks,
             //'supplierProducts'=>$supplierProducts,

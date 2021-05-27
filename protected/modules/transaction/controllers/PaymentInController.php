@@ -598,7 +598,7 @@ class PaymentInController extends Controller {
 //                                }
 //                            }
 
-//                            if ($pph > 0) {
+                            if ($paymentIn->tax_service_amount > 0) {
                                 $getCoaPph = '143.00.002';
                                 $coaPphWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPph));
                                 $jurnalPph = new JurnalUmum;
@@ -613,7 +613,7 @@ class PaymentInController extends Controller {
                                 $jurnalPph->is_coa_category = 0;
                                 $jurnalPph->transaction_type = 'Pin';
                                 $jurnalPph->save();
-//                            }
+                            }
                     }// end if approved
                 }
                 $this->redirect(array('view', 'id' => $headerId));

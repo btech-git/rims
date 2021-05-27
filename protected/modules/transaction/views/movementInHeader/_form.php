@@ -13,16 +13,15 @@
 
     <div class="form">
 
-        <?php
-        $form = $this->beginWidget('CActiveForm', array(
+        <?php $form = $this->beginWidget('CActiveForm', array(
             'id' => 'movement-in-header-form',
+            'htmlOptions' => array('enctype' => 'multipart/form-data'),
             // Please note: When you enable ajax validation, make sure the corresponding
             // controller action is handling ajax validation correctly.
             // There is a call to performAjaxValidation() commented in generated controller code.
             // See class documentation of CActiveForm for details on this.
             'enableAjaxValidation' => false,
-                ));
-        ?>
+        )); ?>
 
 
         <p class="note">Fields with <span class="required">*</span> are required.</p>
@@ -158,46 +157,50 @@
                                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                                     'id' => 'receive-item-grid',
                                     'dataProvider' => $receiveItemDataProvider,
-                                    'filter' => $receiveItem,
+                                    'filter' => null,
+                                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                                    'pager' => array(
+                                        'cssFile' => false,
+                                        'header' => '',
+                                    ),
                                     'selectionChanged' => 'js:function(id){
-                                    $("#MovementInHeader_receive_item_id").val($.fn.yiiGridView.getSelection(id));
-                                    $("#receive-item-dialog").dialog("close");
-                                    $.ajax({
-                                        type: "POST",
-                                        dataType: "JSON",
-                                        url: "' . CController::createUrl('ajaxReceive', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-                                        data: $("form").serialize(),
-                                        success: function(data) {
-                                            $("#MovementInHeader_receive_item_number").val(data.number);
-                                            $("#MovementInHeader_reference_type").val(data.type);
-                                            $("#MovementInHeader_reference_number").val(data.requestNumber);
-                                             $.updateGridView("receive-item-detail-grid", "TransactionReceiveItemDetail[receive_item_no]", data.number);
-                                             $.ajax({
-                                                type: "POST",
-                                                //dataType: "JSON",
-                                                url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementIn->header->id)) . '",
-                                                data: $("form").serialize(),
-                                                success: function(html) {
-                                                    $(".detail").html(html);	
-                                                },
-                                            });
-                                        },
-                                    });
+                                        $("#MovementInHeader_receive_item_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#receive-item-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxReceive', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),
+                                            success: function(data) {
+                                                $("#MovementInHeader_receive_item_number").val(data.number);
+                                                $("#MovementInHeader_reference_type").val(data.type);
+                                                $("#MovementInHeader_reference_number").val(data.requestNumber);
+                                                $.updateGridView("receive-item-detail-grid", "TransactionReceiveItemDetail[receive_item_no]", data.number);
+                                                $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementIn->header->id)) . '",
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $(".detail").html(html);	
+                                                    },
+                                                });
+                                            },
+                                        });
 
-                                    $("#receive-item-grid").find("tr.selected").each(function(){
-                                       $(this).removeClass( "selected" );
-                                    });
-
-                                }',
-                                'columns' => array(
-                                    'receive_item_no',
-                                    'receive_item_date',
-                                    array('header' => 'Supplier', 'value' => 'empty($data->supplier) ? "" : $data->supplier->name',),
-                                    array('name' => 'branch_name', 'value' => '$data->recipientBranch->name',)
-                                )
-                            )); ?>
-                            <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-                            <?php echo $form->error($movementIn->header, 'receive_item_id'); ?>
+                                        $("#receive-item-grid").find("tr.selected").each(function(){
+                                            $(this).removeClass( "selected" );
+                                        });
+                                    }',
+                                    'columns' => array(
+                                        'receive_item_no',
+                                        'receive_item_date',
+                                        array('header' => 'Supplier', 'value' => 'empty($data->supplier) ? "" : $data->supplier->name',),
+                                        array('name' => 'branch_name', 'value' => '$data->recipientBranch->name',)
+                                    )
+                                )); ?>
+                                <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+                                <?php echo $form->error($movementIn->header, 'receive_item_id'); ?>
                             </div>
                         </div>
                     </div>
@@ -251,19 +254,18 @@
                             <div class="small-8 columns">
                                 <?php echo $form->hiddenField($movementIn->header, 'return_item_id'); ?>
                                 <?php echo $form->textField($movementIn->header, 'return_item_number', array('value' => $movementIn->header->return_item_id == "" ? "" : TransactionReturnItem::model()->findByPk($movementIn->header->return_item_id)->return_item_no, 'readonly' => true, 'onclick' => '
-                        var branch = $("#MovementInHeader_branch_id").val();
-                        // var receive_item_number_val = $("#MovementInHeader_receive_item_number").val();
-                        // alert (receive_item_number_val);
-                        if(branch == ""){
-                            alert("Please Choose Branch to Proceed!");
-                        }else{
-                            $("[name=\"TransactionReturnItem[branch_name]\"]").val($("#MovementInHeader_branch_id option:selected").text());
-                            $("[name=\"TransactionReturnItem[branch_name]\"]").attr("readonly", "readonly");
-                            $("#return-item-dialog").dialog("open"); return false;
-                        }
-                    ')); ?>
-                                <?php
-                                $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                    var branch = $("#MovementInHeader_branch_id").val();
+                                    // var receive_item_number_val = $("#MovementInHeader_receive_item_number").val();
+                                    // alert (receive_item_number_val);
+                                    if(branch == ""){
+                                        alert("Please Choose Branch to Proceed!");
+                                    }else{
+                                        $("[name=\"TransactionReturnItem[branch_name]\"]").val($("#MovementInHeader_branch_id option:selected").text());
+                                        $("[name=\"TransactionReturnItem[branch_name]\"]").attr("readonly", "readonly");
+                                        $("#return-item-dialog").dialog("open"); return false;
+                                    }
+                                ')); ?>
+                                <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
                                     'id' => 'return-item-dialog',
                                     // additional javascript options for the dialog plugin
                                     'options' => array(
@@ -272,51 +274,55 @@
                                         'width' => 'auto',
                                         'modal' => true,
                                     ),
-                                ));
-                                ?>
+                                )); ?>
 
-                                <?php
-                                $this->widget('zii.widgets.grid.CGridView', array(
+                                <?php $this->widget('zii.widgets.grid.CGridView', array(
                                     'id' => 'return-item-grid',
                                     'dataProvider' => $returnItemDataProvider,
                                     'filter' => $returnItem,
+                                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                                    'pager' => array(
+                                        'cssFile' => false,
+                                        'header' => '',
+                                    ),
                                     'selectionChanged' => 'js:function(id){
-							               	$("#MovementInHeader_return_item_id").val($.fn.yiiGridView.getSelection(id));
-							                $("#return-item-dialog").dialog("close");
-											$.ajax({
-							                    type: "POST",
-							                    dataType: "JSON",
-							                    url: "' . CController::createUrl('ajaxReturn', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-							                    data: $("form").serialize(),
-							                    success: function(data) {
-							                        $("#MovementInHeader_return_item_number").val(data.number);
-							                        $("#MovementInHeader_reference_type").val("Return Item");
-							                        $("#MovementInHeader_reference_number").val(data.number);
-							                         $.updateGridView("return-item-detail-grid", "TransactionReturnItemDetail[return_item_no]", data.number);
-							                         $.ajax({
-														type: "POST",
-														//dataType: "JSON",
-														url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementIn->header->id)) . '",
-														data: $("form").serialize(),
-														success: function(html) {
-															$(".detail").html(html);	
-															
-														},
-													});
-							                    },
-							                });
+                                        $("#MovementInHeader_return_item_id").val($.fn.yiiGridView.getSelection(id));
+                                        $("#return-item-dialog").dialog("close");
+                                        $.ajax({
+                                            type: "POST",
+                                            dataType: "JSON",
+                                            url: "' . CController::createUrl('ajaxReturn', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                            data: $("form").serialize(),
+                                            success: function(data) {
+                                                $("#MovementInHeader_return_item_number").val(data.number);
+                                                $("#MovementInHeader_reference_type").val("Return Item");
+                                                $("#MovementInHeader_reference_number").val(data.number);
+                                                $.updateGridView("return-item-detail-grid", "TransactionReturnItemDetail[return_item_no]", data.number);
+                                                $.ajax({
+                                                    type: "POST",
+                                                    //dataType: "JSON",
+                                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementIn->header->id)) . '",
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $(".detail").html(html);	
+                                                    },
+                                                });
+                                            },
+                                        });
 
-							              
-
-							                $("#return-item-grid").find("tr.selected").each(function(){
-							                   $(this).removeClass( "selected" );
-							                });
-											
-							            }',
+                                        $("#return-item-grid").find("tr.selected").each(function(){
+                                           $(this).removeClass( "selected" );
+                                        });
+                                    }',
                                     'columns' => array(
                                         'return_item_no',
-                                        array('name' => 'branch_name', 'value' => '$data->recipientBranch->name',))));
-                                ?>
+                                        array(
+                                            'name' => 'branch_name', 
+                                            'value' => '$data->recipientBranch->name',
+                                        )
+                                    )
+                                )); ?>
+                                
                                 <?php Yii::app()->clientScript->registerScript('updateGridView', '
                                     $.updateGridView = function(gridID, name, value) {
                                         $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
@@ -348,10 +354,10 @@
                 <!-- <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-<?php //echo $form->labelEx($movementIn->header,'supervisor_id');  ?>
+                            <?php //echo $form->labelEx($movementIn->header,'supervisor_id');  ?>
                         </div>
                         <div class="small-8 columns">
-<?php //echo $form->textField($movementIn->header,'supervisor_id');  ?>
+                            <?php //echo $form->textField($movementIn->header,'supervisor_id');  ?>
                             <?php //echo $form->error($movementIn->header,'supervisor_id');  ?>
                         </div>
                     </div>
@@ -363,15 +369,15 @@
                             <?php echo $form->labelEx($movementIn->header, 'status', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-<?php //echo $form->textField($movementIn->header,'status');  ?>
+                            <?php //echo $form->textField($movementIn->header,'status');  ?>
                             <?php echo $form->textField($movementIn->header, 'status', array('value' => $movementIn->header->isNewRecord ? 'Draft' : $movementIn->header->status, 'readonly' => true));
-/* if($movementIn->header->isNewRecord){
-  echo $form->textField($movementIn->header,'status',array('value'=>'Draft','readonly'=>true));
-  }else{
-  echo $form->dropDownList($movementIn->header, 'status', array('Draft'=>'Draft','Revised' => 'Revised','Rejected'=>'Rejected','Approved'=>'Approved','Done'=>'Done'),array('prompt'=>'[--Select status Document--]'));
-  }
- */
-?>
+                            /* if($movementIn->header->isNewRecord){
+                              echo $form->textField($movementIn->header,'status',array('value'=>'Draft','readonly'=>true));
+                              }else{
+                              echo $form->dropDownList($movementIn->header, 'status', array('Draft'=>'Draft','Revised' => 'Revised','Rejected'=>'Rejected','Approved'=>'Approved','Done'=>'Done'),array('prompt'=>'[--Select status Document--]'));
+                              }
+                             */
+                            ?>
                             <?php echo $form->error($movementIn->header, 'status'); ?>
                         </div>
                     </div>
@@ -431,6 +437,11 @@
                             'id' => 'receive-item-detail-grid',
                             'dataProvider' => $receiveItemDetailDataProvider,
                             'filter' => $receiveItemDetail,
+                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                            'pager' => array(
+                                'cssFile' => false,
+                                'header' => '',
+                            ),
                             'selectionChanged' => 'js:function(id){
                                 $("#receive-item-detail-dialog").dialog("close");
                                 $.ajax({
@@ -483,6 +494,11 @@
                             'id' => 'return-item-detail-grid',
                             'dataProvider' => $returnItemDetailDataProvider,
                             'filter' => $returnItemDetail,
+                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                            'pager' => array(
+                                'cssFile' => false,
+                                'header' => '',
+                            ),
                             'selectionChanged' => 'js:function(id){
                                 $("#return-item-detail-dialog").dialog("close");
                                 $.ajax({
@@ -515,43 +531,6 @@
 
                         <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
                         <!-- Refresh grid with value from kode kelompok persediaan-->
-
-                    </div>
-                    <!-- <div class="small-4 columns">
-                        
-                        <?php
-                        // echo CHtml::button('Add New Product', array(
-                        // 	'id' => 'detail-button',
-                        // 	'name' => 'Detail',
-                        // 	'style' =>'width:100%',
-                        // 	//'target'=>'_blank',
-                        // 	'onclick' => ' 
-                        // 		window.location.href = "'.Yii::app()->baseUrl.'/master/product/create/"',
-                        //  )); 
-                        ?>
-                    </div> -->
-                    <div class="small-6 columns">
-
-                        <?php
-                        // echo CHtml::button('Count Total', array(
-                        // 	'id' => 'total-button',
-                        // 	'name' => 'Total',
-                        // 	'style' =>'width:100%',
-                        // 	'onclick' => '
-                        // 	$.ajax({
-                        //                type: "POST",
-                        //                url: "' . CController::createUrl('ajaxGetTotal', array('id' => $consignmentOut->header->id,)) . '",
-                        //                data: $("form").serialize(),
-                        //                dataType: "json",
-                        //                success: function(data) {
-                        //                    //console.log(data.total);
-                        //                	//console.log(data.requestType);
-                        //                    $("#ConsignmentOutHeader_total_price").val(data.total);
-                        //                    $("#ConsignmentOutHeader_total_quantity").val(data.total_items);
-                        //                },
-                        //              });',)); 
-                        ?>
-
                     </div>
                 </div>
             </div>
@@ -572,19 +551,19 @@
             <?php echo CHtml::submitButton($movementIn->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
         </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
-    </div><!-- form -->
+</div><!-- form -->
 
-    <script type="text/javascript">
-        $(document).on("change", ".qtyleft_input", function() {
+<script type="text/javascript">
+    $(document).on("change", ".qtyleft_input", function() {
         var sum = 0;
         var thisted = $(this).attr('rel');
         var mmtype =  $("#mmtype").attr('data-mmtype'); //$(this).attr('data-mm');
         // console.log("ini mmtype: "+mmtype);
         // console.log("ini rel thisted: "+thisted);
         $(".productID_"+thisted).each(function(){
-        sum += +$(this).val();
+            sum += +$(this).val();
         });
         // $(".qtyleft_"+thisted).val(sum);
         $("#qtysum_"+mmtype+thisted).val(sum);
@@ -592,29 +571,30 @@
         // console.log("ini nilai awal: "+ nilaiawal);
         // console.log("ini sum: "+sum);
         if (sum > nilaiawal) {
-        // console.log(sum + ">=" + nilaiawal);
-        alert("Quantity yang anda input melebihi quantity stock.");
-        $('.productID_'+thisted).focus().select();
+            // console.log(sum + ">=" + nilaiawal);
+            alert("Quantity yang anda input melebihi quantity stock.");
+            $('.productID_'+thisted).focus().select();
         }
 
-        // else{
-        // 	// console.log(sum + "<=" + nilaiawal);
-        // }
-        // if ()
-        // console.log(sum + ' ' + thisted);
-        });
-        if($("#MovementInHeader_movement_type").val() == "1") {
+    // else{
+    // 	// console.log(sum + "<=" + nilaiawal);
+    // }
+    // if ()
+    // console.log(sum + ' ' + thisted);
+    });
+    
+    if ($("#MovementInHeader_movement_type").val() == "1") {
         $("#receiveItem").show();
         $("#returnItem").hide();
-        } else if($("#MovementInHeader_movement_type").val() == "2") {
+    } else if ($("#MovementInHeader_movement_type").val() == "2") {
         $("#returnItem").show();
         $("#receiveItem").hide();
-        } 
-        else{
+    } else {
         $("#receiveItem").hide();
         $("#returnItem").hide();
-        }
-        $("#MovementInHeader_movement_type").change(function(){
+    }
+    
+    $("#MovementInHeader_movement_type").change(function(){
         //ClearFields();
         $("#MovementInHeader_receive_item_id").val("");
         $("#MovementInHeader_receive_item_number").val("");
@@ -622,16 +602,15 @@
         $("#MovementInHeader_reference_number").val("");
         $("#MovementInHeader_return_item_id").val("");
         $("#MovementInHeader_return_item_number").val("");
-        if($("#MovementInHeader_movement_type").val() == "1") {
-        $("#receiveItem").show();
-        $("#returnItem").hide();
-        } else if($("#MovementInHeader_movement_type").val() == "2") {
-        $("#returnItem").show();
-        $("#receiveItem").hide();
-        } 
-        else{
-        $("#receiveItem").hide();
-        $("#returnItem").hide();
+        if ($("#MovementInHeader_movement_type").val() == "1") {
+            $("#receiveItem").show();
+            $("#returnItem").hide();
+        } else if ($("#MovementInHeader_movement_type").val() == "2") {
+            $("#returnItem").show();
+            $("#receiveItem").hide();
+        } else {
+            $("#receiveItem").hide();
+            $("#returnItem").hide();
         }
-        });
-    </script>
+    });
+</script>

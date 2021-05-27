@@ -22,6 +22,8 @@
  * @property string $mobile_phone
  * @property string $phone
  * @property integer $coa_id
+ * @property integer $is_approved
+ * @property string $date_approval
  *
  * The followings are the available model relations:
  * @property ConsignmentOutHeader[] $consignmentOutHeaders
@@ -62,16 +64,16 @@ class Customer extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, address, province_id, city_id, customer_type', 'required'),
-            array('province_id, city_id, default_payment_type, tenor, coa_id', 'numerical', 'integerOnly' => true),
+            array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved', 'numerical', 'integerOnly' => true),
             array('name, email, phone, mobile_phone', 'length', 'max' => 100),
             array('email', 'email'),
-            array('note', 'safe'),
+            array('note, date_approval', 'safe'),
             array('email', 'filter', 'filter' => 'strtolower'),
             array('zipcode, customer_type, status, flat_rate', 'length', 'max' => 10),
             array('fax', 'length', 'max' => 20),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone', 'safe', 'on' => 'search'),
+            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone, is_approved, date_approval', 'safe', 'on' => 'search'),
         );
     }
 
@@ -123,6 +125,8 @@ class Customer extends CActiveRecord {
             'phone' => 'Phone',
             'mobile_phone' => 'HP',
             'coa_id' => 'Coa',
+            'is_approved' => 'Approval',
+            'date_approval' => 'Tanggal Approval',
         );
     }
 
@@ -161,6 +165,8 @@ class Customer extends CActiveRecord {
         $criteria->compare('mobile_phone', $this->mobile_phone, true);
         $criteria->compare('phone', $this->phone, true);
         $criteria->compare('coa_id', $this->coa_id);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.date_approval', $this->date_approval);
 
         $criteria->together = 'true';
         $criteria->with = array('province', 'city', 'vehicles', 'coa');

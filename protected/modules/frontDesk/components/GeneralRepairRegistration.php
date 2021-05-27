@@ -264,6 +264,7 @@ class GeneralRepairRegistration extends CComponent {
 
     public function validate() {
         $valid = $this->header->validate();
+        $valid = $valid && $this->validateExistingCustomer();
 
         if (count($this->quickServiceDetails) > 0) {
             foreach ($this->quickServiceDetails as $detail) {
@@ -291,6 +292,19 @@ class GeneralRepairRegistration extends CComponent {
             }
         } else {
             $valid = true;
+        }
+
+        return $valid;
+    }
+
+    public function validateExistingCustomer() {
+        $valid = true;
+        
+        $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('transaction_date' => $this->header->transaction_date, 'vehicle_id' => $this->header->vehicle_id));
+
+        if (!empty($registrationTransaction)) {
+            $valid = false;
+            $this->header->addError('error', 'Kendaraan customer sudah ada di database hari ini.');
         }
 
         return $valid;
@@ -705,7 +719,7 @@ class GeneralRepairRegistration extends CComponent {
             $valid = $jurnalUmumReceivable->save() && $valid;                
         }
 
-//            if ($this->header->ppn_price > 0.00) {
+        if ($this->header->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
             $jurnalUmumPpn = new JurnalUmum;
             $jurnalUmumPpn->kode_transaksi = $this->header->transaction_number;
@@ -719,7 +733,7 @@ class GeneralRepairRegistration extends CComponent {
             $jurnalUmumPpn->is_coa_category = 0;
             $jurnalUmumPpn->transaction_type = 'RG';
             $valid = $jurnalUmumPpn->save() && $valid;
-//            }
+        }
 
         if (count($this->productDetails) > 0) {
             foreach ($this->productDetails as $key => $rProduct) {
@@ -758,7 +772,7 @@ class GeneralRepairRegistration extends CComponent {
                 $jurnalUmumPenjualan->transaction_type = 'RG';
                 $valid = $jurnalUmumPenjualan->save() && $valid;
 
-//                    if ($rProduct->discount > 0) {
+                if ($rProduct->discount > 0) {
                     // save product master coa diskon penjualan
                     $coaMasterDiskon = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaDiskonPenjualan->id);
                     $getCoaMasterDiskon = $coaMasterDiskon->code;
@@ -792,7 +806,7 @@ class GeneralRepairRegistration extends CComponent {
                     $jurnalUmumDiskon->is_coa_category = 0;
                     $jurnalUmumDiskon->transaction_type = 'RG';
                     $valid = $jurnalUmumDiskon->save() && $valid;
-//                    }
+                }
 
                 // save product master category coa hpp
                 $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coa_hpp);
@@ -896,7 +910,7 @@ class GeneralRepairRegistration extends CComponent {
                 $jurnalUmumPendapatanJasa->transaction_type = 'RG';
                 $valid = $jurnalUmumPendapatanJasa->save() && $valid;
 
-//                    if ($rService->discount_price > 0.00) {
+                if ($rService->discount_price > 0.00) {
                     $coaDiscountPendapatanJasa = Coa::model()->findByPk($rService->service->serviceCategory->coa_diskon_service);
                     $jurnalUmumDiscountPendapatanJasa = new JurnalUmum;
                     $jurnalUmumDiscountPendapatanJasa->kode_transaksi = $this->header->transaction_number;
@@ -910,7 +924,7 @@ class GeneralRepairRegistration extends CComponent {
                     $jurnalUmumDiscountPendapatanJasa->is_coa_category = 0;
                     $jurnalUmumDiscountPendapatanJasa->transaction_type = 'RG';
                     $valid = $jurnalUmumDiscountPendapatanJasa->save() && $valid;
-//                    }
+                }
             }
 
         }

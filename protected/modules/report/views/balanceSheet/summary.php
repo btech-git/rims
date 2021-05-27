@@ -40,7 +40,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
 
                                 <div class="small-4 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    <?php echo CHtml::textField('StartDate', $startDate, array('readOnly' => true)); ?>
+                                    <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
@@ -49,7 +50,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'readonly' => true,
                                             'placeholder' => 'Mulai',
                                         ),
-                                    )); ?>
+                                    ));*/ ?>
                                 </div>
 
                                 <div class="small-4 columns">
@@ -57,6 +58,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         'name' => 'EndDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
+                                            'onSelect' => 'js:function(text) {
+                                                var parts = text.split("-");
+                                                var startDate = parts[0] + "-01-01";
+                                                $("#StartDate").val(startDate);
+                                            }',
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,

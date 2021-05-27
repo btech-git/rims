@@ -71,16 +71,16 @@
                                 <td><?php echo $detail->warehouse == "" ? "" : $detail->warehouse->name ?></td>
                                 <td><?php echo $detail->quantity_transaction; ?></td>
                                 <td><?php echo $detail->quantity; ?></td>
-                                <?php $stockInventory = Inventory::model()->findByAttributes(array('product_id'=>$detail->product_id,'warehouse_id'=>$detail->warehouse_id)); 
-                                if($stockInventory->total_stock < $detail->quantity){
+                                <?php $stockInventory = Inventory::model()->findByAttributes(array('product_id'=>$detail->product_id, 'warehouse_id'=>$detail->warehouse_id)); 
+                                if (!empty($stockInventory) && $stockInventory->total_stock < $detail->quantity){
                                     $quantityInventory[] = 'NO';
                                 }
                                 else{
                                     $quantityInventory[] = 'YES';
                                 }
                                 ?>
-                                <td><?php echo count($stockInventory)!= 0 ? $stockInventory->total_stock : ''; ?></td>
-                                <td><?php echo $stockInventory->total_stock > $detail->quantity ? 'OK' : 'Not OK'; ?></td>
+                                <td><?php echo !empty($stockInventory) ? $stockInventory->total_stock : '0'; ?></td>
+                                <td><?php echo !empty($stockInventory) && $stockInventory->total_stock > $detail->quantity ? 'OK' : 'Not OK'; ?></td>
                             </tr>
                         <?php endforeach ?>
 

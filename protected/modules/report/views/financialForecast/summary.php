@@ -95,7 +95,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </tr>
 
                             <tr>
-                                <td style="text-align: right; font-weight: bold; text-transform: uppercase" colspan="4">
+                                <td style="text-align: right; font-weight: bold; text-transform: uppercase" colspan="3">
                                     Saldo Awal 
                                 </td>
 
@@ -110,7 +110,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </tr>
 
                             <tr>
-                                <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">Transaction #</td>
                                 <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">Tanggal Estimasi</td>
                                 <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">Debit</td>
                                 <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">Kredit</td>
@@ -119,12 +118,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                             <?php $forecastData = $coa->getFinancialForecastReport($datePrevious); ?>
                             <?php foreach ($forecastData as $forecastRow): ?>
-                                <?php $transactionNumber = $forecastRow['transaction_number']; ?>
-                                <?php $debitAmount = $forecastRow['debit']; ?>
-                                <?php $creditAmount = $forecastRow['credit']; ?>
+                                <?php $debitAmount = $forecastRow['total_debit']; ?>
+                                <?php $creditAmount = $forecastRow['total_credit']; ?>
                                 <?php $saldo += $debitAmount - $creditAmount; ?>
                                 <tr>
-                                    <td style="text-align: right"><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/financialForecast/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($forecastRow['payment_date_estimate']))); ?></td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $debitAmount); ?></td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $creditAmount); ?></td>

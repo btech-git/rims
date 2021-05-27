@@ -18,6 +18,8 @@
  * @property string $credit
  * @property string $status
  * @property string $date
+ * @property integer $is_approved
+ * @property string $date_approval
  *
  * The followings are the available model relations:
  * @property CashTransaction[] $cashTransactions
@@ -56,16 +58,17 @@ class Coa extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, coa_category_id, coa_sub_category_id', 'required'),
-            array('coa_category_id, coa_sub_category_id, coa_id', 'numerical', 'integerOnly' => true),
+            array('coa_category_id, coa_sub_category_id, coa_id, is_approved', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 50),
             array('normal_balance', 'length', 'max' => 10),
             array('code', 'length', 'max' => 15),
             array('status', 'length', 'max' => 20),
             array('cash_transaction', 'length', 'max' => 5),
             array('opening_balance, closing_balance, debit, credit', 'length', 'max' => 18),
+            array('date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date', 'safe', 'on' => 'search'),
+            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date, is_approved, date_approval', 'safe', 'on' => 'search'),
         );
     }
 
@@ -110,6 +113,8 @@ class Coa extends CActiveRecord {
             'closing_balance' => 'Closing Balance',
             'debit' => 'Debit',
             'credit' => 'Credit',
+            'is_approved' => 'Approval',
+            'date_approval' => 'Tanggal Approval',
         );
     }
 
@@ -140,6 +145,8 @@ class Coa extends CActiveRecord {
         $criteria->compare('closing_balance', $this->closing_balance, true);
         $criteria->compare('debit', $this->debit, true);
         $criteria->compare('credit', $this->credit, true);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.date_approval', $this->date_approval);
 
         $criteria->together = true;
         $criteria->with = array('coaCategory', 'coaSubCategory');
@@ -400,6 +407,30 @@ class Coa extends CActiveRecord {
     }
     
     public function getFinancialForecastReport($datePrevious) {
+        
+        $sql = "SELECT payment_date_estimate, coa_bank_id_estimate, SUM(debit) AS total_debit, SUM(credit) AS total_credit
+                FROM (
+                    SELECT invoice_number AS transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, total_price AS debit, 0 AS credit, payment_left AS remaining
+                    FROM " . InvoiceHeader::model()->tableName() . "
+                    UNION
+                    SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit, payment_left AS remaining
+                    FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                ) transaction
+                WHERE remaining > 0 AND payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
+                GROUP BY payment_date_estimate
+                ORDER BY payment_date_estimate ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':date_now' => date('Y-m-d'),
+            ':payment_date_estimate' => $datePrevious,
+            ':coa_bank_id_estimate' => $this->id,
+//            ':branch_id' => $branchId,
+        ));
+        
+        return $resultSet;
+    }
+    
+    public function getFinancialForecastReports($datePrevious) {
         
         $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit, credit, remaining
                 FROM (

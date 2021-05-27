@@ -46,9 +46,9 @@ class ProductController extends Controller {
             $model->date_approval = date('Y-m-d H:i:s');
             
             if ($model->save(true, array('is_approved', 'user_id_approval', 'date_approval')))
-                Yii::app()->user->setFlash('confirm', 'Your Order has been approved!!!');
+                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
             else
-                Yii::app()->user->setFlash('error', 'Your Order failed to approved!!!');
+                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
         }
 
         $this->render('view', array(

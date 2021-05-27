@@ -454,4 +454,39 @@ class Product extends CActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
+    
+    public function getSalesQuantityReport($startDate, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(p.quantity), 0) AS sales_quantity 
+            FROM " . RegistrationProduct::model()->tableName() . " p
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = p.registration_transaction_id
+            WHERE p.product_id = :product_id AND h.transaction_date BETWEEN :start_date AND :end_date
+            GROUP BY p.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getMovementOutQuantityReport($startDate, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(stock_out * -1), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . "
+            WHERE product_id = :product_id AND transaction_date BETWEEN :start_date AND :end_date
+            GROUP BY product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
 }

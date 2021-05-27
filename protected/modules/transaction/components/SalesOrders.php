@@ -230,6 +230,15 @@ class SalesOrders extends CComponent {
                 'branch_id' => $this->header->requester_branch_id,
             ));
 
+            $transactionType = 'SO';
+            $postingDate = date('Y-m-d');
+            $transactionCode = $this->header->sale_order_no;
+            $transactionDate = $this->header->sale_order_date;
+            $branchId = $this->header->requester_branch_id;
+            $transactionSubject = $this->header->customer->name;
+
+            $journalReferences = array();
+
             if ($this->header->payment_type == "Cash") {
                 $getCoaKas = '121.00.002';
                 $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
@@ -264,43 +273,51 @@ class SalesOrders extends CComponent {
             }
 
             foreach ($this->details as $key => $soDetail) {
-                $coaPenjualan = Coa::model()->findByPk($soDetail->product->productSubMasterCategory->coaPenjualanBarangDagang->id);
-                $getCoaPenjualan = $coaPenjualan->code;
-                $coaPenjualanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPenjualan));
+                $coaId = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
+                $journalReferences[$coaId]['debet_kredit'] = 'K';
+                $journalReferences[$coaId]['is_coa_category'] = 0;
+                $journalReferences[$coaId]['values'][] = $soDetail->retail_price * $soDetail->quantity;
+                
+                if ($soDetail->discount > 0) {
+                    $coaId = $soDetail->product->productSubMasterCategory->coa_diskon_penjualan;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $soDetail->totalDiscount * $soDetail->quantity;
+                }
 
-                $jurnalUmumPenjualan = new JurnalUmum;
-                $jurnalUmumPenjualan->kode_transaksi = $this->header->sale_order_no;
-                $jurnalUmumPenjualan->tanggal_transaksi = $this->header->sale_order_date;
-                $jurnalUmumPenjualan->coa_id = $coaPenjualanWithCode->id;
-                $jurnalUmumPenjualan->branch_id = $this->header->requester_branch_id;
-                $jurnalUmumPenjualan->total = $soDetail->retail_price * $soDetail->quantity;
-                $jurnalUmumPenjualan->debet_kredit = 'K';
-                $jurnalUmumPenjualan->tanggal_posting = date('Y-m-d');
-                $jurnalUmumPenjualan->transaction_subject = $this->header->customer->name;
-                $jurnalUmumPenjualan->is_coa_category = 0;
-                $jurnalUmumPenjualan->transaction_type = 'SO';
-                $valid = $jurnalUmumPenjualan->save() && $valid;
+//                $jurnalUmumPenjualan = new JurnalUmum;
+//                $jurnalUmumPenjualan->kode_transaksi = $this->header->sale_order_no;
+//                $jurnalUmumPenjualan->tanggal_transaksi = $this->header->sale_order_date;
+//                $jurnalUmumPenjualan->coa_id = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
+//                $jurnalUmumPenjualan->branch_id = $this->header->requester_branch_id;
+//                $jurnalUmumPenjualan->total = $soDetail->retail_price * $soDetail->quantity;
+//                $jurnalUmumPenjualan->debet_kredit = 'K';
+//                $jurnalUmumPenjualan->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumPenjualan->transaction_subject = $this->header->customer->name;
+//                $jurnalUmumPenjualan->is_coa_category = 0;
+//                $jurnalUmumPenjualan->transaction_type = 'SO';
+//                $valid = $jurnalUmumPenjualan->save() && $valid;
+//
+//                if ($soDetail->discount > 0) {
+//                    $coaDiskon = Coa::model()->findByPk($soDetail->product->productSubMasterCategory->coaDiskonPenjualan->id);
+//                    $getCoaDiskon = $coaDiskon->code;
+//                    $coaDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaDiskon));
+//
+//                    $jurnalUmumDiskon = new JurnalUmum;
+//                    $jurnalUmumDiskon->kode_transaksi = $this->header->sale_order_no;
+//                    $jurnalUmumDiskon->tanggal_transaksi = $this->header->sale_order_date;
+//                    $jurnalUmumDiskon->coa_id = $coaDiskonWithCode->id;
+//                    $jurnalUmumDiskon->branch_id = $this->header->requester_branch_id;
+//                    $jurnalUmumDiskon->total = $soDetail->totalDiscount * $soDetail->quantity;
+//                    $jurnalUmumDiskon->debet_kredit = 'D';
+//                    $jurnalUmumDiskon->tanggal_posting = date('Y-m-d');
+//                    $jurnalUmumDiskon->transaction_subject = $this->header->customer->name;
+//                    $jurnalUmumDiskon->is_coa_category = 0;
+//                    $jurnalUmumDiskon->transaction_type = 'SO';
+//                    $valid = $jurnalUmumDiskon->save() && $valid;
+//                }
 
-//                    if ($soDetail->discount > 0) {
-                    $coaDiskon = Coa::model()->findByPk($soDetail->product->productSubMasterCategory->coaDiskonPenjualan->id);
-                    $getCoaDiskon = $coaDiskon->code;
-                    $coaDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaDiskon));
-
-                    $jurnalUmumDiskon = new JurnalUmum;
-                    $jurnalUmumDiskon->kode_transaksi = $this->header->sale_order_no;
-                    $jurnalUmumDiskon->tanggal_transaksi = $this->header->sale_order_date;
-                    $jurnalUmumDiskon->coa_id = $coaDiskonWithCode->id;
-                    $jurnalUmumDiskon->branch_id = $this->header->requester_branch_id;
-                    $jurnalUmumDiskon->total = $soDetail->totalDiscount * $soDetail->quantity;
-                    $jurnalUmumDiskon->debet_kredit = 'D';
-                    $jurnalUmumDiskon->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumDiskon->transaction_subject = $this->header->customer->name;
-                    $jurnalUmumDiskon->is_coa_category = 0;
-                    $jurnalUmumDiskon->transaction_type = 'SO';
-                    $valid = $jurnalUmumDiskon->save() && $valid;
-//                    }
-
-//                    if ($this->header->ppn_price > 0.00) {
+                if ($this->header->ppn_price > 0.00) {
                     $getCoaPpn = '224.00.001';
                     $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
                     $jurnalUmumPpn = new JurnalUmum;
@@ -315,54 +332,84 @@ class SalesOrders extends CComponent {
                     $jurnalUmumPpn->is_coa_category = 0;
                     $jurnalUmumPpn->transaction_type = 'SO';
                     $valid = $jurnalUmumPpn->save() && $valid;
-//                    }
+                }
 
                 $product = Product::model()->findByPk($soDetail->product_id);
                 $hppPrice = $product->hpp * $soDetail->quantity;
 
+                $coaId = $soDetail->product->productSubMasterCategory->coa_hpp;
+                $journalReferences[$coaId]['debet_kredit'] = 'D';
+                $journalReferences[$coaId]['is_coa_category'] = 0;
+                $journalReferences[$coaId]['values'][] = $hppPrice;
+                
+                $coaId = $soDetail->product->productMasterCategory->coa_outstanding_part_id;
+                $journalReferences[$coaId]['debet_kredit'] = 'K';
+                $journalReferences[$coaId]['is_coa_category'] = 1;
+                $journalReferences[$coaId]['values'][] = $hppPrice;
+                
+                $coaId = $soDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+                $journalReferences[$coaId]['debet_kredit'] = 'K';
+                $journalReferences[$coaId]['is_coa_category'] = 0;
+                $journalReferences[$coaId]['values'][] = $hppPrice;
+                
                 //D
-                $coaHpp = Coa::model()->findByPk($soDetail->product->productSubMasterCategory->coaHpp->id);
-                $getCoaHpp = $coaHpp->code;
-                $coaHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHpp));
-
-                $jurnalUmumHpp = new JurnalUmum;
-                $jurnalUmumHpp->kode_transaksi = $this->header->sale_order_no;
-                $jurnalUmumHpp->tanggal_transaksi = $this->header->sale_order_date;
-                $jurnalUmumHpp->coa_id = $coaHppWithCode->id;
-                $jurnalUmumHpp->branch_id = $this->header->requester_branch_id;
-                $jurnalUmumHpp->total = $hppPrice;
-                $jurnalUmumHpp->debet_kredit = 'D';
-                $jurnalUmumHpp->tanggal_posting = date('Y-m-d');
-                $jurnalUmumHpp->transaction_subject = $this->header->customer->name;
-                $jurnalUmumHpp->is_coa_category = 0;
-                $jurnalUmumHpp->transaction_type = 'SO';
-                $valid = $jurnalUmumHpp->save() && $valid;
-
-                $jurnalUmumMasterOutstandingPart = new JurnalUmum;
-                $jurnalUmumMasterOutstandingPart->kode_transaksi = $this->header->sale_order_no;
-                $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $this->header->sale_order_date;
-                $jurnalUmumMasterOutstandingPart->coa_id = $soDetail->product->productMasterCategory->coa_outstanding_part_id;
-                $jurnalUmumMasterOutstandingPart->branch_id = $this->header->requester_branch_id;
-                $jurnalUmumMasterOutstandingPart->total = $hppPrice;
-                $jurnalUmumMasterOutstandingPart->debet_kredit = 'K';
-                $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterOutstandingPart->transaction_subject = $this->header->customer->name;
-                $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
-                $jurnalUmumMasterOutstandingPart->transaction_type = 'SO';
-                $valid = $jurnalUmumMasterOutstandingPart->save() && $valid;
-
-                $jurnalUmumOutstandingPart = new JurnalUmum;
-                $jurnalUmumOutstandingPart->kode_transaksi = $this->header->sale_order_no;
-                $jurnalUmumOutstandingPart->tanggal_transaksi = $this->header->sale_order_date;
-                $jurnalUmumOutstandingPart->coa_id = $soDetail->product->productSubMasterCategory->coa_outstanding_part_id;
-                $jurnalUmumOutstandingPart->branch_id = $this->header->requester_branch_id;
-                $jurnalUmumOutstandingPart->total = $hppPrice;
-                $jurnalUmumOutstandingPart->debet_kredit = 'K';
-                $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumOutstandingPart->transaction_subject = $this->header->customer->name;
-                $jurnalUmumOutstandingPart->is_coa_category = 0;
-                $jurnalUmumOutstandingPart->transaction_type = 'SO';
-                $valid = $jurnalUmumOutstandingPart->save() && $valid;
+//                $coaHpp = Coa::model()->findByPk($soDetail->product->productSubMasterCategory->coaHpp->id);
+//                $getCoaHpp = $coaHpp->code;
+//                $coaHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHpp));
+//
+//                $jurnalUmumHpp = new JurnalUmum;
+//                $jurnalUmumHpp->kode_transaksi = $this->header->sale_order_no;
+//                $jurnalUmumHpp->tanggal_transaksi = $this->header->sale_order_date;
+//                $jurnalUmumHpp->coa_id = $coaHppWithCode->id;
+//                $jurnalUmumHpp->branch_id = $this->header->requester_branch_id;
+//                $jurnalUmumHpp->total = $hppPrice;
+//                $jurnalUmumHpp->debet_kredit = 'D';
+//                $jurnalUmumHpp->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumHpp->transaction_subject = $this->header->customer->name;
+//                $jurnalUmumHpp->is_coa_category = 0;
+//                $jurnalUmumHpp->transaction_type = 'SO';
+//                $valid = $jurnalUmumHpp->save() && $valid;
+//
+//                $jurnalUmumMasterOutstandingPart = new JurnalUmum;
+//                $jurnalUmumMasterOutstandingPart->kode_transaksi = $this->header->sale_order_no;
+//                $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $this->header->sale_order_date;
+//                $jurnalUmumMasterOutstandingPart->coa_id = $soDetail->product->productMasterCategory->coa_outstanding_part_id;
+//                $jurnalUmumMasterOutstandingPart->branch_id = $this->header->requester_branch_id;
+//                $jurnalUmumMasterOutstandingPart->total = $hppPrice;
+//                $jurnalUmumMasterOutstandingPart->debet_kredit = 'K';
+//                $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumMasterOutstandingPart->transaction_subject = $this->header->customer->name;
+//                $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
+//                $jurnalUmumMasterOutstandingPart->transaction_type = 'SO';
+//                $valid = $jurnalUmumMasterOutstandingPart->save() && $valid;
+//
+//                $jurnalUmumOutstandingPart = new JurnalUmum;
+//                $jurnalUmumOutstandingPart->kode_transaksi = $this->header->sale_order_no;
+//                $jurnalUmumOutstandingPart->tanggal_transaksi = $this->header->sale_order_date;
+//                $jurnalUmumOutstandingPart->coa_id = $soDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+//                $jurnalUmumOutstandingPart->branch_id = $this->header->requester_branch_id;
+//                $jurnalUmumOutstandingPart->total = $hppPrice;
+//                $jurnalUmumOutstandingPart->debet_kredit = 'K';
+//                $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumOutstandingPart->transaction_subject = $this->header->customer->name;
+//                $jurnalUmumOutstandingPart->is_coa_category = 0;
+//                $jurnalUmumOutstandingPart->transaction_type = 'SO';
+//                $valid = $jurnalUmumOutstandingPart->save() && $valid;
+            }
+            
+            foreach ($journalReferences as $coaId => $journalReference) {
+                $jurnalUmumPersediaan = new JurnalUmum();
+                $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                $jurnalUmumPersediaan->coa_id = $coaId;
+                $jurnalUmumPersediaan->branch_id = $branchId;
+                $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+                $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+                $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+                $jurnalUmumPersediaan->transaction_type = $transactionType;
+                $jurnalUmumPersediaan->save();
             }
         }
         

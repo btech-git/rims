@@ -25,6 +25,8 @@
  * @property string $person_in_charge
  * @property string $phone
  * @property string $mobile_phone
+ * @property integer $is_approved
+ * @property string $date_approval
  *
  * The followings are the available model relations:
  * @property ConsignmentInHeader[] $consignmentInHeaders
@@ -76,17 +78,17 @@ class Supplier extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, name, company, address, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor', 'required'),
-            array('province_id, city_id, tenor, coa_id, coa_outstanding_order', 'numerical', 'integerOnly' => true),
+            array('province_id, city_id, tenor, coa_id, coa_outstanding_order, is_approved', 'numerical', 'integerOnly' => true),
             array('code, npwp', 'length', 'max' => 20),
             array('name, company, position', 'length', 'max' => 30),
             array('status', 'length', 'max' => 45),
             array('zipcode, company_attribute', 'length', 'max' => 10),
             array('email_personal, email_company, phone', 'length', 'max' => 60),
             array('person_in_charge, mobile_phone', 'length', 'max' => 100),
-            array('date, note', 'safe'),
+            array('date, note, date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, date, code, name, company, position, address, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, company_attribute,product_name, coa_id, coa_name, coa_code, coa_outstanding_code, coa_outstanding_name, note, status, phone, person_in_charge, mobile_phone', 'safe', 'on' => 'search'),
+            array('id, date, code, name, company, position, address, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, company_attribute,product_name, coa_id, coa_name, coa_code, coa_outstanding_code, coa_outstanding_name, note, status, phone, person_in_charge, mobile_phone, is_approved, date_approval', 'safe', 'on' => 'search'),
         );
     }
 
@@ -149,6 +151,8 @@ class Supplier extends CActiveRecord {
             'person_in_charge' => 'PIC',
             'phone' => 'Phone',
             'mobile_phone' => 'Mobile Phone',
+            'is_approved' => 'Approval',
+            'date_approval' => 'Tanggal Approval',
         );
     }
 
@@ -190,6 +194,8 @@ class Supplier extends CActiveRecord {
         $criteria->compare('person_in_charge', $this->person_in_charge);
         $criteria->compare('phone', $this->phone);
         $criteria->compare('mobile_phone', $this->mobile_phone);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.date_approval', $this->date_approval);
 
         $criteria->together = true;
         $criteria->with = array('coa', 'coaOutstandingOrder');

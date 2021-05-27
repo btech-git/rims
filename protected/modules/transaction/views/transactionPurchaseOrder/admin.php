@@ -62,6 +62,8 @@ Yii::app()->clientScript->registerScript('search', "
                 <div class="search-form" style="display:none">
                     <?php $this->renderPartial('_search',array(
                         'model'=>$model,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
                     )); ?>
                 </div><!-- search-form -->				
             </div>
@@ -70,8 +72,8 @@ Yii::app()->clientScript->registerScript('search', "
          <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-purchase-order-grid',
-                'dataProvider'=>$model->search(),
-                'filter'=>$model,
+                'dataProvider' => $dataProvider,
+                'filter' => null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
                     'cssFile'=>false,
@@ -136,38 +138,5 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
             )); ?>
         </div>
-<!--        <fieldset>
-            <legend>Pending Order List</legend>
-            <h2>Request Order</h2>
-            <div class="grid-view">
-
-                <?php /*$this->widget('zii.widgets.grid.CGridView', array(
-                    'id'=>'transaction-request-order-grid',
-                    'dataProvider'=>$requestDataProvider,
-                    'filter'=>$request,
-                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                    'pager'=>array(
-                        'cssFile'=>false,
-                        'header'=>'',
-                    ),
-                    'columns'=>array(
-                        //'id',
-                        array('name'=>'request_order_no', 'value'=>'CHTml::link($data->request_order_no, array("/transaction/transactionRequestOrder/view", "id"=>$data->id))', 'type'=>'raw'),
-                        'request_order_date',
-                        'status_document',
-                        array(
-                            'header'=>'Purchases',
-                            'value'=> function($data){
-                                if (count($data->transactionPurchaseOrderDetailRequests) >0) {
-                                    foreach ($data->transactionPurchaseOrderDetailRequests as $key => $podetail) {
-                                        echo $podetail->purchaseOrderDetail->purchaseOrder->purchase_order_no. "<br>";
-                                    }
-                                }
-                            } 
-                        )
-                    ),
-                ));*/ ?>
-            </div>
-        </fieldset>-->
     </div>
 </div>

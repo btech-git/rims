@@ -18,6 +18,11 @@
                         'url' => array('/frontDesk/pendingRequest/index'), 
                         'visible' => Yii::app()->user->checkAccess('operationHead')
                     ),
+                    array(
+                        'label' => 'Approval Data Master', 
+                        'url' => array('/master/pendingApproval/index'), 
+                        'visible' => Yii::app()->user->checkAccess('operationHead')
+                    ),
                 ),
             )); ?>
         </li>
@@ -306,6 +311,7 @@
                     array('label' => '-----------------------'),
                     array('label' => 'Rincian Buku Besar Pembantu Piutang', 'url' => array('/report/receivableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
                     array('label' => 'Rincian Buku Besar Pembantu Hutang', 'url' => array('/report/payableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
+                    array('label' => 'Inventory Stok Penjualan', 'url' => array('/report/stockSales/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
                     array('label' => 'Kartu Stok Persediaan', 'url' => array('/report/stockCard/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
                     array('label' => 'Financial Forecast', 'url' => array('/report/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
                     array('label' => 'Laporan General Ledger', 'url' => array('/report/generalLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),

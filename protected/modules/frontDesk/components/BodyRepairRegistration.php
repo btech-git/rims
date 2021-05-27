@@ -300,6 +300,20 @@ class BodyRepairRegistration extends CComponent {
     public function validate() {
         
         $valid = $this->header->validate(array('car_mileage', 'problem', 'insurance_company_id'));
+        $valid = $valid && $this->validateExistingCustomer();
+
+        return $valid;
+    }
+
+    public function validateExistingCustomer() {
+        $valid = true;
+        
+        $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('transaction_date' => $this->header->transaction_date, 'vehicle_id' => $this->header->vehicle_id));
+
+        if (!empty($registrationTransaction)) {
+            $valid = false;
+            $this->header->addError('error', 'Kendaraan customer sudah ada di database hari ini.');
+        }
 
         return $valid;
     }
@@ -681,7 +695,7 @@ class BodyRepairRegistration extends CComponent {
             $jurnalUmumReceivable->save();                
         }
 
-//            if ($registration->ppn_price > 0.00) {
+        if ($this->header->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
             $jurnalUmumPpn = new JurnalUmum;
             $jurnalUmumPpn->kode_transaksi = $this->header->transaction_number;
@@ -695,7 +709,7 @@ class BodyRepairRegistration extends CComponent {
             $jurnalUmumPpn->is_coa_category = 0;
             $jurnalUmumPpn->transaction_type = 'RG';
             $jurnalUmumPpn->save();
-//            }
+        }
 
         if (count($this->productDetails) > 0) {
             foreach ($this->productDetails as $key => $rProduct) {
@@ -733,7 +747,7 @@ class BodyRepairRegistration extends CComponent {
                 $jurnalUmumHpp->transaction_type = 'RG';
                 $jurnalUmumHpp->save();
 
-//                    if ($rProduct->discount > 0) {
+                if ($rProduct->discount > 0) {
                     // save product master coa diskon penjualan
                     $coaMasterDiskon = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaDiskonPenjualan->id);
                     $getCoaMasterDiskon = $coaMasterDiskon->code;
@@ -767,7 +781,7 @@ class BodyRepairRegistration extends CComponent {
                     $jurnalUmumDiskon->is_coa_category = 0;
                     $jurnalUmumDiskon->transaction_type = 'RG';
                     $jurnalUmumDiskon->save();
-//                    }
+                }
 
                 //save product master category coa penjualan barang
                 $coaMasterPenjualan = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaPenjualanBarangDagang->id);
@@ -871,7 +885,7 @@ class BodyRepairRegistration extends CComponent {
                 $jurnalUmumPendapatanJasa->transaction_type = 'RG';
                 $jurnalUmumPendapatanJasa->save();
 
-//                    if ($rService->discount_price > 0.00) {
+                if ($rService->discount_price > 0.00) {
                     $coaDiscountPendapatanJasa = Coa::model()->findByPk($rService->service->serviceCategory->coa_diskon_service);
                     $jurnalUmumDiscountPendapatanJasa = new JurnalUmum;
                     $jurnalUmumDiscountPendapatanJasa->kode_transaksi = $this->header->transaction_number;
@@ -885,7 +899,7 @@ class BodyRepairRegistration extends CComponent {
                     $jurnalUmumDiscountPendapatanJasa->is_coa_category = 0;
                     $jurnalUmumDiscountPendapatanJasa->transaction_type = 'RG';
                     $jurnalUmumDiscountPendapatanJasa->save();
-//                    }
+                }
             }
         }
 

@@ -21,10 +21,14 @@ class BalanceSheetController extends Controller {
     public function actionSummary() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
+        
+        $dateNow = date('Y-m-d');
+        list($yearNow, , ) = explode('-', $dateNow);
+        $dateStart = $yearNow . '-01-01';
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : $dateNow;
 
         $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id IN (12)'));
         $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id IN (13)'));

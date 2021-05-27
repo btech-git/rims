@@ -3,14 +3,14 @@
 /* @var $model TransactionReceiveItem */
 
 $this->breadcrumbs=array(
-	'Transaction Receive Items'=>array('admin'),
-	'Manage',
-	);
+    'Receive Items'=>array('admin'),
+    'Manage',
+);
 
 $this->menu=array(
-	array('label'=>'List TransactionReceiveItem', 'url'=>array('index')),
-	array('label'=>'Create TransactionReceiveItem', 'url'=>array('create')),
-	);
+    array('label'=>'List TransactionReceiveItem', 'url'=>array('index')),
+    array('label'=>'Create TransactionReceiveItem', 'url'=>array('create')),
+);
 
 // Yii::app()->clientScript->registerScript('search', "
 // $('.search-button').click(function(){
@@ -26,24 +26,27 @@ $this->menu=array(
 // ");
 
 Yii::app()->clientScript->registerScript('search', "
-	$('.search-button').click(function(){
-		$('.search-form').slideToggle(600);
-		$('.bulk-action').toggle();
-		$(this).toggleClass('active');
-		if($(this).hasClass('active')){
-			$(this).text('');
-		}else {
-			$(this).text('Advanced Search');
-		}
-		return false;
-	});
-	$('.search-form form').submit(function(){
-		$('#transaction-receive-item-grid').yiiGridView('update', {
-			data: $(this).serialize()
-		});
-		return false;
-	});
-	");
+    $('.search-button').click(function(){
+        $('.search-form').slideToggle(600);
+        $('.bulk-action').toggle();
+        $(this).toggleClass('active');
+        
+        if ($(this).hasClass('active')){
+            $(this).text('');
+        } else {
+            $(this).text('Advanced Search');
+        }
+        
+        return false;
+    });
+    $('.search-form form').submit(function(){
+        $('#transaction-receive-item-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+        
+        return false;
+    });
+");
 ?>
 	
 <div id="maincontent">
@@ -55,7 +58,11 @@ Yii::app()->clientScript->registerScript('search', "
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
                 <div class="clearfix"></div>
                 <div class="search-form" style="display:none">
-                    <?php $this->renderPartial('_search',array('model'=>$model)); ?>
+                    <?php $this->renderPartial('_search',array(
+                        'model'=>$model,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
+                    )); ?>
                 </div><!-- search-form -->				
             </div>
          </div>
@@ -63,8 +70,8 @@ Yii::app()->clientScript->registerScript('search', "
          <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-receive-item-grid',
-                'dataProvider'=>$model->search(),
-                'filter'=>$model,
+                'dataProvider' => $dataProvider,
+                'filter' => null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
                     'cssFile'=>false,
