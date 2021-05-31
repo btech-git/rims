@@ -406,6 +406,39 @@ class Coa extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getBeginningBalanceFinancialForecast($transactionDate) {
+        $balanceTotal = 0.00;
+        $params = array(
+            ':transactionDate' => $transactionDate,
+            ':coa_id' => $this->id,
+        );
+        
+        $accountingJournals = $this->getRelated('jurnalUmums', false, array(
+            'condition' => "tanggal_transaksi < :transactionDate AND coa_id = :coa_id",
+            'params' => $params,
+        ));
+
+        if ($accountingJournals != null) {
+            foreach ($accountingJournals as $accountingJournal) {
+                $debitAmount = $accountingJournal->debet_kredit == 'D' ? $accountingJournal->total : 0;
+                $creditAmount = $accountingJournal->debet_kredit == 'K' ? $accountingJournal->total : 0;
+                if (
+                    $this->coa_category_id == 3 ||
+                    $this->coa_category_id == 4 || 
+                    $this->coa_category_id == 5
+                ) {
+                    $balanceTotal += $creditAmount - $debitAmount;
+                } else if ($this->coa_category_id == 1 || $this->coa_category_id == 2) {
+                    $balanceTotal += $debitAmount - $creditAmount;
+                } else {
+                    $balanceTotal = 0.00;
+                }
+            }
+        }
+        
+        return $balanceTotal;
+    }
+    
     public function getFinancialForecastReport($datePrevious) {
         
         $sql = "SELECT payment_date_estimate, coa_bank_id_estimate, SUM(debit) AS total_debit, SUM(credit) AS total_credit
@@ -430,7 +463,7 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getFinancialForecastReports($datePrevious) {
+    public function getFinancialForecastDetails($transactionDate) {
         
         $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit, credit, remaining
                 FROM (
@@ -440,14 +473,12 @@ class Coa extends CActiveRecord {
                     SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit, payment_left AS remaining
                     FROM " . TransactionPurchaseOrder::model()->tableName() . "
                 ) transaction
-                WHERE remaining > 0 AND payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
+                WHERE remaining > 0 AND payment_date_estimate =:payment_date_estimate AND coa_bank_id_estimate = :coa_bank_id_estimate
                 ORDER BY payment_date_estimate ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':date_now' => date('Y-m-d'),
-            ':payment_date_estimate' => $datePrevious,
+            ':payment_date_estimate' => $transactionDate,
             ':coa_bank_id_estimate' => $this->id,
-//            ':branch_id' => $branchId,
         ));
         
         return $resultSet;

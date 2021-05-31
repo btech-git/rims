@@ -122,7 +122,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 <?php $creditAmount = $forecastRow['total_credit']; ?>
                                 <?php $saldo += $debitAmount - $creditAmount; ?>
                                 <tr>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($forecastRow['payment_date_estimate']))); ?></td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::link(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($forecastRow['payment_date_estimate'])), array('javascript:;'), array(
+                                            'onclick' => 'window.open("' . CController::createUrl('/report/financialForecast/transaction', array(
+                                                "transactionDate" => $forecastRow['payment_date_estimate'], 
+                                                "coaId" => $coa->id, 
+                                            )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
+                                        )); ?>
+                                        <?php //echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($forecastRow['payment_date_estimate']))); ?>
+                                    </td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $debitAmount); ?></td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $creditAmount); ?></td>
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
