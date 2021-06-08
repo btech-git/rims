@@ -8,8 +8,8 @@ $this->breadcrumbs = array(
 );
 
 $this->menu = array(
-    array('label' => 'List RegistrationTransaction', 'url' => array('admin')),
-    array('label' => 'Create RegistrationTransaction', 'url' => array('index')),
+    array('label' => 'List Registration Transaction', 'url' => array('admin')),
+    array('label' => 'Create Registration Transaction', 'url' => array('index')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -61,7 +61,7 @@ $('form').submit(function(){
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -91,7 +91,7 @@ $('form').submit(function(){
                                                     car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                                     car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                                     work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                                    status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                                    payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                                     repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                                     branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                                     customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -122,7 +122,7 @@ $('form').submit(function(){
                                                     car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                                     car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                                     work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                                    status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                                    payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                                     repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                                     branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                                     customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -144,7 +144,7 @@ $('form').submit(function(){
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -164,7 +164,7 @@ $('form').submit(function(){
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -189,7 +189,7 @@ $('form').submit(function(){
                                                 car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                                 plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                                 work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                                status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                                payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                                 repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                                 branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                                 customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -204,7 +204,7 @@ $('form').submit(function(){
                             <td style="text-align: center; font-weight: bold">WO #</td>
                             <td style="text-align: center; font-weight: bold">Customer Name</td>
                             <td style="text-align: center; font-weight: bold">Customer Type</td>
-                            <td style="text-align: center; font-weight: bold">WO Status</td>
+                            <td style="text-align: center; font-weight: bold">Status</td>
                             <td style="text-align: center; font-weight: bold">Type</td>
                             <td style="text-align: center; font-weight: bold">Branch</td>
                         </tr>
@@ -220,7 +220,7 @@ $('form').submit(function(){
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -240,7 +240,7 @@ $('form').submit(function(){
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                             customer_type: $("#' . CHtml::activeId($model, 'customer_type') . '").val(),
@@ -264,7 +264,7 @@ $('form').submit(function(){
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -274,16 +274,14 @@ $('form').submit(function(){
                             </td>
                             
                             <td>
-                                <?php echo CHtml::activeDropDownList($model, 'status', array(
+                                <?php echo CHtml::activeDropDownList($model, 'payment_status', array(
                                     '' => '-- All --',
-                                    'Registration' => 'Registration',
-                                    'Pending' => 'Pending',
-                                    'Available' => 'Available',
-                                    'On Progress' => 'On Progress',
+                                    'INVOICING' => 'INVOICING',
+                                    'CLEAR' => 'CLEAR',
                                 ), array(
                                     'onchange' => '
                                         $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                            status: $(this).val(),
+                                            payment_status: $(this).val(),
                                             transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
                                             transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
@@ -312,7 +310,7 @@ $('form').submit(function(){
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -332,7 +330,7 @@ $('form').submit(function(){
                                             car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
                                             car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
                                             work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            status: $("#' . CHtml::activeId($model, 'status') . '").val(),
+                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
                                             repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
@@ -371,6 +369,10 @@ $('form').submit(function(){
                         'value' => '$data->vehicle->plate_number',
                     ),
                     array(
+                        'name' => 'branch_id', 
+                        'value' => '$data->branch_id != null? $data->branch->name : "-"'
+                    ),
+                    array(
                         'name' => 'customer_name', 
                         'value' => '$data->customer != null? $data->customer->name : "-"'
                     ),
@@ -378,11 +380,7 @@ $('form').submit(function(){
                         'name' => 'grand_total', 
                         'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->grand_total)'
                     ),
-                    'status',
-                    array(
-                        'name' => 'branch_id', 
-                        'value' => '$data->branch_id != null? $data->branch->name : "-"'
-                    ),
+                    'payment_status',
                     array(
                         'name' => 'invoice_number',
                         'header' => 'Invoice',

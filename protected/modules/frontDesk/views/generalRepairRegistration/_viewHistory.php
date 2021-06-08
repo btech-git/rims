@@ -1,5 +1,5 @@
-<?php if($model->customer_id != ""): ?>
-	<?php $historyTransactions = RegistrationTransaction::model()->findAllByAttributes(array('customer_id'=>$model->customer_id)); ?>
+<?php if ($model->vehicle_id != ""): ?>
+    <?php $historyTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id'=>$model->vehicle_id)); ?>
 	
     <div class="detail">
         <table>
@@ -13,6 +13,7 @@
                     <th>detail</th>
                 </tr>
             </thead>
+            
             <tbody>
                 <?php if(count($historyTransactions) > 0): ?>
                     <?php foreach ($historyTransactions as $i => $historyTransaction): ?>
@@ -31,6 +32,7 @@
                                 ), '<span class="fa fa-caret-down"></span> Detail');?>
                             </td>
                         </tr>
+                        
                         <tr>
                             <td id="detail-<?php echo $i?>" class="hide" colspan=6>
                                 <table>
@@ -59,6 +61,7 @@
                                             echo $rec; ?>
                                         </td>
                                     </tr>
+                                    
                                     <tr>
                                         <td>Products</td>
                                         <td>
