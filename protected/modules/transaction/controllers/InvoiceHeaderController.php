@@ -81,20 +81,6 @@ class InvoiceHeaderController extends Controller {
             'payments' => $payments,
         ));
     }
-//    public function actionTest() {
-//        // $this->layout='//layouts/invoice';
-//        (!empty(Yii::app()->session['pr'])) ? $pr = Yii::app()->session['pr'] : $pr = array();
-//        $criteria = new CDbCriteria;
-//        $criteria->addInCondition('id', $pr);
-//        $invoices = InvoiceHeader::model()->findAll($criteria);
-//
-//        // var_dump($invoices); die("S");
-//        # Load a stylesheet
-//        # renderPartial (only 'view' of current controller)
-//        $this->render('pdfInvoices', array(
-//            'invoices' => $invoices,
-//        ));
-//    }
 
     public function actionPdfAll() {
         $this->layout = '//layouts/invoice';

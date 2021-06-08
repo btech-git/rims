@@ -54,7 +54,6 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder = $this->instantiate(null);
         $purchaseOrder->header->main_branch_id = $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
-//        $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
         $this->performAjaxValidation($purchaseOrder->header);
 
         $supplier = new Supplier('search');
@@ -79,6 +78,7 @@ class TransactionPurchaseOrderController extends Controller {
         }
 
         $productCriteria = new CDbCriteria;
+        $productCriteria->compare('t.id', $product->id);
         $productCriteria->compare('t.name', $product->name, true);
         $productCriteria->compare('t.manufacturer_code', $product->manufacturer_code, true);
         $productCriteria->compare('t.brand_id', $product->brand_id);
@@ -147,8 +147,7 @@ class TransactionPurchaseOrderController extends Controller {
         }
 
         $productCriteria = new CDbCriteria;
-        $productCriteria->together = true;
-        $productCriteria->with = array('supplierProducts');
+        $productCriteria->compare('t.id', $product->id);
         $productCriteria->compare('t.name', $product->name, true);
         $productCriteria->compare('t.manufacturer_code', $product->manufacturer_code, true);
         $productCriteria->compare('t.brand_id', $product->brand_id);
@@ -157,8 +156,7 @@ class TransactionPurchaseOrderController extends Controller {
         $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
         $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
         $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
-        $productCriteria->compare('supplierProducts.supplier_id', $product->product_supplier);
-
+        
         $productDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $productCriteria,
             'sort' => array(
@@ -171,25 +169,14 @@ class TransactionPurchaseOrderController extends Controller {
         if (isset($_GET['ProductPrice'])) {
             $price->attributes = $_GET['ProductPrice'];
         }
-
-        $priceCriteria = new CDbCriteria;
-
-        $priceCriteria->compare('product_id', $price->product_id);
-        $priceCriteria->compare('supplier_id', $price->supplier_id);
-        $priceCriteria->with = array('product', 'supplier');
-        $priceCriteria->together = true;
-        $priceCriteria->compare('product.name', $price->product_name, true);
-        $priceCriteria->compare('supplier.name', $price->supplier_name, true);
-        $priceDataProvider = new CActiveDataProvider('ProductPrice', array(
-            'criteria' => $priceCriteria,
-        ));
+        $priceDataProvider = $price->search();
 
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionPurchaseOrder'])) {
-            // $model->attributes=$_POST['TransactionPurchaseOrder'];
             $this->loadState($purchaseOrder);
+            
             if ($purchaseOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $purchaseOrder->header->id));
             }
@@ -197,10 +184,6 @@ class TransactionPurchaseOrderController extends Controller {
 
         $this->render('update', array(
             'purchaseOrder' => $purchaseOrder,
-//            'supplier' => $supplier,
-//            'supplierDataProvider' => $supplierDataProvider,
-            // 'request'=>$request,
-            // 'requestDataProvider'=>$requestDataProvider,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
             'price' => $price,
@@ -1878,4 +1861,23 @@ class TransactionPurchaseOrderController extends Controller {
         echo CHtml::tag('option', array('value' => ''), '-- All Branch --', true);
     }
 
+    public function actionUpdateEstimateDate($id) {
+        $model = $this->loadModel($id);
+        $details = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
+        $payments = PaymentOut::model()->findAllByAttributes(array('purchase_order_id' => $id));
+        
+        if (isset($_POST['Update'])) {
+            $model->payment_date_estimate = $_POST['TransactionPurchaseOrder']['payment_date_estimate'];
+            $model->coa_bank_id_estimate = $_POST['TransactionPurchaseOrder']['coa_bank_id_estimate'];
+            $model->update(array('coa_bank_id_estimate', 'payment_date_estimate'));
+
+            $this->redirect(array('view', 'id' => $model->id));
+        }
+
+        $this->render('updateEstimateDate', array(
+            'model' => $model,
+            'details' => $details,
+            'payments' => $payments,
+        ));
+    }
 }

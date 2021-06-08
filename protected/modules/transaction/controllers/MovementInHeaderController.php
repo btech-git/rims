@@ -54,14 +54,14 @@ class MovementInHeaderController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    /*public function actionCreate() {
 
         $movementIn = $this->instantiate(null);
         $movementIn->header->branch_id = $movementIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementIn->header->branch_id;
 //        $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
         $this->performAjaxValidation($movementIn->header);
 
-        /* Receive Item */
+        // Receive Item
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
 
@@ -89,7 +89,7 @@ class MovementInHeaderController extends Controller {
             'criteria' => $receiveItemDetailCriteria,
         ));
 
-        /* Return Item */
+        // Return Item
         $returnItem = new TransactionReturnItem('search');
         $returnItem->unsetAttributes();
         
@@ -145,6 +145,45 @@ class MovementInHeaderController extends Controller {
             'returnItemDataProvider' => $returnItemDataProvider,
             'returnItemDetail' => $returnItemDetail,
             'returnItemDetailDataProvider' => $returnItemDetailDataProvider,
+        ));
+    }*/
+
+    public function actionCreate($transactionId, $movementType) {
+
+        $movementIn = $this->instantiate(null);
+        $movementIn->header->branch_id = $movementIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementIn->header->branch_id;
+        $this->performAjaxValidation($movementIn->header);
+
+        if ($movementType == 1) {
+            $movementIn->header->receive_item_id = $transactionId;
+            $movementIn->header->return_item_id = null;
+            
+        } else if ($movementType == 2) {
+            $movementIn->header->receive_item_id = null;
+            $movementIn->header->return_item_id = $transactionId;
+            
+        } else {
+            $this->redirect(array('admin'));
+        }
+            
+        $movementIn->header->movement_type = $movementType;
+        $movementIn->addDetails($transactionId, $movementType);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['MovementOutHeader'])) {
+            $this->loadState($movementIn);
+            $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
+            
+            if ($movementIn->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $movementIn->header->id));
+            }
+        }
+
+        $this->render('create', array(
+            'movementIn' => $movementIn,
         ));
     }
 

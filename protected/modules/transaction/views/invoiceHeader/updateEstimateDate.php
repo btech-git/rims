@@ -3,14 +3,12 @@
 /* @var $invoice->header InvoiceHeader */
 
 $this->breadcrumbs=array(
-    'Invoice Headers'=>array('admin'),
-    $invoice->header->id=>array('view','id'=>$invoice->header->id),
+    'Invoice'=>array('admin'),
+    $model->id=>array('view','id'=>$model->id),
     'Update',
 );
 
 ?>
-
-<!--<h1>Update InvoiceHeader <?php //echo $invoice->header->id; ?></h1>-->
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">

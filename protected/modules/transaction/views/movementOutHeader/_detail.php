@@ -1,4 +1,4 @@
-<?php if (count($movementOut->details)): ?>
+<?php if (!empty($movementOut->details)): ?>
     <table>
         <thead>
             <tr>
@@ -15,6 +15,7 @@
                 <th>Action</th>
             </tr>
         </thead>
+        
         <tbody>
             <?php foreach ($movementOut->details as $i => $detail): ?>
                 <?php
@@ -43,7 +44,7 @@
                             <tr>
                                 <?php foreach ($warehouses as $key => $warehouse) :
                                     $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
-                                    $stock = count($inventory) != 0 ? $inventory->total_stock : 0;
+                                    $stock = !empty($inventory) ? $inventory->total_stock : 0;
                                     ?>
                                     <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
                                 <?php endforeach; ?>
@@ -61,12 +62,10 @@
                                 'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $movementOut->header->id, 'index' => $i)),
                                 'update' => '#delivery',
                             )),
-                        ));
-                        ?>
+                        )); ?>
                     </td>
                 </tr>	
             <?php endforeach; ?>
         </tbody>
     </table>
-    <?php
- endif; ?>
+<?php endif; ?>

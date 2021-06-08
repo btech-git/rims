@@ -12,7 +12,6 @@
            'header'=>'',
         ),
         'columns'=>array(
-            //'id',
             array(
                 'name'=>'transaction_number', 
                 'value'=>'CHTml::link($data->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
@@ -22,7 +21,6 @@
                 'name'=>'transaction_date',
                 'value'=>'$data->transaction_date'
             ),
-            //'total_product',
             array(
                 'header'=>'Movements',
                 'value'=> function($data){
@@ -30,6 +28,14 @@
                         echo $movementDetail->movement_out_no. "<br>";
                     }
                 }
+            ),
+            array(
+                'header' => '',
+                'type' => 'raw',
+                'value' => 'CHtml::link("Create", array("create", "transactionId"=>$data->id, "movementType"=>"3"))',
+                'htmlOptions' => array(
+                    'style' => 'text-align: center;'
+                ),
             ),
         ),
     )); ?>

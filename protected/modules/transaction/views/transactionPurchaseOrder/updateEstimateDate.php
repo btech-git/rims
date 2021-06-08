@@ -3,14 +3,12 @@
 /* @var $invoice->header InvoiceHeader */
 
 $this->breadcrumbs=array(
-    'Invoice Headers'=>array('admin'),
-    $invoice->header->id=>array('view','id'=>$invoice->header->id),
+    'Purchase'=>array('admin'),
+    $model->id=>array('view','id'=>$model->id),
     'Update',
 );
 
 ?>
-
-<!--<h1>Update InvoiceHeader <?php //echo $invoice->header->id; ?></h1>-->
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
@@ -86,7 +84,7 @@ $this->breadcrumbs=array(
             'Detail Item'=>array(
                 'id'=>'test1',
                 'content'=>$this->renderPartial('_viewDetail',  array(
-                    'purchaseOrderDetails'=>$purchaseOrderDetails,
+                    'purchaseOrderDetails'=>$details,
                     'ccontroller'=>$ccontroller,
                     'model'=>$model
                 ),TRUE)
@@ -100,14 +98,14 @@ $this->breadcrumbs=array(
             'Detail Receive'=>array(
                 'id'=>'test3',
                 'content'=>$this->renderPartial('_viewDetailReceive', array(
-                    'purchaseOrderDetails'=>$purchaseOrderDetails,
+                    'purchaseOrderDetails'=>$details,
                     'model'=>$model
                 ),TRUE)
             ),
             'Detail Invoice'=>array(
                 'id'=>'test4',
                 'content'=>$this->renderPartial('_viewDetailInvoice', array(
-                    'purchaseOrderDetails'=>$purchaseOrderDetails,
+                    'purchaseOrderDetails'=>$details,
                     'model'=>$model
                 ),TRUE)
             ),

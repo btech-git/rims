@@ -30,52 +30,88 @@ class MovementIns extends CComponent {
         $this->header->setCodeNumberByNext('movement_in_number', $branchCode, MovementInHeader::CONSTANT, $currentMonth, $currentYear);
     }
 
-    public function addDetail($detailId, $type) {
+//    public function addDetail($detailId, $type) {
+//
+//        // $detail = new MovementInDetail();
+//        // $this->details[] = $detail;
+//        if ($type == 1) {
+//            $receiveItemDetail = TransactionReceiveItemDetail::model()->findByPk($detailId);
+//            
+//            $exist = false;
+//            foreach ($this->details as $i => $detail) {
+//                if ($receiveItemDetail->id === $detail->receive_item_detail_id) {
+//                    $exist = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!$exist) {
+//                $detail = new MovementInDetail();
+//                $detail->receive_item_detail_id = $receiveItemDetail->id;
+//                $detail->product_id = $receiveItemDetail->product_id;
+//                $detail->quantity_transaction = $receiveItemDetail->quantity_movement_left;
+//                $this->details[] = $detail;
+//            }
+//        } else {
+//            $returnItemDetail = TransactionReturnItemDetail::model()->findByPk($detailId);
+//            
+//            $exist = false;
+//            foreach ($this->details as $i => $detail) {
+//                if ($returnItemDetail->id === $detail->return_item_detail_id) {
+//                    $exist = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!$exist) {
+//                $detail = new MovementInDetail();
+//                $detail->return_item_detail_id = $returnItemDetail->id;
+//                $detail->product_id = $returnItemDetail->product_id;
+//                $detail->quantity_transaction = $returnItemDetail->quantity_delivery;
+//                $this->details[] = $detail;
+//            }
+//        }
+//    }
 
-        // $detail = new MovementInDetail();
-        // $this->details[] = $detail;
-        if ($type == 1) {
-            $receiveItemDetail = TransactionReceiveItemDetail::model()->findByPk($detailId);
-            
-            $exist = false;
-            foreach ($this->details as $i => $detail) {
-                if ($receiveItemDetail->id === $detail->receive_item_detail_id) {
-                    $exist = true;
-                    break;
+    public function addDetails($transactionId, $movementType) {
+
+        $this->details = array();
+        
+        $detail = new MovementInDetail();
+        
+        if ($movementType == 1) {
+            $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
+
+            if ($receiveItem !== null) {
+                foreach ($receiveItem->transactionReceiveItemDetails as $receiveItemDetail) {
+
+                    $detail->receive_item_detail_id = $receiveItemDetail->id;
+                    $detail->return_item_detail_id = null;
+                    $detail->product_id = $receiveItemDetail->product_id;
+                    $detail->quantity_transaction = $receiveItemDetail->quantity_movement_left;
+
                 }
             }
+        } else if ($movementType == 2) {
+            $returnItem = TransactionReturnItem::model()->findByPk($transactionId);
 
-            if (!$exist) {
-                $detail = new MovementInDetail();
-                $detail->receive_item_detail_id = $receiveItemDetail->id;
-                $detail->product_id = $receiveItemDetail->product_id;
-                $detail->quantity_transaction = $receiveItemDetail->quantity_movement_left;
-                $this->details[] = $detail;
-            }
-        } else {
-            $returnItemDetail = TransactionReturnItemDetail::model()->findByPk($detailId);
-            
-            $exist = false;
-            foreach ($this->details as $i => $detail) {
-                if ($returnItemDetail->id === $detail->return_item_detail_id) {
-                    $exist = true;
-                    break;
+            if ($returnItem !== null) {
+                foreach ($returnItem->transactionReturnItemDetails as $returnDetail) {
+
+                    $detail->receive_item_detail_id = null;
+                    $detail->return_item_detail_id = $returnDetail->id;
+                    $detail->product_id = $returnDetail->product_id;
+                    $detail->quantity_transaction = $returnDetail->quantity_movement_left;
+
                 }
-            }
-
-            if (!$exist) {
-                $detail = new MovementInDetail();
-                $detail->return_item_detail_id = $returnItemDetail->id;
-                $detail->product_id = $returnItemDetail->product_id;
-                $detail->quantity_transaction = $returnItemDetail->quantity_delivery;
-                $this->details[] = $detail;
             }
         }
+        
+        $this->details[] = $detail;
     }
 
     public function removeDetailAt($index) {
         array_splice($this->details, $index, 1);
-        //var_dump(CJSON::encode($this->details));
     }
 
     public function removeDetailAll() {
@@ -88,19 +124,15 @@ class MovementIns extends CComponent {
             $valid = $this->validate() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
-                //print_r('1');
             } else {
                 $dbTransaction->rollback();
-                //print_r('2');
             }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
-            //print_r($e);
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
@@ -120,20 +152,9 @@ class MovementIns extends CComponent {
         return $valid;
     }
 
-//    public function validateDetailsCount() {
-//        $valid = true;
-//        if (count($this->details) === 0) {
-//            $valid = false;
-//            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-//        }
-//
-//        return $valid;
-//    }
-
     public function flush() {
-//        $isNewRecord = $this->header->isNewRecord;
+
         $valid = $this->header->save();
-        //echo "valid";
 
         $movementInDetails = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $this->header->id));
         $detail_id = array();

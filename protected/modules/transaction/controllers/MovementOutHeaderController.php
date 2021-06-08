@@ -55,7 +55,59 @@ class MovementOutHeaderController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    public function actionCreate($transactionId, $movementType) {
+
+        $movementOut = $this->instantiate(null);
+        $movementOut->header->branch_id = $movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementOut->header->branch_id;
+//        $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
+        $this->performAjaxValidation($movementOut->header);
+
+        if ($movementType == 1) {
+            $movementOut->header->delivery_order_id = $transactionId;
+            $movementOut->header->return_order_id = null;
+            $movementOut->header->registration_transaction_id = null;
+            
+        } else if ($movementType == 2) {
+            $movementOut->header->delivery_order_id = null;
+            $movementOut->header->return_order_id = $transactionId;
+            $movementOut->header->registration_transaction_id = null;
+            
+        } else if ($movementType == 3) {
+            $movementOut->header->delivery_order_id = null;
+            $movementOut->header->return_order_id = null;
+            $movementOut->header->registration_transaction_id = $transactionId;
+        } else {
+            $this->redirect(array('admin'));
+        }
+            
+        $movementOut->header->material_request_header_id = null;
+        $movementOut->header->registration_service_id = null;
+        $movementOut->header->movement_type = $movementType;
+        $movementOut->addDetails($transactionId, $movementType);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['MovementOutHeader'])) {
+            $this->loadState($movementOut);
+            $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
+            
+            if ($movementOut->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $movementOut->header->id));
+            }
+        }
+
+        $this->render('create', array(
+            'movementOut' => $movementOut,
+        ));
+    }
+
+    /**
+     * Creates a new model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     */
+    /*public function actionCreate() {
         //$model=new MovementOutHeader;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -96,7 +148,7 @@ class MovementOutHeaderController extends Controller {
             'criteria' => $deliveryOrderDetailCriteria,
         ));
 
-        /* Return Order */
+        // Return Order 
         $returnOrder = new TransactionReturnOrder('search');
         $returnOrder->unsetAttributes();
         
@@ -130,7 +182,7 @@ class MovementOutHeaderController extends Controller {
             'criteria' => $returnOrderDetailCriteria,
         ));
 
-        /* Registration Transaction */
+        // Registration Transaction 
         $movementTransaction = new RegistrationTransaction('search');
         $movementTransaction->unsetAttributes();
         
@@ -162,7 +214,7 @@ class MovementOutHeaderController extends Controller {
             'criteria' => $movementProductCriteria,
         ));
 
-        /* Material Request */
+        // Material Request 
         $materialRequestHeader = Search::bind(new MaterialRequestHeader('search'), isset($_GET['MaterialRequestHeader']) ? $_GET['MaterialRequestHeader'] : array());
         $materialRequestHeaderDataProvider = $materialRequestHeader->searchByMovementOut();
 
@@ -205,7 +257,7 @@ class MovementOutHeaderController extends Controller {
             'materialRequestDetail' => $materialRequestDetail,
             'materialRequestDetailDataProvider' => $materialRequestDetailDataProvider,
         ));
-    }
+    }*/
 
     /**
      * Updates a particular model.
@@ -384,25 +436,13 @@ class MovementOutHeaderController extends Controller {
         
         if (isset($_GET['TransactionDeliveryOrder']))
             $deliveryOrder->attributes = $_GET['TransactionDeliveryOrder'];
-        // $deliveryOrderCriteria = new CDbCriteria;
-        // $deliveryOrderCriteria->together = 'true';
-        // $deliveryOrderCriteria->with = array('senderBranch');
-        // $deliveryOrderCriteria->compare('senderBranch.name',$deliveryOrder->branch_name,true);
-        // $deliveryOrderCriteria->compare('delivery_order_no',$deliveryOrder->delivery_order_no,true);
-        // $deliveryOrderDataProvider = new CActiveDataProvider('TransactionDeliveryOrder',array('criteria'=>$deliveryOrderCriteria));
-
+        
         /* Return Order */
         $returnOrder = new TransactionReturnOrder('search');
         $returnOrder->unsetAttributes();
         if (isset($_GET['TransactionReturnOrder']))
             $returnOrder->attributes = $_GET['TransactionReturnOrder'];
-        // $returnOrderCriteria = new CDbCriteria;
-        // $returnOrderCriteria->together = 'true';
-        // $returnOrderCriteria->with = array('recipientBranch');
-        // $returnOrderCriteria->compare('recipientBranch.name',$returnOrder->branch_name,true);
-        // $returnOrderCriteria->compare('return_order_no',$returnOrder->return_order_no,true);
-        // $returnOrderDataProvider = new CActiveDataProvider('TransactionReturnOrder',array('criteria'=>$returnOrderCriteria));
-
+        
         /* Registration Transaction */
         $movementTransaction = new RegistrationTransaction('search');
         $movementTransaction->unsetAttributes();
@@ -412,7 +452,6 @@ class MovementOutHeaderController extends Controller {
         $movementTransactionCriteria = new CDbCriteria;
         $movementTransactionCriteria->together = 'true';
         $movementTransactionCriteria->with = array('registrationProducts');
-        //$movementTransactionCriteria->compare('branch.name',$movementTransaction->branch_name,true);
         $movementTransactionCriteria->addCondition("total_product != 0");
         $movementTransactionCriteria->compare('transaction_number', $movementTransaction->transaction_number, true);
         $movementTransactionCriteria->compare('transaction_date', $movementTransaction->transaction_date, true);
@@ -421,9 +460,7 @@ class MovementOutHeaderController extends Controller {
         $this->render('admin', array(
             'model' => $model,
             'deliveryOrder' => $deliveryOrder,
-            //'deliveryOrderDataProvider'=>$deliveryOrderDataProvider,
             'returnOrder' => $returnOrder,
-            //'returnOrderDataProvider'=>$returnOrderDataProvider,
             'registrationTransaction' => $movementTransaction,
             'registrationTransactionDataProvider' => $movementTransactionDataProvider,
         ));

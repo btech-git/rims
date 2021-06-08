@@ -31,81 +31,138 @@ class MovementOuts extends CComponent {
         $this->header->setCodeNumberByNext('movement_out_no', $branchCode, MovementOutHeader::CONSTANT, $currentMonth, $currentYear);
     }
 
-    public function addDetail($detailId, $type) {
+//    public function addDetail($detailId, $type) {
+//
+//        if ($type == 1) {
+//            $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByPk($detailId);
+//            
+//            $exist = false;
+//            foreach ($this->details as $i => $detail) {
+//                if ($deliveryOrderDetail->id === $detail->delivery_order_detail_id) {
+//                    $exist = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!$exist) {
+//                $detail = new MovementOutDetail();
+//                $detail->delivery_order_detail_id = $deliveryOrderDetail->id;
+//                $detail->product_id = $deliveryOrderDetail->product_id;
+//                $detail->quantity_transaction = $deliveryOrderDetail->quantity_delivery;
+//                $this->details[] = $detail;
+//            }
+//        } elseif ($type == 2) {
+//            $returnOrderDetail = TransactionReturnOrderDetail::model()->findByPk($detailId);
+//            
+//            $exist = false;
+//            foreach ($this->details as $i => $detail) {
+//                if ($returnOrderDetail->id === $detail->return_order_detail_id) {
+//                    $exist = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!$exist) {
+//                $detail = new MovementOutDetail();
+//                $detail->return_order_detail_id = $returnOrderDetail->id;
+//                $detail->product_id = $returnOrderDetail->product_id;
+//                $detail->quantity_transaction = $returnOrderDetail->qty_reject;
+//                $this->details[] = $detail;
+//            }
+//        } elseif ($type == 3) {
+//            $registrationProduct = RegistrationProduct::model()->findByPk($detailId);
+//            
+//            $exist = false;
+//            foreach ($this->details as $i => $detail) {
+//                if ($registrationProduct->id === $detail->registration_product_id) {
+//                    $exist = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!$exist) {
+//                $detail = new MovementOutDetail();
+//                $detail->registration_product_id = $registrationProduct->id;
+//                $detail->product_id = $registrationProduct->product_id;
+//                $detail->quantity_transaction = $registrationProduct->quantity;
+//                $this->details[] = $detail;
+//            }
+//        } elseif ($type == 4) {
+//            $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detailId);
+//            
+//            $exist = false;
+//            foreach ($this->details as $i => $detail) {
+//                if ($materialRequestDetail->id === $detail->material_request_detail_id) {
+//                    $exist = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!$exist) {
+//                $detail = new MovementOutDetail();
+//                $detail->material_request_detail_id = $detailId;
+//                $detail->product_id = $materialRequestDetail->product_id;
+//                $detail->quantity_transaction = $materialRequestDetail->quantity;
+//                $this->details[] = $detail;
+//            }
+//        }
+//    }
 
-        if ($type == 1) {
-            $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByPk($detailId);
-            
-            $exist = false;
-            foreach ($this->details as $i => $detail) {
-                if ($deliveryOrderDetail->id === $detail->delivery_order_detail_id) {
-                    $exist = true;
-                    break;
+    public function addDetails($transactionId, $movementType) {
+
+        $this->details = array();
+        
+        $detail = new MovementOutDetail();
+        $detail->material_request_detail_id = null;
+        $detail->registration_service_id = null;
+        $detail->quantity_receive = 0;
+        $detail->quantity_receive_left = 0;
+        
+        if ($movementType == 1) {
+            $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
+
+            if ($deliveryOrder !== null) {
+                foreach ($deliveryOrder->transactionDeliveryOrderDetails as $deliveryDetail) {
+
+                    $detail->delivery_order_detail_id = $deliveryDetail->id;
+                    $detail->return_order_detail_id = null;
+                    $detail->registration_product_id = null;
+                    $detail->product_id = $deliveryDetail->product_id;
+                    $detail->quantity_transaction = $deliveryDetail->quantity_movement_left;
+
                 }
             }
+        } else if ($movementType == 2) {
+            $returnOrder = TransactionReturnOrder::model()->findByPk($transactionId);
 
-            if (!$exist) {
-                $detail = new MovementOutDetail();
-                $detail->delivery_order_detail_id = $deliveryOrderDetail->id;
-                $detail->product_id = $deliveryOrderDetail->product_id;
-                $detail->quantity_transaction = $deliveryOrderDetail->quantity_delivery;
-                $this->details[] = $detail;
-            }
-        } elseif ($type == 2) {
-            $returnOrderDetail = TransactionReturnOrderDetail::model()->findByPk($detailId);
-            
-            $exist = false;
-            foreach ($this->details as $i => $detail) {
-                if ($returnOrderDetail->id === $detail->return_order_detail_id) {
-                    $exist = true;
-                    break;
+            if ($returnOrder !== null) {
+                foreach ($returnOrder->transactionReturnOrderDetails as $returnDetail) {
+
+                    $detail->delivery_order_detail_id = null;
+                    $detail->return_order_detail_id = $returnDetail->id;
+                    $detail->registration_product_id = null;
+                    $detail->product_id = $returnDetail->product_id;
+                    $detail->quantity_transaction = $returnDetail->quantity_movement_left;
+
                 }
             }
+        } else if ($movementType == 3) {
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($transactionId);
 
-            if (!$exist) {
-                $detail = new MovementOutDetail();
-                $detail->return_order_detail_id = $returnOrderDetail->id;
-                $detail->product_id = $returnOrderDetail->product_id;
-                $detail->quantity_transaction = $returnOrderDetail->qty_reject;
-                $this->details[] = $detail;
-            }
-        } elseif ($type == 3) {
-            $registrationProduct = RegistrationProduct::model()->findByPk($detailId);
-            
-            $exist = false;
-            foreach ($this->details as $i => $detail) {
-                if ($registrationProduct->id === $detail->registration_product_id) {
-                    $exist = true;
-                    break;
+            if ($registrationTransaction !== null) {
+                foreach ($registrationTransaction->registrationProducts as $registrationDetail) {
+
+                    $detail->delivery_order_detail_id = null;
+                    $detail->return_order_detail_id = null;
+                    $detail->registration_product_id = $registrationDetail->id;
+                    $detail->product_id = $registrationDetail->product_id;
+                    $detail->quantity_transaction = $registrationDetail->quantity_movement_left;
+
                 }
-            }
-
-            if (!$exist) {
-                $detail = new MovementOutDetail();
-                $detail->registration_product_id = $registrationProduct->id;
-                $detail->product_id = $registrationProduct->product_id;
-                $detail->quantity_transaction = $registrationProduct->quantity;
-                $this->details[] = $detail;
-            }
-        } elseif ($type == 4) {
-            $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detailId);
-            
-            $exist = false;
-            foreach ($this->details as $i => $detail) {
-                if ($materialRequestDetail->id === $detail->material_request_detail_id) {
-                    $exist = true;
-                    break;
-                }
-            }
-
-            if (!$exist) {
-                $detail = new MovementOutDetail();
-                $detail->material_request_detail_id = $detailId;
-                $detail->product_id = $materialRequestDetail->product_id;
-                $detail->quantity_transaction = $materialRequestDetail->quantity;
-                $this->details[] = $detail;
             }
         }
+        
+        $this->details[] = $detail;
     }
 
     public function removeDetailAt($index) {

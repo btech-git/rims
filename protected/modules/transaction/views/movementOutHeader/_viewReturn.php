@@ -3,7 +3,7 @@
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'return-order-grid',
-        'dataProvider'=>$returnOrder->search(),
+        'dataProvider'=>$returnOrder->searchByMovementOut(),
         'filter'=>$returnOrder,
         // 'summaryText'=>'',
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -25,6 +25,14 @@
                         echo $movementDetail->movement_out_no. "<br>";
                     }
                 }
+            ),
+            array(
+                'header' => '',
+                'type' => 'raw',
+                'value' => 'CHtml::link("Create", array("create", "transactionId"=>$data->id, "movementType"=>"2"))',
+                'htmlOptions' => array(
+                    'style' => 'text-align: center;'
+                ),
             ),
         ),
     )); ?>

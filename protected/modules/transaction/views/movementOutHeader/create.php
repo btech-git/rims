@@ -3,7 +3,7 @@
 /* @var $model MovementOutHeader */
 
 $this->breadcrumbs = array(
-    'Movement Out Headers' => array('admin'),
+    'Movement Out' => array('admin'),
     'Create',
 );
 
@@ -18,21 +18,21 @@ $this->breadcrumbs = array(
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'movementOut' => $movementOut,
-        'deliveryOrder' => $deliveryOrder,
-        'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
-        'deliveryOrderDetail' => $deliveryOrderDetail,
-        'deliveryOrderDetailDataProvider' => $deliveryOrderDetailDataProvider,
-        'returnOrder' => $returnOrder,
-        'returnOrderDataProvider' => $returnOrderDataProvider,
-        'returnOrderDetail' => $returnOrderDetail,
-        'returnOrderDetailDataProvider' => $returnOrderDetailDataProvider,
-        'registrationTransaction' => $registrationTransaction,
-        'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-        'registrationProduct' => $registrationProduct,
-        'registrationProductDataProvider' => $registrationProductDataProvider,
-        'materialRequestHeader' => $materialRequestHeader,
-        'materialRequestHeaderDataProvider' => $materialRequestHeaderDataProvider,
-        'materialRequestDetail' => $materialRequestDetail,
-        'materialRequestDetailDataProvider' => $materialRequestDetailDataProvider,
+//        'deliveryOrder' => $deliveryOrder,
+//        'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
+//        'deliveryOrderDetail' => $deliveryOrderDetail,
+//        'deliveryOrderDetailDataProvider' => $deliveryOrderDetailDataProvider,
+//        'returnOrder' => $returnOrder,
+//        'returnOrderDataProvider' => $returnOrderDataProvider,
+//        'returnOrderDetail' => $returnOrderDetail,
+//        'returnOrderDetailDataProvider' => $returnOrderDetailDataProvider,
+//        'registrationTransaction' => $registrationTransaction,
+//        'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+//        'registrationProduct' => $registrationProduct,
+//        'registrationProductDataProvider' => $registrationProductDataProvider,
+//        'materialRequestHeader' => $materialRequestHeader,
+//        'materialRequestHeaderDataProvider' => $materialRequestHeaderDataProvider,
+//        'materialRequestDetail' => $materialRequestDetail,
+//        'materialRequestDetailDataProvider' => $materialRequestDetailDataProvider,
     )); ?>
 </div>

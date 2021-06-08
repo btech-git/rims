@@ -104,12 +104,7 @@ class PaymentInController extends Controller {
         $model->vehicle_id = $invoice->vehicle_id;
         $model->payment_time = date('H:i:s');
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
         $model->branch_id = $model->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $model->branch_id;
-//        $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
-
         $images = $model->images = CUploadedFile::getInstances($model, 'images');
 
         if (isset($_POST['Cancel'])) {
@@ -670,5 +665,4 @@ class PaymentInController extends Controller {
             echo CJSON::encode($object);
         }
     }
-
 }
