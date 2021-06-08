@@ -419,7 +419,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $invoiceNumber = '';
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $data->id));
         foreach ($invoices as $key => $invoice) {
-            if ($invoice->status != 'CANCELLED') {
+            if ($invoice->status != 'CANCELLED' && $invoice->status != 'PAID') {
                 $invoiceNumber = $invoice->invoice_number;
             }
         }
@@ -522,13 +522,14 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('t.work_order_number', $this->work_order_number, true);
         $criteria->compare('t.work_order_date', $this->work_order_date, true);
-        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('t.payment_status', $this->payment_status);
         $criteria->compare('note', $this->note, true);
 
         if (!empty($this->transaction_date_from) || !empty($this->transaction_date_to)) {
             $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
         }
-        $criteria->addCondition("t.status <> 'Finished'");
+        
+        $criteria->addCondition("t.status <> 'Finished' AND t.payment_status = 'INVOICING'");
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);
         $criteria->compare('vehicle.plate_number', $this->plate_number, true);

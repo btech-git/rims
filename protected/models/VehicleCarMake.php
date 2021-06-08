@@ -8,6 +8,7 @@
  * @property string $name
  * @property string $status
  * @property integer $service_difficulty_rate
+ * @property integer $is_approved
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -48,10 +49,10 @@ class VehicleCarMake extends CActiveRecord {
             array('name, status, service_difficulty_rate', 'required'),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
-            array('service_difficulty_rate', 'numerical', 'integerOnly' => true),
+            array('service_difficulty_rate, is_approved', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, status, service_difficulty_rate', 'safe', 'on' => 'search'),
+            array('id, name, status, service_difficulty_rate, is_approved', 'safe', 'on' => 'search'),
         );
     }
 
@@ -82,6 +83,7 @@ class VehicleCarMake extends CActiveRecord {
             'name' => 'Name',
             'status' => 'Status',
             'service_difficulty_rate' => 'Service Difficulty Rate',
+            'is_approved' => 'Approval',
         );
     }
 
@@ -104,7 +106,8 @@ class VehicleCarMake extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('t.service_difficulty_rate', $this->service_difficulty_rate);        
+        $criteria->compare('t.service_difficulty_rate', $this->service_difficulty_rate);  
+        $criteria->compare('t.is_approved', $this->is_approved);      
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
 
         return new CActiveDataProvider($this, array(
@@ -131,5 +134,4 @@ class VehicleCarMake extends CActiveRecord {
             default: return '';
         }
     }
-
 }

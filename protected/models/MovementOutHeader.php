@@ -168,4 +168,14 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+
+    public function getMovementType($type) {
+        switch($type) {
+            case 1: return 'Delivery Order';
+            case 2: return 'Return Order';
+            case 3: return 'Retail Sales';
+            case 4: return 'Material Request';
+            default: return '';
+        }
+    }
 }

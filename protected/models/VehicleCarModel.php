@@ -10,6 +10,7 @@
  * @property integer $car_make_id
  * @property integer $service_group_id
  * @property string $status
+ * @property integer $is_approved
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -41,13 +42,13 @@ class VehicleCarModel extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, car_make_id, service_group_id, status', 'required'),
-            array('car_make_id, service_group_id', 'numerical', 'integerOnly' => true),
+            array('car_make_id, service_group_id, is_approved', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 30),
             array('description', 'length', 'max' => 60),
             array('status', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, description, car_make_id, service_group_id, car_make, status', 'safe', 'on' => 'search'),
+            array('id, name, description, car_make_id, service_group_id, car_make, status, is_approved', 'safe', 'on' => 'search'),
         );
     }
 
@@ -81,6 +82,7 @@ class VehicleCarModel extends CActiveRecord {
             'car_make_id' => 'Car Make',
             'service_group_id' => 'Service Group',
             'status' => 'Status',
+            'is_approved' => 'Approval',
         );
     }
 
@@ -106,6 +108,7 @@ class VehicleCarModel extends CActiveRecord {
         $criteria->compare('description', $this->description, true);
         $criteria->compare('t.car_make_id', $this->car_make_id);
         $criteria->compare('t.service_group_id', $this->service_group_id);
+        $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
 
         $criteria->together = 'true';

@@ -151,4 +151,12 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+
+    public function getMovementType($type) {
+        switch($type) {
+            case 1: return 'Receive Item';
+            case 2: return 'Return Item';
+            default: return '';
+        }
+    }
 }
