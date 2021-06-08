@@ -64,7 +64,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 <?php $creditAmount = $forecastRow['credit']; ?>
                                 <?php $saldo += $debitAmount - $creditAmount; ?>
                                 <tr>
-                                    <td><?php echo CHtml::encode($forecastRow['transaction_number']); ?></td>
+                                    <td>
+                                        <?php $transactionNumber = $forecastRow['transaction_number']; ?>
+                                        <?php echo CHtml::link($transactionNumber, array('javascript:;'), array(
+                                            'onclick' => 'window.open("' . CController::createUrl('/report/financialForecast/redirectTransaction', array(
+                                                "codeNumber" => $transactionNumber
+                                            )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
+                                        )); ?> 
+                                    </td>
                                     <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($forecastRow['payment_date_estimate']))); ?></td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $debitAmount); ?></td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $creditAmount); ?></td>

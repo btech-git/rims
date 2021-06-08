@@ -117,7 +117,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
                 </td>
             </tr>
-            <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
+            <?php if ($account->coa_sub_category_id == 28 || $account->coa_sub_category_id == 30 || $account->coa_sub_category_id == 31): ?>
+                <?php $accountCategoryTypeBalance -= $accountCategoryBalance; ?>
+            <?php else: ?>
+                <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
+            <?php endif; ?>
         <?php endforeach; ?>
         
         <tr>
@@ -135,7 +139,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         <?php else: ?>
             <?php $profitLossAmount += $accountCategoryTypeBalance; ?>
         <?php endif; ?>
-        
     <?php endforeach; ?>
     <tr>
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>

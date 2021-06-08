@@ -100,7 +100,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         </tr>
 	<?php $coaSubCategories = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code ASC')); ?> 
         <?php foreach ($coaSubCategories as $accountCategory): ?>
-		<?php $accountCategoryBalance = 0.00; ?>
+            <?php $accountCategoryBalance = 0.00; ?>
             <tr>
                 <td style="padding-left: 25px; font-weight: bold; text-transform: capitalize">
                     <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
@@ -108,14 +108,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </td>
                 <td style="text-align: right; font-weight: bold"></td>
             </tr>
-		<?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
+            <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $account): ?>
 		<?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
 		<?php //if ($accountBalance > 0): ?>
                 <tr>
                     <td style="padding-left: 50px">
                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                        <?php //echo CHtml::encode(CHtml::value($account, 'name')); ?>
                    	<?php echo CHtml::link($account->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
@@ -133,7 +132,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
                 </td>
             </tr>
-		<?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
+            <?php if ($account->coa_sub_category_id == 28 || $account->coa_sub_category_id == 30 || $account->coa_sub_category_id == 31): ?>
+                <?php $accountCategoryTypeBalance -= $accountCategoryBalance; ?>
+            <?php else: ?>
+                <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
+            <?php endif; ?>
         <?php endforeach; ?>
         <tr>
             <td>&nbsp;</td>
@@ -157,7 +160,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     <?php endforeach; ?>
     <tr>
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
-
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">
             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossAmount)); ?>
         </td>
