@@ -26,9 +26,9 @@ Yii::app()->clientScript->registerScript('report', '
         
         <fieldset>
             <legend>List Data Master</legend>
-            <div class="myForm" id="myForm">
+<!--            <div class="myForm" id="myForm">
 
-                <?php echo CHtml::beginForm(array(''), 'get'); ?>
+                <?php /*echo CHtml::beginForm(array(''), 'get'); ?>
                 <div class="row">
                     <div class="medium-6 columns">
                         <div class="field">
@@ -67,8 +67,8 @@ Yii::app()->clientScript->registerScript('report', '
                 </div>
                 
                 <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                <?php echo CHtml::endForm(); ?>
-            </div>
+                <?php echo CHtml::endForm();*/ ?>
+            </div>-->
             
             <br />
 
@@ -93,12 +93,12 @@ Yii::app()->clientScript->registerScript('report', '
                                 'serviceDataProvider' => $serviceDataProvider,
                             ), true)
                         ),
-//                        'Customer' => array(
-//                            'content' => $this->renderPartial('_viewCustomer', array(
-//                                'customer' => $customer,
-//                                'customerDataProvider' => $customerDataProvider,
-//                            ), true)
-//                        ),
+                        'Customer' => array(
+                            'content' => $this->renderPartial('_viewCustomer', array(
+                                'customer' => $customer,
+                                'customerDataProvider' => $customerDataProvider,
+                            ), true)
+                        ),
                         'Supplier' => array(
                             'content' => $this->renderPartial('_viewSupplier', array(
                                 'supplier' => $supplier,
@@ -109,6 +109,24 @@ Yii::app()->clientScript->registerScript('report', '
                             'content' => $this->renderPartial('_viewWarehouse', array(
                                 'warehouse' => $warehouse,
                                 'warehouseDataProvider' => $warehouseDataProvider,
+                            ), true)
+                        ),
+                        'Car Make' => array(
+                            'content' => $this->renderPartial('_viewCarMake', array(
+                                'carMake' => $carMake,
+                                'carMakeDataProvider' => $carMakeDataProvider,
+                            ), true)
+                        ),
+                        'Car Model' => array(
+                            'content' => $this->renderPartial('_viewCarModel', array(
+                                'carModel' => $carModel,
+                                'carModelDataProvider' => $carModelDataProvider,
+                            ), true)
+                        ),
+                        'Car Sub Model' => array(
+                            'content' => $this->renderPartial('_viewCarSubModel', array(
+                                'carSubModel' => $carSubModel,
+                                'carSubModelDataProvider' => $carSubModelDataProvider,
                             ), true)
                         ),
                     ),

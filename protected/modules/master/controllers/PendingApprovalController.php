@@ -60,6 +60,18 @@ class PendingApprovalController extends Controller {
         $warehouseDataProvider = $warehouse->search();
         $warehouseDataProvider->criteria->addCondition('t.is_approved = 0');
 
+        $carMake = Search::bind(new VehicleCarMake('search'), isset($_GET['VehicleCarMake']) ? $_GET['VehicleCarMake'] : '');
+        $carMakeDataProvider = $carMake->search();
+        $carMakeDataProvider->criteria->addCondition('t.is_approved = 0');
+
+        $carModel = Search::bind(new VehicleCarModel('search'), isset($_GET['VehicleCarModel']) ? $_GET['VehicleCarModel'] : '');
+        $carModelDataProvider = $carModel->search();
+        $carModelDataProvider->criteria->addCondition('t.is_approved = 0');
+
+        $carSubModel = Search::bind(new VehicleCarSubModel('search'), isset($_GET['VehicleCarSubModel']) ? $_GET['VehicleCarSubModel'] : '');
+        $carSubModelDataProvider = $carSubModel->search();
+        $carSubModelDataProvider->criteria->addCondition('t.is_approved = 0');
+
         $this->render('index', array(
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_sampai' => $tanggal_sampai,
@@ -75,6 +87,12 @@ class PendingApprovalController extends Controller {
             'serviceDataProvider' => $serviceDataProvider,
             'warehouse' => $warehouse,
             'warehouseDataProvider' => $warehouseDataProvider,
+            'carMake' => $carMake,
+            'carMakeDataProvider' => $carMakeDataProvider,
+            'carModel' => $carModel,
+            'carModelDataProvider' => $carModelDataProvider,
+            'carSubModel' => $carSubModel,
+            'carSubModelDataProvider' => $carSubModelDataProvider,
         ));
     }
 }
