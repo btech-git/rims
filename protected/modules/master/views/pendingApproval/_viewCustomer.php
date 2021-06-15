@@ -9,7 +9,7 @@
     ),
     //'summaryText'=>'',
     'columns'=>array(
-        array('name'=>'name', 'value'=>'CHTml::link($data->name, array("view", "id"=>$data->id))', 'type'=>'raw'),
+        array('name'=>'name', 'value'=>'CHTml::link($data->name, array("/master/customer/view", "id"=>$data->id))', 'type'=>'raw'),
         array('header'=>'Province Name','name'=>'province_name', 'value'=>'$data->province->name'),
         array('header'=>'City Name','name'=>'city_name', 'value'=>'$data->city->name'),
         'email',

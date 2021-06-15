@@ -19,6 +19,12 @@
             ),
             'return_order_date',
             array(
+                'name'=>'supplier_id', 
+                'filter' => CHtml::activeTextField($returnOrder, 'supplier_name'), 
+                'value'=>'empty($data->supplier_id) ? "" : $data->supplier->name', 
+                'type'=>'raw'
+            ),
+            array(
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementOutHeaders as $key => $movementDetail) {

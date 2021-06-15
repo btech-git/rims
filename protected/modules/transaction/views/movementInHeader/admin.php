@@ -3,7 +3,7 @@
 /* @var $model MovementInHeader */
 
 $this->breadcrumbs = array(
-    'Movement In Headers' => array('admin'),
+    'Movement In' => array('admin'),
     'Manage',
 );
 
@@ -37,9 +37,8 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Movement In', Yii::app()->baseUrl . '/transaction/movementInHeader/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.create"))) ?>
-
-                <h2>Manage Movement In Headers</h2>
+                <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Movement In', Yii::app()->baseUrl . '/transaction/movementInHeader/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.create"))) ?>
+                <h2>Manage Movement In</h2>
             </div>
 
             <div class="search-bar">

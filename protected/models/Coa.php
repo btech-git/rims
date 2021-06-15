@@ -441,17 +441,25 @@ class Coa extends CActiveRecord {
     
     public function getFinancialForecastReport($datePrevious) {
         
-        $sql = "SELECT payment_date_estimate, coa_bank_id_estimate, SUM(debit) AS total_debit, SUM(credit) AS total_credit
+        $sql = "SELECT transaction_date, coa_id, SUM(receivable_debit) AS total_receivable_debit, SUM(payable_credit) AS total_payable_credit, SUM(journal_debit) AS total_journal_debit, SUM(journal_credit) AS total_journal_credit
                 FROM (
-                    SELECT invoice_number AS transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, total_price AS debit, 0 AS credit, payment_left AS remaining
+                    SELECT invoice_number AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, branch_id, total_price AS receivable_debit, 0 AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, payment_left AS remaining
                     FROM " . InvoiceHeader::model()->tableName() . "
                     UNION
-                    SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit, payment_left AS remaining
+                    SELECT purchase_order_no AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, main_branch_id AS branch_id, 0 AS receivable_debit, total_price AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, payment_left AS remaining
                     FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                    UNION
+                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 0 AS payable_credit, total AS journal_debit, 0 AS journal_credit, 1 AS remaining
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE debet_kredit = 'D'
+                    UNION
+                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 0 AS payable_credit, 0 AS journal_debit, total AS journal_credit, 1 AS remaining
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE debet_kredit = 'K'
                 ) transaction
-                WHERE remaining > 0 AND payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
-                GROUP BY payment_date_estimate
-                ORDER BY payment_date_estimate ASC";
+                WHERE remaining > 0 AND transaction_date BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate
+                GROUP BY transaction_date
+                ORDER BY transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':date_now' => date('Y-m-d'),

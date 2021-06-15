@@ -28,8 +28,7 @@ $this->menu = array(
         <?php endif; ?>
 
         <?php if ($model->status != 'Finished'): ?>
-            <?php
-            echo CHtml::button('Update Delivered', array(
+            <?php echo CHtml::button('Update Delivered', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',
                 'class' => 'button cbutton right',
@@ -46,30 +45,10 @@ $this->menu = array(
                         location.reload();
                     },})
                 '
-            ));
-            ?>
-        <?php endif ?>
+            )); ?>
+        <?php endif; ?>
 
-        <?php /* echo CHtml::button('Update Received', array(
-          'id' => 'detail-button',
-          'name' => 'Detail',
-          'class'=>'button cbutton right',
-          'style'=>'margin-right:10px',
-          'disabled'=>$model->status == 'Delivered' ? false : true,
-          'onclick' => '
-          $.ajax({
-          type: "POST",
-          //dataType: "JSON",
-          url: "' . CController::createUrl('updateReceived', array('id'=> $model->id)) . '",
-          data: $("form").serialize(),
-          success: function(html) {
-
-          alert("Status Succesfully Updated");
-          location.reload();
-          },})
-          '
-          )); */ ?>
-        <br>
+        <br />
         <h1>View Movement Out Header #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(

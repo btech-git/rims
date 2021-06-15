@@ -19,6 +19,22 @@
             ),
             'delivery_date',
             array(
+                'name'=>'customer_id', 
+                'filter' => CHtml::activeTextField($deliveryOrder, 'customer_name'), 
+                'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
+                'type'=>'raw'
+            ),
+            array(
+                'name' => 'request_type',
+                'filter' => CHtml::activeDropDownList($deliveryOrder, 'request_type', array(
+                    'Sales Order' => 'Sales Order',
+                    'Sent Request' => 'Sent Request', 
+                    'Consignment Out' => 'Consignment Out', 
+                    'Transfer Request' => 'Transfer Request',
+                ), array('empty' => '-- All --')),
+                'value' => '$data->request_type'
+            ),
+            array(
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementOutHeaders as $key => $movementDetail) {

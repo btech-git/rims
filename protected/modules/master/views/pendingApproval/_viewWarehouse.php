@@ -12,7 +12,7 @@
         'code',
         array(
             'name'=>'name', 
-            'value'=>'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+            'value'=>'CHTml::link($data->name, array("/master/warehouse/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
         'description',

@@ -79,64 +79,66 @@
                 </div>
             </div>
             <div class="small-12 medium-6 columns">
-                <div id="deliveryOrder">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($movementOut->header, 'delivery_order_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->hiddenField($movementOut->header, 'delivery_order_id'); ?>
-                                <?php echo $form->textField($movementOut->header, 'delivery_order_number', array(
-                                    'value' => $movementOut->header->delivery_order_id == "" ? "" : TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id)->delivery_order_no,
-                                    'readonly' => true,
-                                )); ?>
-                                <?php echo $form->error($movementOut->header, 'delivery_order_id'); ?>
+                <?php if ((int) $movementOut->header->movement_type == 1): ?>
+                    <div id="deliveryOrder">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <?php echo $form->labelEx($movementOut->header, 'delivery_order_id', array('class' => 'prefix')); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo $form->hiddenField($movementOut->header, 'delivery_order_id'); ?>
+                                    <?php echo $form->textField($movementOut->header, 'delivery_order_number', array(
+                                        'value' => $movementOut->header->delivery_order_id == "" ? "" : TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id)->delivery_order_no,
+                                        'readonly' => true,
+                                    )); ?>
+                                    <?php echo $form->error($movementOut->header, 'delivery_order_id'); ?>
+                                </div>
                             </div>
                         </div>
-                    </div>			
 
-                    <?php
-                    $type = $requestNumber = "";
-                    $delivery = TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id);
-                    if (!empty($delivery)) {
-                        if ($delivery->request_type == "Sales Order") {
-                            $type = "Sales Order";
-                            $requestNumber = $delivery->salesOrder->sale_order_no;
-                        } elseif ($delivery->request_type == "Sent Request") {
-                            $type = "Sent Request";
-                            $requestNumber = $delivery->sentRequest->sent_request_no;
-                        } elseif ($delivery->request_type == "Consignment Out") {
-                            $type = "Consignment out";
-                            $requestNumber = $delivery->consignmentOut->consignment_out_no;
-                        } elseif ($delivery->request_type == "Transfer Request") {
-                            $type = "Transfer Request";
-                            $requestNumber = $delivery->transferRequest->transfer_request_no;
+                        <?php
+                        $type = $requestNumber = "";
+                        $delivery = TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id);
+                        if (!empty($delivery)) {
+                            if ($delivery->request_type == "Sales Order") {
+                                $type = "Sales Order";
+                                $requestNumber = $delivery->salesOrder->sale_order_no;
+                            } elseif ($delivery->request_type == "Sent Request") {
+                                $type = "Sent Request";
+                                $requestNumber = $delivery->sentRequest->sent_request_no;
+                            } elseif ($delivery->request_type == "Consignment Out") {
+                                $type = "Consignment out";
+                                $requestNumber = $delivery->consignmentOut->consignment_out_no;
+                            } elseif ($delivery->request_type == "Transfer Request") {
+                                $type = "Transfer Request";
+                                $requestNumber = $delivery->transferRequest->transfer_request_no;
+                            }
                         }
-                    }
-                    ?>
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label>Reference Type</label>
-                            </div>
-                            <div class="small-8 columns">
-                                <input id="MovementOutHeader_reference_type" readonly="readonly" name="MovementOutHeader[reference_type]" type="text" value="<?php echo $movementOut->header->delivery_order_id == "" ? "" : $type; ?>">
+                        ?>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label>Reference Type</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input id="MovementOutHeader_reference_type" readonly="readonly" name="MovementOutHeader[reference_type]" type="text" value="<?php echo $movementOut->header->delivery_order_id == "" ? "" : $type; ?>">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label>Reference #</label>
-                            </div>
-                            <div class="small-8 columns">
-                                <input id="MovementOutHeader_reference_number" readonly="readonly" name="MovementOutHeader[reference_number]" type="text" value="<?php echo $movementOut->header->delivery_order_id == "" ? "" : $requestNumber; ?>">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label>Reference #</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input id="MovementOutHeader_reference_number" readonly="readonly" name="MovementOutHeader[reference_number]" type="text" value="<?php echo $movementOut->header->delivery_order_id == "" ? "" : $requestNumber; ?>">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div> <!-- End div Delivery Order -->
+                    </div> <!-- End div Delivery Order -->
+                <?php elseif ((int) $movementOut->header->movement_type == 2): ?>
 
                 <div id="returnOrder">
                     <div class="field">
@@ -155,43 +157,44 @@
                         </div>
                     </div>
                 </div> <!-- end of DIV ReturnOrder -->
-
-                <div id="retailSales">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($movementOut->header, 'registration_transaction_id', array('class' => 'prefix')); ?>
+                <?php elseif ((int) $movementOut->header->movement_type == 3): ?>
+                    <div id="retailSales">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <?php echo $form->labelEx($movementOut->header, 'Retail Sales #', array('class' => 'prefix')); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo $form->hiddenField($movementOut->header, 'registration_transaction_id'); ?>
+                                    <?php echo $form->textField($movementOut->header, 'transaction_number', array(
+                                        'value' => $movementOut->header->registration_transaction_id == "" ? "" : RegistrationTransaction::model()->findByPk($movementOut->header->registration_transaction_id)->transaction_number,
+                                        'readonly' => true,
+                                    )); ?>
+                                    <?php echo $form->error($movementOut->header, 'registration_transaction_id'); ?>
+                                </div>
                             </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->hiddenField($movementOut->header, 'registration_transaction_id'); ?>
-                                <?php echo $form->textField($movementOut->header, 'transaction_number', array(
-                                    'value' => $movementOut->header->registration_transaction_id == "" ? "" : RegistrationTransaction::model()->findByPk($movementOut->header->registration_transaction_id)->transaction_number,
-                                    'readonly' => true,
-                                )); ?>
-                                <?php echo $form->error($movementOut->header, 'registration_transaction_id'); ?>
+                        </div>
+                    </div> <!-- end of Div RetailSales -->
+                <?php else: ?>
+                    <div id="materialRequest">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <?php echo $form->labelEx($movementOut->header, 'material_request_header_id', array('class' => 'prefix')); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo $form->hiddenField($movementOut->header, 'material_request_header_id'); ?>
+                                    <?php echo $form->textField($movementOut->header, 'material_request_number', array(
+                                        'value' => $movementOut->header->material_request_header_id == "" ? "" : MaterialRequestHeader::model()->findByPk($movementOut->header->material_request_header_id)->transaction_number,
+                                        'readonly' => true,
+                                    )); ?>
+                                    <?php echo $form->error($movementOut->header, 'material_request_header_id'); ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div> <!-- end of Div RetailSales -->
-
-                <div id="materialRequest">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($movementOut->header, 'material_request_header_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->hiddenField($movementOut->header, 'material_request_header_id'); ?>
-                                <?php echo $form->textField($movementOut->header, 'material_request_number', array(
-                                    'value' => $movementOut->header->material_request_header_id == "" ? "" : MaterialRequestHeader::model()->findByPk($movementOut->header->material_request_header_id)->transaction_number,
-                                    'readonly' => true,
-                                )); ?>
-                                <?php echo $form->error($movementOut->header, 'material_request_header_id'); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+                <?php endif; ?>
+                    
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -266,69 +269,69 @@
     // if ()
     // console.log(sum + ' ' + thisted);
     });
-    if ($("#MovementOutHeader_movement_type").val() == "1") {
-        $("#deliveryOrder").show();
-        $("#returnOrder").hide();
-        $("#retailSales").hide();
-        $("#materialRequest").hide();
-    } else if ($("#MovementOutHeader_movement_type").val() == "2") {
-        $("#deliveryOrder").hide();
-        $("#returnOrder").show();
-        $("#retailSales").hide();
-        $("#materialRequest").hide();
-    } else if ($("#MovementOutHeader_movement_type").val() == "3") {
-        $("#deliveryOrder").hide();
-        $("#returnOrder").hide();
-        $("#retailSales").show();
-        $("#materialRequest").hide();
-    } else if ($("#MovementOutHeader_movement_type").val() == "4") {
-        $("#deliveryOrder").hide();
-        $("#returnOrder").hide();
-        $("#retailSales").hide();
-        $("#materialRequest").show();
-    } else {
-        $("#deliveryOrder").hide();
-        $("#returnOrder").hide();
-        $("#retailSales").hide();
-        $("#materialRequest").hide();
-    }
-    $("#MovementOutHeader_movement_type").change(function() {
-    //ClearFields();
-        $("#MovementOutHeader_delivery_order_id").val("");
-        $("#MovementOutHeader_delivery_order_number").val("");
-        $("#MovementOutHeader_reference_type").val("");
-        $("#MovementOutHeader_reference_number").val("");
-        $("#MovementOutHeader_return_order_id").val("");
-        $("#MovementOutHeader_return_order_number").val("");
-        $("#MovementOutHeader_registration_transaction_id").val("");
-        $("#MovementOutHeader_transaction_number").val("");
-        $("#MovementOutHeader_material_request_id").val("");
-        
-        if ($("#MovementOutHeader_movement_type").val() == "1") {
-            $("#deliveryOrder").show();
-            $("#returnOrder").hide();
-            $("#retailSales").hide();
-            $("#materialRequest").hide();
-        } else if ($("#MovementOutHeader_movement_type").val() == "2") {
-            $("#deliveryOrder").hide();
-            $("#returnOrder").show();
-            $("#retailSales").hide();
-            $("#materialRequest").hide();
-        } else if ($("#MovementOutHeader_movement_type").val() == "3") {
-            $("#deliveryOrder").hide();
-            $("#returnOrder").hide();
-            $("#retailSales").show();
-            $("#materialRequest").hide();
-        } else if ($("#MovementOutHeader_movement_type").val() == "4") {
-            $("#deliveryOrder").hide();
-            $("#returnOrder").hide();
-            $("#retailSales").hide();
-            $("#materialRequest").show();
-        } else {
-            $("#deliveryOrder").hide();
-            $("#returnOrder").hide();
-            $("#retailSales").hide();
-            $("#materialRequest").hide();
-        }
-    });
+//    if ($("#MovementOutHeader_movement_type").val() == "1") {
+//        $("#deliveryOrder").show();
+//        $("#returnOrder").hide();
+//        $("#retailSales").hide();
+//        $("#materialRequest").hide();
+//    } else if ($("#MovementOutHeader_movement_type").val() == "2") {
+//        $("#deliveryOrder").hide();
+//        $("#returnOrder").show();
+//        $("#retailSales").hide();
+//        $("#materialRequest").hide();
+//    } else if ($("#MovementOutHeader_movement_type").val() == "3") {
+//        $("#deliveryOrder").hide();
+//        $("#returnOrder").hide();
+//        $("#retailSales").show();
+//        $("#materialRequest").hide();
+//    } else if ($("#MovementOutHeader_movement_type").val() == "4") {
+//        $("#deliveryOrder").hide();
+//        $("#returnOrder").hide();
+//        $("#retailSales").hide();
+//        $("#materialRequest").show();
+//    } else {
+//        $("#deliveryOrder").hide();
+//        $("#returnOrder").hide();
+//        $("#retailSales").hide();
+//        $("#materialRequest").hide();
+//    }
+//    $("#MovementOutHeader_movement_type").change(function() {
+//    //ClearFields();
+//        $("#MovementOutHeader_delivery_order_id").val("");
+//        $("#MovementOutHeader_delivery_order_number").val("");
+//        $("#MovementOutHeader_reference_type").val("");
+//        $("#MovementOutHeader_reference_number").val("");
+//        $("#MovementOutHeader_return_order_id").val("");
+//        $("#MovementOutHeader_return_order_number").val("");
+//        $("#MovementOutHeader_registration_transaction_id").val("");
+//        $("#MovementOutHeader_transaction_number").val("");
+//        $("#MovementOutHeader_material_request_id").val("");
+//        
+//        if ($("#MovementOutHeader_movement_type").val() == "1") {
+//            $("#deliveryOrder").show();
+//            $("#returnOrder").hide();
+//            $("#retailSales").hide();
+//            $("#materialRequest").hide();
+//        } else if ($("#MovementOutHeader_movement_type").val() == "2") {
+//            $("#deliveryOrder").hide();
+//            $("#returnOrder").show();
+//            $("#retailSales").hide();
+//            $("#materialRequest").hide();
+//        } else if ($("#MovementOutHeader_movement_type").val() == "3") {
+//            $("#deliveryOrder").hide();
+//            $("#returnOrder").hide();
+//            $("#retailSales").show();
+//            $("#materialRequest").hide();
+//        } else if ($("#MovementOutHeader_movement_type").val() == "4") {
+//            $("#deliveryOrder").hide();
+//            $("#returnOrder").hide();
+//            $("#retailSales").hide();
+//            $("#materialRequest").show();
+//        } else {
+//            $("#deliveryOrder").hide();
+//            $("#returnOrder").hide();
+//            $("#retailSales").hide();
+//            $("#materialRequest").hide();
+//        }
+//    });
 </script>

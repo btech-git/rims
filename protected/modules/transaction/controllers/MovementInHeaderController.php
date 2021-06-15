@@ -598,22 +598,25 @@ class MovementInHeaderController extends Controller {
     //                $jurnalUmumMasterGroupInventory->save();
 
                     $value = $jumlah;
-                    $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'K';
-                    $journalReferences[$coaId]['is_coa_category'] = 1;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'K';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 1;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
+                    $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
+                    $journalReferences[$coaMasterTransitId]['values'][] = $value;
+                    
+                    $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
+                    $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
+                    $journalReferences[$coaSubTransitId]['values'][] = $value;
+                    
+                    $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+                    $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
+                    $journalReferences[$coaMasterInventoryId]['values'][] = $value;
+                    
+                    $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                    $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaSubInventoryId]['is_coa_category'] = 0;
+                    $journalReferences[$coaSubInventoryId]['values'][] = $value;
                     
                     //save product master category coa inventory in transit
 //                    $coaMasterInventory = Coa::model()->findByPk($movementDetail->product->productMasterCategory->coaInventoryInTransit->id);
@@ -700,8 +703,8 @@ class MovementInHeaderController extends Controller {
                 }
             }
 
-            $movement->status = "Finished";
-            $movement->save(false);
+            $movementIn->header->status = "Finished";
+            $movementIn->header->save(false);
 
             foreach ($journalReferences as $coaId => $journalReference) {
                 $jurnalUmumPersediaan = new JurnalUmum();
@@ -717,7 +720,6 @@ class MovementInHeaderController extends Controller {
                 $jurnalUmumPersediaan->transaction_type = $transactionType;
                 $jurnalUmumPersediaan->save();
             }
-
         }
     }
 }

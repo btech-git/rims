@@ -22,6 +22,20 @@
                 'value'=>'$data->transaction_date'
             ),
             array(
+                'name' => 'repair_type',
+                'filter' => CHtml::activeDropDownList($registrationTransaction, 'repair_type', array(
+                    'BR' => 'Body Repair',
+                    'GR' => 'General Repair', 
+                ), array('empty' => '-- All --')),
+                'value' => '$data->repair_type',
+            ),
+            array(
+                'name'=>'customer_id', 
+                'filter' => CHtml::activeTextField($registrationTransaction, 'customer_name'), 
+                'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
+                'type'=>'raw'
+            ),
+            array(
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementOutHeaders as $key => $movementDetail) {

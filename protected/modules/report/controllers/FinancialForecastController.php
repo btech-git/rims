@@ -25,7 +25,7 @@ class FinancialForecastController extends Controller {
         $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
         $numberOfPeriod = (isset($_GET['NumberOfPeriod'])) ? $_GET['NumberOfPeriod'] : '1';
         
-        $companyBanks = CompanyBank::model()->findAllByAttributes(array('company_id' => $companyId));
+        $companyBanks = CompanyBank::model()->findAllByAttributes(array('company_id' => '2'));
 
         $payableTransaction = Search::bind(new TransactionPurchaseOrder(), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $payableTransactionDataProvider = $payableTransaction->search();
@@ -47,9 +47,27 @@ class FinancialForecastController extends Controller {
         $dateNow = date('Y-m-d');
         $datePrevious = date('Y-m-d', strtotime($dateNow . ' -' . $numberOfDays . ' days'));
         
+        if (isset($_POST['Approve'])) {
+            list($coaId, $transactionDate, $debitReceivableAmount, $debitJournalAmount, $creditPayableAmount, $creditJournalAmount, $saldo) = explode('|', $_POST['Approve']);
+        
+            $financialForecastApproval = new FinancialForecastApproval();
+            $financialForecastApproval->date_transaction = $transactionDate;
+            $financialForecastApproval->debit_receivable = $debitReceivableAmount;
+            $financialForecastApproval->debit_journal = $debitJournalAmount;
+            $financialForecastApproval->credit_payable = $creditPayableAmount;
+            $financialForecastApproval->credit_journal = $creditJournalAmount;
+            $financialForecastApproval->total_amount = $saldo;
+            $financialForecastApproval->coa_id = $coaId;
+            $financialForecastApproval->date_approval = date('Y-m-d');
+            $financialForecastApproval->time_approval = date('H:i:s');
+            $financialForecastApproval->user_id_approval = Yii::app()->user->id;
+            $valid = $financialForecastApproval->save();
+        }
+        
         $this->render('summary', array(
             'companyBanks' => $companyBanks,
             'companyId' => $companyId,
+            'dateNow' => $dateNow,
             'datePrevious' => $datePrevious,
             'numberOfPeriod' => $numberOfPeriod,
             'payableTransaction' => $payableTransaction,

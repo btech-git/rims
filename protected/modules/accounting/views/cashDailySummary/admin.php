@@ -21,12 +21,12 @@
     <div class="medium-12 columns">
         <div class="field">
             <div class="row collapse">
-                <div class="small-4 columns">
-                    <span class="prefix">Periode </span>
+                <div class="small-2 columns">
+                    <span class="prefix">Periode</span>
                 </div>
                 
-                <div class="small-4 columns">
-                    <?php echo CHtml::dropDownList('Month', $month, array(
+                <div class="small-2 columns">
+                    <?php echo CHtml::dropDownList('MonthStart', $monthStart, array(
                         '01' => 'Jan',
                         '02' => 'Feb',
                         '03' => 'Mar',
@@ -42,9 +42,33 @@
                     )); ?>
                 </div>
                 
-                <div class="small-4 columns">
-                    <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
-
+                <div class="small-2 columns">
+                    <?php echo CHtml::dropDownList('YearStart', $yearStart, $yearList); ?>
+                </div>
+                
+                <div class="small-2 columns">
+                    <span class="prefix">Sampai</span>
+                </div>
+                
+                <div class="small-2 columns">
+                    <?php echo CHtml::dropDownList('MonthEnd', $monthEnd, array(
+                        '01' => 'Jan',
+                        '02' => 'Feb',
+                        '03' => 'Mar',
+                        '04' => 'Apr',
+                        '05' => 'May',
+                        '06' => 'Jun',
+                        '07' => 'Jul',
+                        '08' => 'Aug',
+                        '09' => 'Sep',
+                        '10' => 'Oct',
+                        '11' => 'Nov',
+                        '12' => 'Dec',
+                    )); ?>
+                </div>
+                
+                <div class="small-2 columns">
+                    <?php echo CHtml::dropDownList('YearEnd', $yearEnd, $yearList); ?>
                 </div>
             </div>
         </div>
@@ -63,22 +87,33 @@
             <tr>
                 <th>Tanggal Transaksi</th>
                 <th>Hari Transaksi</th>
-                <th>Amount</th>
                 <th>Approved By</th>
                 <th>Tanggal Approval</th>
+                <th>Amount</th>
             </tr>
         </thead>
+        
         <tbody>
+            <?php $total = 0; ?>
             <?php foreach ($approvals as $approval): ?>
+                <?php $amount = CHtml::value($approval, 'amount'); ?>
                 <tr>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'transaction_date')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'transaction_day_of_week')); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($approval, 'amount'))); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'username')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'approval_date')); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amount)); ?></td>
                 </tr>
+                <?php $total += $amount; ?>
             <?php endforeach; ?>
         </tbody>
+        
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $total)); ?></td>
+            </tr>
+        </tfoot>
     </table>
 </div>
 

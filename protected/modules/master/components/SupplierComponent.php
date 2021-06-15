@@ -105,7 +105,7 @@ class SupplierComponent extends CComponent {
             $coaHutang->date = date('Y-m-d');
             $coaHutang->save();
             
-            $coaGroupOutstandingOrder = Coa::model()->findByAttributes(array('code' => '202.00.000'));
+            $coaGroupOutstandingOrder = Coa::model()->findByAttributes(array('code' => '136.00.000'));
             $coaOutstandingOrder = new Coa;
             $coaOutstandingOrder->getCodeNumber($coaGroupOutstandingOrder->coa_sub_category_id);
             $coaOutstandingOrder->name = 'Outstanding Order - ' . $this->header->company;

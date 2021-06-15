@@ -122,8 +122,11 @@
                             <?php echo $form->labelEx($receiveItem->header, 'request_type', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownlist($receiveItem->header, 'request_type', array('Purchase Order' => 'Purchase Order',
-                                'Internal Delivery Order' => 'Internal Delivery Order', 'Consignment In' => 'Consignment In'), array('prompt' => '[--Select Request Type--]',
+                            <?php echo $form->dropDownlist($receiveItem->header, 'request_type', array(
+                                'Purchase Order' => 'Purchase Order',
+                                'Internal Delivery Order' => 'Internal Delivery Order', 
+                                'Consignment In' => 'Consignment In'
+                            ), array('prompt' => '[--Select Request Type--]',
                                     //	'onchange' =>'//alert($(this).val());
                                     //   var selection = $(this).val();
                                     //   if(selection == "Purchase Order"){

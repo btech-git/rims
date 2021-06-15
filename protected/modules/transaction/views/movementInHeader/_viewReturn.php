@@ -20,6 +20,12 @@
             ),
             'return_item_date',
             array(
+                'name'=>'customer_id', 
+                'filter' => CHtml::activeTextField($returnItem, 'customer_name'), 
+                'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
+                'type'=>'raw'
+            ),
+            array(
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementInHeaders as $key => $movementDetail) {

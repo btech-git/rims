@@ -12,7 +12,7 @@
         'carModel.name',
         array(
             'name'=>'name', 
-            'value'=>'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+            'value'=>'CHTml::link($data->name, array("/master/vehicleCarSubModel/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
     ),

@@ -273,10 +273,12 @@ class CashDailySummaryController extends Controller {
         $currentMonth = date('m');
         $currentYear = date('Y');
         
-        $month = isset($_GET['Month']) ? $_GET['Month'] : $currentMonth;
-        $year = isset($_GET['Year']) ? $_GET['Year'] : $currentYear;
+        $monthStart = isset($_GET['MonthStart']) ? $_GET['MonthStart'] : $currentMonth;
+        $monthEnd = isset($_GET['MonthEnd']) ? $_GET['MonthEnd'] : $currentMonth;
+        $yearStart = isset($_GET['YearStart']) ? $_GET['YearStart'] : $currentYear;
+        $yearEnd = isset($_GET['YearEnd']) ? $_GET['YearEnd'] : $currentYear;
         
-        $approvalList = $model->getApprovalList($month, $year);
+        $approvalList = $model->getApprovalList($monthStart, $yearStart, $monthEnd, $yearEnd);
         
         $approvalsRefs = array();
         foreach ($approvalList as $approval) {
@@ -286,11 +288,11 @@ class CashDailySummaryController extends Controller {
             $approvalsRefs[$approval['transaction_date']][2] = $approval['amount'];
         }
         
-        $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthStart, $yearStart);
         
         $approvals = array();
         for ($d = 0; $d < $numberOfDaysInMonth; $d++) {
-            $currentDate = sprintf('%04d-%02d-%02d', $year, $month, $d + 1);
+            $currentDate = sprintf('%04d-%02d-%02d', $yearStart, $monthStart, $d + 1);
             $approvals[$d] = array();
             $approvals[$d]['transaction_date'] = $currentDate;
             $approvals[$d]['transaction_day_of_week'] = date('l', strtotime($currentDate));
@@ -306,8 +308,10 @@ class CashDailySummaryController extends Controller {
         
         $this->render('admin', array(
             'approvals' => $approvals,
-            'month' => $month,
-            'year' => $year,
+            'monthStart' => $monthStart,
+            'monthEnd' => $monthEnd,
+            'yearStart' => $yearStart,
+            'yearEnd' => $yearEnd,
             'yearList' => $yearList,
         ));
     }

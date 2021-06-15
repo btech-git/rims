@@ -9,7 +9,7 @@
     ),
     //'summaryText'=>'',
     'columns'=>array(
-        array('name' => 'name', 'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 'type' => 'raw'),
+        array('name' => 'name', 'value' => 'CHTml::link($data->name, array("/master/supplier/view", "id"=>$data->id))', 'type' => 'raw'),
         'date',
         'code',
         'company',

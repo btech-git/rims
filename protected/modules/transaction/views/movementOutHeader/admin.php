@@ -36,8 +36,8 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.create"))) ?>
-                <h2>Manage Movement Out Headers</h2>
+                <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.create"))) ?>
+                <h2>Manage Movement Out</h2>
             </div>
 
             <div class="search-bar">
