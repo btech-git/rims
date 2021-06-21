@@ -51,14 +51,15 @@
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                         <?php foreach ($coas as $account): ?>
                             <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
-                                <?php //if ($accountBalance > 0): ?>
-                                <tr>
-                                    <td style="padding-left: 90px">
-                                        <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
-                                    </td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
-                                </tr>
+                                <?php if ($accountBalance != 0): ?>
+                                    <tr>
+                                        <td style="padding-left: 90px">
+                                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                        </td>
+                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
+                                    </tr>
+                                <?php endif; ?>
                             <?php $accountCategoryBalance += $accountBalance; ?>
                         <?php endforeach; ?>
                         <tr>
@@ -163,14 +164,15 @@
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                         <?php foreach ($coas as $account): ?>
                             <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
-                                <?php //if ($accountBalance > 0): ?>
-                                <tr>
-                                    <td style="padding-left: 90px">
-                                        <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
-                                    </td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
-                                </tr>
+                                <?php if ($accountBalance > 0): ?>
+                                    <tr>
+                                        <td style="padding-left: 90px">
+                                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                        </td>
+                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
+                                    </tr>
+                                <?php endif; ?>
                             <?php $accountCategoryBalance += $accountBalance; ?>
                         <?php endforeach; ?>
                         <tr>
@@ -185,65 +187,6 @@
                         </tr>
                         <?php $accountCategoryPrimaryBalance += $accountCategoryBalance; ?>
                     <?php endforeach; ?>
-<!--                    <tr>
-                        <td style="padding-left: 75px; font-weight: bold; text-transform: capitalize">
-                            <?php /*echo CHtml::encode(CHtml::value($accountProfitLossPrevious, 'code')); ?> - 
-                            <?php echo CHtml::encode(CHtml::value($accountProfitLossPrevious, 'name')); ?>
-                        </td>
-
-                        <td style="text-align: right; font-weight: bold">
-                            <?php $profitLossPreviousAmount = 0.00; ?>
-                            <?php foreach ($accountCategoryTypes as $accountCategoryType): ?>
-                                <?php $accountCategoryTypeBalance = 0.00; ?>
-                                <?php $coaSubCategories = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code')); ?> 
-                                <?php foreach ($coaSubCategories as $accountCategory): ?>
-                                    <?php $accountCategoryBalance = 0.00; ?>
-                                    <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
-                                    <?php foreach ($coas as $account): ?>
-                                        <?php $accountBalance = $account->getProfitLossPreviousBalance($startDate, $endDate, $branchId); ?>
-                                        <?php $accountCategoryBalance += $accountBalance; ?>
-                                    <?php endforeach; ?>
-                                    <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
-                                <?php endforeach; ?>
-                                <?php if ($accountCategoryType->id == 7 || $accountCategoryType->id == 8 || $accountCategoryType->id == 10): ?>
-                                    <?php $profitLossPreviousAmount -= $accountCategoryTypeBalance; ?>
-                                <?php else: ?>
-                                    <?php $profitLossPreviousAmount += $accountCategoryTypeBalance; ?>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossPreviousAmount)); ?>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="padding-left: 75px; font-weight: bold; text-transform: capitalize">
-                            <?php echo CHtml::encode(CHtml::value($accountProfitLoss, 'code')); ?> - 
-                            <?php echo CHtml::encode(CHtml::value($accountProfitLoss, 'name')); ?>
-                        </td>
-
-                        <td style="text-align: right; font-weight: bold">
-                            <?php $profitLossAmount = 0.00; ?>
-                            <?php foreach ($accountCategoryTypes as $accountCategoryType): ?>
-                                <?php $accountCategoryTypeBalance = 0.00; ?>
-                                <?php $coaSubCategories = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code')); ?> 
-                                <?php foreach ($coaSubCategories as $accountCategory): ?>
-                                    <?php $accountCategoryBalance = 0.00; ?>
-                                    <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
-                                    <?php foreach ($coas as $account): ?>
-                                        <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
-                                        <?php $accountCategoryBalance += $accountBalance; ?>
-                                    <?php endforeach; ?>
-                                    <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
-                                <?php endforeach; ?>
-                                <?php if ($accountCategoryType->id == 7 || $accountCategoryType->id == 8 || $accountCategoryType->id == 10): ?>
-                                    <?php $profitLossAmount -= $accountCategoryTypeBalance; ?>
-                                <?php else: ?>
-                                    <?php $profitLossAmount += $accountCategoryTypeBalance; ?>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossAmount));*/ ?>
-                       </td>
-                    </tr>-->
                 <?php else : ?>
                     <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
                     <?php foreach ($accountCategorySubs as $accountCategorySub): ?>
@@ -279,14 +222,15 @@
                                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                         <?php foreach ($coas as $account): ?>
                                             <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
-                                            <?php //if ($accountBalance > 0): ?>
-                                            <tr>
-                                                <td style="padding-left: 110px">
-                                                    <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                                    <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
-                                                </td>
-                                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
-                                            </tr>
+                                            <?php if ($accountBalance > 0): ?>
+                                                <tr>
+                                                    <td style="padding-left: 110px">
+                                                        <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                                    </td>
+                                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
+                                                </tr>
+                                            <?php endif; ?>
                                             <?php $accountCategoryBalance += $accountBalance; ?>
                                         <?php endforeach; ?>
                                         <tr>
@@ -337,14 +281,15 @@
                                 <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                 <?php foreach ($coas as $account): ?>
                                     <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
-                                    <?php //if ($accountBalance > 0): ?>
-                                    <tr>
-                                        <td style="padding-left: 95px">
-                                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
-                                        </td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
-                                    </tr>
+                                    <?php if ($accountBalance > 0): ?>
+                                        <tr>
+                                            <td style="padding-left: 95px">
+                                                <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                                <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                            </td>
+                                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
+                                        </tr>
+                                    <?php endif; ?>
                                     <?php $accountCategoryBalance += $accountBalance; ?>
                                 <?php endforeach; ?>
                                     

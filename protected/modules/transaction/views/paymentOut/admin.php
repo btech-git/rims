@@ -104,25 +104,6 @@ $('.search-form form').submit(function(){
                             'header' => 'Status',
                             'value' => '$data->status',
                         ),
-                        /*
-                        'notes',
-                        'user_id',
-                        'branch_id',
-                        */
-                        // array(
-                        // 	'class'=>'CButtonColumn',
-                        // 	'template'=>'{edit}',
-                        // 	'buttons'=>array
-                        // 	(
-                        // 		'edit' => array
-                        // 		(
-                        // 			'label'=>'edit',
-                        // 			'url'=>'Yii::app()->createUrl("transaction/paymentOut/update", array("id"=>$data->id))',
-                        // 			'visible'=> '$data->status != "Approved" && Yii::app()->user->checkAccess("transaction.paymentOut.update")',
-                        // 		),
-
-                        // 	),
-                        // 	),
                     ),
                 )); ?>
             </div>

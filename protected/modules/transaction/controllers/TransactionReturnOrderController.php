@@ -375,8 +375,12 @@ class TransactionReturnOrderController extends Controller {
         $model = new TransactionReturnOrderApproval;
         $model->date = date('Y-m-d H:i:s');
         $branch = Branch::model()->findByPk($returnOrder->recipient_branch_id);
-        $getCoa = "";
-        $getCoaDetail = "";
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $returnOrder->return_order_no,
+            'branch_id' => $returnOrder->recipient_branch_id,
+        ));
+
         //$branch = Branch::model()->findByPk($paymentOut->branch_id);
         //$model = $this->loadModelDetail($detailId);
         if (isset($_POST['TransactionReturnOrderApproval'])) {
@@ -406,19 +410,19 @@ class TransactionReturnOrderController extends Controller {
 //                    $jurnalUmumKas->transaction_type = 'RTO';
 //                    $jurnalUmumKas->save();
 
-                    foreach ($returnOrder->transactionReturnOrderDetails as $key => $receiveDetail) {
-                        $jumlah = $receiveDetail->price * $receiveDetail->qty_reject;
+                    foreach ($returnOrder->transactionReturnOrderDetails as $key => $returnDetail) {
+                        $jumlah = $returnDetail->price * $returnDetail->qty_reject;
 
                         $jurnalUmumRetur = new JurnalUmum;
                         $jurnalUmumRetur->kode_transaksi = $returnOrder->return_order_no;
                         $jurnalUmumRetur->tanggal_transaksi = $returnOrder->return_order_date;
-                        $jurnalUmumRetur->coa_id = $receiveDetail->product->productSubMasterCategory->coa_retur_pembelian;
+                        $jurnalUmumRetur->coa_id = $returnDetail->product->productSubMasterCategory->coa_retur_pembelian;
                         $jurnalUmumRetur->branch_id = $returnOrder->recipient_branch_id;
                         $jurnalUmumRetur->total = $jumlah;
                         $jurnalUmumRetur->debet_kredit = 'K';
                         $jurnalUmumRetur->tanggal_posting = date('Y-m-d');
                         $jurnalUmumRetur->transaction_subject = $returnOrder->supplier->name;
-                        $jurnalUmumRetur->is_coa_category = 1;
+                        $jurnalUmumRetur->is_coa_category = 0;
                         $jurnalUmumRetur->transaction_type = 'RTO';
                         $jurnalUmumRetur->save();
                         
@@ -440,7 +444,7 @@ class TransactionReturnOrderController extends Controller {
 //                        $jurnalUmumMasterPersediaan->save();
 
                         //save product sub master category coa inventory in transit
-                        $coaInventory = Coa::model()->findByPk($receiveDetail->product->productSubMasterCategory->coaInventoryInTransit->id);
+                        $coaInventory = Coa::model()->findByPk($returnDetail->product->productSubMasterCategory->coa_inventory_in_transit);
                         $getCoaInventory = $coaInventory->code;
                         $coaInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInventory));
                         $jurnalUmumPersediaan = new JurnalUmum;
@@ -449,9 +453,9 @@ class TransactionReturnOrderController extends Controller {
                         $jurnalUmumPersediaan->coa_id = $coaInventoryWithCode->id;
                         $jurnalUmumPersediaan->branch_id = $returnOrder->recipient_branch_id;
                         $jurnalUmumPersediaan->total = $jumlah;
-                        $jurnalUmumPersediaan->debet_kredit = 'K';
+                        $jurnalUmumPersediaan->debet_kredit = 'D';
                         $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumPersediaan->transaction_subject = $returnOrder->customer->name;
+                        $jurnalUmumPersediaan->transaction_subject = $returnOrder->supplier->name;
                         $jurnalUmumPersediaan->is_coa_category = 0;
                         $jurnalUmumPersediaan->transaction_type = 'RTO';
                         $jurnalUmumPersediaan->save();

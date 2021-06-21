@@ -153,6 +153,12 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'payment_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
         ));
     }
 

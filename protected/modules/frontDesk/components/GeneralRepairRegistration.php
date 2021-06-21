@@ -689,8 +689,9 @@ class GeneralRepairRegistration extends CComponent {
         ));
 
         /* SAVE TO JOURNAL */
-        if ($this->header->customer->customer_type == 'Company') {
-            $coaReceivable = Coa::model()->findByAttributes(array('code' => '121.00.001'));
+//        if ($this->header->customer->customer_type == 'Company') {
+            $getCoaPiutang = ($this->header->customer->customer_type == 'Company') ? '121.00.001' : '121.00.002';
+            $coaReceivable = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
             $jurnalUmumReceivable = new JurnalUmum;
             $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
             $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
@@ -703,21 +704,21 @@ class GeneralRepairRegistration extends CComponent {
             $jurnalUmumReceivable->is_coa_category = 0;
             $jurnalUmumReceivable->transaction_type = 'RG';
             $valid = $jurnalUmumReceivable->save() && $valid;
-        } else {
-            $coaReceivable = Coa::model()->findByAttributes(array('code' => '121.00.002'));
-            $jurnalUmumReceivable = new JurnalUmum;
-            $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
-            $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
-            $jurnalUmumReceivable->coa_id = $coaReceivable->id;
-            $jurnalUmumReceivable->branch_id = $this->header->branch_id;
-            $jurnalUmumReceivable->total = $this->header->subtotal_product + $this->header->subtotal_service + $this->header->ppn_price;
-            $jurnalUmumReceivable->debet_kredit = 'D';
-            $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-            $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
-            $jurnalUmumReceivable->is_coa_category = 0;
-            $jurnalUmumReceivable->transaction_type = 'RG';
-            $valid = $jurnalUmumReceivable->save() && $valid;                
-        }
+//        } else {
+//            $coaReceivable = Coa::model()->findByAttributes(array('code' => '121.00.002'));
+//            $jurnalUmumReceivable = new JurnalUmum;
+//            $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
+//            $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
+//            $jurnalUmumReceivable->coa_id = $coaReceivable->id;
+//            $jurnalUmumReceivable->branch_id = $this->header->branch_id;
+//            $jurnalUmumReceivable->total = $this->header->subtotal_product + $this->header->subtotal_service + $this->header->ppn_price;
+//            $jurnalUmumReceivable->debet_kredit = 'D';
+//            $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
+//            $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
+//            $jurnalUmumReceivable->is_coa_category = 0;
+//            $jurnalUmumReceivable->transaction_type = 'RG';
+//            $valid = $jurnalUmumReceivable->save() && $valid;                
+//        }
 
         if ($this->header->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));

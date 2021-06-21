@@ -1,6 +1,6 @@
 <?php
 /* @var $this RegistrationTransactionController */
-/* @var $model RegistrationTransaction */
+/* @var $invoice RegistrationTransaction */
 
 $this->breadcrumbs = array(
     'Registration Transactions' => array('admin'),
@@ -26,7 +26,7 @@ Yii::app()->clientScript->registerScript('search', "
 });*/
 $('form').submit(function(){
     $('#registration-transaction-grid').yiiGridView('update', {
-            data: $(this).serialize()
+        data: $(this).serialize()
     });
     return false;
 });
@@ -42,29 +42,23 @@ $('form').submit(function(){
                 <div class="row">
                     <table>
                         <tr>
-                            <td style="text-align: center; font-weight: bold">Transaction #</td>
+                            <td style="text-align: center; font-weight: bold">Invoice #</td>
                             <td style="text-align: center; font-weight: bold" colspan="2">Date</td>
                             <td style="text-align: center; font-weight: bold">Plate #</td>
-                            <td style="text-align: center; font-weight: bold">Car Make</td>
-                            <td style="text-align: center; font-weight: bold">Car Model</td>
                         </tr>
                         
                         <tr>
                             <td>
-                                <?php echo CHtml::activeTextField($model, 'transaction_number', array(
+                                <?php echo CHtml::activeTextField($invoice, 'invoice_number', array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                            transaction_number: $(this).val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                            invoice_number: $(this).val(),
+                                            invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                            invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                            status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                            branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -72,10 +66,10 @@ $('form').submit(function(){
                             
                             <td>
                                 <div>
-                                    <?php $attribute = 'transaction_date'; ?>
+                                    <?php $attribute = 'invoice_date'; ?>
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'model'=>$model,
-                                        'attribute'=>$attribute."_from",
+                                        'model'=>$invoice,
+                                        'attribute'=>$attribute,
                                         'options'=>array(
                                             'dateFormat'=>'yy-mm-dd',
                                         ),
@@ -83,18 +77,14 @@ $('form').submit(function(){
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Transaction Date From',
                                             'onchange' => '
-                                                $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                                    transaction_date_from: $(this).val(),
-                                                    transaction_number: $("#' . CHtml::activeId($model, 'transaction_number') . '").val(),
-                                                    plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                                    transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                                    car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                                    car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                                    work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                                    payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                                    repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                                    branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                                    customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                                $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                                    invoice_date: $(this).val(),
+                                                    invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                                    plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                                    invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                                    status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                                    branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                                    customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                                 } } });
                                             ',
                                         ),
@@ -105,7 +95,7 @@ $('form').submit(function(){
                             <td>                                
                                 <div>
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'model'=>$model,
+                                        'model'=>$invoice,
                                         'attribute'=>$attribute."_to",
                                         'options'=>array(
                                             'dateFormat'=>'yy-mm-dd',
@@ -114,18 +104,14 @@ $('form').submit(function(){
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Transaction Date To',
                                             'onchange' => '
-                                                $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                                    transaction_date_to: $(this).val(),
-                                                    transaction_number: $("#' . CHtml::activeId($model, 'transaction_number') . '").val(),
-                                                    plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                                    transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                                    car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                                    car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                                    work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                                    payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                                    repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                                    branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                                    customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                                $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                                    invoice_date_to: $(this).val(),
+                                                    invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                                    plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                                    invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                                    status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                                    branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                                    customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                                 } } });
                                             ',
                                         ),
@@ -134,206 +120,101 @@ $('form').submit(function(){
                             </td>
                             
                             <td>
-                                <?php echo CHtml::activeTextField($model, 'plate_number', array(
+                                <?php echo CHtml::activeTextField($invoice, 'plate_number', array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
                                             plate_number: $(this).val(),
-                                            transaction_number: $("#' . CHtml::activeId($model, 'transaction_number') . '").val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                            invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                            invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                            invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                            status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                            branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
-                            
-                            <td>
-                                <?php echo CHtml::activeDropDownList($model, 'car_make_code', CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
-                                    'empty' => '-- All --',
-                                    'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                            car_make_code: $(this).val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
-                                        } } });
-                                    ' . CHtml::ajax(array(
-                                        'type' => 'GET',
-                                        'url' => CController::createUrl('ajaxHtmlUpdateCarModelSelect'),
-                                        'update' => '#car_model',
-                                    )),
-                                )); ?>
-                            </td>
-                            
-                            <td>
-                                <div id="car_model">
-                                    <?php echo CHtml::activeDropDownList($model, 'car_model_code', CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array(
-                                        'empty' => '-- All --',
-                                        'onchange' => '
-                                            $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                                car_model_code: $(this).val(),
-                                                transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                                transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                                car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                                plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                                work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                                payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                                repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                                branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                                customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
-                                            } } });
-                                        ',
-                                    )); ?>
-                                </div>
-                            </td>
                         </tr>
                         
                         <tr>
-                            <td style="text-align: center; font-weight: bold">WO #</td>
                             <td style="text-align: center; font-weight: bold">Customer Name</td>
                             <td style="text-align: center; font-weight: bold">Customer Type</td>
                             <td style="text-align: center; font-weight: bold">Status</td>
-                            <td style="text-align: center; font-weight: bold">Type</td>
                             <td style="text-align: center; font-weight: bold">Branch</td>
                         </tr>
                         
-                        <tr>
+                        <tr>                            
                             <td>
-                                <?php echo CHtml::activeTextField($model, 'work_order_number', array(
+                                <?php echo CHtml::activeTextField($invoice, 'customer_name', array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                            work_order_number: $(this).val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
-                                        } } });
-                                    ',
-                                )); ?>
-                            </td>
-                            
-                            <td>
-                                <?php echo CHtml::activeTextField($model, 'customer_name', array(
-                                    'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
                                             customer_name: $(this).val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_type: $("#' . CHtml::activeId($model, 'customer_type') . '").val(),
+                                            invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                            invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                            invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                            status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                            branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                            customer_type: $("#' . CHtml::activeId($invoice, 'customer_type') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
                             
                             <td>
-                                <?php echo CHtml::activeDropDownList($model, 'customer_type', array(
+                                <?php echo CHtml::activeDropDownList($invoice, 'customer_type', array(
                                     '' => '-- All --',
                                     'Company' => 'Company',
                                     'Individual' => 'Individual',
                                 ),  array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
                                             customer_type: $(this).val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                            invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                            invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                            invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                            status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                            branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
                             
                             <td>
-                                <?php echo CHtml::activeDropDownList($model, 'payment_status', array(
+                                <?php echo CHtml::activeDropDownList($invoice, 'status', array(
                                     '' => '-- All --',
                                     'INVOICING' => 'INVOICING',
-                                    'CLEAR' => 'CLEAR',
+                                    'PARTIAL PAYMENT' => 'PARTIAL PAYMENT',
+                                    'NOT PAID' => 'NOT PAID',
                                 ), array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                            payment_status: $(this).val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                            status: $(this).val(),
+                                            invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                            invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                            invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                            branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
                             
                             <td>
-                                <?php echo CHtml::activeDropDownList($model, 'repair_type', array(
-                                    '' => '-- All --',
-                                    'GR' => 'GR',
-                                    'BR' => 'BR',
-                                ), array(
-                                    'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                            repair_type: $(this).val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            branch_id: $("#' . CHtml::activeId($model, 'branch_id') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
-                                        } } });
-                                    ',
-                                )); ?>
-                            </td>
-                            
-                            <td>
-                                <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
+                                <?php echo CHtml::activeDropDownList($invoice, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
                                     'empty' => '-- All --',
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
                                             branch_id: $(this).val(),
-                                            transaction_date_from: $("#' . CHtml::activeId($model, 'transaction_date_from') . '").val(),
-                                            transaction_date_to: $("#' . CHtml::activeId($model, 'transaction_date_to') . '").val(),
-                                            car_make_code: $("#' . CHtml::activeId($model, 'car_make_code') . '").val(),
-                                            car_model_code: $("#' . CHtml::activeId($model, 'car_model_code') . '").val(),
-                                            work_order_number: $("#' . CHtml::activeId($model, 'work_order_number') . '").val(),
-                                            payment_status: $("#' . CHtml::activeId($model, 'payment_status') . '").val(),
-                                            repair_type: $("#' . CHtml::activeId($model, 'repair_type') . '").val(),
-                                            plate_number: $("#' . CHtml::activeId($model, 'plate_number') . '").val(),
-                                            customer_name: $("#' . CHtml::activeId($model, 'customer_name') . '").val(),
+                                            invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                            invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                            invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                            status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -347,7 +228,7 @@ $('form').submit(function(){
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'registration-transaction-grid',
-                'dataProvider' => $model->searchByCashier(),
+                'dataProvider' => $invoiceDataProvider,
                 'filter' => null,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
@@ -359,32 +240,43 @@ $('form').submit(function(){
                         'header' => '#',
                         'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1', //  row is zero based
                     ),
-                    'transaction_number',
+                    array(
+                        'name' => 'invoice_number',
+                        'header' => 'Invoice',
+                        'value' => '$data->invoice_number',
+                    ),
                     array(
                         'name' => 'transaction_date',
-                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)',
+                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)',
                     ),
+                    'registrationTransaction.transaction_number',
                     array(
                         'name' => 'plate_number', 
                         'value' => '$data->vehicle->plate_number',
-                    ),
-                    array(
-                        'name' => 'branch_id', 
-                        'value' => '$data->branch_id != null? $data->branch->name : "-"'
                     ),
                     array(
                         'name' => 'customer_name', 
                         'value' => '$data->customer != null? $data->customer->name : "-"'
                     ),
                     array(
-                        'name' => 'grand_total', 
-                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->grand_total)'
+                        'name' => 'branch_id', 
+                        'value' => '$data->branch_id != null? $data->branch->name : "-"'
                     ),
-                    'payment_status',
+                    'status',
                     array(
-                        'name' => 'invoice_number',
-                        'header' => 'Invoice',
-                        'value' => array($model, 'getInvoice'),
+                        'name' => 'total_price', 
+                        'header' => 'Total',
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->total_price)'
+                    ),
+                    array(
+                        'name' => 'payment_amount', 
+                        'header' => 'Payment',
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->payment_amount)'
+                    ),
+                    array(
+                        'name' => 'payment_left', 
+                        'header' => 'Remaining',
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->payment_left)'
                     ),
                     array(
                         'class' => 'CButtonColumn',
@@ -392,8 +284,8 @@ $('form').submit(function(){
                         'buttons' => array(
                             'views' => array(
                                 'label' => 'bill detail',
-                                'url' => 'Yii::app()->createUrl("transaction/paymentIn/create",array("invoiceId"=>$data->invoiceHeaders[0]->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("frontDesk.registrationTransaction.billDetail") && !empty($data->invoiceHeaders)',
+                                'url' => 'Yii::app()->createUrl("transaction/paymentIn/create",array("invoiceId"=>$data->id))',
+                                'visible' => 'Yii::app()->user->checkAccess("frontDesk.registrationTransaction.billDetail") && !empty($data->registration_transaction_id)',
                                 'click' => "js:function(){
                                     var url = $(this).attr('href');
 

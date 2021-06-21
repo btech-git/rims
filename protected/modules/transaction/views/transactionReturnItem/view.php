@@ -24,12 +24,14 @@ $this->menu = array(
 
         <?php
         $movements = MovementInHeader::model()->findAllByAttributes(array('return_item_id' => $model->id));
-        if (count($movements) == 0 && $model->status != 'Rejected'):
+        if (empty($movements) && $model->status != 'Approved' && $model->status != 'Rejected'):
         ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReturnItem/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnItem.update"))) ?>
         <?php endif; ?>
         
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnItem/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnItem.updateApproval"))) ?>
+        <?php if ($model->status != 'Approved' && $model->status != 'Rejected'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnItem/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnItem.updateApproval"))) ?>
+        <?php endif; ?>
         <h1>View Transaction Return Item #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
@@ -39,7 +41,7 @@ $this->menu = array(
                 'return_item_no',
                 'return_item_date',
                 'estimate_arrival_date',
-                'user.username',
+//                'user.username',
                 'recipientBranch.name',
                 'request_type',
                 'estimate_arrival_date',
@@ -75,7 +77,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo count($model->customer) == 0 ? '-' : $model->customer->name; ?></label>
+                            <label for="label"><?php echo empty($model->customer) ? '-' : $model->customer->name; ?></label>
                         </div>
                     </div>
                 </div>
@@ -103,7 +105,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo count($model->destinationBranch) == 0 ? '-' : $model->destinationBranch->name; ?></label>
+                            <label for="label"><?php echo empty($model->destinationBranch) ? '-' : $model->destinationBranch->name; ?></label>
                         </div>
                     </div>
                 </div>
@@ -131,7 +133,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo count($model->destinationBranch) == 0 ? '-' : $model->destinationBranch->name; ?></label>
+                            <label for="label"><?php echo empty($model->destinationBranch) ? '-' : $model->destinationBranch->name; ?></label>
                         </div>
                     </div>
                 </div>
@@ -159,7 +161,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo count($model->customer) == 0 ? '-' : $model->customer->name; ?></label>
+                            <label for="label"><?php echo empty($model->customer) ? '-' : $model->customer->name; ?></label>
                         </div>
                     </div>
                 </div>
@@ -167,7 +169,7 @@ $this->menu = array(
         </div>
     <?php endif; ?>
 
-    <?php if (count($returnDetails) > 0): ?>
+    <?php if (!empty($returnDetails)): ?>
         <table>
             <thead>
                 <tr>
@@ -197,7 +199,6 @@ $this->menu = array(
                         <td><?php echo CHtml::encode(CHtml::value($returnDetail, 'product.subBrandSeries.name')); ?></td>
                         <td><?php echo $returnDetail->quantity_delivery == '' ? '-' : $returnDetail->quantity_delivery; ?></td>
                         <td><?php echo $returnDetail->quantity == '' ? '-' : $returnDetail->quantity; ?></td>
-                        <!-- <td><?php //echo $returnDetail->quantity_left== ''?'-':$returnDetail->quantity_left;  ?></td> -->
                         <td><?php echo $returnDetail->note == '' ? '-' : $returnDetail->note; ?></td>
                         <td><?php echo $returnDetail->barcode_product == '' ? '-' : $returnDetail->barcode_product; ?></td>
                         <td><?php echo $returnDetail->quantity_movement; ?></td>

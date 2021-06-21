@@ -39,14 +39,13 @@ class ReturnItems extends CComponent {
     public function addDetail($requestType, $requestId) {
         $this->details = array();
         if ($requestType == 1) {
-            //$purchaseOrder = TransactionPurchaseOrder::model()->findByPk($requestId);
             $sales = TransactionSalesOrderDetail::model()->findAllByAttributes(array('sales_order_id' => $requestId));
             foreach ($sales as $key => $sale) {
                 $detail = new TransactionReturnItemDetail();
                 $detail->product_id = $sale->product_id;
                 $detail->quantity_delivery = $sale->quantity;
                 $detail->price = $sale->unit_price;
-                // $detail->quantity_left = $sale->quantity;
+                $detail->return_type = 'Sales Order';
                 $this->details[] = $detail;
             } //endforeach
         }//end if
@@ -56,7 +55,8 @@ class ReturnItems extends CComponent {
                 $detail = new TransactionReturnItemDetail();
                 $detail->product_id = $sent->product_id;
                 $detail->quantity_delivery = $sent->quantity;
-                // $detail->quantity_left = $sent->quantity;
+                $detail->price = 0.00;
+                $detail->return_type = 'Sent Request';
                 $this->details[] = $detail;
             }
         } elseif ($requestType == 3) {
@@ -65,7 +65,8 @@ class ReturnItems extends CComponent {
                 $detail = new TransactionReturnItemDetail();
                 $detail->product_id = $transfer->product_id;
                 $detail->quantity_delivery = $transfer->quantity;
-                // $detail->quantity_left = $transfer->quantity;
+                $detail->price = 0.00;
+                $detail->return_type = 'Transfer Request';
                 $this->details[] = $detail;
             }
         } elseif ($requestType == 4) {
@@ -75,26 +76,18 @@ class ReturnItems extends CComponent {
                 $detail->product_id = $consignment->product_id;
                 $detail->quantity_delivery = $consignment->qty_sent;
                 $detail->price = $consignment->sale_price;
-                // $detail->quantity_left = $sent->quantity;
+                $detail->return_type = 'Consignment Out';
                 $this->details[] = $detail;
             }
         }
-
-
-
-        //echo "5";
     }
 
     public function removeDetailAt() {
-        //array_splice($this->details, $index, 1);
-        //var_dump(CJSON::encode($this->details));
         $this->details = array();
     }
 
     public function removeDetail($index) {
         array_splice($this->details, $index, 1);
-        //var_dump(CJSON::encode($this->details));
-        //$this->details = array();
     }
 
     public function save($dbConnection) {
@@ -103,10 +96,8 @@ class ReturnItems extends CComponent {
             $valid = $this->validate() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
-                //print_r('1');
             } else {
                 $dbTransaction->rollback();
-                //print_r('2');
             }
         } catch (Exception $e) {
             $dbTransaction->rollback();
@@ -115,12 +106,10 @@ class ReturnItems extends CComponent {
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
         $valid = $this->header->validate();
-
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
@@ -132,10 +121,6 @@ class ReturnItems extends CComponent {
             $valid = true;
         }
 
-
-
-
-        //print_r($valid);
         return $valid;
     }
 
@@ -150,9 +135,7 @@ class ReturnItems extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
-        //echo "valid";
 
         $requestDetails = TransactionReturnItemDetail::model()->findAllByAttributes(array('return_item_id' => $this->header->id));
         $detail_id = array();
@@ -167,11 +150,7 @@ class ReturnItems extends CComponent {
 
             $valid = $detail->save(false) && $valid;
             $new_detail[] = $detail->id;
-
-
-            //echo 'test';
         }
-
 
         //delete pricelist
         $delete_array = array_diff($detail_id, $new_detail);
@@ -183,5 +162,4 @@ class ReturnItems extends CComponent {
 
         return $valid;
     }
-
 }

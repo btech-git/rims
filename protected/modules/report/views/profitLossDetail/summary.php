@@ -111,16 +111,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $account): ?>
 		<?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
-		<?php //if ($accountBalance > 0): ?>
-                <tr>
-                    <td style="padding-left: 50px">
-                        <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                   	<?php echo CHtml::link($account->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
-                    </td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
-                </tr>
-		<?php $accountCategoryBalance += $accountBalance; ?>
-		<?php //endif; ?>
+		<?php if ($accountBalance > 0): ?>
+                    <tr>
+                        <td style="padding-left: 50px">
+                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
+                    </tr>
+                    <?php $accountCategoryBalance += $accountBalance; ?>
+		<?php endif; ?>
             <?php endforeach; ?>
             <tr>
                 <td style="text-align: right; font-weight: bold">

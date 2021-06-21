@@ -545,70 +545,52 @@ class PaymentInController extends Controller {
                             'branch_id' => $paymentIn->branch_id,
                         ));
 
-    //                    if ($paymentIn->invoice->reference_type == 1) {
-                            $getCoaPiutang = '121.00.001';
-                            $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
-                            $jurnalPiutang = new JurnalUmum;
-                            $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalPiutang->coa_id = $coaPiutangWithCode->id;
-                            $jurnalPiutang->branch_id = $paymentIn->branch_id;
-                            $jurnalPiutang->total = $paymentIn->payment_amount;
-                            $jurnalPiutang->debet_kredit = 'K';
-                            $jurnalPiutang->tanggal_posting = date('Y-m-d');
-                            $jurnalPiutang->transaction_subject = $paymentIn->customer->name;
-                            $jurnalPiutang->is_coa_category = 0;
-                            $jurnalPiutang->transaction_type = 'Pin';
-                            $jurnalPiutang->save();
+                        $getCoaPiutang = ($paymentIn->customer->customer_type == 'Company') ? '121.00.001' : '121.00.002';
+                        $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
+                        $jurnalPiutang = new JurnalUmum;
+                        $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
+                        $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
+                        $jurnalPiutang->coa_id = $coaPiutangWithCode->id;
+                        $jurnalPiutang->branch_id = $paymentIn->branch_id;
+                        $jurnalPiutang->total = $paymentIn->payment_amount;
+                        $jurnalPiutang->debet_kredit = 'K';
+                        $jurnalPiutang->tanggal_posting = date('Y-m-d');
+                        $jurnalPiutang->transaction_subject = $paymentIn->customer->name;
+                        $jurnalPiutang->is_coa_category = 0;
+                        $jurnalPiutang->transaction_type = 'Pin';
+                        $jurnalPiutang->save();
 
-//                            if ($paymentIn->payment_type_id == 1) {
-                                $getCoaKas = '111.00.001';
-                                $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-                                $jurnalUmumKas = new JurnalUmum;
-                                $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
-                                $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
-                                $jurnalUmumKas->coa_id = $coaKasWithCode->id;
-                                $jurnalUmumKas->branch_id = $paymentIn->branch_id;
-                                $jurnalUmumKas->total = $paymentIn->payment_amount;
-                                $jurnalUmumKas->debet_kredit = 'D';
-                                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                                $jurnalUmumKas->transaction_subject = $paymentIn->customer->name;
-                                $jurnalUmumKas->is_coa_category = 0;
-                                $jurnalUmumKas->transaction_type = 'Pin';
-                                $jurnalUmumKas->save();
-//                            } else {
-//                                if (!empty($paymentIn->company_bank_id)) {
-//                                    $jurnalUmumKasBank = new JurnalUmum;
-//                                    $jurnalUmumKasBank->kode_transaksi = $paymentIn->payment_number;
-//                                    $jurnalUmumKasBank->tanggal_transaksi = $paymentIn->payment_date;
-//                                    $jurnalUmumKasBank->coa_id = $paymentIn->companyBank->coa_id;
-//                                    $jurnalUmumKasBank->branch_id = $paymentIn->branch_id;
-//                                    $jurnalUmumKasBank->total = $paymentIn->payment_amount;
-//                                    $jurnalUmumKasBank->debet_kredit = 'D';
-//                                    $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
-//                                    $jurnalUmumKasBank->transaction_subject = $paymentIn->customer->name;
-//                                    $jurnalUmumKasBank->is_coa_category = 0;
-//                                    $jurnalUmumKasBank->transaction_type = 'Pin';
-//                                    $jurnalUmumKasBank->save();
-//                                }
-//                            }
+                        $getCoaKas = '111.00.001';
+                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+                        $jurnalUmumKas = new JurnalUmum;
+                        $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
+                        $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
+                        $jurnalUmumKas->coa_id = $coaKasWithCode->id;
+                        $jurnalUmumKas->branch_id = $paymentIn->branch_id;
+                        $jurnalUmumKas->total = $paymentIn->payment_amount;
+                        $jurnalUmumKas->debet_kredit = 'D';
+                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumKas->transaction_subject = $paymentIn->customer->name;
+                        $jurnalUmumKas->is_coa_category = 0;
+                        $jurnalUmumKas->transaction_type = 'Pin';
+                        $jurnalUmumKas->save();
 
-                            if ($paymentIn->tax_service_amount > 0) {
-                                $getCoaPph = '143.00.002';
-                                $coaPphWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPph));
-                                $jurnalPph = new JurnalUmum;
-                                $jurnalPph->kode_transaksi = $paymentIn->payment_number;
-                                $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
-                                $jurnalPph->coa_id = $coaPphWithCode->id;
-                                $jurnalPph->branch_id = $paymentIn->branch_id;
-                                $jurnalPph->total = $paymentIn->tax_service_amount;
-                                $jurnalPph->debet_kredit = 'D';
-                                $jurnalPph->tanggal_posting = date('Y-m-d');
-                                $jurnalPph->transaction_subject = $paymentIn->customer->name;
-                                $jurnalPph->is_coa_category = 0;
-                                $jurnalPph->transaction_type = 'Pin';
-                                $jurnalPph->save();
-                            }
+                        if ($paymentIn->tax_service_amount > 0) {
+                            $getCoaPph = '143.00.002';
+                            $coaPphWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPph));
+                            $jurnalPph = new JurnalUmum;
+                            $jurnalPph->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalPph->coa_id = $coaPphWithCode->id;
+                            $jurnalPph->branch_id = $paymentIn->branch_id;
+                            $jurnalPph->total = $paymentIn->tax_service_amount;
+                            $jurnalPph->debet_kredit = 'D';
+                            $jurnalPph->tanggal_posting = date('Y-m-d');
+                            $jurnalPph->transaction_subject = $paymentIn->customer->name;
+                            $jurnalPph->is_coa_category = 0;
+                            $jurnalPph->transaction_type = 'Pin';
+                            $jurnalPph->save();
+                        }
                     }// end if approved
                 }
                 $this->redirect(array('view', 'id' => $headerId));

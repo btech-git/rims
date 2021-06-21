@@ -438,12 +438,41 @@ class RegistrationTransactionController extends Controller {
     }
 
     public function actionCashier() {
-        $model = new RegistrationTransaction('search');
-        $model->unsetAttributes();  // clear any default values
-
-        if (isset($_GET['RegistrationTransaction'])) {
-            $model->attributes = $_GET['RegistrationTransaction'];
+        $invoice = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
+        $invoice->unsetAttributes();
+        
+        if (isset($_GET['InvoiceHeader'])) {
+            $invoice->attributes = $_GET['InvoiceHeader'];
         }
+        
+        $invoiceCriteria = new CDbCriteria;
+        $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.status != "PAID" AND t.payment_left > 0 AND t.registration_transaction_id IS NOT NULL');
+        $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
+        $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
+        $invoiceCriteria->compare('t.status', $invoice->status);
+        $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
+        $invoiceCriteria->compare('t.registration_transaction_id', $invoice->registration_transaction_id);
+        $invoiceCriteria->together = true;
+        $invoiceCriteria->with = array(
+            'customer', 
+            'vehicle',
+        );
+        $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
+        $invoiceCriteria->compare('customer.customer_type', $invoice->customer_type);
+        $invoiceCriteria->compare('vehicle.plate_number', $invoice->plate_number, true);
+        
+        if (!empty($invoice->invoice_date) || !empty($invoice->invoice_date_to)) {
+            $invoiceCriteria->addBetweenCondition('t.invoice_date', $invoice->invoice_date, $invoice->invoice_date_to);
+        }
+        
+        $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
+            'criteria' => $invoiceCriteria, 'sort' => array(
+                'defaultOrder' => 'invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            )
+        ));
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
@@ -462,7 +491,8 @@ class RegistrationTransactionController extends Controller {
         ));
 
         $this->render('cashier', array(
-            'model' => $model,
+            'invoice' => $invoice,
+            'invoiceDataProvider' => $invoiceDataProvider,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
         ));

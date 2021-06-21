@@ -88,6 +88,14 @@
                     }
                 }
             ),
+            array(
+                'header' => '',
+                'type' => 'raw',
+                'value' => 'CHtml::link("Create", array("create", "transactionId"=>$data->id, "movementType"=>"1"))',
+                'htmlOptions' => array(
+                    'style' => 'text-align: center;'
+                ),
+            ),
         ),
     )); ?>
 </div>

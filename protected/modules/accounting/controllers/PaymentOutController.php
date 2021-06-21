@@ -157,7 +157,7 @@ class PaymentOutController extends Controller {
             $dataProvider->criteria->params[':supplier_name'] = "%{$supplierName}%";
         }
 
-        $dataProvider->criteria->order = 't.id DESC';
+        $dataProvider->criteria->order = 't.payment_date DESC';
 
         $purchaseOrder = new TransactionPurchaseOrder('search');
         $purchaseOrder->unsetAttributes();

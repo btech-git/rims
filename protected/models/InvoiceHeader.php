@@ -58,6 +58,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     public $invoice_date_to;
     public $due_date_to;
     public $customer_type;
+    public $plate_number;
 
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -86,7 +87,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number', 'safe', 'on' => 'search'),
         );
     }
 

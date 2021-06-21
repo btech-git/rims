@@ -23,16 +23,16 @@ $this->menu = array(
 
         <?php
         $movements = MovementOutHeader::model()->findAllByAttributes(array('return_order_id' => $model->id));
-        if (count($movements) == 0 && $model->status != 'Rejected'):
+        if (empty($movements) && $model->status != 'Approved' && $model->status != 'Rejected'):
         ?>
-        
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.update"))) ?>
-
         <?php endif; ?>
         
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.updateApproval"))) ?>
+        <?php if ($model->status != 'Approved' && $model->status != 'Rejected'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.updateApproval"))) ?>
+        <?php endif; ?>
 
-        <h1>View TransactionReturnOrder #<?php echo $model->id; ?></h1>
+        <h1>View Transaction Return Order #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
@@ -40,9 +40,9 @@ $this->menu = array(
                 'id',
                 'return_order_no',
                 'return_order_date',
-                'receive_item_id',
-                'recipient_id',
-                'recipient_branch_id',
+                'receiveItem.receive_item_no',
+                'recipient.username',
+                'recipientBranch.name',
             ),
         )); ?>
     </div>
@@ -75,7 +75,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo count($model->supplier) == 0 ? '-' : $model->supplier->name; ?></label>
+                            <label for="label"><?php echo empty($model->supplier) ? '-' : $model->supplier->name; ?></label>
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo count($model->branchDestination) == 0 ? '-' : $model->branchDestination->name; ?></label>
+                            <label for="label"><?php echo empty($model->branchDestination) ? '-' : $model->branchDestination->name; ?></label>
                         </div>
                     </div>
                 </div>
@@ -132,7 +132,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo count($model->supplier) == 0 ? '-' : $model->supplier->name; ?></label>
+                            <label for="label"><?php echo empty($model->supplier) ? '-' : $model->supplier->name; ?></label>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@ $this->menu = array(
         </div>
     <?php endif; ?>
 
-    <?php if (count($returnDetails) > 0): ?>
+    <?php if (!empty($returnDetails)): ?>
         <table>
             <thead>
                 <tr>

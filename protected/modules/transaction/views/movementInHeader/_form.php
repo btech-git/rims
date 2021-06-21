@@ -48,7 +48,8 @@
                             <?php echo $form->labelEx($movementIn->header, 'movement_type', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownList($movementIn->header, 'movement_type', array('1' => 'Receive Item', '2' => 'Return Item'), array('prompt' => '[--Select Movement Type--]', 'onchange' => '
+                            <?php echo CHtml::encode($movementIn->header->getMovementType($movementIn->header->movement_type)); ?>
+                            <?php /*echo $form->dropDownList($movementIn->header, 'movement_type', array('1' => 'Receive Item', '2' => 'Return Item'), array('prompt' => '[--Select Movement Type--]', 'onchange' => '
                                 $.ajax({
                                     type: "POST",
                                     //dataType: "JSON",
@@ -58,7 +59,7 @@
                                         $("#mmtype").html(html);	
                                     },
                                 });
-                            ')); ?>
+                            '));*/ ?>
                             <?php echo $form->error($movementIn->header, 'movement_type'); ?>
                         </div>
                     </div>

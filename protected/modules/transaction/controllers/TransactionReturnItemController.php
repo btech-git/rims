@@ -47,19 +47,8 @@ class TransactionReturnItemController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
-        // $model=new TransactionReturnItem;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['TransactionReturnItem']))
-        // {
-        // 	$model->attributes=$_POST['TransactionReturnItem'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('create',array(
-        // 	'model'=>$model,
-        // ));
+    public function actionCreate() { 
+        
         $transfer = new TransactionSentRequest('search');
         $transfer->unsetAttributes();  // clear any default values
         
@@ -97,6 +86,8 @@ class TransactionReturnItemController extends Controller {
 
         $deliveryCriteria = new CDbCriteria;
         $deliveryCriteria->compare('delivery_order_no', $delivery->delivery_order_no . '%', true, 'AND', false);
+        $deliveryCriteria->compare('delivery_date', $delivery->delivery_date, true);
+        $deliveryCriteria->compare('request_type', $delivery->request_type, true);
 
         $deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
             'criteria' => $deliveryCriteria,
@@ -104,7 +95,6 @@ class TransactionReturnItemController extends Controller {
 
         $returnItem = $this->instantiate(null);
         $returnItem->header->recipient_branch_id = $returnItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnItem->header->recipient_branch_id;
-//        $returnItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnItem->header->return_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnItem->header->return_item_date)), $returnItem->header->recipient_branch_id);
         $this->performAjaxValidation($returnItem->header);
 
         if (isset($_POST['Cancel']))
@@ -340,7 +330,7 @@ class TransactionReturnItemController extends Controller {
                 'id' => $transfer->id,
                 'no' => $transfer->sent_request_no,
                 'date' => $transfer->sent_request_date,
-                'eta' => $transfer->estimate_arrival_date,
+                'eta' => empty($transfer->estimate_arrival_date) ? date('Y-m-d') : $transfer->estimate_arrival_date,
                 'branch' => $transfer->requester_branch_id,
                 'branch_name' => $branch->name,
             );
@@ -360,7 +350,7 @@ class TransactionReturnItemController extends Controller {
                 'id' => $transfer->id,
                 'no' => $transfer->transfer_request_no,
                 'date' => $transfer->transfer_request_date,
-                'eta' => $transfer->estimate_arrival_date,
+                'eta' => empty($transfer->estimate_arrival_date) ? date('Y-m-d') : $transfer->estimate_arrival_date,
                 'branch' => $transfer->requester_branch_id,
                 'branch_name' => $branch->name,
             );
@@ -484,10 +474,6 @@ class TransactionReturnItemController extends Controller {
         $model->date = date('Y-m-d H:i:s');
         $branch = Branch::model()->findByPk($returnItem->recipient_branch_id);
         
-//        $getCoa = "";
-//        $getCoaDetail = "";
-        //$branch = Branch::model()->findByPk($paymentOut->branch_id);
-        //$model = $this->loadModelDetail($detailId);
         if (isset($_POST['TransactionReturnItemApproval'])) {
             $model->attributes = $_POST['TransactionReturnItemApproval'];
             if ($model->save()) {
@@ -499,22 +485,23 @@ class TransactionReturnItemController extends Controller {
 
                 $returnItem->status = $model->approval_type;
                 $returnItem->save(false);
-//                $delivery = TransactionDeliveryOrder::model()->findByPk($returnItem->delivery_order_id);
                 $jumlah = 0;
                 $branch = Branch::model()->findByPk($returnItem->recipient_branch_id);
                 if ($model->approval_type == 'Approved') {
 
-                    $jurnalUmumReceivable = new JurnalUmum;
-                    $jurnalUmumReceivable->kode_transaksi = $returnItem->return_item_no;
-                    $jurnalUmumReceivable->tanggal_transaksi = $returnItem->return_item_date;
-                    $jurnalUmumReceivable->coa_id = $returnItem->customer->coa_id;
-                    $jurnalUmumReceivable->branch_id = $returnItem->recipient_branch_id;
-                    $jurnalUmumReceivable->total = $returnItem->totalDetail * 1.1;
-                    $jurnalUmumReceivable->debet_kredit = 'K';
-                    $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumReceivable->is_coa_category = 0;
-                    $jurnalUmumReceivable->transaction_type = 'RTI';
-                    $jurnalUmumReceivable->save();
+                    if (!empty($returnItem->customer_id)) {
+                        $jurnalUmumReceivable = new JurnalUmum;
+                        $jurnalUmumReceivable->kode_transaksi = $returnItem->return_item_no;
+                        $jurnalUmumReceivable->tanggal_transaksi = $returnItem->return_item_date;
+                        $jurnalUmumReceivable->coa_id = $returnItem->customer->coa_id;
+                        $jurnalUmumReceivable->branch_id = $returnItem->recipient_branch_id;
+                        $jurnalUmumReceivable->total = $returnItem->totalDetail * 1.1;
+                        $jurnalUmumReceivable->debet_kredit = 'K';
+                        $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumReceivable->is_coa_category = 0;
+                        $jurnalUmumReceivable->transaction_type = 'RTI';
+                        $jurnalUmumReceivable->save();
+                    }
 
                     foreach ($returnItem->transactionReturnItemDetails as $key => $deliveryDetail) {
                         $jumlah = $deliveryDetail->price * $deliveryDetail->quantity;
@@ -527,7 +514,7 @@ class TransactionReturnItemController extends Controller {
                         $jurnalUmumMasterRetur->total = $jumlah;
                         $jurnalUmumMasterRetur->debet_kredit = 'D';
                         $jurnalUmumMasterRetur->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumMasterRetur->transaction_subject = $returnItem->customer->name;
+                        $jurnalUmumMasterRetur->transaction_subject = 'Retur Penjualan';
                         $jurnalUmumMasterRetur->is_coa_category = 1;
                         $jurnalUmumMasterRetur->transaction_type = 'RTI';
                         $jurnalUmumMasterRetur->save();
@@ -540,7 +527,7 @@ class TransactionReturnItemController extends Controller {
                         $jurnalUmumRetur->total = $jumlah;
                         $jurnalUmumRetur->debet_kredit = 'D';
                         $jurnalUmumRetur->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumRetur->transaction_subject = $returnItem->customer->name;
+                        $jurnalUmumRetur->transaction_subject = 'Retur Penjualan';
                         $jurnalUmumRetur->is_coa_category = 0;
                         $jurnalUmumRetur->transaction_type = 'RTI';
                         $jurnalUmumRetur->save();
@@ -555,7 +542,7 @@ class TransactionReturnItemController extends Controller {
                         $jurnalPpn->debet_kredit = 'D';
                         $jurnalPpn->tanggal_posting = date('Y-m-d');
                         $jurnalPpn->is_coa_category = 0;
-                        $jurnalPpn->transaction_subject = $returnItem->customer->name;
+                        $jurnalPpn->transaction_subject = 'Retur Penjualan';
                         $jurnalPpn->transaction_type = 'RTI';
                         $jurnalPpn->save();
                         
@@ -627,7 +614,7 @@ class TransactionReturnItemController extends Controller {
                         $jurnalMasterUmumHpp->debet_kredit = 'K';
                         $jurnalMasterUmumHpp->tanggal_posting = date('Y-m-d');
                         $jurnalMasterUmumHpp->is_coa_category = 1;
-                        $jurnalMasterUmumHpp->transaction_subject = $returnItem->customer->name;
+                        $jurnalMasterUmumHpp->transaction_subject = 'Retur Penjualan';
                         $jurnalMasterUmumHpp->transaction_type = 'RTI';
                         $jurnalMasterUmumHpp->save();
 
@@ -641,7 +628,7 @@ class TransactionReturnItemController extends Controller {
                         $jurnalUmumHpp->debet_kredit = 'K';
                         $jurnalUmumHpp->tanggal_posting = date('Y-m-d');
                         $jurnalUmumHpp->is_coa_category = 0;
-                        $jurnalUmumHpp->transaction_subject = $returnItem->customer->name;
+                        $jurnalUmumHpp->transaction_subject = 'Retur Penjualan';
                         $jurnalUmumHpp->transaction_type = 'RTI';
                         $jurnalUmumHpp->save();
 
