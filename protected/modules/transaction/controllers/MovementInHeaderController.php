@@ -50,104 +50,6 @@ class MovementInHeaderController extends Controller {
         ));
     }
 
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
-    /*public function actionCreate() {
-
-        $movementIn = $this->instantiate(null);
-        $movementIn->header->branch_id = $movementIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementIn->header->branch_id;
-//        $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
-        $this->performAjaxValidation($movementIn->header);
-
-        // Receive Item
-        $receiveItem = new TransactionReceiveItem('search');
-        $receiveItem->unsetAttributes();
-
-        if (isset($_GET['TransactionReceiveItem'])) {
-            $receiveItem->attributes = $_GET['TransactionReceiveItem'];
-        }
-
-        $receiveItemDataProvider = $receiveItem->searchByMovementIn();
-
-        $receiveItemDetail = new TransactionReceiveItemDetail('search');
-        $receiveItemDetail->unsetAttributes();  // clear any default values
-
-        if (isset($_GET['TransactionReceiveItemDetail'])) {
-            $receiveItemDetail->attributes = $_GET['TransactionReceiveItemDetail'];
-        }
-
-        $receiveItemDetailCriteria = new CDbCriteria;
-        $receiveItemDetailCriteria->together = 'true';
-        $receiveItemDetailCriteria->with = array('product', 'receiveItem');
-        $receiveItemDetailCriteria->compare('receive_item_id', $receiveItemDetail->receive_item_id, true);
-        $receiveItemDetailCriteria->compare('receiveItem.receive_item_no', $receiveItemDetail->receive_item_no, true);
-        $receiveItemDetailCriteria->compare('product.name', $receiveItemDetail->product_name, true);
-        $receiveItemDetailCriteria->addCondition('quantity_movement_left > 0');
-        $receiveItemDetailDataProvider = new CActiveDataProvider('TransactionReceiveItemDetail', array(
-            'criteria' => $receiveItemDetailCriteria,
-        ));
-
-        // Return Item
-        $returnItem = new TransactionReturnItem('search');
-        $returnItem->unsetAttributes();
-        
-        if (isset($_GET['TransactionReturnItem'])) {
-            $returnItem->attributes = $_GET['TransactionReturnItem'];
-        }
-        
-        $returnItemCriteria = new CDbCriteria;
-        $returnItemCriteria->together = 'true';
-        $returnItemCriteria->with = array('recipientBranch');
-        $returnItemCriteria->compare('recipientBranch.name', $returnItem->branch_name, true);
-        $returnItemCriteria->compare('return_item_no', $returnItem->return_item_no, true);
-        $returnItemDataProvider = new CActiveDataProvider('TransactionReturnItem', array('criteria' => $returnItemCriteria));
-
-        $returnItemDetail = new TransactionReturnItemDetail('search');
-        $returnItemDetail->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionReturnItemDetail'])) {
-            $returnItemDetail->attributes = $_GET['TransactionReturnItemDetail'];
-        }
-        
-        $returnItemDetailCriteria = new CDbCriteria;
-        $returnItemDetailCriteria->together = 'true';
-        $returnItemDetailCriteria->with = array('product', 'returnItem');
-
-        $returnItemDetailCriteria->compare('return_item_id', $returnItemDetail->return_item_id, true);
-        $returnItemDetailCriteria->compare('returnItem.return_item_no', $returnItemDetail->return_item_no, true);
-        $returnItemDetailCriteria->compare('product.name', $returnItemDetail->product_name, true);
-        $returnItemDetailDataProvider = new CActiveDataProvider('TransactionReturnItemDetail', array(
-            'criteria' => $returnItemDetailCriteria,
-        ));
-
-        if (isset($_POST['Cancel'])) {
-            $this->redirect(array('admin'));
-        }
-
-        if (isset($_POST['MovementInHeader'])) {
-            $this->loadState($movementIn);
-            $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
-            
-            if ($movementIn->save(Yii::app()->db)) {
-                $this->redirect(array('view', 'id' => $movementIn->header->id));
-            }
-        }
-
-        $this->render('create', array(
-            'movementIn' => $movementIn,
-            'receiveItemDetail' => $receiveItemDetail,
-            'receiveItemDetailDataProvider' => $receiveItemDetailDataProvider,
-            'receiveItem' => $receiveItem,
-            'receiveItemDataProvider' => $receiveItemDataProvider,
-            'returnItem' => $returnItem,
-            'returnItemDataProvider' => $returnItemDataProvider,
-            'returnItemDetail' => $returnItemDetail,
-            'returnItemDetailDataProvider' => $returnItemDetailDataProvider,
-        ));
-    }*/
-
     public function actionCreate($transactionId, $movementType) {
 
         $movementIn = $this->instantiate(null);
@@ -165,7 +67,7 @@ class MovementInHeaderController extends Controller {
         } else {
             $this->redirect(array('admin'));
         }
-            
+        
         $movementIn->header->movement_type = $movementType;
         $movementIn->addDetails($transactionId, $movementType);
         

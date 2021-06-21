@@ -46,63 +46,74 @@ class TransactionReceiveItemController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    public function actionCreate($transactionId, $movementType) {
         
-        $transfer = new TransactionTransferRequest('search');
-        $transfer->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionTransferRequest'])) {
-            $transfer->attributes = $_GET['TransactionTransferRequest'];
-        }
-
-        $transferCriteria = new CDbCriteria;
-        $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
-
-        $transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
-            'criteria' => $transferCriteria,
-        ));
-
-        $delivery = new TransactionDeliveryOrder('search');
-        $delivery->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionDeliveryOrder'])) {
-            $delivery->attributes = $_GET['TransactionDeliveryOrder'];
-        }
-        
-        $deliveryDataProvider = $delivery->searchByReceive();
-
-        $purchase = new TransactionPurchaseOrder('search');
-        $purchase->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionPurchaseOrder'])) {
-            $purchase->attributes = $_GET['TransactionPurchaseOrder'];
-        }
-        
-        $purchaseDataProvider = $purchase->searchByReceive();
-
-        $consignment = new ConsignmentInHeader('search');
-        $consignment->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['ConsignmentInHeader'])) {
-            $consignment->attributes = $_GET['ConsignmentInHeader'];
-        }
-
-        $consignmentCriteria = new CDbCriteria;
-        $consignmentCriteria->compare('consignment_in_number', $consignment->consignment_in_number . '%', true, 'AND', false);
-        $consignmentCriteria->addCondition("status_document = 'Approved'");
-        $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
-            'criteria' => $consignmentCriteria,
-        ));
-
         $receiveItem = $this->instantiate(null);
         $receiveItem->header->receive_item_date = date('Y-m-d');
         $receiveItem->header->arrival_date = date('Y-m-d');
         $receiveItem->header->user_id_receive = Yii::app()->user->id;
         $receiveItem->header->user_id_invoice = null;
         $receiveItem->header->recipient_branch_id = $receiveItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $receiveItem->header->recipient_branch_id;
-//        $receiveItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($receiveItem->header->receive_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($receiveItem->header->receive_item_date)), $receiveItem->header->recipient_branch_id);
         $this->performAjaxValidation($receiveItem->header);
 
+        if ($movementType == 1) {
+            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($transactionId);
+            $receiveItem->header->purchase_order_id = $transactionId;
+            $receiveItem->header->transfer_request_id = null;
+            $receiveItem->header->consignment_in_id = null;
+            $receiveItem->header->delivery_order_id = null;
+            $receiveItem->header->movement_out_id = null;
+            $receiveItem->header->supplier_id = $purchaseOrder->supplier_id;
+            $receiveItem->header->request_type = 'Purchase Order';
+            $receiveItem->header->destination_branch = null;
+            $receiveItem->header->estimate_arrival_date = null;
+            $receiveItem->header->request_date = $purchaseOrder->purchase_order_date;
+            
+        } else if ($movementType == 2) {
+            $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
+            $receiveItem->header->purchase_order_id = null;
+            $receiveItem->header->transfer_request_id = null;
+            $receiveItem->header->consignment_in_id = null;
+            $receiveItem->header->delivery_order_id = $transactionId;
+            $receiveItem->header->movement_out_id = null;
+            $receiveItem->header->supplier_id = null;
+            $receiveItem->header->request_type = 'Internal Delivery Order';
+            $receiveItem->header->destination_branch = $deliveryOrder->destination_branch;
+            $receiveItem->header->estimate_arrival_date = $deliveryOrder->estimate_arrival_date;
+            $receiveItem->header->request_date = $deliveryOrder->delivery_date;
+            
+        }  else if ($movementType == 3) {
+            $consignmentIn = ConsignmentInHeader::model()->findByPk($transactionId);
+            $receiveItem->header->purchase_order_id = null;
+            $receiveItem->header->transfer_request_id = null;
+            $receiveItem->header->consignment_in_id = $transactionId;
+            $receiveItem->header->delivery_order_id = null;
+            $receiveItem->header->movement_out_id = null;
+            $receiveItem->header->supplier_id = $consignmentIn->supplier_id;
+            $receiveItem->header->request_type = 'Consignment In';
+            $receiveItem->header->destination_branch = null;
+            $receiveItem->header->estimate_arrival_date = null;
+            $receiveItem->header->request_date = $consignmentIn->date_posting;
+            
+        }  else if ($movementType == 4) {
+            $movementOut = MovementOutHeader::model()->findByPk($transactionId);
+            $receiveItem->header->purchase_order_id = null;
+            $receiveItem->header->transfer_request_id = null;
+            $receiveItem->header->consignment_in_id = null;
+            $receiveItem->header->delivery_order_id = null;
+            $receiveItem->header->movement_out_id = $transactionId;
+            $receiveItem->header->supplier_id = null;
+            $receiveItem->header->request_type = 'Movement Out';
+            $receiveItem->header->destination_branch = null;
+            $receiveItem->header->estimate_arrival_date = null;
+            $receiveItem->header->request_date = $movementOut->date_posting;
+            
+        } else {
+            $this->redirect(array('admin'));
+        }
+        
+        $receiveItem->addDetails($transactionId, $movementType);
+        
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
@@ -118,14 +129,6 @@ class TransactionReceiveItemController extends Controller {
 
         $this->render('create', array(
             'receiveItem' => $receiveItem,
-            'transfer' => $transfer,
-            'transferDataProvider' => $transferDataProvider,
-            'purchase' => $purchase,
-            'purchaseDataProvider' => $purchaseDataProvider,
-            'consignment' => $consignment,
-            'consignmentDataProvider' => $consignmentDataProvider,
-            'delivery' => $delivery,
-            'deliveryDataProvider' => $deliveryDataProvider,
         ));
     }
 
@@ -290,89 +293,90 @@ class TransactionReceiveItemController extends Controller {
         
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.receive_item_date, 1, 10)', $startDate, $endDate);
 
-//        $transfer = new TransactionTransferRequest('search');
-//        $transfer->unsetAttributes();  // clear any default values
-//        if (isset($_GET['TransactionTransferRequest']))
-//            $transfer->attributes = $_GET['TransactionTransferRequest'];
-//
-//        $transferCriteria = new CDbCriteria;
-//        $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
-//
-//        $transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
-//                    'criteria' => $transferCriteria,
-//                ));
-//
-//        $delivery = new TransactionDeliveryOrder('search');
-//        $delivery->unsetAttributes();  // clear any default values
-//        if (isset($_GET['TransactionDeliveryOrder']))
-//            $delivery->attributes = $_GET['TransactionDeliveryOrder'];
-//        $deliveryDataProvider = $delivery->searchByReceive();
+        $transfer = new TransactionTransferRequest('search');
+        $transfer->unsetAttributes();  // clear any default values
+        if (isset($_GET['TransactionTransferRequest']))
+            $transfer->attributes = $_GET['TransactionTransferRequest'];
 
-//		$deliveryCriteria = new CDbCriteria;
-//		$deliveryCriteria->condition = "request_type = 'Transfer Request'";
-//		$deliveryCriteria->compare('delivery_order_no',$delivery->delivery_order_no.'%',true,'AND', false);
-//		
-//		$deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
-//			'criteria'=>$deliveryCriteria,
-//		));
+        $transferCriteria = new CDbCriteria;
+        $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
 
-//        $purchase = new TransactionPurchaseOrder('search');
-//        $purchase->unsetAttributes();  // clear any default values
-//        if (isset($_GET['TransactionPurchaseOrder']))
-//            $purchase->attributes = $_GET['TransactionPurchaseOrder'];
-//        $purchaseDataProvider = $purchase->searchByReceive();
+        $transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
+                    'criteria' => $transferCriteria,
+                ));
 
-//		$purchaseCriteria = new CDbCriteria;
-//		$purchaseCriteria->compare('purchase_order_no',$purchase->purchase_order_no.'%',true,'AND', false);
-//		$purchaseCriteria->compare('purchase_order_date',$purchase->purchase_order_date.'%',true,'AND', false);
-//		$purchaseCriteria->together = 'true';
-//		$purchaseCriteria->with = array('supplier');
-//		$purchaseCriteria->compare('supplier.name', $purchase->supplier_name, true);
-//
-//		$purchaseCriteria->addCondition("status_document = 'Approved'");
-//		$purchaseDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
-//			'criteria'=>$purchaseCriteria,
-//		));
+        $delivery = new TransactionDeliveryOrder('search');
+        $delivery->unsetAttributes();  // clear any default values
+        if (isset($_GET['TransactionDeliveryOrder']))
+            $delivery->attributes = $_GET['TransactionDeliveryOrder'];
+        $deliveryDataProvider = $delivery->searchByReceive();
 
-//        $consignment = new ConsignmentInHeader('search');
-//        $consignment->unsetAttributes();  // clear any default values
-//        if (isset($_GET['ConsignmentInHeader']))
-//            $consignment->attributes = $_GET['ConsignmentInHeader'];
-//
-//        $consignmentCriteria = new CDbCriteria;
-//        $consignmentCriteria->compare('consignment_in_number', $consignment->consignment_in_number . '%', true, 'AND', false);
-//        $consignmentCriteria->addCondition("status_document = 'Approved'");
-//        $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
-//                    'criteria' => $consignmentCriteria,
-//                ));
-//
-//        $movement = new MovementOutHeader('search');
-//        $movement->unsetAttributes();  // clear any default values
-//        if (isset($_GET['MovementOutHeader']))
-//            $movement->attributes = $_GET['MovementOutHeader'];
-//
-//        $movementCriteria = new CDbCriteria;
-//        $movementCriteria->compare('movement_out_no', $movement->movement_out_no . '%', true, 'AND', false);
-//        $movementCriteria->addCondition("status != 'Draft' AND status != 'Rejected' AND status != 'Revised'");
-//        $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
-//                    'criteria' => $movementCriteria,
-//                ));
+		$deliveryCriteria = new CDbCriteria;
+		$deliveryCriteria->condition = "request_type = 'Transfer Request'";
+		$deliveryCriteria->compare('delivery_order_no',$delivery->delivery_order_no.'%',true,'AND', false);
+		
+		$deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
+			'criteria'=>$deliveryCriteria,
+		));
+
+        $purchase = new TransactionPurchaseOrder('search');
+        $purchase->unsetAttributes();  // clear any default values
+        if (isset($_GET['TransactionPurchaseOrder']))
+            $purchase->attributes = $_GET['TransactionPurchaseOrder'];
+        
+        $purchaseDataProvider = $purchase->searchByReceive();
+
+        $purchaseCriteria = new CDbCriteria;
+        $purchaseCriteria->compare('purchase_order_no',$purchase->purchase_order_no.'%',true,'AND', false);
+        $purchaseCriteria->compare('purchase_order_date',$purchase->purchase_order_date.'%',true,'AND', false);
+        $purchaseCriteria->together = 'true';
+        $purchaseCriteria->with = array('supplier');
+        $purchaseCriteria->compare('supplier.name', $purchase->supplier_name, true);
+
+        $purchaseCriteria->addCondition("status_document = 'Approved'");
+        $purchaseDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
+                'criteria'=>$purchaseCriteria,
+        ));
+
+        $consignment = new ConsignmentInHeader('search');
+        $consignment->unsetAttributes();  // clear any default values
+        if (isset($_GET['ConsignmentInHeader']))
+            $consignment->attributes = $_GET['ConsignmentInHeader'];
+
+        $consignmentCriteria = new CDbCriteria;
+        $consignmentCriteria->compare('consignment_in_number', $consignment->consignment_in_number . '%', true, 'AND', false);
+        $consignmentCriteria->addCondition("status_document = 'Approved'");
+        $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
+                    'criteria' => $consignmentCriteria,
+                ));
+
+        $movement = new MovementOutHeader('search');
+        $movement->unsetAttributes();  // clear any default values
+        if (isset($_GET['MovementOutHeader']))
+            $movement->attributes = $_GET['MovementOutHeader'];
+
+        $movementCriteria = new CDbCriteria;
+        $movementCriteria->compare('movement_out_no', $movement->movement_out_no . '%', true, 'AND', false);
+        $movementCriteria->addCondition("status != 'Draft' AND status != 'Rejected' AND status != 'Revised'");
+        $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
+            'criteria' => $movementCriteria,
+        ));
 
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-//            'transfer' => $transfer,
-//            'transferDataProvider' => $transferDataProvider,
-//            'purchase' => $purchase,
-//            'purchaseDataProvider' => $purchaseDataProvider,
-//            'consignment' => $consignment,
-//            'consignmentDataProvider' => $consignmentDataProvider,
-//            'delivery' => $delivery,
-//            'deliveryDataProvider' => $deliveryDataProvider,
-//            'movement' => $movement,
-//            'movementDataProvider' => $movementDataProvider,
+            'transfer' => $transfer,
+            'transferDataProvider' => $transferDataProvider,
+            'purchase' => $purchase,
+            'purchaseDataProvider' => $purchaseDataProvider,
+            'consignment' => $consignment,
+            'consignmentDataProvider' => $consignmentDataProvider,
+            'delivery' => $delivery,
+            'deliveryDataProvider' => $deliveryDataProvider,
+            'movement' => $movement,
+            'movementDataProvider' => $movementDataProvider,
         ));
     }
 

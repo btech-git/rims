@@ -47,51 +47,68 @@ class TransactionDeliveryOrderController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    public function actionCreate($transactionId, $movementType) {
         
-        $transfer = new TransactionTransferRequest('search');
-        $transfer->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionTransferRequest'])) {
-            $transfer->attributes = $_GET['TransactionTransferRequest'];
-        }
-        
-        $transferDataProvider = $transfer->searchByDelivery();
-
-        $sent = new TransactionSentRequest('search');
-        $sent->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionSentRequest'])) {
-            $sent->attributes = $_GET['TransactionSentRequest'];
-        }
-        
-        $sentDataProvider = $sent->searchByDelivery();
-
-        $sales = new TransactionSalesOrder('search');
-        $sales->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionSalesOrder'])) {
-            $sales->attributes = $_GET['TransactionSalesOrder'];
-        }
-        
-        $salesDataProvider = $sales->searchByDelivery();
-
-        $consignment = new ConsignmentOutHeader('search');
-        $consignment->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['ConsignmentOutHeader'])) {
-            $consignment->attributes = $_GET['ConsignmentOutHeader'];
-        }
-        
-        $consignmentDataProvider = $consignment->searchByDelivery();
-
         $deliveryOrder = $this->instantiate(null);
         $deliveryOrder->header->posting_date = date('Y-m-d');
         $deliveryOrder->header->estimate_arrival_date = null;
         $deliveryOrder->header->sender_branch_id = $deliveryOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $deliveryOrder->header->sender_branch_id;
-//        $deliveryOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($deliveryOrder->header->delivery_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($deliveryOrder->header->delivery_date)), $deliveryOrder->header->sender_branch_id);
         $this->performAjaxValidation($deliveryOrder->header);
 
+        if ($movementType == 1) {
+            $saleOrder = TransactionSalesOrder::model()->findByPk($transactionId);
+            $deliveryOrder->header->sales_order_id = $transactionId;
+            $deliveryOrder->header->sent_request_id = null;
+            $deliveryOrder->header->consignment_out_id = null;
+            $deliveryOrder->header->transfer_request_id = null;
+            $deliveryOrder->header->customer_id = $saleOrder->customer_id;
+            $deliveryOrder->header->request_type = 'Sales Order';
+            $deliveryOrder->header->destination_branch = null;
+            $deliveryOrder->header->estimate_arrival_date = null;
+            $deliveryOrder->header->request_date = $saleOrder->sale_order_date;
+            
+        } else if ($movementType == 2) {
+            $sentRequest = TransactionSentRequest::model()->findByPk($transactionId);
+            $deliveryOrder->header->sales_order_id = null;
+            $deliveryOrder->header->sent_request_id = $transactionId;
+            $deliveryOrder->header->consignment_out_id = null;
+            $deliveryOrder->header->transfer_request_id = null;
+            $deliveryOrder->header->customer_id = null;
+            $deliveryOrder->header->request_type = 'Sent Request';
+            $deliveryOrder->header->destination_branch = $sentRequest->destination_branch_id;
+            $deliveryOrder->header->estimate_arrival_date = $sentRequest->estimate_arrival_date;
+            $deliveryOrder->header->request_date = $sentRequest->sent_request_date;
+            
+        }  else if ($movementType == 3) {
+            $consignmentOut = ConsignmentOutHeader::model()->findByPk($transactionId);
+            $deliveryOrder->header->sales_order_id = null;
+            $deliveryOrder->header->sent_request_id = null;
+            $deliveryOrder->header->consignment_out_id = $transactionId;
+            $deliveryOrder->header->transfer_request_id = null;
+            $deliveryOrder->header->customer_id = $consignmentOut->customer_id;
+            $deliveryOrder->header->request_type = 'Consignment Out';
+            $deliveryOrder->header->destination_branch = null;
+            $deliveryOrder->header->estimate_arrival_date = null;
+            $deliveryOrder->header->request_date = $consignmentOut->date_posting;
+            
+        }  else if ($movementType == 4) {
+            $transferRequest = TransactionTransferRequest::model()->findByPk($transactionId);
+            $deliveryOrder->header->sales_order_id = null;
+            $deliveryOrder->header->sent_request_id = null;
+            $deliveryOrder->header->consignment_out_id = null;
+            $deliveryOrder->header->transfer_request_id = $transactionId;
+            $deliveryOrder->header->customer_id = null;
+            $deliveryOrder->header->request_type = 'Transfer Request';
+            $deliveryOrder->header->destination_branch = $transferRequest->destination_branch_id;
+            $deliveryOrder->header->estimate_arrival_date = $transferRequest->estimate_arrival_date;
+            $deliveryOrder->header->request_date = $transferRequest->transfer_request_date;
+            
+        } else {
+            $this->redirect(array('admin'));
+        }
+        
+        $deliveryOrder->addDetails($transactionId, $movementType);
+        
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
@@ -100,14 +117,6 @@ class TransactionDeliveryOrderController extends Controller {
             $this->loadState($deliveryOrder);
             $deliveryOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($deliveryOrder->header->delivery_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($deliveryOrder->header->delivery_date)), $deliveryOrder->header->sender_branch_id);
             
-            if (!empty($deliveryOrder->header->sales_order_id)) {
-                $deliveryOrder->header->customer_id = $deliveryOrder->header->salesOrder->customer_id;
-            } elseif (!empty($deliveryOrder->header->consignment_out_id)) {
-                $deliveryOrder->header->customer_id = $deliveryOrder->header->consignmentOut->customer_id;
-            } else {
-                $deliveryOrder->header->customer_id = null;
-            }
-
             if ($deliveryOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $deliveryOrder->header->id));
             }
@@ -115,14 +124,6 @@ class TransactionDeliveryOrderController extends Controller {
 
         $this->render('create', array(
             'deliveryOrder' => $deliveryOrder,
-            'sent' => $sent,
-            'sentDataProvider' => $sentDataProvider,
-            'sales' => $sales,
-            'salesDataProvider' => $salesDataProvider,
-            'consignment' => $consignment,
-            'consignmentDataProvider' => $consignmentDataProvider,
-            'transfer' => $transfer,
-            'transferDataProvider' => $transferDataProvider,
         ));
     }
 

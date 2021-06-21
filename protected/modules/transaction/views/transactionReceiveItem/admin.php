@@ -12,19 +12,6 @@ $this->menu=array(
     array('label'=>'Create TransactionReceiveItem', 'url'=>array('create')),
 );
 
-// Yii::app()->clientScript->registerScript('search', "
-// $('.search-button').click(function(){
-// 	$('.search-form').toggle();
-// 	return false;
-// });
-// $('.search-form form').submit(function(){
-// 	$('#transaction-receive-item-grid').yiiGridView('update', {
-// 		data: $(this).serialize()
-// 	});
-// 	return false;
-// });
-// ");
-
 Yii::app()->clientScript->registerScript('search', "
     $('.search-button').click(function(){
         $('.search-form').slideToggle(600);
@@ -51,7 +38,7 @@ Yii::app()->clientScript->registerScript('search', "
 	
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Receive Item', Yii::app()->baseUrl.'/transaction/transactionReceiveItem/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionReceiveItem.create"))) ?>
+        <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Receive Item', Yii::app()->baseUrl.'/transaction/transactionReceiveItem/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionReceiveItem.create"))) ?>
         <h1>Manage Transaction Receive Item</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
@@ -113,50 +100,34 @@ Yii::app()->clientScript->registerScript('search', "
             )); ?>
         </div>
 
-<!--        <fieldset>
+        <fieldset>
             <legend>Pending Orders</legend>
             <div>
-                <?php /*$this->widget('zii.widgets.jui.CJuiTabs', array(
+                <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => array(
                         'Purchase Order' => array(
-                            'content' => $this->renderPartial(
-                                '_viewPurchaseOrder',
-                                array(
-                                    'purchase'=>$purchase,
-                                    'purchaseDataProvider'=>$purchaseDataProvider,
-                                ),
-                                true
-                            )
+                            'content' => $this->renderPartial('_viewPurchaseOrder', array(
+                                'purchase'=>$purchase,
+                                'purchaseDataProvider'=>$purchaseDataProvider,
+                            ), true)
                         ),
                         'Internal Delivery Order' => array(
-                            'content' => $this->renderPartial(
-                                '_viewDelivery',
-                                array(
-                                    'delivery'=>$delivery,
-                                    'deliveryDataProvider'=>$deliveryDataProvider,
-                                ),
-                                true
-                            )
+                            'content' => $this->renderPartial('_viewDelivery', array(
+                                'delivery'=>$delivery,
+                                'deliveryDataProvider'=>$deliveryDataProvider,
+                            ), true),
                         ),
                         'Consignment In' => array(
-                            'content' => $this->renderPartial(
-                                '_viewConsignment',
-                                array(
-                                    'consignment'=>$consignment,
-                                    'consignmentDataProvider'=>$consignmentDataProvider,
-                                ),
-                                true
-                            )
+                            'content' => $this->renderPartial('_viewConsignment', array(
+                                'consignment'=>$consignment,
+                                'consignmentDataProvider'=>$consignmentDataProvider,
+                            ), true),
                         ),
                         'Retail Sales' => array(
-                            'content' => $this->renderPartial(
-                                '_viewRetailSales',
-                                array(
-                                    'movement'=>$movement,
-                                    'movementDataProvider'=>$movementDataProvider,
-                                ),
-                                true
-                            )
+                            'content' => $this->renderPartial('_viewRetailSales', array(
+                                'movement'=>$movement,
+                                'movementDataProvider'=>$movementDataProvider,
+                            ), true),
                         ),
                     ),
                     // additional javascript options for the tabs plugin
@@ -165,8 +136,8 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     // set id for this widgets
                     'id' => 'view_tab',
-                ));*/ ?>
+                )); ?>
             </div>
-        </fieldset>-->
+        </fieldset>
     </div>
 </div>

@@ -5,12 +5,11 @@
         'id'=>'purchase-grid',
         'dataProvider'=>$purchaseDataProvider,
         'filter'=>$purchase,
-        //'summaryText'=>'',
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager'=>array(
             'cssFile'=>false,
             'header'=>'',
-                    ),
+        ),
         'columns'=>array(
             array(
                 'name'=>'purchase_order_no', 
@@ -29,7 +28,6 @@
                     if (count($data->transactionReceiveItems) >0) {
                         foreach ($data->transactionReceiveItems as $key => $receive) {
                             echo $receive->receive_item_no. "<br>";
-
                         }
                     }
                 }
@@ -37,6 +35,14 @@
             array(
                 'header' => 'Status',
                 'value' => '$data->totalRemainingQuantityReceived'
+            ),
+            array(
+                'header' => '',
+                'type' => 'raw',
+                'value' => 'CHtml::link("Create", array("create", "transactionId"=>$data->id, "movementType"=>"1"))',
+                'htmlOptions' => array(
+                    'style' => 'text-align: center;'
+                ),
             ),
         ),
     )); ?>

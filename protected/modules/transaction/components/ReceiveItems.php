@@ -31,10 +31,9 @@ class ReceiveItems extends CComponent {
         $this->header->setCodeNumberByNext('receive_item_no', $branchCode, TransactionReceiveItem::CONSTANT, $currentMonth, $currentYear);
     }
 
-    public function addDetail($requestType, $requestId) {
+    public function addDetails($requestId, $requestType) {
 
         if ($requestType == 1) {
-            //$purchaseOrder = TransactionPurchaseOrder::model()->findByPk($requestId);
             $purchases = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $requestId));
             foreach ($purchases as $key => $purchase) {
                 if ($purchase->purchase_order_quantity_left > 0) {
@@ -55,16 +54,6 @@ class ReceiveItems extends CComponent {
             } //endforeach
         }//end if
         elseif ($requestType == 2) {
-            //$transferRequest = TransactionTransferRequest::model()->findByPk($requestId);
-            /* $transfers = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id'=>$requestId));
-              foreach ($transfers as $key => $transfer) {
-              $detail = new TransactionReceiveItemDetail();
-              $detail->product_id = $transfer->product_id;
-              $detail->qty_request = $transfer->quantity;
-              $detail->qty_request_left = $transfer->transfer_request_quantity_left;
-              $detail->transfer_request_detail_id = $transfer->id;
-              $this->details[] = $detail;
-              } */
             $deliveries = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $requestId));
             foreach ($deliveries as $key => $delivery) {
                 $detail = new TransactionReceiveItemDetail();
@@ -77,7 +66,6 @@ class ReceiveItems extends CComponent {
                 $this->details[] = $detail;
             }
         } elseif ($requestType == 3) {
-            //$transferRequest = TransactionTransferRequest::model()->findByPk($requestId);
             $consignments = ConsignmentInDetail::model()->findAllByAttributes(array('consignment_in_id' => $requestId));
             foreach ($consignments as $key => $consignment) {
                 $detail = new TransactionReceiveItemDetail();
@@ -89,8 +77,19 @@ class ReceiveItems extends CComponent {
                 $detail->barcode_product = $consignment->barcode_product;
                 $this->details[] = $detail;
             }
+        } elseif ($requestType == 4) {
+            $movementOuts = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $requestId));
+            foreach ($movementOuts as $key => $movementOut) {
+                $detail = new TransactionReceiveItemDetail();
+                $detail->product_id = $movementOut->product_id;
+                $detail->qty_request = $movementOut->quantity;
+                $detail->qty_request_left = $movementOut->quantity_receive_left;
+                $detail->movement_out_detail_id = $movementOut->id;
+                $detail->note = 'Movement Out';
+                $detail->barcode_product = null;
+                $this->details[] = $detail;
+            }
         }
-        //echo "5";
     }
 
     public function removeDetailAt() {

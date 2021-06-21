@@ -10,24 +10,32 @@
             'cssFile'=>false,
             'header'=>'',
             ),
-        //'summaryText'=>'',
         'columns'=>array(
-            //'id',
-            //'code',
-            array('name'=>'consignment_in_number', 'value'=>'CHTml::link($data->consignment_in_number, array("/transaction/ConsignmentInHeader/view", "id"=>$data->id))', 'type'=>'raw'),
-            //'consignment_in_number',
+            array(
+                'name'=>'consignment_in_number', 
+                'value'=>'CHTml::link($data->consignment_in_number, array("/transaction/ConsignmentInHeader/view", "id"=>$data->id))', 
+                'type'=>'raw'
+            ),
             'date_posting',
             'status_document',
-            array('header'=>'Receives','value'=> function($data){
-            if(count($data->transactionReceiveItems) >0) {
-                foreach ($data->transactionReceiveItems as $key => $receive) {
-                    echo $receive->receive_item_no. "<br>";
-
+            array(
+                'header'=>'Receives',
+                'value'=> function($data){
+                    if(count($data->transactionReceiveItems) >0) {
+                        foreach ($data->transactionReceiveItems as $key => $receive) {
+                            echo $receive->receive_item_no. "<br>";
+                        }
+                    }
                 }
-            }
-
-
-            }
-        )),
+            ),
+            array(
+                'header' => '',
+                'type' => 'raw',
+                'value' => 'CHtml::link("Create", array("create", "transactionId"=>$data->id, "movementType"=>"3"))',
+                'htmlOptions' => array(
+                    'style' => 'text-align: center;'
+                ),
+            ),
+        ),
     )); ?>
 </div>

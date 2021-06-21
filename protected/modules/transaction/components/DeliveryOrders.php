@@ -36,7 +36,7 @@ class DeliveryOrders extends CComponent {
         $this->header->setCodeNumberByNext('delivery_order_no', $branchCode, TransactionDeliveryOrder::CONSTANT, $currentMonth, $currentYear);
     }
 
-    public function addDetail($requestType, $requestId) {
+    public function addDetails($requestId, $requestType) {
         $this->details = array();
 
         if ($requestType == 1) {
@@ -46,7 +46,6 @@ class DeliveryOrders extends CComponent {
                 $detail->product_id = $sale->product_id;
                 $detail->quantity_request = $sale->quantity;
                 $detail->quantity_request_left = $sale->remainingQuantityDelivery;
-                //added 20 july 10 pm
                 $detail->sales_order_detail_id = $sale->id;
                 $this->details[] = $detail;
             } //endforeach
@@ -58,7 +57,6 @@ class DeliveryOrders extends CComponent {
                 $detail->product_id = $sent->product_id;
                 $detail->quantity_request = $sent->quantity;
                 $detail->quantity_request_left = $sent->remainingQuantityDelivery;
-                //added 20 july 10 pm
                 $detail->sent_request_detail_id = $sent->id;
                 $this->details[] = $detail;
             }
@@ -69,7 +67,6 @@ class DeliveryOrders extends CComponent {
                 $detail->product_id = $consignment->product_id;
                 $detail->quantity_request = $consignment->quantity;
                 $detail->quantity_request_left = $consignment->remainingQuantityDelivery;
-                //added 20 july 10 pm
                 $detail->consignment_out_detail_id = $consignment->id;
                 $this->details[] = $detail;
             }
@@ -87,8 +84,6 @@ class DeliveryOrders extends CComponent {
     }
 
     public function removeDetailAt() {
-        //array_splice($this->details, $index, 1);
-        //var_dump(CJSON::encode($this->details));
         $this->details = array();
     }
 
