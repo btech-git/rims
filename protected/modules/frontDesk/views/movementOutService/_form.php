@@ -115,7 +115,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 
                                 <!-- END COLUMN 6-->
                                 <div class="medium-6 columns">

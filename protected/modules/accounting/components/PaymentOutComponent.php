@@ -128,6 +128,15 @@ class PaymentOutComponent extends CComponent {
     public function flush() {
         $valid = $this->header->save(false);
 
+        //save Invoice
+        $invoices = PayOutDetail::model()->findAllByAttributes(array('payment_out_id' => $this->header->id));
+        $invoice_id = array();
+        
+        foreach ($invoices as $invoice) {
+            $invoice_id[] = $invoice->id;
+        }
+        $new_invoice = array();
+
         foreach ($this->details as $detail) {
             if ($detail->total_invoice <= 0.00)
                 continue;
@@ -136,11 +145,20 @@ class PaymentOutComponent extends CComponent {
                 $detail->payment_out_id = $this->header->id;
 
             $valid = $detail->save(false) && $valid;
+            $new_invoice[] = $detail->id;
 
 //            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
 //            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
 //            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
 //            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+        }
+
+        //delete 
+        $delete_invoice_array = array_diff($invoice_id, $new_invoice);
+        if ($delete_invoice_array != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_invoice_array);
+            PayOutDetail::model()->deleteAll($criteria);
         }
 
         foreach ($this->header->images as $file) {

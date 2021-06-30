@@ -7,8 +7,11 @@ $this->breadcrumbs = array(
 
 <h1>Update Permintaan Bahan</h1>
 
-<?php echo $this->renderPartial('_form', array(
-    'materialRequest' => $materialRequest,
-    'product' => $product,
-    'productDataProvider' => $productDataProvider,    
-)); ?>
+<div id="maincontent">
+    <?php echo $this->renderPartial('_form', array(
+        'materialRequest' => $materialRequest,
+        'product' => $product,
+        'productDataProvider' => $productDataProvider,
+        'branches' => $branches,
+    )); ?>
+</div>

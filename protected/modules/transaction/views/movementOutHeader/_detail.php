@@ -60,7 +60,7 @@
                             'onclick' => CHtml::ajax(array(
                                 'type' => 'POST',
                                 'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $movementOut->header->id, 'index' => $i)),
-                                'update' => '#delivery',
+                                'update' => '#mmtype',
                             )),
                         )); ?>
                     </td>

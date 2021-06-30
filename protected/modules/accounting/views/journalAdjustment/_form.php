@@ -5,6 +5,8 @@
 
         <div class="form">
             <?php echo CHtml::beginForm(); ?>
+            <?php Yii::app()->clientScript->registerCoreScript('jquery'); ?>
+            <?php Yii::app()->clientScript->registerCoreScript('jquery.ui'); ?>
             <span style="color: red; font-weight: bold"><?php echo CHtml::errorSummary($journalVoucher->header); ?></span>
             <!--<p class="note">Fields with <span class="required">*</span> are required.</p>-->
 
@@ -200,3 +202,10 @@
 <?php echo CHtml::endForm(); ?>
 
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<?php
+    Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
+    Yii::app()->clientScript->registerScript('myjavascript', '
+        $(".numbers").number( true,2, ".", ",");
+    ', CClientScript::POS_END);
+?>

@@ -439,7 +439,7 @@ class Coa extends CActiveRecord {
         return $balanceTotal;
     }
     
-    public function getFinancialForecastReport($datePrevious) {
+    public function getFinancialForecastReport($datePrevious, $dateNow) {
         
         $sql = "SELECT transaction_date, coa_id, SUM(receivable_debit) AS total_receivable_debit, SUM(payable_credit) AS total_payable_credit, SUM(journal_debit) AS total_journal_debit, SUM(journal_credit) AS total_journal_credit
                 FROM (
@@ -462,7 +462,7 @@ class Coa extends CActiveRecord {
                 ORDER BY transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':date_now' => date('Y-m-d'),
+            ':date_now' => $dateNow,
             ':payment_date_estimate' => $datePrevious,
             ':coa_bank_id_estimate' => $this->id,
 //            ':branch_id' => $branchId,

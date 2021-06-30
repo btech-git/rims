@@ -68,6 +68,8 @@ class MaterialRequestController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
 
+        $branches = Branch::model()->findAll();
+        
         $details = array();
         foreach ($materialRequest->details as $detail) {
             $details[] = $detail;
@@ -88,6 +90,7 @@ class MaterialRequestController extends Controller {
             'materialRequest' => $materialRequest,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
+            'branches' => $branches,
         ));
     }
 
@@ -192,10 +195,12 @@ class MaterialRequestController extends Controller {
             $materialRequest = $this->instantiate($id);
             $this->loadState($materialRequest);
 
+            $branches = Branch::model()->findAll();
             $materialRequest->removeDetailAt($index);
 
             $this->renderPartial('_detail', array(
                 'materialRequest' => $materialRequest,
+                'branches' => $branches,
             ));
         }
     }

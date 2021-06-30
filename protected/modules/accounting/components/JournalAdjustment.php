@@ -40,7 +40,7 @@ class JournalAdjustment extends CComponent {
 //        }
     }
 
-    public function removeDetailAt($index) {
+    public function removeAccountDetailAt($index) {
         array_splice($this->details, $index, 1);
     }
 
@@ -86,12 +86,30 @@ class JournalAdjustment extends CComponent {
     public function flush() {
         $valid = $this->header->save(false);
 
+        //save Product
+        $accounts = JournalAdjustmentDetail::model()->findAllByAttributes(array('journal_adjustment_header_id' => $this->header->id));
+        $account_id = array();
+        
+        foreach ($accounts as $account) {
+            $account_id[] = $account->id;
+        }
+        $new_account = array();
+
         foreach ($this->details as $detail) {
             if ($detail->isNewRecord) {
                 $detail->journal_adjustment_header_id = $this->header->id;
             }
 
             $valid = $valid && $detail->save(false);
+            $new_account[] = $detail->id;
+        }
+
+        //delete 
+        $delete_account_array = array_diff($account_id, $new_account);
+        if ($delete_account_array != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_account_array);
+            JournalAdjustmentDetail::model()->deleteAll($criteria);
         }
 
         return $valid;

@@ -83,7 +83,7 @@ class AdjustmentController extends Controller {
             $this->loadState($adjustment);
 
             if (isset($_POST['ProductId']))
-                $adjustment->addDetail($_POST['ProductId']);
+                $adjustment->addDetail($_POST['ProductId'], $_POST['StockAdjustmentHeader']['branch_id']);
 
             $this->renderPartial('_detail', array(
                 'adjustment' => $adjustment,

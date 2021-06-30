@@ -15,7 +15,7 @@
             <tr style="background-color: azure">
                 <td>
                     <?php echo CHtml::activeHiddenField($detail, "[$i]coa_id"); ?>
-                    <?php echo CHtml::encode(CHtml::value($detail, 'coa.code')); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'coa.code')); ?> - 
                     <?php echo CHtml::error($detail, 'coa_id'); ?>
                 </td>
 
@@ -67,13 +67,13 @@
                 </td>
 
                 <td>
-                    <?php /*echo CHtml::button('Delete', array(
+                    <?php echo CHtml::button('X', array(
                         'onclick' => CHtml::ajax(array(
                             'type' => 'POST',
-                            'url' => CController::createUrl('AjaxHtmlRemoveDetail', array('id' => $journalVoucher->header->id, 'index' => $i)),
+                            'url' => CController::createUrl('ajaxHtmlRemoveAccountDetail', array('id' => $journalVoucher->header->id, 'index' => $i)),
                             'update' => '#detail_div',
                         )),
-                    ));*/ ?>
+                    )); ?>
                 </td>
             </tr>
         <?php endforeach; ?>

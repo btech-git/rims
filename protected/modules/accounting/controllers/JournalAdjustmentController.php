@@ -183,12 +183,13 @@ class JournalAdjustmentController extends Controller {
         }
     }
 
-    public function actionAjaxHtmlRemoveDetail($id, $index) {
+    public function actionAjaxHtmlRemoveAccountDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
+
             $journalVoucher = $this->instantiate($id);
             $this->loadState($journalVoucher);
 
-            $journalVoucher->removeDetailAt($index);
+            $journalVoucher->removeAccountDetailAt($index);
 
             $this->renderPartial('_detail', array(
                 'journalVoucher' => $journalVoucher,
@@ -262,6 +263,8 @@ class JournalAdjustmentController extends Controller {
                     $journalVoucher->details[] = $detail;
                 }
             }
+            if (count($_POST['JournalAdjustmentDetail']) < count($journalVoucher->details))
+                array_splice($journalVoucher->details, $i + 1);
         } else {
             $journalVoucher->details = array();
         }

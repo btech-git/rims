@@ -33,31 +33,26 @@ You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&g
 or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
 </p>
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
+<?php //echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
+<!--<div class="search-form" style="display:none">
+<?php /*$this->renderPartial('_search',array(
 	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
+));*/ ?>
+</div> search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'registration-service-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'id',
-		'registration_transaction_id',
-		'service_id',
-		'employee_id',
-		'claim',
-		'price',
-		/*
-		'service_exception_rate',
-		'total_price',
-		'hour',
-		*/
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
+    'id'=>'registration-service-grid',
+    'dataProvider'=>$model->search(),
+    'filter'=>$model,
+    'columns'=>array(
+//        'id',
+        'registrationTransaction.transaction_number',
+        'service.name',
+//        'employee.name',
+        'claim',
+        'price',
+        array(
+            'class'=>'CButtonColumn',
+        ),
+    ),
 )); ?>
