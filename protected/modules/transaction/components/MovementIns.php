@@ -75,21 +75,20 @@ class MovementIns extends CComponent {
 
     public function addDetails($transactionId, $movementType) {
 
-        $this->details = array();
-        
-        $detail = new MovementInDetail();
-        
         if ($movementType == 1) {
             $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
 
             if ($receiveItem !== null) {
                 foreach ($receiveItem->transactionReceiveItemDetails as $receiveItemDetail) {
+                    if ($receiveItemDetail->quantity_movement_left > 0) {
 
-                    $detail->receive_item_detail_id = $receiveItemDetail->id;
-                    $detail->return_item_detail_id = null;
-                    $detail->product_id = $receiveItemDetail->product_id;
-                    $detail->quantity_transaction = $receiveItemDetail->quantity_movement_left;
-
+                        $detail = new MovementInDetail();
+                        $detail->receive_item_detail_id = $receiveItemDetail->id;
+                        $detail->return_item_detail_id = null;
+                        $detail->product_id = $receiveItemDetail->product_id;
+                        $detail->quantity_transaction = $receiveItemDetail->quantity_movement_left;
+                        $this->details[] = $detail;
+                    }
                 }
             }
         } else if ($movementType == 2) {
@@ -97,17 +96,18 @@ class MovementIns extends CComponent {
 
             if ($returnItem !== null) {
                 foreach ($returnItem->transactionReturnItemDetails as $returnDetail) {
+                    if ($receiveItemDetail->quantity_movement_left > 0) {
 
-                    $detail->receive_item_detail_id = null;
-                    $detail->return_item_detail_id = $returnDetail->id;
-                    $detail->product_id = $returnDetail->product_id;
-                    $detail->quantity_transaction = $returnDetail->quantity_movement_left;
-
+                        $detail = new MovementInDetail();
+                        $detail->receive_item_detail_id = null;
+                        $detail->return_item_detail_id = $returnDetail->id;
+                        $detail->product_id = $returnDetail->product_id;
+                        $detail->quantity_transaction = $returnDetail->quantity_movement_left;
+                        $this->details[] = $detail;
+                    }
                 }
             }
         }
-        
-        $this->details[] = $detail;
     }
 
     public function removeDetailAt($index) {
@@ -168,17 +168,17 @@ class MovementIns extends CComponent {
 
             if ($detail->id == "") {
                 $moveDetail = MovementInDetail::model()->findByAttributes(array('movement_in_header_id' => $this->header->id, 'product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
-                if (!empty($moveDetail) != 0) {
+                if (!empty($moveDetail)) {
                     $moveDetail->quantity += $detail->quantity;
                     $moveDetail->save() && $valid;
                 } else {
-                    $detail->movement_in_header_id = $this->header->id;
-                    $valid = $detail->save(false) && $valid;
+                    if ($detail->quantity > 0) {
+                        $detail->movement_in_header_id = $this->header->id;
+                        $valid = $detail->save(false) && $valid;
+                    }
                 }
-            } // endif
-            else {
+            } else {
                 $detail->movement_in_header_id = $this->header->id;
-                //$detail->request_order_quantity_rest = $detail->quantity;
                 $valid = $detail->save(false) && $valid;
             }
 
@@ -229,5 +229,4 @@ class MovementIns extends CComponent {
 
         return $valid;
     }
-
 }

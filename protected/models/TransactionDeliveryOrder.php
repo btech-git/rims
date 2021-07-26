@@ -221,7 +221,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 'delivery_date DESC',
+                'defaultOrder' => 't.delivery_date DESC',
             ),
             'pagination' => array(
                 'pageSize' => 10,

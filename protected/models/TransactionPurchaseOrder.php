@@ -228,15 +228,19 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         )";
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('purchase_order_date', $this->purchase_order_date, true);
-        $criteria->compare('supplier_id', $this->supplier_id);
         $criteria->compare('purchase_order_no', $this->purchase_order_no . '%', true, 'AND', false);
+        $criteria->compare('purchase_order_date', $this->purchase_order_date, true);
+        
+        $criteria->together = 'true';
+        $criteria->with = array('supplier');
+        $criteria->compare('supplier.name', $this->supplier_name, true);
+
         $criteria->addCondition("status_document = 'Approved'");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 'purchase_order_date DESC',
+                'defaultOrder' => 't.purchase_order_date DESC',
             ),
             'pagination' => array(
                 'pageSize' => 10,

@@ -286,6 +286,7 @@ class TransactionReceiveItemController extends Controller {
         $dataProvider->criteria->with = array(
             'supplier',
             'recipientBranch',
+            'purchaseOrder',
         );
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
@@ -293,31 +294,33 @@ class TransactionReceiveItemController extends Controller {
         
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.receive_item_date, 1, 10)', $startDate, $endDate);
 
-        $transfer = new TransactionTransferRequest('search');
-        $transfer->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionTransferRequest']))
-            $transfer->attributes = $_GET['TransactionTransferRequest'];
-
-        $transferCriteria = new CDbCriteria;
-        $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
-
-        $transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
-                    'criteria' => $transferCriteria,
-                ));
+//        $transfer = new TransactionTransferRequest('search');
+//        $transfer->unsetAttributes();  // clear any default values
+//        if (isset($_GET['TransactionTransferRequest']))
+//            $transfer->attributes = $_GET['TransactionTransferRequest'];
+//
+//        $transferCriteria = new CDbCriteria;
+//        $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
+//
+//        $transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
+//            'criteria' => $transferCriteria,
+//        ));
 
         $delivery = new TransactionDeliveryOrder('search');
         $delivery->unsetAttributes();  // clear any default values
+        
         if (isset($_GET['TransactionDeliveryOrder']))
             $delivery->attributes = $_GET['TransactionDeliveryOrder'];
+        
         $deliveryDataProvider = $delivery->searchByReceive();
 
-		$deliveryCriteria = new CDbCriteria;
-		$deliveryCriteria->condition = "request_type = 'Transfer Request'";
-		$deliveryCriteria->compare('delivery_order_no',$delivery->delivery_order_no.'%',true,'AND', false);
-		
-		$deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
-			'criteria'=>$deliveryCriteria,
-		));
+//        $deliveryCriteria = new CDbCriteria;
+//        $deliveryCriteria->condition = "request_type = 'Transfer Request'";
+//        $deliveryCriteria->compare('delivery_order_no',$delivery->delivery_order_no.'%',true,'AND', false);
+//
+//        $deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
+//            'criteria'=>$deliveryCriteria,
+//        ));
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values
@@ -326,17 +329,17 @@ class TransactionReceiveItemController extends Controller {
         
         $purchaseDataProvider = $purchase->searchByReceive();
 
-        $purchaseCriteria = new CDbCriteria;
-        $purchaseCriteria->compare('purchase_order_no',$purchase->purchase_order_no.'%',true,'AND', false);
-        $purchaseCriteria->compare('purchase_order_date',$purchase->purchase_order_date.'%',true,'AND', false);
-        $purchaseCriteria->together = 'true';
-        $purchaseCriteria->with = array('supplier');
-        $purchaseCriteria->compare('supplier.name', $purchase->supplier_name, true);
-
-        $purchaseCriteria->addCondition("status_document = 'Approved'");
-        $purchaseDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
-                'criteria'=>$purchaseCriteria,
-        ));
+//        $purchaseCriteria = new CDbCriteria;
+//        $purchaseCriteria->compare('purchase_order_no',$purchase->purchase_order_no.'%',true,'AND', false);
+//        $purchaseCriteria->compare('purchase_order_date',$purchase->purchase_order_date.'%',true,'AND', false);
+//        $purchaseCriteria->together = 'true';
+//        $purchaseCriteria->with = array('supplier');
+//        $purchaseCriteria->compare('supplier.name', $purchase->supplier_name, true);
+//
+//        $purchaseCriteria->addCondition("status_document = 'Approved'");
+//        $purchaseDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
+//            'criteria'=>$purchaseCriteria,
+//        ));
 
         $consignment = new ConsignmentInHeader('search');
         $consignment->unsetAttributes();  // clear any default values
@@ -346,9 +349,10 @@ class TransactionReceiveItemController extends Controller {
         $consignmentCriteria = new CDbCriteria;
         $consignmentCriteria->compare('consignment_in_number', $consignment->consignment_in_number . '%', true, 'AND', false);
         $consignmentCriteria->addCondition("status_document = 'Approved'");
+        $consignmentCriteria->order = 't.date_posting DESC';
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
-                    'criteria' => $consignmentCriteria,
-                ));
+            'criteria' => $consignmentCriteria,
+        ));
 
         $movement = new MovementOutHeader('search');
         $movement->unsetAttributes();  // clear any default values
@@ -358,6 +362,7 @@ class TransactionReceiveItemController extends Controller {
         $movementCriteria = new CDbCriteria;
         $movementCriteria->compare('movement_out_no', $movement->movement_out_no . '%', true, 'AND', false);
         $movementCriteria->addCondition("status != 'Draft' AND status != 'Rejected' AND status != 'Revised'");
+        $movementCriteria->order = 't.date_posting DESC';
         $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
             'criteria' => $movementCriteria,
         ));
@@ -367,8 +372,8 @@ class TransactionReceiveItemController extends Controller {
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'transfer' => $transfer,
-            'transferDataProvider' => $transferDataProvider,
+//            'transfer' => $transfer,
+//            'transferDataProvider' => $transferDataProvider,
             'purchase' => $purchase,
             'purchaseDataProvider' => $purchaseDataProvider,
             'consignment' => $consignment,

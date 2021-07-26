@@ -581,25 +581,89 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public function searchByMovementOut() {
         $criteria = new CDbCriteria;
 
+        $criteria->condition = "EXISTS (
+            SELECT COALESCE(SUM(d.quantity_movement_left), 0) AS quantity_remaining
+            FROM " . RegistrationProduct::model()->tableName() . " d
+            WHERE t.id = d.registration_transaction_id
+            GROUP BY d.registration_transaction_id
+            HAVING quantity_remaining > 0
+        )";
+
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
         $criteria->compare('transaction_date', $this->transaction_date, true);
         $criteria->compare('repair_type', $this->repair_type, true);
         $criteria->compare('problem', $this->problem, true);
         $criteria->compare('t.customer_id', $this->customer_id);
-        $criteria->compare('t.vehicle_id', $this->vehicle_id);
-        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('pic_id', $this->pic_id);
+        $criteria->compare('vehicle_id', $this->vehicle_id);
+        $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('total_quickservice', $this->total_quickservice);
+        $criteria->compare('total_quickservice_price', $this->total_quickservice_price, true);
+        $criteria->compare('total_service', $this->total_service);
+        $criteria->compare('subtotal_service', $this->subtotal_service, true);
+        $criteria->compare('discount_service', $this->discount_service, true);
+        $criteria->compare('total_service_price', $this->total_service_price, true);
+        $criteria->compare('total_product', $this->total_product, true);
+        $criteria->compare('subtotal_product', $this->subtotal_product, true);
+        $criteria->compare('discount_product', $this->discount_product, true);
+        $criteria->compare('total_product_price', $this->total_product_price, true);
         $criteria->compare('is_quick_service', $this->is_quick_service);
+        $criteria->compare('is_insurance', $this->is_insurance);
+        $criteria->compare('insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('t.work_order_number', $this->work_order_number, true);
         $criteria->compare('t.work_order_date', $this->work_order_date, true);
-        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('payment_status', $this->payment_status, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('down_payment_amount', $this->down_payment_amount, true);
+        $criteria->compare('laststatusupdate_by', $this->laststatusupdate_by);
+        $criteria->compare('sales_order_number', $this->sales_order_number, true);
+        $criteria->compare('sales_order_date', $this->sales_order_date, true);
+        $criteria->compare('ppn', $this->ppn);
+        $criteria->compare('pph', $this->pph);
+        $criteria->compare('subtotal', $this->subtotal, true);
+        $criteria->compare('ppn_price', $this->ppn_price, true);
+        $criteria->compare('pph_price', $this->pph_price, true);
+        $criteria->compare('vehicle_mileage', $this->vehicle_mileage, true);
         $criteria->compare('note', $this->note, true);
+        $criteria->compare('is_passed', $this->is_passed);
+        $criteria->compare('total_time', $this->total_time);
+        $criteria->compare('vehicle_status', $this->vehicle_status);
+        $criteria->compare('priority_level', $this->priority_level);
+        $criteria->compare('customer_work_order_number', $this->customer_work_order_number);
 
-        $criteria->addCondition("t.work_order_number IS NOT NULL");
+        $criteria->addCondition("t.work_order_number IS NOT NULL AND t.total_product > 0");
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'vehicle' => array(
+                'with' => array(
+                    'carMake', 'carModel', 'color'
+                ),
+            ), 
+            'customer', 
+            'pic',
+        );
+
+        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+        $criteria->compare('customer.name', $this->customer_name, true);
+        $criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
+        $criteria->addSearchCondition('pic.name', $this->pic_name, true);
+        $criteria->compare('carMake.name', $this->car_make_code, true);
+        $criteria->compare('carModel.name', $this->car_model_code, true);
+        $criteria->compare('vehicle.color_id', $this->car_color, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
         ));
     }
 

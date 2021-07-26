@@ -2,6 +2,7 @@
     <table>
         <thead>
             <tr>
+                <th class="required">Code</th>
                 <th class="required">Product</th>
                 <th class="required">Transaction Quantity</th>
                 <th class="required">Warehouses</th>
@@ -19,6 +20,8 @@
                 $list = CHtml::listData($warehouses, 'id', 'name');
                 ?>
                 <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, "product.manufacturer_code")); ?></td>
+                    
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_detail_id", array('size' => 20, 'maxlength' => 20)); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]return_item_detail_id", array('size' => 20, 'maxlength' => 20)); ?>

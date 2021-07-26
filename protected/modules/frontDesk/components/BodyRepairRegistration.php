@@ -505,12 +505,16 @@ class BodyRepairRegistration extends CComponent {
         $new_product = array();
 
         //save request detail
-        foreach ($this->productDetails as $productDetail) {
-            $productDetail->registration_transaction_id = $this->header->id;
-            $productDetail->total_price = $productDetail->totalAmountProduct;
+        if (count($this->productDetails) > 0) {
+            foreach ($this->productDetails as $productDetail) {
+                $productDetail->registration_transaction_id = $this->header->id;
+                $productDetail->total_price = $productDetail->totalAmountProduct;
+                $productDetail->quantity_movement = 0;
+                $productDetail->quantity_movement_left = $productDetail->quantity;
 
-            $valid = $productDetail->save(false) && $valid;
-            $new_product[] = $productDetail->id;
+                $valid = $productDetail->save(false) && $valid;
+                $new_product[] = $productDetail->id;
+            }
         }
 
         //delete 

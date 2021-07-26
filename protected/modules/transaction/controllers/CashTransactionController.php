@@ -283,14 +283,22 @@ class CashTransactionController extends Controller {
         if (isset($_GET['CashTransaction']))
             $model->attributes = $_GET['CashTransaction'];
         
+        $user = Users::model()->findByPk(Yii::app()->user->getId());
+        
         $cashInTransactionDataProvider = $model->search();
-        $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In" ');        
+        $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In" ');
 
         $cashOutTransactionDataProvider = $model->search();
-        $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out" ');        
+        $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out" ');
+        
+        if ((int) $user->branch_id != 6) {
+            $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = ' . $user->branch_id);
+            $cashOutTransactionDataProvider->criteria->addCondition('t.branch_id = ' . $user->branch_id);
+        }
 
         $this->render('admin', array(
             'model' => $model,
+            'user' => $user,
             'cashInTransactionDataProvider' => $cashInTransactionDataProvider,
             'cashOutTransactionDataProvider' => $cashOutTransactionDataProvider,
         ));

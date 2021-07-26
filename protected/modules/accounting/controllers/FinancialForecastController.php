@@ -118,17 +118,17 @@ class FinancialForecastController extends Controller {
         ));
     }
 
-    public function actionApproval($transactionDate, $coaId) {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-
-        $coa = Coa::model()->findByPk($coaId);
-
-        $this->render('approval', array(
-            'transactionDate' => $transactionDate,
-            'coa' => $coa,
-        ));
-    }
+//    public function actionApproval($transactionDate, $coaId) {
+//        set_time_limit(0);
+//        ini_set('memory_limit', '1024M');
+//
+//        $coa = Coa::model()->findByPk($coaId);
+//
+//        $this->render('approval', array(
+//            'transactionDate' => $transactionDate,
+//            'coa' => $coa,
+//        ));
+//    }
 
     public function actionRedirectTransaction($codeNumber) {
         list($leftPart,, ) = explode('/', $codeNumber);

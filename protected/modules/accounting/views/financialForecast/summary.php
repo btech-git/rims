@@ -202,15 +202,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $creditJournalAmount); ?></td>
                                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
                                                 <td style="text-align: center">
-                                                    <?php /*echo CHtml::link('Approval', array('javascript:;'), array(
-                                                        'onclick' => 'window.open("' . CController::createUrl('/report/financialForecast/approval', array(
-                                                            "transactionDate" => $forecastRow['transaction_date'], 
-                                                            "coaId" => $coa->id, 
-                                                        )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                                                    ));*/ ?>
-                                                    
                                                     <?php if (!isset($forecastApprovalReference[$coa->id][$forecastRow['transaction_date']])): ?>
-                                                        <?php //$approveButtonValue = $coa->id . ',' . $forecastRow['transaction_date'] . ',' . $debitReceivableAmount . ',' . $debitJournalAmount . ',' . $creditPayableAmount . ',' . $creditJournalAmount . ',' . $saldo; ?>
                                                         <?php echo CHtml::button('Approve', array(
                                                             'onclick' => '
                                                                 $("#ForecastApprovalCoaId").val("'.$coa->id.'");
@@ -221,9 +213,69 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                                 $("#ForecastApprovalCreditJournalAmount").val("'.$creditJournalAmount.'");
                                                                 $("#ForecastApprovalSaldo").val("'.$saldo.'");
                                                                 $("#forecast-approval-dialog").dialog("open");
-                                                            '
+                                                            ',
+                                                            'style' => 'background-color: green; color:white',
                                                         )); ?>
-                                                        <?php //echo CHtml::htmlButton('Approve', array('type' => 'submit', 'name' => 'Approve', 'value' => $approveButtonValue, 'confirm' => 'Are you sure you want to Approve?')); ?>
+                                                    <?php else: ?>
+                                                        <?php echo CHtml::button('View', array(
+                                                            'onclick' => '
+                                                                $("#ForecastApprovalCoaId").val("'.$coa->id.'");
+                                                                $("#ForecastApprovalTransactionDate").val("'.$forecastRow['transaction_date'].'");
+                                                                $("#ForecastApprovalDebitReceivableAmount").val("'.$debitReceivableAmount.'");
+                                                                $("#ForecastApprovalDebitJournalAmount").val("'.$debitJournalAmount.'");
+                                                                $("#ForecastApprovalCreditPayableAmount").val("'.$creditPayableAmount.'");
+                                                                $("#ForecastApprovalCreditJournalAmount").val("'.$creditJournalAmount.'");
+                                                                $("#ForecastApprovalSaldo").val("'.$saldo.'");
+                                                                $("#forecast-view-dialog").dialog("open");
+                                                            ',
+                                                            'style' => 'background-color: blue; color:white',
+                                                        )); ?>
+
+                                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                                            'id' => 'forecast-view-dialog',
+                                                            // additional javascript options for the dialog plugin
+                                                            'options' => array(
+                                                                'title' => 'Forecast Summary',
+                                                                'autoOpen' => false,
+                                                                'width' => 'auto',
+                                                                'modal' => true,
+                                                            ),
+                                                        )); ?>
+
+                                                        <div>
+                                                            <table>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Tanggal</th>
+                                                                        <th>A/R</th>
+                                                                        <th>Debit</th>
+                                                                        <th>A/P</th>
+                                                                        <th>Kredit</th>
+                                                                        <th>Saldo</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <?php $forecastApproval = FinancialForecastApproval::model()->findByAttributes(array('coa_id' => $coa->id, 'date_transaction' => $forecastRow['transaction_date'])); ?>
+                                                                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($forecastApproval, 'date_transaction')))); ?></td>
+                                                                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'debit_receivable'))); ?></td>
+                                                                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'debit_journal'))); ?></td>
+                                                                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'credit_payable'))); ?></td>
+                                                                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'credit_journal'))); ?></td>
+                                                                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'total_amount'))); ?></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                            <hr />
+
+                                                            <div>
+                                                                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/' . CHtml::encode(CHtml::value($forecastApproval, 'id')), CHtml::encode(CHtml::value($forecastApproval, 'id'))); ?>
+                                                            </div>
+                                                        </div>
+
+                                                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
@@ -319,7 +371,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 <?php echo CHtml::endForm(); ?>
 
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-
 
 <script>
     $(".forecast-header").click(function() {

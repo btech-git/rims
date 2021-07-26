@@ -264,9 +264,6 @@ class CashDailySummaryController extends Controller {
 //            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 //    }
 
-    /**
-     * Manages all models.
-     */
     public function actionAdmin() {
         $model = new CashDailyApproval();
         
@@ -330,4 +327,68 @@ class CashDailySummaryController extends Controller {
         ));
     }
 
+    public function actionIndex() {
+        $model = new CashDailySummary();
+        
+        $monthNow = date('m');
+        $yearNow = date('Y');
+        
+        $monthStart = isset($_GET['MonthStart']) ? $_GET['MonthStart'] : $monthNow;
+        $monthEnd = isset($_GET['MonthEnd']) ? $_GET['MonthEnd'] : $monthNow;
+        $yearStart = isset($_GET['YearStart']) ? $_GET['YearStart'] : $yearNow;
+        $yearEnd = isset($_GET['YearEnd']) ? $_GET['YearEnd'] : $yearNow;
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        
+        $approvalList = $model->getApprovalList($monthStart, $yearStart, $monthEnd, $yearEnd, $branchId);
+        
+        $approvalsRefs = array();
+        foreach ($approvalList as $approval) {
+            $approvalsRefs[$approval['transaction_date']] = array();
+            $approvalsRefs[$approval['transaction_date']][0] = $approval['username'];
+            $approvalsRefs[$approval['transaction_date']][1] = $approval['amount'];
+            $approvalsRefs[$approval['transaction_date']][2] = $approval['branch_name'];
+        }
+        
+        $monthYearLimit = $yearEnd * 12 + $monthEnd;
+        
+        $approvals = array();
+        $index = 0;
+        
+        $currentMonth = $monthStart;
+        $currentYear = $yearStart;
+        while ($currentYear * 12 + $currentMonth <= $monthYearLimit) {
+            $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
+            for ($d = 0; $d < $numberOfDaysInMonth; $d++) {
+                $currentDate = sprintf('%04d-%02d-%02d', $currentYear, $currentMonth, $d + 1);
+                $approvals[$index] = array();
+                $approvals[$index]['transaction_date'] = $currentDate;
+                $approvals[$index]['transaction_day_of_week'] = date('l', strtotime($currentDate));
+                $approvals[$index]['username'] = isset($approvalsRefs[$currentDate][0]) ? $approvalsRefs[$currentDate][0] : '';
+                $approvals[$index]['amount'] = isset($approvalsRefs[$currentDate][1]) ? $approvalsRefs[$currentDate][1] : '0.00';
+                $approvals[$index]['branch_name'] = isset($approvalsRefs[$currentDate][2]) ? $approvalsRefs[$currentDate][2] : '';
+                $index++;
+            }
+            if ((int) $currentMonth < 12) {
+                $currentMonth++;
+            } else {
+                $currentMonth = 1;
+                $currentYear++;
+            }
+        }
+        
+        $yearList = array();
+        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+            $yearList[$y] = $y;
+        }
+        
+        $this->render('index', array(
+            'approvals' => $approvals,
+            'monthStart' => $monthStart,
+            'monthEnd' => $monthEnd,
+            'yearStart' => $yearStart,
+            'yearEnd' => $yearEnd,
+            'yearList' => $yearList,
+            'branchId' => $branchId,
+        ));
+    }
 }

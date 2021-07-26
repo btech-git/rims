@@ -444,25 +444,19 @@ class MovementOutHeaderController extends Controller {
             $returnOrder->attributes = $_GET['TransactionReturnOrder'];
         
         /* Registration Transaction */
-        $movementTransaction = new RegistrationTransaction('search');
-        $movementTransaction->unsetAttributes();
+        $registrationTransaction = new RegistrationTransaction('search');
+        $registrationTransaction->unsetAttributes();
         if (isset($_GET['RegistrationTransaction']))
-            $movementTransaction->attributes = $_GET['RegistrationTransaction'];
+            $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
 
-        $movementTransactionCriteria = new CDbCriteria;
-        $movementTransactionCriteria->together = 'true';
-        $movementTransactionCriteria->with = array('registrationProducts');
-        $movementTransactionCriteria->addCondition("total_product != 0");
-        $movementTransactionCriteria->compare('transaction_number', $movementTransaction->transaction_number, true);
-        $movementTransactionCriteria->compare('transaction_date', $movementTransaction->transaction_date, true);
-        $movementTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array('criteria' => $movementTransactionCriteria));
+        $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
 
         $this->render('admin', array(
             'model' => $model,
             'deliveryOrder' => $deliveryOrder,
             'returnOrder' => $returnOrder,
-            'registrationTransaction' => $movementTransaction,
-            'registrationTransactionDataProvider' => $movementTransactionDataProvider,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
         ));
     }
 

@@ -55,30 +55,6 @@
         
         <div class="small-12 medium-6 columns">
             <!-- BEGIN FIELDS -->
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php /*echo $form->label($model,'debit_amount', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model,'debit_amount',array('size'=>18,'maxlength'=>18)); ?>
-                    </div>
-                </div>
-            </div>	
-
-             BEGIN FIELDS 
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->label($model,'credit_amount', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model,'credit_amount',array('size'=>18,'maxlength'=>18));*/ ?>
-                    </div>
-                </div>
-            </div>-->
-
-            <!-- BEGIN FIELDS -->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -90,17 +66,18 @@
                 </div>
             </div>	
 
-            <!-- BEGIN FIELDS -->
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->label($model,'branch_id', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+            <?php if ((int) $user->branch_id == 6): ?>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->label($model,'branch_id', array('class'=>'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                        </div>
                     </div>
                 </div>
-            </div>	
+            <?php endif; ?>
 
             <div class="field buttons text-right">
                 <?php echo CHtml::submitButton('Search',array('class'=>'button cbutton')); ?>
