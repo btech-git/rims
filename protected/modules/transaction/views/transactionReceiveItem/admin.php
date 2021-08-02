@@ -123,7 +123,7 @@ Yii::app()->clientScript->registerScript('search', "
                                 'consignmentDataProvider'=>$consignmentDataProvider,
                             ), true),
                         ),
-                        'Retail Sales' => array(
+                        'Movement Out' => array(
                             'content' => $this->renderPartial('_viewRetailSales', array(
                                 'movement'=>$movement,
                                 'movementDataProvider'=>$movementDataProvider,

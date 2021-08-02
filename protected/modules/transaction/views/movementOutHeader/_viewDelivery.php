@@ -38,7 +38,7 @@
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementOutHeaders as $key => $movementDetail) {
-                        echo $movementDetail->movement_out_no. "<br>";
+                        echo CHtml::link($movementDetail->movement_out_no, array("/transaction/movementOutHeader/view", "id"=>$movementDetail->id)). "<br>";
                     }
                 }
             ),

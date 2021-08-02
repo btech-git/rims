@@ -415,6 +415,87 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    /**
+     * Deletes a particular model.
+     * If deletion is successful, the browser will be redirected to the 'admin' page.
+     * @param integer $id the ID of the model to be deleted
+     */
+    public function actionDelete($id) {
+        $this->loadModel($id)->delete();
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if (!isset($_GET['ajax'])) {
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
+    }
+
+    public function actionDeleteImage($id) {
+        $model = RegistrationInsuranceImages::model()->findByPk($id);
+        $model->scenario = 'delete';
+
+        $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/insurance/accident/' . $model->registrationInsuranceData->id . '/' . $model->filename;
+        $dir_thumb = dirname(Yii::app()->request->scriptFile) . '/images/uploads/insurance/accident/' . $model->registrationInsuranceData->id . '/' . $model->thumbname;
+        $dir_square = dirname(Yii::app()->request->scriptFile) . '/images/uploads/insurance/accident/' . $model->registrationInsuranceData->id . '/' . $model->squarename;
+
+        if (file_exists($dir)) {
+            unlink($dir);
+        }
+        if (file_exists($dir_thumb)) {
+            unlink($dir_thumb);
+        }
+        if (file_exists($dir_square)) {
+            unlink($dir_square);
+        }
+
+        $model->is_inactive = 1;
+        $model->update(array('is_inactive'));
+
+        $this->redirect(Yii::app()->request->urlReferrer);
+    }
+
+    public function actionDeleteFeatured($id) {
+        $model = RegistrationInsuranceData::model()->findByPk($id);
+        $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/insurance/' . $model->id . '/' . $model->featuredname;
+        if (file_exists($dir)) {
+            unlink($dir);
+        }
+
+        $model->spk_insurance = null;
+        $model->update(array('spk_insurance'));
+        $this->redirect(Yii::app()->request->urlReferrer);
+    }
+
+    public function actionDeleteImageRealization($id) {
+        $model = RegistrationRealizationImages::model()->findByPk($id);
+        $model->scenario = 'delete';
+
+        if ($model->registrationRealization->name == 'Epoxy') {
+            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/epoxy/' . $model->registrationRealization->id . '/' . $model->filename;
+            $dir_thumb = dirname(Yii::app()->request->scriptFile) . '/images/uploads/epoxy/' . $model->registrationRealization->id . '/' . $model->thumbname;
+            $dir_square = dirname(Yii::app()->request->scriptFile) . '/images/uploads/epoxy/' . $model->registrationRealization->id . '/' . $model->squarename;
+        } else {
+            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/after_service/' . $model->registrationRealization->id . '/' . $model->filename;
+            $dir_thumb = dirname(Yii::app()->request->scriptFile) . '/images/uploads/after_service/' . $model->registrationRealization->id . '/' . $model->thumbname;
+            $dir_square = dirname(Yii::app()->request->scriptFile) . '/images/uploads/after_service/' . $model->registrationRealization->id . '/' . $model->squarename;
+        }
+
+
+        if (file_exists($dir)) {
+            unlink($dir);
+        }
+        if (file_exists($dir_thumb)) {
+            unlink($dir_thumb);
+        }
+        if (file_exists($dir_square)) {
+            unlink($dir_square);
+        }
+
+        $model->is_inactive = 1;
+        $model->update(array('is_inactive'));
+
+        $this->redirect(Yii::app()->request->urlReferrer);
+    }
+
 //    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity) {
 //
 //        $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);

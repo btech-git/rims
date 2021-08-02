@@ -110,13 +110,7 @@ class MovementOuts extends CComponent {
 
     public function addDetails($transactionId, $movementType) {
 
-        $this->details = array();
-        
-        $detail = new MovementOutDetail();
-        $detail->material_request_detail_id = null;
-        $detail->registration_service_id = null;
-        $detail->quantity_receive = 0;
-        $detail->quantity_receive_left = 0;
+//        $this->details = array();
         
         if ($movementType == 1) {
             $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
@@ -124,12 +118,19 @@ class MovementOuts extends CComponent {
             if ($deliveryOrder !== null) {
                 foreach ($deliveryOrder->transactionDeliveryOrderDetails as $deliveryDetail) {
 
-                    $detail->delivery_order_detail_id = $deliveryDetail->id;
-                    $detail->return_order_detail_id = null;
-                    $detail->registration_product_id = null;
-                    $detail->product_id = $deliveryDetail->product_id;
-                    $detail->quantity_transaction = $deliveryDetail->quantity_movement_left;
-
+                    if ($deliveryDetail->quantity_movement_left > 0) {
+                        $detail = new MovementOutDetail();
+                        $detail->material_request_detail_id = null;
+                        $detail->registration_service_id = null;
+                        $detail->quantity_receive = 0;
+                        $detail->quantity_receive_left = 0;
+                        $detail->delivery_order_detail_id = $deliveryDetail->id;
+                        $detail->return_order_detail_id = null;
+                        $detail->registration_product_id = null;
+                        $detail->product_id = $deliveryDetail->product_id;
+                        $detail->quantity_transaction = $deliveryDetail->quantity_movement_left;
+                        $this->details[] = $detail;
+                    }
                 }
             }
         } else if ($movementType == 2) {
@@ -138,12 +139,19 @@ class MovementOuts extends CComponent {
             if ($returnOrder !== null) {
                 foreach ($returnOrder->transactionReturnOrderDetails as $returnDetail) {
 
-                    $detail->delivery_order_detail_id = null;
-                    $detail->return_order_detail_id = $returnDetail->id;
-                    $detail->registration_product_id = null;
-                    $detail->product_id = $returnDetail->product_id;
-                    $detail->quantity_transaction = $returnDetail->quantity_movement_left;
-
+                    if ($returnDetail->quantity_movement_left > 0) {
+                        $detail = new MovementOutDetail();
+                        $detail->material_request_detail_id = null;
+                        $detail->registration_service_id = null;
+                        $detail->quantity_receive = 0;
+                        $detail->quantity_receive_left = 0;
+                        $detail->delivery_order_detail_id = null;
+                        $detail->return_order_detail_id = $returnDetail->id;
+                        $detail->registration_product_id = null;
+                        $detail->product_id = $returnDetail->product_id;
+                        $detail->quantity_transaction = $returnDetail->quantity_movement_left;
+                        $this->details[] = $detail;
+                    }
                 }
             }
         } else if ($movementType == 3) {
@@ -152,17 +160,22 @@ class MovementOuts extends CComponent {
             if ($registrationTransaction !== null) {
                 foreach ($registrationTransaction->registrationProducts as $registrationDetail) {
 
-                    $detail->delivery_order_detail_id = null;
-                    $detail->return_order_detail_id = null;
-                    $detail->registration_product_id = $registrationDetail->id;
-                    $detail->product_id = $registrationDetail->product_id;
-                    $detail->quantity_transaction = $registrationDetail->quantity;
-
+                    if ($registrationDetail->quantity_movement_left > 0) {
+                        $detail = new MovementOutDetail();
+                        $detail->material_request_detail_id = null;
+                        $detail->registration_service_id = null;
+                        $detail->quantity_receive = 0;
+                        $detail->quantity_receive_left = 0;
+                        $detail->delivery_order_detail_id = null;
+                        $detail->return_order_detail_id = null;
+                        $detail->registration_product_id = $registrationDetail->id;
+                        $detail->product_id = $registrationDetail->product_id;
+                        $detail->quantity_transaction = $registrationDetail->quantity_movement_left;
+                        $this->details[] = $detail;
+                    }
                 }
             }
         }
-        
-        $this->details[] = $detail;
     }
 
     public function removeDetailAt($index) {

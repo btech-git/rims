@@ -51,10 +51,25 @@
                             </tr>
                         </table>
                     </td>
+                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", $list, array('prompt' => '[--Select Warehouse--]')); ?></td>
                     <td>
-                        <?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", $list, array('prompt' => '[--Select Warehouse--]')); ?>
+                        <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
+                            'class' => 'qtyleft_input productID_' . $detail->product_id, 
+                            'rel' => $detail->product_id,
+                            'onchange'=> '
+                                var qty = +jQuery("#MovementOutDetail_'.$i.'_quantity").val();
+                                var temp = +jQuery("#MovementOutDetail_'.$i.'_quantity_transaction").val();
+                                var count = temp - qty;
+
+                                if (count < 0) {
+                                    alert("QTY Movement could not be less than QTY LEFT.");
+                                    $( "#save" ).prop( "disabled", true );
+                                } else {
+                                    $( "#save" ).prop( "disabled", false );
+                                }
+                            ',
+                        )); ?>
                     </td>
-                    <td><?php echo CHtml::activeTextField($detail, "[$i]quantity", array('class' => 'qtyleft_input productID_' . $detail->product_id, 'rel' => $detail->product_id)); ?></td>
                     <td>
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(

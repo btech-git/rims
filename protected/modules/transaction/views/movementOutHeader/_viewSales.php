@@ -1,5 +1,5 @@
 <h2>Retail Sales</h2>
-<hr>
+<hr />
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'retail-sale-grid',
@@ -14,7 +14,7 @@
         'columns'=>array(
             array(
                 'name'=>'transaction_number', 
-                'value'=>'CHTml::link($data->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
+                'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             array(
@@ -39,7 +39,7 @@
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementOutHeaders as $key => $movementDetail) {
-                        echo $movementDetail->movement_out_no. "<br>";
+                        echo CHtml::link($movementDetail->movement_out_no, array("/transaction/movementOutHeader/view", "id"=>$movementDetail->id)). "<br />";
                     }
                 }
             ),

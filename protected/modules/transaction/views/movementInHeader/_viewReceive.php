@@ -1,54 +1,5 @@
 <h2>Receive Item</h2>
 <div class="grid-view">
-<!--    <table>
-        <thead>
-            <tr>
-                <td>Tanggal</td>
-                <td>Supplier</td>
-                <td>Type</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                        'name' => 'receive_item_date',
-                        'attribute' => $receiveItem->receive_item_date,
-                        'options' => array(
-                            'dateFormat' => 'yy-mm-dd',
-                        ),
-                        'htmlOptions' => array(
-                            'readonly' => true,
-                            'placeholder' => 'Date'
-                        ),
-                    ));*/ ?>
-                </td>
-                <td>
-                    <?php /*echo CHtml::activeDropDownList($receiveItem, 'supplier_id', CHtml::listData(Supplier::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
-                        'empty' => '-- All --',
-                        'onchange' => CHtml::ajax(array(
-                            'type' => 'GET',
-                            'update' => '#receive-item-grid',
-                        ))
-                    ));*/ ?>
-                </td>
-                <td>
-                    <?php /*echo CHtml::activeDropDownList($receiveItem, 'request_type', array(
-                        'Purchase Order' => 'Purchase Order',
-                        'Internal Delivery Order' => 'Internal Delivery Order', 
-                        'Consignment In' => 'Consignment In'
-                    ), array(
-                        'empty' => '-- All --',
-                        'onchange' => CHtml::ajax(array(
-                            'type' => 'GET',
-                            'update' => '#receive-item-grid',
-                        ))
-                    ));*/ ?>
-                </td>
-            </tr>
-        </tbody>
-    </table>-->
-    
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'receive-item-grid',
         'dataProvider'=>$receiveItem->searchByMovementIn(),
@@ -84,7 +35,7 @@
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementInHeaders as $key => $movementDetail) {
-                        echo $movementDetail->movement_in_number. "<br>";
+                        echo CHtml::link($movementDetail->movement_in_number, array("/transaction/movementInHeader/view", "id"=>$movementDetail->id)). "<br>";
                     }
                 }
             ),
