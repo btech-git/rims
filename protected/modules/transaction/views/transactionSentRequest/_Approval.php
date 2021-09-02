@@ -3,17 +3,12 @@
 /* @var $model TransaksiORderPembelian */
 /* @var $form CActiveForm */
 ?>
-<script>
-
-</script>
 <div class="form">
 
-    <?php
-    $form = $this->beginWidget('CActiveForm', array(
+    <?php $form = $this->beginWidget('CActiveForm', array(
         'id' => 'transaction-request-order-form',
         'enableAjaxValidation' => false,
-    ));
-    ?>
+    )); ?>
 
     <!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
     <div class="row">
@@ -29,9 +24,7 @@
                         <label class="prefix">Sent Request No</label>
                     </div>
                     <div class="small-8 columns">
-<?php echo $form->textField($sentRequest, 'sent_request_no', array('value' => $sentRequest->sent_request_no, 'readonly' => true));
-?>
-
+                        <?php echo $form->textField($sentRequest, 'sent_request_no', array('value' => $sentRequest->sent_request_no, 'readonly' => true)); ?>
                     </div>
                 </div>
             </div>
@@ -41,9 +34,7 @@
                         <label class="prefix">Date Posting</label>
                     </div>
                     <div class="small-8 columns">
-<?php echo $form->textField($sentRequest, 'sent_request_date', array('value' => $sentRequest->sent_request_date, 'readonly' => true));
-?>
-
+                        <?php echo $form->textField($sentRequest, 'sent_request_date', array('value' => $sentRequest->sent_request_date, 'readonly' => true)); ?>
                     </div>
                 </div>
             </div>
@@ -53,8 +44,7 @@
                         <label class="prefix">Status Document</label>
                     </div>
                     <div class="small-8 columns">
-<?php echo $form->textField($sentRequest, 'status_document', array('value' => $sentRequest->status_document, 'readonly' => true));
-?>
+                        <?php echo $form->textField($sentRequest, 'status_document', array('value' => $sentRequest->status_document, 'readonly' => true)); ?>
                     </div>
                 </div>
             </div>
@@ -67,37 +57,40 @@
                 </div>
             </div>
             <div class="field">
-<?php $details = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $sentRequest->id)); ?>
+                <?php $details = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $sentRequest->id)); ?>
                 <table>
                     <thead>
                         <tr>
                             <td>Product</td>
+                            <td>Code</td>
+                            <td>Kategori</td>
+                            <td>Brand</td>
+                            <td>Sub Brand</td>
+                            <td>Sub Brand Series</td>
                             <td>Quantity</td>
-    <!--                        <td>Unit Price (HPP)</td>-->
                             <td>Unit</td>
-    <!--                        <td>Amount</td>-->
-
                         </tr>
                     </thead>
                     <tbody>
-<?php foreach ($details as $key => $sentDetail): ?>
+                        <?php foreach ($details as $key => $sentDetail): ?>
                             <tr>
-                                <td><?php echo $sentDetail->product_id != "" ? $sentDetail->product->name : '-'; ?></td>
+                                <?php $product = $sentDetail->product_id != "" ? $sentDetail->product : ''; ?>
+                                <td><?php echo $product->name ?></td>
+                                <td><?php echo $product->manufacturer_code ?></td>
+                                <td><?php echo $product->masterSubCategoryCode ?></td>
+                                <td><?php echo $product->brand->name ?></td>
+                                <td><?php echo $product->subBrand->name ?></td>
+                                <td><?php echo $product->subBrandSeries->name ?></td>
                                 <td><?php echo $sentDetail->quantity; ?></td>
                                 <td><?php echo $sentDetail->unit->name; ?></td>
-    <!--                            <td><?php //echo $this->format_money($sentDetail->unit_price);  ?></td>
-                              <td><?php //echo $sentDetail->amount;  ?></td>-->
-
-
                             </tr>
-<?php endforeach ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
-
             </div>
-
-
+            
             <hr/>
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-12 columns">
@@ -109,7 +102,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-12 columns">
-<?php if ($historis != null): ?>
+                        <?php if ($historis != null): ?>
                             <table>
                                 <thead>
                                     <tr>
@@ -121,9 +114,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-    <?php foreach ($historis as $key => $history): ?>
-
-
+                                    <?php foreach ($historis as $key => $history): ?>
                                         <tr>
                                             <td><?php echo $history->approval_type; ?></td>
                                             <td><?php echo $history->revision; ?></td>
@@ -131,15 +122,13 @@
                                             <td><?php echo $history->note; ?></td>
                                             <td><?php echo $history->supervisor != null ? $history->supervisor->username : ''; ?></td>
                                         </tr>
-    <?php endforeach ?>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
-
-                        <?php
-                        else:
+                        <?php else:
                             echo "No Revision History";
-                            ?>
-<?php endif ?>
+                        ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

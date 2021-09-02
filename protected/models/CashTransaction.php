@@ -219,4 +219,13 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
+    public function getTotalDetails() {
+        $total = 0.00;
+        
+        foreach($this->cashTransactionDetails as $detail) {
+            $total += $detail->amount;
+        }
+        
+        return $total;
+    }
 }

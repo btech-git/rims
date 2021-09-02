@@ -151,7 +151,10 @@ $('.search-form form').submit(function(){
                     'hapus' => array(
                         'label' => 'delete',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/delete", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("transaction.generalRepairRegistration.delete")'
+                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("transaction.generalRepairRegistration.delete")',
+                        'options' => array(
+                            'confirm' => 'Are you sure to delete this transaction?',
+                        ),
                     ),
                 ),
             ),

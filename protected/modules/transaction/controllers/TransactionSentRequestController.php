@@ -346,12 +346,20 @@ class TransactionSentRequestController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->loadModel($id)->delete();
+        if (Yii::app()->request->isPostRequest) {
+            $model = $this->instantiate($id);
 
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax'])) {
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            if ($model->header->purchaseReturnHeaders != NULL || $model->header->receiveHeaders != NULL) {
+                Yii::app()->user->setFlash('message', 'Cannot DELETE this transaction');
+            } else {
+                foreach ($model->details as $detail) 
+                    $detail->delete();
+                
+                $model->header->delete();
+            }
         }
+        else
+            throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
     /**

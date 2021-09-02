@@ -421,7 +421,12 @@ class GeneralRepairRegistrationController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $registrationRealizationProcess = RegistrationRealizationProcess::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
+        foreach($registrationRealizationProcess as $detail) {
+            $detail->delete();
+        }
+        $model->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {

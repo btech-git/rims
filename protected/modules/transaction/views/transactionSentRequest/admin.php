@@ -55,57 +55,65 @@ Yii::app()->clientScript->registerScript('search', "
                 <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
                 <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
             </div>-->
-            <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
-            <div class="clearfix"></div>
-            <div class="search-form" style="display:none">
-                <?php $this->renderPartial('_search',array(
-                    'model'=>$model,
-                )); ?>
-            </div><!-- search-form -->				
+                <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
+                <div class="clearfix"></div>
+                <div class="search-form" style="display:none">
+                    <?php $this->renderPartial('_search',array(
+                        'model'=>$model,
+                    )); ?>
+                </div><!-- search-form -->				
+            </div>
         </div>
-    </div>
 
-    <div class="grid-view">
-        <?php $this->widget('zii.widgets.grid.CGridView', array(
-            'id'=>'transaction-sent-request-grid',
-            'dataProvider'=>$model->search(),
-            'filter'=>$model,
-            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-            'pager'=>array(
-                'cssFile'=>false,
-                'header'=>'',
-            ),
-            'columns'=>array(
-                array(
-                    'name'=>'sent_request_no', 
-                    'value'=>'CHTml::link($data->sent_request_no, array("view", "id"=>$data->id))', 
-                    'type'=>'raw'
+        <div class="grid-view">
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id'=>'transaction-sent-request-grid',
+                'dataProvider'=>$model->search(),
+                'filter'=>$model,
+                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                'pager'=>array(
+                    'cssFile'=>false,
+                    'header'=>'',
                 ),
-                'sent_request_date',
-                'estimate_arrival_date',
-                // 'requester_id',
-                array(
-                    'name'=>'requester_branch_id',
-                    'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                    'value'=>'$data->requesterBranch->name'
-                ),
-                'status_document',
-                array(
-                    'name'=>'approved_by',
-                    'value'=>'$data->approval!= null?$data->approval->username:""',
-                ),
-                array(
-                    'header' => 'Status',
-                    'value' => '$data->totalRemainingQuantityDelivered',
-                ),
-                array(
-                    'class'=>'CButtonColumn',
-                    'template'=>'{edit}',
-                    'buttons'=>array (
-                        'edit' => array (
-                            'label'=>'edit',
-                            'url'=>'Yii::app()->createUrl("transaction/transactionSentRequest/update", array("id"=>$data->id))',
-                            'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSentRequest.update")',
+                'columns'=>array(
+                    array(
+                        'name'=>'sent_request_no', 
+                        'value'=>'CHTml::link($data->sent_request_no, array("view", "id"=>$data->id))', 
+                        'type'=>'raw'
+                    ),
+                    'sent_request_date',
+                    'estimate_arrival_date',
+                    // 'requester_id',
+                    array(
+                        'name'=>'requester_branch_id',
+                        'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                        'value'=>'$data->requesterBranch->name'
+                    ),
+                    'status_document',
+                    array(
+                        'name'=>'approved_by',
+                        'value'=>'$data->approval!= null?$data->approval->username:""',
+                    ),
+                    array(
+                        'header' => 'Status',
+                        'value' => '$data->totalRemainingQuantityDelivered',
+                    ),
+                    array(
+                        'class'=>'CButtonColumn',
+                        'template'=>'{update}{delete}',
+                        'buttons'=>array (
+                            'update' => array (
+                                'label'=>'update',
+                                'url'=>'Yii::app()->createUrl("transaction/transactionSentRequest/update", array("id"=>$data->id))',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSentRequest.update")',
+                                ),
+                            'delete' => array(
+                                'label' => 'delete',
+                                'url'=>'Yii::app()->createUrl("transaction/transactionSentRequest/delete", array("id"=>$data->id))',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSentRequest.update")',
+                                'options' => array(
+                                    'confirm' => 'Are you sure to delete this transaction?',
+                                ),
                             ),
                         ),
                     ),

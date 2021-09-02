@@ -99,19 +99,15 @@ class DeliveryOrders extends CComponent {
             $valid = $this->validate() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
-                //print_r('1');
             } else {
                 $dbTransaction->rollback();
-                //print_r('2');
             }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
-            //print_r($e);
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
@@ -129,7 +125,6 @@ class DeliveryOrders extends CComponent {
             $valid = true;
         }
 
-        //print_r($valid);
         return $valid;
     }
 
@@ -167,16 +162,15 @@ class DeliveryOrders extends CComponent {
         //save request detail
         foreach ($this->details as $detail) {
             $detail->delivery_order_id = $this->header->id;
-            //echo $this->header->request_type;
+            $detail->quantity_movement = 0;
+            $detail->quantity_movement_left = $detail->quantity_delivery;
             $left_quantity = 0;
             
             if ($this->header->request_type == 'Sales Order') {
-                //echo $this->header->request_type;
                 $criteria = new CDbCriteria;
                 $criteria->together = 'true';
                 $criteria->with = array('deliveryOrder');
                 $criteria->condition = "deliveryOrder.sales_order_id =" . $this->header->sales_order_id . " AND delivery_order_id != " . $this->header->id;
-                //$criteria->condition="sales_order_detail_id =".$detail->sales_order_detail_id ." AND delivery_order_id != ".$this->header->id;
                 $receiveItemDetails = TransactionDeliveryOrderDetail::model()->findAll($criteria);
 
                 $quantity = 0;
@@ -190,7 +184,7 @@ class DeliveryOrders extends CComponent {
                 $left_quantity = $salesOrderDetail->sales_order_quantity_left;
                 $salesOrderDetail->save(false);
 
-                $salesOrder = TransactionSalesOrder::model()->findByPk($this->header->sales_order_id);
+//                $salesOrder = TransactionSalesOrder::model()->findByPk($this->header->sales_order_id);
                 $branch = Branch::model()->findByPk($this->header->sender_branch_id);
                 $jumlah = $detail->quantity_delivery * $detail->salesOrderDetail->unit_price;
                 
@@ -648,11 +642,11 @@ class DeliveryOrders extends CComponent {
                 foreach ($deliveryItemDetails as $deliveryItemDetail)
                     $quantity += $deliveryItemDetail->quantity_delivery;
 
-                $this->headerDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->transfer_request_detail_id, 'transfer_request_id' => $this->header->transfer_request_id));
-                $this->headerDetail->quantity_delivery_left = $detail->quantity_request - ($detail->quantity_delivery + $quantity);
-                $this->headerDetail->quantity_delivery = $quantity + $detail->quantity_delivery;
-                $left_quantity = $this->headerDetail->quantity_delivery_left;
-                $this->headerDetail->save(false);
+                $transferRequestDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->transfer_request_detail_id, 'transfer_request_id' => $this->header->transfer_request_id));
+                $transferRequestDetail->quantity_delivery_left = $detail->quantity_request - ($detail->quantity_delivery + $quantity);
+                $transferRequestDetail->quantity_delivery = $quantity + $detail->quantity_delivery;
+                $left_quantity = $transferRequestDetail->quantity_delivery_left;
+                $transferRequestDetail->save(false);
                 $detail->quantity_receive_left = $detail->quantity_delivery;
 
                 $transfer = TransactionTransferRequest::model()->findByPk($this->header->transfer_request_id);
@@ -748,12 +742,11 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumInventory->is_coa_category = 0;
                 $jurnalUmumInventory->transaction_type = 'DO';
                 $jurnalUmumInventory->save();
-
             }
+            
             $detail->quantity_request_left = $left_quantity;
             $valid = $detail->save() && $valid;
             $new_detail[] = $detail->id;
-            //echo 'test';
         }
 
         //delete pricelist

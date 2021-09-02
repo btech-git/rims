@@ -95,11 +95,9 @@ class Cashs extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
-
+//        $isNewRecord = $this->header->isNewRecord;
+        $this->header->debit_amount = $this->totalDetails;
         $valid = $this->header->save();
-
-        //echo "valid";
 
         $cashDetails = CashTransactionDetail::model()->findAllByAttributes(array('cash_transaction_id' => $this->header->id));
         $detail_id = array();
@@ -113,7 +111,6 @@ class Cashs extends CComponent {
             $detail->cash_transaction_id = $this->header->id;
             $valid = $detail->save(false) && $valid;
             $new_detail[] = $detail->id;
-            //echo 'test';
         }
 
 
@@ -125,8 +122,16 @@ class Cashs extends CComponent {
             CashTransactionDetail::model()->deleteAll($criteria);
         }
 
-
         return $valid;
     }
 
+    public function getTotalDetails() {
+        $total = 0.00;
+        
+        foreach($this->details as $detail) {
+            $total += $detail->amount;
+        }
+        
+        return $total;
+    }
 }

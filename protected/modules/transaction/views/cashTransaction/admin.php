@@ -93,7 +93,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'Debit Amount',
-                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->cashTransactionDetails[0]->amount, 0)',
+                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->totalDetails, 0)',
                             'htmlOptions' => array(
                                 'style' => 'text-align: right',
                             ),
@@ -159,7 +159,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'Credit Amount',
-                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->cashTransactionDetails[0]->amount, 0)',
+                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->totalDetails, 0)',
                             'htmlOptions' => array(
                                 'style' => 'text-align: right',
                             ),

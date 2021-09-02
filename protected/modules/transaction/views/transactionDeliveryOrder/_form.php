@@ -173,7 +173,7 @@
                             </div>
                             <div class="small-8 columns">
                                 <?php echo $form->hiddenField($deliveryOrder->header, 'transfer_request_id'); ?>
-                                <?php echo $form->textField($deliveryOrder->header, 'transfer_request_id', array(
+                                <?php echo $form->textField($deliveryOrder->header, 'transfer_request_no', array(
                                     'value' => $deliveryOrder->header->transfer_request_id != Null ? $deliveryOrder->header->transferRequest->transfer_request_no : '',
                                     'readOnly' => true,
                                 )); ?>
@@ -236,7 +236,20 @@
                                 <?php echo $form->labelEx($deliveryOrder->header, 'estimate_arrival_date', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->textField($deliveryOrder->header, 'estimate_arrival_date', array('readonly' => 'true')); ?>
+                                <?php //echo $form->textField($deliveryOrder->header, 'estimate_arrival_date', array('readonly' => 'true')); ?>
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'model' => $deliveryOrder->header,
+                                    'attribute' => "estimate_arrival_date",
+                                    // additional javascript options for the date picker plugin
+                                    'options' => array(
+                                        'dateFormat' => 'yy-mm-dd',
+                                        'changeMonth' => true,
+                                        'changeYear' => true,
+                                    ),
+                                    'htmlOptions' => array(
+                                        'readonly' => true,
+                                    ),
+                                )); ?>
                                 <?php echo $form->error($deliveryOrder->header, 'estimate_arrival_date'); ?>
                             </div>
                         </div>

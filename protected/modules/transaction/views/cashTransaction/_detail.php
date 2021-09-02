@@ -53,11 +53,7 @@
                         )); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::activeTextField($detail, "[$i]amount", array('onchange' =>
-                            '
-									
-								'
-                        )); ?>
+                        <?php echo CHtml::activeTextField($detail, "[$i]amount"); ?>
                         <?php echo CHtml::button('Count', array(
                             'id' => 'count_' . $i,
                             'style' => 'display:none',
@@ -68,9 +64,9 @@
                               data: $("form").serialize(),
                               dataType: "json",
                               success: function(data) {
-                                  console.log(data.total);
+                                console.log(data.total);
 
-                                if($("#CashTransaction_transaction_type").val() == "In")
+                                if ($("#CashTransaction_transaction_type").val() == "In")
                                     $("#CashTransactionDetail_' . $i . '_coa_credit").val(data.total);
                                 else
                                     $("#CashTransactionDetail_' . $i . '_coa_debit").val(data.total);
@@ -78,9 +74,7 @@
                             });',
                         )); ?>
                     </td>
-                    <td>
-                        <?php echo CHtml::activeTextArea($detail, "[$i]notes"); ?>
-                    </td>
+                    <td><?php echo CHtml::activeTextArea($detail, "[$i]notes"); ?></td>
                     <td>
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
@@ -92,11 +86,10 @@
                     </td>
                 </tr>
                 <?php Yii::app()->clientScript->registerScript('myjqueryCount' . $i, '
-                        $("#CashTransactionDetail_' . $i . '_amount").keyup(function(event){
-                                $("#total-button").click();
-                                $("#count_' . $i . '").click();
-                                //alert("test");
-                        });
+                    $("#CashTransactionDetail_' . $i . '_amount").keyup(function(event){
+                        $("#total-button").click();
+                        $("#count_' . $i . '").click();
+                    });
                 '); ?>
             <?php endforeach ?>
         </tbody>
