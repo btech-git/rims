@@ -7,16 +7,12 @@
         'cssFile'=>false,
         'header'=>'',
         ),
-    //'summaryText'=>'',
     'columns'=>array(
-        //'id',
-        //'code',
         array(
             'name'=>'sale_order_no', 
             'value'=>'CHTml::link($data->sale_order_no, array("/transaction/transactionSalesOrder/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
-        // 'purchase_order_no',
         array(
             'header' => 'Tanggal',
             'name' => 'sale_order_date',

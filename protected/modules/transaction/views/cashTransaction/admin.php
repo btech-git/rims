@@ -40,13 +40,14 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Cash Transaction', Yii::app()->baseUrl . '/transaction/cashTransaction/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.create"))) ?>
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Cash Transaction', Yii::app()->baseUrl . '/transaction/cashTransaction/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("cashTransactionCreate"))) ?>
                 <h2>Manage Cash Transactions</h2>
             </div>
 
             <div class="search-bar">
                 <div class="clearfix button-bar">
-                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					<div class="clearfix"></div>
+                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					
+                    <div class="clearfix"></div>
                     <div class="search-form" style="display:none">
                         <?php $this->renderPartial('_search', array(
                             'model' => $model,
@@ -114,7 +115,7 @@ $('.search-form form').submit(function(){
                                 'edit' => array(
                                     'label' => 'edit',
                                     'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.cashTransaction.update")',
+                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("cashTransactionEdit")',
                                 ),
                             ),
                         ),
@@ -180,7 +181,7 @@ $('.search-form form').submit(function(){
                                 'edit' => array(
                                     'label' => 'edit',
                                     'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.cashTransaction.update")',
+                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("cashTransactionEdit")',
                                 ),
                             ),
                         ),

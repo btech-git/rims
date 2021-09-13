@@ -27,17 +27,15 @@
             'header' => 'Status',
             'value' => '$data->totalRemainingQuantityReceived',
         ),
-		array(
-			'class'=>'CButtonColumn',
-			'template'=>'{views}',
-			'buttons'=>array
-			(
-				'views' => array
-				(
-					'label'=>'view',
-					'url'=>'Yii::app()->createUrl("frontDesk/outstandingOrder/viewPurchase", array("id"=>$data->id))',
-				),
-			),
-		),
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{views}',
+            'buttons' => array(
+                'views' => array(
+                    'label'=>'view',
+                    'url'=>'Yii::app()->createUrl("frontDesk/outstandingOrder/viewPurchase", array("id"=>$data->id))',
+                ),
+            ),
+        ),
     ),
 )); ?>

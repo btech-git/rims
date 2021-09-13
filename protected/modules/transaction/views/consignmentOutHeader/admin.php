@@ -40,7 +40,7 @@ $('.search-form form').submit(function(){
 	<div class="row">
 		<div class="small-12 columns">
 			<div class="clearfix page-action">
-				<?php echo CHtml::link('<span class="fa fa-plus"></span>New Consignment Out', Yii::app()->baseUrl.'/transaction/consignmentOutHeader/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.consignmentOutHeader.create"))) ?>
+				<?php echo CHtml::link('<span class="fa fa-plus"></span>New Consignment Out', Yii::app()->baseUrl.'/transaction/consignmentOutHeader/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("consignmentOutCreate"))) ?>
 
 				<h2>Manage Consignment Out Headers</h2>
 			</div>
@@ -101,7 +101,7 @@ $('.search-form form').submit(function(){
                                 'edit' => array (
                                     'label'=>'edit',
                                     'url'=>'Yii::app()->createUrl("transaction/consignmentOutHeader/update", array("id"=>$data->id))',
-                                    'visible'=>'$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.consignmentOutHeader.update")'
+                                    'visible'=>'$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("consignmentOutEdit")'
 								),
 							),
 						),

@@ -6,13 +6,14 @@
     'pager'=>array(
         'cssFile'=>false,
         'header'=>'',
-        ),
+    ),
     //'summaryText'=>'',
     'columns'=>array(
-        //'id',
-        //'code',
-        array('name'=>'transfer_request_no', 'value'=>'CHTml::link($data->transfer_request_no, array("/transaction/transactionTransferRequest/view", "id"=>$data->id))', 'type'=>'raw'),
-        // 'purchase_order_no',
+        array(
+            'name'=>'transfer_request_no', 
+            'value'=>'CHTml::link($data->transfer_request_no, array("/transaction/transactionTransferRequest/view", "id"=>$data->id))', 
+            'type'=>'raw'
+        ),
         array(
             'header' => 'Tanggal',
             'name' => 'transfer_request_date',

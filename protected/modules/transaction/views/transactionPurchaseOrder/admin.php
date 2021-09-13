@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerScript('search', "
 	
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionPurchaseOrder.create"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("purchaseOrderCreate"))) ?>
         <h1>Manage Transaction Purchase Orders</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
@@ -126,12 +126,12 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionPurchaseOrder.update")',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("purchaseOrderEdit")',
                             ),
                             'print' => array (
                                 'label'=>'print',
                                 'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/pdf", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document == "Approved" && Yii::app()->user->checkAccess("transaction.transactionPurchaseOrder.pdf")',
+                                'visible'=> '$data->status_document == "Approved" && Yii::app()->user->checkAccess("purchaseOrderEdit")',
                             ),
                         ),
                     ),

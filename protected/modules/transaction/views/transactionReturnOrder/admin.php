@@ -37,7 +37,7 @@ Yii::app()->clientScript->registerScript('search', "
 	
 	<div id="maincontent">
 		<div class="clearfix page-action">
-			<?php echo CHtml::link('<span class="fa fa-plus"></span>New Return Order', Yii::app()->baseUrl.'/transaction/transactionReturnOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionReturnOrder.create"))) ?>
+			<?php echo CHtml::link('<span class="fa fa-plus"></span>New Return Order', Yii::app()->baseUrl.'/transaction/transactionReturnOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("purchaseReturnCreate"))) ?>
 			
 			<h1>Manage Transaction Return Order</h1>
 			<div class="search-bar">
@@ -99,7 +99,7 @@ Yii::app()->clientScript->registerScript('search', "
 	         					(
 	         						'label'=>'edit',
 	         						'url'=>'Yii::app()->createUrl("transaction/transactionReturnOrder/update", array("id"=>$data->id))',
-	         						'visible'=>'count(MovementOutHeader::model()->findAllByAttributes(array("return_order_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("transaction.transactionReturnOrder.update") && $data->status != "Rejected"',
+	         						'visible'=>'count(MovementOutHeader::model()->findAllByAttributes(array("return_order_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("purchaseReturnEdit") && $data->status != "Rejected"',
 	         						),
 	         					),
 	         				),

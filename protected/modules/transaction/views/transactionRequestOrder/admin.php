@@ -47,7 +47,7 @@ Yii::app()->clientScript->registerScript('search', "
 	
 	<div id="maincontent">
 		<div class="clearfix page-action">
-			<?php echo CHtml::link('<span class="fa fa-plus"></span>New Request Order', Yii::app()->baseUrl.'/transaction/transactionRequestOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionRequestOrder.create"))) ?>
+			<?php echo CHtml::link('<span class="fa fa-plus"></span>New Request Order', Yii::app()->baseUrl.'/transaction/transactionRequestOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("requestOrderCreate"))) ?>
 			<h1>Manage Transaction Request Orders</h1>
 			<div class="search-bar">
 				<div class="clearfix button-bar">
@@ -121,7 +121,7 @@ Yii::app()->clientScript->registerScript('search', "
 									(
 										'label'=>'edit',
 										'url'=>'Yii::app()->createUrl("transaction/transactionRequestOrder/update", array("id"=>$data->id))',
-										'visible'=>'$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionRequestOrder.update")',
+										'visible'=>'$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("requestOrderEdit")',
 										
 										),
 									),

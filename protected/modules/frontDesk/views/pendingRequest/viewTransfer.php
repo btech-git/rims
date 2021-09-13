@@ -26,7 +26,7 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <h1>View TransactionTransferRequest #<?php echo $model->id; ?></h1>
+        <h1>View Transaction Transfer Request #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
@@ -38,7 +38,6 @@ $this->menu = array(
                 'estimate_arrival_date',
                 array('name' => 'requester_id', 'value' => $model->user->username),
                 array('name' => 'requester_branch_id', 'value' => $model->requesterBranch->name),
-//                'destination_id',
                 array('name' => 'destination_branch_id', 'value' => $model->destinationBranch->name),
                 array(
                     'name' => 'approved_by', 
@@ -50,34 +49,33 @@ $this->menu = array(
 </div>
 <div class="detail">
     <?php if (count($transferDetails)>0): ?>
-		<table>
-			<thead>
-				<tr>
-					<td>Product</td>
-					<td>Code</td>
-					<td>Kategori</td>
-					<td>Brand</td>
-					<td>Sub Brand</td>
-					<td>Sub Brand Series</td>
-					<td>Quantity</td>
-					<td>Unit</td>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($transferDetails as $key => $transferDetail): ?>
-					<tr>
-						<td><?php echo $transferDetail->product ? $transferDetail->product->name : '-'; ?></td>
-						<td><?php echo $transferDetail->product ? $transferDetail->product->manufacturer_code : '-'; ?></td>
-						<td><?php echo $transferDetail->product ? $transferDetail->product->masterSubCategoryCode : '-'; ?></td>
-						<td><?php echo $transferDetail->product ? $transferDetail->product->brand->name : '-'; ?></td>
-						<td><?php echo $transferDetail->product ? $transferDetail->product->subBrand->name : '-'; ?></td>
-						<td><?php echo $transferDetail->product ? $transferDetail->product->subBrandSeries->name : '-'; ?></td>
-						<td style="text-align: center"><?php echo $transferDetail->quantity; ?></td>
-						<td><?php echo $transferDetail->unit->name; ?></td>
-						
-					</tr>
-				<?php endforeach ?>
-			</tbody>
+        <table>
+            <thead>
+                <tr>
+                    <td>Product</td>
+                    <td>Code</td>
+                    <td>Kategori</td>
+                    <td>Brand</td>
+                    <td>Sub Brand</td>
+                    <td>Sub Brand Series</td>
+                    <td>Quantity</td>
+                    <td>Unit</td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($transferDetails as $key => $transferDetail): ?>
+                    <tr>
+                        <td><?php echo $transferDetail->product ? $transferDetail->product->name : '-'; ?></td>
+                        <td><?php echo $transferDetail->product ? $transferDetail->product->manufacturer_code : '-'; ?></td>
+                        <td><?php echo $transferDetail->product ? $transferDetail->product->masterSubCategoryCode : '-'; ?></td>
+                        <td><?php echo $transferDetail->product ? $transferDetail->product->brand->name : '-'; ?></td>
+                        <td><?php echo $transferDetail->product ? $transferDetail->product->subBrand->name : '-'; ?></td>
+                        <td><?php echo $transferDetail->product ? $transferDetail->product->subBrandSeries->name : '-'; ?></td>
+                        <td style="text-align: center"><?php echo $transferDetail->quantity; ?></td>
+                        <td><?php echo $transferDetail->unit->name; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
             <tfoot>
                 <tr>
                     <td colspan="6" style="text-align: right; font-weight: bold">Total Quantity</td>
@@ -85,10 +83,10 @@ $this->menu = array(
                     <td>&nbsp;</td>
                 </tr>
             </tfoot>
-		</table>
-	<?php else: ?>
-		<?php echo "No Detail Available!"; ?>
-	<?php endif ?>
+        </table>
+    <?php else: ?>
+        <?php echo "No Detail Available!"; ?>
+    <?php endif; ?>
 </div>
 	
 <div class="form">
@@ -98,5 +96,4 @@ $this->menu = array(
             <?php echo CHtml::submitButton('Approve', array('class' => 'button cbutton', 'name' => 'Approve', 'confirm' => 'Are you sure you want to approve this transaction?')); ?>
         </div>
     <?php echo CHtml::endForm(); ?>
-
 </div><!-- form -->

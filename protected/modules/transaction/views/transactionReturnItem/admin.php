@@ -35,7 +35,7 @@ $('.search-form form').submit(function(){
 	
 <div id="maincontent">
 	<div class="clearfix page-action">
-		<?php echo CHtml::link('<span class="fa fa-plus"></span>New Return Item', Yii::app()->baseUrl.'/transaction/transactionReturnItem/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionReturnItem.create"))) ?>
+		<?php echo CHtml::link('<span class="fa fa-plus"></span>New Return Item', Yii::app()->baseUrl.'/transaction/transactionReturnItem/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("saleReturnCreate"))) ?>
 				
             <h1>Manage Transaction Return Item</h1>
 			<div class="search-bar">
@@ -102,7 +102,7 @@ $('.search-form form').submit(function(){
 						'edit' => array(
 							'label'=>'edit',
 							'url'=>'Yii::app()->createUrl("transaction/transactionReturnItem/update", array("id"=>$data->id))',
-							'visible'=>'count(MovementInHeader::model()->findAllByAttributes(array("return_item_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("transaction.transactionReturnItem.update") && $data->status != "Rejected"'
+							'visible'=>'count(MovementInHeader::model()->findAllByAttributes(array("return_item_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("saleReturnEdit") && $data->status != "Rejected"'
 						),
 					),
 				),

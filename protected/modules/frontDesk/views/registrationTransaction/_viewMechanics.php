@@ -21,9 +21,9 @@
                     <tbody>
                     <?php foreach ($employees as $key => $employee): ?>
                         <tr>
-                            <td>    <?php echo $employee->name; ?></td>
-                            <td>    <?php echo $employee->availability; ?></td>
-                            <td>    <?php echo $employee->skills; ?></td>
+                            <td><?php echo $employee->name; ?></td>
+                            <td><?php echo $employee->availability; ?></td>
+                            <td><?php echo $employee->skills; ?></td>
                             <td>
                                 <ul style="margin-bottom: 0 !important; list-style: none;">
                                     <?php
@@ -42,7 +42,7 @@
                                     ?>
                                 </ul>
                             </td>
-                            <td>    <?php echo empty($employee->branch->name) ? 'Branch Inactive' : $employee->branch->name; ?></td>
+                            <td><?php echo empty($employee->branch->name) ? 'Branch Inactive' : $employee->branch->name; ?></td>
                         </tr>
                     <?php endforeach ?>
                     </tbody>

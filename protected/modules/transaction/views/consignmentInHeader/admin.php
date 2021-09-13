@@ -48,7 +48,7 @@ return false;
 <div id="maincontent">
 	<div class="clearfix page-action">
 	
-	<?php echo CHtml::link('<span class="fa fa-plus"></span>New Consignment In', Yii::app()->baseUrl.'/transaction/consignmentInHeader/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.consignmentInHeader.create"))) ?>
+	<?php echo CHtml::link('<span class="fa fa-plus"></span>New Consignment In', Yii::app()->baseUrl.'/transaction/consignmentInHeader/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("consignmentInCreate"))) ?>
 		<h1>Manage Consignment In</h1>
 		<div class="search-bar">
 			<div class="clearfix button-bar">
@@ -109,7 +109,7 @@ return false;
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("transaction/consignmentInHeader/update", array("id"=>$data->id))',
-                                'visible'=>'$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.consignmentInHeader.update")'
+                                'visible'=>'$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("consignmentInEdit")'
                             ),
                         ),
                     ),

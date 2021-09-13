@@ -36,7 +36,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Material Request', Yii::app()->baseUrl.'/frontDesk/materialRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionMaterialRequest.create"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Material Request', Yii::app()->baseUrl.'/frontDesk/materialRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("materialRequestCreate"))) ?>
         <h1>Manage  Permintaan Bahan</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
@@ -93,7 +93,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("frontDesk/materialRequest/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionMaterialRequest.update")',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("materialRequestEdit")',
                             ),
                         ),
                     ),

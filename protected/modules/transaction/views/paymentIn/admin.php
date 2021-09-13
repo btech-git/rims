@@ -44,13 +44,13 @@ $('.search-form form').submit(function(){
                     Yii::app()->baseUrl . '/transaction/paymentIn/index', array(
                         'class' => 'button cbutton right',
                         'style' => 'margin-left:10px',
-                        'visible' => Yii::app()->user->checkAccess("transaction.paymentIn.index")
-                    )) ?>
+                        'visible' => Yii::app()->user->checkAccess("paymentInCreate") || Yii::app()->user->checkAccess("paymentInEdit")
+                    )); ?>
                 <?php echo CHtml::link('<span class="fa fa-plus"></span>New Payment In',
                     Yii::app()->baseUrl . '/transaction/paymentIn/invoiceList', array(
                         'class' => 'button success right',
-                        'visible' => Yii::app()->user->checkAccess("transaction.paymentIn.create")
-                    )) ?>
+                        'visible' => Yii::app()->user->checkAccess("paymentInCreate")
+                    )); ?>
                 <h2>Manage Payment In</h2>
             </div>
 

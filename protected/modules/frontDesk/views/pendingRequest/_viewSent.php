@@ -6,7 +6,7 @@
     'pager'=>array(
         'cssFile'=>false,
         'header'=>'',
-        ),
+    ),
     //'summaryText'=>'',
     'columns'=>array(
         array(
@@ -24,18 +24,20 @@
         array('name'=>'requester_branch_id','value'=>'$data->requesterBranch->name'),
         array('name'=>'destination_branch_id','value'=>'$data->destinationBranch->name'),
         array('name'=>'requester_id','value'=> '$data->user->username'),
-        array('name'=>'destination_approval_status','value'=> '$data->approvalStatus', 'header' => 'Approval Status'),
-		array(
-			'class'=>'CButtonColumn',
-			'template'=>'{views}',
-			'buttons'=>array
-			(
-				'views' => array
-				(
-					'label'=>'view',
-					'url'=>'Yii::app()->createUrl("frontDesk/pendingRequest/viewSent", array("id"=>$data->id))',
-				),
-			),
-		),
+        array(
+            'name'=>'destination_approval_status',
+            'value'=> '$data->approvalStatus', 
+            'header' => 'Approval Status'
+        ),
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{views}',
+            'buttons'=>array(
+                'views' => array(
+                    'label'=>'view',
+                    'url'=>'Yii::app()->createUrl("frontDesk/pendingRequest/viewSent", array("id"=>$data->id))',
+                ),
+            ),
+        ),
     ),
 )); ?>

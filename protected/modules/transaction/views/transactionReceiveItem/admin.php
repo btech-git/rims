@@ -92,7 +92,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array(
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("transaction/transactionReceiveItem/update", array("id"=>$data->id))',
-                                'visible'=>'count(MovementInHeader::model()->findAllByAttributes(array("receive_item_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update") && ($data->request_type != "Retail Sales")'
+                                'visible'=>'count(MovementInHeader::model()->findAllByAttributes(array("receive_item_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("receiveItemEdit") && ($data->request_type != "Retail Sales")'
                             ),
                         ),
                     ),

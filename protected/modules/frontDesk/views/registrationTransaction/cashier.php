@@ -285,7 +285,7 @@ $('form').submit(function(){
                             'views' => array(
                                 'label' => 'bill detail',
                                 'url' => 'Yii::app()->createUrl("transaction/paymentIn/create",array("invoiceId"=>$data->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("frontDesk.registrationTransaction.billDetail") && !empty($data->registration_transaction_id)',
+                                'visible' => 'Yii::app()->user->checkAccess("paymentInCreate") && !empty($data->registration_transaction_id)',
                                 'click' => "js:function(){
                                     var url = $(this).attr('href');
 

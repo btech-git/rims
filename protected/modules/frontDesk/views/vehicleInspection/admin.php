@@ -57,23 +57,9 @@ $('.search-form form').submit(function(){
                                     'Available' => 'Available',
                                     'On Progress' => 'On Progress',
                                     'Finished' => 'Finished'
-                                        ), array("style" => "margin-bottom:0px;")
-                                ); ?>
+                                ), array("style" => "margin-bottom:0px;")); ?>
                             </div>
                             <div class="medium-4 columns">
-                                <?php
-                                // Date range search inputs
-                                /* $attribute = 'transaction_date';
-                                  for ($i = 0; $i <= 1; $i++)
-                                  {
-                                  echo ($i == 0 ? Yii::t('main', 'From:') : Yii::t('main', 'To:'));
-                                  $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                  'id'=>CHtml::activeId($model, $attribute.'_'.$i),
-                                  'model'=>$model,
-                                  'attribute'=>$attribute."[$i]",
-                                  ));
-                                  } */
-                                ?>
                                 <?php $attribute = 'transaction_date'; ?>
                                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'id' => CHtml::activeId($vehicle, $attribute . '_0'),
@@ -184,7 +170,7 @@ $('.search-form form').submit(function(){
                         'inspection' => array(
                             'label' => 'inspection',
                             'url' => 'Yii::app()->createUrl("frontDesk/vehicleInspection/create", array("vehicleId" => $data->vehicle_id, "wonumber" => $data->work_order_number))',
-                            'visible' => 'Yii::app()->user->checkAccess("frontDesk.vehicleInspection.inspection") && !empty($data->work_order_number)'
+                            'visible' => 'Yii::app()->user->checkAccess("inspectionCreate") && !empty($data->work_order_number)'
                         ),
                     ),
                 ),
@@ -196,48 +182,11 @@ $('.search-form form').submit(function(){
 
 <?php Yii::app()->clientScript->registerScript('search', "
     $('#RegistrationTransaction_status,#RegistrationTransaction_transaction_date_1').change(function(){
-            // if ($('#RegistrationTransaction_transaction_date_0').val().lenght != 0) {
-                $.fn.yiiGridView.update('vehicle-inspection-grid', {
-                    data: $('#search_heading-range').serialize()
-                });
-            // }
+        // if ($('#RegistrationTransaction_transaction_date_0').val().lenght != 0) {
+            $.fn.yiiGridView.update('vehicle-inspection-grid', {
+                data: $('#search_heading-range').serialize()
+            });
+        // }
         return false;
     });	
 "); ?>
-
-<?php /* $this->widget('zii.widgets.grid.CGridView', array(
-  'id'=>'vehicle-inspection-grid',
-  'dataProvider'=>$vehicleDataProvider,
-  'filter'=>$vehicle,
-  'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-  'pager'=>array(
-  'cssFile'=>false,
-  'header'=>'',
-  ),
-  'columns'=>array(
-  //'id',
-  array('name'=>'plate_number', 'value'=>'CHTml::link($data->plate_number, array("view", "id"=>$data->id))', 'type'=>'raw'),
-  'machine_number',
-  'frame_number',
-  array('name'=>'car_make','value'=>'$data->carMake->name'),
-  array('name'=>'car_model','value'=>'$data->carModel->name'),
-  array('name'=>'car_sub_model','value'=>'$data->carSubModel->name'),
-  //'vehicle_id',
-  //'inspection_id',
-  //'inspection_date',
-  //'work_order_number',
-  //'status',
-  array(
-  'class'=>'CButtonColumn',
-  'template'=>'{inspection}',
-  'buttons'=>array
-  (
-  'inspection' => array
-  (
-  'label'=>'inspection',
-  'url'=>'Yii::app()->createUrl("frontDesk/vehicleInspection/inspection", array("vehicleId"=>$data->id))',
-  ),
-  ),
-  ),
-  ),
-  )); */ ?>

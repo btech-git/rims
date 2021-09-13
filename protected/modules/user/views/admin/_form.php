@@ -11,27 +11,27 @@ Yii::app()->clientScript->registerScript('userRoles', "
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
             }
         }
-    }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 90);
-        checkRoles(1, 2, 90);
-        checkRoles(2, 3, 14);
-        checkRoles(15, 16, 21);
+        checkRoles(0, 1, 100);
+        checkRoles(1, 2, 100);
+        checkRoles(2, 3, 6);
+        checkRoles(7, 8, 21);
         checkRoles(22, 23, 28);
-        checkRoles(29, 30, 38);
-        checkRoles(39, 40, 63);
-        checkRoles(64, 65, 79);
-        checkRoles(80, 81, 86);
-        checkRoles(87, 88, 89);
+        checkRoles(29, 30, 35);
+        checkRoles(36, 40, 42);
+        checkRoles(43, 44, 49);
+        checkRoles(50, 51, 74);
+        checkRoles(75, 76, 81);
+        checkRoles(75, 76, 81);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_0').click(function(){
-        checkRoles(0, 1, 90);
+        checkRoles(0, 1, 100);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_1').click(function(){
-        checkRoles(1, 2, 90);
+        checkRoles(1, 2, 100);
     })
 
     $('#" . CHtml::activeId($model, 'roles') . "_2').click(function(){

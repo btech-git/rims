@@ -141,17 +141,17 @@ $('.search-form form').submit(function(){
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id"=>$data->id))',
-                        'visible' => 'Yii::app()->user->checkAccess("transaction.generalRepairRegistration.view")'
+                        'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
                     ),
                     'edit' => array(
                         'label' => 'edit',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/update", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("transaction.generalRepairRegistration.update") && empty($data->invoiceHeaders)',
+                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("generalRepairEdit") && empty($data->invoiceHeaders)',
                     ),
                     'hapus' => array(
                         'label' => 'delete',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/delete", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("transaction.generalRepairRegistration.delete")',
+                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
                         'options' => array(
                             'confirm' => 'Are you sure to delete this transaction?',
                         ),

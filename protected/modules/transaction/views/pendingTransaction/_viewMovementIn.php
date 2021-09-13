@@ -7,16 +7,12 @@
         'cssFile'=>false,
         'header'=>'',
         ),
-    //'summaryText'=>'',
     'columns'=>array(
-        //'id',
-        //'code',
         array(
             'name'=>'movement_in_number', 
             'value'=>'CHTml::link($data->movement_in_number, array("/transaction/movementInHeader/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
-        // 'purchase_order_no',
         array(
             'header' => 'Tanggal',
             'name' => 'date_posting',

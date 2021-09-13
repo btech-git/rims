@@ -6,13 +6,13 @@
     'pager'=>array(
         'cssFile'=>false,
         'header'=>'',
-        ),
-    //'summaryText'=>'',
+    ),
     'columns'=>array(
-        //'id',
-        //'code',
-        array('name'=>'consignment_out_no', 'value'=>'CHTml::link($data->consignment_out_no, array("/transaction/consignmentOutHeader/view", "id"=>$data->id))', 'type'=>'raw'),
-        // 'purchase_order_no',
+        array(
+            'name'=>'consignment_out_no', 
+            'value'=>'CHTml::link($data->consignment_out_no, array("/transaction/consignmentOutHeader/view", "id"=>$data->id))', 
+            'type'=>'raw'
+        ),
         array(
             'header' => 'Tanggal',
             'name' => 'date_posting',

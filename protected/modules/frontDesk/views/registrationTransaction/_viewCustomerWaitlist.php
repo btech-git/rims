@@ -72,12 +72,12 @@
                     </td>
                     <td>
                         <?php echo CHtml::activeDropDownList($model, 'status', array(
-							'Registration'=>'Registration',
-							'Pending'=>'Pending',
-							'Available'=>'Available',
-							'On Progress'=>'On Progress',
-							'Finished'=>'Finished'
-						), array(
+                                'Registration'=>'Registration',
+                                'Pending'=>'Pending',
+                                'Available'=>'Available',
+                                'On Progress'=>'On Progress',
+                                'Finished'=>'Finished'
+                        ), array(
                             'empty' => '-- All --',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',

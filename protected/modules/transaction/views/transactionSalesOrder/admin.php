@@ -37,7 +37,7 @@ $('.search-form form').submit(function(){
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Sales Order',
             Yii::app()->baseUrl . '/transaction/transactionSalesOrder/create', array(
                 'class' => 'button success right',
-                'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.create")
+                'visible' => Yii::app()->user->checkAccess("saleOrderCreate")
             )); ?>
         <h1>Manage Transaction Sales Orders</h1>
         <div class="search-bar">
@@ -128,12 +128,12 @@ $('.search-form form').submit(function(){
                             'edit' => array(
                                 'label' => 'edit',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/update", array("id"=>$data->id))',
-                                'visible' => '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSalesOrder.update")',
+                                'visible' => '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("saleOrderEdit")',
                             ),
                             'print' => array(
                                 'label' => 'print',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/pdf", array("id"=>$data->id))',
-                                'visible' => '$data->status_document == "Approved" && Yii::app()->user->checkAccess("transaction.transactionSalesOrder.pdf")',
+                                'visible' => '$data->status_document == "Approved" && Yii::app()->user->checkAccess("saleOrderEdit")',
                             ),
                         ),
                     ),

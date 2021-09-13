@@ -28,7 +28,7 @@ $('.search-form form').submit(function(){
 
 <div id="maincontent">
 	<div class="clearfix page-action">
-		<?php echo CHtml::link('<span class="fa fa-plus"></span>New Stock Adjustment', Yii::app()->baseUrl.'/frontDesk/adjustment/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.stockAdjustment.create"))) ?>
+		<?php echo CHtml::link('<span class="fa fa-plus"></span>New Stock Adjustment', Yii::app()->baseUrl.'/frontDesk/adjustment/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("stockAdjustmentCreate"))) ?>
 		<h2>Manage Stock Adjustment Headers</h2>
 		</div>
 

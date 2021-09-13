@@ -39,7 +39,7 @@ $this->breadcrumbs=array(
 <br />
                 
 <div class="detail">
-	<?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(
             'Detail Item'=>array(
                 'id'=>'test1',

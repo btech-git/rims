@@ -46,7 +46,7 @@ Yii::app()->clientScript->registerScript('search', "
 	?>
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Sent Request', Yii::app()->baseUrl.'/transaction/sentRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionSentRequest.create"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Sent Request', Yii::app()->baseUrl.'/transaction/sentRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("sentRequestCreate"))) ?>
         <h1>Manage Transaction Sent Request</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
@@ -109,12 +109,12 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("transaction/sentRequest/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSentRequest.update")',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("sentRequestEdit")',
                             ),
                             'delete' => array(
                                 'label' => 'delete',
                                 'url'=>'Yii::app()->createUrl("transaction/sentRequest/delete", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSentRequest.delete")',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("sentRequestEdit")',
                                 'options' => array(
                                     'confirm' => 'Are you sure to delete this transaction?',
                                 ),

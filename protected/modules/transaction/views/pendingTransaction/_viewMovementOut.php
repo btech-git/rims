@@ -7,12 +7,12 @@
         'cssFile'=>false,
         'header'=>'',
         ),
-    //'summaryText'=>'',
     'columns'=>array(
-        //'id',
-        //'code',
-        array('name'=>'movement_out_no', 'value'=>'CHTml::link($data->movement_out_no, array("/transaction/movementOutHeader/view", "id"=>$data->id))', 'type'=>'raw'),
-        // 'purchase_order_no',
+        array(
+            'name'=>'movement_out_no', 
+            'value'=>'CHTml::link($data->movement_out_no, array("/transaction/movementOutHeader/view", "id"=>$data->id))', 
+            'type'=>'raw'
+        ),
         array(
             'header' => 'Tanggal',
             'name' => 'date_posting',

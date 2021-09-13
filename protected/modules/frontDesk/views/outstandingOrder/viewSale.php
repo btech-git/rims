@@ -31,8 +31,6 @@ $this->breadcrumbs = array(
                     'value' => $model->approvedBranch != null ? $model->approvedBranch->name : ''
                 ),
                 array('name' => 'customer_name', 'value' => $model->customer->name),
-//                'total_quantity',
-//                array('name' => 'total_price', 'value' => AppHelper::formatMoney($model->total_price)),
                 'estimate_payment_date',
                 array(
                     'label' => 'Invoice #',

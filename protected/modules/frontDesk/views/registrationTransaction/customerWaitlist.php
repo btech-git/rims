@@ -67,60 +67,53 @@ $customerDataProvider = new CActiveDataProvider('Customer', array(
     'criteria' => $customerCriteria,
 )); ?>
 
-
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'customer-dialog',
-        // additional javascript options for the dialog plugin
-        'options' => array(
-            'title' => 'Customer',
-            'autoOpen' => false,
-            'width' => 'auto',
-            'modal' => true,
-        ),
-    )
-);
-?>
+    'id' => 'customer-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Customer',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => true,
+    ),
+)); ?>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'customer-grid',
-        'dataProvider' => $customerDataProvider,
-        'filter' => $customer,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
-        'selectionChanged' => 'js:function(id){
-    jQuery("#customer-dialog").dialog("close");
-    jQuery.ajax({
-        type: "POST",
-        dataType: "JSON",
-        url: "' . CController::createUrl('ajaxCustomer', array('id' => '')) . '" + jQuery.fn.yiiGridView.getSelection(id),
-        data: $("form").serialize(),
-        success: function(data) {
-            jQuery("#RegistrationTransaction_customer_name").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_epoxy").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_dempul").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_finishing").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_opening").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_paint").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_washing").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_tba").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_gr").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_grOil").val(data.name);
-            jQuery("#RegistrationTransaction_customer_name_grWash").val(data.name);
-        },
-    });
-}',
-        'columns' => array(
-            //'id',
-            //'code',
-            'customer_type',
-            'name',
-            'email',
-        ),
-    )
-);
-?>
+    'id' => 'customer-grid',
+    'dataProvider' => $customerDataProvider,
+    'filter' => $customer,
+    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+    'pager' => array(
+        'cssFile' => false,
+        'header' => '',
+    ),
+    'selectionChanged' => 'js:function(id){
+        jQuery("#customer-dialog").dialog("close");
+        jQuery.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: "' . CController::createUrl('ajaxCustomer', array('id' => '')) . '" + jQuery.fn.yiiGridView.getSelection(id),
+            data: $("form").serialize(),
+            success: function(data) {
+                jQuery("#RegistrationTransaction_customer_name").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_epoxy").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_dempul").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_finishing").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_opening").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_paint").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_washing").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_tba").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_gr").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_grOil").val(data.name);
+                jQuery("#RegistrationTransaction_customer_name_grWash").val(data.name);
+            },
+        });
+    }',
+    'columns' => array(
+        'customer_type',
+        'name',
+        'email',
+    ),
+)); ?>
 
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>

@@ -342,7 +342,7 @@ $('form').submit(function(){
                                 'label'=>'view',
                                 'url'=>'Yii::app()->createUrl("frontDesk/registrationTransaction/viewWo", array("id"=>$data->id))',
                                 //'options'=>array('class'=>'registration-service-view','id'=>''),
-                                'visible'=>'Yii::app()->user->checkAccess("frontDesk.registrationTransaction.viewWo")',
+                                'visible'=>'Yii::app()->user->checkAccess("workOrderReport")',
                                 'click'=>"js:function(){
                                     var url = $(this).attr('href');
 

@@ -42,7 +42,8 @@ $('.search-form form').submit(function(){
 
             <div class="search-bar">
                 <div class="clearfix button-bar">
-                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					<div class="clearfix"></div>
+                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					
+                    <div class="clearfix"></div>
                     <div class="search-form" style="display:none">
                         <?php $this->renderPartial('_search', array(
                             'model' => $model,
@@ -92,7 +93,7 @@ $('.search-form form').submit(function(){
                                 'edit' => array(
                                     'label' => 'edit',
                                     'url' => 'Yii::app()->createUrl("transaction/movementOutHeader/update", array("id"=>$data->id))',
-                                    'visible' => '($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && Yii::app()->user->checkAccess("transaction.movementOutHeader.update")',
+                                    'visible' => '($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && Yii::app()->user->checkAccess("movementOutEdit")',
                                 ),
                             ),
                         ),

@@ -9,10 +9,11 @@
         ),
     //'summaryText'=>'',
     'columns'=>array(
-        //'id',
-        //'code',
-        array('name'=>'sent_request_no', 'value'=>'CHTml::link($data->sent_request_no, array("/transaction/transactionSentRequest/view", "id"=>$data->id))', 'type'=>'raw'),
-        // 'purchase_order_no',
+        array(
+            'name'=>'sent_request_no', 
+            'value'=>'CHTml::link($data->sent_request_no, array("/transaction/transactionSentRequest/view", "id"=>$data->id))', 
+            'type'=>'raw'
+        ),
         array(
             'header' => 'Tanggal',
             'name' => 'sent_request_date',

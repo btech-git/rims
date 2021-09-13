@@ -8,7 +8,11 @@
         'header'=>'',
     ),
     'columns'=>array(
-        array('name'=>'consignment_in_number', 'value'=>'CHTml::link($data->consignment_in_number, array("/transaction/consignmentInHeader/view", "id"=>$data->id))', 'type'=>'raw'),
+        array(
+            'name'=>'consignment_in_number', 
+            'value'=>'CHTml::link($data->consignment_in_number, array("/transaction/consignmentInHeader/view", "id"=>$data->id))', 
+            'type'=>'raw'
+        ),
         array(
             'header' => 'Tanggal',
             'name' => 'date_posting',

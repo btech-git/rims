@@ -47,7 +47,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 	<div id="maincontent">
 		<div class="clearfix page-action">
-			<?php echo CHtml::link('<span class="fa fa-plus"></span>New Transfer Request', Yii::app()->baseUrl.'/transaction/transferRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionTransferRequest.create"))) ?>
+			<?php echo CHtml::link('<span class="fa fa-plus"></span>New Transfer Request', Yii::app()->baseUrl.'/transaction/transferRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transferRequestCreate"))) ?>
 			<h1>Manage Transaction Transfer Request</h1>
 			<div class="search-bar">
 				<div class="clearfix button-bar">
@@ -108,7 +108,7 @@ Yii::app()->clientScript->registerScript('search', "
 								(
 									'label'=>'edit',
 									'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
-									'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transferRequest.update")',
+									'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transferRequestEdit")',
 								),
 							),
 						),

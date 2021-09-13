@@ -147,16 +147,17 @@ $('.search-form form').submit(function(){
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array("id"=>$data->id))',
+                        'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")',
                     ),
                     'edit' => array(
                         'label' => 'edit',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/update", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && empty($data->invoiceHeaders)' // && Yii::app()->user->checkAccess("transaction.bodyRepairRegistration.update")',
+                        'visible' => '$data->status != "Finished" && empty($data->invoiceHeaders) && Yii::app()->user->checkAccess("bodyRepairEdit")',
                     ),
                     'hapus' => array(
                         'label' => 'delete',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/delete", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished"' // && Yii::app()->user->checkAccess("transaction.bodyRepairRegistration.delete")'
+                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("bodyRepairEdit")'
                     ),
                 ),
             ),

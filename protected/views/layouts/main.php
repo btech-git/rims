@@ -163,7 +163,7 @@
 						<?php $this->widget('zii.widgets.CMenu',array(
 								'items'=>array(
 									array('label'=>'Home', 'url'=>array('/site/index')),
-									array('label'=>'Setting', 'url'=>array('/site/setting'),'template'=>'/ {menu}'),
+									array('label'=>'Setting', 'url'=>array('/site/setting'),'template'=>'/ {menu}', 'visible' => Yii::app()->user->checkAccess('masterData')),
 									array('label'=>'Profile ('.Yii::app()->user->name.')', 'url'=>Yii::app()->createUrl("user/admin/profile",array("id"=>Yii::app()->user->id)),'template'=>'/ {menu}', 'visible'=>!Yii::app()->user->isGuest),
 									//array('label'=>'Help', 'url'=>array('/site/contact'),'template'=>'/ {menu}'),
 									//array('label'=>'Login', 'url'=>array('/site/login'),'template'=>'/ {menu}', 'visible'=>Yii::app()->user->isGuest),
