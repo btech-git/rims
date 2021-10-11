@@ -15,19 +15,36 @@ class TransactionSalesOrderController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('saleOrderCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'delete' ||
+            $filterChain->action->id === 'update'        
+        ) {
+            if (!(Yii::app()->user->checkAccess('saleOrderEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('saleOrderApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if (
                 $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'create' ||
-                $filterChain->action->id === 'delete' ||
                 $filterChain->action->id === 'generateInvoice' ||
                 $filterChain->action->id === 'index' ||
-                $filterChain->action->id === 'update' ||
-                $filterChain->action->id === 'updateApproval' ||
                 $filterChain->action->id === 'view' ||
                 $filterChain->action->id === 'showProduct'
                 
         ) {
-            if (!(Yii::app()->user->checkAccess('saleOrderCreate')) || !(Yii::app()->user->checkAccess('saleOrderEdit'))) {
+            if (!(Yii::app()->user->checkAccess('saleOrderCreate')) || !(Yii::app()->user->checkAccess('saleOrderEdit')) || !(Yii::app()->user->checkAccess('saleOrderApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }

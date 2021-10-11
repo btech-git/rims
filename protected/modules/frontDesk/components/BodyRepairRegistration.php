@@ -156,13 +156,14 @@ class BodyRepairRegistration extends CComponent {
 
     public function addServiceDetail($serviceId, $customerId, $custType, $vehicleId, $repair) {
 
-        $serviceArrays = array();
+//        $serviceArrays = array();
         $serviceArrays = $this->serviceDetails;
         $checkService = array();
 
         foreach ($serviceArrays as $serviceArray) {
             $checkService[] = $serviceArray->service_id;
         }
+        
         if (in_array($serviceId, $checkService)) {
             echo "Please select other Service, this is already added";
         } else {
@@ -177,17 +178,17 @@ class BodyRepairRegistration extends CComponent {
         $service = Service::model()->findByPk($serviceId);
         if ($custType == "Individual") {
             $serviceCarSubDetail = ServicePricelist::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id, 'car_model_id' => $vehicle->car_model_id, 'car_sub_detail_id' => $vehicle->car_sub_model_id));
-            if (count($serviceCarSubDetail) > 0) {
+            if (!empty($serviceCarSubDetail)) {
                 $serviceDetail->price = $serviceCarSubDetail->price;
                 $serviceDetail->total_price = $serviceCarSubDetail->price;
             } else {
                 $serviceCarModel = ServicePricelist::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id, 'car_model_id' => $vehicle->car_model_id));
-                if (count($serviceCarModel) > 0) {
+                if (!empty($serviceCarModel)) {
                     $serviceDetail->price = $serviceCarModel->price;
                     $serviceDetail->total_price = $serviceCarModel->price;
                 } else {
                     $serviceCarMake = ServicePricelist::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id));
-                    if (count($serviceCarMake) > 0) {
+                    if (!empty($serviceCarMake)) {
                         $serviceDetail->price = $serviceCarMake->price;
                         $serviceDetail->total_price = $serviceCarMake->price;
                     } else {
@@ -219,17 +220,17 @@ class BodyRepairRegistration extends CComponent {
         }//endif Individual
         else {
             $custServiceSubDetail = CustomerServiceRate::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id, 'car_model_id' => $vehicle->car_model_id, 'car_sub_model_id' => $vehicle->car_sub_model_id, 'customer_id' => $customerId));
-            if (count($custServiceSubDetail) > 0) {
+            if (!empty($custServiceSubDetail)) {
                 $serviceDetail->price = $custServiceSubDetail->rate;
                 $serviceDetail->total_price = $custServiceSubDetail->rate;
             } else {
                 $custServiceCarModel = CustomerServiceRate::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id, 'car_model_id' => $vehicle->car_model_id, 'customer_id' => $customerId));
-                if (count($custServiceCarModel) > 0) {
+                if (!empty($custServiceCarModel)) {
                     $serviceDetail->price = $custServiceCarModel->rate;
                     $serviceDetail->total_price = $custServiceCarModel->rate;
                 } else {
                     $custServiceCarMake = CustomerServiceRate::model()->findByAttributes(array('service_id' => $serviceId, 'car_make_id' => $vehicle->car_make_id, 'customer_id' => $customerId));
-                    if (count($custServiceCarMake) > 0) {
+                    if (!empty($custServiceCarMake)) {
                         $serviceDetail->price = $custServiceCarMake->rate;
                         $serviceDetail->total_price = $custServiceCarMake->rate;
                     } else {
@@ -244,12 +245,14 @@ class BodyRepairRegistration extends CComponent {
                             $lux = $service->luxury_value;
                             $hour = $service->flat_rate_hour;
                         }
+                        
                         if ($customerData->flat_rate != null) {
                             $priceTotal = $diff * $lux * $hour * $customerData->flat_rate;
                         } else {
                             $bodyFR = BodyStandardFr::model()->findByPk(1);
                             $priceTotal = $diff * $lux * $hour * $bodyFR->flat_rate;
                         }
+                        
                         $serviceDetail->price = $priceTotal;
                         $serviceDetail->total_price = $priceTotal;
                     }//else servicecarMake
@@ -273,15 +276,17 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function addProductDetail($productId) {
-        $productArrays = array();
+//        $productArrays = array();
         $productArrays = $this->productDetails;
         $checkProduct = array();
-        foreach ($productArrays as $productArray)
+        
+        foreach ($productArrays as $productArray) {
             $checkProduct[] = $productArray->product_id;
+        }
 
-        if (in_array($productId, $checkProduct))
+        if (in_array($productId, $checkProduct)) {
             echo "Please select other Product, this is already added";
-        else {
+        } else {
             $productDetail = new RegistrationProduct();
             $productDetail->product_id = $productId;
             $product = Product::model()->findByPk($productId);

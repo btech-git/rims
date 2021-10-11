@@ -6,19 +6,32 @@ class JournalAdjustmentController extends Controller {
     
     public function filters() {
         return array(
-//			'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create'
-                || $filterChain->action->id === 'ajaxHtmlAddProduct'
-                || $filterChain->action->id === 'ajaxHtmlAddAccount'
-                || $filterChain->action->id === 'ajaxHtmlRemoveAccount'
-                || $filterChain->action->id === 'ajaxJsonTotalCredit'
-                || $filterChain->action->id === 'ajaxJsonTotalDebit'
-                || $filterChain->action->id === 'view') {
-            if (!(Yii::app()->user->checkAccess('adjustmentCreate')))
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalApproval')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'update' ||
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'view'
+        ) {
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalCreate')) || !(Yii::app()->user->checkAccess('adjustmentJournalEdit')) || !(Yii::app()->user->checkAccess('adjustmentJournalApproval')))
                 $this->redirect(array('/site/login'));
         }
 

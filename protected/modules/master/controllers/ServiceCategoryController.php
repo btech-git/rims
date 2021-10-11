@@ -15,17 +15,27 @@ class ServiceCategoryController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterServiceCategoryCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'profile' || 
             $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'restore'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('operationHead')))
+            if (!(Yii::app()->user->checkAccess('masterServiceCategoryEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'profile' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'index'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterServiceCategoryCreate')) || !(Yii::app()->user->checkAccess('masterServiceCategoryEdit')))
                 $this->redirect(array('/site/login'));
         }
 

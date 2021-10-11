@@ -15,16 +15,30 @@ class TransactionReturnItemController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('saleReturnCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'create' || 
             $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'updateApproval' || 
-            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('purchaseReturnCreate')) || !(Yii::app()->user->checkAccess('purchaseReturnEdit')))
+            if (!(Yii::app()->user->checkAccess('saleReturnEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('saleReturnApproval')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'view'
+        ) {
+            if (!(Yii::app()->user->checkAccess('saleReturnCreate')) || !(Yii::app()->user->checkAccess('saleReturnEdit')) || !(Yii::app()->user->checkAccess('saleReturnApproval')))
                 $this->redirect(array('/site/login'));
         }
 

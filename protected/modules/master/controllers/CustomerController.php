@@ -10,24 +10,34 @@ class CustomerController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterCustomerCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterCustomerEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'addVehicle' || 
             $filterChain->action->id === 'updatePic' || 
             $filterChain->action->id === 'updatePrice' || 
             $filterChain->action->id === 'updateVehicle'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('idleManagement')))
+            if (!(Yii::app()->user->checkAccess('masterCustomerCreate')) || !(Yii::app()->user->checkAccess('masterCustomerEdit')))
                 $this->redirect(array('/site/login'));
         }
 

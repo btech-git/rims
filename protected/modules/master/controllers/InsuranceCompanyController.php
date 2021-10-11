@@ -15,16 +15,26 @@ class InsuranceCompanyController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterInsuranceCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterInsuranceEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'restore'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('operationHead')))
+            if (!(Yii::app()->user->checkAccess('masterInsuranceCreate')) || !(Yii::app()->user->checkAccess('masterInsuranceEdit')))
                 $this->redirect(array('/site/login'));
         }
 

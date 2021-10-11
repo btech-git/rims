@@ -16,22 +16,16 @@ class RegistrationTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'cashier') {
-            if (!(Yii::app()->user->checkAccess('cashierCreate')) || !(Yii::app()->user->checkAccess('cashierEdit'))) {
+            if (!(Yii::app()->user->checkAccess('cashierApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
         
         if ($filterChain->action->id === 'customerWaitlist') {
-            if (
-                    !(Yii::app()->user->checkAccess('generalRepairCreate')) || 
-                    !(Yii::app()->user->checkAccess('generalRepairEdit')) || 
-                    !(Yii::app()->user->checkAccess('bodyRepairCreate')) || 
-                    !(Yii::app()->user->checkAccess('bodyRepairEdit'))
-            ) {
+            if (!(Yii::app()->user->checkAccess('customerQueueReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
-
 
         $filterChain->run();
     }
@@ -2306,6 +2300,9 @@ class RegistrationTransactionController extends Controller {
     }
 
     public function actionCustomerWaitlist() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $modelDataProvider = $model->search();
         $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL");

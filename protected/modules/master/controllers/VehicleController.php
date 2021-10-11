@@ -10,21 +10,31 @@ class VehicleController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterVehicleCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterVehicleEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'inspection'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('idleManagement')))
+            if (!(Yii::app()->user->checkAccess('masterVehicleCreate')) || !(Yii::app()->user->checkAccess('masterVehicleEdit')))
                 $this->redirect(array('/site/login'));
         }
 

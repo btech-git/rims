@@ -10,7 +10,7 @@
     'columns'=>array(
         array(
             'name'=>'transfer_request_no', 
-            'value'=>'CHTml::link($data->transfer_request_no, array("/transaction/transactionTransferRequest/view", "id"=>$data->id))', 
+            'value'=>'CHTml::link($data->transfer_request_no, array("/transaction/transferRequest/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
         'transfer_request_date',

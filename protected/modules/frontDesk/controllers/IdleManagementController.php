@@ -24,7 +24,7 @@ class IdleManagementController extends Controller
             $filterChain->action->id === 'workOrderResumeService' ||
             $filterChain->action->id === 'workOrderStartService'
         ) {
-            if (!(Yii::app()->user->checkAccess('idleManagement')))
+            if (!(Yii::app()->user->checkAccess('grMechanicApproval')))
                 $this->redirect(array('/site/login'));
         }
 

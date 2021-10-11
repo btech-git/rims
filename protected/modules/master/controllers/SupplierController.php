@@ -6,23 +6,33 @@ class SupplierController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create' ) {
+            if (!(Yii::app()->user->checkAccess('masterSupplierCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'addCoa' || 
             $filterChain->action->id === 'edit' || 
             $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterSupplierEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'addCoa' || 
             $filterChain->action->id === 'addProduct'
         ) {
-            if (!(Yii::app()->user->checkAccess('purchaseHead')))
+            if (!(Yii::app()->user->checkAccess('masterSupplierCreate')) || !(Yii::app()->user->checkAccess('masterSupplierEdit')))
                 $this->redirect(array('/site/login'));
         }
 

@@ -15,14 +15,23 @@ class TransactionDeliveryOrderController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('deliveryCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'delete' ||
+            $filterChain->action->id === 'update'
+        ) {
+            if (!(Yii::app()->user->checkAccess('deliveryEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'updateApproval' || 
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'update'
+            $filterChain->action->id === 'view'
         ) {
             if (!(Yii::app()->user->checkAccess('deliveryCreate')) || !(Yii::app()->user->checkAccess('deliveryEdit')))
                 $this->redirect(array('/site/login'));

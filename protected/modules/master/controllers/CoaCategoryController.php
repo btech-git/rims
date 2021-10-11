@@ -11,21 +11,31 @@ class CoaCategoryController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterCoaCategoryCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'edit' || 
             $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterCoaCategoryEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('accountingHead')) || !(Yii::app()->user->checkAccess('financeHead')))
+            if (!(Yii::app()->user->checkAccess('masterCoaCategoryCreate')) || !(Yii::app()->user->checkAccess('masterCoaCategoryEdit')))
                 $this->redirect(array('/site/login'));
         }
 

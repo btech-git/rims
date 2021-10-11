@@ -15,17 +15,43 @@ class TransactionPurchaseOrderController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('purchaseOrderCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'delete' || 
+            $filterChain->action->id === 'update'
+        ) {
+            if (!(Yii::app()->user->checkAccess('purchaseOrderEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'outstanding' || 
+            $filterChain->action->id === 'updateApproval'
+        ) {
+            if (!(Yii::app()->user->checkAccess('purchaseOrderApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if (
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'create' || 
             $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'outstanding' || 
             $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'updateApproval' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('purchaseOrderCreate')) || !(Yii::app()->user->checkAccess('purchaseOrderEdit'))) {
+            if (
+                !(Yii::app()->user->checkAccess('purchaseOrderCreate')) || 
+                !(Yii::app()->user->checkAccess('purchaseOrderEdit')) ||
+                !(Yii::app()->user->checkAccess('purchaseOrderApproval'))
+            ) {
                 $this->redirect(array('/site/login'));
             }
         }

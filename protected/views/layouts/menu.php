@@ -42,8 +42,9 @@
         Yii::app()->user->checkAccess('inspectionEdit') || 
         Yii::app()->user->checkAccess('cashierCreate') || 
         Yii::app()->user->checkAccess('cashierEdit') || 
-        Yii::app()->user->checkAccess('workOrderReport') || 
-        Yii::app()->user->checkAccess('customerQueueReport')
+        Yii::app()->user->checkAccess('workOrderApproval') || 
+        Yii::app()->user->checkAccess('cashierApproval') || 
+        Yii::app()->user->checkAccess('customerQueueApproval')
     ): ?>
         <li class="mdropdown"><a href="#">RESEPSIONIS</a>
             <?php $this->widget('zii.widgets.CMenu', array(
@@ -71,17 +72,17 @@
                     array(
                         'label' => 'SPK', 
                         'url' => array('/frontDesk/workOrder/admin'),
-                        'visible' => Yii::app()->user->checkAccess('workOrderReport')
+                        'visible' => Yii::app()->user->checkAccess('workOrderApproval')
                     ),
                     array(
                         'label' => 'Kasir', 
                         'url' => array('/frontDesk/registrationTransaction/cashier'), 
-                        'visible' => (Yii::app()->user->checkAccess('cashierCreate') || Yii::app()->user->checkAccess('cashierEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('cashierApproval'))
                     ),
                     array(
                         'label' => 'Daftar Antrian Customer', 
                         'url' => array('/frontDesk/registrationTransaction/customerWaitlist'), 
-                        'visible' => Yii::app()->user->checkAccess('customerQueueReport')
+                        'visible' => Yii::app()->user->checkAccess('customerQueueApproval')
                     ),
                 ),
             )); ?>
@@ -390,7 +391,7 @@
                     array('label' => 'Laporan Movement Out', 'url' => array('/report/movementOut/summary'), 'visible' => Yii::app()->user->checkAccess('movementOutReport')),
                     array('label' => 'Laporan Pembelian', 'url' => array('/report/purchaseSummary/summary'), 'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')),
                     array('label' => 'Laporan Hutang Supplier', 'url' => array('/report/payable/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Laporan InvoicePenjualan', 'url' => array('/report/saleInvoiceSummary/summary'), 'visible' => Yii::app()->user->checkAccess('saleInvoiceReport')),
+                    array('label' => 'Laporan Invoice Penjualan', 'url' => array('/report/saleInvoiceSummary/summary'), 'visible' => Yii::app()->user->checkAccess('saleInvoiceReport')),
                     array('label' => 'Laporan Piutang Customer', 'url' => array('/report/receivable/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                     array('label' => 'Laporan Payment In', 'url' => array('/report/paymentIn/summary'), 'visible' => Yii::app()->user->checkAccess('paymentInReport')),
                     array('label' => 'Laporan Payment Out', 'url' => array('/report/paymentOut/summary'), 'visible' => Yii::app()->user->checkAccess('paymentOutReport')),

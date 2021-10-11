@@ -15,20 +15,30 @@ class EmployeeController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create' ) {
+            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'restore' || 
             $filterChain->action->id === 'edit' || 
             $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterEmployeeEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'updateBank' || 
             $filterChain->action->id === 'updateDeduction' || 
             $filterChain->action->id === 'updateIncentive'
         ) {
-            if (!(Yii::app()->user->checkAccess('generalManager')))
+            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit')))
                 $this->redirect(array('/site/login'));
         }
 

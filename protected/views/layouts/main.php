@@ -66,9 +66,9 @@
 		</style>
 		<script>
 		  $(document).ready(function(){
-		  	$('[data-hover="dropdown"]').bootstrapDropdownHover();
+		      $('[data-hover="dropdown"]').bootstrapDropdownHover();
 		  });
-		  </script>
+		</script>
 		<?php $id=2;?>
 
 		<?php $ccontroller = Yii::app()->controller->id; ?>
@@ -140,7 +140,7 @@
 							
 							<li class="dropdown" >
 							    <a href="<?php echo Yii::app()->baseUrl.'/transaction/pendingTransaction';?>" class="dropdown-toggle" data-toggle="dropdown"  data-delay="1000" data-close-others="false">
-							        <i class="fa fa-bell" style="font-size:16px;" ><i id="rcorners4"><?php echo $count; ?></i></i></b>
+							        <i class="fa fa-bell" style="font-size:16px;" ><i id="rcorners4"><?php echo $count; ?></i></i>
 							    </a>
 							    <ul class="dropdown-menu">
 							        <li><?php echo CHtml::link('Request (' . count($requestOrder) . ')' , array('/transaction/transactionRequestOrder/admin'), array('target' =>'_blank')); ?></li>
@@ -212,8 +212,6 @@
 			<!-- end content -->
 			<?php include 'footer.php';?>
 
-		</div>
-		
 		<?php /*
 		<script>
 		  $(document).ready(function(){

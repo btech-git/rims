@@ -110,8 +110,8 @@ $this->breadcrumbs=array(
                                                 )),
                                             )); ?>
                                         </td>
-<!--                                        <td>
-                                            <?php /*echo CHtml::activeCheckBox($bodyRepairRegistration->header,'pph', array(
+                                        <td>
+                                            <?php echo CHtml::activeCheckBox($bodyRepairRegistration->header,'pph', array(
                                                 'onchange' => CHtml::ajax(array(
                                                     'type' => 'POST',
                                                     'dataType' => 'JSON',
@@ -123,8 +123,8 @@ $this->breadcrumbs=array(
                                                         $("#sub_total_quick_service").html(data.subTotalQuickService);
                                                     }',
                                                 )),
-                                            ));*/ ?>
-                                        </td>-->
+                                            )); ?>
+                                        </td>
                                         <?php if($bodyRepairRegistration->header->work_order_number != ""): ?>
                                             <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'work_order_number')); ?></td>
                                         <?php endif; ?>
@@ -350,9 +350,9 @@ $this->breadcrumbs=array(
                             <div class="row">
                                 <div class="medium-12 columns">
                                     <div class="field buttons text-center">
-                                        <?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
+                                        <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
                                         <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                                        <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                                        <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton')); ?>
                                     </div>
                                 </div>
                             </div>

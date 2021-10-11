@@ -16,19 +16,10 @@ class WorkOrderController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'index' ||
             $filterChain->action->id === 'admin' ||
-            $filterChain->action->id === 'create' ||
-            $filterChain->action->id === 'delete' ||
-            $filterChain->action->id === 'update' ||
             $filterChain->action->id === 'view' 
         ) {
-            if (
-                !(Yii::app()->user->checkAccess('generalRepairCreate')) || 
-                !(Yii::app()->user->checkAccess('generalRepairEdit')) || 
-                !(Yii::app()->user->checkAccess('bodyRepairCreate')) || 
-                !(Yii::app()->user->checkAccess('bodyRepairEdit'))
-            ) {
+            if (!(Yii::app()->user->checkAccess('workOrderApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }

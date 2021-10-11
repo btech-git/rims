@@ -10,7 +10,7 @@ class VehicleCarSubModelController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 

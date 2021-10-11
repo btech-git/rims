@@ -587,7 +587,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             WHERE t.id = d.registration_transaction_id
             GROUP BY d.registration_transaction_id
             HAVING quantity_remaining > 0
-        )";
+        ) AND t.total_product > 0";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
@@ -634,8 +634,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('vehicle_status', $this->vehicle_status);
         $criteria->compare('priority_level', $this->priority_level);
         $criteria->compare('customer_work_order_number', $this->customer_work_order_number);
-
-        $criteria->addCondition("t.work_order_number IS NOT NULL AND t.total_product > 0");
 
         $criteria->together = 'true';
         $criteria->with = array(

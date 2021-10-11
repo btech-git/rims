@@ -16,16 +16,34 @@ class CashTransactionController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('cashTransactionCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('cashTransactionEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('cashTransactionApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if (
             $filterChain->action->id === 'admin' ||
-            $filterChain->action->id === 'create' ||
-            $filterChain->action->id === 'delete' ||
             $filterChain->action->id === 'index' ||
-            $filterChain->action->id === 'update' ||
-            $filterChain->action->id === 'updateApproval' ||
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('cashTransactionCreate')) || !(Yii::app()->user->checkAccess('cashTransactionEdit'))) {
+            if (
+                !(Yii::app()->user->checkAccess('cashTransactionCreate')) || 
+                !(Yii::app()->user->checkAccess('cashTransactionEdit')) || 
+                !(Yii::app()->user->checkAccess('cashTransactionApproval'))
+            ) {
                 $this->redirect(array('/site/login'));
             }
         }

@@ -11,19 +11,30 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('generalRepairCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+        
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('generalRepairEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if (
             $filterChain->action->id === 'admin' ||
             $filterChain->action->id === 'addProductService' ||
-            $filterChain->action->id === 'create' ||
             $filterChain->action->id === 'generateSalesOrder' ||
             $filterChain->action->id === 'generateWorkOrder' ||
             $filterChain->action->id === 'generateInvoice' ||
             $filterChain->action->id === 'view' ||
-            $filterChain->action->id === 'showRealization' ||
-            $filterChain->action->id === 'update'
+            $filterChain->action->id === 'showRealization'
         ) {
-            if (!(Yii::app()->user->checkAccess('generalRepairCreate')) || !(Yii::app()->user->checkAccess('generalRepairEdit')))
+            if (!(Yii::app()->user->checkAccess('generalRepairCreate')) || !(Yii::app()->user->checkAccess('generalRepairEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

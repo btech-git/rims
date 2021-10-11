@@ -71,6 +71,8 @@ $this->menu = array(
     </div>
 </div>
 
+<br />
+
 <div class="detail">
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(

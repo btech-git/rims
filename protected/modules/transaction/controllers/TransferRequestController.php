@@ -11,26 +11,36 @@ class TransferRequestController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('transferRequestCreate')))
+                $this->redirect(array('/site/login'));
+        }
+        
+        if ($filterChain->action->id === 'update') {
+            if (Yii::app()->user->checkAccess('transferRequestEdit'))
+                $this->redirect(array('/site/login'));
+        }
+        
+        if ($filterChain->action->id === 'updateApproval') {
+            if (Yii::app()->user->checkAccess('transferRequestApproval'))
+                $this->redirect(array('/site/login'));
+        }
+        
         if ($filterChain->action->id === 'view'
-                || $filterChain->action->id === 'create'
-                || $filterChain->action->id === 'update'
-                || $filterChain->action->id === 'admin'
-                || $filterChain->action->id === 'memo') {
-            if (!(Yii::app()->user->checkAccess('purchaseCreate') || Yii::app()->user->checkAccess('purchaseEdit')))
+            || $filterChain->action->id === 'admin'
+            || $filterChain->action->id === 'memo'
+        ) {
+            if (!(Yii::app()->user->checkAccess('transferRequestCreate')) || !(Yii::app()->user->checkAccess('transferRequestEdit')) || !(Yii::app()->user->checkAccess('transferRequestEdit')))
                 $this->redirect(array('/site/login'));
         }
-        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'admin' || $filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('deleteTransaction')))
-                $this->redirect(array('/site/login'));
-        }
-
+        
         $filterChain->run();
     }
 
     public function actionCreate() {
         $transferRequest = $this->instantiate(null);
         $transferRequest->header->requester_id = Yii::app()->user->id;
-        $transferRequest->header->transfer_request_date = date('Y-m-d');
+        $transferRequest->header->transfer_request_date = date('Y-m-d H:i:s');
         $transferRequest->header->requester_branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
         $transferRequest->header->status_document = 'Draft';
         $transferRequest->header->total_quantity =  0;

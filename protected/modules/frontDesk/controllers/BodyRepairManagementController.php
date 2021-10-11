@@ -18,7 +18,7 @@ class BodyRepairManagementController extends Controller
             $filterChain->action->id === 'assignMechanic' ||
             $filterChain->action->id === 'checkQuality'
         ) {
-            if (!(Yii::app()->user->checkAccess('idleManagement')))
+            if (!(Yii::app()->user->checkAccess('brMechanicApproval')))
                 $this->redirect(array('/site/login'));
         }
 

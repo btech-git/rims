@@ -33,7 +33,7 @@ class FinancialForecastController extends Controller {
         $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
         $numberOfPeriod = (isset($_GET['NumberOfPeriod'])) ? $_GET['NumberOfPeriod'] : '1';
         
-        $companyBanks = CompanyBank::model()->findAllByAttributes(array('company_id' => '2'));
+        $coas = Coa::model()->findAllByAttributes(array('coa_id' => '2'));
 
         $payableTransaction = Search::bind(new TransactionPurchaseOrder(), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $payableTransactionDataProvider = $payableTransaction->search();
@@ -89,7 +89,7 @@ class FinancialForecastController extends Controller {
         }
         
         $this->render('summary', array(
-            'companyBanks' => $companyBanks,
+            'coas' => $coas,
             'companyId' => $companyId,
             'dateNow' => $dateNow,
             'datePrevious' => $datePrevious,

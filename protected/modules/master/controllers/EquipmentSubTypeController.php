@@ -15,16 +15,26 @@ class EquipmentSubTypeController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate')))
+                $this->redirect(array('/site/login'));
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'restore' || 
             $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'delete'
+        ) {
+            if (!(Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('inventoryHead')) || !(Yii::app()->user->checkAccess('operationHead')) || !(Yii::app()->user->checkAccess('purchaseHead')) || !(Yii::app()->user->checkAccess('salesHead')))
+            if (!(Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate')) || !(Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit')))
                 $this->redirect(array('/site/login'));
         }
 

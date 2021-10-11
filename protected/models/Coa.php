@@ -441,23 +441,25 @@ class Coa extends CActiveRecord {
     
     public function getFinancialForecastReport($datePrevious, $dateNow) {
         
-        $sql = "SELECT transaction_date, coa_id, SUM(receivable_debit) AS total_receivable_debit, SUM(payable_credit) AS total_payable_credit, SUM(journal_debit) AS total_journal_debit, SUM(journal_credit) AS total_journal_credit
+        $sql = "SELECT transaction_date, SUM(receivable_debit) AS total_receivable_debit, SUM(payable_credit) AS total_payable_credit, SUM(journal_debit) AS total_journal_debit, SUM(journal_credit) AS total_journal_credit
                 FROM (
                     SELECT invoice_number AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, branch_id, total_price AS receivable_debit, 0 AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, payment_left AS remaining
                     FROM " . InvoiceHeader::model()->tableName() . "
+                    WHERE payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
                     UNION
                     SELECT purchase_order_no AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, main_branch_id AS branch_id, 0 AS receivable_debit, total_price AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, payment_left AS remaining
                     FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                    WHERE payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
                     UNION
                     SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 0 AS payable_credit, total AS journal_debit, 0 AS journal_credit, 1 AS remaining
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE debet_kredit = 'D'
+                    WHERE debet_kredit = 'D' AND tanggal_transaksi BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate
                     UNION
                     SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 0 AS payable_credit, 0 AS journal_debit, total AS journal_credit, 1 AS remaining
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE debet_kredit = 'K'
+                    WHERE debet_kredit = 'K' AND tanggal_transaksi BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate
                 ) transaction
-                WHERE remaining > 0 AND transaction_date BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate
+                WHERE remaining > 0
                 GROUP BY transaction_date
                 ORDER BY transaction_date ASC";
         
