@@ -387,7 +387,7 @@ class PaymentInController extends Controller {
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
             'criteria' => $invoiceCriteria,
             'sort' => array(
-                'defaultOrder' => 'payment_date DESC',
+                'defaultOrder' => 't.invoice_date DESC',
             ),
             'pagination' => array(
                 'pageSize' => 10,

@@ -128,42 +128,61 @@ $('.search-form form').submit(function(){
 )); ?>
 <?php //echo CHtml::endForm(); ?>
 
-<!--<div id="maincontent">
-    <div class="row">
-        <div class="small-12 columns">
-            <fieldset>
-                <legend>PO Pending Payment</legend>
-                <div class="grid-view">
-                    <?php /*$this->widget('zii.widgets.grid.CGridView', array(
-                        'id' => 'purchase-order-grid',
-                        // 'dataProvider'=>$vehicleDataProvider,
-                        'dataProvider' => $purchaseOrderDataProvider,
-                        'filter' => $purchaseOrder,
-                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                        'pager'=>array(
-                           'cssFile'=>false,
-                           'header'=>'',
-                        ),
-                        'columns' => array(
-                            array(
-                                'name' => 'purchase_order_no',
-                                'value' => 'CHTml::link($data->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->id))',
-                                'type' => 'raw'
-                            ),
-                            'purchase_order_date',
-                            'status_document',
-                            array('name' => 'supplier_name', 'value' => '$data->supplier->name'),
-                            array(
-                                'name' => 'total_price', 
-                                'value' => 'AppHelper::formatMoney($data->total_price)',
-                                'htmlOptions' => array(
-                                    'style' => 'text-align: right'         
-                                ),
-                            ),
-                        ),
-                    ));*/ ?>
-                </div>
-            </fieldset>
-        </div>
-    </div>  end row 
-</div>-->
+<hr />
+
+<h1>List Hutang Supplier</h1>
+
+<br />
+
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'receive-item-grid',
+    'dataProvider' => $receiveItemDataProvider,
+    'filter' => $receiveItem,
+    'pager' => array(
+        'cssFile' => false,
+        'header' => '',
+    ),
+    'columns' => array(
+        array(
+            'name' => 'invoice_number',
+            'header' => 'Invoice #',
+            'value' => '$data->invoice_number',
+        ),
+        array(
+            'header' => 'Tanggal',
+            'name' => 'invoice_date',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
+        ),
+        array(
+            'name' => 'supplier_name',
+            'header' => 'Supplier',
+            'value' => '$data->supplier->name',
+        ),
+        array(
+            'name' => 'supplier_delivery_number',
+            'header' => 'Supplier SJ #',
+            'value' => '$data->supplier_delivery_number',
+        ),
+        array(
+            'header' => 'Jatuh Tempo',
+            'name' => 'invoice_due_date',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_due_date)'
+        ),
+        array(
+            'header' => 'Total',
+            'filter' => false,
+            'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
+            'htmlOptions' => array('style' => 'text-align: right'),
+        ),
+        array(
+            'name' => 'user_id_invoice',
+            'filter' => false,
+            'header' => 'Admin',
+            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
+        ),
+        array(
+            'header' => 'Tanggal Input',
+            'value' => '$data->dateTimeCreated',
+        ),
+    ),
+)); ?>

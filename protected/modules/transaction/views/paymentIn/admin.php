@@ -40,12 +40,12 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <?php echo CHtml::link('<span class="fa fa-list" ></span>Unpaid Invoice List',
+                <?php /*echo CHtml::link('<span class="fa fa-list" ></span>Unpaid Invoice List',
                     Yii::app()->baseUrl . '/transaction/paymentIn/index', array(
                         'class' => 'button cbutton right',
                         'style' => 'margin-left:10px',
                         'visible' => Yii::app()->user->checkAccess("paymentInCreate") || Yii::app()->user->checkAccess("paymentInEdit")
-                    )); ?>
+                    ));*/ ?>
                 <?php echo CHtml::link('<span class="fa fa-plus"></span>New Payment In',
                     Yii::app()->baseUrl . '/transaction/paymentIn/invoiceList', array(
                         'class' => 'button success right',
@@ -116,10 +116,10 @@ $('.search-form form').submit(function(){
                 )); ?>
             </div>
             
-<!--            <fieldset>
+            <fieldset>
                 <legend>Pending Invoice</legend>
                 <div class="grid-view">
-                    <?php /*$this->widget('zii.widgets.grid.CGridView', array(
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
                         'id' => 'invoice-grid',
                         // 'dataProvider'=>$vehicleDataProvider,
                         'dataProvider' => $invoiceDataProvider,
@@ -155,9 +155,9 @@ $('.search-form form').submit(function(){
                                 'value' => 'AppHelper::formatMoney($data->total_price)'
                             ),
                         ),
-                    ));*/ ?>
+                    )); ?>
                 </div>
-            </fieldset>-->
+            </fieldset>
         </div>
     </div> <!-- end row -->
 </div> <!-- end maintenance -->

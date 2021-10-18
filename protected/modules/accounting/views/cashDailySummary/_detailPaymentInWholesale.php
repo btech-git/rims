@@ -18,7 +18,13 @@
                 <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'customer.name')); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmount)); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_number')); ?></td>
+                <td>
+                    <?php echo CHtml::link($paymentIn->payment_number, array('javascript:;'), array(
+                        'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
+                            "codeNumber" => $paymentIn->payment_number
+                        )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
+                    )); ?>
+                </td>
                 <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'notes')); ?></td>
             </tr>
             <?php $grandTotal += $totalAmount; ?>

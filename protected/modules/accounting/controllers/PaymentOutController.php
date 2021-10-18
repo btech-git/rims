@@ -159,7 +159,10 @@ class PaymentOutController extends Controller {
 
         $dataProvider->criteria->order = 't.payment_date DESC';
 
-        $purchaseOrder = new TransactionPurchaseOrder('search');
+        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
+        $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
+
+        /*$purchaseOrder = new TransactionPurchaseOrder('search');
         $purchaseOrder->unsetAttributes();
         
         if (isset($_GET['TransactionPurchaseOrder'])) {
@@ -183,14 +186,16 @@ class PaymentOutController extends Controller {
             'pagination' => array(
                 'pageSize' => 10,
             )
-        ));
+        ));*/
 
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
             'dataProvider' => $dataProvider,
             'supplierName' => $supplierName,
-            'purchaseOrder' => $purchaseOrder,
-            'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
+            'receiveItem' => $receiveItem,
+            'receiveItemDataProvider' => $receiveItemDataProvider,
+//            'purchaseOrder' => $purchaseOrder,
+//            'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
         ));
     }
 

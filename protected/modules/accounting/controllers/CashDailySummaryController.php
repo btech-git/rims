@@ -391,4 +391,22 @@ class CashDailySummaryController extends Controller {
             'branchId' => $branchId,
         ));
     }
+    
+    public function actionRedirectTransaction($codeNumber) {
+
+        list($leftPart,, ) = explode('/', $codeNumber);
+        list(, $codeNumberConstant) = explode('.', $leftPart);
+
+        if ($codeNumberConstant === 'Pin') {
+            $model = PaymentIn::model()->findByAttributes(array('payment_number' => $codeNumber));
+            $this->redirect(array('/transaction/paymentIn/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'Pout') {
+            $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
+            $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'INV') {
+            $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
+            $this->redirect(array('/transaction/invoiceHeader/view', 'id' => $model->id));
+        }
+        
+    }
 }
