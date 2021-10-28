@@ -40,7 +40,7 @@
                 
                 <td style="text-align: right">
                     <?php echo CHtml::activeHiddenField($detail, "[$i]total_invoice"); ?>
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotal'))); ?>
                     <?php echo CHtml::error($detail, 'invoice_grand_total'); ?>
                 </td>
 

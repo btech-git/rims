@@ -51,7 +51,7 @@ $this->breadcrumbs = array(
                         <?php endif; ?>
 
                         <?php
-                        $servicesReg = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'is_body_repair' => 0));
+                        $servicesReg = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
                         $quickServicesReg = RegistrationQuickService::model()->findByAttributes(array('registration_transaction_id' => $model->id));
                         ?>
                         <?php /*if (empty($servicesReg) && empty($quickServicesReg) && empty($model->sales_order_number)) : ?>
@@ -64,7 +64,7 @@ $this->breadcrumbs = array(
                                 'onclick' => ''
                             )); ?>
                         <?php else : */?>
-                            <?php if (!empty($servicesReg) && empty($model->work_order_number) && (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"))): ?>
+                            <?php if (empty($model->work_order_number) && (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"))): ?>
                                 <?php echo CHtml::button('Generate Work Order', array(
                                     'id' => 'detail-button',
                                     'name' => 'Detail',

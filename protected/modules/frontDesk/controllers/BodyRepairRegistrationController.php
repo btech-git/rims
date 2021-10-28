@@ -414,8 +414,9 @@ class BodyRepairRegistrationController extends Controller {
         
         $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->sales_order_date = date('Y-m-d');
+        $model->header->status = 'Processing SO';
 
-        if ($model->save(Yii::app()->db)) {
+        if ($model->header->update(array('sales_order_number', 'sales_order_date', 'status'))) {
 
             $real = new RegistrationRealizationProcess();
             $real->registration_transaction_id = $model->header->id;
@@ -438,7 +439,7 @@ class BodyRepairRegistrationController extends Controller {
         $model->header->work_order_date = date('Y-m-d');
         $model->header->status = 'Processing';
 
-        if ($model->save(Yii::app()->db)) {
+        if ($model->header->update(array('work_order_number', 'work_order_date', 'status'))) {
             if ($model->header->repair_type == 'BR') {
 //                $real = RegistrationRealizationProcess::model()->findByAttributes(array(
 //                    'registration_transaction_id' => $id,

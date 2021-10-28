@@ -28,7 +28,7 @@ class PaymentOutComponent extends CComponent {
             if (!$exist) {
                 $detail = new PayOutDetail;
                 $detail->receive_item_id = $invoiceId;
-                $detail->total_invoice = $receiveItem->invoice_grand_total;
+                $detail->total_invoice = $receiveItem->grandTotal;
                 $this->details[] = $detail;
             }
         } else
@@ -141,8 +141,11 @@ class PaymentOutComponent extends CComponent {
             if ($detail->total_invoice <= 0.00)
                 continue;
 
-            if ($detail->isNewRecord)
+            if ($detail->isNewRecord) {
                 $detail->payment_out_id = $this->header->id;
+            } else {
+                $detail->total_invoice = $detail->receiveItem->grandTotal;
+            }
 
             $valid = $detail->save(false) && $valid;
             $new_invoice[] = $detail->id;
@@ -197,8 +200,7 @@ class PaymentOutComponent extends CComponent {
         $total = 0.00;
         
         foreach ($this->details as $detail) {
-            $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
-            $total += $receiveItem->invoice_grand_total;
+            $total += $detail->receiveItem->grandTotal;
         }
         
         return $total;
