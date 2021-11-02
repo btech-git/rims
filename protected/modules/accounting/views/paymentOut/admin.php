@@ -144,6 +144,10 @@ $('.search-form form').submit(function(){
     ),
     'columns' => array(
         array(
+            'header' => 'PO #',
+            'value' => '$data->purchaseOrder->purchase_order_no',
+        ),
+        array(
             'name' => 'invoice_number',
             'header' => 'Invoice #',
             'value' => '$data->invoice_number',

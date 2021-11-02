@@ -391,6 +391,18 @@ class PaymentOutController extends Controller {
             ));
         }
     }
+    
+    public function actionRedirectTransaction($codeNumber) {
+
+        list($leftPart,, ) = explode('/', $codeNumber);
+        list(, $codeNumberConstant) = explode('.', $leftPart);
+
+        if ($codeNumberConstant === 'PO') {
+            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
+        }
+        
+    }
 
     public function instantiate($id) {
         if (empty($id))

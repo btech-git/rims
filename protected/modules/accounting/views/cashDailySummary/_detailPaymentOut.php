@@ -6,6 +6,7 @@
             <th style="text-align: center">Payment Type</th>
             <th style="text-align: center">Amount</th>
             <th style="text-align: center">Payment #</th>
+            <th style="text-align: center">PO #</th>
             <th style="text-align: center">Notes</th> 
         </tr>
     </thead>
@@ -25,6 +26,13 @@
                         )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                     )); ?>
                 </td>
+                <td>
+                    <?php /*echo CHtml::link($paymentOut->receiveItem->purchaseOrder->purchase_order_no, array('javascript:;'), array(
+                        'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
+                            "codeNumber" => $paymentOut->receiveItem->purchaseOrder->purchase_order_no
+                        )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
+                    ));*/ ?>
+                </td>
                 <td><?php echo CHtml::encode(CHtml::value($paymentOut, 'notes')); ?></td>
             </tr>
             <?php $grandTotal += $totalAmount; ?>
@@ -36,7 +44,7 @@
             <td style="text-align: right; border-top: 1px solid">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
             </td>
-            <td colspan="2" style="border-top: 1px solid">&nbsp;</td>
+            <td colspan="3" style="border-top: 1px solid">&nbsp;</td>
         </tr>
     </tfoot>
 </table>

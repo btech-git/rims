@@ -402,10 +402,13 @@ class CashDailySummaryController extends Controller {
             $this->redirect(array('/transaction/paymentIn/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'Pout') {
             $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
-            $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/paymentOut/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'INV') {
             $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
             $this->redirect(array('/transaction/invoiceHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'PO') {
+            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
         }
         
     }

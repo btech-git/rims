@@ -77,11 +77,12 @@
 <table style="background-color: greenyellow">
     <thead>
         <tr style="background-color: skyblue">
-            <th style="text-align: center; width: 10%">Invoice #</th>
-            <th style="text-align: center; width: 10%">Tanggal</th>
-            <th style="text-align: center; width: 10%">Jatuh Tempo</th>
+            <th style="text-align: center; width: 15%">Invoice #</th>
+            <th style="text-align: center; width: 15%">Tanggal</th>
+            <th style="text-align: center; width: 15%">PO #</th>
+            <th style="text-align: center; width: 15%">Jatuh Tempo</th>
             <th style="text-align: center">Memo</th>
-            <th style="text-align: center; width: 10%">Amount</th>
+            <th style="text-align: center; width: 15%">Amount</th>
         </tr>
     </thead>
     
@@ -95,6 +96,14 @@
                 
                 <td>
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?>
+                </td>
+                
+                <td>
+                    <?php echo CHtml::link($receiveItem->purchaseOrder->purchase_order_no, array('javascript:;'), array(
+                        'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
+                            "codeNumber" => $receiveItem->purchaseOrder->purchase_order_no
+                        )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
+                    )); ?>
                 </td>
                 
                 <td>
@@ -114,14 +123,14 @@
     
     <tfoot>
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="4">Total Hutang</td>
+            <td style="text-align: right; font-weight: bold" colspan="5">Total Hutang</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>
         </tr>
         
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="4">Pembayaran</td>
+            <td style="text-align: right; font-weight: bold" colspan="5">Pembayaran</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'payment_amount'))); ?>
             </td>
