@@ -98,12 +98,12 @@ $('.search-form form').submit(function(){
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->payment_date)'
         ),
-        array(
-            'header' => 'PO #',
-            'name' => 'purchase_order_number',
-            'filter' => false,
-            'value' => 'empty($data->purchase_order_id) ? "N/A" : $data->purchaseOrder->purchase_order_no '
-        ),
+//        array(
+//            'header' => 'PO #',
+//            'name' => 'purchase_order_number',
+//            'filter' => false,
+//            'value' => 'empty($data->purchase_order_id) ? "N/A" : $data->purchaseOrder->purchase_order_no '
+//        ),
         array(
             'header' => 'Supplier',
             'filter' => CHtml::textField('SupplierName', $supplierName),
@@ -145,7 +145,8 @@ $('.search-form form').submit(function(){
     'columns' => array(
         array(
             'header' => 'PO #',
-            'value' => '$data->purchaseOrder->purchase_order_no',
+            'value' => 'CHTml::link($data->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->purchase_order_id))',
+            'type' => 'raw',
         ),
         array(
             'name' => 'invoice_number',

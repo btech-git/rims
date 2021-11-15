@@ -50,7 +50,8 @@ class CashDailySummaryController extends Controller {
                 FROM " . PaymentIn::model()->tableName() . " pi
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
-                WHERE pi.payment_date = :payment_date " . $branchConditionSql . "
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = pi.customer_id
+                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual'" . $branchConditionSql . "
                 GROUP BY pi.branch_id, pi.payment_type_id
                 ORDER BY pi.branch_id, pi.payment_type_id";
         
@@ -59,8 +60,8 @@ class CashDailySummaryController extends Controller {
         $paymentInWholesale = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
         $paymentInWholesaleDataProvider = $paymentInWholesale->searchByDailyCashReport();
         $paymentInWholesaleDataProvider->criteria->together = 'true';
-        $paymentInWholesaleDataProvider->criteria->with = array('invoice');
-        $paymentInWholesaleDataProvider->criteria->addCondition("invoice.sales_order_id IS NOT NULL");
+        $paymentInWholesaleDataProvider->criteria->with = array('invoice', 'customer');
+        $paymentInWholesaleDataProvider->criteria->addCondition("invoice.sales_order_id IS NOT NULL AND customer.customer_type = 'Company'");
         $paymentInWholesaleDataProvider->criteria->compare('t.payment_date', $transactionDate);
         $paymentInWholesaleDataProvider->criteria->compare('t.branch_id', $branchId);
 
@@ -409,6 +410,9 @@ class CashDailySummaryController extends Controller {
         } else if ($codeNumberConstant === 'PO') {
             $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'CASH') {
+            $model = CashTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/transaction/cashTransaction/view', 'id' => $model->id));
         }
         
     }

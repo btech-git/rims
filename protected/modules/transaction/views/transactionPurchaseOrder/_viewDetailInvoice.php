@@ -8,7 +8,7 @@
                 </tr>
                 <tr>
                     <td width="15%">Tanggal</td>
-                    <td><?php echo $receiveHeader->invoice_date; ?></td>
+                    <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->invoice_date); ?></td>
                 </tr>
                 <tr>
                     <td width="15%">Faktur Pajak #</td>
@@ -16,7 +16,7 @@
                 </tr>
                 <tr>
                     <td width="15%">Jatuh Tempo</td>
-                    <td><?php echo $receiveHeader->invoice_due_date; ?></td>
+                    <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->invoice_due_date); ?></td>
                 </tr>
                 <tr>
                     <td width="15%">Receive Item No</td>
@@ -24,7 +24,16 @@
                 </tr>
                 <tr>
                     <td width="15%">Tanggal</td>
-                    <td><?php echo $receiveHeader->receive_item_date; ?></td>
+                    <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->receive_item_date); ?></td>
+                </tr>
+                <tr>
+                    <td width="15%">Supplier SJ#</td>
+                    <td><?php echo $receiveHeader->supplier_delivery_number; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add / Edit Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $receiveHeader->id, array('visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2">

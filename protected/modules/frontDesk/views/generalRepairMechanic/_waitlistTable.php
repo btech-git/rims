@@ -1,7 +1,3 @@
-<div style="text-align: right">
-    <?php //echo ReportHelper::summaryText($registrationServiceDataProvider); ?>
-</div>
-
 <table>
     <thead>
         <tr>
@@ -11,7 +7,6 @@
             <th style="text-align: center; font-weight: bold">WO #</th>
             <th style="text-align: center; font-weight: bold">WO Date</th>
             <th style="text-align: center; font-weight: bold">Service</th>
-            <th style="text-align: center; font-weight: bold">ServiceType</th>
             <th style="text-align: center; font-weight: bold">Duration</th>
             <th style="text-align: center; font-weight: bold">WO Status</th>
             <th style="text-align: center; font-weight: bold">Branch</th>
@@ -36,12 +31,11 @@
                     <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
                     <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
                     <td><?php echo $registrationTransaction->work_order_number; ?></td>
-                    <td><?php echo $registrationTransaction->work_order_date; ?></td>
+                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
                     <td><?php echo $model->service->name; ?></td>
-                    <td><?php echo $model->service->serviceType->name; ?></td>
                     <td><?php echo $model->service->flat_rate_hour; ?></td>
                     <td><?php echo $registrationTransaction->status != null ? $registrationTransaction->status : '-'; ?></td>
-                    <td><?php echo $registrationTransaction->branch_id != null ? $registrationTransaction->branch->name : '-'; ?></td>
+                    <td><?php echo $registrationTransaction->branch_id != null ? $registrationTransaction->branch->code : '-'; ?></td>
                     <td><?php echo $registrationTransaction->getPriorityLiteral($registrationTransaction->priority_level); ?></td>
                     <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Detail', Yii::app()->createUrl("frontDesk/generalRepairMechanic/viewDetailWorkOrder", array("registrationId"=>$registrationTransaction->id)), array('class' => 'button warning', 'target' => '_blank')); ?></td>
                 </tr>

@@ -46,11 +46,11 @@ $('.search-form form').submit(function(){
                         'style' => 'margin-left:10px',
                         'visible' => Yii::app()->user->checkAccess("paymentInCreate") || Yii::app()->user->checkAccess("paymentInEdit")
                     ));*/ ?>
-                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Payment In',
+                <?php /*echo CHtml::link('<span class="fa fa-plus"></span>New Payment In',
                     Yii::app()->baseUrl . '/transaction/paymentIn/invoiceList', array(
                         'class' => 'button success right',
                         'visible' => Yii::app()->user->checkAccess("paymentInCreate")
-                    )); ?>
+                    ));*/ ?>
                 <h2>Manage Payment In</h2>
             </div>
 
@@ -108,6 +108,10 @@ $('.search-form form').submit(function(){
                             'value' => '$data->invoice->status',
                         ),
                         array(
+                            'header' => 'Type',
+                            'value' => '$data->invoice->referenceTypeLiteral',
+                        ),
+                        array(
                             'name' => 'user_id', 
                             'header' => 'Pembuat',
                             'value' => '$data->user->username'
@@ -153,6 +157,14 @@ $('.search-form form').submit(function(){
                             array(
                                 'name' => 'total_price', 
                                 'value' => 'AppHelper::formatMoney($data->total_price)'
+                            ),
+                            array(
+                                'header' => '',
+                                'type' => 'raw',
+                                'value' => 'CHtml::link("Create", array("create", "invoiceId"=>$data->id))',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: center;'
+                                ),
                             ),
                         ),
                     )); ?>

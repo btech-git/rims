@@ -228,13 +228,34 @@ $('#invoiceSearch').submit(function(){
                                 return in_array($data->id, $prChecked);
                             },
                         ),
-                        array('name' => 'invoice_number', 'value' => 'CHTml::link($data->invoice_number, array("view", "id"=>$data->id))', 'type' => 'raw'),
+                        array(
+                            'name' => 'invoice_number', 
+                            'value' => 'CHtml::link($data->invoice_number, array("view", "id"=>$data->id))', 
+                            'type' => 'raw'
+                        ),
                         'invoice_date',
                         'due_date',
-                        array('name' => 'reference_type', 'value' => '$data->reference_type == 1 ? "Sales Order" : "Retail Sales"'),
-                        array('name' => 'sales_order_id', 'value' => '$data->sales_order_id != null ? $data->salesOrder->sale_order_no : $data->registrationTransaction->sales_order_number'),
-                        array('name' => 'customer_id', 'value' => '$data->customer_id != null ? $data->customer->name : ""'),
-                        array('name' => 'customer_type', 'value' => '$data->customer_id != null ? $data->customer->customer_type : ""'),
+                        array(
+                            'name' => 'reference_type', 
+                            'value' => '$data->reference_type == 1 ? "Sales Order" : "Retail Sales"'
+                        ),
+                        array(
+                            'name' => 'sales_order_id', 
+                            'value' => '$data->sales_order_id != null ? $data->salesOrder->sale_order_no : CHtml::link($data->registrationTransaction->sales_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id))',
+                            'type' => 'raw'
+                        ),
+                        array(
+                            'header' => 'WO #', 
+                            'value' => '$data->sales_order_id != null ? "" : $data->registrationTransaction->work_order_number'
+                        ),
+                        array(
+                            'name' => 'customer_id', 
+                            'value' => '$data->customer_id != null ? $data->customer->name : ""'
+                        ),
+                        array(
+                            'name' => 'customer_type', 
+                            'value' => '$data->customer_id != null ? $data->customer->customer_type : ""'
+                        ),
                         'status',
                     ),
                 )); ?>

@@ -57,10 +57,9 @@ class GeneralRepairMechanicController extends Controller {
             $registrationServiceDataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
-//        if (!empty($serviceTypeId)) {
-//            $registrationServiceDataProvider->criteria->addCondition("service.service_type_id = :service_type_id");
-//            $registrationServiceDataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
-//        }
+        $registrationServiceProgressDataProvider = $registrationService->searchByProgressMechanic();
+        $registrationServiceProgressDataProvider->criteria->addCondition("t.start_mechanic_id = :start_mechanic_id");
+        $registrationServiceProgressDataProvider->criteria->params[':start_mechanic_id'] = Yii::app()->user->id;
 
         $registrationServiceHistoryDataProvider = $registrationService->search();
         $registrationServiceHistoryDataProvider->criteria->together = 'true';
@@ -75,10 +74,10 @@ class GeneralRepairMechanicController extends Controller {
             'workOrderNumber' => $workOrderNumber,
             'status' => $status,
             'branchId' => $branchId,
-//            'serviceTypeId' => $serviceTypeId,
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
+            'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,
         ));
     }
 
@@ -150,6 +149,8 @@ class GeneralRepairMechanicController extends Controller {
             $registrationService->service_activity = 'StartService';
             $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
             $generalRepairMechanic->save(Yii::app()->db);
+            $registration->service_status = 'StartService';
+            $registration->save(Yii::app()->db);
         } else if (isset($_POST['DetailId']) && isset($_POST['ResumeService'])) {
             $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
             $registrationService->service_activity = 'ResumeService';
@@ -165,6 +166,8 @@ class GeneralRepairMechanicController extends Controller {
             $registrationService->service_activity = 'FinishService';
             $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
             $generalRepairMechanic->save(Yii::app()->db);
+            $registration->service_status = 'PrepareToCheck';
+            $registration->save(Yii::app()->db);
         }
 
         $this->render('viewDetailWorkOrder', array(

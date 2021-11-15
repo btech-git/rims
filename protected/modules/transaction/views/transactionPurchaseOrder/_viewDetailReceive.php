@@ -10,7 +10,7 @@
             </tr>
             <tr>
                 <td width="15%">Tanggal</td>
-                <td><?php echo $receiveHeader->receive_item_date; ?></td>
+                <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->receive_item_date); ?></td>
             </tr>
             <tr>
                 <td width="15%">Supplier SJ#</td>

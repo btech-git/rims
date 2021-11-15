@@ -152,19 +152,19 @@
                 </div>
             </div>
 
-<!--            <div class="bank">-->
+<!--            <div class="bank">
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($model, 'bank_id'); ?>
+                            <?php /*echo $form->labelEx($model, 'bank_id'); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php echo CHtml::activeDropDownlist($model, 'bank_id', CHtml::listData(Bank::model()->findAll(), 'id', 'name'), array('prompt' => '[--Select Bank--]')); ?>
-                            <?php echo $form->error($model, 'bank_id'); ?>
+                            <?php echo $form->error($model, 'bank_id');*/ ?>
                         </div>
                     </div>
                 </div>
-<!--            </div>	-->
+            </div>	-->
 
             <div class="field">
                 <div class="row collapse">

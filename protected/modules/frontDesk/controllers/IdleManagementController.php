@@ -44,9 +44,6 @@ class IdleManagementController extends Controller
         $registrationServiceDataProvider = $registrationService->searchByGeneralRepairIdleManagement();
         $registrationServiceDataProvider->criteria->together = 'true';
         $registrationServiceDataProvider->criteria->with = array('registrationTransaction');
-//        $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
-//        $registrationServiceDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
-//        $registrationServiceDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $employee = Search::bind(new EmployeeBranchDivisionPositionLevel('search'), isset($_GET['EmployeeBranchDivisionPositionLevel']) ? $_GET['EmployeeBranchDivisionPositionLevel'] : '');
         $employeeDataProvider = $employee->search();
@@ -60,11 +57,14 @@ class IdleManagementController extends Controller
         $employeeDataProvider->criteria->order = 'employee.name ASC';
         $employeeDataProvider->criteria->addCondition("position_id IN (1, 3, 4) AND division_id = 1");
         
+        $registrationServiceProgressDataProvider = $registrationService->searchByProgressMechanic();
+        $registrationServiceQualityControlDataProvider = $registrationService->searchByQualityControl();
+
         $registrationServiceHistoryDataProvider = $registrationService->search();
         $registrationServiceHistoryDataProvider->criteria->together = 'true';
         $registrationServiceHistoryDataProvider->criteria->with = array('registrationTransaction');
-        $registrationServiceHistoryDataProvider->criteria->addCondition("registrationTransaction.status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
-        $registrationServiceHistoryDataProvider->criteria->compare('t.start_mechanic_id', Yii::app()->user->id);
+        $registrationServiceHistoryDataProvider->criteria->addCondition("registrationTransaction.service_status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
+//        $registrationServiceHistoryDataProvider->criteria->compare('t.start_mechanic_id', Yii::app()->user->id);
         $registrationServiceHistoryDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
         $registrationServiceHistoryDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
@@ -72,6 +72,8 @@ class IdleManagementController extends Controller
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
+            'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,
+            'registrationServiceQualityControlDataProvider' => $registrationServiceQualityControlDataProvider,
             'startMechanic' => $startMechanic,
             'employee' => $employee,
             'employeeDataProvider' => $employeeDataProvider,

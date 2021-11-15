@@ -14,11 +14,11 @@
         ),
         array(
             'header'=>'Car Make', 
-            'value'=>'$data->registrationTransaction->vehicle->carMake->name'
+            'value'=>'CHtml::value($data, "registrationTransaction.vehicle.carMake.name")'
         ),
         array(
             'header'=>'Car Model', 
-            'value'=>'$data->registrationTransaction->vehicle->carModel->name'
+            'value'=>'CHtml::value($data, "registrationTransaction.vehicle.carModel.name")'
         ),
         array(
             'header'=>'WO #', 

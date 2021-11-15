@@ -243,7 +243,8 @@ $('form').submit(function(){
                     array(
                         'name' => 'invoice_number',
                         'header' => 'Invoice',
-                        'value' => '$data->invoice_number',
+                        'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->id))', 
+                        'type' => 'raw'
                     ),
                     array(
                         'name' => 'transaction_date',

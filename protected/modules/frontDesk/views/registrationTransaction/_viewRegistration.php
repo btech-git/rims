@@ -129,7 +129,7 @@
                             $invoiceCriteria->addCondition("registration_transaction_id = " . $model->id);
                             ?>
                             <?php $invoice = InvoiceHeader::model()->find($invoiceCriteria) ?>
-                            <input type="text" readonly="true" value="<?php echo count($invoice) > 0 ? $invoice->invoice_number : ''; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo !empty($invoice) ? $invoice->invoice_number : ''; ?>"> 
                         </div>
                     </div>
                 </div>

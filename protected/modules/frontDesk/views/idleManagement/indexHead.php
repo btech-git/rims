@@ -52,7 +52,7 @@ Yii::app()->clientScript->registerScript('search', "
         <div>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(
-                    'Service List' => array(
+                    'Waiting List' => array(
                         'content' => $this->renderPartial('_viewHeadWaitlist', array(
                             'registrationService' => $registrationService,
                             'registrationServiceDataProvider' => $registrationServiceDataProvider,
@@ -62,7 +62,17 @@ Yii::app()->clientScript->registerScript('search', "
                             'branchId' => $branchId,
                         ), true),
                     ),
-                    'History' => array(
+                    'On-Progress' => array(
+                        'content' => $this->renderPartial('_viewProgressList', array(
+                            'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,
+                        ), true),
+                    ),
+                    'Ready to QC' => array(
+                        'content' => $this->renderPartial('_viewCheckList', array(
+                            'registrationServiceQualityControlDataProvider' => $registrationServiceQualityControlDataProvider,
+                        ), true),
+                    ),
+                    'Finished' => array(
                         'content' => $this->renderPartial('_viewHistoryHead', array(
                             'registrationService' => $registrationService,
                             'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,

@@ -60,9 +60,16 @@ Yii::app()->clientScript->registerScript('search', "
                                 'workOrderNumber' => $workOrderNumber,
                                 'status' => $status,
                                 'branchId' => $branchId,
-//                                'serviceTypeId' => $serviceTypeId,
                                 'registrationService' => $registrationService,
                                 'registrationServiceDataProvider' => $registrationServiceDataProvider,
+                            ), true
+                        ),
+                    ),
+                    'On-Progress' => array(
+                        'content' => $this->renderPartial(
+                            '_viewProgress',
+                            array(
+                                'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,
                             ), true
                         ),
                     ),
