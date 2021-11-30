@@ -32,7 +32,8 @@ class GeneralRepairMechanicController extends Controller {
         $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
         $status = isset($_GET['Status']) ? $_GET['Status'] : '';
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-//        $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
         $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
         $registrationServiceDataProvider = $registrationService->searchByGeneralRepairIdleManagement();
@@ -56,6 +57,10 @@ class GeneralRepairMechanicController extends Controller {
             $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.branch_id = :branch_id");
             $registrationServiceDataProvider->criteria->params[':branch_id'] = $branchId;
         }
+        
+        if (!empty($startDate) && !empty($endDate)) {
+            $registrationServiceDataProvider->criteria->addBetweenCondition('SUBSTRING(registrationTransaction.transaction_date, 1, 10)', $startDate, $endDate);
+        }
 
         $registrationServiceProgressDataProvider = $registrationService->searchByProgressMechanic();
         $registrationServiceProgressDataProvider->criteria->addCondition("t.start_mechanic_id = :start_mechanic_id");
@@ -74,6 +79,8 @@ class GeneralRepairMechanicController extends Controller {
             'workOrderNumber' => $workOrderNumber,
             'status' => $status,
             'branchId' => $branchId,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
@@ -368,28 +375,29 @@ class GeneralRepairMechanicController extends Controller {
 
     public function actionAjaxHtmlUpdateWaitlistTable() {
         if (Yii::app()->request->isAjaxRequest) {
+            
             $registrationService = new RegistrationService('search');
             $registrationService->unsetAttributes();  // clear any default values
             $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
             $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
             $status = isset($_GET['Status']) ? $_GET['Status'] : '';
             $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-            $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
+//            $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
 
             if (isset($_GET['RegistrationService'])) {
                 $registrationService->attributes = $_GET['RegistrationService'];
             }
 
-            $registrationServiceDataProvider = $registrationService->searchByGeneralRepairMechanic();
+            $registrationServiceDataProvider = $registrationService->searchByGeneralRepairIdleManagement();
         
             if (!empty($plateNumber)) {
-                $registrationServiceDataProvider->criteria->addCondition("vehicle.plate_number = :plate_number");
-                $registrationServiceDataProvider->criteria->params[':plate_number'] = $plateNumber;
+                $registrationServiceDataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+                $registrationServiceDataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
             }
 
             if (!empty($workOrderNumber)) {
-                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.work_order_number = :work_order_number");
-                $registrationServiceDataProvider->criteria->params[':work_order_number'] = $workOrderNumber;
+                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.work_order_number LIKE :work_order_number");
+                $registrationServiceDataProvider->criteria->params[':work_order_number'] = "%{$workOrderNumber}%";
             }
 
             if (!empty($status)) {
@@ -402,10 +410,10 @@ class GeneralRepairMechanicController extends Controller {
                 $registrationServiceDataProvider->criteria->params[':branch_id'] = $branchId;
             }
 
-            if (!empty($serviceTypeId)) {
-                $registrationServiceDataProvider->criteria->addCondition("service.service_type_id = :service_type_id");
-                $registrationServiceDataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
-            }
+//            if (!empty($serviceTypeId)) {
+//                $registrationServiceDataProvider->criteria->addCondition("service.service_type_id = :service_type_id");
+//                $registrationServiceDataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
+//            }
 
             $this->renderPartial('_waitlistTable', array(
                 'registrationService' => $registrationService,
@@ -414,7 +422,7 @@ class GeneralRepairMechanicController extends Controller {
                 'workOrderNumber' => $workOrderNumber,
                 'status' => $status,
                 'branchId' => $branchId,
-                'serviceTypeId' => $serviceTypeId,
+//                'serviceTypeId' => $serviceTypeId,
             ));
         }
     }

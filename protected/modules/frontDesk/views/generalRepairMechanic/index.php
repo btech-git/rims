@@ -80,6 +80,8 @@ Yii::app()->clientScript->registerScript('search', "
                                 'registrationService' => $registrationService,
                                 'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
                                 'branchId' => $branchId,
+                                'startDate' => $startDate,
+                                'endDate' => $endDate,
                             ), true
                         ),
                     ),
@@ -94,47 +96,3 @@ Yii::app()->clientScript->registerScript('search', "
         </div>
     </div>
 </div>
-
-<!--Registration Service Dialog -->
-<?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id'=>'registration-service-dialog',
-    'options'=>array(
-        'title'=>'Registration Service',
-        'autoOpen'=>false,
-        'modal'=>true,
-        'width'=>'1200',
-        'close'=>'js:function(){ $.fn.yiiGridView.update("registration-transaction-grid"); }',
-    ),
-)); ?>
-
-<div id="registration_service_div"></div>
-<?php $this->endWidget(); ?>
-
-<!--Update Status Dialog -->
-<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id'=>'update-status-dialog',
-    'options'=>array(
-        'title'=>'Update Status',
-        'autoOpen'=>false,
-        'modal'=>true,
-        'width'=>'1200',
-        'close'=>'js:function(){ $.fn.yiiGridView.update("registration-transaction-grid"); }',
-    ),
-)); ?>
-
-<div id="update_status_div"></div>
-<?php $this->endWidget(); ?>
-
-<!--Level Dialog -->
-<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id'=>'info-dialog',
-    'options'=>array(
-    	'title'=>'Info',
-    	'autoOpen'=>false,
-    	'modal'=>true,
-    	'width'=>'800',
-    ),
-)); ?>
-
-<div id="info_div"></div>
-<?php $this->endWidget();*/ ?>

@@ -70,14 +70,11 @@
 <div id="head_waitlist_table">
     <?php $serviceTypes = ServiceType::model()->findAll(); ?>
     <?php foreach ($serviceTypes as $i => $serviceType): ?>
-        <?php $serviceTabs[$serviceType->name] = $this->renderPartial(
-            '_headWaitlistTable',
-            array(
-                'registrationService' => $registrationService,
-                'registrationServiceDataProvider' => $registrationServiceDataProvider,
-                'serviceType' => $serviceType,
-            ), true
-        ); ?>
+        <?php $serviceTabs[$serviceType->name] = $this->renderPartial('_headWaitlistTable', array(
+            'registrationService' => $registrationService,
+            'registrationServiceDataProvider' => $registrationServiceDataProvider,
+            'serviceType' => $serviceType,
+        ), true); ?>
     <?php endforeach; ?>
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => $serviceTabs,

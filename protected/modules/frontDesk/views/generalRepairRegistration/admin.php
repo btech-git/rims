@@ -136,7 +136,7 @@ $('.search-form form').submit(function(){
             'problem',
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {edit} {hapus}',
+                'template' => '{views} {edit} {hapus} {finish}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
@@ -154,6 +154,14 @@ $('.search-form form').submit(function(){
                         'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
                         'options' => array(
                             'confirm' => 'Are you sure to delete this transaction?',
+                        ),
+                    ),
+                    'finish' => array(
+                        'label' => 'finish',
+                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/finishTransaction", array("id"=>$data->id))',
+                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
+                        'options' => array(
+                            'confirm' => 'Are you sure to finish this transaction?',
                         ),
                     ),
                 ),

@@ -64,13 +64,47 @@ class VehicleController extends Controller {
             $picDetails = "";
         }
         
-        $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $id));
+//        $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $id));
 
+        $registrationTransaction = new RegistrationTransaction('search');
+        $registrationTransaction->unsetAttributes();
+        
+        if (isset($_GET['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
+
+        $registrationTransactionCriteria = new CDbCriteria;
+        $registrationTransactionCriteria->compare('id', $registrationTransaction->id);
+        $registrationTransactionCriteria->compare('transaction_number', $registrationTransaction->transaction_number, true);
+        $registrationTransactionCriteria->compare('transaction_date', $registrationTransaction->transaction_date, true);
+        $registrationTransactionCriteria->compare('t.customer_id', $registrationTransaction->customer_id);
+        $registrationTransactionCriteria->compare('vehicle_id', $id);
+        $registrationTransactionCriteria->compare('branch_id', $registrationTransaction->branch_id);
+        $registrationTransactionCriteria->compare('user_id', $registrationTransaction->user_id);
+        $registrationTransactionCriteria->compare('grand_total', $registrationTransaction->grand_total, true);
+        $registrationTransactionCriteria->compare('t.work_order_number', $registrationTransaction->work_order_number, true);
+        $registrationTransactionCriteria->compare('sales_order_number', $registrationTransaction->sales_order_number, true);
+        $registrationTransactionCriteria->compare('customer_work_order_number', $registrationTransaction->customer_work_order_number, true);
+
+        $registrationTransactionCriteria->together = true;
+        $registrationTransactionCriteria->with = array('customer', 'vehicle', 'branch');
+        $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
+        $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
+            'criteria' => $registrationTransactionCriteria,
+            'sort' => array(
+                'defaultOrder' => 't.transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            )
+        ));
+        
         $this->render('view', array(
             'model' => $model,
             'customers' => $customers,
             'picDetails' => $picDetails,
-            'registrationTransactions' => $registrationTransactions,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
         ));
     }
 

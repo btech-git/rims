@@ -308,9 +308,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             t.id NOT IN (
                 SELECT receive_item_id
                 FROM " . PayOutDetail::model()->tableName() . " 
-            ) AND t.invoice_number != '' 
+            ) AND t.invoice_number <> '' 
         ";
-
+        
         $criteria->compare('id', $this->id);
         $criteria->compare('receive_item_no', $this->receive_item_no, true);
         $criteria->compare('receive_item_date', $this->receive_item_date, true);
@@ -339,6 +339,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             'criteria' => $criteria,
             'Pagination' => array(
                 'PageSize' => 50
+            ),
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date DESC',
             ),
         ));
     }

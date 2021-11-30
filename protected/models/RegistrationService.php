@@ -290,7 +290,7 @@ class RegistrationService extends CActiveRecord {
         $criteria->compare('supervisor_id', $this->supervisor_id);
         $criteria->compare('hour', $this->hour, true);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND registrationTransaction.service_status = 'Pending' AND registrationTransaction.status = 'Processing WO'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND t.status = 'Pending' AND registrationTransaction.status = 'Processing WO'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.id ASC';
         
         return new CActiveDataProvider($this, array(
@@ -301,6 +301,58 @@ class RegistrationService extends CActiveRecord {
         ));
     }
    
+    public function searchByServiceQueue() {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationTransaction' => array (
+                'with' => array(
+                    'branch',
+                    'customer',
+                    'vehicle',
+                )
+            ),
+            'service',
+        );
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('service_id', $this->service_id);
+        $criteria->compare('claim', $this->claim, true);
+        $criteria->compare('price', $this->price, true);
+        $criteria->compare('total_price', $this->total_price, true);
+        $criteria->compare('discount_price', $this->discount_price, true);
+        $criteria->compare('discount_type', $this->discount_type, true);
+        $criteria->compare('is_quick_service', $this->is_quick_service);
+        $criteria->compare('start', $this->start, true);
+        $criteria->compare('end', $this->end, true);
+        $criteria->compare('pause', $this->pause, true);
+        $criteria->compare('resume', $this->resume, true);
+        $criteria->compare('pause_time', $this->pause_time, true);
+        $criteria->compare('total_time', $this->total_time, true);
+        $criteria->compare('note', $this->note, true);
+        $criteria->compare('is_body_repair', $this->is_body_repair);
+        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('assign_mechanic_id', $this->assign_mechanic_id);
+        $criteria->compare('start_mechanic_id', $this->start_mechanic_id);
+        $criteria->compare('finish_mechanic_id', $this->finish_mechanic_id);
+        $criteria->compare('pause_mechanic_id', $this->pause_mechanic_id);
+        $criteria->compare('resume_mechanic_id', $this->resume_mechanic_id);
+        $criteria->compare('supervisor_id', $this->supervisor_id);
+        $criteria->compare('hour', $this->hour, true);
+
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND registrationTransaction.service_status = 'Pending' AND t.status = 'Pending' AND t.assign_mechanic_id IS NOT NULL");
+        $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.id ASC';
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+    
     public function searchByProgressMechanic() {
         $criteria = new CDbCriteria;
 
@@ -342,7 +394,7 @@ class RegistrationService extends CActiveRecord {
         $criteria->compare('supervisor_id', $this->supervisor_id);
         $criteria->compare('hour', $this->hour, true);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND registrationTransaction.service_status = 'StartService'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND t.status = 'On Progress'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.id ASC';
         
         return new CActiveDataProvider($this, array(
@@ -385,7 +437,7 @@ class RegistrationService extends CActiveRecord {
         $criteria->compare('total_time', $this->total_time, true);
         $criteria->compare('note', $this->note, true);
         $criteria->compare('is_body_repair', $this->is_body_repair);
-        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+//        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
         $criteria->compare('assign_mechanic_id', $this->assign_mechanic_id);
         $criteria->compare('start_mechanic_id', $this->start_mechanic_id);
         $criteria->compare('finish_mechanic_id', $this->finish_mechanic_id);
@@ -394,7 +446,7 @@ class RegistrationService extends CActiveRecord {
         $criteria->compare('supervisor_id', $this->supervisor_id);
         $criteria->compare('hour', $this->hour, true);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND registrationTransaction.service_status = 'PrepareToCheck'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'GR' AND registrationTransaction.service_status = 'PrepareToCheck' AND t.status = 'Finished'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.id ASC';
         
         return new CActiveDataProvider($this, array(

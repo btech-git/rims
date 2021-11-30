@@ -100,6 +100,17 @@
                 </div>
             </div>	
 
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'user_id', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->dropDownList($model, 'user_id', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')); ?>
+                    </div>
+                </div>
+            </div>
+
             <div class="field buttons text-right">
                 <?php echo CHtml::submitButton('Search',array('class'=>'button cbutton')); ?>
             </div>

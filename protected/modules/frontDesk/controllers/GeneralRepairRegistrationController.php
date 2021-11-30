@@ -267,7 +267,9 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionView($id) {
+//        $idempotent = new Idempotent;
         $model = $this->loadModel($id);
+        
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
         $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
@@ -292,7 +294,7 @@ class GeneralRepairRegistrationController extends Controller {
         }
 
         if (isset($_POST['SubmitOffPremise'])) {
-            $model->vehicle_status = 'Off-Premise';
+            $model->vehicle_status = 'Sudah Diambil';
             $model->update(array('vehicle_status'));
         }
 
@@ -365,12 +367,42 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionFinishTransaction($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'Finished';
+        
+        if ($model->update(array('status'))) {
+            $this->redirect(array('admin'));
+        }
+    }
+    
     public function actionGenerateInvoice($id) {
         $registration = $this->instantiate($id);
+        $idempotent = new Idempotent;
         
-        if ($registration->saveInvoice(Yii::app()->db)) {
+        if ($registration->saveInvoice(Yii::app()->db) && isset($_POST[Idempotent::TOKEN_NAME])) {
+            $idempotent->form_token = $_POST[Idempotent::TOKEN_NAME];
+            $idempotent->form_name = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id . '/' . Yii::app()->controller->action->id;
+            $idempotent->posting_date = date('Y-m-d');
+            
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = $idempotent->save();
+                
+                if ($valid) {
+                    $dbTransaction->commit();
+                } else {
+                    $dbTransaction->rollback();
+                }
+                
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
+            }
 
-            $this->redirect(array('view', 'id' => $id));
+            if ($valid) {
+                $this->redirect(array('view', 'id' => $id));
+            }
         }
     }
 

@@ -6,7 +6,7 @@
                     '_viewCustomerWaitlist',
                     array(
                         'model' => $model,
-                        'models' => $models,
+//                        'models' => $models,
                         'modelDataProvider' => $modelDataProvider,
                     ),
                     true

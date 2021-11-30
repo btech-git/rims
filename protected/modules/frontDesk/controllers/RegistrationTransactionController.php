@@ -440,7 +440,7 @@ class RegistrationTransactionController extends Controller {
         }
         
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.status != "PAID" AND t.payment_left > 0 AND t.registration_transaction_id IS NOT NULL');
+        $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.status != "PAID" AND t.payment_left > 0 AND t.registration_transaction_id IS NOT NULL AND invoice_date > "2021-01-01"');
         $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
         $invoiceCriteria->compare('t.status', $invoice->status);
@@ -2305,11 +2305,11 @@ class RegistrationTransactionController extends Controller {
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $modelDataProvider = $model->search();
-        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL");
+        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.status != 'Finished'");
 
-        $modelCriteria = new CDbCriteria;
-        $modelCriteria->addCondition("work_order_number != ''");
-        $models = RegistrationTransaction::model()->findAll($modelCriteria);
+//        $modelCriteria = new CDbCriteria;
+//        $modelCriteria->addCondition("t.work_order_number != '' AND t.status != 'Finished'");
+//        $models = RegistrationTransaction::model()->findAll($modelCriteria);
 
         $services = Service::model()->findAll();
         $epoxyId = $paintId = $finishId = $dempulId = $washingId = $openingId = '';
@@ -2564,7 +2564,7 @@ class RegistrationTransactionController extends Controller {
 
         $this->render('customerWaitlist', array(
             'model' => $model,
-            'models' => $models,
+//            'models' => $models,
             'modelDataProvider' => $modelDataProvider,
             'epoxyDatas' => $epoxyDatas,
             'paintDatas' => $paintDatas,

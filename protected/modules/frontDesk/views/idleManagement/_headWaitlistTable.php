@@ -1,7 +1,3 @@
-<div style="text-align: right">
-    <?php //echo ReportHelper::summaryText($modelDataProvider); ?>
-</div>
-
 <table>
     <thead>
         <tr>
@@ -10,7 +6,7 @@
             <th style="text-align: center; font-weight: bold">Car Model</th>
             <th style="text-align: center; font-weight: bold">WO #</th>
             <th style="text-align: center; font-weight: bold">WO Date</th>
-            <!--<th style="text-align: center; font-weight: bold">Services</th>-->
+            <th style="text-align: center; font-weight: bold">Service</th>
             <th style="text-align: center; font-weight: bold">Duration</th>
             <th style="text-align: center; font-weight: bold">WO Status</th>
             <th style="text-align: center; font-weight: bold">Branch</th>
@@ -46,12 +42,12 @@
                     <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
                     <td><?php echo $registrationTransaction->work_order_number; ?></td>
                     <td><?php echo $registrationTransaction->work_order_date; ?></td>
-                    <!--<td><?php //echo $model->getServices(); ?></td>-->
+                    <td><?php echo $model->service->name; ?></td>
                     <td><?php echo $model->service->flat_rate_hour; ?></td>
                     <td><?php echo $registrationTransaction->status != null ? $registrationTransaction->status : '-'; ?></td>
                     <td><?php echo $registrationTransaction->branch_id != null ? $registrationTransaction->branch->name : '-'; ?></td>
                     <td><?php echo $registrationTransaction->getPriorityLiteral($registrationTransaction->priority_level); ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>View', Yii::app()->createUrl("frontDesk/idleManagement/viewHeadWorkOrder", array("registrationId"=>$registrationTransaction->id)), array('class' => 'button warning')); ?></td>
+                    <td><?php echo CHtml::link('<span class="fa fa-list"></span>View', Yii::app()->createUrl("frontDesk/idleManagement/viewHeadWorkOrder", array("registrationId"=>$registrationTransaction->id)), array('class' => 'button info')); ?></td>
                 </tr>
             <?php endif; ?>
         <?php endforeach; ?>

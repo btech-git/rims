@@ -32,7 +32,6 @@
                             'items' => array(
                                 array('label' => 'User', 'url' => array('/user/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Company', 'url' => array('/master/company/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
-                                array('label' => 'Insurance Company', 'url' => array('/master/insuranceCompany/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Branch', 'url' => array('/master/branch/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Supplier', 'url' => array('/master/supplier/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Employee', 'url' => array('/master/employee/admin'), 'linkOptions' => array('class' => 'titleNav'), 'visible' => Yii::app()->user->checkAccess('masterData')),
@@ -111,6 +110,7 @@
                             'items' => array(
                                 array('label' => 'Manage Customer Vehicle', 'url' => array('/master/vehicle/admin'), 'linkOptions' => array('class' => 'titleNav'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Customer', 'url' => array('/master/customer/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
+                                array('label' => 'Insurance Company', 'url' => array('/master/insuranceCompany/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Vehicle Car Make', 'url' => array('/master/vehicleCarMake/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Vehicle Car Model', 'url' => array('/master/vehicleCarModel/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),
                                 array('label' => 'Vehicle Car Sub Model', 'url' => array('/master/vehicleCarSubModel/admin'), 'visible' => Yii::app()->user->checkAccess('masterData')),

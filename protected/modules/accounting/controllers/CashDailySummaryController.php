@@ -61,7 +61,7 @@ class CashDailySummaryController extends Controller {
         $paymentInWholesaleDataProvider = $paymentInWholesale->searchByDailyCashReport();
         $paymentInWholesaleDataProvider->criteria->together = 'true';
         $paymentInWholesaleDataProvider->criteria->with = array('invoice', 'customer');
-        $paymentInWholesaleDataProvider->criteria->addCondition("invoice.sales_order_id IS NOT NULL AND customer.customer_type = 'Company'");
+        $paymentInWholesaleDataProvider->criteria->addCondition("customer.customer_type = 'Company'");
         $paymentInWholesaleDataProvider->criteria->compare('t.payment_date', $transactionDate);
         $paymentInWholesaleDataProvider->criteria->compare('t.branch_id', $branchId);
 
@@ -196,8 +196,9 @@ class CashDailySummaryController extends Controller {
         $cashDaily->user_id = Yii::app()->user->id;
 
         $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
-                FROM " . PaymentIn::model()->tableName() . "
-                WHERE payment_date = :payment_date AND branch_id = :branch_id";
+                FROM " . PaymentIn::model()->tableName() . " p
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
+                WHERE payment_date = :payment_date AND branch_id = :branch_id AND c.customer_type = 'Individual'";
         
         $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
             ':payment_date' => $transactionDate,

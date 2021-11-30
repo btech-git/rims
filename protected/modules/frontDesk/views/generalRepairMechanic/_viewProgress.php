@@ -11,6 +11,7 @@
             <th style="text-align: center; font-weight: bold">Service Type</th>
             <th style="text-align: center; font-weight: bold">Duration</th>
             <th style="text-align: center; font-weight: bold">Branch</th>
+            <th style="text-align: center; font-weight: bold">Note</th>
         </tr>
     </thead>
     
@@ -31,6 +32,7 @@
                     <td><?php echo $model->service->serviceType->name; ?></td>
                     <td><?php echo $model->service->flat_rate_hour; ?></td>
                     <td><?php echo $registrationTransaction->branch_id != null ? $registrationTransaction->branch->code : '-'; ?></td>
+                    <td><?php echo $model->note; ?></td>
                 </tr>
         <?php endforeach; ?>
     </tbody>

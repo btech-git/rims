@@ -112,9 +112,14 @@ $('.search-form form').submit(function(){
                             'value' => '$data->invoice->referenceTypeLiteral',
                         ),
                         array(
-                            'name' => 'user_id', 
-                            'header' => 'Pembuat',
-                            'value' => '$data->user->username'
+                            'header' => 'Created By',
+                            'name' => 'user_id',
+                            'filter' => false,
+                            'value' => 'empty($data->user_id) ? "N/A" : $data->user->username '
+                        ),
+                        array(
+                            'header' => 'Approved By',
+                            'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->paymentInApprovals[0]->supervisor->username '
                         ),
                     ),
                 )); ?>
@@ -155,8 +160,21 @@ $('.search-form form').submit(function(){
                                 'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
                             ),
                             array(
+                                'name' => 'user_id',
+                                'filter' => CHtml::activeDropDownList($invoice, 'user_id', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
+                                'header' => 'Created By',
+                                'value' => 'empty($data->user_id) ? "N/A" : $data->user->username',
+                            ),
+                            array(
+                                'name' => 'branch_id',
+                                'header' => 'Branch',
+                                'filter' => CHtml::activeDropDownList($invoice, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+                                'value' => '$data->branch->name',
+                            ),
+                            array(
                                 'name' => 'total_price', 
-                                'value' => 'AppHelper::formatMoney($data->total_price)'
+                                'value' => 'AppHelper::formatMoney($data->total_price)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
                             ),
                             array(
                                 'header' => '',

@@ -62,6 +62,11 @@ Yii::app()->clientScript->registerScript('search', "
                             'branchId' => $branchId,
                         ), true),
                     ),
+                    'Service Queue' => array(
+                        'content' => $this->renderPartial('_viewQueueList', array(
+                            'registrationServiceQueueDataProvider' => $registrationServiceQueueDataProvider,
+                        ), true),
+                    ),
                     'On-Progress' => array(
                         'content' => $this->renderPartial('_viewProgressList', array(
                             'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,

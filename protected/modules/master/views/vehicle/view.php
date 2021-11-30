@@ -146,7 +146,43 @@ $this->menu = array(
     <div class="large-12 columns">
         <fieldset>
             <legend>Transaction History</legend>
-            <?php foreach ($registrationTransactions as $i => $regDetail): ?>
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'registration-transaction-grid',
+                    'dataProvider' => $registrationTransactionDataProvider,
+                    'filter' => $registrationTransaction,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'name' => 'transaction_number',
+                            'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))',
+                            'type' => 'raw'
+                        ),
+                        'transaction_date',
+                        'repair_type',
+                        'status',
+                        array(
+                            'name' => 'branch_id',
+                            'header' => 'Branch',
+                            'filter' => CHtml::activeDropDownList($registrationTransaction, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+                            'value' => '$data->branch->name',
+                        ),
+                        array(
+                            'name' => 'grand_total', 
+                            'value' => 'AppHelper::formatMoney($data->grand_total)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                    ),
+                )); ?>
+            </div>
+        </fieldset>
+<!--        <fieldset>
+            <legend>Transaction History</legend>
+            <?php /*foreach ($registrationTransactions as $i => $regDetail): ?>
                 <div class="row">
                     <table>
                         <thead>
@@ -269,7 +305,7 @@ $this->menu = array(
 
                     </div>
                 </div>
-            <?php endforeach; ?>
-        </fieldset>
+            <?php endforeach;*/ ?>
+        </fieldset>-->
     </div>
 </div>

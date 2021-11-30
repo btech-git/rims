@@ -385,17 +385,7 @@
                             <?php endif;
 
                             if ($postImages !== null): ?>
-                                <?php
-                                //$criteria = new CDbCriteria;
-                                //$criteria->select = 'max(`order`) AS max_order';
-                                //$row = ArticlesImages::model()->findByAttributes(array('article_id' => $model->id, 'status' => 1));
-                                //$count_banners = count($restaurantImages);
-                                //$down = SKINS . 'arrow_down.png';
-                                //$up = SKINS . 'arrow_up.png';
-                                ?>
-                                <?php //print_r($postImages); ?>
-                                <?php
-                                foreach ($postImages as $postImage):
+                                <?php foreach ($postImages as $postImage):
                                     $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename;
                                     $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename;
                                     ?>
@@ -426,6 +416,9 @@
                 <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
+            
+            <?php echo CHtml::hiddenField(Idempotent::TOKEN_NAME, Idempotent::generateToken()); ?>
+
         </div>
         <div class="small-12 medium-6 columns">
 

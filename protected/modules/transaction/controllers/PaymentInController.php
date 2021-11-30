@@ -113,7 +113,9 @@ class PaymentInController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($invoiceId) {
+        $idempotent = new Idempotent;
         $model = new PaymentIn;
+        
         $invoice = InvoiceHeader::model()->findByPk($invoiceId);
         $registrationTransaction = RegistrationTransaction::model()->findByPk($invoice->registration_transaction_id);
         
@@ -130,14 +132,20 @@ class PaymentInController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['PaymentIn'])) {
+        if (isset($_POST['PaymentIn']) ) {
             $model->attributes = $_POST['PaymentIn'];
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
 
-//            if ((int)$model->payment_type_id !== 1 && $model->company_bank_id == null) {
-//                $model->addError('error', 'Company Bank cannot be empty!');
-//            } else {
-                if ($model->save(Yii::app()->db)) {
+            $idempotent->form_token = $_POST[Idempotent::TOKEN_NAME];
+            $idempotent->form_name = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id . '/' . Yii::app()->controller->action->id;
+            $idempotent->posting_date = date('Y-m-d');
+            
+            if ($model->save(Yii::app()->db) && isset($_POST[Idempotent::TOKEN_NAME])) {
+                
+                $dbTransaction = Yii::app()->db->beginTransaction();
+                try {
+                    $valid = $idempotent->save();
+                    
                     if (!empty($registrationTransaction)) {
                         $registrationTransaction->payment_status = 'CLEAR';
                         $registrationTransaction->update(array('payment_status'));
@@ -150,7 +158,6 @@ class PaymentInController extends Controller {
 
                     $criteria = new CDbCriteria;
                     $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
-    //                $payment = PaymentIn::model()->findAll($criteria);
 
                     if (isset($images) && !empty($images)) {
                         foreach ($model->images as $i => $image) {
@@ -158,35 +165,49 @@ class PaymentInController extends Controller {
                             $postImage->payment_in_id = $model->id;
                             $postImage->is_inactive = $model::STATUS_ACTIVE;
                             $postImage->extension = $image->extensionName;
+                            $valid = $postImage->save() && $valid;
 
-                            if ($postImage->save()) {
+                            if ($valid) {
                                 $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id;
 
                                 if (!file_exists($dir)) {
                                     mkdir($dir, 0777, true);
                                 }
+
                                 $path = $dir . '/' . $postImage->filename;
                                 $image->saveAs($path);
                                 $picture = Yii::app()->image->load($path);
-                                $picture->save();
+                                $valid = $picture->save() && $valid;
 
                                 $thumb = Yii::app()->image->load($path);
                                 $thumb_path = $dir . '/' . $postImage->thumbname;
-                                $thumb->save($thumb_path);
+                                $valid = $thumb->save($thumb_path) && $valid;
 
                                 $square = Yii::app()->image->load($path);
                                 $square_path = $dir . '/' . $postImage->squarename;
-                                $square->save($square_path);
+                                $valid = $square->save($square_path) && $valid;
                             }
                         }
                     }
+                    
+                    if ($valid) {
+                        $dbTransaction->commit();
+                    } else {
+                        $dbTransaction->rollback();
+                    }
+                } catch (Exception $e) {
+                    $dbTransaction->rollback();
+                    $valid = false;
+                }
 
+                if ($valid) {
                     $this->redirect(array('view', 'id' => $model->id));
                 }
-//            }
+            }
         }
 
         $this->render('create', array(
+            'idempotent' => $idempotent,
             'model' => $model,
             'invoice' => $invoice,
         ));
@@ -380,6 +401,8 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
         $invoiceCriteria->compare('due_date', $invoice->due_date, true);
         $invoiceCriteria->compare('total_price', $invoice->total_price, true);
+        $invoiceCriteria->compare('branch_id', $invoice->branch_id);
+        $invoiceCriteria->compare('user_id', $invoice->user_id);
         
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer');
@@ -404,6 +427,7 @@ class PaymentInController extends Controller {
         $dataProvider->criteria->with = array(
             'customer',
             'invoice',
+            'paymentInApprovals',
         );
         $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '' ;
 

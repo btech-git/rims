@@ -80,7 +80,7 @@ $('.search-form form').submit(function(){
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'payment-out-grid',
     'dataProvider' => $dataProvider,
-    'filter' => $paymentOut,
+    'filter' => null,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager'=>array(
        'cssFile'=>false,
@@ -93,17 +93,17 @@ $('.search-form form').submit(function(){
             'value' => '$data->payment_number',
         ),
         array(
-            'header' => 'Tanggal',
+            'header' => 'Tanggal Bayar',
             'name' => 'payment_date',
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->payment_date)'
         ),
-//        array(
-//            'header' => 'PO #',
-//            'name' => 'purchase_order_number',
-//            'filter' => false,
-//            'value' => 'empty($data->purchase_order_id) ? "N/A" : $data->purchaseOrder->purchase_order_no '
-//        ),
+        array(
+            'header' => 'Tanggal Input',
+            'name' => 'date_created',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
+        ),
         array(
             'header' => 'Supplier',
             'filter' => CHtml::textField('SupplierName', $supplierName),
@@ -119,6 +119,16 @@ $('.search-form form').submit(function(){
         ),
         'notes',
         'branch.name: Branch',
+        array(
+            'header' => 'Created By',
+            'name' => 'user_id',
+            'filter' => false,
+            'value' => 'empty($data->user_id) ? "N/A" : $data->user->username '
+        ),
+        array(
+            'header' => 'Approved By',
+            'value' => 'empty($data->paymentOutApprovals) ? "N/A" : $data->paymentOutApprovals[0]->supervisor->username '
+        ),
         array(
             'class' => 'CButtonColumn',
             'template' => '{view}{update}',
@@ -174,20 +184,26 @@ $('.search-form form').submit(function(){
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_due_date)'
         ),
         array(
-            'header' => 'Total',
-            'filter' => false,
-            'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
-            'htmlOptions' => array('style' => 'text-align: right'),
+            'name' => 'user_id_invoice',
+            'filter' => CHtml::activeDropDownList($receiveItem, 'user_id_invoice', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
+            'header' => 'Created By',
+            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
         ),
         array(
-            'name' => 'user_id_invoice',
-            'filter' => false,
-            'header' => 'Admin',
-            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
+            'name' => 'recipient_branch_id',
+            'header' => 'Branch',
+            'filter' => CHtml::activeDropDownList($receiveItem, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+            'value' => '$data->recipientBranch->name',
         ),
         array(
             'header' => 'Tanggal Input',
             'value' => '$data->dateTimeCreated',
+        ),
+        array(
+            'header' => 'Total',
+            'filter' => false,
+            'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
+            'htmlOptions' => array('style' => 'text-align: right'),
         ),
     ),
 )); ?>

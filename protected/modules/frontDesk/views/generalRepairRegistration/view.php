@@ -112,6 +112,8 @@ $this->breadcrumbs = array(
                                 },
                             })'
                         )); ?>
+                    
+                        <?php echo CHtml::hiddenField(Idempotent::TOKEN_NAME, Idempotent::generateToken()); ?>
                     <?php endif; ?>
                 </div>
             </div>

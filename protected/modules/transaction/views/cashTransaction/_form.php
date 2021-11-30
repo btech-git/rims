@@ -5,7 +5,6 @@
 ?>
 
 <div class="form">
-
     <?php $form = $this->beginWidget('CActiveForm', array(
         'id' => 'cash-transaction-form',
         'htmlOptions' => array('enctype' => 'multipart/form-data'),
@@ -28,6 +27,7 @@
                         <?php echo $form->labelEx($cashTransaction->header, 'transaction_type',
                             array('class' => 'prefix')); ?>
                     </div>
+                    
                     <div class="small-8 columns">
                         <?php echo $form->dropDownList($cashTransaction->header, 'transaction_type', array(
                             'In' => 'In',
@@ -40,18 +40,6 @@
                     </div>
                 </div>
             </div>
-
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php /*echo $form->labelEx($cashTransaction->header, 'transaction_number', array('class' => 'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction->header, 'transaction_number', array('readonly' => true)); ?>
-                        <?php echo $form->error($cashTransaction->header, 'transaction_number');*/ ?>
-                    </div>
-                </div>
-            </div>-->
 
             <div class="field">
                 <div class="row collapse">
@@ -78,7 +66,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="field">
                 <div class="row collapse">
@@ -112,6 +99,7 @@
                     <div class="small-4 columns">
                         <?php echo $form->labelEx($cashTransaction->header, 'branch_id', array('class' => 'prefix')); ?>
                     </div>
+                    
                     <div class="small-8 columns">
                         <?php echo $form->dropDownlist($cashTransaction->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
                             'prompt' => '[--Select Branch--]'
@@ -126,11 +114,13 @@
                     <div class="small-4 columns">
                         <?php echo $form->labelEx($cashTransaction->header, 'user_id', array('class' => 'prefix')); ?>
                     </div>
+                    
                     <div class="small-8 columns">
                         <?php echo $form->hiddenField($cashTransaction->header, 'user_id', array(
                             'value' => $cashTransaction->header->isNewRecord ? Yii::app()->user->getId() : $cashTransaction->header->user_id,
                             'readonly' => true
                         )); ?>
+                        
                         <?php echo $form->textField($cashTransaction->header, 'user_name', array(
                             'size' => 30,
                             'maxlength' => 30,
@@ -147,6 +137,7 @@
                     <div class="small-4 columns">
                         <?php echo $form->labelEx($cashTransaction->header, 'status', array('class' => 'prefix')); ?>
                     </div>
+                    
                     <div class="small-8 columns">
                         <?php echo $form->textField($cashTransaction->header, 'status', array(
                             'value' => $cashTransaction->header->isNewRecord ? 'Draft' : $cashTransaction->header->status,
@@ -170,6 +161,7 @@
                                 <div class="small-4 columns">
                                     <label for="" class="prefix">COA Code</label>
                                 </div>
+                                
                                 <div class="small-8 columns">
                                     <?php echo CHtml::encode(CHtml::value($cashTransaction, 'branch.code')); ?>
                                     <?php echo $form->textField($cashTransaction->header, 'coa_code', array(
@@ -178,7 +170,6 @@
                                         'readonly' => true,
                                         'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->code : ''
                                     )); ?>
-
                                 </div>
                             </div>
                         </div>
@@ -188,32 +179,31 @@
                                 <div class="small-4 columns">
                                     <label for="" class="prefix">COA Opening Balance</label>
                                 </div>
+                                
                                 <div class="small-8 columns">
-
                                     <?php echo $form->textField($cashTransaction->header, 'coa_opening_balance', array(
                                         'size' => 20,
                                         'maxlength' => 20,
                                         'readonly' => true,
                                         'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->opening_balance : ''
                                     )); ?>
-
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
                                     <label for="" class="prefix">COA Normal Balance</label>
                                 </div>
+                                
                                 <div class="small-8 columns">
-
                                     <?php echo $form->textField($cashTransaction->header, 'coa_normal_balance', array(
                                         'size' => 20,
                                         'maxlength' => 20,
                                         'readonly' => true,
                                         'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->normal_balance : ''
                                     )); ?>
-
                                 </div>
                             </div>
                         </div>
@@ -225,15 +215,14 @@
                                 <div class="small-4 columns">
                                     <label for="" class="prefix">COA Debit Amount</label>
                                 </div>
+                                
                                 <div class="small-8 columns">
-
                                     <?php echo $form->textField($cashTransaction->header, 'coa_debit', array(
                                         'size' => 20,
                                         'maxlength' => 20,
                                         'readonly' => true,
                                         'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->debit : ''
                                     )); ?>
-
                                 </div>
                             </div>
                         </div>
@@ -243,6 +232,7 @@
                                 <div class="small-4 columns">
                                     <label for="" class="prefix">COA Credit Amount</label>
                                 </div>
+                                
                                 <div class="small-8 columns">
                                     <?php echo $form->textField($cashTransaction->header, 'coa_credit', array(
                                         'size' => 20,
@@ -250,7 +240,6 @@
                                         'readonly' => true,
                                         'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->credit : ''
                                     )); ?>
-
                                 </div>
                             </div>
                         </div>
@@ -258,47 +247,46 @@
                 </div>
             </div>
         </fieldset>
-
     </div>
-
 
     <div class="row">
         <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'debit_amount',
-                            array('class' => 'prefix')); ?>
+                        <?php echo $form->labelEx($cashTransaction->header, 'debit_amount', array('class' => 'prefix')); ?>
                     </div>
+                    
                     <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction->header, 'debit_amount',
-                            array('size' => 18, 'maxlength' => 18, 'readonly' => true)); ?>
+                        <?php echo $form->textField($cashTransaction->header, 'debit_amount', array('size' => 18, 'maxlength' => 18, 'readonly' => true)); ?>
                         <?php echo $form->error($cashTransaction->header, 'debit_amount'); ?>
                     </div>
                 </div>
             </div>
         </div>
+        
         <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'credit_amount',
-                            array('class' => 'prefix')); ?>
+                        <?php echo $form->labelEx($cashTransaction->header, 'credit_amount', array('class' => 'prefix')); ?>
                     </div>
+                    
                     <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction->header, 'credit_amount',
-                            array('size' => 18, 'maxlength' => 18, 'readonly' => true)); ?>
+                        <?php echo $form->textField($cashTransaction->header, 'credit_amount', array('size' => 18, 'maxlength' => 18, 'readonly' => true)); ?>
                         <?php echo $form->error($cashTransaction->header, 'credit_amount'); ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
     <div class="row">
         <div class="large-12 columns">
             <fieldset>
                 <legend>Details</legend>
-                <p> <?php echo CHtml::button('Add Details', array(
+                <p> 
+                    <?php echo CHtml::button('Add Details', array(
                         'id' => 'detail-button',
                         'name' => 'Detail',
                         'onclick' => '
@@ -342,12 +330,14 @@
                     </div>
                 </div>
             </fieldset>
+            
             <div class="large-6">
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <?php echo $form->labelEx($cashTransaction->header, 'images', array('class' => 'prefix')); ?>
                         </div>
+                        
                         <div class="small-8 columns">
                             <?php if ($cashTransaction->header->isNewRecord): ?>
                                 <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
@@ -384,11 +374,13 @@
                                                         $cashTransaction->header->transaction_type . "Image"); ?>
                                                 </div>
                                             </div>
+                                            
                                             <div class="small-8 columns">
                                                 <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
                                                     <?php echo(Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $cashTransaction->header->id . '/' . $postImage->filename); ?>
                                                 </div>
                                             </div>
+                                            
                                             <div class="small-1 columns">
                                                 <?php echo CHtml::link('x', array(
                                                     'deleteImage',
@@ -413,6 +405,9 @@
                 <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
                 <?php echo CHtml::submitButton($cashTransaction->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
+            
+            <?php echo CHtml::hiddenField(Idempotent::TOKEN_NAME, Idempotent::generateToken()); ?>
+
         </div>
     </div>
 

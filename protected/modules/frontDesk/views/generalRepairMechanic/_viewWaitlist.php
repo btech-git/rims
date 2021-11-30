@@ -77,17 +77,16 @@
     <?php echo CHtml::endForm(); ?>
 </div>
 
+<br />
+
 <div id="mechanic_waitlist_table">
     <?php $serviceTypes = ServiceType::model()->findAll(array('condition' => 'id <> 2')); ?>
     <?php foreach ($serviceTypes as $i => $serviceType): ?>
-        <?php $serviceTabs[$serviceType->name] = $this->renderPartial(
-            '_waitlistTable',
-            array(
-                'registrationService' => $registrationService,
-                'registrationServiceDataProvider' => $registrationServiceDataProvider,
-                'serviceType' => $serviceType,
-            ), true
-        ); ?>
+        <?php $serviceTabs[$serviceType->name] = $this->renderPartial('_waitlistTable', array(
+            'registrationService' => $registrationService,
+            'registrationServiceDataProvider' => $registrationServiceDataProvider,
+            'serviceType' => $serviceType,
+        ), true); ?>
     <?php endforeach; ?>
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => $serviceTabs,

@@ -55,18 +55,36 @@ class BrandController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+        $idempotent = new Idempotent;
         $model = new Brand;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['Brand'])) {
+        if (isset($_POST['Brand']) && isset($_POST[Idempotent::TOKEN_NAME])) {
+            $idempotent->form_token = $_POST[Idempotent::TOKEN_NAME];
+            $idempotent->form_name = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id . '/' . Yii::app()->controller->action->id;
+            $idempotent->posting_date = date('Y-m-d');
             $model->attributes = $_POST['Brand'];
-            if ($model->save())
+            
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = $idempotent->save() && $model->save();
+                if ($valid) {
+                    $dbTransaction->commit();
+                } else {
+                    $dbTransaction->rollback();
+                }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
+            }
+            if ($valid)
                 $this->redirect(array('view', 'id' => $model->id));
         }
 
         $this->render('create', array(
+            'idempotent' => $idempotent,
             'model' => $model,
         ));
     }
