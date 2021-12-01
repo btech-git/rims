@@ -25,9 +25,14 @@
             'value'=>'$data->registrationTransaction->work_order_number'
         ),
         array(
-            'name'=>'WO Date', 
+            'header'=>'WO Date', 
             'filter' => false,
             'value'=>'$data->registrationTransaction->work_order_date',
+        ),
+        array(
+            'header'=>'WO Time', 
+            'filter' => false,
+            'value'=>'date("H:i:s", strtotime($data->registrationTransaction->transaction_date))',
         ),
         array(
             'header'=>'Service', 
@@ -62,7 +67,7 @@
 //            ),
         array(
             'header'=>'WO Status',
-            'value'=>'$data->registrationTransaction->status',
+            'value'=>'$data->registrationTransaction->service_status',
             'type'=>'raw',
             'filter'=> false,
         ),

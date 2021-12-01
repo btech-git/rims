@@ -53,13 +53,9 @@ $('form').submit(function(){
     <!-- BEGIN maincontent -->
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php if (Yii::app()->user->checkAccess("master.product.create")) { ?>
-            <a class="button success right"
-               href="<?php echo Yii::app()->baseUrl . '/master/product/create'; ?>"><span class="fa fa-plus"></span>New
-                Product</a>
-            <a style="margin-right: 10px;padding: 7px;" class="button info right"
-               href="<?php echo Yii::app()->baseUrl . '/master/product/upload'; ?>"><span class="fa fa-plus"></span>Upload
-                Product</a>
+        <?php if (Yii::app()->user->checkAccess("masterProductCreate")) { ?>
+            <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/product/create'; ?>"><span class="fa fa-plus"></span>New Product</a>
+            <a style="margin-right: 10px;padding: 7px;" class="button info right" href="<?php echo Yii::app()->baseUrl . '/master/product/upload'; ?>"><span class="fa fa-plus"></span>Upload Product</a>
         <?php } ?>
         <h1>Manage Product</h1>
 

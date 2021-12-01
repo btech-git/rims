@@ -30,6 +30,7 @@
  * @property string $grand_total
  * @property string $work_order_number
  * @property string $work_order_date
+ * @property string $work_order_time
  * @property string $status
  * @property string $payment_status
  * @property string $payment_type
@@ -116,10 +117,10 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
             array('status', 'length', 'max' => 50),
             array('transaction_number', 'unique'),
-            array('transaction_date, problem, work_order_date, sales_order_date, note, customer_type', 'safe'),
+            array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -189,6 +190,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'grand_total' => 'Grand Total',
             'work_order_number' => 'Work Order Number',
             'work_order_date' => 'Work Order Date',
+            'work_order_time' => 'Work Order Time',
             'status' => 'Status',
             'payment_status' => 'Payment Status',
             'payment_type' => 'Payment Type',
@@ -255,6 +257,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('t.work_order_number', $this->work_order_number, true);
         $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.work_order_time', $this->work_order_time, true);
         $criteria->compare('t.status', $this->status, true);
         $criteria->compare('payment_status', $this->payment_status, true);
         $criteria->compare('payment_type', $this->payment_type, true);

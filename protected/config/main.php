@@ -183,6 +183,8 @@ return array(
             'class' => 'RWebUser',
             'allowAutoLogin' => true,
             'loginUrl' => array('/user/login'),
+            'authTimeout' => 1800, // A year
+            'absoluteAuthTimeout' => 1800,
         ),
         'authManager' => array(
             'class' => 'RDbAuthManager',

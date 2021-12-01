@@ -54,6 +54,7 @@ class IdleManagementController extends Controller {
         $employeeDataProvider->criteria->order = 'employee.name ASC';
         $employeeDataProvider->criteria->addCondition("position_id IN (1, 3, 4) AND division_id = 1");
 
+        $registrationPlanningDataProvider = $registrationService->searchByPlanning();
         $registrationServiceQueueDataProvider = $registrationService->searchByServiceQueue();
         $registrationServiceProgressDataProvider = $registrationService->searchByProgressMechanic();
         $registrationServiceQualityControlDataProvider = $registrationService->searchByQualityControl();
@@ -61,12 +62,13 @@ class IdleManagementController extends Controller {
         $registrationServiceHistoryDataProvider = $registrationService->search();
         $registrationServiceHistoryDataProvider->criteria->together = 'true';
         $registrationServiceHistoryDataProvider->criteria->with = array('registrationTransaction');
-        $registrationServiceHistoryDataProvider->criteria->addCondition("registrationTransaction.service_status = 'Finished' AND registrationTransaction.repair_type = 'GR'");
+        $registrationServiceHistoryDataProvider->criteria->addCondition("registrationTransaction.service_status = 'Finished' AND registrationTransaction.repair_type = 'GR' AND registrationTransaction.is_passed = 1");
         $registrationServiceHistoryDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
         $registrationServiceHistoryDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
         $this->render('indexHead', array(
             'registrationService' => $registrationService,
+            'registrationPlanningDataProvider' => $registrationPlanningDataProvider,
             'registrationServiceQueueDataProvider' => $registrationServiceQueueDataProvider,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
@@ -139,7 +141,9 @@ class IdleManagementController extends Controller {
         } elseif (isset($_POST['Save'])) {
             $registration->is_passed = $_POST['RegistrationTransaction']['is_passed'];
             $registration->priority_level = $_POST['RegistrationTransaction']['priority_level'];
-            $registration->update(array('is_passed', 'priority_level'));
+            $registration->service_status = (int) $registration->is_passed == 1 ? 'Finished' : 'Failed';
+            $registration->status = (int) $registration->is_passed == 1 ? 'Invoicing' : 'Processing WO';
+            $registration->update(array('is_passed', 'priority_level', 'service_status', 'status'));
 
             if (!empty($_POST['Memo'])) {
                 $registrationMemo = new RegistrationMemo();
@@ -159,6 +163,42 @@ class IdleManagementController extends Controller {
             'registrationQuickServiceDataProvider' => $registrationQuickServiceDataProvider,
             'vehicle' => $vehicle,
             'memo' => $memo,
+        ));
+    }
+
+    public function actionViewAssignment($id) {
+        $registrationService = RegistrationService::model()->findByPk($id);
+        $vehicle = Vehicle::model()->findByPk($registrationService->registrationTransaction->vehicle_id);
+
+        $registrationQuickService = new RegistrationQuickService('search');
+        $registrationQuickService->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationQuickService'])) {
+            $registrationQuickService->attributes = $_GET['RegistrationQuickService'];
+        }
+
+        $registrationQuickServiceCriteria = new CDbCriteria;
+        $registrationQuickServiceCriteria->compare('id', $registrationQuickService->id);
+        $registrationQuickServiceCriteria->compare('registration_transaction_id', $registrationService->registration_transaction_id);
+        $registrationQuickServiceCriteria->compare('quick_service_id', $registrationQuickService->quick_service_id);
+        $registrationQuickServiceCriteria->compare('price', $registrationQuickService->price);
+        $registrationQuickServiceCriteria->compare('hour', $registrationQuickService->hour);
+
+        $registrationQuickServiceDataProvider = new CActiveDataProvider('RegistrationQuickService', array(
+            'criteria' => $registrationQuickServiceCriteria,
+        ));
+
+        if (isset($_POST['Submit'])) {
+            $registrationService->assign_mechanic_id = $_POST['RegistrationService']['assign_mechanic_id'];
+            $registrationService->update(array('assign_mechanic_id'));
+            
+            $this->redirect(array('indexHead'));
+        }
+
+        $this->render('viewAssignment', array(
+            'registrationService' => $registrationService,
+            'registrationQuickService' => $registrationQuickService,
+            'registrationQuickServiceDataProvider' => $registrationQuickServiceDataProvider,
+            'vehicle' => $vehicle,
         ));
     }
 
@@ -423,6 +463,16 @@ class IdleManagementController extends Controller {
         }
     }
 
+    public function actionProceedToPlanning($id) {
+        $registrationService = RegistrationService::model()->findByPk($id);
+        $registrationService->status = 'Planning';
+        
+        if ($registrationService->update(array('status'))) {
+            $this->redirect(array('indexHead'));
+        }
+        
+    }
+    
     public function actionStartProcessing($id) {
         $registrationService = RegistrationService::model()->findByPk($id);
         $registrationService->status = 'On Progress';

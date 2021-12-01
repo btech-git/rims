@@ -63,6 +63,11 @@ Yii::app()->clientScript->registerScript('search', "
                         ), true),
                     ),
                     'Service Queue' => array(
+                        'content' => $this->renderPartial('_viewPlanningList', array(
+                            'registrationPlanningDataProvider' => $registrationPlanningDataProvider,
+                        ), true),
+                    ),
+                    'Assigned' => array(
                         'content' => $this->renderPartial('_viewQueueList', array(
                             'registrationServiceQueueDataProvider' => $registrationServiceQueueDataProvider,
                         ), true),

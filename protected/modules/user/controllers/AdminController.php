@@ -68,11 +68,12 @@ class AdminController extends Controller {
      */
     public function actionView($id) {
         $model = $this->loadModel();
-        //$model = Users::model()->findByPk($id);
         $attendances = EmployeeAttendance::model()->findAllByAttributes(array('user_id' => $model->id));
+        
         $this->render('view', array(
             'model' => $model,
             'attendances' => $attendances,
+            'counter' => 0,
         ));
     }
 

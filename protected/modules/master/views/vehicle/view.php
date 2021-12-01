@@ -32,12 +32,12 @@ $this->menu = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>"><span class="fa fa-th-list"></span>Manage Vehicles</a>
-        <?php if (Yii::app()->user->checkAccess("master.vehicle.update")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterVehicleEdit")) { ?>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>		
         <?php } ?>
-        <?php if (Yii::app()->user->checkAccess("master.registrationTransaction.create")) { ?>
+        <?php //if (Yii::app()->user->checkAccess("master.registrationTransaction.create")) { ?>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/frontDesk/registrationTransaction/create', array('type' => 2, 'id' => $model->id)); ?>"><span class="fa fa-plus"></span>Registration</a>
-        <?php } ?>
+        <?php //} ?>
         <h1>View Vehicle <?php echo $model->plate_number; ?></h1>
 
         <div class="row">

@@ -11,14 +11,13 @@
             <th style="text-align: center; font-weight: bold">Service Category</th>
             <th style="text-align: center; font-weight: bold">Service Type</th>
             <th style="text-align: center; font-weight: bold">Duration</th>
-            <th style="text-align: center; font-weight: bold">Mechanic</th>
             <th style="text-align: center; font-weight: bold">Note</th>
-            <th></th>
+            <th>&nbsp;</th>
         </tr>
     </thead>
     
     <tbody>
-        <?php foreach ($registrationServiceQueueDataProvider->data as $model): ?>
+        <?php foreach ($registrationPlanningDataProvider->data as $model): ?>
             <tr>
                 <?php 
                 $registrationTransaction = $model->registrationTransaction;
@@ -34,9 +33,8 @@
                 <td><?php echo $model->service->serviceCategory->name; ?></td>
                 <td><?php echo $model->service->serviceType->name; ?></td>
                 <td><?php echo $model->service->flat_rate_hour; ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($model, 'assignMechanic.name')); ?></td>
                 <td><?php echo $model->note; ?></td>
-                <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Process', Yii::app()->createUrl("frontDesk/idleManagement/startProcessing", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
+                <td><?php echo CHtml::link('<span class="fa fa-bars"></span>Assign Mechanic', Yii::app()->createUrl("frontDesk/idleManagement/viewAssignment", array("id" => $model->id)), array('class' => 'button info')); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

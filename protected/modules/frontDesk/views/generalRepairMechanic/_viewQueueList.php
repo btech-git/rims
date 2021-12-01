@@ -36,7 +36,7 @@
                 <td><?php echo $model->service->flat_rate_hour; ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'assignMechanic.name')); ?></td>
                 <td><?php echo $model->note; ?></td>
-                <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Process', Yii::app()->createUrl("frontDesk/idleManagement/startProcessing", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
+                <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Process', Yii::app()->createUrl("frontDesk/generalRepairMechanic/startProcessing", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

@@ -30,6 +30,11 @@
             'value'=>'$data->registrationTransaction->work_order_date',
         ),
         array(
+            'header'=>'WO Time', 
+            'filter' => false,
+            'value'=>'date("H:i:s", strtotime($data->registrationTransaction->transaction_date))',
+        ),
+        array(
             'header'=>'Service', 
             'value'=>'$data->service->name',
         ),

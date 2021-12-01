@@ -65,25 +65,34 @@ Yii::app()->clientScript->registerScript('search', "
                             ), true
                         ),
                     ),
-                    'On-Progress' => array(
-                        'content' => $this->renderPartial(
-                            '_viewProgress',
-                            array(
-                                'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,
-                            ), true
-                        ),
+                    'Service Queue' => array(
+                        'content' => $this->renderPartial('_viewPlanningList', array(
+                            'registrationPlanningDataProvider' => $registrationPlanningDataProvider,
+                        ), true),
                     ),
-                    'History' => array(
-                        'content' => $this->renderPartial(
-                            '_viewHistory',
-                            array(
-                                'registrationService' => $registrationService,
-                                'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
-                                'branchId' => $branchId,
-                                'startDate' => $startDate,
-                                'endDate' => $endDate,
-                            ), true
-                        ),
+                    'Assigned' => array(
+                        'content' => $this->renderPartial('_viewQueueList', array(
+                            'registrationServiceQueueDataProvider' => $registrationServiceQueueDataProvider,
+                        ), true),
+                    ),
+                    'On-Progress' => array(
+                        'content' => $this->renderPartial('_viewProgress', array(
+                            'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,
+                        ), true),
+                    ),
+                    'Ready to QC' => array(
+                        'content' => $this->renderPartial('_viewCheckList', array(
+                            'registrationServiceQualityControlDataProvider' => $registrationServiceQualityControlDataProvider,
+                        ), true),
+                    ),
+                    'Finished' => array(
+                        'content' => $this->renderPartial('_viewHistory', array(
+                            'registrationService' => $registrationService,
+                            'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
+                            'branchId' => $branchId,
+                            'startDate' => $startDate,
+                            'endDate' => $endDate,
+                        ), true),
                     ),
                 ),
                 // additional javascript options for the tabs plugin

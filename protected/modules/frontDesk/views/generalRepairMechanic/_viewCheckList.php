@@ -11,9 +11,7 @@
             <th style="text-align: center; font-weight: bold">Service Category</th>
             <th style="text-align: center; font-weight: bold">Service Type</th>
             <th style="text-align: center; font-weight: bold">Duration</th>
-            <th style="text-align: center; font-weight: bold">Mechanic</th>
             <th style="text-align: center; font-weight: bold">Note</th>
-            <th></th>
         </tr>
     </thead>
     
@@ -34,9 +32,7 @@
                     <td><?php echo $model->service->serviceCategory->name; ?></td>
                     <td><?php echo $model->service->serviceType->name; ?></td>
                     <td><?php echo $model->service->flat_rate_hour; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'startMechanic.name')); ?></td>
                     <td><?php echo $model->note; ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-list"></span>View', Yii::app()->createUrl("frontDesk/idleManagement/viewHeadWorkOrder", array("registrationId"=>$registrationTransaction->id)), array('class' => 'button info')); ?></td>
                 </tr>
         <?php endforeach; ?>
     </tbody>

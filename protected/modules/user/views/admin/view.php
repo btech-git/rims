@@ -9,12 +9,13 @@ $this->menu = array(
     array('label' => UserModule::t('Create User'), 'url' => array('create')),
     array('label' => UserModule::t('Update User'), 'url' => array('update', 'id' => $model->id)),
     array('label' => UserModule::t('Delete User'), 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->id), 'confirm' => UserModule::t('Are you sure to delete this item?'))),
-    array('label' => UserModule::t('Manage Users'), 'url' => array('admin')),
+    array('label' => UserModule::t('Manage User'), 'url' => array('admin')),
     array('label' => UserModule::t('Manage Profile Field'), 'url' => array('profileField/admin')),
     array('label' => UserModule::t('List User'), 'url' => array('/user')),
 );
 ?>
 
+<?php echo CHtml::link('Change Password', array("edit", "id" => $model->id), array('class' => 'button warning')); ?>
 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/user/admin/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
 <h1><?php echo UserModule::t('View User') . ' "' . $model->username . '"'; ?></h1>
 
@@ -1060,9 +1061,9 @@ $this->widget('zii.widgets.CDetailView', array(
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-            <?php if (CHtml::resolveValue($model, "roles[masterCompany]")): ?>
-                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
-            <?php endif; ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterCompany]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
                 <?php echo CHtml::label('SETTING COMPANY', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>

@@ -12,6 +12,7 @@
             <th style="text-align: center; font-weight: bold">Duration</th>
             <th style="text-align: center; font-weight: bold">Branch</th>
             <th style="text-align: center; font-weight: bold">Note</th>
+            <th></th>
         </tr>
     </thead>
     
@@ -33,6 +34,7 @@
                     <td><?php echo $model->service->flat_rate_hour; ?></td>
                     <td><?php echo $registrationTransaction->branch_id != null ? $registrationTransaction->branch->code : '-'; ?></td>
                     <td><?php echo $model->note; ?></td>
+                    <td><?php echo CHtml::link('<span class="fa fa-clipboard"></span>Add to QC', Yii::app()->createUrl("frontDesk/generalRepairMechanic/processQualityControl", array("id"=>$model->id)), array('class' => 'button warning')); ?></td>
                 </tr>
         <?php endforeach; ?>
     </tbody>

@@ -34,10 +34,11 @@ $('.search-form form').submit(function(){
 ");
 ?>
 <div id="maincontent">
-	<div class="clearfix page-action">
-		<?php if (Yii::app()->user->checkAccess("master.vehicle.create")) { ?>
+    <div class="clearfix page-action">
+        <?php if (Yii::app()->user->checkAccess("masterVehicleCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/vehicle/create';?>"><span class="fa fa-plus"></span>New Vehicle</a>
         <?php }?>
+            
         <h1>Manage Customer Vehicles</h1>
 
         <div class="search-bar">
@@ -66,9 +67,9 @@ $('.search-form form').submit(function(){
             ),
             'columns'=>array(
                 array (
-                    'class' 		 => 'CCheckBoxColumn',
+                    'class' => 'CCheckBoxColumn',
                     'selectableRows' => '2',	
-                    'header'		 => 'Selected',	
+                    'header' => 'Selected',	
                     'value' => '$data->id',				
                 ),
                 array(

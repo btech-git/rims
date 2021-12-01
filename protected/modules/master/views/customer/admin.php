@@ -36,10 +36,10 @@ $('.search-form form').submit(function(){
 ?>
 <div id="maincontent">
 <div class="clearfix page-action">
-	<?php if (Yii::app()->user->checkAccess("master.customer.create")) { ?>
+	<?php if (Yii::app()->user->checkAccess("masterCustomerCreate")) { ?>
 		<a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/customer/create';?>"><span class="fa fa-plus"></span>New Customer</a>
 	<?php }?>
-	<?php if (Yii::app()->user->checkAccess("master.customer.exportExcel")) { ?>
+	<?php if (Yii::app()->user->checkAccess("masterCustomerEdit")) { ?>
 		<a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/customer/exportExcel';?>"><span class="fa fa-print"></span>Export Excel</a> &nbsp;
 	<?php }?>
 	<h1>Manage Customer</h1>

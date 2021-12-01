@@ -68,7 +68,7 @@
 </div>
 
 <div id="head_waitlist_table">
-    <?php $serviceTypes = ServiceType::model()->findAll(); ?>
+    <?php $serviceTypes = ServiceType::model()->findAll(array('condition' => 'id <> 2')); ?>
     <?php foreach ($serviceTypes as $i => $serviceType): ?>
         <?php $serviceTabs[$serviceType->name] = $this->renderPartial('_headWaitlistTable', array(
             'registrationService' => $registrationService,
