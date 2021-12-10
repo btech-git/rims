@@ -12,71 +12,205 @@ $this->menu=array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
-	$('.search-button').click(function(){
-		$('.search-form').slideToggle(600);
-		$('.bulk-action').toggle();
-		$(this).toggleClass('active');
-		if($(this).hasClass('active')){
-			$(this).text('');
-		}else {
-			$(this).text('Advanced Search');
-		}
-		return false;
-	});
-	$('.search-form form').submit(function(){
-		$('#registration-transaction-grid').yiiGridView('update', {
-			data: $(this).serialize()
-		});
-		return false;
-	});
-	
-	$('#info').click(function(){
-		href = $(this).attr('href')
-		$.ajax({
-			type: 'POST',
-			url: href,
-			data: $('form').serialize(),
-			success: function(html) {
-				$('#info-dialog').dialog('open');
-				$('#info_div').html(html);
-			},
-		});
-	});
+    $('.search-button').click(function(){
+        $('.search-form').slideToggle(600);
+        $('.bulk-action').toggle();
+        $(this).toggleClass('active');
+        if ($(this).hasClass('active')) {
+            $(this).text('');
+        } else {
+            $(this).text('Advanced Search');
+        }
+        return false;
+    });
+    
+    $('.search-form form').submit(function(){
+        $('#registration-transaction-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+        
+        return false;
+    });
+
+    $('#info').click(function(){
+        href = $(this).attr('href')
+        $.ajax({
+            type: 'POST',
+            url: href,
+            data: $('form').serialize(),
+            success: function(html) {
+                $('#info-dialog').dialog('open');
+                $('#info_div').html(html);
+            },
+        });
+    });
 ");
 ?>
 
 <div id="maincontent">
-	<div class="clearfix page-action">
-		<h1>Body Repair Head Management</h1>
-		<div>
+    <div class="clearfix page-action">
+        <h1>Body Repair Head Management</h1>
+        <div>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(
-                    'Wait List' => array(
-                        'content' => $this->renderPartial(
-                            '_viewWaitlist',
-                            array(
-                                'model' => $model,
-                                'waitlistDataProvider' => $waitlistDataProvider,
-                            ), true
-                        ),
+                    'Waitlist' => array(
+                        'content' => $this->renderPartial('_viewWaitlist', array(
+                            'model' => $model,
+                            'waitlistDataProvider' => $waitlistDataProvider,
+                        ), true),
                     ),
-                    'History' => array(
-                        'content' => $this->renderPartial(
-                            '_viewHistory',
-                            array(
-                                'historyDataProvider' => $historyDataProvider,
-                                'branchId' => $branchId,
-                            ), true
-                        ),
+                    'Bongkar' => array(
+                        'content' => $this->renderPartial('_viewBongkar', array(
+                            'queueBongkarDataProvider' => $queueBongkarDataProvider,
+                            'assignBongkarDataProvider' => $assignBongkarDataProvider,
+                            'progressBongkarDataProvider' => $progressBongkarDataProvider,
+                            'qualityControlBongkarDataProvider' => $qualityControlBongkarDataProvider,
+                            'finishedBongkarDataProvider' => $finishedBongkarDataProvider,
+                        ), true ),
+                    ),
+                    'Spare Part' => array(
+                        'content' => $this->renderPartial('_viewSparepart', array(
+                            'queueSparePartDataProvider' => $queueSparePartDataProvider,
+                            'assignSparePartDataProvider' => $assignSparePartDataProvider,
+                            'progressSparePartDataProvider' => $progressSparePartDataProvider,
+                            'qualityControlSparePartDataProvider' => $qualityControlSparePartDataProvider,
+                            'finishedSparePartDataProvider' => $finishedSparePartDataProvider,
+                        ), true),
+                    ),
+                    'Ketok/Las' => array(
+                        'content' => $this->renderPartial('_viewKetok', array(
+                            'queueKetokDataProvider' => $queueKetokDataProvider,
+                            'assignKetokDataProvider' => $assignKetokDataProvider,
+                            'progressKetokDataProvider' => $progressKetokDataProvider,
+                            'qualityControlKetokDataProvider' => $qualityControlKetokDataProvider,
+                            'finishedKetokDataProvider' => $finishedKetokDataProvider,
+                        ), true),
+                    ),
+                    'Dempul' => array(
+                        'content' => $this->renderPartial('_viewDempul', array(
+                            'queueDempulDataProvider' => $queueDempulDataProvider,
+                            'assignDempulDataProvider' => $assignDempulDataProvider,
+                            'progressDempulDataProvider' => $progressDempulDataProvider,
+                            'qualityControlDempulDataProvider' => $qualityControlDempulDataProvider,
+                            'finishedDempulDataProvider' => $finishedDempulDataProvider,
+                        ), true),
+                    ),
+                    'Epoxy' => array(
+                        'content' => $this->renderPartial('_viewEpoxy', array(
+                            'queueEpoxyDataProvider' => $queueEpoxyDataProvider,
+                            'assignEpoxyDataProvider' => $assignEpoxyDataProvider,
+                            'progressEpoxyDataProvider' => $progressEpoxyDataProvider,
+                            'qualityControlEpoxyDataProvider' => $qualityControlEpoxyDataProvider,
+                            'finishedEpoxyDataProvider' => $finishedEpoxyDataProvider,
+                        ), true),
+                    ),
+                    'Cat' => array(
+                        'content' => $this->renderPartial('_viewCat', array(
+                            'queueCatDataProvider' => $queueCatDataProvider,
+                            'assignCatDataProvider' => $assignCatDataProvider,
+                            'progressCatDataProvider' => $progressCatDataProvider,
+                            'qualityControlCatDataProvider' => $qualityControlCatDataProvider,
+                            'finishedCatDataProvider' => $finishedCatDataProvider,
+                        ), true),
+                    ),
+                    'Pasang' => array(
+                        'content' => $this->renderPartial('_viewPasang', array(
+                            'queuePasangDataProvider' => $queuePasangDataProvider,
+                            'assignPasangDataProvider' => $assignPasangDataProvider,
+                            'progressPasangDataProvider' => $progressPasangDataProvider,
+                            'qualityControlPasangDataProvider' => $qualityControlPasangDataProvider,
+                            'finishedPasangDataProvider' => $finishedPasangDataProvider,
+                        ), true),
+                    ),
+                    'Cuci' => array(
+                        'content' => $this->renderPartial('_viewCuci', array(
+                            'queueCuciDataProvider' => $queueCuciDataProvider,
+                            'assignCuciDataProvider' => $assignCuciDataProvider,
+                            'progressCuciDataProvider' => $progressCuciDataProvider,
+                            'qualityControlCuciDataProvider' => $qualityControlCuciDataProvider,
+                            'finishedCuciDataProvider' => $finishedCuciDataProvider,
+                        ), true),
+                    ),
+                    'Poles' => array(
+                        'content' => $this->renderPartial('_viewPoles', array(
+                            'queuePolesDataProvider' => $queuePolesDataProvider,
+                            'assignPolesDataProvider' => $assignPolesDataProvider,
+                            'progressPolesDataProvider' => $progressPolesDataProvider,
+                            'qualityControlPolesDataProvider' => $qualityControlPolesDataProvider,
+                            'finishedPolesDataProvider' => $finishedPolesDataProvider,
+                        ), true),
+                    ),
+                ),
+                // additional javascript options for the tabs plugin
+                'options' => array(
+                    'collapsible' => true,
+                ),
+                // set id for this widgets
+                'id' => 'view_assigned',
+            )); ?>
+            
+            <?php /*$this->widget('zii.widgets.jui.CJuiTabs', array(
+                'tabs' => array(
+                    'Waitlist' => array(
+                        'content' => $this->renderPartial('_viewWaitlist', array(
+                            'model' => $model,
+                            'waitlistDataProvider' => $waitlistDataProvider,
+                        ), true),
+                    ),
+                    'Service Queue' => array(
+                        'content' => $this->renderPartial('_viewQueue', array(
+                            'model' => $model,
+                            'queueDataProvider' => $queueDataProvider,
+                        ), true),
+                    ),
+                    'Assigned' => array(
+                        'content' => $this->renderPartial('_viewAssigned', array(
+                            'model' => $model,
+                            'assignBongkarDataProvider' => $assignBongkarDataProvider,
+                            'assignSparePartDataProvider' => $assignSparePartDataProvider,
+                            'assignKetokDataProvider' => $assignKetokDataProvider,
+                            'assignDempulDataProvider' => $assignDempulDataProvider,
+                            'assignEpoxyDataProvider' => $assignEpoxyDataProvider,
+                            'assignCatDataProvider' => $assignCatDataProvider,
+                            'assignPasangDataProvider' => $assignPasangDataProvider,
+                            'assignPolesDataProvider' => $assignPolesDataProvider,
+                            'assignCuciDataProvider' => $assignCuciDataProvider,
+                        ), true),
+                    ),
+                    'On-Progress' => array(
+                        'content' => $this->renderPartial('_viewProgress', array(
+                            'model' => $model,
+                            'progressBongkarDataProvider' => $progressBongkarDataProvider,
+                            'progressSparePartDataProvider' => $progressSparePartDataProvider,
+//                            'progressKetokDataProvider' => $progressKetokDataProvider,
+//                            'progressDempulDataProvider' => $progressDempulDataProvider,
+//                            'progressEpoxyDataProvider' => $progressEpoxyDataProvider,
+//                            'progressCatDataProvider' => $progressCatDataProvider,
+//                            'progressPasangDataProvider' => $progressPasangDataProvider,
+//                            'progressPolesDataProvider' => $progressPolesDataProvider,
+//                            'progressCuciDataProvider' => $progressCuciDataProvider,
+//                                'waitlistDataProvider' => $waitlistDataProvider,
+                        ), true),
+                    ),
+                    'Ready to QC' => array(
+                        'content' => $this->renderPartial('_viewQualityControl', array(
+                            'model' => $model,
+                            'qualityControlBongkarDataProvider' => $qualityControlBongkarDataProvider,
+                            'qualityControlSparePartDataProvider' => $qualityControlSparePartDataProvider,
+                        ), true),
+                    ),
+                    'Finished' => array(
+                        'content' => $this->renderPartial('_viewFinished', array(
+                            'model' => $model,
+                            'finishedBongkarDataProvider' => $finishedBongkarDataProvider,
+                            'finishedSparePartDataProvider' => $finishedSparePartDataProvider,
+                        ), true),
                     ),
                     'Available Mechanics' => array(
-                        'content' => $this->renderPartial(
-                            '_viewAvailableMechanic',
-                            array(
-                                'employee' => $employee,
-                                'employeeDataProvider' => $employeeDataProvider,
-                            ), true
-                        ),
+                        'content' => $this->renderPartial('_viewAvailableMechanic', array(
+                            'employee' => $employee,
+                            'employeeDataProvider' => $employeeDataProvider,
+                        ), true),
                     ),
                 ),
                 // additional javascript options for the tabs plugin
@@ -85,72 +219,9 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 // set id for this widgets
                 'id' => 'view_tab',
-            )); ?>
+            ));*/ ?>
         </div>
-	</div>
-</div>
-<br />
-<div id="maincontent">
-	<div class="clearfix page-action">
-		<h1>On-Progress</h1>
-		<div>
-            <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
-                'tabs' => array(
-                    'Bongkar' => array(
-                        'content' => $this->renderPartial('_viewProgressBongkar', array(
-                            'progressBongkarDataProvider' => $progressBongkarDataProvider,
-                        ), true ),
-                    ),
-                    'Spare Part' => array(
-                        'content' => $this->renderPartial('_viewProgressSparepart', array(
-                            'progressSparePartDataProvider' => $progressSparePartDataProvider,
-                        ), true),
-                    ),
-                    'Ketok/Las' => array(
-                        'content' => $this->renderPartial('_viewProgressKetok', array(
-                            'progressKetokDataProvider' => $progressKetokDataProvider,
-                        ), true),
-                    ),
-                    'Dempul' => array(
-                        'content' => $this->renderPartial('_viewProgressDempul', array(
-                            'progressDempulDataProvider' => $progressDempulDataProvider,
-                        ), true),
-                    ),
-                    'Epoxy' => array(
-                        'content' => $this->renderPartial('_viewProgressEpoxy', array(
-                            'progressEpoxyDataProvider' => $progressEpoxyDataProvider,
-                        ), true),
-                    ),
-                    'Cat' => array(
-                        'content' => $this->renderPartial('_viewProgressCat', array(
-                            'progressCatDataProvider' => $progressCatDataProvider,
-                        ), true),
-                    ),
-                    'Pasang' => array(
-                        'content' => $this->renderPartial('_viewProgressPasang', array(
-                            'progressPasangDataProvider' => $progressPasangDataProvider,
-                        ), true),
-                    ),
-                    'Poles' => array(
-                        'content' => $this->renderPartial('_viewProgressPoles', array(
-                            'progressPolesDataProvider' => $progressPolesDataProvider,
-                        ), true),
-                    ),
-                    'Cuci' => array(
-                        'content' => $this->renderPartial('_viewProgressCuci', array(
-                            'progressCuciDataProvider' => $progressCuciDataProvider,
-                        ), true),
-                    ),
-                ),
-                // additional javascript options for the tabs plugin
-                'options' => array(
-                    'collapsible' => true,
-                ),
-                // set id for this widgets
-                'id' => 'view_progress',
-            )); ?>
-        </div>
-	</div>
+    </div>
 </div>
 
 <!--Registration Service Dialog -->

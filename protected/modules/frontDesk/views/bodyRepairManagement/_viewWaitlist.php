@@ -14,8 +14,7 @@
                 <tr>
                     <td>
                         <?php echo CHtml::activeTextField($model, 'plate_number', array(
-                            'onchange' => 
-                            CHtml::ajax(array(
+                            'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
                                 'url' => CController::createUrl('ajaxHtmlUpdateHeadWaitlistTable'),
                                 'update' => '#head_waitlist_table',
@@ -24,8 +23,7 @@
                     </td>
                     <td>
                         <?php echo CHtml::activeTextField($model, 'work_order_number', array(
-                            'onchange' => 
-                            CHtml::ajax(array(
+                            'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
                                 'url' => CController::createUrl('ajaxHtmlUpdateHeadWaitlistTable'),
                                 'update' => '#head_waitlist_table',
@@ -34,11 +32,11 @@
                     </td>
                     <td>
                         <?php echo CHtml::activeDropDownList($model, 'status', array(
-							'Pending'=>'Pending',
-							'Available'=>'Available',
-							'On Progress'=>'On Progress',
-							'Finished'=>'Finished'
-						), array(
+                            'Pending'=>'Pending',
+                            'Available'=>'Available',
+                            'On Progress'=>'On Progress',
+                            'Finished'=>'Finished'
+                        ), array(
                             'empty' => '-- All --',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',

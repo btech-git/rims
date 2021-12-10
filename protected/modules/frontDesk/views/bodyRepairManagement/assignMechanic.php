@@ -71,6 +71,7 @@ $('.search-form form').submit(function(){
                             array(
                                 'registration' => $registration,
                                 'memo' => $memo,
+                                'priorityLevel' => $priorityLevel,
                             ), true
                         ),
                     ),
@@ -139,7 +140,6 @@ $('.search-form form').submit(function(){
             <table>
                 <thead>
                     <tr style="background-color: yellow">
-                        <th style="text-align: center">No</th>
                         <th style="text-align: center">Process</th>
                         <th style="text-align: center">Start</th>
                         <th style="text-align: center">Finish</th>
@@ -148,29 +148,30 @@ $('.search-form form').submit(function(){
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($registration->registrationBodyRepairDetails as $i => $registrationBodyRepairDetail): ?>
-                        <tr>
-                            <td style="text-align: center"><?php echo $i + 1; ?></td>
-                            <td>
-                                <?php echo CHtml::activeHiddenField($registrationBodyRepairDetail, "[$i]id"); ?>
-                                <?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'service_name')); ?>
-                            </td>
-                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'start_date_time')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'finish_date_time')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'total_time')); ?></td>
-                            <td>
-                                <?php //if (empty($registrationBodyRepairDetail->mechanic_assigned_id)): ?>
-                                    <?php echo CHtml::activeDropDownlist($registrationBodyRepairDetail, "[$i]mechanic_assigned_id", CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
-//                                        "branch_id" => $registration->branch_id,
-                                        "level_id" => $registrationBodyRepairDetail->getLevelIdByProcessName($registrationBodyRepairDetail->service_name),
-                                    )), "employee_id", "employee.name"), array("empty" => "-- Assign Mechanic --")); ?>
-                                <?php /*else: ?>
-                                    <?php echo CHtml::activeHiddenField($registrationBodyRepairDetail, "[$i]mechanic_assigned_id"); ?>
-                                    <?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'mechanicAssigned.name')); ?>
-                                <?php endif;*/ ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>                        
+                    <?php //foreach ($registration->registrationBodyRepairDetails as $i => $registrationBodyRepairDetail): ?>
+                        <?php //if (substr($registration->status, 6) == $registrationBodyRepairDetail->service_name): ?>
+                            <tr>
+                                <td>
+                                    <?php echo CHtml::activeHiddenField($registrationBodyRepairDetail, "id"); ?>
+                                    <?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'service_name')); ?>
+                                </td>
+                                <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'start_date_time')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'finish_date_time')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'total_time')); ?></td>
+                                <td>
+                                    <?php //if (empty($registrationBodyRepairDetail->mechanic_assigned_id)): ?>
+                                        <?php echo CHtml::activeDropDownlist($registrationBodyRepairDetail, "mechanic_assigned_id", CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+    //                                        "branch_id" => $registration->branch_id,
+                                            "level_id" => $registrationBodyRepairDetail->getLevelIdByProcessName($registrationBodyRepairDetail->service_name),
+                                        )), "employee_id", "employee.name"), array("empty" => "-- Assign Mechanic --")); ?>
+                                    <?php /*else: ?>
+                                        <?php echo CHtml::activeHiddenField($registrationBodyRepairDetail, "[$i]mechanic_assigned_id"); ?>
+                                        <?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'mechanicAssigned.name')); ?>
+                                    <?php endif;*/ ?>
+                                </td>
+                            </tr>
+                        <?php //endif; ?>
+                    <?php //endforeach; ?>                        
                 </tbody>
             </table>
         </div>
@@ -184,5 +185,4 @@ $('.search-form form').submit(function(){
         <?php echo CHtml::submitButton('Assign', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class' => 'btn_blue')); ?>
     </div>
 <?php endif; ?>
-<?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
 <?php echo CHtml::endForm(); ?>  

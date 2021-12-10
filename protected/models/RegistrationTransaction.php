@@ -488,7 +488,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
         }
         
-        $criteria->addCondition("t.work_order_number != ''");
+        $criteria->addCondition("t.work_order_number != '' AND t.status <> 'Finished'");
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);
         $criteria->compare('vehicle.plate_number', $this->plate_number, true);

@@ -138,12 +138,21 @@ class IdleManagementController extends Controller {
                 $registrationService->assign_mechanic_id = $_POST['RegistrationService'][$i]['assign_mechanic_id'];
                 $registrationService->update(array('assign_mechanic_id'));
             }
+            
+            $this->redirect(array('indexHead'));
         } elseif (isset($_POST['Save'])) {
             $registration->is_passed = $_POST['RegistrationTransaction']['is_passed'];
             $registration->priority_level = $_POST['RegistrationTransaction']['priority_level'];
-            $registration->service_status = (int) $registration->is_passed == 1 ? 'Finished' : 'Failed';
+            $registration->service_status = (int) $registration->is_passed == 1 ? 'Finished' : 'Pending';
             $registration->status = (int) $registration->is_passed == 1 ? 'Invoicing' : 'Processing WO';
             $registration->update(array('is_passed', 'priority_level', 'service_status', 'status'));
+            
+            if ((int) $registration->is_passed == 0) {
+                foreach($registration->registrationServices as $detail) {
+                    $detail->status = 'On Progress';
+                    $detail->update(array('status'));
+                }
+            }
 
             if (!empty($_POST['Memo'])) {
                 $registrationMemo = new RegistrationMemo();
@@ -153,6 +162,8 @@ class IdleManagementController extends Controller {
                 $registrationMemo->user_id = Yii::app()->user->id;
                 $registrationMemo->save();
             }
+            
+            $this->redirect(array('indexHead'));
         }
 
         $this->render('viewHeadWorkOrder', array(

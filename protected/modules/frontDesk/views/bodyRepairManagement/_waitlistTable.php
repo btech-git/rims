@@ -33,9 +33,9 @@
                 <td><?php echo $model->work_order_date; ?></td>
                 <td><?php echo $model->problem; ?></td>
                 <td><?php echo $model->insurance_company_id != null ? $model->insuranceCompany->name : ' '; ?></td>
-                <td><?php echo $model->branch_id != null ? $model->branch->name : '-'; ?></td>
+                <td><?php echo $model->branch_id != null ? $model->branch->code : '-'; ?></td>
                 <td><?php echo $model->getPriorityLiteral($model->priority_level); ?></td>
-                <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>View', Yii::app()->createUrl("frontDesk/bodyRepairManagement/assignMechanic", array("registrationId"=>$model->id)), array('class' => 'button warning', 'target' => '_blank')); ?></td>
+                <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/bodyRepairManagement/proceedToQueue", array("id"=>$model->id)), array('class' => 'button secondary')); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

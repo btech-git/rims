@@ -52,7 +52,7 @@
                     <td><?php echo $registrationTransaction->status != null ? $registrationTransaction->status : '-'; ?></td>
                     <td><?php echo $registrationTransaction->branch_id != null ? $registrationTransaction->branch->code : '-'; ?></td>
                     <td><?php echo $registrationTransaction->getPriorityLiteral($registrationTransaction->priority_level); ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Planning', Yii::app()->createUrl("frontDesk/idleManagement/proceedToPlanning", array("id"=>$model->id)), array('class' => 'button secondary')); ?></td>
+                    <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/idleManagement/proceedToPlanning", array("id"=>$model->id)), array('class' => 'button secondary')); ?></td>
                 </tr>
                 <?php $numbering++; ?>
             <?php endif; ?>

@@ -198,14 +198,14 @@ $('.search-form form').submit(function(){
         <?php if ($mechanicId === null || $mechanicId !== null && $mechanicId === Yii::app()->user->id): ?>
             <div style="text-align: center">
                 <?php if ($bodyRepairManagement->runningDetailTimesheet->start_date_time === null): ?>
-                    <?php echo CHtml::submitButton('Start', array('name' => 'StartOrPauseTimesheet', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                    <?php echo CHtml::submitButton('Start', array('name' => 'StartOrPauseTimesheet', 'confirm' => 'Are you sure you want to start?', 'class' => 'button cbuton success')); ?>
                 <?php else: ?>
-                    <?php echo CHtml::submitButton('Pause', array('name' => 'StartOrPauseTimesheet', 'confirm' => 'Are you sure you want to pause?', 'class' => 'button cbuton info', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                    <?php echo CHtml::submitButton('Pause', array('name' => 'StartOrPauseTimesheet', 'confirm' => 'Are you sure you want to pause?', 'class' => 'button cbuton info')); ?>
                     &nbsp;&nbsp;&nbsp;
-                    <?php echo CHtml::submitButton('Finish', array('name' => 'FinishTimesheet', 'confirm' => 'Are you sure you want to finish?', 'class' => 'button cbuton alert', 'onclick' => '$("#_FormSubmit_").val($(this).attr("name")); this.disabled = true')); ?>
+                    <?php echo CHtml::submitButton('Finish', array('name' => 'FinishTimesheet', 'confirm' => 'Are you sure you want to finish?', 'class' => 'button cbuton alert')); ?>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
     <?php endif; ?>
-    <?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
+    <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
 <?php echo CHtml::endForm(); ?>  

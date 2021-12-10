@@ -71,6 +71,7 @@ $('.search-form form').submit(function(){
                             array(
                                 'registration' => $registration,
                                 'memo' => $memo,
+                                'priorityLevel' => $priorityLevel,
                             ), true
                         ),
                     ),
@@ -114,7 +115,7 @@ $('.search-form form').submit(function(){
                 // set id for this widgets
                 'id' => 'view_tab',
             )); ?>
-            <?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
+            <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
         </div>
 
         <br />

@@ -27,7 +27,7 @@
                     <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
                     <td><?php echo $vehicle != null ? CHtml::encode(CHtml::value($vehicle, 'carMake.name')) : ' '; ?></td>
                     <td><?php echo $vehicle != null ? CHtml::encode(CHtml::value($vehicle, 'carModel.name')) : ' '; ?></td>
-                    <td><?php echo $registrationTransaction->work_order_number; ?></td>
+                    <td><?php echo CHtml::link($registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$registrationTransaction->id), array('target' => 'blank')); ?></td>
                     <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
                     <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
                     <td><?php echo $model->service->name; ?></td>

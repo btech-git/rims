@@ -13,7 +13,7 @@ function tanggal($date) {
 <div class="container">
     <div class="header">
         <div style="float: left; width: 45%">
-            <img src="/images/logo.png" alt="">
+            <img src="../images/logo.png" alt="">
             <table>
                 <tr>
                     <td>
@@ -140,6 +140,7 @@ function tanggal($date) {
             </table>
             <br />
         <?php endif; ?>
+            
         <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
             <table>
                 <tr>

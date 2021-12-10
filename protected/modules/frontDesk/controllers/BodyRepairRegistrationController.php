@@ -438,7 +438,7 @@ class BodyRepairRegistrationController extends Controller {
         $model->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->work_order_date = date('Y-m-d');
         $model->header->work_order_time = date('H:i:s');
-        $model->header->status = 'Processing';
+        $model->header->status = 'Waitlist';
 
         if ($model->header->update(array('work_order_number', 'work_order_date', 'work_order_time', 'status'))) {
             if ($model->header->repair_type == 'BR') {

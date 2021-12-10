@@ -63,6 +63,7 @@
         <div>
             <?php echo CHtml::submitButton('Clear', array('name' => 'Clear')); ?>
         </div>
+        <br />
     </div>
     <?php echo CHtml::endForm(); ?>
 </div>

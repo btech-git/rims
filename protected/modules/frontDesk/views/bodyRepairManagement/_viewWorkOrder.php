@@ -31,11 +31,11 @@
             <td>Work Order #: <?php echo $registration->work_order_number; ?></td>
             <td>Status: <?php echo $registration->status; ?></td>
         </tr>
-        <?php if ($registration->service_status !== 'Finish'): ?>
+        <?php if ($registration->service_status !== 'Finished'): ?>
             <tr>
                 <td>
                     Priority: 
-                    <?php echo CHtml::activeDropDownList($registration, 'priority_level', array(
+                    <?php echo CHtml::dropDownList('PriorityLevel', $priorityLevel, array(
                          RegistrationTransaction::PRIORITY_HIGH => RegistrationTransaction::PRIORITY_HIGH_LITERAL,
                          RegistrationTransaction::PRIORITY_MEDIUM => RegistrationTransaction::PRIORITY_MEDIUM_LITERAL,
                          RegistrationTransaction::PRIORITY_LOW => RegistrationTransaction::PRIORITY_LOW_LITERAL,

@@ -36,6 +36,7 @@ class BodyRepairManagement extends CComponent {
         $valid = false;
         if ($this->runningDetail->is_passed) {
             $nextServiceName = $this->nextServiceName($this->runningDetail->service_name);
+            $this->header->status = $nextServiceName === null ? 'Repair Completed' : 'Queue ' . $nextServiceName;
             $this->header->service_status = $nextServiceName === null ? 'Finish' : $nextServiceName . ' - Pending';
             $valid = $this->header->save(false);
             $this->runningDetail->mechanic_head_id = Yii::app()->user->id;
@@ -54,15 +55,15 @@ class BodyRepairManagement extends CComponent {
     
     private function nextServiceName($serviceName) {
         $nextServiceNameList = array(
-            'Bongkar' => 'Sparepart',
-            'Sparepart' => 'Ketok/Las',
-            'Ketok/Las' => 'Dempul',
+            'Bongkar Pasang' => 'Spare Part',
+            'Spare Part' => 'Las Ketok',
+            'Las Ketok' => 'Dempul',
             'Dempul' => 'Epoxy',
             'Epoxy' => 'Cat',
-            'Cat' => 'Pasang',
-            'Pasang' => 'Poles',
-            'Poles' => 'Cuci',
-            'Cuci' => null,
+            'Cat' => 'Finishing',
+            'Finishing' => 'Cuci',
+            'Cuci' => 'Poles',
+            'Poles' => null,
         );
         
         return $nextServiceNameList[$serviceName];
