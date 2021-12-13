@@ -1,4 +1,4 @@
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Service Queue</h3></legend>
     <table>
         <thead>
@@ -38,7 +38,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Assigned</h3></legend>
     <table>
         <thead>
@@ -78,7 +78,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>On Progress</h3></legend>
     <table>
         <thead>
@@ -118,7 +118,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Ready to QC</h3></legend>
     <table>
         <thead>
@@ -158,7 +158,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Finished</h3></legend>
     <table>
         <thead>

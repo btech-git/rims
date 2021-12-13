@@ -1,4 +1,4 @@
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Service Queue</h3></legend>
     <table>
         <thead>
@@ -38,7 +38,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Assigned</h3></legend>
     <table>
         <thead>
@@ -69,7 +69,7 @@
                     <td><?php echo $registrationTransaction->total_time; ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($model, 'mechanicAssigned.name')); ?></td>
                     <td><?php echo $registrationTransaction->note; ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Processing', Yii::app()->createUrl("frontDesk/bodyRepairManagement/startProcessingBongkar", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
+                    <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Processing', Yii::app()->createUrl("frontDesk/bodyRepairManagement/startProcessingSparepart", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -78,7 +78,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>On Progress</h3></legend>
     <table>
         <thead>
@@ -118,7 +118,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Ready to QC</h3></legend>
     <table>
         <thead>
@@ -158,7 +158,7 @@
 
 <br />
 
-<div style="text-align: right">
+<div style="text-align: center">
     <legend><h3>Finished</h3></legend>
     <table>
         <thead>

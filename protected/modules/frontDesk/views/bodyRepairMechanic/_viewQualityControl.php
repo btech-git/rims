@@ -9,7 +9,6 @@
             <th style="text-align: center; font-weight: bold">WO Time</th>
             <th style="text-align: center; font-weight: bold">Service</th>
             <th style="text-align: center; font-weight: bold">Mechanic</th>
-            <th></th>
         </tr>
     </thead>
     
@@ -28,7 +27,6 @@
                 <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
                 <td><?php echo $model->service_name; ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'mechanic.name')); ?></td>
-                <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>QC', Yii::app()->createUrl("frontDesk/idleManagement/startProcessing", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

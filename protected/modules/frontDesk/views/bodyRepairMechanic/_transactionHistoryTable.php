@@ -30,18 +30,18 @@
             'value'=>'$data->registrationTransaction->work_order_date',
         ),
         array(
-            'header' => 'Duration (mnt)',
-            'value' => '$data->total_time',
-        ),
-        array(
-            'header'=>'Status',
-            'value'=>'$data->registrationTransaction->service_status',
+            'header'=>'Service',
+            'value'=>'$data->service_name',
             'type'=>'raw',
             'filter'=> false,
         ),
         array(
+            'header' => 'Duration (mnt)',
+            'value' => '$data->total_time',
+        ),
+        array(
             'header'=>'Branch', 
-            'value'=>'!empty($data->registrationTransaction->branch_id) ? $data->registrationTransaction->branch->name : "" '
+            'value'=>'!empty($data->registrationTransaction->branch_id) ? $data->registrationTransaction->branch->code : "" '
         ),
         array(
             'class'=>'CButtonColumn',
@@ -49,7 +49,7 @@
             'buttons'=>array(
                 'vw' => array(
                     'label'=>'detail',
-                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairMechanic/viewDetailWorkOrder", array("registrationId"=>$data->id))',
+                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairMechanic/viewDetailWorkOrder", array("registrationId"=>$data->registration_transaction_id))',
                     'options'=>array('target' => '_blank'),
                 ),
             ),

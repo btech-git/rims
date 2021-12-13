@@ -46,6 +46,6 @@
 <div id="mechanic_waitlist_table" style="height: 430px">
     <?php $this->renderPartial('_mechanicWaitlistTable', array(
         'model' => $model,
-        'modelDataProvider' => $modelDataProvider,
+        'waitlistDataProvider' => $waitlistDataProvider,
     )); ?>
 </div>

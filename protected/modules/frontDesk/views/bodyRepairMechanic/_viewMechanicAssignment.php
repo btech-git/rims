@@ -44,9 +44,8 @@
                     'template'=>'{vw}',
                     'buttons'=>array(
                         'vw' => array(
-                            'label'=>'detail',
-                            'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairMechanic/viewDetailWorkOrder", array("registrationId"=>$data->id))',
-                            'options'=>array('target' => '_blank'),
+                            'label'=>'Start',
+                            'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairMechanic/proceedToProgressMechanic", array("id"=>$data->id))',
                         ),
                     ),
                 ),

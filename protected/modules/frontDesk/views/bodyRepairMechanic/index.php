@@ -59,13 +59,21 @@ Yii::app()->clientScript->registerScript('search', "
                             'plateNumber' => $plateNumber,
                             'workOrderNumber' => $workOrderNumber,
                             'model' => $model,
-                            'modelDataProvider' => $modelDataProvider,
+                            'waitlistDataProvider' => $waitlistDataProvider,
                         ), true),
                     ),
                     'Service Queue' => array(
                         'content' => $this->renderPartial('_viewQueue', array(
                             'registrationBodyRepairDetail' => $registrationBodyRepairDetail,
-                            'queueDataProvider' => $queueDataProvider,
+                            'queueBongkarDataProvider' => $queueBongkarDataProvider,
+                            'queueSparePartDataProvider' => $queueSparePartDataProvider,
+                            'queueKetokDataProvider' => $queueKetokDataProvider,
+                            'queueDempulDataProvider' => $queueDempulDataProvider,
+                            'queueEpoxyDataProvider' => $queueEpoxyDataProvider,
+                            'queueCatDataProvider' => $queueCatDataProvider,
+                            'queuePasangDataProvider' => $queuePasangDataProvider,
+                            'queuePolesDataProvider' => $queuePolesDataProvider,
+                            'queueCuciDataProvider' => $queueCuciDataProvider,
                         ), true),
                     ),
                     'Assigned' => array(

@@ -587,7 +587,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Las Ketok' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Ketok/Las - Pending'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Las Ketok' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Las Ketok - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -1347,7 +1347,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Finishing' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Pasang - Pending'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Finishing' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Finishing - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -1890,4 +1890,41 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         ));
     }
 
+    public function searchByQueueMechanic() {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationTransaction' => array (
+                'with' => array(
+                    'branch',
+                    'customer',
+                    'vehicle',
+                )
+            ),
+            'mechanic',
+        );
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('service_name', $this->service_name, true);
+        $criteria->compare('start_date_time', $this->start_date_time, true);
+        $criteria->compare('finish_date_time', $this->finish_date_time, true);
+        $criteria->compare('total_time', $this->total_time);
+        $criteria->compare('to_be_checked', $this->to_be_checked);
+        $criteria->compare('is_passed', $this->is_passed);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('mechanic_id', $this->mechanic_id);
+        $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
+        $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
+
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Cat' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Cat - Pending'");
+        $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
 }
