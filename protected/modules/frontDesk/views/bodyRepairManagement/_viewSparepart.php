@@ -1,195 +1,39 @@
-<div style="text-align: center">
-    <legend><h3>Service Queue</h3></legend>
-    <table>
-        <thead>
-            <tr>
-                <th style="text-align: center; font-weight: bold">Plate #</th>
-                <th style="text-align: center; font-weight: bold">Car Make</th>
-                <th style="text-align: center; font-weight: bold">Car Model</th>
-                <th style="text-align: center; font-weight: bold">WO #</th>
-                <th style="text-align: center; font-weight: bold">WO Date</th>
-                <th style="text-align: center; font-weight: bold">WO Time</th>
-                <th style="text-align: center; font-weight: bold">Duration</th>
-                <th style="text-align: center; font-weight: bold">Mechanic</th>
-                <th style="text-align: center; font-weight: bold">Note</th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php foreach ($queueSparePartDataProvider->data as $model): ?>
-                <tr>
-                    <?php $registrationTransaction = $model->registrationTransaction; $vehicle = $registrationTransaction->vehicle; ?>
-                    <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
-                    <td><?php echo $registrationTransaction->work_order_number; ?></td>
-                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
-                    <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
-                    <td><?php echo $registrationTransaction->total_time; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'mechanicAssigned.name')); ?></td>
-                    <td><?php echo $registrationTransaction->note; ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Assign Mechanic', Yii::app()->createUrl("frontDesk/bodyRepairManagement/assignMechanic", array("id"=>$model->id)), array('class' => 'button warning', 'target' => '_blank')); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<br />
-
-<div style="text-align: center">
-    <legend><h3>Assigned</h3></legend>
-    <table>
-        <thead>
-            <tr>
-                <th style="text-align: center; font-weight: bold">Plate #</th>
-                <th style="text-align: center; font-weight: bold">Car Make</th>
-                <th style="text-align: center; font-weight: bold">Car Model</th>
-                <th style="text-align: center; font-weight: bold">WO #</th>
-                <th style="text-align: center; font-weight: bold">WO Date</th>
-                <th style="text-align: center; font-weight: bold">WO Time</th>
-                <th style="text-align: center; font-weight: bold">Duration</th>
-                <th style="text-align: center; font-weight: bold">Mechanic</th>
-                <th style="text-align: center; font-weight: bold">Note</th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php foreach ($assignSparePartDataProvider->data as $model): ?>
-                <tr>
-                    <?php $registrationTransaction = $model->registrationTransaction; $vehicle = $registrationTransaction->vehicle; ?>
-                    <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
-                    <td><?php echo $registrationTransaction->work_order_number; ?></td>
-                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
-                    <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
-                    <td><?php echo $registrationTransaction->total_time; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'mechanicAssigned.name')); ?></td>
-                    <td><?php echo $registrationTransaction->note; ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Processing', Yii::app()->createUrl("frontDesk/bodyRepairManagement/startProcessingSparepart", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<br />
-
-<div style="text-align: center">
-    <legend><h3>On Progress</h3></legend>
-    <table>
-        <thead>
-            <tr>
-                <th style="text-align: center; font-weight: bold">Plate #</th>
-                <th style="text-align: center; font-weight: bold">Car Make</th>
-                <th style="text-align: center; font-weight: bold">Car Model</th>
-                <th style="text-align: center; font-weight: bold">WO #</th>
-                <th style="text-align: center; font-weight: bold">WO Date</th>
-                <th style="text-align: center; font-weight: bold">WO Time</th>
-                <th style="text-align: center; font-weight: bold">Duration</th>
-                <th style="text-align: center; font-weight: bold">Mechanic</th>
-                <th style="text-align: center; font-weight: bold">Note</th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php foreach ($progressSparePartDataProvider->data as $model): ?>
-                <tr>
-                    <?php $registrationTransaction = $model->registrationTransaction; $vehicle = $registrationTransaction->vehicle; ?>
-                    <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
-                    <td><?php echo $registrationTransaction->work_order_number; ?></td>
-                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
-                    <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
-                    <td><?php echo $registrationTransaction->total_time; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'mechanicAssigned.name')); ?></td>
-                    <td><?php echo $registrationTransaction->note; ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>QC', Yii::app()->createUrl("frontDesk/bodyRepairManagement/proceedToQualityControlSparepart", array("id"=>$model->id)), array('class' => 'button success')); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<br />
-
-<div style="text-align: center">
-    <legend><h3>Ready to QC</h3></legend>
-    <table>
-        <thead>
-            <tr>
-                <th style="text-align: center; font-weight: bold">Plate #</th>
-                <th style="text-align: center; font-weight: bold">Car Make</th>
-                <th style="text-align: center; font-weight: bold">Car Model</th>
-                <th style="text-align: center; font-weight: bold">WO #</th>
-                <th style="text-align: center; font-weight: bold">WO Date</th>
-                <th style="text-align: center; font-weight: bold">WO Time</th>
-                <th style="text-align: center; font-weight: bold">Duration</th>
-                <th style="text-align: center; font-weight: bold">Mechanic</th>
-                <th style="text-align: center; font-weight: bold">Note</th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php foreach ($qualityControlSparePartDataProvider->data as $model): ?>
-                <tr>
-                    <?php $registrationTransaction = $model->registrationTransaction; $vehicle = $registrationTransaction->vehicle; ?>
-                    <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
-                    <td><?php echo $registrationTransaction->work_order_number; ?></td>
-                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
-                    <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
-                    <td><?php echo $registrationTransaction->total_time; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'mechanicAssigned.name')); ?></td>
-                    <td><?php echo $registrationTransaction->note; ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-wrench"></span>Pass/Fail', Yii::app()->createUrl("frontDesk/bodyRepairManagement/checkQuality", array("registrationId"=>$model->registration_transaction_id)), array('class' => 'button success')); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<br />
-
-<div style="text-align: center">
-    <legend><h3>Finished</h3></legend>
-    <table>
-        <thead>
-            <tr>
-                <th style="text-align: center; font-weight: bold">Plate #</th>
-                <th style="text-align: center; font-weight: bold">Car Make</th>
-                <th style="text-align: center; font-weight: bold">Car Model</th>
-                <th style="text-align: center; font-weight: bold">WO #</th>
-                <th style="text-align: center; font-weight: bold">WO Date</th>
-                <th style="text-align: center; font-weight: bold">WO Time</th>
-                <th style="text-align: center; font-weight: bold">Duration</th>
-                <th style="text-align: center; font-weight: bold">Mechanic</th>
-                <th style="text-align: center; font-weight: bold">Note</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php foreach ($finishedSparePartDataProvider->data as $model): ?>
-                <tr>
-                    <?php $registrationTransaction = $model->registrationTransaction; $vehicle = $registrationTransaction->vehicle; ?>
-                    <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
-                    <td><?php echo $registrationTransaction->work_order_number; ?></td>
-                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
-                    <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
-                    <td><?php echo $registrationTransaction->total_time; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'mechanicAssigned.name')); ?></td>
-                    <td><?php echo $registrationTransaction->note; ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+<div class="clearfix page-action">
+    <div>
+        <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+            'tabs' => array(
+                'Queue' => array(
+                    'content' => $this->renderPartial('_viewSparepartQueue', array(
+                        'queueSparePartDataProvider' => $queueSparePartDataProvider,
+                    ), true),
+                ),
+                'Assigned' => array(
+                    'content' => $this->renderPartial('_viewSparepartEmployeeAssignment', array(
+                        'assignSparePartDataProvider' => $assignSparePartDataProvider,
+                    ), true ),
+                ),
+                'On-Progress' => array(
+                    'content' => $this->renderPartial('_viewSparepartProgress', array(
+                        'progressSparePartDataProvider' => $progressSparePartDataProvider,
+                    ), true),
+                ),
+                'Ready to QC' => array(
+                    'content' => $this->renderPartial('_viewSparepartQualityControl', array(
+                        'qualityControlSparePartDataProvider' => $qualityControlSparePartDataProvider,
+                    ), true),
+                ),
+                'Finished' => array(
+                    'content' => $this->renderPartial('_viewSparepartFinished', array(
+                        'finishedSparePartDataProvider' => $finishedSparePartDataProvider,
+                    ), true),
+                ),
+            ),
+            // additional javascript options for the tabs plugin
+            'options' => array(
+                'collapsible' => true,
+            ),
+            // set id for this widgets
+            'id' => 'view_sparepart',
+        )); ?>
+    </div>
 </div>

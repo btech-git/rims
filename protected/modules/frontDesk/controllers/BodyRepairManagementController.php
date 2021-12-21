@@ -12,11 +12,11 @@ class BodyRepairManagementController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-                $filterChain->action->id === 'index' ||
-                $filterChain->action->id === 'viewDetailWorkOrder' ||
-                $filterChain->action->id === 'viewEmployeeDetail' ||
-                $filterChain->action->id === 'assignMechanic' ||
-                $filterChain->action->id === 'checkQuality'
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'viewDetailWorkOrder' ||
+            $filterChain->action->id === 'viewEmployeeDetail' ||
+            $filterChain->action->id === 'assignMechanic' ||
+            $filterChain->action->id === 'checkQuality'
         ) {
             if (!(Yii::app()->user->checkAccess('brMechanicApproval')))
                 $this->redirect(array('/site/login'));
@@ -318,6 +318,7 @@ class BodyRepairManagementController extends Controller {
         $registration = RegistrationTransaction::model()->findByPk($registrationId);
         $vehicle = Vehicle::model()->findByPk($registration->vehicle_id);
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
+        $registrationHistories = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $vehicle->id));
 
         $registrationService = new RegistrationService('search');
         $registrationService->unsetAttributes();  // clear any default values
@@ -325,7 +326,7 @@ class BodyRepairManagementController extends Controller {
             $registrationService->attributes = $_GET['RegistrationService'];
         }
         $registrationServiceCriteria = new CDbCriteria;
-        $registrationServiceCriteria->condition = 'registration_transaction_id = ' . $registrationId . ' AND is_body_repair = 1 ';
+        $registrationServiceCriteria->condition = 'registration_transaction_id = ' . $registrationId;
         $registrationServiceDataProvider = new CActiveDataProvider('RegistrationService', array(
             'criteria' => $registrationServiceCriteria,
         ));
@@ -346,15 +347,13 @@ class BodyRepairManagementController extends Controller {
         $runningDetailTimesheet = $this->loadRunningDetailTimesheet($runningDetail);
         $bodyRepairMechanic = new BodyRepairMechanic($registration, $runningDetail, $runningDetailTimesheet);
 
-        if (isset($_POST['_FormSubmit_'])) {
-            if ($_POST['_FormSubmit_'] === 'SubmitMemo' && !empty($_POST['Memo'])) {
-                $registrationMemo = new RegistrationMemo();
-                $registrationMemo->registration_transaction_id = $registrationId;
-                $registrationMemo->memo = $_POST['Memo'];
-                $registrationMemo->date_time = date('Y-m-d H:i:s');
-                $registrationMemo->user_id = Yii::app()->user->id;
-                $registrationMemo->save();
-            }
+        if (isset($_POST['SubmitMemo']) && !empty($_POST['Memo'])) {
+            $registrationMemo = new RegistrationMemo();
+            $registrationMemo->registration_transaction_id = $registrationId;
+            $registrationMemo->memo = $_POST['Memo'];
+            $registrationMemo->date_time = date('Y-m-d H:i:s');
+            $registrationMemo->user_id = Yii::app()->user->id;
+            $registrationMemo->save();
         } else if (isset($_POST['StartOrPauseTimesheet']) || isset($_POST['FinishTimesheet'])) {
             if ($bodyRepairMechanic->runningDetail !== null) {
                 $mechanicId = $bodyRepairMechanic->runningDetail->mechanic_id;
@@ -380,6 +379,7 @@ class BodyRepairManagementController extends Controller {
         $this->render('viewDetailWorkOrder', array(
             'bodyRepairManagement' => $bodyRepairMechanic,
             'registrationBodyRepairDetails' => $registrationBodyRepairDetails,
+            'registrationHistories' => $registrationHistories,
             'registration' => $registration,
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
@@ -732,4 +732,12 @@ class BodyRepairManagementController extends Controller {
         return $runningDetail;
     }
 
+    public function loadRunningDetailTimesheet($registrationBodyRepairDetail) {
+        $runningDetailTimesheet = RegistrationBodyRepairDetailTimesheet::model()->findByAttributes(array('registration_body_repair_detail_id' => $registrationBodyRepairDetail === null ? null : $registrationBodyRepairDetail->id, 'finish_date_time' => null), array('order' => 'id DESC'));
+        if ($runningDetailTimesheet === null) {
+            $runningDetailTimesheet = new RegistrationBodyRepairDetailTimesheet();
+        }
+
+        return $runningDetailTimesheet;
+    }
 }

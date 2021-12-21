@@ -188,6 +188,7 @@ $('form').submit(function(){
                                     'INVOICING' => 'INVOICING',
                                     'PARTIAL PAYMENT' => 'PARTIAL PAYMENT',
                                     'NOT PAID' => 'NOT PAID',
+                                    'PAID' => 'PAID',
                                 ), array(
                                     'onchange' => '
                                         $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {

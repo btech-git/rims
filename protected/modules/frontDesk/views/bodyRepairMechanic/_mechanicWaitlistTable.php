@@ -43,7 +43,7 @@
                 <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
                 <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
                 <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
-                <td><?php echo $model->work_order_number; ?></td>
+                    <td><?php echo CHtml::link($model->work_order_number, array("/frontDesk/bodyRepairMechanic/viewDetailWorkOrder", "registrationId"=>$model->id), array('target' => 'blank')); ?></td>
                 <td><?php echo $model->work_order_date; ?></td>
                 <td><?php echo $model->problem; ?></td>
                 <td><?php echo $model->insurance_company_id != null ? $model->insuranceCompany->name : ' '; ?></td>

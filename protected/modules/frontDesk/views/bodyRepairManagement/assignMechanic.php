@@ -160,9 +160,10 @@ $('.search-form form').submit(function(){
                                 <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'total_time')); ?></td>
                                 <td>
                                     <?php //if (empty($registrationBodyRepairDetail->mechanic_assigned_id)): ?>
-                                        <?php echo CHtml::activeDropDownlist($registrationBodyRepairDetail, "mechanic_assigned_id", CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
-    //                                        "branch_id" => $registration->branch_id,
-                                            "level_id" => $registrationBodyRepairDetail->getLevelIdByProcessName($registrationBodyRepairDetail->service_name),
+                                        <?php echo CHtml::activeDropDownlist($registrationBodyRepairDetail, "mechanic_assigned_id", CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAll(array(
+//                                            "level_id" => 17,
+                                            "condition" => "level_id = :level_id OR level_id = 17",
+                                            "params" => array(":level_id" => $registrationBodyRepairDetail->getLevelIdByProcessName($registrationBodyRepairDetail->service_name)),
                                         )), "employee_id", "employee.name"), array("empty" => "-- Assign Mechanic --")); ?>
                                     <?php /*else: ?>
                                         <?php echo CHtml::activeHiddenField($registrationBodyRepairDetail, "[$i]mechanic_assigned_id"); ?>

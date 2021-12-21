@@ -255,7 +255,7 @@ $this->menu = array(
                             <tr>
                                 <td><?php echo $payment->payment_number; ?></td>
                                 <td><?php echo $payment->payment_date; ?></td>
-                                <td><?php echo $payment->payment_type; ?></td>
+                                <td><?php echo $payment->paymentType->name; ?></td>
                                 <td><?php echo number_format($payment->payment_amount, 2); ?></td>
                                 <td><?php echo $payment->notes; ?></td>
                                 <td><?php echo $payment->status; ?></td>

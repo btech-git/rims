@@ -217,6 +217,7 @@ class IdleManagementController extends Controller {
         $registration = RegistrationTransaction::model()->findByPk($registrationId);
         $vehicle = Vehicle::model()->findByPk($registration->vehicle_id);
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
+        $registrationHistories = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $vehicle->id));
 
         $registrationService = new RegistrationService('search');
         $registrationService->unsetAttributes();  // clear any default values
@@ -283,6 +284,7 @@ class IdleManagementController extends Controller {
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'registrationQuickService' => $registrationQuickService,
             'registrationQuickServiceDataProvider' => $registrationQuickServiceDataProvider,
+            'registrationHistories' => $registrationHistories,
             'vehicle' => $vehicle,
             'memo' => $memo,
         ));

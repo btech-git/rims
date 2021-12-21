@@ -440,7 +440,7 @@ class RegistrationTransactionController extends Controller {
         }
         
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.status != "PAID" AND t.payment_left > 0 AND t.registration_transaction_id IS NOT NULL AND invoice_date > "2021-01-01"');
+        $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.registration_transaction_id IS NOT NULL AND invoice_date > "2021-01-01"');
         $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
         $invoiceCriteria->compare('t.status', $invoice->status);

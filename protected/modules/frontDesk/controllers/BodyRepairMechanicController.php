@@ -157,6 +157,7 @@ class BodyRepairMechanicController extends Controller {
         $registration = RegistrationTransaction::model()->findByPk($registrationId);
         $vehicle = Vehicle::model()->findByPk($registration->vehicle_id);
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
+        $registrationHistories = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $vehicle->id));
 
         $registrationService = new RegistrationService('search');
         $registrationService->unsetAttributes();  // clear any default values
@@ -222,6 +223,7 @@ class BodyRepairMechanicController extends Controller {
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'registrationDamage' => $registrationDamage,
             'registrationDamageDataProvider' => $registrationDamageDataProvider,
+            'registrationHistories' => $registrationHistories,
             'vehicle' => $vehicle,
             'memo' => $memo,
         ));
@@ -412,7 +414,7 @@ class BodyRepairMechanicController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('start_date_time', 'mechanic_id'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Bongkar Pasang - Started';
+            $registrationTransaction->service_status = $registrationBodyRepairDetail->service_name . ' - Started';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));

@@ -22,7 +22,8 @@
         ),
         array(
             'header'=>'WO #', 
-            'value'=>'$data->registrationTransaction->work_order_number'
+            'value'=>'CHtml::link($data->registrationTransaction->work_order_number, array("/frontDesk/bodyRepairMechanic/viewDetailWorkOrder", "registrationId"=>$data->registration_transaction_id), array("target" => "blank"))',
+            'type'=>'raw',
         ),
         array(
             'name'=>'WO Date', 
@@ -43,16 +44,16 @@
             'header'=>'Branch', 
             'value'=>'!empty($data->registrationTransaction->branch_id) ? $data->registrationTransaction->branch->code : "" '
         ),
-        array(
-            'class'=>'CButtonColumn',
-            'template'=>'{vw}',
-            'buttons'=>array(
-                'vw' => array(
-                    'label'=>'detail',
-                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairMechanic/viewDetailWorkOrder", array("registrationId"=>$data->registration_transaction_id))',
-                    'options'=>array('target' => '_blank'),
-                ),
-            ),
-        ),
+//        array(
+//            'class'=>'CButtonColumn',
+//            'template'=>'{vw}',
+//            'buttons'=>array(
+//                'vw' => array(
+//                    'label'=>'detail',
+//                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairMechanic/viewDetailWorkOrder", array("registrationId"=>$data->registration_transaction_id))',
+//                    'options'=>array('target' => '_blank'),
+//                ),
+//            ),
+//        ),
     ),
 )); ?>

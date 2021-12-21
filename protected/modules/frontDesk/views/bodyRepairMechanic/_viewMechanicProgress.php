@@ -29,7 +29,8 @@
                 ),
                 array(
                     'header' => 'WO #',
-                    'value' => '$data->registrationTransaction->work_order_number'
+                    'value' => 'CHtml::link($data->registrationTransaction->work_order_number, array("/frontDesk/bodyRepairMechanic/viewDetailWorkOrder", "registrationId"=>$data->registration_transaction_id), array("target" => "blank"))',
+                    'type'=>'raw',
                 ),
                 array(
                     'header' => 'WO Date',

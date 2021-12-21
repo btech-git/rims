@@ -459,10 +459,10 @@ class BranchController extends Controller {
 
     public function instantiate($id) {
         if (empty($id)) {
-            $branch = new Branches(new Branch(), array(), array(), array(), array());
+            $branch = new Branches(new Branch(), array(), array(), array(), array(), array());
         } else {
             $branchModel = $this->loadModel($id);
-            $branch = new Branches($branchModel, $branchModel->divisionBranches, $branchModel->branchWarehouses, $branchModel->branchPhones, $branchModel->branchFaxes);
+            $branch = new Branches($branchModel, $branchModel->divisionBranches, $branchModel->branchWarehouses, $branchModel->branchPhones, $branchModel->branchFaxes, $branchModel->branchCoaInterbranches);
         }
         return $branch;
     }

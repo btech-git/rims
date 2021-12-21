@@ -194,11 +194,12 @@ $('form').submit(function(){
                             <td>
                                 <?php echo CHtml::activeDropDownList($model, 'status', array(
                                     ''=>'-- All --',
-                                    'Registration'=>'Registration',
-                                    'Pending'=>'Pending',
-                                    'Available'=>'Available',
-                                    'On Progress'=>'On Progress',
-                                    'Finished'=>'Finished'
+//                                    'Registration'=>'Registration',
+//                                    'Pending'=>'Pending',
+                                    'Waitlist'=>'Waitlist',
+                                    'Processing WO'=>'Processing WO',
+                                    'Assigned'=>'Assigned',
+                                    'Finished'=>'Finished',
                                 ), array(
                                     'onchange' => '
                                         $.fn.yiiGridView.update("work-order-grid", {data: {RegistrationTransaction: {
@@ -326,13 +327,13 @@ $('form').submit(function(){
                         'name'=>'status', 
                         'value'=>'$data->status',
                         'type'=>'raw',
-                        'filter'=>CHtml::dropDownList('RegistrationTransaction[status]', $model->status, array(
-                            ''=>'All',
-                            'Pending'=>'Pending',
-                            'Available'=>'Available',
-                            'On Progress'=>'On Progress',
-                            'Finished'=>'Finished'
-                        )),
+//                        'filter'=>CHtml::dropDownList('RegistrationTransaction[service_status]', $model->status, array(
+//                            ''=>'All',
+//                            'Pending'=>'Pending',
+//                            'Available'=>'Available',
+//                            'On Progress'=>'On Progress',
+//                            'Finished'=>'Finished'
+//                        )),
                     ),
                     array(
                         'class'=>'CButtonColumn',

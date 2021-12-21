@@ -112,6 +112,7 @@ Yii::app()->clientScript->registerScript('search', $str . "
                         'content' => $this->renderPartial('_viewServiceHistory', array(
                             'registration' => $registration,
                             'vehicle' => $vehicle,
+                            'registrationHistories' => $registrationHistories,
                         ), true),
                     ),
                 ),
