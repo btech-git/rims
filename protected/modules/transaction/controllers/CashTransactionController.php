@@ -75,7 +75,6 @@ class CashTransactionController extends Controller {
         //$model=new CashTransaction;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        $idempotent = new Idempotent;
         $cashTransaction = $this->instantiate(null);
         
         $cashTransaction->header->branch_id = $cashTransaction->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $cashTransaction->header->branch_id;
@@ -121,69 +120,17 @@ class CashTransactionController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['CashTransaction'])) {
+        if (isset($_POST['CashTransaction']) && IdempotentManager::check()) {
             
             $this->loadState($cashTransaction);
             $cashTransaction->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($cashTransaction->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($cashTransaction->header->transaction_date)), $cashTransaction->header->branch_id);
             
-            $idempotent->form_token = $_POST[Idempotent::TOKEN_NAME];
-            $idempotent->form_name = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id . '/' . Yii::app()->controller->action->id;
-            $idempotent->posting_date = date('Y-m-d');
-            
-            if ($cashTransaction->save(Yii::app()->db) && isset($_POST[Idempotent::TOKEN_NAME])) {
-                
-                $dbTransaction = Yii::app()->db->beginTransaction();
-                try {
-                    $valid = $idempotent->save();
-                    
-                    if (isset($images) && !empty($images)) {
-                        foreach ($cashTransaction->header->images as $i => $image) {
-                            $postImage = new CashTransactionImages;
-                            $postImage->cash_transaction_id = $cashTransaction->header->id;
-                            $postImage->is_inactive = 0;
-                            $postImage->extension = $image->extensionName;
-                            $valid = $postImage->save() && $valid;
-
-                            if ($valid) {
-                                $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $cashTransaction->header->id;
-
-                                if (!file_exists($dir)) {
-                                    mkdir($dir, 0777, true);
-                                }
-                                $path = $dir . '/' . $postImage->filename;
-                                $image->saveAs($path);
-                                $picture = Yii::app()->image->load($path);
-                                $valid = $picture->save() && $valid;
-
-                                $thumb = Yii::app()->image->load($path);
-                                $thumb_path = $dir . '/' . $postImage->thumbname;
-                                $valid = $thumb->save($thumb_path) && $valid;
-
-                                $square = Yii::app()->image->load($path);
-                                $square_path = $dir . '/' . $postImage->squarename;
-                                $valid = $square->save($square_path) && $valid;
-                            }
-                        }
-                    }
-                    
-                    if ($valid) {
-                        $dbTransaction->commit();
-                    } else {
-                        $dbTransaction->rollback();
-                    }
-                } catch (Exception $e) {
-                    $dbTransaction->rollback();
-                    $valid = false;
-                }
-                
-                if ($valid) {
-                    $this->redirect(array('view', 'id' => $cashTransaction->header->id));
-                }
+            if ($cashTransaction->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $cashTransaction->header->id));
             }
         }
 
         $this->render('create', array(
-            'idempotent' => $idempotent,
             'cashTransaction' => $cashTransaction,
             'coaKas' => $coaKas,
             'coaKasDataProvider' => $coaKasDataProvider,
@@ -236,7 +183,7 @@ class CashTransactionController extends Controller {
             'criteria' => $coaDetailCriteria,
         ));
         
-        $images = $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
+        $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
         $postImages = CashTransactionImages::model()->findAllByAttributes(array('cash_transaction_id' => $cashTransaction->header->id, 'is_inactive' => 0));
         $countPostImage = count($postImages);
         $maxImage = 10;
@@ -245,38 +192,10 @@ class CashTransactionController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['CashTransaction'])) {
+        if (isset($_POST['CashTransaction']) && IdempotentManager::check()) {
             $this->loadState($cashTransaction);
 
             if ($cashTransaction->save(Yii::app()->db)) {
-                if (isset($images) && !empty($images)) {
-                    foreach ($cashTransaction->header->images as $i => $image) {
-                        $postImage = new CashTransactionImages;
-                        $postImage->cash_transaction_id = $cashTransaction->header->id;
-                        $postImage->is_inactive = 0;
-                        $postImage->extension = $image->extensionName;
-
-                        if ($postImage->save()) {
-                            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $cashTransaction->header->id;
-
-                            if (!file_exists($dir)) {
-                                mkdir($dir, 0777, true);
-                            }
-                            $path = $dir . '/' . $postImage->filename;
-                            $image->saveAs($path);
-                            $picture = Yii::app()->image->load($path);
-                            $picture->save();
-
-                            $thumb = Yii::app()->image->load($path);
-                            $thumb_path = $dir . '/' . $postImage->thumbname;
-                            $thumb->save($thumb_path);
-
-                            $square = Yii::app()->image->load($path);
-                            $square_path = $dir . '/' . $postImage->squarename;
-                            $square->save($square_path);
-                        }
-                    }
-                }
                 $this->redirect(array('view', 'id' => $cashTransaction->header->id));
             }
         }

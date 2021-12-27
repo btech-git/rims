@@ -55,7 +55,7 @@ Yii::app()->clientScript->registerScript('search', "
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'material-request-grid',
                 'dataProvider'=>$model->search(),
-                'filter'=>$model,
+                'filter'=>null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
                     'cssFile'=>false,

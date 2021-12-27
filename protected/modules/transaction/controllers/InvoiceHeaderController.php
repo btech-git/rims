@@ -227,11 +227,39 @@ class InvoiceHeaderController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['InvoiceHeader']))
             $model->attributes = $_GET['InvoiceHeader'];
-
+        
+        $dataProvider = $model->search();
+        $dataProvider->criteria->with = array(
+            'salesOrder',
+            'registrationTransaction',
+            'customer',
+            'vehicle',
+            
+        );
+        
         (!empty(Yii::app()->session['pr'])) ? $pr = Yii::app()->session['pr'] : $pr = array();
+        
+        $saleOrderNumber = isset($_GET['SaleOrderNumber']) ? $_GET['SaleOrderNumber'] : '';
+        $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
+
+        if (!empty($saleOrderNumber)) {
+            if (empty($model->sales_order_id)) {
+                $dataProvider->criteria->compare('registrationTransaction.sales_order_number', $saleOrderNumber, true);
+            } else {
+                $dataProvider->criteria->compare('salesOrder.sale_order_no', $saleOrderNumber, true);
+            }
+        }
+        
+        if (!empty($workOrderNumber)) {
+            $dataProvider->criteria->compare('registrationTransaction.work_order_number', $workOrderNumber, true);
+        }
+        
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
             'prChecked' => $pr,
+            'saleOrderNumber' => $saleOrderNumber,
+            'workOrderNumber' => $workOrderNumber,
         ));
     }
 

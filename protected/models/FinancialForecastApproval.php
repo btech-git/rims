@@ -14,6 +14,7 @@
  * @property string $date_approval
  * @property string $time_approval
  * @property string $total_amount
+ * @property string $image_filetype
  * @property integer $user_id_approval
  *
  * The followings are the available model relations:
@@ -39,9 +40,10 @@ class FinancialForecastApproval extends CActiveRecord {
             array('date_transaction, coa_id, date_approval, time_approval, total_amount, user_id_approval', 'required'),
             array('coa_id, user_id_approval', 'numerical', 'integerOnly' => true),
             array('debit_receivable, debit_journal, credit_payable, credit_journal, total_amount', 'length', 'max' => 18),
+            array('image_filetype', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, date_transaction, debit_receivable, debit_journal, credit_payable, credit_journal, coa_id, date_approval, time_approval, total_amount, user_id_approval', 'safe', 'on' => 'search'),
+            array('id, date_transaction, debit_receivable, debit_journal, credit_payable, credit_journal, coa_id, date_approval, time_approval, total_amount, user_id_approval, image_filetype', 'safe', 'on' => 'search'),
         );
     }
 
@@ -73,6 +75,7 @@ class FinancialForecastApproval extends CActiveRecord {
             'time_approval' => 'Time Approval',
             'total_amount' => 'Total Amount',
             'user_id_approval' => 'User Id Approval',
+            'image_filetype' => 'Image Filetype',
         );
     }
 
@@ -104,6 +107,7 @@ class FinancialForecastApproval extends CActiveRecord {
         $criteria->compare('time_approval', $this->time_approval, true);
         $criteria->compare('total_amount', $this->total_amount, true);
         $criteria->compare('user_id_approval', $this->user_id_approval);
+        $criteria->compare('image_filetype', $this->image_filetype);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

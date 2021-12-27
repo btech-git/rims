@@ -134,6 +134,11 @@ return array(
             // enable cookie-based authentication
             'allowAutoLogin'=>true,
         ),*/
+//        'session' => array(
+//            'class' => 'CHttpSession',
+//            'timeout' => 60,
+//        ),
+        
         'image' => array(
             'class' => 'application.extensions.image.CImageComponent',
             'driver' => 'GD',
@@ -182,9 +187,10 @@ return array(
             // enable cookie-based authentication
             'class' => 'RWebUser',
             'allowAutoLogin' => true,
+            'autoRenewCookie' => true,
             'loginUrl' => array('/user/login'),
-            'authTimeout' => 1800, // A year
-            'absoluteAuthTimeout' => 1800,
+            'authTimeout' => 3600, 
+//            'absoluteAuthTimeout' => 3600,
         ),
         'authManager' => array(
             'class' => 'RDbAuthManager',

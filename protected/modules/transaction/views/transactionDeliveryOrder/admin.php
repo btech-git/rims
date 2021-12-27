@@ -52,23 +52,27 @@ Yii::app()->clientScript->registerScript('search', "
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'transaction-delivery-order-grid',
                 'dataProvider' => $model->search(),
-                'filter' => $model,
+                'filter' => null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
                     'cssFile' => false,
                     'header' => '',
                 ),
                 'columns' => array(
-                    array('name' => 'delivery_order_no', 'value' => 'CHTml::link($data->delivery_order_no, array("view", "id"=>$data->id))', 'type' => 'raw'),
+                    array(
+                        'name' => 'delivery_order_no', 
+                        'value' => 'CHTml::link($data->delivery_order_no, array("view", "id"=>$data->id))', 
+                        'type' => 'raw'
+                    ),
                     'delivery_date',
                     'posting_date',
                     array(
                         'name' => 'customer_name',
-                        'value' => '(!empty($data->customer->name)?$data->customer->name:"")'
+                        'value' => '(!empty($data->customer->name) ? $data->customer->name : "")'
                     ),
                     array(
                         'name' => 'sender_id',
-                        'value' => '(!empty($data->user->username)?$data->user->username:"")'
+                        'value' => '(!empty($data->user->username) ? $data->user->username : "")'
                     ),
                     array(
                         'name' => 'branch_name',

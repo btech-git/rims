@@ -114,19 +114,23 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div style="font-size: larger">Financial Forecast</div>
                         <div>
                             <?php //$dateNow = date('Y-m-d'); ?>
-                            <?php echo ' Tanggal: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($dateNow))); ?>
+                            <?php echo ' Tanggal: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($datePrevious))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($dateNow))); ?>
                         </div>
                     </div>
+                    
+                    <br />
 
-                    <?php foreach ($coas as $coa): ?>
-                        <div style="display: inline-block">
-                            <?php echo CHtml::radioButton('CoaIdSelection', false, array('id' => $coa->id, 'onclick' => '
-                                $(".forecast-data").hide();
-                                $("#forecast-data-coa-'.$coa->id.'").show();
-                            ')); ?>
-                            <?php echo CHtml::label($coa->name, $coa->id); ?>
-                        </div>
-                    <?php endforeach; ?>
+                    <div style="text-align: center">
+                        <?php foreach ($coas as $coa): ?>
+                            <div style="display: inline-block; width: 20%; text-align: left">
+                                <?php echo CHtml::radioButton('CoaIdSelection', false, array('id' => $coa->id, 'onclick' => '
+                                    $(".forecast-data").hide();
+                                    $("#forecast-data-coa-'.$coa->id.'").show();
+                                ')); ?>
+                                <?php echo CHtml::label($coa->name, $coa->id); ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                     <?php $coaIds = array(); ?>
                     <?php foreach ($coas as $coa): ?>
                         <?php $coaIds[] = $coa->id; ?>
@@ -139,6 +143,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php foreach ($forecastApprovalList as $forecastApprovalItem): ?>
                         <?php $forecastApprovalReference[$forecastApprovalItem->coa_id][$forecastApprovalItem->date_transaction] = true; ?>
                     <?php endforeach; ?>
+                    
+                    <br /><br />
+                    
                     <?php foreach ($coas as $coa): ?>
                         <table class="forecast-data" id="forecast-data-coa-<?php echo $coa->id; ?>" style="width: 80%; margin: 0 auto; border-spacing: 0pt; display: none">
                             <tr class="forecast-header" style="background-color: gray">
@@ -221,13 +228,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                     <?php else: ?>
                                                         <?php echo CHtml::button('View', array(
                                                             'onclick' => '
-                                                                $("#ForecastApprovalCoaId").val("'.$coa->id.'");
-                                                                $("#ForecastApprovalTransactionDate").val("'.$forecastRow['transaction_date'].'");
-                                                                $("#ForecastApprovalDebitReceivableAmount").val("'.$debitReceivableAmount.'");
-                                                                $("#ForecastApprovalDebitJournalAmount").val("'.$debitJournalAmount.'");
-                                                                $("#ForecastApprovalCreditPayableAmount").val("'.$creditPayableAmount.'");
-                                                                $("#ForecastApprovalCreditJournalAmount").val("'.$creditJournalAmount.'");
-                                                                $("#ForecastApprovalSaldo").val("'.$saldo.'");
+                                                                $.ajax({
+                                                                    type: "POST",
+                                                                    dataType: "JSON",
+                                                                    url: "'.CController::createUrl('ajaxJsonForecastDataView', array('coaId' => $coa->id, 'transactionDate' => $forecastRow['transaction_date'])).'",
+                                                                    data: $("form").serialize(),
+                                                                    success: function(data) {
+                                                                        $("#ForecastApprovalViewTransactionDate").html(data.dateTransaction);
+                                                                        $("#ForecastApprovalViewDebitReceivableAmount").html(data.debitReceivable);
+                                                                        $("#ForecastApprovalViewDebitJournalAmount").html(data.debitJournal);
+                                                                        $("#ForecastApprovalViewCreditPayableAmount").html(data.creditPayable);
+                                                                        $("#ForecastApprovalViewCreditJournalAmount").html(data.creditJournal);
+                                                                        $("#ForecastApprovalViewSaldo").html(data.totalAmount);
+                                                                        $("#ForecastApprovalViewImage").attr("src", "' . Yii::app()->request->baseUrl . '/images/' . '" + data.forecastApprovalId + "." + data.imageFiletype);
+                                                                    },
+                                                                });
                                                                 $("#forecast-view-dialog").dialog("open");
                                                             ',
                                                             'style' => 'background-color: blue; color:white',
@@ -353,13 +368,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         </thead>
         <tbody>
             <tr>
-                <?php $forecastApproval = FinancialForecastApproval::model()->findByAttributes(array('coa_id' => $coa->id, 'date_transaction' => $forecastRow['transaction_date'])); ?>
-                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($forecastApproval, 'date_transaction')))); ?></td>
-                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'debit_receivable'))); ?></td>
-                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'debit_journal'))); ?></td>
-                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'credit_payable'))); ?></td>
-                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'credit_journal'))); ?></td>
-                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'total_amount'))); ?></td>
+                <?php //$forecastTransactionDate = isset($forecastRow['transaction_date']) ? $forecastRow['transaction_date'] : $dateNow; ?>
+                <?php //$forecastApproval = FinancialForecastApproval::model()->findByAttributes(array('coa_id' => $coa->id, 'date_transaction' => $forecastTransactionDate)); ?>
+                <td><span id="ForecastApprovalViewTransactionDate"></span><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'debit_receivable'))); ?></td>
+                <td><span id="ForecastApprovalViewDebitReceivableAmount"></span><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'debit_journal'))); ?></td>
+                <td><span id="ForecastApprovalViewDebitJournalAmount"></span><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'credit_payable'))); ?></td>
+                <td><span id="ForecastApprovalViewCreditPayableAmount"></span><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'credit_journal'))); ?></td>
+                <td><span id="ForecastApprovalViewCreditJournalAmount"></span><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($forecastApproval, 'total_amount'))); ?></td>
+                <td><span id="ForecastApprovalViewSaldo"></span><?php //echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($forecastApproval, 'date_transaction')))); ?></td>
             </tr>
         </tbody>
     </table>
@@ -367,7 +383,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     <hr />
 
     <div>
-        <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/' . CHtml::encode(CHtml::value($forecastApproval, 'id')), CHtml::encode(CHtml::value($forecastApproval, 'id'))); ?>
+        <?php echo CHtml::image('', '', array('id' => 'ForecastApprovalViewImage', 'style' => 'width: 512px; height: 512px')); ?>
     </div>
 </div>
 

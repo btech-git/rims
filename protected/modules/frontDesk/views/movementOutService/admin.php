@@ -1,58 +1,101 @@
 <?php
-/* @var $this RegistrationServiceController */
-/* @var $model RegistrationService */
+/* @var $this MovementOutHeaderController */
+/* @var $model MovementOutHeader */
 
-$this->breadcrumbs=array(
-	'Registration Services'=>array('admin'),
-	'Manage',
+$this->breadcrumbs = array(
+    'Movement Out Headers' => array('admin'),
+    'Manage',
 );
 
-$this->menu=array(
-	array('label'=>'List RegistrationService', 'url'=>array('index')),
-	array('label'=>'Create RegistrationService', 'url'=>array('create')),
-);
+/* $this->menu=array(
+  array('label'=>'List MovementOutHeader', 'url'=>array('index')),
+  array('label'=>'Create MovementOutHeader', 'url'=>array('create')),
+  ); */
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
+    $('.search-form').slideToggle(600);
+    $('.bulk-action').toggle();
+    $(this).toggleClass('active');
+    if ($(this).hasClass('active')) {
+        $(this).text('');
+    } else {
+        $(this).text('Advanced Search');
+    }
+    return false;
 });
 $('.search-form form').submit(function(){
-	$('#registration-service-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
+    $('#movement-out-header-grid').yiiGridView('update', {
+        data: $(this).serialize()
+    });
+    return false;
 });
 ");
 ?>
+<div id="maincontent">
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="clearfix page-action">
+                <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.create"))) ?>
+                <h2>Manage Pengeluaran Bahan Pemakaian</h2>
+            </div>
 
-<h1>Manage Registration Services</h1>
+            <div class="search-bar">
+                <div class="clearfix button-bar">
+                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					
+                    <div class="clearfix"></div>
+                    <div class="search-form" style="display:none">
+                        <?php $this->renderPartial('_search', array(
+                            'model' => $model,
+                        )); ?>
+                    </div><!-- search-form -->
+                </div>
+            </div>
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php //echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<!--<div class="search-form" style="display:none">
-<?php /*$this->renderPartial('_search',array(
-	'model'=>$model,
-));*/ ?>
-</div> search-form -->
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'registration-service-grid',
-    'dataProvider'=>$model->search(),
-    'filter'=>$model,
-    'columns'=>array(
-//        'id',
-        'registrationTransaction.transaction_number',
-        'service.name',
-//        'employee.name',
-        'claim',
-        'price',
-        array(
-            'class'=>'CButtonColumn',
-        ),
-    ),
-)); ?>
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'movement-out-header-grid',
+                    'dataProvider' => $dataProvider,
+                    'filter' => null,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'name' => 'movement_out_no',
+                            'value' => 'CHTml::link($data->movement_out_no, array("view", "id"=>$data->id))', 'type' => 'raw'
+                        ),
+                        'date_posting',
+                        'status',
+                        array(
+                            'name' => 'branch_id',
+                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                            'value' => '$data->branch->name'
+                        ),
+                        array(
+                            'name' => 'registration_transaction_number',
+                            'value' => '(!empty($data->registrationTransaction->transaction_number) ? $data->registrationTransaction->transaction_number : "")'
+                        ),
+                        array(
+                            'name' => 'user_id',
+                            'value' => '$data->user->username',
+                        ),
+                        array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{edit}',
+                            'buttons' => array(
+                                'edit' => array(
+                                    'label' => 'edit',
+                                    'url' => 'Yii::app()->createUrl("frontDesk/movementOutService/update", array("id"=>$data->id))',
+                                    'visible' => '($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && Yii::app()->user->checkAccess("movementOutEdit")',
+                                ),
+                            ),
+                        ),
+                    ),
+                )); ?>
+            </div>
+        </div>
+    </div> <!-- end row -->
+</div> <!-- end maintenance -->

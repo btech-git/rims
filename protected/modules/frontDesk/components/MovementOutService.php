@@ -66,6 +66,7 @@ class MovementOutService extends CComponent {
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
+            $this->header->addError('error', $e->getMessage());
         }
 
         return $valid;
@@ -76,7 +77,7 @@ class MovementOutService extends CComponent {
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
-                $fields = array('quantity, product_id');
+                $fields = array('quantity, product_id, warehouse_id');
                 $valid = $detail->validate($fields) && $valid;
                 echo $valid;
             }
@@ -98,8 +99,21 @@ class MovementOutService extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
+        
+        foreach ($this->details as $detail) {
+            $detail->movement_out_header_id = $this->header->id;
+            $detail->delivery_order_detail_id = null;
+            $detail->return_order_detail_id = null;
+            $detail->material_request_detail_id = null;
+            $detail->registration_product_id = null;
+            $detail->quantity_transaction = $detail->quantity;
+            $detail->quantity_receive = null;
+            $detail->quantity_receive_left = null;
+            
+            $valid = $detail->save() && $valid;
+        }
 
         return $valid;
     }

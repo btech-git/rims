@@ -558,7 +558,7 @@ class GeneralRepairRegistration extends CComponent {
     public function saveInvoice($dbConnection) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validateInvoice() && $this->flushInvoice();
+            $valid = $this->validateInvoice() && IdempotentManager::build()->save() && $this->flushInvoice();
             
             if ($valid) {
                 $dbTransaction->commit();

@@ -10,8 +10,6 @@
  */
 class Idempotent extends CActiveRecord {
 
-    const TOKEN_NAME = '__idempotent_token__';
-
     /**
      * @return string the associated database table name
      */
@@ -91,9 +89,4 @@ class Idempotent extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
-    public static function generateToken() {
-        return random_int(1, 1000000000);
-    }
-
 }

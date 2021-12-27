@@ -98,7 +98,12 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'status_document'); ?>
+                        <?php echo $form->dropDownList($model, 'status_document', array(
+                            'Draft' => 'Draft',
+                            'Revised' => 'Need Revision',
+                            'Rejected'=>'Rejected',
+                            'Approved' => 'Approved',
+                        ), array('empty' => '-- all --')); ?>
                     </div>
                 </div>
             </div>

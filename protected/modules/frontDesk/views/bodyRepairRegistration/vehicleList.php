@@ -34,7 +34,7 @@ $('.search-form form').submit(function(){
 ?>
 
 <div id="maincontent">
-	<div class="clearfix page-action">
+    <div class="clearfix page-action">
         <table style="border: 0px solid">
             <tr>
                 <td style="width: 70%; border: 0px solid"><h1>List Customer + Vehicle</h1></td>
@@ -43,7 +43,7 @@ $('.search-form form').submit(function(){
             </tr>
         </table>
         
-		<div class="grid-view">
+        <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'vehicle-grid',
                 'dataProvider' => $vehicleDataProvider,
@@ -117,7 +117,7 @@ $('.search-form form').submit(function(){
                     ),
                 ),
             )); ?>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 

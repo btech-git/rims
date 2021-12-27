@@ -189,7 +189,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('in_words', $this->in_words, true);
         $criteria->compare('note', $this->note, true);
 
-        if ($this->invoice_date != NULL OR $this->invoice_date != NULL) {
+        if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
             $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
             $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
         }
@@ -211,7 +211,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'invoice_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 100,
             ),
         ));
     }

@@ -62,6 +62,7 @@ $('.search-form form').submit(function(){
                         <?php $this->renderPartial('_search', array(
                             'model' => $model,
                             'customerType' => $customerType,
+                            'plateNumber' => $plateNumber,
                         )); ?>
                     </div><!-- search-form -->
                 </div>

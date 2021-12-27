@@ -27,9 +27,12 @@ class BodyRepairMechanicController extends Controller {
     }
 
     public function actionIndex() {
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 //        $user = Users::model()->findByPk(Yii::app()->user->id);
 //        $employee = Employee::model()->findByPk($user->employee_id);
+        $carMakeName = (isset($_GET['CarMakeName'])) ? $_GET['CarMakeName'] : '';
+        $carModelName = (isset($_GET['CarModelName'])) ? $_GET['CarModelName'] : '';
+        $workOrderDate = (isset($_GET['WorkOrderDate'])) ? $_GET['WorkOrderDate'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $workOrderNumber = (isset($_GET['WorkOrderNumber'])) ? $_GET['WorkOrderNumber'] : '';
 
@@ -44,27 +47,10 @@ class BodyRepairMechanicController extends Controller {
 //        }
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
-//        $modelDataProvider = $model->search();
-//        $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR'" . $waitlistStatusCondition);
-//        $modelDataProvider->criteria->compare('t.work_order_number', $model->work_order_number, true);
-//        $modelDataProvider->criteria->compare('t.branch_id', $model->branch_id);
-//        $modelDataProvider->criteria->compare('t.status', $model->status, true);
-//        $modelDataProvider->criteria->params = $waitlistStatusParams;
-//        $modelDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC';
 
         $waitlistDataProvider = $model->search();
         $waitlistDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.service_status = 'Bongkar - Pending' AND t.status = 'Waitlist'");
-        $waitlistDataProvider->criteria->compare('t.work_order_number', $model->work_order_number, true);
-        $waitlistDataProvider->criteria->compare('t.branch_id', $model->branch_id);
-        $waitlistDataProvider->criteria->compare('t.status', $model->status, true);
         $waitlistDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC';
-
-//        $queueDataProvider = $model->search();
-//        $queueDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.service_status = 'Bongkar - Pending' AND t.status = 'Queue'");
-//        $queueDataProvider->criteria->compare('t.work_order_number', $model->work_order_number, true);
-//        $queueDataProvider->criteria->compare('t.branch_id', $model->branch_id);
-//        $queueDataProvider->criteria->compare('t.status', $model->status, true);
-//        $queueDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date ASC';
 
         $registrationBodyRepairDetail = Search::bind(new RegistrationBodyRepairDetail('search'), isset($_GET['RegistrationBodyRepairDetail']) ? $_GET['RegistrationBodyRepairDetail'] : '');
 
@@ -101,14 +87,52 @@ class BodyRepairMechanicController extends Controller {
 
         $registrationHistoryDataProvider = $registrationBodyRepairDetail->search();
         $registrationHistoryDataProvider->criteria->together = 'true';
-        $registrationHistoryDataProvider->criteria->with = array('registrationTransaction');
+        $registrationHistoryDataProvider->criteria->with = array(
+            'registrationTransaction' => array(
+                'with' => array(
+                    'vehicle' => array(
+                        'with' => array(
+                            'carMake', 
+                            'carModel',
+                        ),
+                    ), 
+                ),
+            ),
+        );
         $registrationHistoryDataProvider->criteria->addCondition("registrationTransaction.repair_type = 'BR' AND registrationTransaction.work_order_number IS NOT NULL AND t.to_be_checked = 1 AND t.is_passed = 1");
         $registrationHistoryDataProvider->criteria->compare('t.mechanic_id', Yii::app()->user->id);
         $registrationHistoryDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
+        if (!empty($plateNumber)) {
+            $registrationHistoryDataProvider->criteria->compare('vehicle.plate_number', $plateNumber, true);
+        }
+        
+        if (!empty($carMakeName)) {
+            $registrationHistoryDataProvider->criteria->compare('carMake.name', $carMakeName, true);
+        }
+        
+        if (!empty($carModelName)) {
+            $registrationHistoryDataProvider->criteria->compare('carModel.name', $carModelName, true);
+        }
+        
+        if (!empty($branchId)) {
+            $registrationHistoryDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+        }
+        
+        if (!empty($workOrderNumber)) {
+            $registrationHistoryDataProvider->criteria->compare('registrationTransaction.work_order_number', $workOrderNumber, true);
+        }
+        
+        if (!empty($workOrderDate)) {
+            $registrationHistoryDataProvider->criteria->compare('registrationTransaction.work_order_date', $workOrderDate);
+        }
+        
         $this->render('index', array(
             'model' => $model,
             'branchId' => $branchId,
+            'carMakeName' => $carMakeName,
+            'carModelName' => $carModelName,
+            'workOrderDate' => $workOrderDate,
             'plateNumber' => $plateNumber,
             'workOrderNumber' => $workOrderNumber,
             'registrationBodyRepairDetail' => $registrationBodyRepairDetail,
@@ -447,41 +471,78 @@ class BodyRepairMechanicController extends Controller {
                 $model->attributes = $_GET['RegistrationTransaction'];
             }
 
-            $modelDataProvider = $model->search();
-            $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.status != 'Finished'");
+            $waitlistDataProvider = $model->search();
+            $waitlistDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.service_status = 'Bongkar - Pending' AND t.status = 'Waitlist'");
+            $waitlistDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC';
 
             $this->renderPartial('_mechanicWaitlistTable', array(
                 'model' => $model,
-                'modelDataProvider' => $modelDataProvider,
+                'waitlistDataProvider' => $waitlistDataProvider,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateTransactionHistoryTable() {
         if (Yii::app()->request->isAjaxRequest) {
-            $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-//            $mechanicId = isset($_GET['MechanicId']) ? $_GET['MechanicId'] : '';
+            $carMakeName = (isset($_GET['CarMakeName'])) ? $_GET['CarMakeName'] : '';
+            $carModelName = (isset($_GET['CarModelName'])) ? $_GET['CarModelName'] : '';
+            $workOrderDate = (isset($_GET['WorkOrderDate'])) ? $_GET['WorkOrderDate'] : '';
+            $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+            $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+            $workOrderNumber = (isset($_GET['WorkOrderNumber'])) ? $_GET['WorkOrderNumber'] : '';
 
             $registrationBodyRepairDetail = Search::bind(new RegistrationBodyRepairDetail('search'), isset($_GET['RegistrationBodyRepairDetail']) ? $_GET['RegistrationBodyRepairDetail'] : '');
 
             $registrationHistoryDataProvider = $registrationBodyRepairDetail->search();
             $registrationHistoryDataProvider->criteria->together = 'true';
-            $registrationHistoryDataProvider->criteria->with = array('registrationTransaction');
-            $registrationHistoryDataProvider->criteria->addCondition("registrationTransaction.service_status = 'Finish' AND registrationTransaction.repair_type = 'BR' AND registrationTransaction.work_order_number IS NOT NULL");
+            $registrationHistoryDataProvider->criteria->with = array(
+                'registrationTransaction' => array(
+                    'with' => array(
+                        'vehicle' => array(
+                            'with' => array(
+                                'carMake', 
+                                'carModel',
+                            ),
+                        ), 
+                    ),
+                ),
+            );
+            $registrationHistoryDataProvider->criteria->addCondition("registrationTransaction.repair_type = 'BR' AND registrationTransaction.work_order_number IS NOT NULL AND t.to_be_checked = 1 AND t.is_passed = 1");
             $registrationHistoryDataProvider->criteria->compare('t.mechanic_id', Yii::app()->user->id);
-            $registrationHistoryDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
             $registrationHistoryDataProvider->criteria->order = 'registrationTransaction.work_order_date DESC';
 
-//            if (empty($mechanicId)) {
-//                $registrationServiceDataProvider->criteria->compare('t.finish_mechanic_id', Yii::app()->user->id);
-//            } else {
-//                $registrationServiceDataProvider->criteria->compare('t.finish_mechanic_id', $mechanicId);
-//            };
+            if (!empty($plateNumber)) {
+                $registrationHistoryDataProvider->criteria->compare('vehicle.plate_number', $plateNumber, true);
+            }
+
+            if (!empty($carMakeName)) {
+                $registrationHistoryDataProvider->criteria->compare('carMake.name', $carMakeName, true);
+            }
+
+            if (!empty($carModelName)) {
+                $registrationHistoryDataProvider->criteria->compare('carModel.name', $carModelName, true);
+            }
+
+            if (!empty($branchId)) {
+                $registrationHistoryDataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+            }
+
+            if (!empty($workOrderNumber)) {
+                $registrationHistoryDataProvider->criteria->compare('registrationTransaction.work_order_number', $workOrderNumber, true);
+            }
+
+            if (!empty($workOrderDate)) {
+                $registrationHistoryDataProvider->criteria->compare('registrationTransaction.work_order_date', $workOrderDate);
+            }
 
             $this->renderPartial('_transactionHistoryTable', array(
                 'registrationHistoryDataProvider' => $registrationHistoryDataProvider,
                 'branchId' => $branchId,
-//                'mechanicId' => $mechanicId,
+                'carMakeName' => $carMakeName,
+                'carModelName' => $carModelName,
+                'workOrderDate' => $workOrderDate,
+                'plateNumber' => $plateNumber,
+                'workOrderNumber' => $workOrderNumber,
             ));
         }
     }

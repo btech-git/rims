@@ -49,7 +49,7 @@ class Cashs extends CComponent {
     public function save($dbConnection) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validate() && $this->flush();
+            $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
                 //print_r('1');
@@ -113,7 +113,34 @@ class Cashs extends CComponent {
             $new_detail[] = $detail->id;
         }
 
+        if (isset($this->header->images) && !empty($this->header->images)) {
+            foreach ($this->header->images as $i => $image) {
+                $postImage = new CashTransactionImages;
+                $postImage->cash_transaction_id = $this->header->id;
+                $postImage->is_inactive = 0;
+                $postImage->extension = $image->extensionName;
 
+                if ($postImage->save()) {
+                    $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $this->header->id;
+
+                    if (!file_exists($dir)) {
+                        mkdir($dir, 0777, true);
+                    }
+                    $path = $dir . '/' . $postImage->filename;
+                    $image->saveAs($path);
+                    $picture = Yii::app()->image->load($path);
+                    $picture->save();
+
+                    $thumb = Yii::app()->image->load($path);
+                    $thumb_path = $dir . '/' . $postImage->thumbname;
+                    $thumb->save($thumb_path);
+
+                    $square = Yii::app()->image->load($path);
+                    $square_path = $dir . '/' . $postImage->squarename;
+                    $square->save($square_path);
+                }
+            }
+        }
         //delete details
         $delete_array = array_diff($detail_id, $new_detail);
         if ($delete_array != NULL) {

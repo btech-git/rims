@@ -71,7 +71,7 @@ Yii::app()->clientScript->registerScript('search', "
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-transfer-request-grid',
                 'dataProvider'=>$model->search(),
-                'filter'=>$model,
+                'filter'=> null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
                     'cssFile'=>false,
@@ -99,7 +99,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'value'=>'$data->destinationBranch->name'
                     ),
                     array(
-                        'header' => 'Status',
+                        'header' => 'Delivery Status',
                         'value' => '$data->totalRemainingQuantityDelivered',
                     ),
                     array(

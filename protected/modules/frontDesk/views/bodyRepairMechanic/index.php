@@ -96,8 +96,14 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     'Finished' => array(
                         'content' => $this->renderPartial('_viewHistory', array(
-                            'registrationHistoryDataProvider' => $registrationHistoryDataProvider,
+                            'model' => $model,
                             'branchId' => $branchId,
+                            'carMakeName' => $carMakeName,
+                            'carModelName' => $carModelName,
+                            'workOrderDate' => $workOrderDate,
+                            'plateNumber' => $plateNumber,
+                            'workOrderNumber' => $workOrderNumber,
+                            'registrationHistoryDataProvider' => $registrationHistoryDataProvider,
                         ), true),
                     ),
                 ),

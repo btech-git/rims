@@ -136,22 +136,22 @@ class TransactionReturnItem extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('return_item_no', $this->return_item_no, true);
-        $criteria->compare('return_item_date', $this->return_item_date, true);
-        $criteria->compare('delivery_order_id', $this->delivery_order_id);
-        $criteria->compare('recipient_id', $this->recipient_id);
-        $criteria->compare('recipient_branch_id', $this->recipient_branch_id);
-        $criteria->compare('request_type', $this->request_type, true);
-        $criteria->compare('sent_request_id', $this->sent_request_id);
-        $criteria->compare('request_date', $this->request_date, true);
-        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
-        $criteria->compare('destination_branch', $this->destination_branch);
-        $criteria->compare('sales_order_id', $this->sales_order_id);
-        $criteria->compare('customer_id', $this->customer_id);
-        $criteria->compare('consignment_out_id', $this->consignment_out_id);
-        $criteria->compare('transfer_request_id', $this->transfer_request_id);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.return_item_no', $this->return_item_no, true);
+        $criteria->compare('t.return_item_date', $this->return_item_date, true);
+        $criteria->compare('t.delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('t.recipient_id', $this->recipient_id);
+        $criteria->compare('t.recipient_branch_id', $this->recipient_branch_id);
+        $criteria->compare('t.request_type', $this->request_type, true);
+        $criteria->compare('t.sent_request_id', $this->sent_request_id);
+        $criteria->compare('t.request_date', $this->request_date, true);
+        $criteria->compare('t.estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('t.destination_branch', $this->destination_branch);
+        $criteria->compare('t.sales_order_id', $this->sales_order_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.consignment_out_id', $this->consignment_out_id);
+        $criteria->compare('t.transfer_request_id', $this->transfer_request_id);
+        $criteria->compare('t.status', $this->status, true);
 
         $criteria->together = 'true';
         $criteria->with = array('recipientBranch', 'customer', 'deliveryOrder');

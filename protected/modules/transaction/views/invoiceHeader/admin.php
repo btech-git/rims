@@ -58,6 +58,7 @@ $('#invoiceSearch').submit(function(){
                                         </div>
                                     </div>
                                 </div>	
+                                
                                 <div class="field">
                                     <div class="row collapse">
                                         <div class="small-4 columns">
@@ -65,6 +66,20 @@ $('#invoiceSearch').submit(function(){
                                         </div>
                                         <div class="small-8 columns">
                                             <?php echo $form->dropDownList($model, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company',), array('prompt' => 'Select',)); ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <?php echo $form->label($model, 'reference_type', array('class' => 'prefix')); ?>
+                                        </div>
+                                        <div class="small-8 columns">						
+                                            <?php echo $form->dropDownList($model, 'reference_type', array(
+                                                '1' => 'Sales Order', 
+                                                '2' => 'Retail Sales',
+                                            ), array('prompt' => 'Select',)); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -143,6 +158,7 @@ $('#invoiceSearch').submit(function(){
                                                     )); ?>
                                                     <?php echo $form->error($model, 'due_date'); ?>
                                                 </div>
+                                                
                                                 <div class="medium-7 columns">
                                                     <div class="field">
                                                         <div class="row collapse">
@@ -188,10 +204,37 @@ $('#invoiceSearch').submit(function(){
                                 <div class="field">
                                     <div class="row collapse">
                                         <div class="small-4 columns">
+                                            <?php echo CHtml::label('SO #', '', array('class' => 'prefix')); ?>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo CHtml::textField('SaleOrderNumber', $saleOrderNumber); ?>
+                                        </div>
+                                    </div>
+                                </div>	
+
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <?php echo CHtml::label('WO #', '', array('class' => 'prefix')); ?>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo CHtml::textField('WorkOrderNumber', $workOrderNumber); ?>
+                                        </div>
+                                    </div>
+                                </div>	
+
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
                                             <?php echo $form->label($model, 'status', array('class' => 'prefix')); ?>
                                         </div>
                                         <div class="small-8 columns">						
-                                            <?php echo $form->dropDownList($model, 'status', array('PAID' => 'PAID', 'NOT PAID' => 'NOT PAID',), array('prompt' => 'Select',)); ?>
+                                            <?php echo $form->dropDownList($model, 'status', array(
+                                                'PAID' => 'PAID', 
+                                                'NOT PAID' => 'NOT PAID',
+                                                'CLEAR' => 'CLEAR',
+                                                'INVOICING' => 'INVOICING',
+                                            ), array('prompt' => 'Select',)); ?>
                                         </div>
                                     </div>
                                 </div>	
@@ -211,8 +254,8 @@ $('#invoiceSearch').submit(function(){
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'invoice-header-grid',
-                    'dataProvider' => $model->search(),
-                    'filter' => $model,
+                    'dataProvider' => $dataProvider,
+                    'filter' => null,
                     // 'summaryText'=>'',
                     'rowCssClassExpression' => '(($data->status == "PAID")?"hijau":"merah")',
                     'template' => '{items}<!--<div class="clearfix">{summary}{pager}</div>-->',

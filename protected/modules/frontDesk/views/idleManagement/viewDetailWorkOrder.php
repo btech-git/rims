@@ -60,6 +60,9 @@ $('.search-form form').submit(function() {
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
+    <?php echo CHtml::link('Registration', array('/frontDesk/generalRepairRegistration/view', 'id'=>$registration->id), array('target' => '_blank', 'class'=>'button primary right')); ?>
+    <span style="float: right">&nbsp;&nbsp;&nbsp;</span>
+    <?php echo CHtml::link('Inspection', array('/frontDesk/vehicleInspection/create', 'vehicleId'=>$registration->vehicle_id, 'wonumber' => $registration->work_order_number), array('target' => '_blank', 'class'=>'button success right')); ?>
     <div class="clearfix page-action">
         <h1>Management General Repair Progress</h1>
 

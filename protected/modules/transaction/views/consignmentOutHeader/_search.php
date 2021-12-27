@@ -6,13 +6,13 @@
 
 <div class="wide form" id="advSearch">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'action'=>Yii::app()->createUrl($this->route),
-	'method'=>'get',
-)); ?>
+    <?php $form=$this->beginWidget('CActiveForm', array(
+            'action'=>Yii::app()->createUrl($this->route),
+            'method'=>'get',
+    )); ?>
 
-	<div class="row">
-		<div class="small-12 medium-6 columns">
+    <div class="row">
+        <div class="small-12 medium-6 columns">
             <!-- BEGIN FIELDS -->
             <div class="field">
                 <div class="row collapse">
@@ -44,7 +44,12 @@
                         <?php echo $form->label($model,'status', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'status',array('size'=>10,'maxlength'=>10)); ?>
+                        <?php echo $form->dropDownList($model, 'status', array(
+                            'Draft' => 'Draft',
+                            'Revised' => 'Need Revision',
+                            'Rejected'=>'Rejected',
+                            'Approved' => 'Approved',
+                        ), array('empty' => '-- all --')); ?>
                     </div>
                 </div>
             </div>	
@@ -92,6 +97,6 @@
             </div>
         </div>
     </div>
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- search-form -->

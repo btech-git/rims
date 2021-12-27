@@ -115,7 +115,7 @@ $('.search-form form').submit(function(){
                                 'edit' => array(
                                     'label' => 'edit',
                                     'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("cashTransactionEdit")',
+                                    'visible' => 'Yii::app()->user->checkAccess("cashierHead") || ($data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("cashTransactionEdit"))',
                                 ),
                             ),
                         ),

@@ -57,7 +57,7 @@ $('.search-form form').submit(function(){
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'movement-in-header-grid',
                     'dataProvider' => $model->search(),
-                    'filter' => $model,
+                    'filter' => null,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
                         'cssFile' => false,

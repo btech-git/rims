@@ -22,7 +22,8 @@
         ),
         array(
             'header'=>'WO #', 
-            'value'=>'$data->work_order_number'
+            'value'=>'CHtml::link($data->work_order_number, array("/frontDesk/bodyRepairManagement/viewDetailWorkOrder", "registrationId"=>$data->id), array("target" => "blank"))',
+            'type'=>'raw',
         ),
         array(
             'name'=>'WO Date', 
@@ -34,25 +35,19 @@
             'value' => '$data->total_time',
         ),
         array(
-            'header'=>'Status',
-            'value'=>'$data->service_status',
-            'type'=>'raw',
-            'filter'=> false,
-        ),
-        array(
             'header'=>'Branch', 
-            'value'=>'!empty($data->branch_id) ? $data->branch->name : "" '
+            'value'=>'!empty($data->branch_id) ? $data->branch->code : "" '
         ),
-        array(
-            'class'=>'CButtonColumn',
-            'template'=>'{vw}',
-            'buttons'=>array(
-                'vw' => array(
-                    'label'=>'Show',
-                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairManagement/assignMechanic", array("registrationId"=>$data->id))',
-                    'options'=>array('target' => '_blank'),
-                ),
-            ),
-        ),
+//        array(
+//            'class'=>'CButtonColumn',
+//            'template'=>'{vw}',
+//            'buttons'=>array(
+//                'vw' => array(
+//                    'label'=>'Show',
+//                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairManagement/assignMechanic", array("registrationId"=>$data->id))',
+//                    'options'=>array('target' => '_blank'),
+//                ),
+//            ),
+//        ),
     ),
 )); ?>

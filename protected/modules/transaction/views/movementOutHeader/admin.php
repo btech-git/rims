@@ -56,7 +56,7 @@ $('.search-form form').submit(function(){
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'movement-out-header-grid',
                     'dataProvider' => $model->search(),
-                    'filter' => $model,
+                    'filter' => null,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
                         'cssFile' => false,
@@ -70,13 +70,13 @@ $('.search-form form').submit(function(){
                         'date_posting',
                         'status',
                         array(
-                            'name' => 'user_id',
-                            'value' => '$data->user->username',
-                        ),
-                        array(
                             'name' => 'branch_id',
                             'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                             'value' => '$data->branch->name'
+                        ),
+                        array(
+                            'name' => 'registration_transaction_number',
+                            'value' => '(!empty($data->registrationTransaction->transaction_number) ? $data->registrationTransaction->transaction_number : "")'
                         ),
                         array(
                             'name' => 'delivery_order_number',
@@ -85,6 +85,10 @@ $('.search-form form').submit(function(){
                         array(
                             'name' => 'return_order_number',
                             'value' => '(!empty($data->returnOrder->return_order_no)?$data->returnOrder->return_order_no:"")'
+                        ),
+                        array(
+                            'name' => 'user_id',
+                            'value' => '$data->user->username',
                         ),
                         array(
                             'class' => 'CButtonColumn',

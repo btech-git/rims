@@ -34,9 +34,6 @@ class BodyRepairManagementController extends Controller {
 
         $historyDataProvider = $model->search();
         $historyDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.service_status = 'Finished'");
-        $historyDataProvider->criteria->compare('t.work_order_number', $model->work_order_number, true);
-        $historyDataProvider->criteria->compare('t.branch_id', $model->branch_id);
-        $historyDataProvider->criteria->compare('t.status', $model->status, true);
         $historyDataProvider->criteria->order = 't.work_order_date DESC, t.vehicle_id ASC';
 
         $employee = Search::bind(new EmployeeBranchDivisionPositionLevel('search'), isset($_GET['EmployeeBranchDivisionPositionLevel']) ? $_GET['EmployeeBranchDivisionPositionLevel'] : '');
@@ -708,6 +705,46 @@ class BodyRepairManagementController extends Controller {
         
     }
     
+    public function actionAjaxHtmlUpdateWaitlistTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $model = new RegistrationTransaction('search');
+            $model->unsetAttributes();  // clear any default values
+
+            if (isset($_GET['RegistrationTransaction'])) {
+                $model->attributes = $_GET['RegistrationTransaction'];
+            }
+
+            $waitlistDataProvider = $model->search();
+            $waitlistDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.service_status = 'Bongkar - Pending' AND t.status = 'Waitlist'");
+            $waitlistDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC';
+
+            $this->renderPartial('_waitlistTable', array(
+                'model' => $model,
+                'waitlistDataProvider' => $waitlistDataProvider,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateTransactionHistoryTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $model = new RegistrationTransaction('search');
+            $model->unsetAttributes();  // clear any default values
+
+            if (isset($_GET['RegistrationTransaction'])) {
+                $model->attributes = $_GET['RegistrationTransaction'];
+            }
+
+            $historyDataProvider = $model->search();
+            $historyDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.service_status = 'Finished'");
+            $historyDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC';
+
+            $this->renderPartial('_transactionHistoryTable', array(
+                'model' => $model,
+                'historyDataProvider' => $historyDataProvider,
+            ));
+        }
+    }
+
     public function loadModel($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
         if ($model === null) {

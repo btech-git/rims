@@ -406,7 +406,7 @@
                 <?php echo CHtml::submitButton($cashTransaction->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
             
-            <?php echo CHtml::hiddenField(Idempotent::TOKEN_NAME, Idempotent::generateToken()); ?>
+            <?php echo IdempotentManager::generate(); ?>
 
         </div>
     </div>

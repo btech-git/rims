@@ -113,7 +113,6 @@ $this->breadcrumbs = array(
                             })'
                         )); ?>
                     
-                        <?php echo CHtml::hiddenField(Idempotent::TOKEN_NAME, Idempotent::generateToken()); ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -234,4 +233,7 @@ $this->breadcrumbs = array(
         <?php endif; ?>
     </div>
 </div>
+
+<?php echo IdempotentManager::generate(); ?>
+
 <?php echo CHtml::endForm(); ?>

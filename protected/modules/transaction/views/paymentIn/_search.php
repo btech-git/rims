@@ -66,16 +66,26 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->dropDownList($model, 'invoice_status', array(
-                            'DRAFT' => 'DRAFT',
-                            'INVOICING' => 'INVOICING',
-                            'PARTIALLY PAID' => 'PARTIALLY PAID',
-                            'PAID' => 'PAID',
-                            'CLEAR' => 'CLEAR',
-                            'CANCELLED' => 'CANCELLED',
+                            'Draft' => 'Draft',
+                            'Revised' => 'Need Revision',
+                            'Rejected'=>'Rejected',
+                            'Approved' => 'Approved',
                         ), array('empty' => '-- all --')); ?>
                     </div>
                 </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Plate #', '', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::textField('PlateNumber', $plateNumber, array('size'=>50,'maxlength'=>50)); ?>
+                    </div>
+                </div>
             </div>	
+
         </div>
             
         <div class="small-12 medium-6 columns">
@@ -127,6 +137,17 @@
                 </div>
             </div>
 
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model, 'notes', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->textField($model, 'notes'); ?>
+                    </div>
+                </div>
+            </div>
+            
             <div class="field buttons text-right">
                 <?php echo CHtml::submitButton('Search',array('class'=>'button cbutton')); ?>
             </div>

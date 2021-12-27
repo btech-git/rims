@@ -140,6 +140,12 @@ Yii::app()->clientScript->registerScript('search', "
                             'finishedPolesDataProvider' => $finishedPolesDataProvider,
                         ), true),
                     ),
+                    'Finished' => array(
+                        'content' => $this->renderPartial('_viewHistory', array(
+                            'model' => $model,
+                            'historyDataProvider' => $historyDataProvider,
+                        ), true),
+                    ),
                 ),
                 // additional javascript options for the tabs plugin
                 'options' => array(

@@ -70,7 +70,7 @@
 
     <?php //echo CHtml::button('Test', array('id' => 'TestButton'));  ?>
 
-    <?php echo CHtml::hiddenField(Idempotent::TOKEN_NAME, Idempotent::generateToken()); ?>
+    <?php echo IdempotentManager::generate(); ?>
 
     <?php $this->endWidget(); ?>
 </div><!-- form -->

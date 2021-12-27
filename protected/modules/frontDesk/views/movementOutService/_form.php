@@ -52,7 +52,7 @@
 
                     <div class="row">
                         <div class="medium-12 columns">
-                            <h2>Movement Out</h2>
+                            <h2>Pengeluaran Bahan Pemakaian</h2>
                             
                             <hr />
 

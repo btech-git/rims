@@ -69,7 +69,7 @@ Yii::app()->clientScript->registerScript('search', "
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-sent-request-grid',
                 'dataProvider'=>$model->search(),
-                'filter'=>$model,
+                'filter'=> null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
                     'cssFile'=>false,
@@ -86,8 +86,13 @@ Yii::app()->clientScript->registerScript('search', "
                     // 'requester_id',
                     array(
                         'name'=>'requester_branch_id',
-                        'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                        'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value'=>'$data->requesterBranch->name'
+                    ),
+                    array(
+                        'name'=>'destination_branch_id',
+//                        'filter' => CHtml::activeDropDownList($model, 'destination_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                        'value'=>'$data->destinationBranch->name'
                     ),
                     'status_document',
                     array(
@@ -95,7 +100,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'value'=>'$data->approval!= null?$data->approval->username:""',
                     ),
                     array(
-                        'header' => 'Status',
+                        'header' => 'Delivery Status',
                         'value' => '$data->totalRemainingQuantityDelivered',
                     ),
                     array(

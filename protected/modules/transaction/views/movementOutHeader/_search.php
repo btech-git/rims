@@ -56,7 +56,12 @@
                         <?php echo $form->label($model,'status', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'status',array('size'=>20,'maxlength'=>20)); ?>
+                        <?php echo $form->dropDownList($model, 'status', array(
+                            'Draft' => 'Draft',
+                            'Revised' => 'Need Revision',
+                            'Rejected'=>'Rejected',
+                            'Approved' => 'Approved',
+                        ), array('empty' => '-- all --')); ?>
                     </div>
                 </div>
             </div>	

@@ -113,7 +113,6 @@ class PaymentInController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($invoiceId) {
-        $idempotent = new Idempotent;
         $model = new PaymentIn;
         
         $invoice = InvoiceHeader::model()->findByPk($invoiceId);
@@ -132,82 +131,74 @@ class PaymentInController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['PaymentIn']) ) {
+        if (isset($_POST['PaymentIn']) && IdempotentManager::check()) {
             $model->attributes = $_POST['PaymentIn'];
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
-
-            $idempotent->form_token = $_POST[Idempotent::TOKEN_NAME];
-            $idempotent->form_name = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id . '/' . Yii::app()->controller->action->id;
-            $idempotent->posting_date = date('Y-m-d');
-            
-            if ($model->save(Yii::app()->db) && isset($_POST[Idempotent::TOKEN_NAME])) {
                 
-                $dbTransaction = Yii::app()->db->beginTransaction();
-                try {
-                    $valid = $idempotent->save();
-                    
-                    if (!empty($registrationTransaction)) {
-                        $registrationTransaction->payment_status = 'CLEAR';
-                        $registrationTransaction->update(array('payment_status'));
-                    }
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = IdempotentManager::build()->save() && $model->save();
 
-                    //update Invoice
-                    $invoice->payment_amount = $invoice->getTotalPayment();
-                    $invoice->payment_left = $invoice->getTotalRemaining();
-                    $invoice->update(array('payment_amount', 'payment_left'));
+                if (!empty($registrationTransaction)) {
+                    $registrationTransaction->payment_status = 'CLEAR';
+                    $registrationTransaction->update(array('payment_status'));
+                }
 
-                    $criteria = new CDbCriteria;
-                    $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
+                //update Invoice
+                $invoice->payment_amount = $invoice->getTotalPayment();
+                $invoice->payment_left = $invoice->getTotalRemaining();
+                $invoice->update(array('payment_amount', 'payment_left'));
 
-                    if (isset($images) && !empty($images)) {
-                        foreach ($model->images as $i => $image) {
-                            $postImage = new PaymentInImages;
-                            $postImage->payment_in_id = $model->id;
-                            $postImage->is_inactive = $model::STATUS_ACTIVE;
-                            $postImage->extension = $image->extensionName;
-                            $valid = $postImage->save() && $valid;
+                $criteria = new CDbCriteria;
+                $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
 
-                            if ($valid) {
-                                $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id;
+                if (isset($images) && !empty($images)) {
+                    foreach ($model->images as $i => $image) {
+                        $postImage = new PaymentInImages;
+                        $postImage->payment_in_id = $model->id;
+                        $postImage->is_inactive = $model::STATUS_ACTIVE;
+                        $postImage->extension = $image->extensionName;
+                        $valid = $postImage->save() && $valid;
 
-                                if (!file_exists($dir)) {
-                                    mkdir($dir, 0777, true);
-                                }
+                        if ($valid) {
+                            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id;
 
-                                $path = $dir . '/' . $postImage->filename;
-                                $image->saveAs($path);
-                                $picture = Yii::app()->image->load($path);
-                                $valid = $picture->save() && $valid;
-
-                                $thumb = Yii::app()->image->load($path);
-                                $thumb_path = $dir . '/' . $postImage->thumbname;
-                                $valid = $thumb->save($thumb_path) && $valid;
-
-                                $square = Yii::app()->image->load($path);
-                                $square_path = $dir . '/' . $postImage->squarename;
-                                $valid = $square->save($square_path) && $valid;
+                            if (!file_exists($dir)) {
+                                mkdir($dir, 0777, true);
                             }
+
+                            $path = $dir . '/' . $postImage->filename;
+                            $image->saveAs($path);
+                            $picture = Yii::app()->image->load($path);
+                            $valid = $picture->save() && $valid;
+
+                            $thumb = Yii::app()->image->load($path);
+                            $thumb_path = $dir . '/' . $postImage->thumbname;
+                            $valid = $thumb->save($thumb_path) && $valid;
+
+                            $square = Yii::app()->image->load($path);
+                            $square_path = $dir . '/' . $postImage->squarename;
+                            $valid = $square->save($square_path) && $valid;
                         }
                     }
-                    
-                    if ($valid) {
-                        $dbTransaction->commit();
-                    } else {
-                        $dbTransaction->rollback();
-                    }
-                } catch (Exception $e) {
-                    $dbTransaction->rollback();
-                    $valid = false;
                 }
 
                 if ($valid) {
-                    $this->redirect(array('view', 'id' => $model->id));
+                    $dbTransaction->commit();
+                } else {
+                    $dbTransaction->rollback();
                 }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
+            }
+
+            if ($valid) {
+                $this->redirect(array('view', 'id' => $model->id));
             }
         }
 
         $this->render('create', array(
-            'idempotent' => $idempotent,
             'model' => $model,
             'invoice' => $invoice,
         ));
@@ -426,13 +417,22 @@ class PaymentInController extends Controller {
         $dataProvider = $model->search();
         $dataProvider->criteria->with = array(
             'customer',
-            'invoice',
             'paymentInApprovals',
+            'invoice' => array(
+                'with' => array(
+                    'vehicle',
+                ),
+            ),
         );
         $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '' ;
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '' ;
 
         if (!empty($customerType)) {
             $dataProvider->criteria->compare('customer.customer_type', $customerType);        
+        }
+        
+        if (!empty($plateNumber)) {
+            $dataProvider->criteria->compare('vehicle.plate_number', $plateNumber, true);        
         }
         
         $this->render('admin', array(
@@ -440,6 +440,7 @@ class PaymentInController extends Controller {
             'invoice' => $invoice,
             'invoiceDataProvider' => $invoiceDataProvider,
             'customerType' => $customerType,
+            'plateNumber' => $plateNumber,
             'dataProvider' => $dataProvider,
         ));
     }

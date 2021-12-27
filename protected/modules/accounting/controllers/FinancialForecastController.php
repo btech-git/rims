@@ -83,8 +83,9 @@ class FinancialForecastController extends Controller {
             $financialForecastApproval->date_approval = date('Y-m-d');
             $financialForecastApproval->time_approval = date('H:i:s');
             $financialForecastApproval->user_id_approval = Yii::app()->user->id;
+            $financialForecastApproval->image_filetype = pathinfo($_FILES['ForecastApprovalUploadImage']['name'], PATHINFO_EXTENSION);
             if ($financialForecastApproval->save()) {
-                move_uploaded_file($_FILES['ForecastApprovalUploadImage']['tmp_name'], '/home/pmahendro/public_html/rims/images/' . $financialForecastApproval->id . '.jpg');
+                move_uploaded_file($_FILES['ForecastApprovalUploadImage']['tmp_name'], Yii::app()->basePath . '/../images/' . $financialForecastApproval->id . '.' . $financialForecastApproval->image_filetype);
             }
         }
         
@@ -152,6 +153,32 @@ class FinancialForecastController extends Controller {
                 'companyId' => $companyId,
                 'coaId' => $coaId,
             ), false, true);
+        }
+    }
+
+    public function actionAjaxJsonForecastDataView($coaId, $transactionDate) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $forecastApproval = FinancialForecastApproval::model()->findByAttributes(array('coa_id' => $coaId, 'date_transaction' => $transactionDate));
+
+            $debitReceivable = Yii::app()->numberFormatter->format('#,##0', $forecastApproval->debit_receivable);
+            $debitJournal = Yii::app()->numberFormatter->format('#,##0', $forecastApproval->debit_journal);
+            $creditPayable = Yii::app()->numberFormatter->format('#,##0', $forecastApproval->credit_payable);
+            $creditJournal = Yii::app()->numberFormatter->format('#,##0', $forecastApproval->credit_journal);
+            $totalAmount = Yii::app()->numberFormatter->format('#,##0', $forecastApproval->total_amount);
+            $dateTransaction = Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($forecastApproval->date_transaction));
+            $imageFiletype = $forecastApproval->image_filetype;
+            $forecastApprovalId = $forecastApproval->id;
+            
+            echo CJSON::encode(array(
+                'debitReceivable' => $debitReceivable,
+                'debitJournal' => $debitJournal,
+                'creditPayable' => $creditPayable,
+                'creditJournal' => $creditJournal,
+                'totalAmount' => $totalAmount,
+                'dateTransaction' => $dateTransaction,
+                'imageFiletype' => $imageFiletype,
+                'forecastApprovalId' => $forecastApprovalId,
+            ));
         }
     }
 

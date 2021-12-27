@@ -44,16 +44,5 @@
             'header'=>'Branch', 
             'value'=>'!empty($data->registrationTransaction->branch_id) ? $data->registrationTransaction->branch->code : "" '
         ),
-//        array(
-//            'class'=>'CButtonColumn',
-//            'template'=>'{vw}',
-//            'buttons'=>array(
-//                'vw' => array(
-//                    'label'=>'detail',
-//                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairMechanic/viewDetailWorkOrder", array("registrationId"=>$data->registration_transaction_id))',
-//                    'options'=>array('target' => '_blank'),
-//                ),
-//            ),
-//        ),
     ),
 )); ?>

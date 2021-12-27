@@ -417,8 +417,6 @@
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
             
-            <?php echo CHtml::hiddenField(Idempotent::TOKEN_NAME, Idempotent::generateToken()); ?>
-
         </div>
         <div class="small-12 medium-6 columns">
 
@@ -436,6 +434,8 @@
             
         </div>
     </div>
+
+    <?php echo IdempotentManager::generate(); ?>
 
     <?php $this->endWidget(); ?>
 

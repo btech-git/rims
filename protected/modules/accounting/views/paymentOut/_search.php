@@ -61,7 +61,19 @@
                         )); ?>
                     </div>
                 </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'notes', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->textField($model,'notes'); ?>
+                    </div>
+                </div>
             </div>	
+
         </div>
         <div class="small-12 medium-6 columns">
             <!-- BEGIN FIELDS -->

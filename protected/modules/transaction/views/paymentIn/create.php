@@ -10,7 +10,6 @@ $this->breadcrumbs = array(
 
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
-        'idempotent' => $idempotent,
         'model' => $model,
         'invoice' => $invoice,
     )); ?>
