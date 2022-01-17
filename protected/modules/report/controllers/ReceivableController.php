@@ -25,8 +25,8 @@ class ReceivableController extends Controller {
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
 
-        $startDate = (isset($_GET['StartDate'])) ? '2019-01-01' : '';
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';

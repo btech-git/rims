@@ -40,8 +40,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
 
                                 <div class="small-4 columns">
-                                    <?php echo CHtml::textField('StartDate', $startDate, array('readOnly' => true)); ?>
-                                    <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    <?php //echo CHtml::textField('StartDate', $startDate, array('readOnly' => true)); ?>
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
@@ -50,7 +50,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'readonly' => true,
                                             'placeholder' => 'Mulai',
                                         ),
-                                    ));*/ ?>
+                                    )); ?>
                                 </div>
 
                                 <div class="small-4 columns">
@@ -95,7 +95,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php $branch = Branch::model()->findByPk($branchId); ?>
                     <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
                     <div style="font-size: larger">Laporan Balance Sheet Induk</div>
-                    <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+                    <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
                 </div>
 
                 <br />

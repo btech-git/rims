@@ -136,7 +136,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">Approval</td>
                                         </tr>
 
-                                        <?php $forecastData = $coa->getFinancialForecastReport($datePrevious); ?>
+                                        <?php $forecastData = $coa->getFinancialForecastReport($datePrevious, $dateNow); ?>
                                         <?php foreach ($forecastData as $forecastRow): ?>
                                             <?php $debitReceivableAmount = $forecastRow['total_receivable_debit']; ?>
                                             <?php $debitJournalAmount = $forecastRow['total_journal_debit']; ?>

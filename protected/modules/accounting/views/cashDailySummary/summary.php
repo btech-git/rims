@@ -29,4 +29,10 @@ $this->menu=array(
     'paymentInRetailResultSet' => $paymentInRetailResultSet,
     'paymentInRetailList' => $paymentInRetailList,
     'existingDate' => $existingDate,
+    'saleOrder' => $saleOrder,
+    'saleOrderDataProvider' => $saleOrderDataProvider,
+    'registrationTransaction' => $registrationTransaction,
+    'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+    'purchaseOrder' => $purchaseOrder,
+    'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
 )); ?>

@@ -69,6 +69,7 @@
  * @property User $user
  * @property Customer $customer
  * @property Vehicle $vehicle
+ * @property RegistrationServiceManagement[] $registrationServiceManagements
  */
 class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
@@ -148,6 +149,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
+            'registrationServiceManagements' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'registration_transaction_id'),
         );
     }
 
@@ -342,7 +344,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 ),
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 100,
             ),
         ));
     }
@@ -403,7 +405,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'transaction_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 50,
+                'pageSize' => 500,
             ),
         ));
     }

@@ -104,6 +104,7 @@ $('.search-form form').submit(function(){
                             '_viewServiceHistory',
                             array(
                                 'vehicle' => $vehicle,
+                                'registration' => $registration,
                             ), true
                         ),
                     ),

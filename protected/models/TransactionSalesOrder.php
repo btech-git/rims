@@ -183,7 +183,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'sale_order_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             ),
         ));
     }

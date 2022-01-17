@@ -60,7 +60,7 @@ Yii::app()->clientScript->registerCss('_report', '
 				<?php foreach ($transaction->transactionPurchaseOrderDetails as $key => $transactionDetail): ?>
 					<tr style="background:#efefef;border:0px;">
 						<td><?php echo $transactionDetail->product->code; ?></td>
-						<td><?php echo $transactionDetail->product->name; ?></td>
+						<td><?php echo CHtml::encode(CHtml::value($transactionDetail, 'product.name')); ?></td>
 						<td><?php echo $transactionDetail->product->productMasterCategory->name; ?></td>
 						<td><?php echo $transactionDetail->product->productSubMasterCategory->name; ?></td>
 						<td><?php echo $transactionDetail->product->productSubCategory->name; ?></td>

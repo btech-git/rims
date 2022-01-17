@@ -80,6 +80,7 @@ function tanggal($date) {
             </table>
         </div>
     </div>
+    <div class="center">PROBLEM: <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></div>
 
     <div class="purchase-order">
         <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>

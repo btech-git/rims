@@ -290,11 +290,18 @@ class BodyRepairManagementController extends Controller {
                 $registrationMemo->user_id = Yii::app()->user->id;
                 $registrationMemo->save();
 //            }
-        } else if (isset($_POST['SubmitPass']) || isset($_POST['SubmitFail'])) {
+        } else if (isset($_POST['SubmitPass'])) {
             if ($bodyRepairManagement->runningDetail !== null) {
-                $bodyRepairManagement->runningDetail->is_passed = isset($_POST['SubmitPass']);
+                $bodyRepairManagement->runningDetail->is_passed = true;
                 
                 if ($bodyRepairManagement->save(Yii::app()->db)) {
+                    $this->redirect(array('index'));
+                }
+            }
+        } else if (isset($_POST['SubmitFail']) && isset($_POST['SubmitServiceName'])) {
+            if ($bodyRepairManagement->runningDetail !== null) {
+                
+                if ($bodyRepairManagement->saveForFail(Yii::app()->db, $_POST['SubmitServiceName'])) {
                     $this->redirect(array('index'));
                 }
             }
@@ -418,7 +425,7 @@ class BodyRepairManagementController extends Controller {
 
     public function actionProceedToQueue($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
-        $model->status = 'Queue Bongkar Pasang';
+        $model->status = 'Queue Bongkar';
         
         if ($model->update(array('status'))) {
             $this->redirect(array('index'));
@@ -433,7 +440,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('start_date_time', 'mechanic_id'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Bongkar Pasang - Started';
+            $registrationTransaction->service_status = 'Bongkar - Started';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));
@@ -448,7 +455,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('start_date_time', 'mechanic_id'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Spare Part - Started';
+            $registrationTransaction->service_status = 'Sparepart - Started';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));
@@ -463,7 +470,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('start_date_time', 'mechanic_id'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Las Ketok - Started';
+            $registrationTransaction->service_status = 'KetokLas - Started';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));
@@ -523,7 +530,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('start_date_time', 'mechanic_id'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Finishing - Started';
+            $registrationTransaction->service_status = 'Pasang - Started';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));
@@ -569,7 +576,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('finish_date_time', 'total_time', 'to_be_checked'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Bongkar Pasang - Checking';
+            $registrationTransaction->service_status = 'Bongkar - Checking';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));
@@ -585,7 +592,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('finish_date_time', 'total_time', 'to_be_checked'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Spare Part - Checking';
+            $registrationTransaction->service_status = 'Sparepart - Checking';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));
@@ -601,7 +608,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('finish_date_time', 'total_time', 'to_be_checked'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Las Ketok - Checking';
+            $registrationTransaction->service_status = 'KetokLas - Checking';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));
@@ -665,7 +672,7 @@ class BodyRepairManagementController extends Controller {
         
         if ($registrationBodyRepairDetail->update(array('finish_date_time', 'total_time', 'to_be_checked'))) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationBodyRepairDetail->registration_transaction_id);
-            $registrationTransaction->service_status = 'Finishing - Checking';
+            $registrationTransaction->service_status = 'Pasang - Checking';
             $registrationTransaction->update(array('service_status'));
             
             $this->redirect(array('index'));

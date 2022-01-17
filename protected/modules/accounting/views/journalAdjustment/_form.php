@@ -1,7 +1,7 @@
 <div id="maincontent">
     <div class="clearfix page-action">
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/journalAdjustment/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
-        <h1><?php if ($journalVoucher->header->isNewRecord){ echo "New Jurnal Penyesuaian"; }else{ echo "Update Jurnal Penyesuaian";}?></h1>
+        <h1><?php if ($journalVoucher->header->isNewRecord){ echo "New Jurnal Umum"; }else{ echo "Update Jurnal Umum";}?></h1>
 
         <div class="form">
             <?php echo CHtml::beginForm(); ?>

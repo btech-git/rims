@@ -12,7 +12,7 @@
             <th style="text-align: center">WO #</th>
             <th style="text-align: center">Status</th>
             <th style="text-align: center">Duration</th>
-            <th style="text-align: center">Insurance</th>
+            <th style="text-align: center">BR/GR</th>
             <th style="text-align: center">Action</th>
         </tr>
     </thead>
@@ -42,7 +42,7 @@
                 }
                 ?>
                 <td><?php echo $duration; ?></td>
-                <td><?php echo $model->insuranceCompany != null ? $model->insuranceCompany->name : '-'; ?></td>
+                <td><?php echo $model->repair_type; ?></td>
                 <td>
                     <?php /*echo CHtml::tag('button', array(
                         'disabled' => count($regServices) == 0 ? true : false,

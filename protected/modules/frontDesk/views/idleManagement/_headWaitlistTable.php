@@ -9,7 +9,7 @@
             <th style="text-align: center; font-weight: bold">WO Date</th>
             <th style="text-align: center; font-weight: bold">WO Time</th>
             <th style="text-align: center; font-weight: bold">Service</th>
-            <th style="text-align: center; font-weight: bold">Duration</th>
+            <!--<th style="text-align: center; font-weight: bold">Duration</th>-->
             <th style="text-align: center; font-weight: bold">WO Status</th>
             <th style="text-align: center; font-weight: bold">Branch</th>
             <th style="text-align: center; font-weight: bold">Priority</th>
@@ -18,41 +18,22 @@
     </thead>
     <tbody>
         <?php $numbering = 1; ?>
-        <?php foreach ($registrationServiceDataProvider->data as $model): ?>
-            <?php if ($model->service->service_type_id === $serviceType->id): ?>
+        <?php foreach ($registrationServiceManagementData as $row): ?>
+            <?php if ($row['service_type_id'] === $serviceType->id): ?>
                 <tr>
-                    <?php /*if ($model->repair_type == 'GR') {
-                        $regServices = RegistrationService::model()->findAllByAttributes(array(
-                            'registration_transaction_id' => $model->id,
-                            'is_body_repair' => 0
-                        ));
-                    } else {
-                        $regServices = RegistrationService::model()->findAllByAttributes(array(
-                            'registration_transaction_id' => $model->id,
-                            'is_body_repair' => 1
-                        ));
-                    }
-                    $duration = 0;
-                    foreach ($regServices as $key => $regService) {
-                        $duration += $regService->service->flat_rate_hour;
-                    }*/ ?>
-                    <?php 
-                    $registrationTransaction = $model->registrationTransaction;
-                    $vehicle = $registrationTransaction->vehicle; 
-                    ?>
                     <td><?php echo $numbering; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-                    <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>
-                    <td><?php echo CHtml::link($registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$registrationTransaction->id), array('target' => 'blank')); ?></td>
-                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $registrationTransaction->work_order_date); ?></td>
-                    <td><?php echo date("H:i:s", strtotime($registrationTransaction->transaction_date)); ?></td>
-                    <td><?php echo $model->service->name; ?></td>
-                    <td><?php echo $model->service->flat_rate_hour; ?></td>
-                    <td><?php echo $registrationTransaction->status != null ? $registrationTransaction->status : '-'; ?></td>
-                    <td><?php echo $registrationTransaction->branch_id != null ? $registrationTransaction->branch->code : '-'; ?></td>
-                    <td><?php echo $registrationTransaction->getPriorityLiteral($registrationTransaction->priority_level); ?></td>
-                    <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/idleManagement/proceedToPlanning", array("id"=>$model->id)), array('class' => 'button secondary')); ?></td>
+                    <td><?php echo $row['plate_number']; ?></td>
+                    <td><?php echo $row['car_make']; ?></td>
+                    <td><?php echo $row['car_model']; ?></td>
+                    <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['plate_number']), array('target' => 'blank')); ?></td>
+                    <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $row['work_order_date']); ?></td>
+                    <td><?php echo date("H:i:s", strtotime($row['transaction_date'])); ?></td>
+                    <td><?php echo implode(', ', $serviceNames[$row['registration_transaction_id'] . ':' . $row['service_type_id']]); ?></td>
+                    <!--<td><?php //echo $row['plate_number']; ?></td>-->
+                    <td><?php echo $row['status']; ?></td>
+                    <td><?php echo $row['branch']; ?></td>
+                    <td><?php echo $row['priority_level']; ?></td>
+                    <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/idleManagement/proceedToPlanning", array("id"=>$row['registration_transaction_id'])), array('class' => 'button secondary')); ?></td>
                 </tr>
                 <?php $numbering++; ?>
             <?php endif; ?>

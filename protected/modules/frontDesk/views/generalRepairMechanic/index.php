@@ -50,51 +50,32 @@ Yii::app()->clientScript->registerScript('search', "
     <div class="clearfix page-action">
         <h1>Mechanic General Repair Work Order</h1>
         <div>
+            <?php $serviceTabs['Waiting List'] = $this->renderPartial('_viewWaitlist', array(
+                'model' => $model,
+                'waitlistDataProvider' => $waitlistDataProvider,
+            ), true); ?>
+            
+            <?php $serviceTypes = ServiceType::model()->findAll(array('condition' => 'id <> 2')); ?>
+            <?php foreach ($serviceTypes as $i => $serviceType): ?>
+                <?php $serviceTabs[$serviceType->name] = $this->renderPartial('_serviceTypeTable', array(
+                    'registrationService' => $registrationService,
+                    'serviceType' => $serviceType,
+                    'registrationServiceManagementQueue' => $registrationServiceManagementQueue,
+                    'registrationServiceManagementAssigned' => $registrationServiceManagementAssigned,
+                    'registrationServiceManagementProgress' => $registrationServiceManagementProgress,
+                    'registrationServiceManagementControl' => $registrationServiceManagementControl,
+                    'registrationServiceManagementFinished' => $registrationServiceManagementFinished,
+                    'serviceNames' => $serviceNames,
+                ), true); ?>
+            <?php endforeach; ?>
+            
+            <?php /*$serviceTabs['Finished'] = $this->renderPartial('_viewFinishedList', array(
+                'model' => $model,
+                'historyDataProvider' => $historyDataProvider,
+            ), true);*/ ?>
+            
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
-                'tabs' => array(
-                    'Waitlist' => array(
-                        'content' => $this->renderPartial(
-                            '_viewWaitlist',
-                            array(
-                                'plateNumber' => $plateNumber,
-                                'workOrderNumber' => $workOrderNumber,
-                                'status' => $status,
-                                'branchId' => $branchId,
-                                'registrationService' => $registrationService,
-                                'registrationServiceDataProvider' => $registrationServiceDataProvider,
-                            ), true
-                        ),
-                    ),
-                    'Service Queue' => array(
-                        'content' => $this->renderPartial('_viewPlanningList', array(
-                            'registrationPlanningDataProvider' => $registrationPlanningDataProvider,
-                        ), true),
-                    ),
-                    'Assigned' => array(
-                        'content' => $this->renderPartial('_viewQueueList', array(
-                            'registrationServiceQueueDataProvider' => $registrationServiceQueueDataProvider,
-                        ), true),
-                    ),
-                    'On-Progress' => array(
-                        'content' => $this->renderPartial('_viewProgress', array(
-                            'registrationServiceProgressDataProvider' => $registrationServiceProgressDataProvider,
-                        ), true),
-                    ),
-                    'Ready to QC' => array(
-                        'content' => $this->renderPartial('_viewCheckList', array(
-                            'registrationServiceQualityControlDataProvider' => $registrationServiceQualityControlDataProvider,
-                        ), true),
-                    ),
-                    'Finished' => array(
-                        'content' => $this->renderPartial('_viewHistory', array(
-                            'registrationService' => $registrationService,
-                            'registrationServiceHistoryDataProvider' => $registrationServiceHistoryDataProvider,
-                            'branchId' => $branchId,
-                            'startDate' => $startDate,
-                            'endDate' => $endDate,
-                        ), true),
-                    ),
-                ),
+                'tabs' => $serviceTabs,
                 // additional javascript options for the tabs plugin
                 'options' => array(
                     'collapsible' => true,

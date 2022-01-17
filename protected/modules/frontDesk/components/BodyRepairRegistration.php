@@ -358,7 +358,7 @@ class BodyRepairRegistration extends CComponent {
         $valid = $this->header->save();
         
         if ($isNewRecord && $valid) {
-            $serviceNames = array('Bongkar Pasang', 'Spare Part', 'Las Ketok', 'Dempul', 'Epoxy', 'Cat', 'Finishing', 'Cuci', 'Poles');
+            $serviceNames = array('Bongkar', 'Sparepart', 'KetokLas', 'Dempul', 'Epoxy', 'Cat', 'Pasang', 'Cuci', 'Poles');
             foreach ($serviceNames as $serviceName) {
                 $registrationBodyRepairDetail = new RegistrationBodyRepairDetail();
                 $registrationBodyRepairDetail->service_name = $serviceName;

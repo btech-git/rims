@@ -427,7 +427,7 @@ class GeneralRepairRegistration extends CComponent {
         $this->header->pph_price = $this->taxServiceAmount;
         $valid = $this->header->save();
         
-        $bongkar = $sparepart = $ketok_las = $dempul = $epoxy = $cat = $pasang = $poles = $cuci = $finishing = 0;
+//        $bongkar = $sparepart = $ketok_las = $dempul = $epoxy = $cat = $pasang = $poles = $cuci = $finishing = 0;
 
         $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
         $detail_id = array();
@@ -470,8 +470,30 @@ class GeneralRepairRegistration extends CComponent {
 
         //save request detail
         if (count($this->serviceDetails) > 0) {
+            $serviceTypeIds = array();
             foreach ($this->serviceDetails as $serviceDetail) {
+                if (!in_array($serviceDetail->service->service_type_id, $serviceTypeIds)) {
+                    $registrationServiceManagement = new RegistrationServiceManagement();
+                    $registrationServiceManagement->registration_transaction_id = $this->header->id;
+                    $registrationServiceManagement->service_type_id = $serviceDetail->service->service_type_id;
+                    $registrationServiceManagement->status = 'Waitlist';
+                    $registrationServiceManagement->start = NULL;
+                    $registrationServiceManagement->end = NULL;
+                    $registrationServiceManagement->pause = NULL;
+                    $registrationServiceManagement->resume = NULL;
+                    $registrationServiceManagement->note = NULL;
+                    $registrationServiceManagement->start_mechanic_id = NULL;
+                    $registrationServiceManagement->finish_mechanic_id = NULL;
+                    $registrationServiceManagement->pause_mechanic_id = NULL;
+                    $registrationServiceManagement->resume_mechanic_id = NULL;
+                    $registrationServiceManagement->assign_mechanic_id = NULL;
+                    $registrationServiceManagement->supervisor_id = NULL;
+                    $valid = $registrationServiceManagement->save(FALSE) && $valid;
+                }
+                $serviceTypeIds[] = $serviceDetail->service->service_type_id;
+                
                 $serviceDetail->registration_transaction_id = $this->header->id;
+                $serviceDetail->service_type_id = $serviceDetail->service->service_type_id;
                 $serviceDetail->total_price = $serviceDetail->totalAmount;
                 $serviceDetail->start = NULL;
                 $serviceDetail->end = NULL;

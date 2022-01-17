@@ -41,58 +41,60 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <tbody>
             <?php foreach ($payableLedgerSummary->dataProvider->data as $header): ?>
-                <tr class="items1">
-                    <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <?php $saldo = $header->getBeginningBalancePayable($startDate); ?>
+                <?php if ($saldo > 0.00): ?>
+                    <tr class="items1">
+                        <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
 
-                    <td style="text-align: right; font-weight: bold">
-                        <?php $saldo = $header->getBeginningBalancePayable($startDate); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
-                    </td>
-                </tr>
-                
-                <?php $payableData = $header->getPayableLedgerReport($startDate, $endDate); ?>
-                <?php $positiveAmount = 0; ?>
-                <?php $negativeAmount = 0; ?>
-                <?php foreach ($payableData as $payableRow): ?>
-                    <?php $transactionNumber = $payableRow['transaction_number']; ?>
-                    <?php $purchaseAmount = $payableRow['purchase_amount']; ?>
-                    <?php $paymentAmount = $payableRow['payment_amount']; ?>
-                    <?php $amount = $payableRow['amount']; ?>
-                    <?php $saldo += $amount; ?>
-                    <tr class="items2">
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?></td>
-                        <td><?php echo CHtml::encode($payableRow['transaction_type']); ?></td>
-                        <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
-                        <td><?php echo CHtml::encode($payableRow['remark']); ?></td>
-                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $amount); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
+                        <td style="text-align: right; font-weight: bold">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
+                        </td>
                     </tr>
-                    <?php $positiveAmount += $purchaseAmount; ?>
-                    <?php $negativeAmount += $paymentAmount; ?>
-                <?php endforeach; ?>
-                    
-                <tr>
-                    <td colspan="4" style="text-align: right; font-weight: bold">Total Penambahan</td>
-                    <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
-                    <td>&nbsp;</td>
-                </tr>
-                
-                <tr>
-                    <td colspan="4" style="text-align: right; font-weight: bold">Total Penurunan</td>
-                    <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $negativeAmount); ?></td>
-                    <td>&nbsp;</td>
-                </tr>
-                
-                <tr>
-                    <td colspan="4" style="text-align: right; font-weight: bold">Perubahan Bersih</td>
-                    <?php //$differenceAmount = $positiveAmount + $negativeAmount; ?>
-                    <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $saldo); ?></td>
-                    <td>&nbsp;</td>
-                </tr>
-                
-                <tr>
-                    <td colspan="6">&nbsp;</td>
-                </tr>
+
+                    <?php $payableData = $header->getPayableLedgerReport($startDate, $endDate); ?>
+                    <?php $positiveAmount = 0; ?>
+                    <?php $negativeAmount = 0; ?>
+                    <?php foreach ($payableData as $payableRow): ?>
+                        <?php $transactionNumber = $payableRow['transaction_number']; ?>
+                        <?php $purchaseAmount = $payableRow['purchase_amount']; ?>
+                        <?php $paymentAmount = $payableRow['payment_amount']; ?>
+                        <?php $amount = $payableRow['amount']; ?>
+                        <?php $saldo += $amount; ?>
+                        <tr class="items2">
+                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?></td>
+                            <td><?php echo CHtml::encode($payableRow['transaction_type']); ?></td>
+                            <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
+                            <td><?php echo CHtml::encode($payableRow['remark']); ?></td>
+                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $amount); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
+                        </tr>
+                        <?php $positiveAmount += $purchaseAmount; ?>
+                        <?php $negativeAmount += $paymentAmount; ?>
+                    <?php endforeach; ?>
+
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: bold">Total Penambahan</td>
+                        <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: bold">Total Penurunan</td>
+                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $negativeAmount); ?></td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: bold">Perubahan Bersih</td>
+                        <?php //$differenceAmount = $positiveAmount + $negativeAmount; ?>
+                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $saldo); ?></td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                <?php endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

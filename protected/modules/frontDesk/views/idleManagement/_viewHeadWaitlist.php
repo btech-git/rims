@@ -45,7 +45,6 @@
                             )),
                         )); ?>
                     </td>
-                    </td>
                     <td>
                         <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                             'empty' => '-- All --',
@@ -75,6 +74,8 @@
             'registrationService' => $registrationService,
             'registrationServiceDataProvider' => $registrationServiceDataProvider,
             'serviceType' => $serviceType,
+            'registrationServiceManagementData' => $registrationServiceManagementData,
+            'serviceNames' => $serviceNames,
         ), true); ?>
     <?php endforeach; ?>
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(

@@ -59,8 +59,8 @@ $('.search-form form').submit(function(){
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
-	<div class="clearfix page-action">
-		<h1>Manage Body Repair Progress</h1>
+    <div class="clearfix page-action">
+        <h1>Manage Body Repair Progress</h1>
 
         <div>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
@@ -138,6 +138,14 @@ $('.search-form form').submit(function(){
         <br />
         
         <div>
+            <?php if ($runningDetail !== null): ?>
+                <div style="text-align: center">
+                    <?php echo CHtml::submitButton('Pass', array('name' => 'SubmitPass', 'confirm' => 'Confirm Pass?', 'class' => 'button success')); ?>
+                </div>
+            <?php endif; ?>
+            
+            <br />
+            
             <table>
                 <thead>
                     <tr style="background-color: yellow">
@@ -160,14 +168,24 @@ $('.search-form form').submit(function(){
                     </tr>
                 </tbody>
             </table>
+            
             <?php if ($runningDetail !== null): ?>
                 <div style="text-align: center">
-                    <?php echo CHtml::submitButton('Pass', array('name' => 'SubmitPass', 'confirm' => 'Confirm Pass?', 'class' => 'button success')); ?>
-                    &nbsp;&nbsp;
                     <?php echo CHtml::submitButton('Fail', array('name' => 'SubmitFail', 'confirm' => 'Confirm Fail?', 'class' => 'button cbutton alert')); ?>
+                    <?php echo CHtml::dropDownList('SubmitServiceName', '', array(
+                        'Bongkar' => 'Bongkar',
+                        'Sparepart' => 'Sparepart',
+                        'KetokLas' => 'KetokLas',
+                        'Dempul' => 'Dempul',
+                        'Epoxy' => 'Epoxy',
+                        'Cat' => 'Cat',
+                        'Pasang' => 'Pasang',
+                        'Cuci' => 'Cuci',
+                        'Poles' => 'Poles',
+                    )); ?>
                 </div>
             <?php endif; ?>
         </div>
-	</div>
+    </div>
 </div>
 <?php echo CHtml::endForm(); ?>  

@@ -60,6 +60,8 @@ Yii::app()->clientScript->registerScript('search', "
                             'workOrderNumber' => $workOrderNumber,
                             'status' => $status,
                             'branchId' => $branchId,
+                            'registrationServiceManagementData' => $registrationServiceManagementData,
+                            'serviceNames' => $serviceNames,
                         ), true),
                     ),
                     'Service Queue' => array(

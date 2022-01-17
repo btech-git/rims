@@ -31,11 +31,11 @@ class ReceivableLedgerSummary extends CComponent {
     }
 
     public function setupFilter($filters) {
-//        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
-//        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-//        
-//        $this->dataProvider->criteria->addBetweenCondition('invoiceHeaders.invoice_date', $startDate, $endDate);
-//        $this->dataProvider->criteria->addBetweenCondition('paymentIns.payment_date', $startDate, $endDate);
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        
+        $this->dataProvider->criteria->addBetweenCondition('invoiceHeaders.invoice_date', $startDate, $endDate);
+        $this->dataProvider->criteria->addBetweenCondition('paymentIns.payment_date', $startDate, $endDate);
     }
 
 }

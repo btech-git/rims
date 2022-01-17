@@ -39,7 +39,7 @@ class FinancialForecastController extends Controller {
         $month = date('m');
         $numberOfDays = 0;
         for ($i = 0; $i < (int) $numberOfPeriod; $i++) {
-            $month = $month === 1 ? 12 : $month - 1;
+//            $month = $month === 1 ? 12 : $month - 1;
             $year = $month === 12 ? $year - 1 : $year;
             $numberOfDaysinMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
             $numberOfDays += $numberOfDaysinMonth;

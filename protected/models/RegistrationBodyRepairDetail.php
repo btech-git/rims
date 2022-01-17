@@ -157,9 +157,9 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
     public function getLevelIdByProcessName($processName) {
         $levelId = '';
 
-        if ($processName == 'Bongkar Pasang') {
+        if ($processName == 'Bongkar') {
             $levelId = 8;
-        } else if ($processName == 'Las Ketok') {
+        } else if ($processName == 'KetokLas') {
             $levelId = 9;
         } else if ($processName == 'Dempul') {
             $levelId = 10;
@@ -167,13 +167,13 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
             $levelId = 11;
         } else if ($processName == 'Cat') {
             $levelId = 12;
-        } else if ($processName == 'Finishing') {
+        } else if ($processName == 'Pasang') {
             $levelId = 13;
         } else if ($processName == 'Cuci') {
             $levelId = 14;
         } else if ($processName == 'Poles') {
             $levelId = 15;
-        } else if ($processName == 'Spare Part') {
+        } else if ($processName == 'Sparepart') {
             $levelId = 16;
         }
 
@@ -207,7 +207,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Bongkar Pasang' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Bongkar - Pending' AND registrationTransaction.status = 'Queue Bongkar Pasang'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Bongkar' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Bongkar - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -245,7 +245,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND t.service_name = 'Bongkar Pasang' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Bongkar - Pending'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND t.service_name = 'Bongkar' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Bongkar - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -283,7 +283,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Bongkar Pasang' AND registrationTransaction.service_status = 'Bongkar Pasang - Started'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Bongkar' AND registrationTransaction.service_status = 'Bongkar - Started'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -321,7 +321,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Bongkar Pasang' AND registrationTransaction.service_status = 'Bongkar Pasang - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Bongkar' AND registrationTransaction.service_status = 'Bongkar - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -359,7 +359,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Bongkar Pasang' AND t.to_be_checked = 1 AND t.is_passed = 1");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Bongkar' AND t.to_be_checked = 1 AND t.is_passed = 1");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -397,7 +397,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Spare Part' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Spare Part - Pending' AND registrationTransaction.status = 'Queue Spare Part'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Sparepart' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Sparepart - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -435,7 +435,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND service_name = 'Spare Part' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Spare Part - Pending'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND service_name = 'Sparepart' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Sparepart - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -473,7 +473,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Spare Part' AND registrationTransaction.service_status = 'Spare Part - Started'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Sparepart' AND registrationTransaction.service_status = 'Sparepart - Started'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -511,7 +511,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Spare Part' AND registrationTransaction.service_status = 'Spare Part - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Sparepart' AND registrationTransaction.service_status = 'Sparepart - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -549,7 +549,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Spare Part' AND t.to_be_checked = 1 AND t.is_passed = 1");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Sparepart' AND t.to_be_checked = 1 AND t.is_passed = 1");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -587,7 +587,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Las Ketok' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Las Ketok - Pending'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'KetokLas' AND t.is_passed = 0 AND registrationTransaction.service_status = 'KetokLas - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -625,7 +625,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND service_name = 'Las Ketok'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND service_name = 'KetokLas'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -663,7 +663,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Las Ketok' AND registrationTransaction.service_status = 'Las Ketok - Started'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'KetokLas' AND registrationTransaction.service_status = 'KetokLas - Started'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -701,7 +701,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Las Ketok' AND registrationTransaction.service_status = 'Las Ketok - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'KetokLas' AND registrationTransaction.service_status = 'KetokLas - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -739,7 +739,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Las Ketok' AND t.to_be_checked = 1 AND t.is_passed = 1");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'KetokLas' AND t.to_be_checked = 1 AND t.is_passed = 1");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -1347,7 +1347,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Finishing' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Finishing - Pending'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NULL AND t.mechanic_id IS NULL AND t.service_name = 'Pasang' AND t.is_passed = 0 AND registrationTransaction.service_status = 'Pasang - Pending'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -1385,7 +1385,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND service_name = 'Finishing'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.mechanic_assigned_id IS NOT NULL AND t.mechanic_id IS NULL AND service_name = 'Pasang'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -1423,7 +1423,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Finishing' AND registrationTransaction.service_status = 'Finishing - Started'");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Pasang' AND registrationTransaction.service_status = 'Pasang - Started'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -1461,7 +1461,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Finishing' AND registrationTransaction.service_status = 'Finishing - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Pasang' AND registrationTransaction.service_status = 'Pasang - Checking' AND t.to_be_checked = 1 AND t.is_passed = 0");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(
@@ -1499,7 +1499,7 @@ class RegistrationBodyRepairDetail extends CActiveRecord {
         $criteria->compare('mechanic_head_id', $this->mechanic_head_id);
         $criteria->compare('mechanic_assigned_id', $this->mechanic_assigned_id);
 
-        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Finishing' AND t.to_be_checked = 1 AND t.is_passed = 1");
+        $criteria->addCondition("registrationTransaction.work_order_number IS NOT NULL AND registrationTransaction.repair_type = 'BR' AND t.service_name = 'Pasang' AND t.to_be_checked = 1 AND t.is_passed = 1");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.transaction_date DESC';
         
         return new CActiveDataProvider($this, array(

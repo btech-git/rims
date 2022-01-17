@@ -24,8 +24,8 @@ class ReceivableLedgerController extends Controller {
 
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
 
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -34,11 +34,11 @@ class ReceivableLedgerController extends Controller {
         $receivableLedgerSummary->setupLoading();
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
-//        $filters = array(
-//            'startDate' => $startDate,
-//            'endDate' => $endDate,
-//        );
-//        $receivableLedgerSummary->setupFilter($filters);
+        $filters = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        );
+        $receivableLedgerSummary->setupFilter($filters);
         
         $this->render('summary', array(
             'customer' => $customer,

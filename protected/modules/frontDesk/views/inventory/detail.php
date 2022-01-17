@@ -18,6 +18,7 @@ $this->breadcrumbs=array(
         <h2>Stok Detail for <?php echo $product->name; ?></h2>
         <table style="border: 1px solid">
             <tr>
+                <td style="text-align: center; font-weight: bold">ID</td>
                 <td style="text-align: center; font-weight: bold">Manufacturer Code</td>
                 <td style="text-align: center; font-weight: bold">Category</td>
                 <td style="text-align: center; font-weight: bold">Brand</td>
@@ -26,6 +27,7 @@ $this->breadcrumbs=array(
                 <td style="text-align: center; font-weight: bold">Unit</td>
             </tr>
             <tr>
+                <td><?php echo $product->id; ?></td>
                 <td><?php echo $product->manufacturer_code; ?></td>
                 <td><?php echo $product->masterSubCategoryCode; ?></td>
                 <td><?php echo $product->brand->name; ?></td>

@@ -37,11 +37,28 @@ class IdleManagementController extends Controller {
         $status = isset($_GET['Status']) ? $_GET['Status'] : '';
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $mechanicId = isset($_GET['MechanicId']) ? $_GET['MechanicId'] : '';
-        $startMechanic = empty($model->start_mechanic_id) ? '' : Users::model()->findByPk($model->start_mechanic_id);
+//        $startMechanic = empty($model->start_mechanic_id) ? '' : Users::model()->findByPk($model->start_mechanic_id);
 
         $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : '');
         $registrationServiceDataProvider = $registrationService->searchByGeneralRepairIdleManagement();
 
+        $registrationServiceManagementData = RegistrationServiceManagement::model()->getRegistrationServiceManagementData();
+        $registrationTransactionIds = array();
+        $serviceTypeIds = array();
+        foreach ($registrationServiceManagementData as $row) {
+            if (!in_array($row['registration_transaction_id'], $registrationTransactionIds)) {
+                $registrationTransactionIds[] = $row['registration_transaction_id'];
+            }
+            if (!in_array($row['service_type_id'], $serviceTypeIds)) {
+                $serviceTypeIds[] = $row['service_type_id'];
+            }
+        }
+        $registrationServiceData = $registrationService->getRegistrationServiceData($registrationTransactionIds, $serviceTypeIds);
+        $serviceNames = array();
+        foreach ($registrationServiceData as $row) {
+            $serviceNames[$row['registration_transaction_id'] . ':' . $row['service_type_id']][] = $row['name'];
+        }
+        
         $employee = Search::bind(new EmployeeBranchDivisionPositionLevel('search'), isset($_GET['EmployeeBranchDivisionPositionLevel']) ? $_GET['EmployeeBranchDivisionPositionLevel'] : '');
         $employeeDataProvider = $employee->search();
         $employeeDataProvider->criteria->with = array(
@@ -82,6 +99,8 @@ class IdleManagementController extends Controller {
             'plateNumber' => $plateNumber,
             'workOrderNumber' => $workOrderNumber,
             'status' => $status,
+            'registrationServiceManagementData' => $registrationServiceManagementData,
+            'serviceNames' => $serviceNames,
         ));
     }
 

@@ -24,13 +24,13 @@ class StockSalesController extends Controller {
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $stockCardSummary = new StockCardSummary($product->search());
+        $stockCardSummary = new StockSalesSummary($product->search());
         $stockCardSummary->setupLoading();
         $stockCardSummary->setupPaging($pageSize, $currentPage);
         $stockCardSummary->setupSorting();

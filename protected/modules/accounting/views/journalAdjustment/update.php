@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs = array(
-    'Jurnal Penyesuaian' => array('admin'),
+    'Jurnal Umum' => array('admin'),
     'Update',
 );
 ?>

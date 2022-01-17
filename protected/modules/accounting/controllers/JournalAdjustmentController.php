@@ -47,7 +47,7 @@ class JournalAdjustmentController extends Controller {
 
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $dataProvider = $account->search();
-        $dataProvider->criteria->addCondition("t.status = 'Approved'");
+//        $dataProvider->criteria->addCondition("t.status = 'Approved'");
 
         if (isset($_POST['Submit'])) {
             $this->loadState($journalVoucher);

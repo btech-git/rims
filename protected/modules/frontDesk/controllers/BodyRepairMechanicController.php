@@ -12,12 +12,12 @@ class BodyRepairMechanicController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-                $filterChain->action->id === 'index' ||
-                $filterChain->action->id === 'viewDetailWorkOrder' ||
-                $filterChain->action->id === 'workOrderFinishService' ||
-                $filterChain->action->id === 'workOrderPauseService' ||
-                $filterChain->action->id === 'workOrderResumeService' ||
-                $filterChain->action->id === 'workOrderStartService'
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'viewDetailWorkOrder' ||
+            $filterChain->action->id === 'workOrderFinishService' ||
+            $filterChain->action->id === 'workOrderPauseService' ||
+            $filterChain->action->id === 'workOrderResumeService' ||
+            $filterChain->action->id === 'workOrderStartService'
         ) {
             if (!(Yii::app()->user->checkAccess('brMechanicCreate')) || !(Yii::app()->user->checkAccess('brMechanicEdit')))
                 $this->redirect(array('/site/login'));
@@ -158,7 +158,7 @@ class BodyRepairMechanicController extends Controller {
         if ((int) $levelId === 8) {
             $processName = 'Bongkar';
         } else if ((int) $levelId === 9) {
-            $processName = 'Ketok/Las';
+            $processName = 'KetokLas';
         } else if ((int) $levelId === 10) {
             $processName = 'Dempul';
         } else if ((int) $levelId === 11) {
@@ -166,7 +166,7 @@ class BodyRepairMechanicController extends Controller {
         } else if ((int) $levelId === 12) {
             $processName = 'Cat';
         } else if ((int) $levelId === 13) {
-            $processName = 'Finishing';
+            $processName = 'Pasang';
         } else if ((int) $levelId === 14) {
             $processName = 'Cuci';
         } else if ((int) $levelId === 15) {
@@ -411,7 +411,7 @@ class BodyRepairMechanicController extends Controller {
 
     public function actionProceedToQueue($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
-        $model->status = 'Queue Bongkar Pasang';
+        $model->status = 'Queue Bongkar';
         
         if ($model->update(array('status'))) {
             $this->redirect(array('index'));

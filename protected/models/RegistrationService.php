@@ -28,11 +28,13 @@
  * @property integer $pause_mechanic_id
  * @property integer $resume_mechanic_id
  * @property integer $supervisor_id
+ * @property integer $service_type_id
  * @property string $hour
  *
  * The followings are the available model relations:
  * @property RegistrationTransaction $registrationTransaction
  * @property Service $service
+ * @property ServiceType $serviceType
  * @property Employee $employee
  * @property StartMechanic $startMechanic
  * @property FinishMechanic $finishMechanic
@@ -64,7 +66,7 @@ class RegistrationService extends CActiveRecord {
         // will receive user inputs.
         return array(
             //array('note', 'required'),
-            array('registration_transaction_id, service_id, is_quick_service, is_body_repair, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, pause_time, total_time', 'numerical', 'integerOnly' => true),
+            array('registration_transaction_id, service_id, is_quick_service, is_body_repair, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, pause_time, total_time, service_type_id', 'numerical', 'integerOnly' => true),
             array('claim, price,hour', 'length', 'max' => 10),
             array('total_price, discount_price', 'length', 'max' => 18),
             array('discount_type', 'length', 'max' => 50),
@@ -72,7 +74,7 @@ class RegistrationService extends CActiveRecord {
             array('start, end, pause, resume, note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, registration_transaction_id, service_id, claim, price, total_price, discount_price, discount_type, is_quick_service, start, end, pause, resume, pause_time, total_time, note, is_body_repair, status, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, service_name, listemployee, platnumber,hour, service_activity', 'safe', 'on' => 'search'),
+            array('id, registration_transaction_id, service_id, claim, price, total_price, discount_price, discount_type, is_quick_service, start, end, pause, resume, pause_time, total_time, note, is_body_repair, status, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, service_name, listemployee, platnumber,hour, service_activity, service_type_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -85,6 +87,7 @@ class RegistrationService extends CActiveRecord {
         return array(
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'service' => array(self::BELONGS_TO, 'Service', 'service_id'),
+            'serviceType' => array(self::BELONGS_TO, 'ServiceType', 'service_type_id'),
             'employee' => array(self::BELONGS_TO, 'Employee', 'employee_id'),
             'startMechanic' => array(self::BELONGS_TO, 'Employee', 'start_mechanic_id'),
             'finishMechanic' => array(self::BELONGS_TO, 'Employee', 'finish_mechanic_id'),
@@ -103,6 +106,7 @@ class RegistrationService extends CActiveRecord {
             'id' => 'ID',
             'registration_transaction_id' => 'Registration Transaction',
             'service_id' => 'Service',
+            'service_type_id' => 'Service Type',
             'claim' => 'Claim',
             'price' => 'Price',
             'total_price' => 'Total Price',
@@ -149,6 +153,7 @@ class RegistrationService extends CActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
         $criteria->compare('service_id', $this->service_id);
+        $criteria->compare('service_type_id', $this->service_type_id);
         $criteria->compare('claim', $this->claim, true);
         $criteria->compare('price', $this->price, true);
         $criteria->compare('total_price', $this->total_price, true);
@@ -515,5 +520,17 @@ class RegistrationService extends CActiveRecord {
         $seconds = floor($this->total_time % 60);
         
         return sprintf('%dh %dm %ds', $hours, $minutes, $seconds);
+    }
+    
+    public function getRegistrationServiceData($registrationTransactionIds, $serviceTypeIds) {
+        $resultSet = Yii::app()->db->createCommand()
+                ->select('d.registration_transaction_id, d.service_type_id, s.name')
+                ->from('rims_registration_service d')
+                ->join('rims_service s', 's.id = d.service_id')
+                ->where(array('in', 'd.registration_transaction_id', $registrationTransactionIds))
+                ->andWhere(array('in', 'd.service_type_id', $serviceTypeIds))
+                ->queryAll();
+
+        return $resultSet;
     }
 }

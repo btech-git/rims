@@ -164,6 +164,7 @@ class Product extends CActiveRecord {
             'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
+            'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'product_id'),
         );
     }
 
@@ -475,10 +476,11 @@ class Product extends CActiveRecord {
     
     public function getMovementOutQuantityReport($startDate, $endDate) {
         $sql = "
-            SELECT COALESCE(SUM(stock_out * -1), 0) AS beginning_balance 
-            FROM " . InventoryDetail::model()->tableName() . "
-            WHERE product_id = :product_id AND transaction_date BETWEEN :start_date AND :end_date
-            GROUP BY product_id
+            SELECT COALESCE(SUM(quantity), 0) AS beginning_balance 
+            FROM " . MovementOutDetail::model()->tableName() . " d
+            INNER JOIN " . MovementOutHeader::model()->tableName() . " h
+            WHERE d.product_id = :product_id AND h.date_posting BETWEEN :start_date AND :end_date
+            GROUP BY d.product_id
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(

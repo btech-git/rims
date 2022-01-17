@@ -200,7 +200,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'purchase_order_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             ),
         ));
     }

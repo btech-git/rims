@@ -137,7 +137,7 @@
                                                 <label class="prefix"><?php echo 'Registration Transaction #'; ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.transaction_number')); ?>
+                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationTransaction.transaction_number')); ?>
                                             </div>
                                         </div>
                                     </div>

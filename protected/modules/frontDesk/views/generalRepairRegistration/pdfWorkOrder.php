@@ -162,8 +162,9 @@ function tanggal($date) {
                 <?php $no++;
                 } ?>
             </table>
-            <br />
         <?php endif; ?>
+        <br />
+        <p>Problem: <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></p>
         <p class="authorized"><?php echo tanggal(date('Y-m-d')); ?></p>
     </div>
 </div>

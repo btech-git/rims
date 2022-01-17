@@ -82,6 +82,23 @@ class CashDailySummaryController extends Controller {
         $cashTransactionOutDataProvider->criteria->compare('t.branch_id', $branchId);
         $cashTransactionOutDataProvider->criteria->addCondition('t.transaction_type = "Out" AND t.status = "Approved" ');
         
+        $saleOrder = Search::bind(new TransactionSalesOrder('search'), isset($_GET['TransactionSalesOrder']) ? $_GET['TransactionSalesOrder'] : '');
+        
+        $saleOrderDataProvider = $saleOrder->search();
+        $saleOrderDataProvider->criteria->compare('t.sale_order_date', $transactionDate, true);
+        $saleOrderDataProvider->criteria->addCondition('t.approved_id IS NOT NULL');
+        
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+
+        $registrationTransactionDataProvider = $registrationTransaction->searchAdmin();
+        $registrationTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate, true);
+        
+        $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
+        
+        $purchaseOrderDataProvider = $purchaseOrder->search();
+        $purchaseOrderDataProvider->criteria->compare('t.purchase_order_date', $transactionDate, true);
+        $purchaseOrderDataProvider->criteria->addCondition('t.approved_id IS NOT NULL');
+        
         $paymentTypeIdList = array();
         foreach ($paymentTypes as $paymentType) {
             $paymentTypeIdList[] = $paymentType->id;
@@ -128,6 +145,12 @@ class CashDailySummaryController extends Controller {
             'paymentInRetailResultSet' => $paymentInRetailResultSet,
             'paymentInRetailList' => $paymentInRetailList,
             'existingDate' => $existingDate,
+            'saleOrder' => $saleOrder,
+            'saleOrderDataProvider' => $saleOrderDataProvider,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'purchaseOrder' => $purchaseOrder,
+            'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
         ));
     }
 
@@ -414,6 +437,12 @@ class CashDailySummaryController extends Controller {
         } else if ($codeNumberConstant === 'CASH') {
             $model = CashTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/transaction/cashTransaction/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'RG') {
+            $model = RegistrationTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/frontDesk/registrationTransaction/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'SO') {
+            $model = TransactionSalesOrder::model()->findByAttributes(array('sale_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionSalesOrder/view', 'id' => $model->id));
         }
         
     }

@@ -68,7 +68,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'finishedBongkarDataProvider' => $finishedBongkarDataProvider,
                         ), true ),
                     ),
-                    'Spare Part' => array(
+                    'Sparepart' => array(
                         'content' => $this->renderPartial('_viewSparepart', array(
                             'queueSparePartDataProvider' => $queueSparePartDataProvider,
                             'assignSparePartDataProvider' => $assignSparePartDataProvider,
@@ -144,6 +144,12 @@ Yii::app()->clientScript->registerScript('search', "
                         'content' => $this->renderPartial('_viewHistory', array(
                             'model' => $model,
                             'historyDataProvider' => $historyDataProvider,
+                        ), true),
+                    ),
+                    'Available Mechanics' => array(
+                        'content' => $this->renderPartial('_viewAvailableMechanic', array(
+                            'employee' => $employee,
+                            'employeeDataProvider' => $employeeDataProvider,
                         ), true),
                     ),
                 ),

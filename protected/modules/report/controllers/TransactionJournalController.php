@@ -20,8 +20,8 @@ class TransactionJournalController extends Controller {
     public function actionSummary() {
         $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
 
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
 //        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 //        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';

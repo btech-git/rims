@@ -73,19 +73,19 @@ class BodyRepairMechanic extends CComponent {
         return $valid;
     }
     
-    private function nextServiceName($serviceName) {
-        $nextServiceNameList = array(
-            'Bongkar' => 'Sparepart',
-            'Sparepart' => 'Ketok/Las',
-            'Ketok/Las' => 'Dempul',
-            'Dempul' => 'Epoxy',
-            'Epoxy' => 'Cat',
-            'Cat' => 'Pasang',
-            'Pasang' => 'Poles',
-            'Poles' => 'Cuci',
-            'Cuci' => null,
-        );
-        
-        return $nextServiceNameList[$serviceName];
-    }
+//    private function nextServiceName($serviceName) {
+//        $nextServiceNameList = array(
+//            'Bongkar' => 'Sparepart',
+//            'Sparepart' => 'KetokLas',
+//            'KetokLas' => 'Dempul',
+//            'Dempul' => 'Epoxy',
+//            'Epoxy' => 'Cat',
+//            'Cat' => 'Pasang',
+//            'Pasang' => 'Poles',
+//            'Poles' => 'Cuci',
+//            'Cuci' => null,
+//        );
+//        
+//        return $nextServiceNameList[$serviceName];
+//    }
 }
