@@ -42,12 +42,13 @@
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
+                    <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
                     <?php if ($index >= 0): ?>
-                        <td><?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?></td>
+                        <td><?php echo CHtml::encode($stockValue); ?></td>
                     <?php else: ?>
-                        <td>0</td>
+                        <td><?php echo 0; ?></td>
                     <?php endif; ?>
-                    <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
+                    <?php $totalStock += $stockValue; ?>
                 <?php endforeach; ?>
                         
                 <td><?php echo CHtml::encode($totalStock); ?></td>

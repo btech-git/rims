@@ -286,7 +286,7 @@ class Coa extends CActiveRecord {
 
     public function getBeginningBalanceLedger($startDate) {
         $sql = "
-            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
+            SELECT IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
             FROM (
                 SELECT coa_id, tanggal_transaksi, total AS amount
                 FROM " . JurnalUmum::model()->tableName() . "

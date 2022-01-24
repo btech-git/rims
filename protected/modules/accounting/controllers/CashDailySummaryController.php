@@ -18,8 +18,9 @@ class CashDailySummaryController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('accountingReport')) || !(Yii::app()->user->checkAccess('financeReport')))
+            if (!(Yii::app()->user->checkAccess('accountingReport') || !(Yii::app()->user->checkAccess('financeReport')))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

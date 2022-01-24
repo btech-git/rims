@@ -46,16 +46,17 @@ class GeneralLedgerSummary extends CComponent {
 
     public function getSaldo($startDate) {
         foreach ($this->dataProvider->data as $data) {
-//            if ($data->coa_category_id > 5 && $data->coa_category_id < 11) {
-                $saldo = 0;
-//            } else {
-//                $saldo = $data->getBeginningBalanceLedger($startDate);
-//            }
+            $saldo = $data->getBeginningBalanceLedger($startDate);
 
             foreach ($data->jurnalUmums as $detail) {
                 $debitAmount = ($detail->debet_kredit === 'D') ? $detail->total : 0 ;
                 $creditAmount = ($detail->debet_kredit === 'K') ? $detail->total : 0 ;
-                $saldo += $debitAmount - $creditAmount;
+                
+                if ($data->normal_balance = 'Debit') {
+                    $saldo += $debitAmount - $creditAmount;
+                } elseif ($data->normal_balance = 'KREDIT') {
+                    $saldo += $creditAmount - $debitAmount;
+                }
                 $detail->currentSaldo = $saldo;
             }
         }

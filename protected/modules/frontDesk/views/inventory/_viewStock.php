@@ -40,7 +40,7 @@
                 <td colspan="3" class="text-right"><strong>Total</strong></td>
                 <td><?php echo CHtml::encode($totalstockin); ?></td>
                 <td><?php echo CHtml::encode($totalstockout); ?></td>
-                <td><?php echo CHtml::encode($stockme); ?></td>
+                <td><?php //echo CHtml::encode($stockme); ?></td>
                 <td colspan="2"></td>
             </tr>
         </tfoot>

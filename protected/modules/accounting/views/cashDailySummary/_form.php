@@ -104,36 +104,38 @@
                 )); ?>
             </div>
             
-            <div class="row">
-                <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
-                    'tabs' => array(
-                        'Sales Retail' => array(
-                            'content' => $this->renderPartial('_viewRegistrationTransaction', array(
-                                'registrationTransaction' => $registrationTransaction,
-                                'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-                            ), true),
+            <?php if (Yii::app()->user->checkAccess('director')): ?>
+                <div class="row">
+                    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                        'tabs' => array(
+                            'Sales Retail' => array(
+                                'content' => $this->renderPartial('_viewRegistrationTransaction', array(
+                                    'registrationTransaction' => $registrationTransaction,
+                                    'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+                                ), true),
+                            ),
+                            'Sales Non Retail' => array(
+                                'content' => $this->renderPartial('_viewSaleOrder', array(
+                                    'saleOrder' => $saleOrder,
+                                    'saleOrderDataProvider' => $saleOrderDataProvider,
+                                ), true),
+                            ),
+                            'Purchase Order' => array(
+                                'content' => $this->renderPartial('_viewPurchaseOrder', array(
+                                    'purchaseOrder' => $purchaseOrder,
+                                    'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
+                                ), true),
+                            ),
                         ),
-                        'Sales Non Retail' => array(
-                            'content' => $this->renderPartial('_viewSaleOrder', array(
-                                'saleOrder' => $saleOrder,
-                                'saleOrderDataProvider' => $saleOrderDataProvider,
-                            ), true),
+                        // additional javascript options for the tabs plugin
+                        'options' => array(
+                            'collapsible' => true,
                         ),
-                        'Purchase Order' => array(
-                            'content' => $this->renderPartial('_viewPurchaseOrder', array(
-                                'purchaseOrder' => $purchaseOrder,
-                                'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
-                            ), true),
-                        ),
-                    ),
-                    // additional javascript options for the tabs plugin
-                    'options' => array(
-                        'collapsible' => true,
-                    ),
-                    // set id for this widgets
-                    'id' => 'view_tab',
-                )); ?>
-            </div>
+                        // set id for this widgets
+                        'id' => 'view_tab',
+                    )); ?>
+                </div>
+            <?php endif; ?>
             <?php echo CHtml::endForm(); ?>
         </div>
     </div>

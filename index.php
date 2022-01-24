@@ -17,8 +17,8 @@ require_once($yii);
 // Yii::createWebApplication($config)->run();
 $app = Yii::createWebApplication($config);
 
-Yii::import('ext.yiiexcel.YiiExcel', true);
-Yii::registerAutoloader(array('YiiExcel', 'autoload'), true);
+//Yii::import('ext.yiiexcel.YiiExcel', true);
+//Yii::registerAutoloader(array('YiiExcel', 'autoload'), true);
 
 // Optional:
 //  As we always try to run the autoloader before anything else, we can use it to do a few

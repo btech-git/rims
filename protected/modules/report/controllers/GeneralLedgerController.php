@@ -33,11 +33,6 @@ class GeneralLedgerController extends Controller {
         $accountId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-//        $accounts = Coa::model()->findAll(array(
-//            'condition' => 'status = "Approved"',
-//            'order' => 'code ASC',
-//        ));
-
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
         $generalLedgerSummary->setupLoading($startDate, $endDate, $accountId);
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
@@ -45,9 +40,10 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupFilter($startDate, $endDate, $accountId, $branchId);
         $generalLedgerSummary->getSaldo($startDate);
 
-//        if (isset($_GET['SaveExcel']))
-//            $this->saveToExcel($generalLedgerSummary, $generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
-
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+        }
+        
         $this->render('summary', array(
             'account' => $account,
             'generalLedgerSummary' => $generalLedgerSummary,
@@ -55,7 +51,6 @@ class GeneralLedgerController extends Controller {
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'number' => $number,
-//            'accounts' => $accounts,
             'accountId' => $accountId,
             'branchId' => $branchId,
         ));
@@ -76,13 +71,11 @@ class GeneralLedgerController extends Controller {
             $startAccount = (isset($_GET['StartAccount'])) ? $_GET['StartAccount'] : '';
             $endAccount = (isset($_GET['EndAccount'])) ? $_GET['EndAccount'] : '';
 
-            $accounts = Account::model()->findAllByAttributes(
-                array(
-                    'branch_id' => $_POST['BranchId'],
-                ), array(
-                    'order' => 'code ASC',
-                )
-            );
+            $accounts = Account::model()->findAllByAttributes(array(
+                'branch_id' => $_POST['BranchId'],
+            ), array(
+                'order' => 'code ASC',
+            ));
 
             $account = Search::bind(new Account('search'), isset($_GET['Account']) ? $_GET['Account'] : array());
 
@@ -95,7 +88,7 @@ class GeneralLedgerController extends Controller {
         }
     }
 
-    protected function saveToExcel($generalLedgerSummary, $dataProvider, array $options = array()) {
+    protected function saveToExcel($dataProvider, array $options = array()) {
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
         
@@ -129,7 +122,7 @@ class GeneralLedgerController extends Controller {
         $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Laporan Buku Besar');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
@@ -157,9 +150,6 @@ class GeneralLedgerController extends Controller {
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')) . '-' . CHtml::encode(CHtml::value($header, 'name')));
             $worksheet->mergeCells("A{$counter}:D{$counter}");
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndDebitLedger($header->id, $options['startDate'], $options['endDate']))));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndCreditLedger($header->id, $options['startDate'], $options['endDate']))));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndBalanceLedger($header->id, $options['endDate']))));
             $counter++;$counter++;
 
             $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -167,21 +157,20 @@ class GeneralLedgerController extends Controller {
 
             $worksheet->mergeCells("A{$counter}:F{$counter}");
             $worksheet->setCellValue("A{$counter}", 'SALDO AWAL');
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getBeginningBalanceLedger($header->id, $options['startDate']))));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode($header->getBeginningBalanceLedger($startDate)));
             $counter++;$counter++;
 
-
-            foreach ($header->accountJournals as $detail) {
+            foreach ($header->jurnalUmums as $detail) {
                 $worksheet->getStyle("A{$counter}:D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
                 $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_number')));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($detail->date))));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detail, 'kode_transaksi')));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($detail->tanggal_transaksi))));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_subject')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'note')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detail->debit)));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detail->credit)));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detail->currentSaldo)));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_type')));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($detail->debet_kredit == 'D' ? $detail->total : 0));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($detail->debet_kredit == 'K' ? $detail->total : 0));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($detail->currentSaldo));
 
                 $counter++;
             }

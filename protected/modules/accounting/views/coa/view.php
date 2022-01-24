@@ -58,23 +58,25 @@ $this->menu = array(
     <table>
         <thead>
             <tr>
-                <th>Periode</th>
-                <th>Opening Balance</th>
-                <th>Closing Balance</th>
+                <th>Transaksi</th>
+                <th>Tanggal</th>
+                <th>Type</th>
                 <th>Debit</th>
                 <th>Credit</th>
             </tr>
         </thead>
         
         <tbody>
-            <?php foreach ($coaDetails as $key => $coaDetail): ?>
-                <tr>
-                    <td><?php echo $coaDetail->periode; ?></td>
-                    <td><?php echo $coaDetail->opening_balance != "" ? $coaDetail->opening_balance : 0 ?></td>
-                    <td><?php echo $coaDetail->closing_balance != "" ? $coaDetail->closing_balance : 0 ?></td>
-                    <td><?php echo $coaDetail->debit != "" ? $coaDetail->debit : 0 ?></td>
-                    <td><?php echo $coaDetail->credit != "" ? $coaDetail->credit : 0 ?></td>
-                </tr>
+            <?php foreach (array_reverse($coaDetails) as $key => $coaDetail): ?>
+                <?php if ($key <= 50): ?>
+                    <tr>
+                        <td><?php echo $coaDetail->kode_transaksi; ?></td>
+                        <td><?php echo $coaDetail->tanggal_transaksi; ?></td>
+                        <td><?php echo $coaDetail->transaction_type; ?></td>
+                        <td><?php echo $coaDetail->debet_kredit == "D" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $coaDetail->total)) : 0 ?></td>
+                        <td><?php echo $coaDetail->debet_kredit == "K" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $coaDetail->total)) : 0 ?></td>
+                    </tr>
+                <?php endif; ?>
             <?php endforeach; ?>
         </tbody>
         

@@ -89,7 +89,7 @@ class CashTransactionController extends Controller {
             $coaKas->attributes = $_GET['Coa'];
         
         $coaKasCriteria = new CDbCriteria;
-        $coaKasCriteria->addCondition("SUBSTRING(code, -3 , 3) <> 000 AND coa_sub_category_id BETWEEN 1 AND 3 AND status = 'Approved'");
+        $coaKasCriteria->addCondition("SUBSTRING(code, -3 , 3) <> 000 AND t.coa_sub_category_id IN (1, 2, 3) AND status = 'Approved'");
         $coaKasCriteria->compare('code', $coaKas->code . '%', true, 'AND', false);
         $coaKasCriteria->compare('name', $coaKas->name, true);
         $coaKasCriteria->compare('normal_balance', $coaKas->normal_balance, true);
@@ -104,9 +104,9 @@ class CashTransactionController extends Controller {
             $coaDetail->attributes = $_GET['Coa'];
         
         $coaDetailCriteria = new CDbCriteria;
-        $coaDetailCriteria->addCondition("SUBSTRING(code, -3 , 3) <> 000 AND status = 'Approved'");
-        $coaDetailCriteria->compare('code', $coaDetail->code . '%', true, 'AND', false);
-        $coaDetailCriteria->compare('name', $coaDetail->name, true);
+        $coaDetailCriteria->addCondition("SUBSTRING(t.code, -3 , 3) <> 000 AND status = 'Approved'");
+        $coaDetailCriteria->compare('t.code', $coaDetail->code . '%', true, 'AND', false);
+        $coaDetailCriteria->compare('t.name', $coaDetail->name, true);
         $coaDetailCriteria->compare('t.coa_category_id', $coaDetail->coa_category_id);
         $coaDetailCriteria->compare('t.coa_sub_category_id', $coaDetail->coa_sub_category_id);
         $coaDetailCriteria->compare('normal_balance', $coaDetail->normal_balance, true);

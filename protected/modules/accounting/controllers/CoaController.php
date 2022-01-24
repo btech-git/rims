@@ -51,7 +51,7 @@ class CoaController extends Controller {
      */
     public function actionView($id) {
         $model = $this->loadModel($id);
-        $coaDetails = CoaDetail::model()->findAllByAttributes(array('coa_id' => $id));
+        $coaDetails = JurnalUmum::model()->findAllByAttributes(array('coa_id' => $id));
         
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
