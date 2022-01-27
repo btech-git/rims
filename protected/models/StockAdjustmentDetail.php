@@ -10,6 +10,7 @@
  * @property integer $warehouse_id
  * @property integer $quantity_current
  * @property integer $quantity_adjustment
+ * @property string $memo
  */
 class StockAdjustmentDetail extends CActiveRecord {
 
@@ -30,9 +31,10 @@ class StockAdjustmentDetail extends CActiveRecord {
         return array(
             array('stock_adjustment_header_id, product_id, quantity_current, quantity_adjustment', 'required'),
             array('stock_adjustment_header_id, product_id, warehouse_id, quantity_current, quantity_adjustment', 'numerical', 'integerOnly' => true),
+            array('memo', 'length', 'max'=>100),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, stock_adjustment_header_id, product_id, warehouse_id, quantity_current, quantity_adjustment', 'safe', 'on' => 'search'),
+            array('id, stock_adjustment_header_id, product_id, warehouse_id, quantity_current, quantity_adjustment, memo', 'safe', 'on' => 'search'),
         );
     }
 
@@ -60,6 +62,7 @@ class StockAdjustmentDetail extends CActiveRecord {
             'warehouse_id' => 'Warehouse',
             'quantity_current' => 'Quantity Current',
             'quantity_adjustment' => 'Quantity Adjustment',
+            'memo' => 'Memo',
         );
     }
 
@@ -86,6 +89,7 @@ class StockAdjustmentDetail extends CActiveRecord {
         $criteria->compare('warehouse_id', $this->warehouse_id);
         $criteria->compare('quantity_current', $this->quantity_current);
         $criteria->compare('quantity_adjustment', $this->quantity_adjustment);
+        $criteria->compare('memo', $this->memo);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

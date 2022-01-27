@@ -9,16 +9,14 @@
             <th>Sub Brand Series</th>
             <th class="required">Warehouse</th>
             <th class="required" style="width: 5%">Quantity</th>
-            <th style="text-align: center; width: 5%"></th>
         </tr>
     </thead>
 
     <tbody>
         <?php foreach ($movementOut->details as $i => $detail): ?>
-            <?php $product = Product::model()->findByPK($detail->product_id); ?>
+            <?php $product = $detail->product; ?>
             <tr>
                 <td>
-                    <?php echo CHtml::activeHiddenField($detail, "[$i]product_id"); ?>
                     <?php echo CHtml::encode(CHtml::value($product, 'name'));  ?>
                 </td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code'));  ?></td>
@@ -26,17 +24,10 @@
                 <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name'));  ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name'));  ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name'));  ?></td>
-                <td><?php echo CHtml::activeDropDownList($detail,"[$i]warehouse_id", CHtml::listData(Warehouse::model()->findAll(), 'id', 'code'), array('prompt' => '[--Select--]')); ?></td>
-                <td><?php echo CHtml::activeTextField($detail,"[$i]quantity");?></td>
                 <td>
-                    <?php echo CHtml::button('X', array(
-                        'onclick' => CHtml::ajax(array(
-                            'type' => 'POST',
-                            'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $movementOut->header->id, 'index' => $i)),
-                            'update' => '#detail_div',
-                        )),
-                    )); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'warehouse.name')); ?>
                 </td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'quantity'));  ?></td>
             </tr>	
         <?php endforeach; ?>
     </tbody>

@@ -80,24 +80,25 @@ class MovementOutServiceController extends Controller {
         $movementOut->header->branch_id = $movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementOut->header->branch_id;
         $movementOut->header->user_id = Yii::app()->user->id;
         $movementOut->header->registration_transaction_id = $registrationTransactionId;
-//        $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationTransactionId);
 
-        if (!empty($registrationTransactionId)) {
-            $movementOut->addDetails($registrationTransactionId);
-        }
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
+        $productDataProvider = $product->search();
 
         if (isset($_POST['Submit'])) {
             $this->loadState($movementOut);
             $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date)), Yii::app()->dateFormatter->format('yy', strtotime($movementOut->header->date)));
 
             if ($movementOut->save(Yii::app()->db)) {
-                Yii::app()->session['DeliveryMemoAllowed'] = true;
                 $this->redirect(array('view', 'id' => $movementOut->header->id));
             }
         }
 
         $this->render('create', array(
             'movementOut' => $movementOut,
+            'registrationTransaction' => $registrationTransaction,
+            'product' => $product,
+            'productDataProvider' => $productDataProvider,
         ));
     }
 
@@ -153,6 +154,12 @@ class MovementOutServiceController extends Controller {
         $model = new MovementOutHeader('search');
         $model->unsetAttributes();  // clear any default values
         
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
+        $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $workOrderNumber = (isset($_GET['WorkOrderNumber'])) ? $_GET['WorkOrderNumber'] : '';
+
         if (isset($_GET['MovementOutHeader'])) {
             $model->attributes = $_GET['MovementOutHeader'];
         }
@@ -169,10 +176,78 @@ class MovementOutServiceController extends Controller {
             )
         ));
 
+        $dataProvider->criteria->together = true;
+        $dataProvider->criteria->with = array(
+            'registrationTransaction' => array(
+                'with' => array(
+                    'customer',
+                    'vehicle',
+                ),
+            ),
+        );
+        
+        if (!empty($plateNumber)) {
+            $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+            $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+        }
+        
+        if (!empty($carMake)) {
+            $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
+            $dataProvider->criteria->params[':car_make_id'] = $carMake;
+        }
+        
+        if (!empty($carModel)) {
+            $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
+            $dataProvider->criteria->params[':car_model_id'] = $carModel;
+        }
+        
+        if (!empty($customerName)) {
+            $dataProvider->criteria->addCondition('customer.name LIKE :name');
+            $dataProvider->criteria->params[':name'] = "%{$customerName}%";
+        }
+        
+        if (!empty($workOrderNumber)) {
+            $dataProvider->criteria->addCondition('registrationTransaction.work_order_number LIKE :work_order_number');
+            $dataProvider->criteria->params[':work_order_number'] = "%{$workOrderNumber}%";
+        }
+        
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'plateNumber' => $plateNumber,
+            'carMake' => $carMake,
+            'carModel' => $carModel,
+            'customerName' => $customerName,
+            'workOrderNumber' => $workOrderNumber,
         ));
+    }
+
+    public function actionAjaxHtmlAddDetail($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $movementOut = $this->instantiate($id);
+            $this->loadState($movementOut);
+
+            if (isset($_POST['ProductId'])) {
+                $movementOut->addDetail($_POST['ProductId']);
+            }
+
+            $this->renderPartial('_detail', array(
+                'movementOut' => $movementOut,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlRemoveProduct($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $movementOut = $this->instantiate($id);
+            $this->loadState($movementOut);
+
+            $movementOut->removeDetailAt($index);
+
+            $this->renderPartial('_detail', array(
+                'movementOut' => $movementOut,
+            ));
+        }
     }
 
     /**

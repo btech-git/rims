@@ -178,7 +178,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </div>
 
                             <div>
-                                <?php echo CHtml::resetButton('Clear', array('class' => 'button alert')); ?>
+                                <?php echo CHtml::resetButton('Hapus');  ?>
                                 <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;', 'class' => 'button success')); ?>
                                 <?php echo CHtml::submitButton('Save To Excel', array('name' => 'SaveToExcel', 'class' => 'button primary')); ?>
                             </div>

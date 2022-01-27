@@ -348,13 +348,9 @@ class Coa extends CActiveRecord {
             foreach ($accountingJournals as $accountingJournal) {
                 $debitAmount = $accountingJournal->debet_kredit == 'D' ? $accountingJournal->total : 0;
                 $creditAmount = $accountingJournal->debet_kredit == 'K' ? $accountingJournal->total : 0;
-                if (
-                    $this->coa_category_id == 3 ||
-                    $this->coa_category_id == 4 || 
-                    $this->coa_category_id == 5
-                ) {
+                if ($this->normal_balance == 'KREDIT' ) {
                     $balanceTotal += $creditAmount - $debitAmount;
-                } else if ($this->coa_category_id == 1 || $this->coa_category_id == 2) {
+                } else if ($this->normal_balance == 'DEBIT') {
                     $balanceTotal += $debitAmount - $creditAmount;
                 } else {
                     $balanceTotal = 0.00;

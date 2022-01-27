@@ -60,7 +60,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                     
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Brand --')); ?>
+                                        <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'order' => 'name',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSelect'),
+                                                'update' => '#product_sub_brand',
+                                            )),
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -70,11 +78,65 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Sub Brand</span>
+                                        <span class="prefix">Category</span>
                                     </div>
                                     
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(), 'id', 'name'), array('empty' => '-- All Sub Brand --')); ?>
+                                        <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                                'order' => 'name',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
+                                                'update' => '#product_sub_master_category',
+                                            )),
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Sub Brand</span>
+                                    </div>
+                                    
+                                    <div class="small-8 columns" id="product_sub_brand">
+                                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'order' => 'name',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
+                                                'update' => '#product_sub_brand_series',
+                                            )),
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Sub Master Category</span>
+                                    </div>
+                                    
+                                    <div class="small-8 columns" id="product_sub_master_category">
+                                        <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'order' => 'name',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
+                                                'update' => '#product_sub_category',
+                                            )),
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -89,8 +151,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Series</span>
                                     </div>
                                     
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(), 'id', 'name'), array('empty' => '-- All Brand Series --')); ?>
+                                    <div class="small-8 columns" id="product_sub_brand_series">
+                                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'order' => 'name',
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -100,11 +165,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Category</span>
+                                        <span class="prefix">Sub Category</span>
                                     </div>
                                     
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Master Category --')); ?>
+                                    <div class="small-8 columns" id="product_sub_category">
+                                        <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'order' => 'name',
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -112,7 +180,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                        <div class="medium-6 columns">
+                        <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
@@ -147,32 +215,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Sub Category</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Sub Category --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                        <?php echo CHtml::submitButton('Hapus', array('onclick' => 'resetForm($("#myform"));')); ?>
+                        <?php echo CHtml::resetButton('Hapus');  ?>
                         <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>
                     <div class="clear"></div>
-
                 </div>
 
                 <hr />

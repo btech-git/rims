@@ -96,6 +96,7 @@ class Cashs extends CComponent {
 
     public function flush() {
 //        $isNewRecord = $this->header->isNewRecord;
+        $this->header->credit_amount = $this->totalDetails;
         $this->header->debit_amount = $this->totalDetails;
         $valid = $this->header->save();
 

@@ -10,6 +10,7 @@
         <th style="text-align: center">Penyesuaian</th>
         <th style="text-align: center">Perbedaan</th>
         <th style="text-align: center">Unit</th>
+        <th style="text-align: center">Memo</th>
         <th></th>
     </tr>
     <?php foreach ($adjustment->details as $i => $detail): ?>
@@ -29,7 +30,9 @@
                 <?php echo CHtml::error($detail, 'quantity_current'); ?>
             </td>
             <td style="text-align: center; width: 15%">
-                <?php echo CHtml::activeTextField($detail, "[$i]quantity_adjustment", array('size' => 7, 'maxLength' => 20,
+                <?php echo CHtml::activeTextField($detail, "[$i]quantity_adjustment", array(
+                    'size' => 3, 
+                    'maxLength' => 20,
                     'onchange' => CHtml::ajax(array(
                         'type' => 'POST',
                         'dataType' => 'JSON',
@@ -47,6 +50,7 @@
                 </span>
             </td>
             <td><?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
+            <td><?php echo CHtml::activeTextField($detail, "[$i]memo"); ?></td>
             <td style="width: 5%">
                 <?php echo CHtml::button('Delete', array(
                     'onclick' => CHtml::ajax(array(

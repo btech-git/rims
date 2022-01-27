@@ -31,22 +31,21 @@ class MovementOutService extends CComponent {
         $this->header->setCodeNumberByNext('movement_out_no', $branchCode, MovementOutHeader::CONSTANT, $currentMonth, $currentYear);
     }
 
-    public function addDetails($registrationTransactionId) {
+    public function addDetail($id) {
+        $product = Product::model()->findByPk($id);
 
-        $this->details = array();
-        $registrationServices = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $registrationTransactionId));
-
-        if ($registrationServices !== null) {
-            foreach ($registrationServices as $registrationService) {
-                $serviceProducts = ServiceProduct::model()-> findAllByAttributes(array('service_id' => $registrationService->service_id));
-                
-                foreach($serviceProducts as $serviceProduct) {
-                    $detail = new MovementOutDetail();
-                    $detail->product_id = $serviceProduct->product_id;
-                    $detail->registration_service_id = $registrationService->id;
-                    $this->details[] = $detail;
-                }
+        $exist = false;
+        foreach ($this->details as $i => $detail) {
+            if ($product->id === $detail->product_id) {
+                $exist = true;
+                break;
             }
+        }
+
+        if (!$exist) {
+            $movementOutDetail = new MovementOutDetail();
+            $movementOutDetail->product_id = $id;
+            $this->details[] = $movementOutDetail;
         }
     }
 

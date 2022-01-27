@@ -13,6 +13,9 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create RegistrationService</h1>
-
-<?php echo $this->renderPartial('_form', array('movementOut' => $movementOut,)); ?>
+<?php $this->renderPartial('_form', array(
+    'movementOut' => $movementOut,
+    'registrationTransaction' => $registrationTransaction,
+    'product' => $product,
+    'productDataProvider' => $productDataProvider,
+)); ?>

@@ -36,7 +36,6 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.create"))) ?>
                 <h2>Manage Pengeluaran Bahan Pemakaian</h2>
             </div>
 
@@ -47,6 +46,11 @@ $('.search-form form').submit(function(){
                     <div class="search-form" style="display:none">
                         <?php $this->renderPartial('_search', array(
                             'model' => $model,
+                            'plateNumber' => $plateNumber,
+                            'carMake' => $carMake,
+                            'carModel' => $carModel,
+                            'customerName' => $customerName,
+                            'workOrderNumber' => $workOrderNumber,
                         )); ?>
                     </div><!-- search-form -->
                 </div>
@@ -68,16 +72,34 @@ $('.search-form form').submit(function(){
                             'value' => 'CHTml::link($data->movement_out_no, array("view", "id"=>$data->id))', 'type' => 'raw'
                         ),
                         'date_posting',
-                        'status',
+//                        'status',
                         array(
                             'name' => 'branch_id',
                             'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                            'value' => '$data->branch->name'
+                            'value' => '$data->branch->code',
                         ),
                         array(
+                            'header' => 'Registration #',
                             'name' => 'registration_transaction_number',
                             'value' => '(!empty($data->registrationTransaction->transaction_number) ? $data->registrationTransaction->transaction_number : "")'
                         ),
+                        array('name' => 'plate_number', 'value' => '$data->registrationTransaction->vehicle->plate_number'),
+                        array(
+                            'header' => 'Car Make',
+                            'name' => 'car_make_code',
+                            'value' => 'empty($data->registrationTransaction->vehicle->carMake) ? "" : $data->registrationTransaction->vehicle->carMake->name'
+                        ),
+                        array(
+                            'header'=>'Car Model',
+                            'name'=>'car_model_code',
+                            'value'=>'$data->registrationTransaction->vehicle->carModel->name'
+                        ),
+                        array(
+                            'header' => 'Customer Name',
+                            'name' => 'customer_name',
+                            'value' => '$data->registrationTransaction->customer->name',
+                        ),
+                        'registrationTransaction.work_order_number',
                         array(
                             'name' => 'user_id',
                             'value' => '$data->user->username',

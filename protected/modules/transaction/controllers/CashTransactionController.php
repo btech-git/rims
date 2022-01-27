@@ -432,7 +432,7 @@ class CashTransactionController extends Controller {
         $historis = CashTransactionApproval::model()->findAllByAttributes(array('cash_transaction_id' => $headerId));
         $model = new CashTransactionApproval;
         $model->date = date('Y-m-d H:i:s');
-        $branch = Branch::model()->findByPk($cashTransaction->branch_id);
+//        $branch = Branch::model()->findByPk($cashTransaction->branch_id);
         $getCoa = "";
         $getCoaDetail = "";
 

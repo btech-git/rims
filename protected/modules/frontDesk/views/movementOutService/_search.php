@@ -47,6 +47,28 @@
                         <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'customer_name', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
+                    </div>
+                </div>
+            </div>		
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo 'WO #'; ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::textField('WorkOrderNumber', $workOrderNumber); ?>
+                    </div>
+                </div>
             </div>	
         </div>	
         
@@ -76,6 +98,39 @@
                             'Rejected'=>'Rejected',
                             'Approved' => 'Approved',
                         ), array('empty' => '-- all --')); ?>
+                    </div>
+                </div>
+            </div>	
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'plate_number', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
+                    </div>
+                </div>
+            </div>	
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model, 'Car Make', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                    </div>
+                </div>
+            </div>	
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'car_model', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::dropDownList('CarModel', $carModel, CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>	
