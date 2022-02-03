@@ -20,7 +20,7 @@
             <?php foreach ($dataProvider->data as $detail): ?>
                     <?php $totalstockout += $detail->stock_out; ?>
                     <?php $totalstockin += $detail->stock_in; ?>
-                    <?php $currentstock += $detail->stock_in - $detail->stock_out; ?>
+                    <?php $currentstock += $detail->stock_in + $detail->stock_out; ?>
                     <tr>
                         <td><?php echo CHtml::encode($detail->transaction_type); ?></td>
                         <td><?php echo CHtml::link($detail->transaction_number, Yii::app()->createUrl("frontDesk/inventory/redirectTransaction", array("codeNumber" => $detail->transaction_number)), array('target' => '_blank')); ?></td>

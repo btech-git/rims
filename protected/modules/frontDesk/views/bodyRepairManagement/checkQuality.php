@@ -3,13 +3,13 @@
 /* @var $model RegistrationTransaction */
 
 $this->breadcrumbs=array(
-	'Idle Management'=>array('indexHead'),
+	'Idle Management'=>array('index'),
 	'Manage',
 );
 
 $this->menu=array(
-	array('label'=>'List RegistrationTransaction', 'url'=>array('admin')),
-	array('label'=>'Create RegistrationTransaction', 'url'=>array('index')),
+	array('label'=>'List Registration Transaction', 'url'=>array('admin')),
+	array('label'=>'Create Registration Transaction', 'url'=>array('index')),
 );
 
 Yii::app()->clientScript->registerScript('search', "

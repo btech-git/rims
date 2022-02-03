@@ -147,24 +147,24 @@ class Customer extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('address', $this->address, true);
-        $criteria->compare('zipcode', $this->zipcode, true);
-        $criteria->compare('province_id', $this->province_id);
-        $criteria->compare('city_id', $this->city_id);
+        $criteria->compare('t.address', $this->address, true);
+        $criteria->compare('t.zipcode', $this->zipcode, true);
+        $criteria->compare('t.province_id', $this->province_id);
+        $criteria->compare('t.city_id', $this->city_id);
         $criteria->compare('fax', $this->fax, true);
-        $criteria->compare('email', $this->email, true);
-        $criteria->compare('note', $this->note, true);
-        $criteria->compare('default_payment_type', $this->default_payment_type);
-        $criteria->compare('customer_type', $this->customer_type, true);
+        $criteria->compare('t.email', $this->email, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.default_payment_type', $this->default_payment_type);
+        $criteria->compare('t.tcustomer_type', $this->customer_type, true);
         $criteria->compare('tenor', $this->tenor);
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
         $criteria->compare('birthdate', $this->birthdate, true);
         $criteria->compare('flat_rate', $this->flat_rate, true);
         $criteria->compare('mobile_phone', $this->mobile_phone, true);
         $criteria->compare('phone', $this->phone, true);
-        $criteria->compare('coa_id', $this->coa_id);
+        $criteria->compare('t.coa_id', $this->coa_id);
         $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('t.date_approval', $this->date_approval);
 

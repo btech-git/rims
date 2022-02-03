@@ -8,62 +8,37 @@ $this->breadcrumbs = array(
 );
 
 $this->menu = array(
-    array('label' => 'List RegistrationTransaction', 'url' => array('admin')),
-    array('label' => 'Create RegistrationTransaction', 'url' => array('index')),
+    array('label' => 'List Registration Transaction', 'url' => array('admin')),
+    array('label' => 'Create Registration Transaction', 'url' => array('index')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
-	$('.search-form').slideToggle(600);
-	$('.bulk-action').toggle();
-	$(this).toggleClass('active');
-	if($(this).hasClass('active')){
-		$(this).text('');
-	}else {
-		$(this).text('Advanced Search');
-	}
-	return false;
+    $('.search-form').slideToggle(600);
+    $('.bulk-action').toggle();
+    $(this).toggleClass('active');
+    if ($(this).hasClass('active')) {
+        $(this).text('');
+    } else {
+        $(this).text('Advanced Search');
+    }
+    return false;
 });
+
 $('.search-form form').submit(function(){
-	$('#registration-service-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
+    $('#registration-service-grid').yiiGridView('update', {
+            data: $(this).serialize()
+    });
+    return false;
 });
 
-	/*$('#registration-service-grid a.registration-service-start').live('click',function() {
-        //if(!confirm('Are you sure you want to mark this commission as PAID?')) return false;
-        
-        var url = $(this).attr('href');
-        //  do your post request here
-        console.log(url);
-        $.post(url,function(html){
-            $.fn.yiiGridView.update('registration-service-grid');
-        });
-        return false;
-	});
-
-	$('#registration-service-grid a.registration-service-finish').live('click',function() {
-        //if(!confirm('Are you sure you want to mark this commission as PAID?')) return false;
-        
-        var url = $(this).attr('href');
-        //  do your post request here
-        console.log(url);
-        $.post(url,function(html){
-            $.fn.yiiGridView.update('registration-service-grid');
-        });
-        return false;
-	});*/
 ");
 ?>
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
-        <?php echo CHtml::link('Registration', array('/frontDesk/generalRepairRegistration/view', 'id'=>$registration->id), array('target' => '_blank', 'class'=>'button primary right')); ?>
-        <span style="float: right">&nbsp;&nbsp;&nbsp;</span>
-        <?php echo CHtml::link('Inspection', array('/frontDesk/vehicleInspection/create', 'vehicleId'=>$registration->vehicle_id, 'wonumber' => $registration->work_order_number), array('target' => '_blank', 'class'=>'button success right')); ?>
     <div class="clearfix page-action">
-        <h1>Manage General Repair Progress</h1>
+        <h1>Body Repair</h1>
         <div>
             <span style="text-align: center"><h3>Work Order Information</h3></span>
             
@@ -98,27 +73,6 @@ $('.search-form form').submit(function(){
                     <td>Work Order #: <?php echo $registration->work_order_number; ?></td>
                     <td>Status: <?php echo $registration->status; ?></td>
                 </tr>
-                <tr>
-                    <?php echo CHtml::beginForm(); ?>
-                    <td>
-                        Tambah Memo: 
-                        <?php echo CHtml::textField('Memo', $memo, array('size' => 10, 'maxLength' => 100)); ?> <br />
-                        <?php echo CHtml::submitButton('Submit', array('name' => 'SubmitMemo', 'confirm' => 'Are you sure you want to save?', 'class' => 'btn_blue')); ?>
-                    </td>
-                    <?php echo CHtml::endForm(); ?>
-                    <td>
-                        List Memo
-                        <table>
-                            <?php foreach ($registration->registrationMemos as $i => $detail): ?>
-                                <tr>
-                                    <td style="width: 5%"><?php echo CHtml::encode($i + 1); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                                </tr>
-                                <?php $i++; ?>
-                            <?php endforeach; ?>
-                        </table>
-                    </td>
-                </tr>
             </table>
         </div>
         
@@ -135,7 +89,7 @@ $('.search-form form').submit(function(){
                     <th>Action</th>
                 </thead>
 
-                <tgeneral>
+                <tbody>
                     <?php foreach ($registration->registrationProducts as $key => $rp): ?>
                         <tr>
                             <td><?php echo $rp->product->name; ?></td>
@@ -224,7 +178,7 @@ $('.search-form form').submit(function(){
                             </td>
                         </tr>
                     <?php endforeach; ?>
-                </tgeneral>
+                </tbody>
             </table>
         </div>
         
@@ -292,7 +246,7 @@ $('.search-form form').submit(function(){
                     <th>detail</th>
                 </thead>
 
-                <tgeneral>
+                <tbody>
                     <?php $counter = 1; ?>
                     <?php foreach (array_reverse($registrationHistories) as $i => $registrationHistory): ?>
                         <?php if ($counter < 11 && $registrationHistory->id !== $registration->id): ?>
@@ -368,8 +322,55 @@ $('.search-form form').submit(function(){
                             <?php $counter++; ?>
                         <?php endif; ?>
                 <?php endforeach; ?>
-                </tgeneral>
+                </tbody>
             </table>
+        </div>
+
+        <br />
+
+        <div>
+            <table>
+                <caption>Body Repair</caption>
+                <thead>
+                    <tr style="background-color: lightblue">
+                        <th style="text-align: center">No.</th>
+                        <th style="text-align: center">Process</th>
+                        <th style="text-align: center">Start</th>
+                        <th style="text-align: center">Finish</th>
+                        <th style="text-align: center">Total Time</th>
+                        <th style="text-align: center">Mechanic</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <?php foreach ($registrationBodyRepairDetails as $i => $registrationBodyRepairDetail): ?>
+                        <?php $isDetailRunning = $bodyRepairManagement->runningDetail === null ? false : $registrationBodyRepairDetail->id === $bodyRepairManagement->runningDetail->id; ?>
+                        <tr style="<?php echo $isDetailRunning ? 'font-weight: bold; background-color: greenyellow' : ''; ?>">
+                            <td style="text-align: center"><?php echo $i + 1; ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'service_name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'start_date_time')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'finish_date_time')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'totalTimeFormatted')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($registrationBodyRepairDetail, 'mechanic.name')); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="text-align: center">
+            <?php echo CHtml::dropDownList('SubmitServiceName', '', array(
+                'Bongkar' => 'Bongkar',
+                'Sparepart' => 'Sparepart',
+                'KetokLas' => 'KetokLas',
+                'Dempul' => 'Dempul',
+                'Epoxy' => 'Epoxy',
+                'Cat' => 'Cat',
+                'Pasang' => 'Pasang',
+                'Cuci' => 'Cuci',
+                'Poles' => 'Poles',
+            )); ?>
+            <?php echo CHtml::submitButton('Proceed to Queue', array('name' => 'ProceedQueue', 'confirm' => 'Confirm to Process?', 'class' => 'button cbutton success')); ?>
         </div>
     </div>
 </div>

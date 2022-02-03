@@ -423,13 +423,56 @@ class BodyRepairManagementController extends Controller {
         ));
     }
 
-    public function actionProceedToQueue($id) {
-        $model = RegistrationTransaction::model()->findByPk($id);
-        $model->status = 'Queue Bongkar';
+    public function actionProceedToQueue($registrationId) {
+        $registration = RegistrationTransaction::model()->findByPk($registrationId);
+        $vehicle = Vehicle::model()->findByPk($registration->vehicle_id);
+        $registrationHistories = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $vehicle->id));
+
+        $registrationService = new RegistrationService('search');
+        $registrationService->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationService'])) {
+            $registrationService->attributes = $_GET['RegistrationService'];
+        }
+        $registrationServiceCriteria = new CDbCriteria;
+        $registrationServiceCriteria->condition = 'registration_transaction_id = ' . $registrationId;
+        $registrationServiceDataProvider = new CActiveDataProvider('RegistrationService', array(
+            'criteria' => $registrationServiceCriteria,
+        ));
+
+        $registrationDamage = new RegistrationDamage('search');
+        $registrationDamage->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationDamage'])) {
+            $registrationDamage->attributes = $_GET['RegistrationDamage'];
+        }
+        $registrationDamageCriteria = new CDbCriteria;
+        $registrationDamageCriteria->condition = 'registration_transaction_id = ' . $registrationId;
+        $registrationDamageDataProvider = new CActiveDataProvider('RegistrationDamage', array(
+            'criteria' => $registrationDamageCriteria,
+        ));
         
-        if ($model->update(array('status'))) {
+        $registrationBodyRepairDetails = RegistrationBodyRepairDetail::model()->findAllByAttributes(array('registration_transaction_id' => $registration->id));
+        $runningDetail = $this->loadRunningDetail($registrationBodyRepairDetails);
+        $bodyRepairManagement = new BodyRepairManagement($registration, $runningDetail);
+
+        $serviceName = isset($_POST['SubmitServiceName']) ? $_POST['SubmitServiceName'] : '';
+        if (isset($_POST['ProceedQueue']) && $serviceName !== null) {
+            $registration->service_status = $serviceName . ' - Pending';
+            $registration->update(array('service_status'));
+            
             $this->redirect(array('index'));
         }
+        
+        $this->render('processWaitlist', array(
+            'vehicle' => $vehicle,
+            'registration' => $registration,
+            'registrationHistories' => $registrationHistories,
+            'registrationService' => $registrationService,
+            'registrationServiceDataProvider' => $registrationServiceDataProvider,
+            'registrationDamage' => $registrationDamage,
+            'registrationDamageDataProvider' => $registrationDamageDataProvider,
+            'bodyRepairManagement' => $bodyRepairManagement,
+            'registrationBodyRepairDetails' => $registrationBodyRepairDetails,
+        ));
         
     }
     

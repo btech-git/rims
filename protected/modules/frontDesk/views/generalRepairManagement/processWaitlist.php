@@ -59,9 +59,6 @@ $('.search-form form').submit(function(){
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
-        <?php echo CHtml::link('Registration', array('/frontDesk/generalRepairRegistration/view', 'id'=>$registration->id), array('target' => '_blank', 'class'=>'button primary right')); ?>
-        <span style="float: right">&nbsp;&nbsp;&nbsp;</span>
-        <?php echo CHtml::link('Inspection', array('/frontDesk/vehicleInspection/create', 'vehicleId'=>$registration->vehicle_id, 'wonumber' => $registration->work_order_number), array('target' => '_blank', 'class'=>'button success right')); ?>
     <div class="clearfix page-action">
         <h1>Manage General Repair Progress</h1>
         <div>
@@ -97,27 +94,6 @@ $('.search-form form').submit(function(){
                 <tr>
                     <td>Work Order #: <?php echo $registration->work_order_number; ?></td>
                     <td>Status: <?php echo $registration->status; ?></td>
-                </tr>
-                <tr>
-                    <?php echo CHtml::beginForm(); ?>
-                    <td>
-                        Tambah Memo: 
-                        <?php echo CHtml::textField('Memo', $memo, array('size' => 10, 'maxLength' => 100)); ?> <br />
-                        <?php echo CHtml::submitButton('Submit', array('name' => 'SubmitMemo', 'confirm' => 'Are you sure you want to save?', 'class' => 'btn_blue')); ?>
-                    </td>
-                    <?php echo CHtml::endForm(); ?>
-                    <td>
-                        List Memo
-                        <table>
-                            <?php foreach ($registration->registrationMemos as $i => $detail): ?>
-                                <tr>
-                                    <td style="width: 5%"><?php echo CHtml::encode($i + 1); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                                </tr>
-                                <?php $i++; ?>
-                            <?php endforeach; ?>
-                        </table>
-                    </td>
                 </tr>
             </table>
         </div>
@@ -370,6 +346,11 @@ $('.search-form form').submit(function(){
                 <?php endforeach; ?>
                 </tgeneral>
             </table>
+        </div>
+        
+        <div style="text-align: center">
+            <?php echo CHtml::dropDownList('ServiceTypeId', '', CHtml::listData(RegistrationServiceManagement::model()->findAllByAttributes(array('registration_transaction_id' => $registration->id)), 'service_type_id', 'serviceType.name')); ?>
+            <?php echo CHtml::submitButton('Proceed to Queue', array('name' => 'ProceedQueue', 'confirm' => 'Confirm to Process?', 'class' => 'button cbutton success')); ?>
         </div>
     </div>
 </div>

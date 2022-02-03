@@ -22,7 +22,20 @@ class ReceivableLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
+        $customer = new Customer('search');
+        $customer->unsetAttributes();  // clear any default values
+        if (isset($_GET['Customer'])) {
+            $customer->attributes = $_GET['Customer'];
+        }
+        $customerCriteria = new CDbCriteria;
+        $customerCriteria->compare('t.name', $customer->name, true);
+        $customerCriteria->compare('t.customer_type', $customer->customer_type, true);
+        $customerDataProvider = new CActiveDataProvider('Customer', array(
+            'criteria' => $customerCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
+        ));
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -42,11 +55,25 @@ class ReceivableLedgerController extends Controller {
         
         $this->render('summary', array(
             'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
             'receivableLedgerSummary' => $receivableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
         ));
+    }
+
+    public function actionAjaxJsonCustomer() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customer = Customer::model()->findByPk($_POST['Customer']['id']);
+            
+            $object = array(
+                'customer_type' => $customer->customer_type,
+                'customer_name' => $customer->name,
+                'customer_address' => $customer->address,
+            );
+            echo CJSON::encode($object);
+        }
     }
 
     public function actionRedirectTransaction($codeNumber) {

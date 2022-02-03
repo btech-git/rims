@@ -148,6 +148,7 @@ $('.search-form form').submit(function(){
             </table>
             
             <div style="text-align: center">
+                <?php echo CHtml::dropDownList('ServiceTypeId', '', CHtml::listData(RegistrationServiceManagement::model()->findAllByAttributes(array('registration_transaction_id' => $registrationTransaction->id)), 'service_type_id', 'serviceType.name')); ?>
                 <?php echo CHtml::submitButton('Pass', array('name' => 'SubmitPass', 'confirm' => 'Confirm Pass?', 'class' => 'button success')); ?> 
                 &nbsp;&nbsp;&nbsp;
                 <?php echo CHtml::submitButton('Fail', array('name' => 'SubmitFail', 'confirm' => 'Confirm Fail?', 'class' => 'button cbutton alert')); ?>

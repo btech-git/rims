@@ -132,19 +132,19 @@ class GeneralRepairManagementController extends Controller {
         ));
     }
     
-    public function actionProceedToQueue($id) {
-        $model = RegistrationTransaction::model()->findByPk($id);
-        $model->service_status = 'Queue';
-        
-        foreach ($model->registrationServiceManagements as $detail) {
-            $detail->status = 'Queue';
-            $detail->update(array('status'));
-        }
-        
-        if ($model->update(array('service_status'))) {
-            $this->redirect(array('index'));
-        }
-    }
+//    public function actionProceedToQueue($id) {
+//        $model = RegistrationTransaction::model()->findByPk($id);
+//        $model->service_status = 'Queue';
+//        
+//        foreach ($model->registrationServiceManagements as $detail) {
+//            $detail->status = 'Queue';
+//            $detail->update(array('status'));
+//        }
+//        
+//        if ($model->update(array('service_status'))) {
+//            $this->redirect(array('index'));
+//        }
+//    }
     
     public function actionAssignMechanic($id) {
         $registrationServiceManagement = RegistrationServiceManagement::model()->findByPk($id);
@@ -220,8 +220,6 @@ class GeneralRepairManagementController extends Controller {
         $registrationServiceManagement = RegistrationServiceManagement::model()->findByPk($id);
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationServiceManagement->registration_transaction_id);
         $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
-//        $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
-//        $priorityLevel = isset($_GET['PriorityLevel']) ? $_GET['PriorityLevel'] : '';
 
         $registrationService = new RegistrationService('search');
         $registrationService->unsetAttributes();  // clear any default values
@@ -245,15 +243,20 @@ class GeneralRepairManagementController extends Controller {
             'criteria' => $registrationDamageCriteria,
         ));
 
-            $qualityControl = RegistrationServiceManagement::model()->findByAttributes(array('is_passed' => 0));
+        $qualityControl = RegistrationServiceManagement::model()->findByAttributes(array('is_passed' => 0));
         if (isset($_POST['SubmitPass'])) {
             if (empty($qualityControl)) {
                 $registrationTransaction->service_status = 'Finished';
+                $registrationServiceManagement->status = 'Finished';
+                $registrationServiceManagement->is_passed = true;
             } else {
+                $serviceTypeId = isset($_POST['ServiceTypeId']) ? $_POST['ServiceTypeId'] : '';
+                $registrationServiceManagement = RegistrationServiceManagement::model()->findByAttributes(array('registration_transaction_id' => $registrationTransaction->id, 'service_type_id' => $serviceTypeId));
+                $registrationServiceManagement->status = 'Queue';
+                $registrationServiceManagement->is_passed = false;
+
                 $registrationTransaction->service_status = 'Queue';
             }
-            $registrationServiceManagement->status = 'Finished';
-            $registrationServiceManagement->is_passed = true;
 
             if ($registrationServiceManagement->update(array('is_passed', 'status')) && $registrationTransaction->update(array('service_status'))) {
                 $this->redirect(array('index'));
@@ -344,6 +347,60 @@ class GeneralRepairManagementController extends Controller {
             'registrationDamageDataProvider' => $registrationDamageDataProvider,
             'vehicle' => $vehicle,
             'memo' => $memo,
+        ));
+    }
+
+    public function actionProceedToQueue($id) {
+        $registration = RegistrationTransaction::model()->findByPk($id);
+        $vehicle = Vehicle::model()->findByPk($registration->vehicle_id);
+        $registrationHistories = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $vehicle->id));
+
+        $registrationService = new RegistrationService('search');
+        $registrationService->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationService'])) {
+            $registrationService->attributes = $_GET['RegistrationService'];
+        }
+        $registrationServiceCriteria = new CDbCriteria;
+        $registrationServiceCriteria->condition = 'registration_transaction_id = ' . $id;
+        $registrationServiceDataProvider = new CActiveDataProvider('RegistrationService', array(
+            'criteria' => $registrationServiceCriteria,
+        ));
+
+        $registrationDamage = new RegistrationDamage('search');
+        $registrationDamage->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationDamage'])) {
+            $registrationDamage->attributes = $_GET['RegistrationDamage'];
+        }
+        $registrationDamageCriteria = new CDbCriteria;
+        $registrationDamageCriteria->condition = 'registration_transaction_id = ' . $id;
+        $registrationDamageDataProvider = new CActiveDataProvider('RegistrationDamage', array(
+            'criteria' => $registrationDamageCriteria,
+        ));
+
+        if (isset($_POST['ProceedQueue'])) {
+            
+            $serviceTypeId = isset($_POST['ServiceTypeId']) ? $_POST['ServiceTypeId'] : '';
+            if (!empty($serviceTypeId)) {
+                $registrationServiceManagement = RegistrationServiceManagement::model()->findByAttributes(array('registration_transaction_id' => $registration->id, 'service_type_id' => $serviceTypeId));
+                $registrationServiceManagement->status = 'Queue';
+                $registrationServiceManagement->update(array('status'));
+            }
+
+            $registration->service_status = 'Queue';
+            if ($registration->update(array('service_status'))) {
+                $this->redirect(array('index'));
+            }
+
+        }
+        
+        $this->render('processWaitlist', array(
+            'vehicle' => $vehicle,
+            'registration' => $registration,
+            'registrationHistories' => $registrationHistories,
+            'registrationService' => $registrationService,
+            'registrationServiceDataProvider' => $registrationServiceDataProvider,
+            'registrationDamage' => $registrationDamage,
+            'registrationDamageDataProvider' => $registrationDamageDataProvider,
         ));
     }
 

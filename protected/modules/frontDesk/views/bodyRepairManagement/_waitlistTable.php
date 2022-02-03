@@ -27,7 +27,7 @@
                 <td><?php echo $model->insurance_company_id != null ? $model->insuranceCompany->name : ' '; ?></td>
                 <td><?php echo $model->branch_id != null ? $model->branch->code : '-'; ?></td>
                 <td><?php echo $model->getPriorityLiteral($model->priority_level); ?></td>
-                <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/bodyRepairManagement/proceedToQueue", array("id"=>$model->id)), array('class' => 'button secondary')); ?></td>
+                <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/bodyRepairManagement/proceedToQueue", array("registrationId"=>$model->id)), array('class' => 'button secondary')); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

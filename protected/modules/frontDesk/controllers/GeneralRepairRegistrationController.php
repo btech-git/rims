@@ -289,12 +289,17 @@ class GeneralRepairRegistrationController extends Controller {
 
         if (isset($_POST['SubmitFinish'])) {
             $model->status = 'Finished';
-            $model->update(array('status'));
+            $model->transaction_date_out = date('Y-m-d');
+            $model->transaction_time_out = date('H:i:s');
+            $model->update(array('status', 'transaction_date_out', 'transaction_time_out'));
         }
 
         if (isset($_POST['SubmitOffPremise'])) {
             $model->vehicle_status = 'Sudah Diambil';
-            $model->update(array('vehicle_status'));
+            $model->transaction_date_out = date('Y-m-d');
+            $model->transaction_time_out = date('H:i:s');
+
+            $model->update(array('vehicle_status', 'transaction_date_out', 'transaction_time_out'));
         }
 
         $this->render('view', array(
@@ -369,8 +374,10 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionFinishTransaction($id) {
         $model = $this->loadModel($id);
         $model->status = 'Finished';
+        $model->transaction_date_out = date('Y-m-d');
+        $model->transaction_time_out = date('H:i:s');
         
-        if ($model->update(array('status'))) {
+        if ($model->update(array('status', 'transaction_date_out', 'transaction_time_out'))) {
             $this->redirect(array('admin'));
         }
     }

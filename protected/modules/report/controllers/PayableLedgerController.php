@@ -22,7 +22,20 @@ class PayableLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : '');
+        $supplier = new Supplier('search');
+        $supplier->unsetAttributes();  // clear any default values
+        if (isset($_GET['Supplier'])) {
+            $supplier->attributes = $_GET['Supplier'];
+        }
+        $supplierCriteria = new CDbCriteria;
+        $supplierCriteria->compare('t.name', $supplier->name, true);
+        $supplierCriteria->compare('t.company', $supplier->company, true);
+        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
+            'criteria' => $supplierCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
+        ));
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -42,11 +55,25 @@ class PayableLedgerController extends Controller {
         
         $this->render('summary', array(
             'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
             'payableLedgerSummary' => $payableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
         ));
+    }
+
+    public function actionAjaxJsonSupplier() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $supplier = Supplier::model()->findByPk($_POST['Supplier']['id']);
+            
+            $object = array(
+                'supplier_company' => $supplier->company,
+                'supplier_name' => $supplier->name,
+                'supplier_address' => $supplier->address,
+            );
+            echo CJSON::encode($object);
+        }
     }
 
     public function actionRedirectTransaction($codeNumber) {

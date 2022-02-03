@@ -173,24 +173,24 @@ class Supplier extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('date', $this->date, true);
-        $criteria->compare('code', $this->code, true);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.date', $this->date, true);
+        $criteria->compare('.code', $this->code, true);
         $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('company', $this->company, true);
-        $criteria->compare('position', $this->position, true);
-        $criteria->compare('address', $this->address, true);
-        $criteria->compare('province_id', $this->province_id);
-        $criteria->compare('city_id', $this->city_id);
-        $criteria->compare('zipcode', $this->zipcode, true);
-        $criteria->compare('email_personal', $this->email_personal, true);
+        $criteria->compare('t.company', $this->company, true);
+        $criteria->compare('t.position', $this->position, true);
+        $criteria->compare('t.address', $this->address, true);
+        $criteria->compare('t.province_id', $this->province_id);
+        $criteria->compare('t.city_id', $this->city_id);
+        $criteria->compare('t.zipcode', $this->zipcode, true);
+        $criteria->compare('t.email_personal', $this->email_personal, true);
         $criteria->compare('email_company', $this->email_company, true);
         $criteria->compare('npwp', $this->npwp, true);
         $criteria->compare('tenor', $this->tenor);
         $criteria->compare('company_attribute', $this->company_attribute, true);
-        $criteria->compare('coa_id', $this->coa_id);
-        $criteria->compare('coa_outstanding_order', $this->coa_outstanding_order);
-        $criteria->compare('description', $this->description);
+        $criteria->compare('t.coa_id', $this->coa_id);
+        $criteria->compare('t.coa_outstanding_order', $this->coa_outstanding_order);
+        $criteria->compare('t.description', $this->description);
         $criteria->compare('person_in_charge', $this->person_in_charge);
         $criteria->compare('phone', $this->phone);
         $criteria->compare('mobile_phone', $this->mobile_phone);

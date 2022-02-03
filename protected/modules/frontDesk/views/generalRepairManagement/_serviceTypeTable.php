@@ -1,5 +1,6 @@
 <div class="clearfix page-action">
     <div>
+        <?php $numbering = 1; ?>
         <h3>Queue</h3>
         <table>
             <thead>
@@ -20,7 +21,6 @@
             </thead>
 
             <tbody>
-                <?php $numbering = 1; ?>
                 <?php foreach ($registrationServiceManagementQueue as $row): ?>
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
@@ -65,7 +65,6 @@
             </thead>
 
             <tbody>
-                <?php $numbering = 1; ?>
                 <?php foreach ($registrationServiceManagementAssigned as $row): ?>
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
@@ -110,7 +109,6 @@
             </thead>
 
             <tbody>
-                <?php $numbering = 1; ?>
                 <?php foreach ($registrationServiceManagementProgress as $row): ?>
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
@@ -155,7 +153,6 @@
             </thead>
 
             <tbody>
-                <?php $numbering = 1; ?>
                 <?php foreach ($registrationServiceManagementControl as $row): ?>
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
@@ -198,7 +195,6 @@
             </thead>
 
             <tbody>
-                <?php $numbering = 1; ?>
                 <?php foreach ($registrationServiceManagementFinished as $row): ?>
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>

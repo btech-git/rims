@@ -33,7 +33,7 @@
                         <td><?php echo $row['status']; ?></td>
                         <td><?php echo $row['branch']; ?></td>
                         <td><?php echo $row['priority_level']; ?></td>
-                        <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/idleManagement/proceedToPlanning", array("id"=>$row['registration_transaction_id'])), array('class' => 'button secondary')); ?></td>
+                        <td><?php echo CHtml::link('<span class="fa fa-angle-right"></span>Process to Queue', Yii::app()->createUrl("frontDesk/generalRepairManagement/proceedToPlanning", array("id"=>$row['registration_transaction_id'])), array('class' => 'button secondary')); ?></td>
                     </tr>
                     <?php $numbering++; ?>
                 <?php endif; ?>

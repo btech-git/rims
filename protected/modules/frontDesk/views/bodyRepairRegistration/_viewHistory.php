@@ -1,6 +1,6 @@
 <?php if ($model->vehicle_id != ""): ?>
     <?php $historyTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id'=>$model->vehicle_id)); ?>
-    <?php if (count($historyTransactions) > 0): ?>
+    <?php if (count($historyTransactions) > 0 AND count($historyTransactions) < 30): ?>
         <div class="detail">
             <table>
                 <thead>
@@ -31,7 +31,7 @@
                                 ), '<span class="fa fa-caret-down"></span> Detail');?>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <td id="detail-<?php echo $i?>" class="hide" colspan=6>
                                 <table>
@@ -84,7 +84,7 @@
                                 </table>
                             </td>
                         </tr>
-                    <?php endforeach ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
