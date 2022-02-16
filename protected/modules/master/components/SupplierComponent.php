@@ -88,7 +88,7 @@ class SupplierComponent extends CComponent {
     public function flush() {
         
         if ($this->header->isNewRecord) {
-            $coaGroupHutang = Coa::model()->findByAttributes(array('code' => '201.00.000'));
+            $coaGroupHutang = Coa::model()->findByAttributes(array('coa_sub_category_id' => '15'));
             $coaHutang = new Coa;
             $coaHutang->getCodeNumber($coaGroupHutang->coa_sub_category_id);
             $coaHutang->name = 'Hutang ' . $this->header->company;

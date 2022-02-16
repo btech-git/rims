@@ -671,6 +671,7 @@ $this->breadcrumbs=array(
                 });
             }',
             'columns'=>array(
+                'id',
                 'manufacturer_code',
                 'name',
                 array('name'=>'product_brand_name', 'value'=>'$data->brand->name'),

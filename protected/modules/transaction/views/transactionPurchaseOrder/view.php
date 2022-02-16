@@ -84,13 +84,13 @@ $this->menu=array(
                     'model'=>$model
                 ),TRUE)
             ),
-//            'Detail Receive'=>array(
-//                'id'=>'test3',
-//                'content'=>$this->renderPartial('_viewDetailReceive', array(
-//                    'purchaseOrderDetails'=>$purchaseOrderDetails,
-//                    'model'=>$model
-//                ),TRUE)
-//            ),
+            'Detail Receive'=>array(
+                'id'=>'test3',
+                'content'=>$this->renderPartial('_viewDetailReceive', array(
+                    'purchaseOrderDetails'=>$purchaseOrderDetails,
+                    'model'=>$model
+                ),TRUE)
+            ),
             'Detail Invoice'=>array(
                 'id'=>'test4',
                 'content'=>$this->renderPartial('_viewDetailInvoice', array(

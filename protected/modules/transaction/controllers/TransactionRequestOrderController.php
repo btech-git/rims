@@ -105,12 +105,13 @@ class TransactionRequestOrderController extends Controller
         }
 
         $productCriteria = new CDbCriteria;
+        $productCriteria->compare('t.id', $product->id);
         $productCriteria->compare('t.name', $product->name, true);
         $productCriteria->compare('t.manufacturer_code', $product->manufacturer_code, true);
         $productCriteria->together = true;
         $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.company as product_supplier';
         $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';
-        $productCriteria->group = 't.id';
+//        $productCriteria->group = 't.id';
         $productCriteria->distinct = true;
         $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
         $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);

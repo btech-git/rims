@@ -136,7 +136,7 @@ class StockAdjustmentDetail extends CActiveRecord {
         }
     }
 
-    public function getCurrentStock($branchId = null, $productId) {
+    public function getCurrentStock($productId, $branchId = null) {
         $sql = "
             SELECT COALESCE(i.total_stock, 0)
             FROM " . Inventory::model()->tableName() . " i
@@ -145,7 +145,7 @@ class StockAdjustmentDetail extends CActiveRecord {
         ";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':product_id' => $this->id,
+            ':product_id' => $productId,
             ':branch_id' => empty($branchId) ? $this->stockAdjustmentHeader->branch_id : $branchId,
         ));
 

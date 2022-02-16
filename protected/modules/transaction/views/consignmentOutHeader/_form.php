@@ -18,20 +18,7 @@
     <p class="note">Fields with <span class="required">*</span> are required.</p>
     <?php echo $form->errorSummary($consignmentOut->header); ?>
 
-    <div class="row">
-<!--        <div class="large-6 columns">
-            <div class="row collapse prefix-radius">
-                <div class="small-4 columns">
-                    <?php //echo $form->labelEx($consignmentOut->header, 'consignment_out_no', array('class' => 'prefix')); ?>
-                </div>
-                <div class="small-8 columns">
-                    <?php //echo CHtml::encode(CHtml::value($consignmentOut->header, 'consignment_out_no')); ?>
-                    <?php //echo $form->textField($consignmentOut->header, 'consignment_out_no', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
-                    <?php //echo $form->error($consignmentOut->header, 'consignment_out_no'); ?>
-                </div>
-            </div>
-        </div>-->
-        
+    <div class="row">        
         <div class="large-6 columns">
             <div class="row collapse prefix-radius">
                 <div class="small-4 columns">
@@ -55,20 +42,6 @@
                 </div>
                 <div class="small-8 columns">
                     <?php echo $form->textField($consignmentOut->header, 'date_posting', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>
-                    <?php /* $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                      'model' => $consignmentOut->header,
-                      'attribute' => "date_posting",
-                      'options'=>array(
-                      'dateFormat' => 'yy-mm-dd',
-                      'changeMonth'=>true,
-                      'changeYear'=>true,
-                      'yearRange'=>'1900:2020'
-                      ),
-                      'htmlOptions'=>array(
-                      'value'=>date('Y-m-d'),
-                      //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
-                      ),
-                      )); */ ?>
                     <?php echo $form->error($consignmentOut->header, 'date_posting'); ?>
                 </div>
             </div>
@@ -160,7 +133,6 @@
                         <?php echo $form->labelEx($consignmentOut->header, 'status', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php //echo $form->textField($consignmentOut->header,'status',array('size'=>10,'maxlength'=>10)); ?>
                         <?php
                         if ($consignmentOut->header->isNewRecord) {
                             echo $form->textField($consignmentOut->header, 'status', array('value' => 'Draft', 'readonly' => true));
@@ -348,6 +320,7 @@
         <table>
             <thead>
                 <tr>
+                    <td>ID</td>
                     <td>Code</td>
                     <td>Name</td>
                     <td>Brand</td>
@@ -361,6 +334,21 @@
             <tbody>
                 <tr>
                     <td>
+                        <?php echo CHtml::activeTextField($product, 'id', array(
+                            'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
+                                brand_id: $("#Product_brand_id").val(),
+                                sub_brand_id: $("#Product_sub_brand_id").val(),
+                                sub_brand_series_id: $("#Product_sub_brand_series_id").val(),
+                                product_master_category_id: $("#Product_product_master_category_id").val(),
+                                product_sub_master_category_id: $("#Product_product_sub_master_category_id").val(),
+                                product_sub_category_id: $("#Product_product_sub_category_id").val(),
+                                manufacturer_code: $("#Product_manufacturer_code").val(),
+                                name: $("#Product_name").val(),
+                                id: $(this).val(),
+                            } } });',
+                        )); ?>
+                    </td>
+                    <td>
                         <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
                             'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
                                     brand_id: $("#Product_brand_id").val(),
@@ -371,6 +359,7 @@
                                     product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                     manufacturer_code: $(this).val(),
                                     name: $("#Product_name").val(),
+                                    id: $("#Product_id").val(),
                                 } } });',
                         )); ?>
                     </td>
@@ -385,6 +374,7 @@
                                     product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                     manufacturer_code: $("#Product_manufacturer_code").val(),
                                     name: $(this).val(),
+                                    id: $("#Product_id").val(),
                                 } } });',
                         )); ?>
                     </td>
@@ -404,6 +394,7 @@
                                 product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                 manufacturer_code: $("#Product_manufacturer_code").val(),
                                 name: $("#Product_name").val(),
+                                id: $("#Product_id").val(),
                             } } });',
                         )); ?>
                     </td>
@@ -445,6 +436,7 @@
                                 product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                 manufacturer_code: $("#Product_manufacturer_code").val(),
                                 name: $("#Product_name").val(),
+                                id: $("#Product_id").val(),
                             } } });',
                         )); ?>
                     </td>

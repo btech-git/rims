@@ -308,13 +308,13 @@ $('.search-form form').submit(function(){
                                     <?php echo CHtml::tag('button', array(
                                         'type'=>'button',
                                         'class' => 'hello button expand',
-                                        'onclick'=>'$("#detail-'.$i.'").toggle();'
+                                        'onclick'=>'$("#detail-history-'.$i.'").toggle();'
                                     ), '<span class="fa fa-caret-down"></span> Detail');?>
                                 </td>
                             </tr>
                         
                             <tr>
-                                <td id="detail-<?php echo $i?>" class="hide" colspan=6>
+                                <td id="detail-history-<?php echo $i?>" class="hide" colspan=6>
                                     <table>
                                         <tr>
                                             <td>Problem</td>

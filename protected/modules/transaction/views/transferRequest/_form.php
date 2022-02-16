@@ -114,6 +114,8 @@
         <?php echo CHtml::hiddenField('ProductId'); ?>
     </div>
 
+    <br />
+    
     <div id="detail_div">
         <?php $this->renderPartial('_detail', array('transferRequest' => $transferRequest)); ?>
     </div>
@@ -144,6 +146,7 @@
             <table>
                 <thead>
                     <tr>
+                        <td>ID</td>
                         <td>Code</td>
                         <td>Name</td>
                         <td>Brand</td>
@@ -157,6 +160,21 @@
                 <tbody>
                     <tr>
                         <td>
+                            <?php echo CHtml::activeTextField($product, 'id', array(
+                                'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
+                                    brand_id: $("#Product_brand_id").val(),
+                                    sub_brand_id: $("#Product_sub_brand_id").val(),
+                                    sub_brand_series_id: $("#Product_sub_brand_series_id").val(),
+                                    product_master_category_id: $("#Product_product_master_category_id").val(),
+                                    product_sub_master_category_id: $("#Product_product_sub_master_category_id").val(),
+                                    product_sub_category_id: $("#Product_product_sub_category_id").val(),
+                                    id: $(this).val(),
+                                    name: $("#Product_name").val(),
+                                    manufacturer_code: $("#Product_manufacturer_code").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        <td>
                             <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
                                 'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
                                     brand_id: $("#Product_brand_id").val(),
@@ -167,6 +185,7 @@
                                     product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                     manufacturer_code: $(this).val(),
                                     name: $("#Product_name").val(),
+                                    id: $("#Product_id").val(),
                                 } } });',
                             )); ?>
                         </td>
@@ -181,6 +200,7 @@
                                     product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                     manufacturer_code: $("#Product_manufacturer_code").val(),
                                     name: $(this).val(),
+                                    id: $("#Product_id").val(),
                                 } } });',
                             )); ?>
                         </td>
@@ -200,6 +220,7 @@
                                     product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                     manufacturer_code: $("#Product_manufacturer_code").val(),
                                     name: $("#Product_name").val(),
+                                    id: $("#Product_id").val(),
                                 } } });',
                             )); ?>
                         </td>
@@ -240,6 +261,7 @@
                                     product_sub_category_id: $("#Product_product_sub_category_id").val(),
                                     manufacturer_code: $("#Product_manufacturer_code").val(),
                                     name: $("#Product_name").val(),
+                                    id: $("#Product_id").val(),
                                 } } });',
                             )); ?>
                         </td>
@@ -288,6 +310,7 @@
                     });
                 }',
                 'columns' => array(
+                    'id',
                     'name',
                     'manufacturer_code',
                     array(

@@ -392,3 +392,37 @@ $this->menu = array(
         </table>
     <?php endif; ?>
 </div>
+<div>
+    <?php $movementIns = MovementInHeader::model()->findAllByAttributes(array('receive_item_id' => $model->id)); ?>
+    
+    <?php if (!empty($movementIns)): ?>
+        <table>
+            <caption>Movement In</caption>
+            <thead>
+                <tr>
+                    <td>Movement #</td>
+                    <td>Date</td>
+                    <td>Branch</td>
+                    <td>Product</td>
+                    <td>Qty</td>
+                    <td>Warehouse</td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($movementIns as $movementIn): ?>
+                    <?php $movementInDetails = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $movementIn->id)); ?>
+                    <?php foreach ($movementInDetails as $movementInDetail): ?>
+                        <tr>
+                            <td><?php echo $movementIn->movement_in_number; ?></td>
+                            <td><?php echo $movementIn->date_posting; ?></td>
+                            <td><?php echo $movementIn->branch->name; ?></td>
+                            <td><?php echo $movementInDetail->product->name; ?></td>
+                            <td><?php echo $movementInDetail->quantity; ?></td>
+                            <td><?php echo $movementInDetail->warehouse->name; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>

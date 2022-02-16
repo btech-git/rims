@@ -8,6 +8,7 @@
         product_sub_category_id: $(this).val(),
         manufacturer_code: $("#Product_manufacturer_code").val(),
         name: $("#Product_name").val(),
+        id: $("#Product_id").val(),
     } } });',
 )); ?>
 <?php echo CHtml::hiddenField('SubCategory', ''); ?>
