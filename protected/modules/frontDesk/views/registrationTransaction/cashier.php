@@ -251,7 +251,11 @@ $('form').submit(function(){
                         'name' => 'transaction_date',
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)',
                     ),
-                    'registrationTransaction.transaction_number',
+                    array(
+                        'header' => 'Registration #',
+                        'value' => 'CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id))', 
+                        'type' => 'raw'
+                    ),
                     array(
                         'name' => 'plate_number', 
                         'value' => '$data->vehicle->plate_number',

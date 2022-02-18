@@ -19,11 +19,11 @@
     <tbody>
         <?php foreach ($modelDataProvider->data as $model): ?>
             <tr>
-                <td><?php echo $model->vehicle != null ? $model->vehicle->plate_number : ' '; ?></td>
-                <td><?php echo $model->customer_id != null ? $model->customer->name : ' '; ?></td>
+                <td><?php echo $model->vehicle != null ? CHtml::link($model->vehicle->plate_number, array("/master/vehicle/view", "id"=>$model->vehicle_id), array('target' => '_blank')) : ' '; ?></td>
+                <td><?php echo $model->customer_id != null ? CHtml::link($model->customer->name, array("/master/customer/view", "id"=>$model->customer_id), array('target' => '_blank')) : ' '; ?></td>
                 <td><?php echo $model->vehicle->carMake != null ? $model->vehicle->carMake->name : ' '; ?></td>
                 <td><?php echo $model->vehicle->carModel != null ? $model->vehicle->carModel->name : ' '; ?></td>
-                <td><?php echo $model->work_order_number != null ? $model->work_order_number : ' '; ?></td>
+                <td><?php echo $model->work_order_number != null ? CHtml::link($model->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$model->id), array('target' => '_blank')) : ' '; ?></td>
                 <td><?php echo $model->status != null ? $model->status : '-'; ?></td>
                 <?php if ($model->repair_type == 'GR') {
                     $regServices = RegistrationService::model()->findAllByAttributes(array(
