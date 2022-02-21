@@ -3,9 +3,9 @@
     <?php
         $duration = 0;
         $damage = "";
-        $registrationServiceBodyRepairs = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id'=>$registration->id,'is_body_repair'=>1));
+        $registrationServiceBodyRepairs = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id'=>$registration->id, 'is_body_repair'=>0));
         foreach ($registrationServiceBodyRepairs as $rs) {
-            $duration += $rs->hour;
+            $duration += $rs->total_time;
         }
         $registrationDamages = RegistrationDamage::model()->findAllByAttributes(array('registration_transaction_id'=>$registration->id));
         foreach ($registrationDamages as $key => $registrationDamage) {
@@ -21,7 +21,7 @@
         </tr>
         <tr>
             <td>Car Make: <?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-            <td>Total Duration: <?php echo $duration . ' hr'; ?></td>
+            <td>Total Duration: <?php echo $registration->formattedDurationTime; ?></td>
         </tr>
         <tr>
             <td>Car Model: <?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>

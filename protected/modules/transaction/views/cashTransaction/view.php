@@ -325,8 +325,8 @@ $this->menu = array(
                     <legend>Attached Images</legend>
 
                     <?php foreach ($postImages as $postImage):
-                        $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $model->id . '/' . $postImage->filename;
-                        $src = Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $model->id . '/' . $postImage->filename;
+                        $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $postImage->filename;
+                        $src = Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $postImage->filename;
                         ?>
                         <div class="row">
                             <div class="small-3 columns">
@@ -336,7 +336,7 @@ $this->menu = array(
                             </div>
                             <div class="small-8 columns">
                                 <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-                                    <?php echo (Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $model->id . '/' . $postImage->filename); ?>
+                                    <?php echo (Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $postImage->filename); ?>
                                 </div>
                             </div>
 

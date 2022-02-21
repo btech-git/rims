@@ -150,37 +150,17 @@ class PaymentInController extends Controller {
                 $invoice->update(array('payment_amount', 'payment_left'));
 
                 $criteria = new CDbCriteria;
-                $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
+                $criteria->condition = "invoice_id = " . $model->invoice_id . " AND id != " . $model->id;
 
-                if (isset($images) && !empty($images)) {
-                    foreach ($model->images as $i => $image) {
-                        $postImage = new PaymentInImages;
-                        $postImage->payment_in_id = $model->id;
-                        $postImage->is_inactive = $model::STATUS_ACTIVE;
-                        $postImage->extension = $image->extensionName;
-                        $valid = $postImage->save() && $valid;
+                foreach ($images as $file) {
+                    $contentImage = new PaymentInImages();
+                    $contentImage->payment_in_id = $model->id;
+                    $contentImage->is_inactive = PaymentIn::STATUS_ACTIVE;
+                    $contentImage->extension = $file->extensionName;
+                    $valid = $contentImage->save(false) && $valid;
 
-                        if ($valid) {
-                            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id;
-
-                            if (!file_exists($dir)) {
-                                mkdir($dir, 0777, true);
-                            }
-
-                            $path = $dir . '/' . $postImage->filename;
-                            $image->saveAs($path);
-                            $picture = Yii::app()->image->load($path);
-                            $valid = $picture->save() && $valid;
-
-                            $thumb = Yii::app()->image->load($path);
-                            $thumb_path = $dir . '/' . $postImage->thumbname;
-                            $valid = $thumb->save($thumb_path) && $valid;
-
-                            $square = Yii::app()->image->load($path);
-                            $square_path = $dir . '/' . $postImage->squarename;
-                            $valid = $square->save($square_path) && $valid;
-                        }
-                    }
+                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $contentImage->filename;
+                    $file->saveAs($originalPath);
                 }
 
                 if ($valid) {
@@ -211,6 +191,7 @@ class PaymentInController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->payment_time = date('H:i:s');
         $model->setCodeNumberByRevision('payment_number');
 
         $invoice = new InvoiceHeader('search');
@@ -282,38 +263,16 @@ class PaymentInController extends Controller {
                     $invoiceData->save(false);
 
                     $images = $model->images = CUploadedFile::getInstances($model, 'images');
-                    //print_r($images);
-                    if (isset($images) && !empty($images)) {
 
-                        foreach ($model->images as $image) {
+                    foreach ($images as $file) {
+                        $contentImage = new PaymentInImages();
+                        $contentImage->payment_in_id = $model->id;
+                        $contentImage->is_inactive = PaymentIn::STATUS_ACTIVE;
+                        $contentImage->extension = $file->extensionName;
+                        $valid = $contentImage->save(false) && $valid;
 
-                            $postImage = new PaymentInImages;
-                            $postImage->payment_in_id = $model->id;
-                            $postImage->is_inactive = $model::STATUS_ACTIVE;
-                            $postImage->extension = $image->extensionName;
-
-                            if ($postImage->save()) {
-                                $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id;
-
-                                if (!file_exists($dir)) {
-                                    mkdir($dir, 0777, true);
-                                }
-                                $path = $dir . '/' . $postImage->filename;
-                                $image->saveAs($path);
-                                $picture = Yii::app()->image->load($path);
-                                $picture->save();
-
-                                $thumb = Yii::app()->image->load($path);
-                                $thumb_path = $dir . '/' . $postImage->thumbname;
-                                $thumb->save($thumb_path);
-
-                                $square = Yii::app()->image->load($path);
-                                $square_path = $dir . '/' . $postImage->squarename;
-                                $square->save($square_path);
-
-                                echo $postImage->extension;
-                            }
-                        }
+                        $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $contentImage->filename;
+                        $file->saveAs($originalPath);
                     }
 
                     $this->redirect(array('view', 'id' => $model->id));

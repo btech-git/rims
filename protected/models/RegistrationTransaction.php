@@ -720,4 +720,19 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+    
+    public function getFormattedDurationTime() {
+        $totalTime = 0;
+        
+        foreach($this->registrationServices as $detail) {
+            $totalTime += $detail->total_time;
+        }
+        
+        $hours = floor($totalTime / 3600);
+        $minutes = floor($totalTime / 60 % 60);
+        $seconds = floor($totalTime % 60);
+        
+        return sprintf('%dh %dm %ds', $hours, $minutes, $seconds);
+    }
+    
 }

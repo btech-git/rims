@@ -73,7 +73,7 @@
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
-                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['plate_number']), array('target' => 'blank')); ?></td>
+                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['registration_transaction_id']), array('target' => 'blank')); ?></td>
                             <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $row['work_order_date']); ?></td>
                             <td><?php echo date("H:i:s", strtotime($row['transaction_date'])); ?></td>
                             <td><?php echo implode(', ', $serviceNames[$row['registration_transaction_id'] . ':' . $row['service_type_id']]); ?></td>
@@ -118,7 +118,7 @@
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
-                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['plate_number']), array('target' => 'blank')); ?></td>
+                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['registration_transaction_id']), array('target' => 'blank')); ?></td>
                             <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $row['work_order_date']); ?></td>
                             <td><?php echo date("H:i:s", strtotime($row['transaction_date'])); ?></td>
                             <td><?php echo implode(', ', $serviceNames[$row['registration_transaction_id'] . ':' . $row['service_type_id']]); ?></td>
@@ -162,7 +162,7 @@
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
-                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['plate_number']), array('target' => 'blank')); ?></td>
+                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['registration_transaction_id']), array('target' => 'blank')); ?></td>
                             <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $row['work_order_date']); ?></td>
                             <td><?php echo date("H:i:s", strtotime($row['transaction_date'])); ?></td>
                             <td><?php echo implode(', ', $serviceNames[$row['registration_transaction_id'] . ':' . $row['service_type_id']]); ?></td>
@@ -204,7 +204,7 @@
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
-                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['plate_number']), array('target' => 'blank')); ?></td>
+                            <td><?php echo CHtml::link($row['work_order_number'], array("/frontDesk/registrationTransaction/view", "id"=>$row['registration_transaction_id']), array('target' => 'blank')); ?></td>
                             <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", $row['work_order_date']); ?></td>
                             <td><?php echo date("H:i:s", strtotime($row['transaction_date'])); ?></td>
                             <td><?php echo implode(', ', $serviceNames[$row['registration_transaction_id'] . ':' . $row['service_type_id']]); ?></td>

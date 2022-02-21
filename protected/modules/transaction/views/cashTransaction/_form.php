@@ -331,72 +331,31 @@
                 </div>
             </fieldset>
             
-            <div class="large-6">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($cashTransaction->header, 'images', array('class' => 'prefix')); ?>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <?php if ($cashTransaction->header->isNewRecord): ?>
-                                <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                                <?php $this->widget('CMultiFileUpload', array(
-                                    'model' => $cashTransaction->header,
-                                    'attribute' => 'images',
-                                    'accept' => 'jpg|jpeg|png|gif',
-                                    'denied' => 'Only jpg, jpeg, png and gif are allowed',
-                                    'max' => 10,
-                                    'remove' => 'x',
-                                )); ?>
-                            <?php else:
-                                if ($allowedImages != 0): ?>
-                                    <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                                    <?php $this->widget('CMultiFileUpload', array(
-                                        'model' => $cashTransaction->header,
-                                        'attribute' => 'images',
-                                        'accept' => 'jpg|jpeg|png|gif',
-                                        'denied' => 'Only jpg, jpeg, png and gif are allowed',
-                                        'max' => 10,
-                                        'remove' => 'x',
-                                    )); ?>
-                                <?php endif;
-
-                                if ($postImages !== null): ?>
-                                    <?php foreach ($postImages as $postImage):
-                                        $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $cashTransaction->header->id . '/' . $postImage->filename;
-                                        $src = Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $cashTransaction->header->id . '/' . $postImage->filename;
-                                    ?>
-                                        <div class="row">
-                                            <div class="small-3 columns">
-                                                <div style="margin-bottom:.5rem">
-                                                    <?php echo CHtml::image($src,
-                                                        $cashTransaction->header->transaction_type . "Image"); ?>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="small-8 columns">
-                                                <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-                                                    <?php echo(Yii::app()->baseUrl . '/images/uploads/cashTransaction/' . $cashTransaction->header->id . '/' . $postImage->filename); ?>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="small-1 columns">
-                                                <?php echo CHtml::link('x', array(
-                                                    'deleteImage',
-                                                    'id' => $postImage->id,
-                                                    'cash_transaction_id' => $cashTransaction->header->id
-                                                ), array(
-                                                    'class' => 'deleteImg right',
-                                                    'confirm' => 'Are you sure you want to delete this image?'
-                                                )); ?>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php endif;
-                            endif; ?>
-                            <?php echo $form->error($cashTransaction->header, 'images'); ?>
-                        </div>
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php $this->widget('CMultiFileUpload', array(
+                            'model' => $cashTransaction->header,
+                            'attribute' => 'images',
+                            'accept' => 'jpg|jpeg|png|gif',
+                            'denied' => 'Only jpg, jpeg, png and gif are allowed',
+                            'max' => 10,
+                            'remove' => '[x]',
+                            'duplicate' => 'Already Selected',
+                            'options' => array(
+                                'afterFileSelect' => 'function(e ,v ,m){
+                                    var fileSize = e.files[0].size;
+                                    if (fileSize > 2*1024*1024) {
+                                        alert("Exceeds file upload limit 2MB");
+                                        $(".MultiFile-remove").click();
+                                    }                      
+                                    return true;
+                                }',
+                            ),
+                        )); ?>
                     </div>
                 </div>
             </div>

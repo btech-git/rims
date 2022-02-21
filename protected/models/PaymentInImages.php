@@ -98,7 +98,7 @@ class PaymentInImages extends CActiveRecord {
     }
 
     public function getFilename() {
-        return $this->payment_in_id . '-' . $this->payment_in_id . '-realization.' . $this->extension;
+        return $this->id . '.' . $this->extension;
     }
 
     public function getThumbname() {

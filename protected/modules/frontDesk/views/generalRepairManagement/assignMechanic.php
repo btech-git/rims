@@ -131,9 +131,9 @@ $('.search-form form').submit(function(){
                         <th style="text-align: center">Service</th>
                         <th style="text-align: center">Category</th>
                         <th style="text-align: center">Duration</th>
-                        <th style="text-align: center">Start</th>
+<!--                        <th style="text-align: center">Start</th>
                         <th style="text-align: center">Finish</th>
-                        <th style="text-align: center">Total Time</th>
+                        <th style="text-align: center">Total Time</th>-->
                         <th style="text-align: center">Service Status</th>
                         <th style="text-align: center">Assign Mechanic</th>
                     </tr>
@@ -149,9 +149,9 @@ $('.search-form form').submit(function(){
                         </td>
                         <td><?php echo CHtml::encode(CHtml::value($registrationServiceManagement, 'serviceType.name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($registrationServiceManagement, 'hour')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($registrationServiceManagement, 'start')); ?></td>
+<!--                        <td><?php /*echo CHtml::encode(CHtml::value($registrationServiceManagement, 'start')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($registrationServiceManagement, 'end')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($registrationServiceManagement, 'total_time')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($registrationServiceManagement, 'total_time'));*/ ?></td>-->
                         <td><?php echo CHtml::encode(CHtml::value($registrationServiceManagement, 'status')); ?></td>
                         <td>
                             <?php echo CHtml::activeDropDownlist($registrationServiceManagement, 'assign_mechanic_id', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(

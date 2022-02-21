@@ -133,7 +133,7 @@
 					</div>
 					<div class="small-8 columns">
 						<?php //echo $form->textField($vehicleInspection->header,'status',array('size'=>10,'maxlength'=>10)); ?>
-						<?php echo $form->dropDownList($vehicleInspection->header,'service_advisor_id',CHtml::listData(Employee::model()->findAll(),'id','name')); ?>
+						<?php echo $form->dropDownList($vehicleInspection->header,'service_advisor_id',CHtml::listData(Users::model()->findAll(),'id','username')); ?>
 						<?php echo $form->error($vehicleInspection->header,'service_advisor_id'); ?>
 					</div>
 				</div>			

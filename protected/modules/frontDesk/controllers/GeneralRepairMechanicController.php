@@ -209,10 +209,20 @@ class GeneralRepairMechanicController extends Controller {
         } else if (isset($_POST['DetailId']) && isset($_POST['FinishService'])) {
             $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
             $registrationService->service_activity = 'FinishService';
+            $registrationService->save(Yii::app()->db);
+            
             $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
             $generalRepairMechanic->save(Yii::app()->db);
+            
             $registration->service_status = 'PrepareToCheck';
             $registration->save(Yii::app()->db);
+                
+            $registrationRealizationProcess = RegistrationRealizationProcess::model()->findByAttributes(array('registration_service_id' => $registrationService->id));
+            $registrationRealizationProcess->checked = 1;
+            $registrationRealizationProcess->checked_by = Yii::app()->user->id;
+            $registrationRealizationProcess->checked_date = date('Y-m-d');
+            $registrationRealizationProcess->detail = 'Finished';
+            $registrationRealizationProcess->save(Yii::app()->db);
         }
 
         $this->render('viewDetailWorkOrder', array(

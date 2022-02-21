@@ -356,61 +356,31 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($model, 'images'); ?>
+                        <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php if ($model->isNewRecord): ?>
-                            <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                            <?php $this->widget('CMultiFileUpload', array(
-                                'model' => $model,
-                                'attribute' => 'images',
-                                'accept' => 'jpg|jpeg|png|gif',
-                                'denied' => 'Only jpg, jpeg, png and gif are allowed',
-                                'max' => 10,
-                                'remove' => 'x',
-                                    //'duplicate' => 'Already Selected',
-                            )); ?>
-                        <?php else:
-                            if ($allowedImages != 0): ?>
-                                <?php //echo $form->labelEx($model, 'images', array('class' => 'label')); ?>
-                                <?php $this->widget('CMultiFileUpload', array(
-                                    'model' => $model,
-                                    'attribute' => 'images',
-                                    'accept' => 'jpg|jpeg|png|gif',
-                                    'denied' => 'Only jpg, jpeg, png and gif are allowed',
-                                    'max' => 10,
-                                    'remove' => 'x',
-                                        //'duplicate' => 'Already Selected',
-                                )); ?>
-                            <?php endif;
-
-                            if ($postImages !== null): ?>
-                                <?php foreach ($postImages as $postImage):
-                                    $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename;
-                                    $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename;
-                                    ?>
-                                    <div class="row">
-                                        <div class="small-3 columns">
-                                            <div style="margin-bottom:.5rem">
-                                                <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
-                                            </div>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-                                                <?php echo (Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $model->id . '/' . $postImage->filename); ?>
-                                            </div>
-                                        </div>
-                                        <div class="small-1 columns">
-                                            <?php echo CHtml::link('x', array('deleteImage', 'id' => $postImage->id, 'payment_in_id' => $model->id), array('class' => 'deleteImg right', 'confirm' => 'Are you sure you want to delete this image?')); ?>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php endif;
-                        endif; ?>
-                        <?php echo $form->error($model, 'images'); ?>
+                        <?php $this->widget('CMultiFileUpload', array(
+                            'model' => $model,
+                            'attribute' => 'images',
+                            'accept' => 'jpg|jpeg|png|gif',
+                            'denied' => 'Only jpg, jpeg, png and gif are allowed',
+                            'max' => 10,
+                            'remove' => '[x]',
+                            'duplicate' => 'Already Selected',
+                            'options' => array(
+                                'afterFileSelect' => 'function(e ,v ,m){
+                                    var fileSize = e.files[0].size;
+                                    if (fileSize > 2*1024*1024) {
+                                        alert("Exceeds file upload limit 2MB");
+                                        $(".MultiFile-remove").click();
+                                    }                      
+                                    return true;
+                                }',
+                            ),
+                        )); ?>
                     </div>
                 </div>
-            </div>		
+            </div>
 
             <div class="field buttons text-center">
                 <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>

@@ -102,9 +102,11 @@ class CashTransactionImages extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-	public function getFilename() {
-    	return $this->cash_transaction_id . '-' . $this->cash_transaction_id . '-cash-transaction.' . $this->extension;
-   	}
+
+        public function getFilename() {
+
+            return $this->id . '.' . $this->extension;
+        }
 
    	public function getThumbname() {
     	return $this->cash_transaction_id . '-' . $this->cash_transaction_id . '-cash-transaction-thumb.' . $this->extension;

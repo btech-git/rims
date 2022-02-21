@@ -55,7 +55,7 @@ class VehicleInspections extends CComponent {
 
         //$valid = $this->validateDetailsCount() && $valid;
 
-        if (count($this->vehicleInspectionDetails) > 0) {
+        if (!empty($this->vehicleInspectionDetails)) {
             foreach ($this->vehicleInspectionDetails as $vehicleInspectionDetail) {
                 $valid = $vehicleInspectionDetail->validate() && $valid;
             }
@@ -68,7 +68,7 @@ class VehicleInspections extends CComponent {
 
     public function validateDetailsCount() {
         $valid = true;
-        if (count($this->vehicleInspectionDetails) === 0) {
+        if (empty($this->vehicleInspectionDetails)) {
             $valid = false;
             $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
         }
@@ -77,7 +77,7 @@ class VehicleInspections extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
         $vehicleInspectionDetails = VehicleInspectionDetail::model()->findAllByAttributes(array('vehicle_inspection_id' => $this->header->id));
@@ -97,18 +97,18 @@ class VehicleInspections extends CComponent {
         }
 
         $vehicleIns = VehicleInspection::model()->findAllByAttributes(array('work_order_number' => $this->header->work_order_number));
-        if (count($vehicleIns) <= 1) {
+        if (!empty($vehicleIns)) {
             $registration = RegistrationTransaction::model()->findByAttributes(array('work_order_number' => $this->header->work_order_number));
-            if (count($registration)) {
+            if (!empty($registration)) {
                 $registrationRealization = RegistrationRealizationProcess::model()->findByAttributes(array('registration_transaction_id' => $registration->id, 'name' => 'Vehicle Inspection'));
+                $registrationRealization->registration_transaction_id = $this->header->id;
+                $registrationRealization->name = 'Vehicle Inspection';
+                $registrationRealization->checked = 1;
+                $registrationRealization->checked_by = Yii::app()->user->id;
+                $registrationRealization->checked_date = date('Y-m-d');
+                $registrationRealization->detail = 'Yes';
+                $registrationRealization->save();
             }
-            //$registrationRealization->registration_transaction_id = $this->header->id;
-            //$registrationRealization->name = 'Vehicle Inspection';
-            $registrationRealization->checked = 1;
-            $registrationRealization->checked_by = Yii::app()->user->id;
-            $registrationRealization->checked_date = date('Y-m-d');
-            $registrationRealization->detail = 'Yes';
-            $registrationRealization->save();
         }
 
         //delete position
@@ -121,5 +121,4 @@ class VehicleInspections extends CComponent {
 
         return $valid;
     }
-
 }
