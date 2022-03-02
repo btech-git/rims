@@ -307,15 +307,15 @@
                                 console.log(paymentAmount);
                                 console.log(invoiceAmount);
                                 console.log(invoiceLeft);
-                                if (relCount == 1)
+                                if (relCount == 1) {
                                     count = invoiceAmount - paymentAmount;
-                                else
+                                } else {
                                     count = invoiceLeft - paymentAmount;
-                                if (count < 0)
-                                {
-                                    alert("Payment Amount could not be higher than Invoice Amount");
-                                    $("#PaymentIn_payment_amount").val("");
                                 }
+                                //if (count < 0) {
+                                  //  alert("Payment Amount could not be higher than Invoice Amount");
+                                   // $("#PaymentIn_payment_amount").val("");
+                                //}
                             '
                         )); ?>
                         <?php echo $form->error($model, 'payment_amount'); ?>

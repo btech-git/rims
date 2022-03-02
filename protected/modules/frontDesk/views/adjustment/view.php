@@ -34,6 +34,7 @@ $this->menu = array(
                 'id',
                 'stock_adjustment_number',
                 'date_posting',
+                'transaction_type',
                 array(
                     'name' => 'warehouse_id',
                     'header' => 'Gudang',

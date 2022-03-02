@@ -99,6 +99,7 @@ class AdminController extends Controller {
     public function actionCreate() {
         $model = new User;
         $model->create_at = date('Y-m-d H:i:s');
+        $model->lastvisit_at = date('Y-m-d H:i:s');
         $employees = Employee::model()->findAll();
         
 //        $profile = new Profile;
@@ -148,11 +149,11 @@ class AdminController extends Controller {
 //            $profile->attributes = $_POST['Profile'];
 
             if ($model->validate()) {
-                $old_password = User::model()->notsafe()->findByPk($model->id);
-                if ($old_password->password != $model->password) {
-                    $model->password = Yii::app()->controller->module->encrypting($model->password);
-                    $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
-                }
+//                $old_password = User::model()->notsafe()->findByPk($model->id);
+//                if ($old_password->password != $model->password) {
+//                    $model->password = Yii::app()->controller->module->encrypting($model->password);
+//                    $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
+//                }
                 $model->save();
 //                $profile->save();
                 $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
@@ -180,9 +181,9 @@ class AdminController extends Controller {
             $model->attributes = $_POST['User'];
 
             if ($model->validate()) {
-                $old_password = User::model()->findByPk($model->id);
+//                $old_password = User::model()->findByPk($model->id);
 //                if ($old_password->password != $model->password) {
-                $model->password = Yii::app()->controller->module->encrypting($model->password);
+                $model->password = Yii::app()->controller->module->encrypting($_POST['User']['password']);
 //                    $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
 //                }
                 $model->save();

@@ -23,6 +23,21 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">		
+                                    <?php echo CHtml::label('Tipe', ''); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'transaction_type', array(
+                                        'Selisih Cabang' => 'Selisih Cabang',
+                                        'Hilang' => 'Hilang',
+                                    ), array('empty' => '-- Pilih Tipe --')); ?>
+                                    <?php echo CHtml::error($adjustment->header, 'transaction_type'); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">		
                                     <?php echo CHtml::label('Cabang 1', ''); ?>
                                 </div>
                                 <div class="small-8 columns">
@@ -114,8 +129,8 @@
                     </fieldset>
 
                     <div class="buttons">
-                        <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class' => 'btn_blue', 'onclick' => 'this.disabled = true')); ?>
-                        <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class' => 'btn_blue', 'onclick' => 'this.disabled = true')); ?>
+                        <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class' => 'btn_blue')); ?>
+                        <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class' => 'btn_blue')); ?>
                     </div>
                 </div>
             </div>

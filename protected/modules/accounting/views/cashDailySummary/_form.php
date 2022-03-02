@@ -104,7 +104,7 @@
                 )); ?>
             </div>
             
-            <?php if (Yii::app()->user->checkAccess('director')): ?>
+            <?php if (Yii::app()->user->checkAccess('cashDailyTransactionReport')): ?>
                 <div class="row">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(

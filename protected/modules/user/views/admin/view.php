@@ -831,22 +831,6 @@ $this->widget('zii.widgets.CDetailView', array(
             </td>
         </tr>
         <tr>
-            <td>Inventory Stok Penjualan</td>
-            <td style="text-align: center">
-            <?php if (CHtml::resolveValue($model, "roles[stockInventoryReport]")): ?>
-                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
-            <?php endif; ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Kartu Stok Persediaan</td>
-            <td style="text-align: center">
-            <?php if (CHtml::resolveValue($model, "roles[stockCardReport]")): ?>
-                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
-            <?php endif; ?>
-            </td>
-        </tr>
-        <tr>
             <td>Financial Forecast</td>
             <td style="text-align: center">
             <?php if (CHtml::resolveValue($model, "roles[financialForecastReport]")): ?>
@@ -898,6 +882,110 @@ $this->widget('zii.widgets.CDetailView', array(
             <td>Cash Transaction</td>
             <td style="text-align: center">
             <?php if (CHtml::resolveValue($model, "roles[cashTransactionReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Analisa Keuangan</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[financialAnalysisReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Kertas Kerja</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[kertasKerjaReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Jurnal Umum</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[transactionJournalReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Jurnal Umum Rekap</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[journalSummaryReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Laporan Kas Harian</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[cashDailyReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Approval Kas Harian</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[cashDailyApprovalReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Summary Kas Harian</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[cashDailySummaryReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Financial Forecast</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[financialForecastReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Kas Harian Transaksi</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[cashDailyTransactionReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 50%">
+            <?php if (CHtml::resolveValue($model, "roles[areaManager]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+                <?php echo CHtml::label('HEAD DEPT', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+            </th>
+            <th style="text-align: center">Laporan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Inventory Stok Penjualan</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[stockInventoryReport]")): ?>
+                <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+            <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Kartu Stok Persediaan</td>
+            <td style="text-align: center">
+            <?php if (CHtml::resolveValue($model, "roles[stockCardReport]")): ?>
                 <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
             <?php endif; ?>
             </td>

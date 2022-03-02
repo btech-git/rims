@@ -12,6 +12,8 @@
  * @property integer $user_id
  * @property integer $supervisor_id
  * @property string $status
+ * @property string $note
+ * @property string $transaction_type
  * 
  * @property StockAdjustmentDetail[] $stockAdjustmentDetails
  */
@@ -41,12 +43,12 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         return array(
             array('stock_adjustment_number, date_posting, branch_id, warehouse_id, user_id, status', 'required'),
             array('branch_id, warehouse_id, user_id, supervisor_id', 'numerical', 'integerOnly' => true),
-            array('stock_adjustment_number, status', 'length', 'max' => 30),
+            array('stock_adjustment_number, status, transaction_type', 'length', 'max' => 30),
             array('stock_adjustment_number', 'unique'),
-            // array('note', 'length', 'max'=>30),
+            array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, stock_adjustment_number, date_posting, branch_id, warehouse_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note', 'safe', 'on' => 'search'),
+            array('id, stock_adjustment_number, date_posting, branch_id, warehouse_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note, transaction_type', 'safe', 'on' => 'search'),
         );
     }
 
@@ -79,6 +81,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
             'supervisor_id' => 'Supervisor',
             'status' => 'Status',
             'note' => 'Note',
+            'transaction_type' => 'Transaction Type',
         );
     }
 
@@ -108,6 +111,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.supervisor_id', $this->supervisor_id);
         $criteria->compare('t.status', $this->status, true);
         $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.transaction_type', $this->transaction_type, true);
 
         $criteria->together = 'true';
         $criteria->with = array('branch', 'user');

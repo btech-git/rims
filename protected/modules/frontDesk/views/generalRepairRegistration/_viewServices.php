@@ -2,7 +2,6 @@
     <thead>
         <tr>
             <th>Service name</th>
-            <th>Claim</th>
             <th>Price</th>
             <th>Discount Type</th>
             <th>Discount Price</th>
@@ -19,7 +18,6 @@
             <?php foreach ($services as $i => $service): ?>
                 <tr>
                     <td><?php echo $service->service->name; ?></td>
-                    <td><?php echo $service->claim; ?></td>
                     <td><?php echo number_format($service->price,2); ?></td>
                     <td><?php echo $service->discount_type; ?></td>
                     <td><?php echo $service->discount_type == 'Percent' ? $service->discount_price : number_format($service->discount_price,2);; ?></td>

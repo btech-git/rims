@@ -145,7 +145,7 @@ class Coa extends CActiveRecord {
         $criteria->compare('closing_balance', $this->closing_balance, true);
         $criteria->compare('debit', $this->debit, true);
         $criteria->compare('credit', $this->credit, true);
-        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.is_approved', 1);
         $criteria->compare('t.date_approval', $this->date_approval);
 
         $criteria->together = true;
@@ -155,6 +155,12 @@ class Coa extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.code ASC, t.name ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
         ));
     }
 

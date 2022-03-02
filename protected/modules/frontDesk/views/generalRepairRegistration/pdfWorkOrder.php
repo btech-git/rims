@@ -124,7 +124,7 @@ function tanggal($date) {
                 <tr>
                     <th class="no">No</th>
                     <th class="item" style="width: 75%">Service</th>
-                    <th class="qty">Claim</th>
+                    <th class="note">Note</th>
                 </tr>
                 <?php
                 $no = 1;
@@ -133,7 +133,7 @@ function tanggal($date) {
                     <tr class="isi">
                         <td class="noo"><?php echo $no ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'claim')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'note')); ?></td>
                     </tr>
                 <?php $no++;
             } ?>

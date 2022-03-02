@@ -333,50 +333,84 @@
         </li>
     <?php endif; ?>
     
-    <?php if (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport')): ?>
+    <?php if (
+        Yii::app()->user->checkAccess('accountingReport') || 
+        Yii::app()->user->checkAccess('financeReport') ||
+        Yii::app()->user->checkAccess('receivableJournalReport') || 
+        Yii::app()->user->checkAccess('generalLedgerReport') || 
+        Yii::app()->user->checkAccess('cashTransactionReport') || 
+        Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
+        Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
+        Yii::app()->user->checkAccess('summaryProfitLossReport') || 
+        Yii::app()->user->checkAccess('standardProfitLossReport') || 
+        Yii::app()->user->checkAccess('financialAnalysisReport') || 
+        Yii::app()->user->checkAccess('kertasKerjaReport') || 
+        Yii::app()->user->checkAccess('transactionJournalReport') || 
+        Yii::app()->user->checkAccess('journalSummaryReport') || 
+        Yii::app()->user->checkAccess('cashDailyReport') || 
+        Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
+        Yii::app()->user->checkAccess('cashDailySummaryReport') || 
+        Yii::app()->user->checkAccess('financialForecastReport') || 
+        Yii::app()->user->checkAccess('cashDailyTransactionReport')
+    ): ?>
         <li class="mdropdown"><a href="#">ACCOUNTING/FINANCE</a>
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
-                    array('label' => 'Analisa Keuangan', 'url' => array('/accounting/forecasting/admin'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Laporan Posisi Keuangan (Neraca)', 'url' => array('/report/balanceSheet/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Laporan Laba Rugi', 'url' => array('/report/profitLoss/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Buku Besar', 'url' => array('/report/generalLedger/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Kertas Kerja', 'url' => array('/accounting/coa/kertasKerja'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Jurnal Umum', 'url' => array('/report/transactionJournal/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-//                    array('label' => 'Jurnal Umum', 'url' => array('/accounting/jurnalUmum/index'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Jurnal Umum Rekap', 'url' => array('/accounting/jurnalUmum/jurnalUmumRekap'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Laporan Kas Harian', 'url' => array('/report/kasharian/report'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Approval Kas Harian', 'url' => array('/accounting/cashDailySummary/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Summary Kas Harian', 'url' => array('/accounting/cashDailySummary/admin'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-//                    array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
+                    array('label' => 'Rincian Buku Besar Pembantu Piutang', 'url' => array('/report/receivableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('receivableJournalReport')),
+                    array('label' => 'Rincian Buku Besar Pembantu Hutang', 'url' => array('/report/payableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('payableJournalReport')),
+                    array('label' => 'Analisa Keuangan', 'url' => array('/accounting/forecasting/admin'), 'visible' => Yii::app()->user->checkAccess('financialAnalysisReport')),
+                    array('label' => 'Laporan General Ledger (Buku Besar)', 'url' => array('/report/generalLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalLedgerReport')),
+                    array('label' => 'Laporan Balance Sheet (induk)', 'url' => array('/report/balanceSheet/summary'), 'visible' => Yii::app()->user->checkAccess('summaryBalanceSheetReport')),
+                    array('label' => 'Laporan Balance Sheet (Standar)', 'url' => array('/report/balanceSheetDetail/summary'), 'visible' => Yii::app()->user->checkAccess('standardBalanceSheetReport')),
+                    array('label' => 'Laporan Profit/Loss (induk)', 'url' => array('/report/profitLoss/summary'), 'visible' => Yii::app()->user->checkAccess('summaryProfitLossReport')),
+                    array('label' => 'Laporan Profit/Loss (Standar)', 'url' => array('/report/profitLossDetail/summary'), 'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')),
+                    array('label' => 'Laporan Cash Transaction', 'url' => array('/report/cashTransaction/summary'), 'visible' => Yii::app()->user->checkAccess('cashTransactionReport')),
+//                    array('label' => 'Laporan Posisi Keuangan (Neraca)', 'url' => array('/report/balanceSheet/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
+//                    array('label' => 'Laporan Laba Rugi', 'url' => array('/report/profitLoss/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
+//                    array('label' => 'Buku Besar', 'url' => array('/report/generalLedger/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
+                    array('label' => 'Kertas Kerja', 'url' => array('/accounting/coa/kertasKerja'), 'visible' => Yii::app()->user->checkAccess('kertasKerjaReport')),
+                    array('label' => 'Jurnal Umum', 'url' => array('/report/transactionJournal/summary'), 'visible' => Yii::app()->user->checkAccess('transactionJournalReport')),
+                    array('label' => 'Jurnal Umum Rekap', 'url' => array('/accounting/jurnalUmum/jurnalUmumRekap'), 'visible' => Yii::app()->user->checkAccess('journalSummaryReport')),
+                    array('label' => 'Laporan Kas Harian', 'url' => array('/report/kasharian/report'), 'visible' => Yii::app()->user->checkAccess('cashDailyReport')),
+                    array('label' => 'Approval Kas Harian', 'url' => array('/accounting/cashDailySummary/summary'), 'visible' => Yii::app()->user->checkAccess('cashDailyApprovalReport')),
+                    array('label' => 'Summary Kas Harian', 'url' => array('/accounting/cashDailySummary/admin'), 'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport')),
+                    array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('financialForecastReport')),
                 ),
             )); ?>
         </li>
     <?php endif; ?>
     
-    <?php if (Yii::app()->user->checkAccess('purchaseOrderReport') || Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport') || Yii::app()->user->checkAccess('generalRepairReport') || Yii::app()->user->checkAccess('bodyRepairReport') || Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport') || Yii::app()->user->checkAccess('cashTransactionReport') || Yii::app()->user->checkAccess('consignmentInReport') || Yii::app()->user->checkAccess('consignmentOutReport') || Yii::app()->user->checkAccess('materialRequestReport') || Yii::app()->user->checkAccess('movementInReport') || Yii::app()->user->checkAccess('movementOutReport') || Yii::app()->user->checkAccess('paymentInReport') || Yii::app()->user->checkAccess('paymentOutReport') || Yii::app()->user->checkAccess('deliveryReport') || Yii::app()->user->checkAccess('receiveItemReport') || Yii::app()->user->checkAccess('sentRequestReport') || Yii::app()->user->checkAccess('transferRequestReport')): ?>
+    <?php if (
+            Yii::app()->user->checkAccess('purchaseOrderReport') || 
+            Yii::app()->user->checkAccess('saleOrderReport') || 
+            Yii::app()->user->checkAccess('saleInvoiceReport') || 
+            Yii::app()->user->checkAccess('generalRepairReport') || 
+            Yii::app()->user->checkAccess('bodyRepairReport') || 
+            Yii::app()->user->checkAccess('consignmentInReport') || 
+            Yii::app()->user->checkAccess('consignmentOutReport') || 
+            Yii::app()->user->checkAccess('materialRequestReport') || 
+            Yii::app()->user->checkAccess('movementInReport') || 
+            Yii::app()->user->checkAccess('movementOutReport') || 
+            Yii::app()->user->checkAccess('paymentInReport') || 
+            Yii::app()->user->checkAccess('paymentOutReport') || 
+            Yii::app()->user->checkAccess('deliveryReport') || 
+            Yii::app()->user->checkAccess('receiveItemReport') || 
+            Yii::app()->user->checkAccess('sentRequestReport') || 
+            Yii::app()->user->checkAccess('transferRequestReport')
+        ): ?>
         <li class="mdropdown"><a href="#">LAPORAN</a>
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
-                    array('label' => 'Rincian Buku Besar Pembantu Piutang', 'url' => array('/report/receivableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Rincian Buku Besar Pembantu Hutang', 'url' => array('/report/payableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Inventory Stok Penjualan', 'url' => array('/report/stockSales/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Kartu Stok Persediaan', 'url' => array('/report/stockCard/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Financial Forecast', 'url' => array('/report/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Laporan General Ledger', 'url' => array('/report/generalLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Laporan Balance Sheet (induk)', 'url' => array('/report/balanceSheet/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Laporan Balance Sheet (Standar)', 'url' => array('/report/balanceSheetDetail/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Laporan Profit/Loss (induk)', 'url' => array('/report/profitLoss/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Laporan Profit/Loss (Standar)', 'url' => array('/report/profitLossDetail/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Laporan Cash Transaction', 'url' => array('/report/cashTransaction/summary'), 'visible' => Yii::app()->user->checkAccess('cashTransactionReport')),
+                    array('label' => 'Inventory Stok Penjualan', 'url' => array('/report/stockSales/summary'), 'visible' => Yii::app()->user->checkAccess('stockInventoryReport')),
+                    array('label' => 'Kartu Stok Persediaan', 'url' => array('/report/stockCard/summary'), 'visible' => Yii::app()->user->checkAccess('stockCardReport')),
+//                    array('label' => 'Financial Forecast', 'url' => array('/report/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('financialForecastReport')),
                     array('label' => 'Laporan Consignment In', 'url' => array('/report/consignmentIn/summary'), 'visible' => Yii::app()->user->checkAccess('consignmentInReport')),
                     array('label' => 'Laporan Consignment Out', 'url' => array('/report/consignmentOut/summary'), 'visible' => Yii::app()->user->checkAccess('consignmentOutReport')),
                     array('label' => 'Laporan Permintaan Bahan', 'url' => array('/report/materialRequest/summary'), 'visible' => Yii::app()->user->checkAccess('materialRequestReport')),
                     array('label' => 'Laporan Movement In', 'url' => array('/report/movementIn/summary'), 'visible' => Yii::app()->user->checkAccess('movementInReport')),
                     array('label' => 'Laporan Movement Out', 'url' => array('/report/movementOut/summary'), 'visible' => Yii::app()->user->checkAccess('movementOutReport')),
-                    array('label' => 'Laporan Hutang Supplier', 'url' => array('/report/payable/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Laporan Piutang Customer', 'url' => array('/report/receivable/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
+                    array('label' => 'Laporan Hutang Supplier', 'url' => array('/report/payable/summary'), 'visible' => Yii::app()->user->checkAccess('supplierPayableReport')),
+                    array('label' => 'Laporan Piutang Customer', 'url' => array('/report/receivable/summary'), 'visible' => Yii::app()->user->checkAccess('customerReceivableReport')),
                     array('label' => 'Laporan Payment In', 'url' => array('/report/paymentIn/summary'), 'visible' => Yii::app()->user->checkAccess('paymentInReport')),
                     array('label' => 'Laporan Payment Out', 'url' => array('/report/paymentOut/summary'), 'visible' => Yii::app()->user->checkAccess('paymentOutReport')),
                     array('label' => 'Laporan Invoice Penjualan', 'url' => array('/report/saleInvoiceSummary/summary'), 'visible' => Yii::app()->user->checkAccess('saleInvoiceReport')),
