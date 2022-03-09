@@ -478,48 +478,47 @@ class GeneralRepairMechanicController extends Controller {
     
     public function actionAjaxHtmlUpdateWaitlistTable() {
         if (Yii::app()->request->isAjaxRequest) {
+
+            $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+
+            $waitlistDataProvider = $model->search();
+//            $waitlistDataProvider->criteria->together = 'true';
+//            $waitlistDataProvider->criteria->with = array('vehicle');
+            $waitlistDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.service_status = 'Waitlist'");
+            $waitlistDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC';
+
+//            $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
+//            $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
+//            $status = isset($_GET['Status']) ? $_GET['Status'] : '';
+//            $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
             
-            $registrationService = new RegistrationService('search');
-            $registrationService->unsetAttributes();  // clear any default values
-            $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
-            $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
-            $status = isset($_GET['Status']) ? $_GET['Status'] : '';
-            $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-//            $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : '';
+//            if (!empty($plateNumber)) {
+//                $waitlistDataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+//                $waitlistDataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+//            }
 
-            if (isset($_GET['RegistrationService'])) {
-                $registrationService->attributes = $_GET['RegistrationService'];
-            }
-
-            $registrationServiceDataProvider = $registrationService->searchByGeneralRepairIdleManagement();
-        
-            if (!empty($plateNumber)) {
-                $registrationServiceDataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
-                $registrationServiceDataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
-            }
-
-            if (!empty($workOrderNumber)) {
-                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.work_order_number LIKE :work_order_number");
-                $registrationServiceDataProvider->criteria->params[':work_order_number'] = "%{$workOrderNumber}%";
-            }
-
-            if (!empty($status)) {
-                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.status = :status");
-                $registrationServiceDataProvider->criteria->params[':status'] = $status;
-            }
-
-            if (!empty($branchId)) {
-                $registrationServiceDataProvider->criteria->addCondition("registrationTransaction.branch_id = :branch_id");
-                $registrationServiceDataProvider->criteria->params[':branch_id'] = $branchId;
-            }
+//            if (!empty($workOrderNumber)) {
+//                $waitlistDataProvider->criteria->addCondition("work_order_number LIKE :work_order_number");
+//                $waitlistDataProvider->criteria->params[':work_order_number'] = "%{$workOrderNumber}%";
+//            }
+//
+//            if (!empty($status)) {
+//                $waitlistDataProvider->criteria->addCondition("status = :status");
+//                $waitlistDataProvider->criteria->params[':status'] = $status;
+//            }
+//
+//            if (!empty($branchId)) {
+//                $waitlistDataProvider->criteria->addCondition("branch_id = :branch_id");
+//                $waitlistDataProvider->criteria->params[':branch_id'] = $branchId;
+//            }
 
             $this->renderPartial('_waitlistTable', array(
-                'registrationService' => $registrationService,
-                'registrationServiceDataProvider' => $registrationServiceDataProvider,
-                'plateNumber' => $plateNumber,
-                'workOrderNumber' => $workOrderNumber,
-                'status' => $status,
-                'branchId' => $branchId,
+                'model' => $model,
+                'waitlistDataProvider' => $waitlistDataProvider,
+//                'plateNumber' => $plateNumber,
+//                'workOrderNumber' => $workOrderNumber,
+//                'status' => $status,
+//                'branchId' => $branchId,
             ));
         }
     }

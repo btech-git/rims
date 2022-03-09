@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center">Transaction #</th>
-            <th style="text-align: center">Branch</th>
+            <th style="text-align: center">Tanggal</th>
             <th style="text-align: center">Customer</th>
             <th style="text-align: center">Amount</th>
             <th style="text-align: center">Note</th>
@@ -11,8 +11,7 @@
     
     <tbody>
         <?php $grandTotal = 0.00; ?>
-        <?php //if (!empty($registrationTransactionDataProvider)): ?>
-        <?php foreach ($registrationTransactionDataProvider->data as $header): ?>
+        <?php foreach ($retailTransactionDataProvider->data as $header): ?>
             <?php $totalPrice = CHtml::value($header, 'grand_total'); ?>
             <tr>
                 <td>
@@ -37,7 +36,6 @@
             </tr>
             <?php $grandTotal += $totalPrice; ?>
         <?php endforeach; ?>
-            <?php //endif; ?>
     </tbody>
     
     <tfoot>

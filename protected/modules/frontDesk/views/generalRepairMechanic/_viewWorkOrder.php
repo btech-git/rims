@@ -21,7 +21,7 @@
         </tr>
         <tr>
             <td>Car Make: <?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
-            <td>Total Duration: <?php echo $registration->formattedDurationTime; ?></td>
+            <td>Total Duration: <?php echo $registration->getFormattedDurationTime(); ?></td>
         </tr>
         <tr>
             <td>Car Model: <?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>

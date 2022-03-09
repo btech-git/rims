@@ -127,6 +127,9 @@ class SupplierComponent extends CComponent {
         }
         
         $valid = $this->header->save();
+        
+        $this->header->code = 'S' . $this->header->id;
+        $this->header->update(array('code'));
 
         $supplier_banks = SupplierBank::model()->findAllByAttributes(array('supplier_id' => $this->header->id));
         $bankId = array();

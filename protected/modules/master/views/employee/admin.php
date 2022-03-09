@@ -44,7 +44,7 @@ $('.search-form form').submit(function(){
 		<!-- BEGIN maincontent -->
 		<div id="maincontent">
 		<div class="clearfix page-action">
-		<?php if (Yii::app()->user->checkAccess("master.employee.create")) { ?>
+		<?php if (Yii::app()->user->checkAccess("masterEmployeeCreate")) { ?>
 		<a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/employee/create';?>"><span class="fa fa-plus"></span>New Employee</a>
 		<?php }?>
 		<h1>Manage Employees</h1>

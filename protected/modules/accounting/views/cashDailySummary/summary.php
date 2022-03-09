@@ -31,8 +31,10 @@ $this->menu=array(
     'existingDate' => $existingDate,
     'saleOrder' => $saleOrder,
     'saleOrderDataProvider' => $saleOrderDataProvider,
-    'registrationTransaction' => $registrationTransaction,
-    'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+    'retailTransaction' => $retailTransaction,
+    'retailTransactionDataProvider' => $retailTransactionDataProvider,
+    'wholesaleTransaction' => $wholesaleTransaction,
+    'wholesaleTransactionDataProvider' => $wholesaleTransactionDataProvider,
     'purchaseOrder' => $purchaseOrder,
     'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
 )); ?>

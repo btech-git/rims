@@ -109,12 +109,18 @@
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
                             'Sales Retail' => array(
-                                'content' => $this->renderPartial('_viewRegistrationTransaction', array(
-                                    'registrationTransaction' => $registrationTransaction,
-                                    'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+                                'content' => $this->renderPartial('_viewRetailTransaction', array(
+                                    'retailTransaction' => $retailTransaction,
+                                    'retailTransactionDataProvider' => $retailTransactionDataProvider,
                                 ), true),
                             ),
-                            'Sales Non Retail' => array(
+                            'Sales Wholesale' => array(
+                                'content' => $this->renderPartial('_viewWholesaleTransaction', array(
+                                    'wholesaleTransaction' => $wholesaleTransaction,
+                                    'wholesaleTransactionDataProvider' => $wholesaleTransactionDataProvider,
+                                ), true),
+                            ),
+                            'Sales Order' => array(
                                 'content' => $this->renderPartial('_viewSaleOrder', array(
                                     'saleOrder' => $saleOrder,
                                     'saleOrderDataProvider' => $saleOrderDataProvider,

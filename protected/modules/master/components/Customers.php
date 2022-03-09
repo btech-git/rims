@@ -86,14 +86,21 @@ class Customers extends CComponent {
 
     public function validate() {
         $valid = $this->header->validate();
+        
+        if ($this->header->customer_type == 'Company') {
+            $customerName = Customer::model()->findByAttributes(array('name' => $this->header->name));
+            if (empty($customerName)) {
+                $valid = true;
+            } else {
+                $valid = false;
+            }
+        }
 
         if (count($this->phoneDetails) > 0) {
             foreach ($this->phoneDetails as $phoneDetail) {
                 $fields = array('phone_no');
                 $valid = $phoneDetail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
         }
 
         if (count($this->mobileDetails) > 0) {
@@ -101,8 +108,6 @@ class Customers extends CComponent {
                 $fields = array('mobile_no');
                 $valid = $mobileDetail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
         }
 
         if (count($this->picDetails) > 0) {
@@ -110,8 +115,6 @@ class Customers extends CComponent {
                 $fields = array('name', 'address');
                 $valid = $picDetail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
         }
 
         if (count($this->vehicleDetails) > 0) {
@@ -119,8 +122,6 @@ class Customers extends CComponent {
                 $fields = array('plate_number', 'machine_number');
                 $valid = $vehicleDetail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
         }
 
         return $valid;
@@ -129,7 +130,7 @@ class Customers extends CComponent {
     public function flush() {
 
         if ($this->header->customer_type == 'Individual') {
-            $this->header->coa_id = 1;
+            $this->header->coa_id = 1449;
         } else {
             $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => 346), array('order' => 'id DESC'));
             $ordinal = substr($existingCoa->code, -3);

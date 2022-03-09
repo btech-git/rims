@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center">Transaction #</th>
-            <th style="text-align: center">Branch</th>
+            <th style="text-align: center">Tanggal</th>
             <th style="text-align: center">Supplier</th>
             <th style="text-align: center">Amount</th>
             <th style="text-align: center">Approved By</th>

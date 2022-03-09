@@ -404,4 +404,23 @@ class GeneralRepairManagementController extends Controller {
         ));
     }
 
+    public function actionAjaxHtmlUpdateWaitlistTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+
+            $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+
+            $waitlistDataProvider = $model->search();
+            $waitlistDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.service_status = 'Waitlist'");
+            $waitlistDataProvider->criteria->compare('t.work_order_number', $model->work_order_number, true);
+            $waitlistDataProvider->criteria->compare('t.branch_id', $model->branch_id);
+            $waitlistDataProvider->criteria->compare('t.status', $model->status, true);
+            $waitlistDataProvider->criteria->order = 't.priority_level ASC, t.work_order_date DESC';
+
+            $this->renderPartial('_waitlistTable', array(
+                'model' => $model,
+                'waitlistDataProvider' => $waitlistDataProvider,
+            ));
+        }
+    }
+
 }

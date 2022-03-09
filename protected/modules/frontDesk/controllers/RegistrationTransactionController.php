@@ -22,7 +22,7 @@ class RegistrationTransactionController extends Controller {
         }
         
         if ($filterChain->action->id === 'customerWaitlist') {
-            if (!(Yii::app()->user->checkAccess('customerQueueReport'))) {
+            if (!(Yii::app()->user->checkAccess('customerQueueApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }

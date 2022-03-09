@@ -363,6 +363,7 @@ $this->menu = array(
                     <td>Receive #</td>
                     <td>Date</td>
                     <td>Supplier SJ#</td>
+                    <td>Code</td>
                     <td>Product</td>
                     <td>Qty Request</td>
                     <td>Qty Received</td>
@@ -379,6 +380,7 @@ $this->menu = array(
                             <td><?php echo $receiveItemDetail->receiveItem->receive_item_no; ?></td>
                             <td><?php echo $receiveItemDetail->receiveItem->receive_item_date; ?></td>
                             <td><?php echo $receiveItemDetail->receiveItem->supplier_delivery_number; ?></td>
+                            <td><?php echo $receiveItemDetail->product->manufacturer_code; ?></td>
                             <td><?php echo $receiveItemDetail->product->name; ?></td>
                             <td><?php echo $receiveItemDetail->qty_request; ?></td>
                             <td><?php echo $receiveItemDetail->qty_received; ?></td>

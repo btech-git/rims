@@ -14,31 +14,28 @@
                 <tr>
                     <td>
                         <?php echo CHtml::activeTextField($model, 'plate_number', array(
-                            'onchange' => 
-                            CHtml::ajax(array(
+                            'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                'update' => '#mechanic_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#waitlist_table',
                             )),
                         )); ?>
                     </td>
                     <td>
                         <?php echo CHtml::activeTextField($model, 'car_make_code', array(
-                            'onchange' => 
-                            CHtml::ajax(array(
+                            'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                'update' => '#mechanic_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#waitlist_table',
                             )),
                         )); ?>                        
                     </td>
                     <td>
                         <?php echo CHtml::activeTextField($model, 'car_model_code', array(
-                            'onchange' => 
-                            CHtml::ajax(array(
+                            'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                'update' => '#mechanic_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#waitlist_table',
                             )),
                         )); ?>                        
                     </td>
@@ -47,8 +44,8 @@
                             'empty' => '-- All --',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                'update' => '#mechanic_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#waitlist_table',
                             )),
                         )); ?>
                     </td>
@@ -69,8 +66,8 @@
                         <?php echo CHtml::activeTextField($model, 'work_order_number', array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                'update' => '#mechanic_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#waitlist_table',
                             )),
                         )); ?>
                     </td>
@@ -87,8 +84,8 @@
                                 'placeholder' => 'Work Order Date',
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                    'update' => '#mechanic_waitlist_table',
+                                    'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                    'update' => '#waitlist_table',
                                 )),
                             ),
                         )); ?>
@@ -98,8 +95,8 @@
                         <?php echo CHtml::activeTextField($model, 'problem', array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                'update' => '#mechanic_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#waitlist_table',
                             )),
                         )); ?>
                     </td>
@@ -108,8 +105,8 @@
                             'empty' => '-- All --',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateMechanicWaitlistTable'),
-                                'update' => '#mechanic_waitlist_table',
+                                'url' => CController::createUrl('ajaxHtmlUpdateWaitlistTable'),
+                                'update' => '#waitlist_table',
                             )),
                         )); ?>
                     </td>
