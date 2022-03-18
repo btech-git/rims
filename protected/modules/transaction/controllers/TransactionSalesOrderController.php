@@ -70,34 +70,22 @@ class TransactionSalesOrderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        // $model=new TransactionSalesOrder;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['TransactionSalesOrder']))
-        // {
-        // 	$model->attributes=$_POST['TransactionSalesOrder'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('create',array(
-        // 	'model'=>$model,
-        // ));
-
+        
         $salesOrder = $this->instantiate(null);
         $salesOrder->header->requester_branch_id = $salesOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $salesOrder->header->requester_branch_id;
-//        $salesOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($salesOrder->header->sale_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($salesOrder->header->sale_order_date)), $salesOrder->header->requester_branch_id);
         $this->performAjaxValidation($salesOrder->header);
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Customer']))
+        if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
+        }
         
         $customerCriteria = new CDbCriteria;
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('email', $customer->email, true);
-        $customerCriteria->compare('customer_type', $customer->customer_type, true);
+        $customerCriteria->compare('customer_type', 'Company');
 
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
@@ -256,7 +244,7 @@ class TransactionSalesOrderController extends Controller {
             $tanggal = empty($_POST['TransactionSalesOrder']['sale_order_date']) ? date('Y-m-d') : $_POST['TransactionSalesOrder']['sale_order_date'];
             $tenor = empty($customer->tenor) ? 30 : $customer->tenor;
             $tanggal_jatuh_tempo = date('Y-m-d', strtotime($tanggal . '+' . $tenor . ' days'));
-            $coa = $customer->coa_id != "" ? $customer->coa_id : '';
+            $coa = !empty($customer->coa_id) ? $customer->coa_id : '';
             $paymentEstimation = $coa == "" ? $tanggal : $tanggal_jatuh_tempo;
 
             //$supplier = Supplier::model()->findByPk($productPrice->supplier_id);

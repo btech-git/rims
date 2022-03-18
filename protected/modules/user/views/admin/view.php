@@ -66,6 +66,18 @@ $this->widget('zii.widgets.CDetailView', array(
 )); ?>
 
 <br />
+
+<div>
+    <table>
+        <tr>
+            <td>Branch List</td>
+            <?php foreach ($model->userBranches as $detail): ?>
+                <td><?php echo $detail->branch->code; ?></td>
+            <?php endforeach; ?>
+        </tr>
+    </table>
+</div>
+
 <br />
 
 <?php if (count($attendances) != 0): ?>

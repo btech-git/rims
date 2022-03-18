@@ -411,7 +411,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'transaction_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 500,
+                'pageSize' => 50,
             ),
         ));
     }

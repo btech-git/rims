@@ -66,6 +66,8 @@ class TransactionReceiveItemController extends Controller {
         $receiveItem->header->recipient_branch_id = $receiveItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $receiveItem->header->recipient_branch_id;
         $this->performAjaxValidation($receiveItem->header);
 
+        $branches = Branch::model()->findAll();
+        
         if ($movementType == 1) {
             $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($transactionId);
             $receiveItem->header->purchase_order_id = $transactionId;
@@ -139,6 +141,7 @@ class TransactionReceiveItemController extends Controller {
 
         $this->render('create', array(
             'receiveItem' => $receiveItem,
+            'branches' => $branches,
         ));
     }
 

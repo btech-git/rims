@@ -15,5 +15,6 @@ $this->menu=array(
 <div id="maincontent">
     <?php echo $this->renderPartial('_form', array(
         'receiveItem'=>$receiveItem,
+        'branches' => $branches,
     )); ?>
 </div>

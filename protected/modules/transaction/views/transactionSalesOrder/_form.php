@@ -104,35 +104,33 @@
                                 'id' => 'customer-grid',
                                 'dataProvider' => $customerDataProvider,
                                 'filter' => $customer,
-                                'selectionChanged' => '
-                                    js:function(id){
-                                        $("#TransactionSalesOrder_customer_id").val($.fn.yiiGridView.getSelection(id));
-                                        $("#customer-dialog").dialog("close");
-                                        $.ajax({
-                                            type: "POST",
-                                            dataType: "JSON",
-                                            url: "' . CController::createUrl('ajaxCustomer', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-                                            data: $("form").serialize(),
-                                            success: function(data) {
-                                                $("#TransactionSalesOrder_customer_name").val(data.name);		                        	
-                                                $("#TransactionSalesOrder_cust_type").val(data.type);		                        	
-                                                $("#TransactionSalesOrder_coa_customer").val(data.coa);		                        	
-                                                $("#TransactionSalesOrder_coa_name").val(data.coa_name);		                        	
-                                                $("#TransactionSalesOrder_estimate_payment_date").val(data.paymentEstimation);		
-                                                
-                                                if (data.coa == "") {
-                                                    $("#payment-text").show();
-                                                    $("#payment-ddl").hide();
-                                                    $("#payment-ddl select").attr("disabled","disabled");
-                                                } else {
-                                                    $("#payment-text").hide();
-                                                    $("#payment-ddl").show();
-                                                    $("#payment-ddl select").prop("disabled", false);
-                                                }
-                                            },
-                                        });
-                                    }
-                                ',
+                                'selectionChanged' => 'js:function(id){
+                                    $("#TransactionSalesOrder_customer_id").val($.fn.yiiGridView.getSelection(id));
+                                    $("#customer-dialog").dialog("close");
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        url: "' . CController::createUrl('ajaxCustomer', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                        data: $("form").serialize(),
+                                        success: function(data) {
+                                            $("#TransactionSalesOrder_customer_name").val(data.name);		                        	
+                                            $("#TransactionSalesOrder_cust_type").val(data.type);		                        	
+                                            $("#TransactionSalesOrder_coa_customer").val(data.coa);		                        	
+                                            $("#TransactionSalesOrder_coa_name").val(data.coa_name);		                        	
+                                            $("#TransactionSalesOrder_estimate_payment_date").val(data.paymentEstimation);		
+
+                                            if (data.coa == "") {
+                                                $("#payment_text").show();
+                                                $("#payment_ddl").hide();
+                                                $("#payment_ddl select").attr("disabled","disabled");
+                                            } else {
+                                                $("#payment_text").hide();
+                                                $("#payment_ddl").show();
+                                                $("#payment_ddl select").prop("disabled", false);
+                                            }
+                                        },
+                                    });
+                                }',
                                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                                 'pager' => array(
                                     'cssFile' => false,
@@ -141,18 +139,18 @@
                                 'columns' => array(
                                     //'kode',
                                     'name',
-                                    'email',
+                                    array(
+                                        'name' => 'email',
+                                        'value' => 'CHtml::encode(CHtml::value($data, "email"))',
+                                    ),
                                     array(
                                         'name' => 'customer_type',
-                                        'filter' => CHtml::activeDropDownList($customer, 'customer_type', array(
-                                            'Individual' => 'Individual',
-                                            'Company' => 'Company',
-                                                ), array('empty' => '-- Pilih --')),
+                                        'filter' => false, 
                                         'value' => '$data->customer_type',
                                     ),
                                     array(
-                                        'header' => 'Phone',
-                                        'value' => 'empty($data->customerMobiles) ? "" : $data->customerMobiles[0]->mobile_no',
+                                        'header' => 'COA account',
+                                        'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
                                     ),
                                     array(
                                         'header' => 'PIC',

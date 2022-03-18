@@ -82,6 +82,7 @@ class User extends CActiveRecord {
         }
         
         $relations['employee'] = array(self::BELONGS_TO, 'Employee', 'employee_id');
+        $relations['userBranches'] = array(self::HAS_MANY, 'UserBranch', 'users_id');
 
         return $relations;
     }

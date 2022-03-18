@@ -55,10 +55,16 @@ class ProductController extends Controller {
             $model->user_id_approval = Yii::app()->user->getId();
             $model->date_approval = date('Y-m-d H:i:s');
             
-            if ($model->save(true, array('is_approved', 'user_id_approval', 'date_approval')))
+            if ($model->save(true, array('is_approved', 'user_id_approval', 'date_approval'))) {
                 Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            else
-                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
+            }
+            
+        } elseif (isset($_POST['Reject'])) {
+            $model->is_approved = 2;
+            
+            if ($model->save(true, array('is_approved'))) {
+                Yii::app()->user->setFlash('confirm', 'Your data has been rejected!!!');
+            }
         }
 
         $this->render('view', array(

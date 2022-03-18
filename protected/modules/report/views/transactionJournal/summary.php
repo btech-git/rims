@@ -223,8 +223,16 @@ Yii::app()->clientScript->registerScript('report', '
             'columns'=> array(
                 'code',
                 'name',
-                'coaSubCategory.name: Sub Kategori',
-                'coaCategory.name: Kategori',
+                array(
+                    'name' => 'coa_category_id',
+                    'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                    'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
+                ),
+                array(
+                    'name' => 'coa_sub_category_id',
+                    'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                    'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
+                ),
             ),
         )); ?>
     

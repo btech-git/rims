@@ -386,7 +386,7 @@ class GeneralRepairRegistrationController extends Controller {
         $registration = $this->instantiate($id);
         
         if (IdempotentManager::check()) {
-            if ($registration->saveInvoice(Yii::app()->db)) {
+            if ($registration->saveInvoice(Yii::app()->db, $id)) {
                 $this->redirect(array('view', 'id' => $id));
             }
         }
@@ -395,7 +395,12 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionGenerateSalesOrder($id) {
         $model = $this->instantiate($id);
 
-        $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
+        if (empty($model->header->sales_order_number)) {
+            $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
+        } else {
+            $model->setCodeNumberSaleOrderByRevision('sales_order_number');
+        }
+        
         $model->header->sales_order_date = date('Y-m-d');
         $model->header->status = 'Processing SO';
 
@@ -416,7 +421,12 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionGenerateWorkOrder($id) {
         $model = $this->instantiate($id);
 
-        $model->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
+        if (empty($model->header->work_order_number)) {
+            $model->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
+        } else {
+            $model->setCodeNumberWorkOrderByRevision('work_order_number');
+        }
+        
         $model->header->work_order_date = date('Y-m-d');
         $model->header->work_order_time = date('H:i:s');
         $model->header->status = 'Processing WO';

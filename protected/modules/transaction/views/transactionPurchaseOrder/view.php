@@ -112,3 +112,13 @@ $this->menu=array(
         'id'=>'view_tab',
     )); ?>
 </div>
+
+<br />
+
+<?php if (Yii::app()->user->checkAccess("purchaseHead") && $model->status_document === 'Approved'): ?>
+    <div class="field buttons text-center">
+        <?php echo CHtml::beginForm(); ?>
+        <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
+        <?php echo CHtml::endForm(); ?>
+    </div>
+<?php endif; ?>

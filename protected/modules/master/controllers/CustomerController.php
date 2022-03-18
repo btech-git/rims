@@ -60,8 +60,11 @@ class CustomerController extends Controller {
             
             if ($model->save(true, array('is_approved', 'date_approval')))
                 Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            else
-                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
+        } elseif (isset($_POST['Reject'])) {
+            $model->is_approved = 2;
+            
+            if ($model->save(true, array('is_approved')))
+                Yii::app()->user->setFlash('confirm', 'Your data has been rejected!!!');
         }
 
         $this->render('view', array(

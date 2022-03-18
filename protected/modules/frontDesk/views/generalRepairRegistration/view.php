@@ -28,13 +28,13 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Product & Service', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/addProductService?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
                         <?php //endif; ?>
 
-                        <?php if (Yii::app()->user->checkAccess("generalRepairCreate")  && empty($model->sales_order_number)): ?>
+                        <?php if (Yii::app()->user->checkAccess("generalRepairCreate")  && $model->status !== 'Finished'): ?>
                             <?php echo CHtml::button('Generate Sales Order', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'class' => 'button cbutton left',
                                 'style' => 'margin-right:10px',
-                                'disabled' => $model->sales_order_number == null ? false : true,
+//                                'disabled' => $model->sales_order_number == null ? false : true,
                                 'onclick' => '$.ajax({
                                     type: "POST",
                                     //dataType: "JSON",
@@ -62,13 +62,13 @@ $this->breadcrumbs = array(
                                 'onclick' => ''
                             )); ?>
                         <?php else :*/ ?>
-                        <?php if (count($model->registrationServices) > 0 && empty($model->work_order_number) && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
+                        <?php if (count($model->registrationServices) > 0 && $model->status !== 'Finished' && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
                             <?php echo CHtml::button('Generate Work Order', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'class' => 'button cbutton left',
                                 'style' => 'margin-right:10px',
-                                'disabled' => $model->work_order_number == null ? false : true,
+//                                'disabled' => $model->work_order_number == null ? false : true,
                                 'onclick' => ' 
                                     $.ajax({
                                         type: "POST",
@@ -95,7 +95,7 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
                     
-                    <?php if (count($invoices) == 0 && !empty($model->sales_order_number) && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
+                    <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished' && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
                         <?php echo CHtml::button('Generate Invoice', array(
                             'id' => 'invoice-button',
                             'name' => 'Invoice',

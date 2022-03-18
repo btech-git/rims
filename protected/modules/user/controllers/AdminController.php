@@ -118,13 +118,22 @@ class AdminController extends Controller {
 //                    $profile->save();
                     $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
                     $authorizer->authManager->assign('Authenticated', $model->id);
+                    
                     if ((int) $model->superuser === 1) {
                         $authorizer->authManager->assign('Admin', $model->id);
                     }
+                    
+                    $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : $_POST['BranchId'];
+                    foreach($branches as $i=>$branch) {
+                        $userBranch = new UserBranch;
+                        $userBranch->users_id = $model->id;
+                        $userBranch->branch_id = $branch;
+                        $userBranch->save();
+                    }
+                    
+                    $this->redirect(array('view', 'id' => $model->id));
                 }
-                
-                $this->redirect(array('view', 'id' => $model->id));
-            } else {
+//            } else {
 //                $profile->validate();
             }
         }
@@ -142,6 +151,7 @@ class AdminController extends Controller {
      */
     public function actionUpdate() {
         $model = $this->loadModel();
+        $employees = Employee::model()->findAll();
 //        $profile = $model->profile;
         $this->performAjaxValidation(array($model));
         if (isset($_POST['User'])) {
@@ -158,6 +168,17 @@ class AdminController extends Controller {
 //                $profile->save();
                 $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
                 $authorizer->authManager->assign('Authenticated', $model->id);
+
+                UserBranch::model()->deleteAllByAttributes(array('users_id' => $model->id,));
+                
+                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : $_POST['BranchId'];
+                foreach($branches as $i=>$branch) {
+                    $userBranch = new UserBranch;
+                    $userBranch->users_id = $model->id;
+                    $userBranch->branch_id = $branch;
+                    $userBranch->save();
+                }
+
                 $this->redirect(array('view', 'id' => $model->id));
             }
 //            else {
@@ -167,6 +188,7 @@ class AdminController extends Controller {
 
         $this->render('update', array(
             'model' => $model,
+            'employees' => $employees,
 //            'profile' => $profile,
         ));
     }

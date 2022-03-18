@@ -74,6 +74,32 @@ class GeneralRepairRegistration extends CComponent {
         $this->header->setCodeNumberByNext('sales_order_number', $branchCode, RegistrationTransaction::CONSTANT_SALE_ORDER, $currentMonth, $currentYear);
     }
     
+    public function setCodeNumberWorkOrderByRevision($codeNumberColumnName) {
+        list($leftCode, $middleCode, $rightCode) = explode('/', $this->header->$codeNumberColumnName);
+        list($branchCode, $constant) = explode('.', $leftCode);
+        list($year, $month) = explode('.', $middleCode);
+        list($ordinal, $revisionCode) = explode('.', $rightCode);
+        $month = $this->header->normalizeCnMonthBy($month);
+        
+        $arr = array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
+        $month = $month ? $month - 1 : 0;
+        $revisionOrdinal = ord($revisionCode) + 1;
+        $this->header->$codeNumberColumnName = sprintf('%s.%s/%04d.%s/%04d.%c', $branchCode, $constant, $year, $arr[$month], $ordinal, $revisionOrdinal);
+    }
+
+    public function setCodeNumberSaleOrderByRevision($codeNumberColumnName) {
+        list($leftCode, $middleCode, $rightCode) = explode('/', $this->header->$codeNumberColumnName);
+        list($branchCode, $constant) = explode('.', $leftCode);
+        list($year, $month) = explode('.', $middleCode);
+        list($ordinal, $revisionCode) = explode('.', $rightCode);
+        $month = $this->header->normalizeCnMonthBy($month);
+        
+        $arr = array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
+        $month = $month ? $month - 1 : 0;
+        $revisionOrdinal = ord($revisionCode) + 1;
+        $this->header->$codeNumberColumnName = sprintf('%s.%s/%04d.%s/%04d.%c', $branchCode, $constant, $year, $arr[$month], $ordinal, $revisionOrdinal);
+    }
+
     public function addQuickServiceDetail($quickServiceId) {
         $count = count($this->quickServiceDetails);
         
@@ -577,10 +603,10 @@ class GeneralRepairRegistration extends CComponent {
         return $valid;
     }
 
-    public function saveInvoice($dbConnection) {
+    public function saveInvoice($dbConnection, $id) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validateInvoice() && IdempotentManager::build()->save() && $this->flushInvoice();
+            $valid = $this->validateInvoice() && IdempotentManager::build()->save() && $this->flushInvoice($id);
             
             if ($valid) {
                 $dbTransaction->commit();
@@ -596,13 +622,20 @@ class GeneralRepairRegistration extends CComponent {
         return $valid;
     }
 
-    public function flushInvoice() {
+    public function flushInvoice($id) {
         
         $this->header->payment_status = 'INVOICING';
         $valid = $this->header->update(array('payment_status'));
         
-        $model = new InvoiceHeader();
-        $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($this->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($this->header->transaction_date)), $this->header->branch_id);
+        $model = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $id));
+        
+        if (empty($model)) {
+            $model = new InvoiceHeader();
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($this->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($this->header->transaction_date)), $this->header->branch_id);
+        } else {
+            $model->setCodeNumberByRevision('invoice_number');
+        }
+        
         $model->invoice_date = date('Y-m-d');
         $model->due_date = date('Y-m-d');
         $model->reference_type = 2;

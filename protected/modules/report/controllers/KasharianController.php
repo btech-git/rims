@@ -4,14 +4,15 @@ class KasharianController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'index' || $filterChain->action->id === 'report') {
-            if (!(Yii::app()->user->checkAccess('accountingReport')) || !(Yii::app()->user->checkAccess('financeReport')))
+            if (!(Yii::app()->user->checkAccess('accountingReport')) || !(Yii::app()->user->checkAccess('financeReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

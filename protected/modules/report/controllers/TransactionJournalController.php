@@ -48,10 +48,10 @@ class TransactionJournalController extends Controller {
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("t.status = 'Approved' AND t.coa_id IS NOT NULL");
-        $coaCriteria->compare('code', $coa->code, true);
-        $coaCriteria->compare('name', $coa->name, true);
-        $coaCriteria->compare('coa_category_id', $coa->coa_category_id);
-        $coaCriteria->compare('coa_sub_category_id', $coa->coa_sub_category_id, true);
+        $coaCriteria->compare('t.code', $coa->code, true);
+        $coaCriteria->compare('t.name', $coa->name, true);
+        $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
+        $coaCriteria->compare('t.coa_sub_category_id', $coa->coa_sub_category_id);
 
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,

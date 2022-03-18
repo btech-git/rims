@@ -23,6 +23,7 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                 <td>Unit</td>
                 <td>Note</td>
                 <td>Barcode</td>
+                <td>&nbsp;</td>
             </tr>
         </thead>
         
@@ -68,6 +69,7 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                 <td>Unit</td>
                 <td>Note</td>
                 <td>Barcode</td>
+                <td>&nbsp;</td>
             </tr>
         </thead>
         
@@ -139,7 +141,50 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                         )); ?>
                     </td>
                 </tr>
-    <?php endforeach; ?>
+                
+                <tr>
+                    <td colspan="13">
+                        <div class="row">
+                            <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <?php foreach ($branches as $branch): ?>
+                                                <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
+                                            <?php endforeach; ?>
+                                            <th style="text-align: center">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <?php $inventoryTotalQuantities = $receiveItemDetail->getInventoryTotalQuantities(); ?>
+                                            <?php $totalStock = 0; ?>
+                                            <?php foreach ($branches as $branch): ?>
+                                                <?php $index = -1; ?>
+                                                <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
+                                                    <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
+                                                        <?php $index = $i; ?>
+                                                        <?php break; ?>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                                <?php if ($index >= 0): ?>
+                                                    <td>
+                                                        <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
+                                                        <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
+                                                    </td>
+                                                <?php else: ?>
+                                                    <td>0</td>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            <td><?php echo CHtml::encode($totalStock); ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 <?php } ?>

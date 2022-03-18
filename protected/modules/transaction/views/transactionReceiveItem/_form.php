@@ -257,7 +257,10 @@
         </div>
         
         <div class="detail">
-            <?php $this->renderPartial('_detail', array('receiveItem' => $receiveItem)); ?>
+            <?php $this->renderPartial('_detail', array(
+                'receiveItem' => $receiveItem,
+                'branches' => $branches,
+            )); ?>
         </div>
         
         <div class="row">

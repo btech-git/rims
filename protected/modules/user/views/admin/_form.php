@@ -130,7 +130,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
 
     <?php echo $form->errorSummary(array($model)); ?>
     <div class="row">
-        <div class="small-12 medium-6 columns">
+        <div class="medium-12 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -203,40 +203,36 @@ Yii::app()->clientScript->registerScript('userRoles', "
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($model, 'branch_id', array('class' => 'prefix')); ?>
+                        <?php echo $form->labelEx($model, 'employee_id', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
-                            'onchange' => CHtml::ajax(array(
-                                'type' => 'POST',
-                                'url' => CController::createUrl('ajaxHtmlUpdateEmployeeSelect'),
-                                'update' => '#employee_list',
-                            )),
-                        )); ?>
-                        <?php echo $form->error($model, 'branch_id'); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo 'Employee'; ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php if ($model->isNewRecord): ?>
+                        <?php /*if ($model->isNewRecord): ?>
                             <?php $this->renderPartial('_employeeSelect', array(
                                 'model'=>$model,
                                 'employees' => $employees,
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($model, 'employee.name')); ?>
-                        <?php endif; ?>
+                        <?php endif;*/ ?>
+                        <?php echo CHtml::activeDropDownList($model, 'employee_id', CHtml::listData($employees, 'id', 'name'), array('empty' => '-- Pilih Employee --')); ?>
                         <?php echo CHtml::error($model, 'employee_id'); ?>
                     </div>
                 </div>
             </div>
 
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'branch_id', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php $branches = Branch::model()->findAll(array('order' => 'code')); ?>
+                        <?php echo CHtml::checkBoxList('BranchId[]', false, CHtml::listData($branches, 'id', 'code'), array('labelOptions'=>array('style'=>'display:inline'), 'separator'=>' ',)); ?>
+                        <?php echo $form->error($model, 'branch_id'); ?>
+                    </div>
+                </div>
+            </div>
+            
             <br />
 
             <div class="row">

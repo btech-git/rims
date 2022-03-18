@@ -37,8 +37,7 @@ class PendingApprovalController extends Controller {
         $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
 
         $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : '');
-        $coaDataProvider = $coa->search();
-        $coaDataProvider->criteria->addCondition('t.is_approved = 0');
+        $coaDataProvider = $coa->searchByPendingApproval();
         
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
         $customerDataProvider = $customer->search();
