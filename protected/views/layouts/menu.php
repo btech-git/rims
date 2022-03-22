@@ -264,7 +264,11 @@
                         'url' => array('/frontDesk/materialRequest/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('materialRequestCreate') || Yii::app()->user->checkAccess('materialRequestEdit'))
                     ),
-    //                array('label' => 'Gudang', 'url' => array('/master/inventory/admin'), 'visible' => Yii::app()->user->checkAccess('Master.Inventory.Admin')),
+                    array(
+                        'label' => 'Permintaan Maintenance', 
+                        'url' => array('/frontDesk/maintenanceRequest/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('maintenanceRequestCreate') || Yii::app()->user->checkAccess('maintenanceRequestEdit'))
+                    ),
                     array(
                         'label' => 'Stok Gudang', 
                         'url' => array('/frontDesk/inventory/check'), 
