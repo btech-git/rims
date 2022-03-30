@@ -48,19 +48,35 @@
                             </td>
                             <td></td>
                         </tr>
-                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
-                        <?php foreach ($coas as $account): ?>
-                            <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
-                                <?php if ($accountBalance != 0): ?>
-                                    <tr>
-                                        <td style="padding-left: 90px">
-                                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
-                                        </td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
-                                    </tr>
+                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null)); ?> 
+                        <?php foreach ($coas as $coa): ?>
+                            <?php $accountGroupBalance = $coa->getProfitLossBalance($startDate, $endDate, $branchId); ?>
+                            <?php if ($accountGroupBalance != 0): ?>
+                                <tr>
+                                    <td style="padding-left: 90px">
+                                        <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
+                                        <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $coa->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                    </td>
+                                    <td style="text-align: right;"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountGroupBalance)); ?></td>
+                                </tr>
+
+                                <?php if (!empty($coa->coaIds)): ?> 
+                                    <?php foreach ($coa->coaIds as $account): ?>
+                                        <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
+                                        <?php if ($accountBalance > 0): ?>
+                                            <tr>
+                                                <td style="padding-left: 125px; font-size: 10px">
+                                                    <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                                    <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                                </td>
+                                                <td style="text-align: right; font-size: 10px"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
+                                            </tr>
+                                            <?php $accountGroupBalance += $accountBalance; ?>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
                                 <?php endif; ?>
-                            <?php $accountCategoryBalance += $accountBalance; ?>
+                            <?php endif; ?>
+                            <?php $accountCategoryBalance += $accountGroupBalance; ?>
                         <?php endforeach; ?>
                         <tr>
                             <td style="text-align: right; font-weight: bold">

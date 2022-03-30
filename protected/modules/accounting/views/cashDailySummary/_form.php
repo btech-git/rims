@@ -108,6 +108,12 @@
                 <div class="row">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
+                            'Jurnal Umum' => array(
+                                'content' => $this->renderPartial('_viewTransactionJournal', array(
+                                    'transactionJournal' => $transactionJournal,
+                                    'transactionJournalDataProvider' => $transactionJournalDataProvider,
+                                ), true),
+                            ),
                             'Sales Retail' => array(
                                 'content' => $this->renderPartial('_viewRetailTransaction', array(
                                     'retailTransaction' => $retailTransaction,

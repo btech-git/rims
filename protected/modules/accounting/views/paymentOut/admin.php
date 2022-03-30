@@ -154,8 +154,9 @@ $('.search-form form').submit(function(){
     ),
     'columns' => array(
         array(
+            'name' => 'purchase_order_no',
             'header' => 'PO #',
-            'value' => 'CHTml::link($data->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->purchase_order_id))',
+            'value' => 'empty($data->purchase_order_id) ? "N/A" : CHtml::link($data->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->purchase_order_id))',
             'type' => 'raw',
         ),
         array(
@@ -171,7 +172,7 @@ $('.search-form form').submit(function(){
         array(
             'name' => 'supplier_name',
             'header' => 'Supplier',
-            'value' => '$data->supplier->name',
+            'value' => 'empty($data->supplier_id) ? "N/A" :$data->supplier->name',
         ),
         array(
             'name' => 'supplier_delivery_number',

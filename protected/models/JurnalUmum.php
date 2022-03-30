@@ -114,7 +114,7 @@ class JurnalUmum extends CActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('kode_transaksi', $this->kode_transaksi, true);
         $criteria->compare('tanggal_transaksi', $this->tanggal_transaksi, true);
-        $criteria->compare('coa_id', $this->coa_id);
+        $criteria->compare('t.coa_id', $this->coa_id);
         $criteria->compare('t.branch_id', $this->branch_id);
         $criteria->compare('total', $this->total, true);
         $criteria->compare('debet_kredit', $this->debet_kredit, true);
@@ -125,6 +125,9 @@ class JurnalUmum extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 5000,
+            ),
         ));
     }
 

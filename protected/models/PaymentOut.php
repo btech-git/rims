@@ -133,18 +133,18 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.purchase_order_id', $this->purchase_order_id);
         $criteria->compare('t.payment_number', $this->payment_number, true);
         $criteria->compare('t.payment_date', $this->payment_date, true);
-        $criteria->compare('t.supplier_id', $this->supplier_id);
-        $criteria->compare('t.payment_amount', $this->payment_amount, true);
-        $criteria->compare('t.notes', $this->notes, true);
-        $criteria->compare('t.payment_type', $this->payment_type, true);
-        $criteria->compare('t.user_id', $this->user_id);
-        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('supplier_id', $this->supplier_id);
+        $criteria->compare('payment_amount', $this->payment_amount, true);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('t.status', $this->status, true);
-        $criteria->compare('t.company_bank_id', $this->company_bank_id);
-        $criteria->compare('t.nomor_giro', $this->nomor_giro, true);
-        $criteria->compare('t.cash_payment_type', $this->cash_payment_type);
-        $criteria->compare('t.bank_id', $this->bank_id);
-        $criteria->compare('t.payment_type_id', $this->payment_type_id);
+        $criteria->compare('company_bank_id', $this->company_bank_id);
+        $criteria->compare('nomor_giro', $this->nomor_giro, true);
+        $criteria->compare('cash_payment_type', $this->cash_payment_type);
+        $criteria->compare('bank_id', $this->bank_id);
+        $criteria->compare('payment_type_id', $this->payment_type_id);
 
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');
@@ -153,12 +153,6 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 'payment_date DESC',
-            ),
-            'pagination' => array(
-                'pageSize' => 10,
-            ),
         ));
     }
 
@@ -231,7 +225,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $total = 0.00;
         
         foreach ($this->payOutDetails as $detail) {
-            $total += $detail->receiveItem->grandTotal;
+            $total += $detail->total_invoice;
         }
         
         return $total;

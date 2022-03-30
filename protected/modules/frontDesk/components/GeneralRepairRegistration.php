@@ -781,13 +781,14 @@ class GeneralRepairRegistration extends CComponent {
             foreach ($this->productDetails as $key => $rProduct) {
 
                 //save product master category coa penjualan barang
-                $coaMasterPenjualan = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaPenjualanBarangDagang->id);
-                $getCoaMasterPenjualan = $coaMasterPenjualan->code;
-                $coaMasterPenjualanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterPenjualan));
+                $coaPenjualanBarang = $rProduct->product->productSubMasterCategory->coaPenjualanBarangDagang;
+//                $coaMasterPenjualan = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaPenjualanBarangDagang->id);
+//                $getCoaMasterPenjualan = $coaMasterPenjualan->code;
+//                $coaMasterPenjualanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterPenjualan));
                 $jurnalUmumMasterPenjualan = new JurnalUmum;
                 $jurnalUmumMasterPenjualan->kode_transaksi = $this->header->transaction_number;
                 $jurnalUmumMasterPenjualan->tanggal_transaksi = $this->header->transaction_date;
-                $jurnalUmumMasterPenjualan->coa_id = $coaMasterPenjualanWithCode->id;
+                $jurnalUmumMasterPenjualan->coa_id = $coaPenjualanBarang->coa_id;
                 $jurnalUmumMasterPenjualan->branch_id = $this->header->branch_id;
                 $jurnalUmumMasterPenjualan->total = $rProduct->sale_price * $rProduct->quantity;
                 $jurnalUmumMasterPenjualan->debet_kredit = 'K';
@@ -798,13 +799,13 @@ class GeneralRepairRegistration extends CComponent {
                 $valid = $jurnalUmumMasterPenjualan->save() && $valid;
 
                 //save product sub master category coa penjualan barang
-                $coaPenjualan = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaPenjualanBarangDagang->id);
-                $getCoaPenjualan = $coaPenjualan->code;
-                $coaPenjualanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPenjualan));
+//                $coaPenjualan = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaPenjualanBarangDagang->id);
+//                $getCoaPenjualan = $coaPenjualan->code;
+//                $coaPenjualanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPenjualan));
                 $jurnalUmumPenjualan = new JurnalUmum;
                 $jurnalUmumPenjualan->kode_transaksi = $this->header->transaction_number;
                 $jurnalUmumPenjualan->tanggal_transaksi = $this->header->transaction_date;
-                $jurnalUmumPenjualan->coa_id = $coaPenjualanWithCode->id;
+                $jurnalUmumPenjualan->coa_id = $coaPenjualanBarang->id;
                 $jurnalUmumPenjualan->branch_id = $this->header->branch_id;
                 $jurnalUmumPenjualan->total = $rProduct->sale_price * $rProduct->quantity;
                 $jurnalUmumPenjualan->debet_kredit = 'K';
@@ -816,13 +817,14 @@ class GeneralRepairRegistration extends CComponent {
 
                 if ($rProduct->discount > 0) {
                     // save product master coa diskon penjualan
-                    $coaMasterDiskon = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaDiskonPenjualan->id);
-                    $getCoaMasterDiskon = $coaMasterDiskon->code;
-                    $coaMasterDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterDiskon));
+                    $coaDiscount = $rProduct->product->productSubMasterCategory->coaDiskonPenjualan;
+//                    $coaMasterDiskon = Coa::model()->findByPk($rProduct->product->productMasterCategory->coaDiskonPenjualan->id);
+//                    $getCoaMasterDiskon = $coaMasterDiskon->code;
+//                    $coaMasterDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterDiskon));
                     $jurnalUmumMasterDiskon = new JurnalUmum;
                     $jurnalUmumMasterDiskon->kode_transaksi = $this->header->transaction_number;
                     $jurnalUmumMasterDiskon->tanggal_transaksi = $this->header->transaction_date;
-                    $jurnalUmumMasterDiskon->coa_id = $coaMasterDiskonWithCode->id;
+                    $jurnalUmumMasterDiskon->coa_id = $coaDiscount->coa_id;
                     $jurnalUmumMasterDiskon->branch_id = $this->header->branch_id;
                     $jurnalUmumMasterDiskon->total = $rProduct->discountAmount;
                     $jurnalUmumMasterDiskon->debet_kredit = 'D';
@@ -833,13 +835,13 @@ class GeneralRepairRegistration extends CComponent {
                     $valid = $jurnalUmumMasterDiskon->save() && $valid;
 
                     // save product sub master coa diskon penjualan
-                    $coaDiskon = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaDiskonPenjualan->id);
-                    $getCoaDiskon = $coaDiskon->code;
-                    $coaDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaDiskon));
+//                    $coaDiskon = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaDiskonPenjualan->id);
+//                    $getCoaDiskon = $coaDiskon->code;
+//                    $coaDiskonWithCode = Coa::model()->findByAttributes(array('code' => $getCoaDiskon));
                     $jurnalUmumDiskon = new JurnalUmum;
                     $jurnalUmumDiskon->kode_transaksi = $this->header->transaction_number;
                     $jurnalUmumDiskon->tanggal_transaksi = $this->header->transaction_date;
-                    $jurnalUmumDiskon->coa_id = $coaDiskonWithCode->id;
+                    $jurnalUmumDiskon->coa_id = $coaDiscount->id;
                     $jurnalUmumDiskon->branch_id = $this->header->branch_id;
                     $jurnalUmumDiskon->total = $rProduct->discountAmount;
                     $jurnalUmumDiskon->debet_kredit = 'D';
@@ -851,13 +853,14 @@ class GeneralRepairRegistration extends CComponent {
                 }
 
                 // save product master category coa hpp
-                $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coa_hpp);
-                $getCoaMasterHpp = $coaMasterHpp->code;
-                $coaMasterHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterHpp));
+                $coaHpp = $rProduct->product->productSubMasterCategory->coaHpp;
+//                $coaMasterHpp = Coa::model()->findByPk($rProduct->product->productMasterCategory->coa_hpp);
+//                $getCoaMasterHpp = $coaMasterHpp->code;
+//                $coaMasterHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterHpp));
                 $jurnalUmumMasterHpp = new JurnalUmum;
                 $jurnalUmumMasterHpp->kode_transaksi = $this->header->transaction_number;
                 $jurnalUmumMasterHpp->tanggal_transaksi = $this->header->transaction_date;
-                $jurnalUmumMasterHpp->coa_id = $coaMasterHppWithCode->id;
+                $jurnalUmumMasterHpp->coa_id = $coaHpp->coa_id;
                 $jurnalUmumMasterHpp->branch_id = $this->header->branch_id;
                 $jurnalUmumMasterHpp->total = $rProduct->quantity * $rProduct->hpp;
                 $jurnalUmumMasterHpp->debet_kredit = 'D';
@@ -868,13 +871,13 @@ class GeneralRepairRegistration extends CComponent {
                 $valid = $jurnalUmumMasterHpp->save() && $valid;
 
                 // save product sub master category coa hpp
-                $coaHpp = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coaHpp->id);
-                $getCoaHpp = $coaHpp->code;
-                $coaHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHpp));
+//                $coaHpp = Coa::model()->findByPk($rProduct->product->productSubMasterCategory->coa_hpp);
+//                $getCoaHpp = $coaHpp->code;
+//                $coaHppWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHpp));
                 $jurnalUmumHpp = new JurnalUmum;
                 $jurnalUmumHpp->kode_transaksi = $this->header->transaction_number;
                 $jurnalUmumHpp->tanggal_transaksi = $this->header->transaction_date;
-                $jurnalUmumHpp->coa_id = $coaHppWithCode->id;
+                $jurnalUmumHpp->coa_id = $coaHpp->id;
                 $jurnalUmumHpp->branch_id = $this->header->branch_id;
                 $jurnalUmumHpp->total = $rProduct->quantity * $rProduct->hpp;
                 $jurnalUmumHpp->debet_kredit = 'D';

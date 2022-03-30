@@ -250,6 +250,46 @@ class MovementOutServiceController extends Controller {
         }
     }
 
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'productBrandId' => $productBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'productSubBrandId' => $productSubBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'productMasterCategoryId' => $productMasterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubCategorySelect', array(
+                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+            ));
+        }
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

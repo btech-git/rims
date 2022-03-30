@@ -159,10 +159,10 @@
                             <?php /*
                             $invoiceCriteria = new CDbCriteria;
                             $invoiceCriteria->addCondition("status != 'CANCELLED'");
-                            $invoiceCriteria->addCondition("registration_transaction_id = " . $model->id);
+                            $invoiceCriteria->addCondition("registration_transaction_id = " . $model->id);*/
                             ?>
-                            <?php $invoice = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $model->id))*/ ?>
-                            <input type="text" readonly="true" value="<?php echo $model->getInvoice($model, null); ?>"> 
+                            <?php $invoice = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $model->id)) ?>
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'invoice_number')); ?>"> 
                         </div>
                     </div>
                 </div>

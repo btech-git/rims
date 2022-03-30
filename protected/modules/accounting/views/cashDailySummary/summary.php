@@ -37,4 +37,6 @@ $this->menu=array(
     'wholesaleTransactionDataProvider' => $wholesaleTransactionDataProvider,
     'purchaseOrder' => $purchaseOrder,
     'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
+    'transactionJournal' => $transactionJournal,
+    'transactionJournalDataProvider' => $transactionJournalDataProvider,
 )); ?>

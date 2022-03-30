@@ -47,11 +47,11 @@ class PayableLedgerController extends Controller {
         $payableLedgerSummary->setupLoading();
         $payableLedgerSummary->setupPaging($pageSize, $currentPage);
         $payableLedgerSummary->setupSorting();
-//        $filters = array(
-//            'startDate' => $startDate,
-//            'endDate' => $endDate,
-//        );
-//        $payableLedgerSummary->setupFilter($filters);
+        $filters = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        );
+        $payableLedgerSummary->setupFilter($filters);
         
         $this->render('summary', array(
             'supplier' => $supplier,

@@ -90,6 +90,15 @@ class CashDailySummaryController extends Controller {
         $saleOrderDataProvider->criteria->compare('t.sale_order_date', $transactionDate);
         $saleOrderDataProvider->criteria->addCondition('t.approved_id IS NOT NULL');
         
+        $transactionJournal = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : '');
+
+        $transactionJournalDataProvider = $transactionJournal->search();
+        $transactionJournalDataProvider->criteria->together = 'true';
+        $transactionJournalDataProvider->criteria->with = array('coa', 'branch');
+        $transactionJournalDataProvider->criteria->compare('t.tanggal_transaksi', $transactionDate);
+        $transactionJournalDataProvider->criteria->compare('t.is_coa_category', 0);
+//        $transactionJournalDataProvider->criteria->order('');
+        
         $retailTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
 
         $retailTransactionDataProvider = $retailTransaction->searchAdmin();
@@ -174,6 +183,8 @@ class CashDailySummaryController extends Controller {
             'wholesaleTransactionDataProvider' => $wholesaleTransactionDataProvider,
             'purchaseOrder' => $purchaseOrder,
             'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
+            'transactionJournal' => $transactionJournal,
+            'transactionJournalDataProvider' => $transactionJournalDataProvider,
         ));
     }
 

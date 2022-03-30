@@ -308,7 +308,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             t.id NOT IN (
                 SELECT receive_item_id
                 FROM " . PayOutDetail::model()->tableName() . " 
-            ) AND t.invoice_number <> '' 
+            )
         ";
         
         $criteria->compare('id', $this->id);
@@ -334,6 +334,16 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('movement_out_id', $this->movement_out_id);
         $criteria->compare('user_id_receive', $this->user_id_receive);
         $criteria->compare('user_id_invoice', $this->user_id_invoice);
+
+        $criteria->together = 'true';
+        $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'transferRequest', 'consignmentIn', 'deliveryOrder', 'movementOut');
+        $criteria->compare('recipientBranch.name', $this->branch_name, true);
+        $criteria->compare('supplier.name', $this->supplier_name, true);
+        $criteria->compare('purchaseOrder.purchase_order_no', $this->purchase_order_no, true);
+        $criteria->compare('transferRequest.transfer_request_no', $this->transfer_request_no, true);
+        $criteria->compare('consignmentIn.consignment_in_no', $this->consignment_in_no, true);
+        $criteria->compare('deliveryOrder.delivery_order_no', $this->delivery_order_no, true);
+        $criteria->compare('movementOut.movement_out_no', $this->movement_out_no, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

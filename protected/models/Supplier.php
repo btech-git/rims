@@ -238,7 +238,7 @@ class Supplier extends CActiveRecord {
                     SELECT payment_number AS transaction_number, payment_date AS transaction_date, 'Pembayaran Pembelian' AS transaction_type, notes AS remark, (payment_amount * -1) AS amount, 0 AS purchase_amount, (payment_amount * -1) AS payment_amount, supplier_id AS supplier
                     FROM " . PaymentOut::model()->tableName() . "
                 ) transaction
-                WHERE transaction_date BETWEEN :start_date AND :end_date AND supplier = :supplier_id
+                WHERE substring(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND supplier = :supplier_id
                 ORDER BY transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
