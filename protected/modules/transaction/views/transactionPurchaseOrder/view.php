@@ -98,8 +98,14 @@ $this->menu=array(
                     'model'=>$model
                 ),TRUE)
             ),
-            'Journal'=>array(
+            'Detail Payment'=>array(
                 'id'=>'test5',
+                'content'=>$this->renderPartial('_viewDetailPayment', array(
+                    'model'=>$model
+                ),TRUE)
+            ),
+            'Journal'=>array(
+                'id'=>'test6',
                 'content'=>$this->renderPartial('_viewJournal', array(
                     'model'=>$model
                 ),TRUE)

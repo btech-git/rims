@@ -95,7 +95,7 @@ class CashDailySummaryController extends Controller {
         $transactionJournalDataProvider = $transactionJournal->search();
         $transactionJournalDataProvider->criteria->together = 'true';
         $transactionJournalDataProvider->criteria->with = array('coa', 'branch');
-        $transactionJournalDataProvider->criteria->compare('t.tanggal_transaksi', $transactionDate);
+        $transactionJournalDataProvider->criteria->compare('t.tanggal_transaksi', $transactionDate,true);
         $transactionJournalDataProvider->criteria->compare('t.is_coa_category', 0);
 //        $transactionJournalDataProvider->criteria->order('');
         
@@ -104,7 +104,7 @@ class CashDailySummaryController extends Controller {
         $retailTransactionDataProvider = $retailTransaction->searchAdmin();
         $retailTransactionDataProvider->criteria->together = 'true';
         $retailTransactionDataProvider->criteria->with = array('customer');
-        $retailTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate);
+        $retailTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
         $retailTransactionDataProvider->criteria->addCondition('customer.customer_type = "Individual"');
         
         $wholesaleTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
@@ -112,13 +112,13 @@ class CashDailySummaryController extends Controller {
         $wholesaleTransactionDataProvider = $wholesaleTransaction->searchAdmin();
         $wholesaleTransactionDataProvider->criteria->together = 'true';
         $wholesaleTransactionDataProvider->criteria->with = array('customer');
-        $wholesaleTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate);
+        $wholesaleTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
         $wholesaleTransactionDataProvider->criteria->addCondition('customer.customer_type = "Company"');
         
         $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         
         $purchaseOrderDataProvider = $purchaseOrder->search();
-        $purchaseOrderDataProvider->criteria->compare('t.purchase_order_date', $transactionDate);
+        $purchaseOrderDataProvider->criteria->compare('t.purchase_order_date', $transactionDate,true);
         $purchaseOrderDataProvider->criteria->addCondition('t.approved_id IS NOT NULL');
         
 //        if ((int) $branchId == 6) {

@@ -28,7 +28,7 @@ class PaymentOutComponent extends CComponent {
             if (!$exist) {
                 $detail = new PayOutDetail;
                 $detail->receive_item_id = $invoiceId;
-                $detail->total_invoice = $receiveItem->grandTotal;
+                $detail->total_invoice = $receiveItem->purchaseOrder->total_price;
                 $this->details[] = $detail;
             }
         } else

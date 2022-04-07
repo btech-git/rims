@@ -29,7 +29,7 @@ class TransactionJournalController extends Controller {
 //        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 //        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
 //        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 1000000;
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 1000;
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 

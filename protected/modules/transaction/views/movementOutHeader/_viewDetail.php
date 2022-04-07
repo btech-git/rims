@@ -4,6 +4,7 @@
     <table>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Product</th>
                 <th>Code</th>
                 <th>Kategori</th>
@@ -21,6 +22,7 @@
             <?php foreach ($details as $key => $detail): ?>
                 <?php $product = $detail->product; ?>
                 <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>

@@ -85,7 +85,7 @@ class PaymentInController extends Controller {
             $invoice->attributes = $_GET['InvoiceHeader'];
         
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.status != "PAID" AND t.payment_left > 0');
+        $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.payment_left > 0');
         $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
         $invoiceCriteria->compare('due_date', $invoice->due_date, true);

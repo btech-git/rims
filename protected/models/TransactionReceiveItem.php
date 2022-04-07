@@ -294,7 +294,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     }
 
     public function getGrandTotal() {
-        return $this->subTotal + $this->taxNominal;
+        return $this->subTotal; // + $this->taxNominal;
     }
 
     public function getGrandTotalAfterRounding() {
