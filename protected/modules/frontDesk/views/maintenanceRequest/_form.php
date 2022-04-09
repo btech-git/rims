@@ -21,7 +21,21 @@
                         <?php echo CHtml::label('Request Tanggal', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($maintenanceRequest->header, 'transaction_date'))); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $maintenanceRequest->header,
+                            'attribute' => "transaction_date",
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                                'yearRange' => '1900:2020'
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                                'value' => date('Y-m-d'),
+                            ),
+                        )); ?>
+                        <?php //echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($maintenanceRequest->header, 'transaction_date'))); ?>
                         <?php echo CHtml::error($maintenanceRequest->header, 'transaction_date'); ?>
                     </div>
                 </div>

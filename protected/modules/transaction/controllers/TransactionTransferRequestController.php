@@ -104,6 +104,7 @@ class TransactionTransferRequestController extends Controller
 
         $transferRequest = $this->instantiate(null);
         $transferRequest->header->requester_branch_id = $transferRequest->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $transferRequest->header->requester_branch_id;
+        $transferRequest->header->date_created = date('Y-m-d H:i:s');
         $transferRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($transferRequest->header->transfer_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($transferRequest->header->transfer_request_date)), $transferRequest->header->requester_branch_id);
         $this->performAjaxValidation($transferRequest->header);
         

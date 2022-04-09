@@ -80,6 +80,7 @@ class CashTransactionController extends Controller {
         $cashTransaction->header->branch_id = $cashTransaction->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $cashTransaction->header->branch_id;
         $cashTransaction->header->payment_type_id = 1;
         $cashTransaction->header->transaction_time = date('H:i:s');
+        $cashTransaction->header->date_created = date('Y-m-d H:i:s');
         $this->performAjaxValidation($cashTransaction->header);
 
         $coaKas = new Coa('search');
@@ -247,16 +248,16 @@ class CashTransactionController extends Controller {
         
         $user = Users::model()->findByPk(Yii::app()->user->getId());
         
-        $cashInTransactionDataProvider = $model->search();
+        $cashInTransactionDataProvider = $model->searchByAdmin();
         $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In" ');
 
-        $cashOutTransactionDataProvider = $model->search();
+        $cashOutTransactionDataProvider = $model->searchByAdmin();
         $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out" ');
         
-        if ((int) $user->branch_id != 6) {
-            $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = ' . $user->branch_id);
-            $cashOutTransactionDataProvider->criteria->addCondition('t.branch_id = ' . $user->branch_id);
-        }
+//        if ((int) $user->branch_id != 6) {
+//            $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = ' . $user->branch_id);
+//            $cashOutTransactionDataProvider->criteria->addCondition('t.branch_id = ' . $user->branch_id);
+//        }
 
         $this->render('admin', array(
             'model' => $model,

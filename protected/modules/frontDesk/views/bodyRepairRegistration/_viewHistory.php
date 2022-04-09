@@ -1,6 +1,6 @@
 <?php if ($model->vehicle_id != ""): ?>
-    <?php $historyTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id'=>$model->vehicle_id)); ?>
-    <?php if (count($historyTransactions) > 0 AND count($historyTransactions) < 30): ?>
+    <?php $historyTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id'=>$model->vehicle_id), array('order' => 't.id DESC', 'limit' => 10)); ?>
+    <?php if (count($historyTransactions) > 0): ?>
         <div class="detail">
             <table>
                 <thead>

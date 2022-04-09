@@ -29,6 +29,7 @@
  * @property string $payment_date_estimate
  * @property integer $coa_bank_id_estimate
  * @property integer $purchase_type
+ * @property string $created_date_time
  *
  * The followings are the available model relations:
  * @property PaymentOut[] $paymentOuts
@@ -80,7 +81,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type', 'required'),
+            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, created_datetime', 'required'),
             array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
@@ -90,7 +91,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -192,6 +193,53 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
         $criteria->together = 'true';
         $criteria->with = array('supplier');
+        $criteria->compare('supplier.name', $this->supplier_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'purchase_order_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+
+    public function searchByAdmin() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.purchase_order_no', $this->purchase_order_no, true);
+        $criteria->compare('t.purchase_order_date', $this->purchase_order_date, true);
+        $criteria->compare('t.status_document', $this->status_document, true);
+        $criteria->compare('t.supplier_id', $this->supplier_id);
+        $criteria->compare('t.payment_type', $this->payment_type, true);
+        $criteria->compare('t.estimate_date_arrival', $this->estimate_date_arrival, true);
+        $criteria->compare('t.requester_id', $this->requester_id);
+        $criteria->compare('t.approved_id', $this->approved_id);
+        $criteria->compare('t.total_quantity', $this->total_quantity);
+        $criteria->compare('t.price_before_discount', $this->price_before_discount, true);
+        $criteria->compare('t.discount', $this->discount, true);
+        $criteria->compare('t.subtotal', $this->subtotal, true);
+        $criteria->compare('t.ppn', $this->ppn);
+        $criteria->compare('t.ppn_price', $this->ppn_price, true);
+        $criteria->compare('t.total_price', $this->total_price, true);
+        $criteria->compare('t.payment_amount', $this->payment_amount, true);
+        $criteria->compare('t.payment_left', $this->payment_left, true);
+        $criteria->compare('t.company_bank_id', $this->company_bank_id);
+        $criteria->compare('t.payment_status', $this->payment_status, true);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('t.purchase_type', $this->purchase_type, true);
+
+        $criteria->addCondition("t.main_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        $criteria->together = 'true';
+        $criteria->with = array('supplier', 'mainBranch');
         $criteria->compare('supplier.name', $this->supplier_name, true);
 
         return new CActiveDataProvider($this, array(

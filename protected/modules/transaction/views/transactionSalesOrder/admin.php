@@ -60,7 +60,7 @@ $('.search-form form').submit(function(){
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'transaction-sales-order-grid',
-                'dataProvider' => $model->search(),
+                'dataProvider' => $model->searchByAdmin(),
                 'filter' => $model,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',	
                 'pager' => array(
@@ -77,7 +77,7 @@ $('.search-form form').submit(function(){
                     'sale_order_date',
                     array(
                         'name'=>'customer_name',
-                        'value'=>'$data->customer->name'
+                        'value'=>'empty($data->customer_id) ? "" : $data->customer->name'
                     ),
                     'status_document',
                     'payment_type',

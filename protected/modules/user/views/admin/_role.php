@@ -77,6 +77,21 @@
                     true
                 )
             ),
+        ),
+        // additional javascript options for the tabs plugin
+        'options' => array(
+            'collapsible' => true,
+        ),
+        // set id for this widgets
+        'id' => 'view_tab_transaction',
+    )); ?>
+</div>
+
+<br /><br />
+
+<div>
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+        'tabs' => array(
             'Accounting/Finance' => array(
                 'content' => $this->renderPartial(
                     '_viewFinance',
@@ -132,6 +147,6 @@
             'collapsible' => true,
         ),
         // set id for this widgets
-        'id' => 'view_tab',
+        'id' => 'view_tab_master',
     )); ?>
 </div>

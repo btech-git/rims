@@ -228,7 +228,7 @@ class InvoiceHeaderController extends Controller {
         if (isset($_GET['InvoiceHeader']))
             $model->attributes = $_GET['InvoiceHeader'];
         
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchByAdmin();
         $dataProvider->criteria->with = array(
             'salesOrder',
             'registrationTransaction',

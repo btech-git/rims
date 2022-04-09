@@ -989,7 +989,7 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ($this->header->ppn == 1) ? $this->subTotalTransaction * .1 : 0;
+        return ($this->header->ppn == 1) ? $this->subTotalTransaction * .11 : 0;
     }
 
     public function getTaxServiceAmount() {

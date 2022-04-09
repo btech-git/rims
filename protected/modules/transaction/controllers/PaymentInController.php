@@ -123,6 +123,7 @@ class PaymentInController extends Controller {
         $model->customer_id = $invoice->customer_id;
         $model->vehicle_id = $invoice->vehicle_id;
         $model->payment_time = date('H:i:s');
+        $model->date_created = date('Y-m-d H:i:s');
 
         $model->branch_id = $model->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $model->branch_id;
         $images = $model->images = CUploadedFile::getInstances($model, 'images');
@@ -351,9 +352,11 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
         $invoiceCriteria->compare('due_date', $invoice->due_date, true);
         $invoiceCriteria->compare('total_price', $invoice->total_price, true);
-        $invoiceCriteria->compare('branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('user_id', $invoice->user_id);
         
+        $invoiceCriteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $invoiceCriteria->params = array(':userId' => Yii::app()->user->id);
+
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer');
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
@@ -373,7 +376,7 @@ class PaymentInController extends Controller {
         if (isset($_GET['PaymentIn']))
             $model->attributes = $_GET['PaymentIn'];
         
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchByAdmin();
         $dataProvider->criteria->with = array(
             'customer',
             'paymentInApprovals',

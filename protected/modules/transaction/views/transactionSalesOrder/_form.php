@@ -44,11 +44,10 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-//                                    'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
+                                    'readonly' => true,
                                     'value' => $salesOrder->header->isNewRecord ? date('Y-m-d') : $salesOrder->header->sale_order_date,
-                                //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
                                 ),
                             )); ?>
                             <?php echo $form->error($salesOrder->header, 'sale_order_date'); ?>
@@ -252,6 +251,7 @@
                                     'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
+                                    'readonly' => true,
                                     'value' => $salesOrder->header->isNewRecord ? date('Y-m-d') : $salesOrder->header->estimate_arrival_date,
                                 ),
                             )); ?>
@@ -277,6 +277,7 @@
                                     'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
+                                    'readonly' => true,
                                     'value' => $salesOrder->header->isNewRecord ? date('Y-m-d') : $salesOrder->header->estimate_payment_date,
                                 ),
                             )); ?>

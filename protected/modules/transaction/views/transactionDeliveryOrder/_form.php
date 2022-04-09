@@ -40,7 +40,21 @@
                             <?php echo $form->labelEx($deliveryOrder->header, 'posting_date', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($deliveryOrder->header, 'posting_date', array('readonly' => true,)); ?>
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                'model' => $deliveryOrder->header,
+                                'attribute' => "posting_date",
+                                // additional javascript options for the date picker plugin
+                                'options' => array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth' => true,
+                                    'changeYear' => true,
+                                ),
+                                'htmlOptions' => array(
+                                    'readonly' => true,
+                                    'value' => $deliveryOrder->header->isNewRecord ? date('Y-m-d') : $deliveryOrder->header->posting_date,
+                                ),
+                            )); ?>
+                            <?php //echo $form->textField($deliveryOrder->header, 'posting_date', array('readonly' => true,)); ?>
                             <?php echo $form->error($deliveryOrder->header, 'posting_date'); ?>
                         </div>
                     </div>

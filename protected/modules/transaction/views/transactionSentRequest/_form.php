@@ -48,9 +48,9 @@
                                 array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($sentRequest->header, 'sent_request_date',
-                                array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
-                            <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            <?php /*echo $form->textField($sentRequest->header, 'sent_request_date',
+                                array('size' => 30, 'maxlength' => 30, 'readonly' => true));*/ ?>
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                 'model' => $sentRequest->header,
                                 'attribute' => "sent_request_date",
                                 // additional javascript options for the date picker plugin
@@ -61,9 +61,10 @@
                                     'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
+                                    'readonly' => true,
                                     'value' => $sentRequest->header->isNewRecord ? date('Y-m-d') : $sentRequest->header->sent_request_date,
                                 ),
-                            ));*/ ?>
+                            )); ?>
                             <?php echo $form->error($sentRequest->header, 'sent_request_date'); ?>
                         </div>
                     </div>
@@ -103,6 +104,7 @@
 //                                    'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
+                                    'readonly' => true,
                                     'value' => $sentRequest->header->isNewRecord ? date('Y-m-d') : $sentRequest->header->estimate_arrival_date,
                                 ),
                             ));

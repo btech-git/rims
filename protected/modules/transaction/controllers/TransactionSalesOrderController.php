@@ -73,6 +73,7 @@ class TransactionSalesOrderController extends Controller {
         
         $salesOrder = $this->instantiate(null);
         $salesOrder->header->requester_branch_id = $salesOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $salesOrder->header->requester_branch_id;
+        $salesOrder->header->created_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($salesOrder->header);
 
         $customer = new Customer('search');

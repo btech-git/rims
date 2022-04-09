@@ -71,6 +71,7 @@ class JurnalUmumController extends Controller {
      */
     public function actionCreate() {
         $model = new JurnalUmum;
+        $model->date_created = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);

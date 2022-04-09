@@ -73,36 +73,6 @@
 
                             <div class="row">
                                 <div class="medium-6 columns">
-<!--                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php //echo $form->labelEx($generalRepairRegistration->header,'transaction_number'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php //echo CHtml::encode(CHtml::value($generalRepairRegistration->header,'transaction_number')); ?>
-                                                <?php //echo $form->textField($generalRepairRegistration->header,'transaction_number',array('size'=>30,'maxlength'=>30, 'readonly' => true)); ?>
-                                                <?php //echo $form->error($generalRepairRegistration->header,'transaction_number'); ?>
-                                            </div>
-                                        </div>
-                                    </div>-->
-
-                                    <?php if(!$generalRepairRegistration->header->isNewRecord): ?>
-                                        <?php if($generalRepairRegistration->header->work_order_number != ""): ?>
-                                            <div class="field">
-                                                <div class="row collapse">
-                                                    <div class="small-4 columns">
-                                                        <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'work_order_number'); ?></label>
-                                                    </div>
-                                                    <div class="small-8 columns">
-
-                                                        <?php echo $form->textField($generalRepairRegistration->header,'work_order_number'); ?>
-                                                        <?php echo $form->error($generalRepairRegistration->header,'work_order_number'); ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -123,6 +93,23 @@
                                             <div class="small-8 columns">
                                                 <?php echo $form->textField($generalRepairRegistration->header, 'repair_type', array('value'=>'GR','readonly'=>true)); ?>
                                                 <?php echo $form->error($generalRepairRegistration->header,'repair_type'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'user_id_assign_mechanic'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'user_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                                                    "branch_id" => $generalRepairRegistration->header->branch_id,
+                                                    "division_id" => 1,
+                                                    "position_id" => 1,
+                                                    "level_id" => array(1, 2, 3),
+                                                )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'user_id_assign_mechanic'); ?>
                                             </div>
                                         </div>
                                     </div>

@@ -60,6 +60,7 @@ class TransactionDeliveryOrderController extends Controller {
         
         $deliveryOrder = $this->instantiate(null);
         $deliveryOrder->header->posting_date = date('Y-m-d');
+        $deliveryOrder->header->date_created = date('Y-m-d H:i:s');
         $deliveryOrder->header->estimate_arrival_date = null;
         $deliveryOrder->header->sender_branch_id = $deliveryOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $deliveryOrder->header->sender_branch_id;
         $this->performAjaxValidation($deliveryOrder->header);

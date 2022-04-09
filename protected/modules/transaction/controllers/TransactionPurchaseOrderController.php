@@ -150,6 +150,7 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder = $this->instantiate(null);
         $purchaseOrder->header->main_branch_id = $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
+        $purchaseOrder->header->purchase_order_date = date('Y-m-d');
         $this->performAjaxValidation($purchaseOrder->header);
 
         $supplier = new Supplier('search');
@@ -205,6 +206,7 @@ class TransactionPurchaseOrderController extends Controller {
             $this->loadState($purchaseOrder);
             $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
             $purchaseOrder->header->payment_date_estimate = date('Y-m-d');
+            $purchaseOrder->header->created_datetime = date('Y-m-d H:i:s');
             
             if ($purchaseOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $purchaseOrder->header->id));
@@ -334,7 +336,7 @@ class TransactionPurchaseOrderController extends Controller {
             $model->attributes = $_GET['TransactionPurchaseOrder'];
         }
 
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchByAdmin();
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'supplier',

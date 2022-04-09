@@ -18,6 +18,7 @@
  * @property integer $company_bank_id
  * @property string $nomor_giro
  * @property integer $payment_type_id
+ * @property string $date_created
  *
  * The followings are the available model relations:
  * @property TransactionPurchaseOrder $purchaseOrder
@@ -55,7 +56,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status', 'required'),
+            array('payment_number, payment_date, date_created, supplier_id, payment_amount, notes, user_id, branch_id, status', 'required'),
             array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount', 'length', 'max' => 18),
@@ -64,7 +65,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images', 'safe', 'on' => 'search'),
+            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, date_created, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images', 'safe', 'on' => 'search'),
         );
     }
 
@@ -145,6 +146,40 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('cash_payment_type', $this->cash_payment_type);
         $criteria->compare('bank_id', $this->bank_id);
         $criteria->compare('payment_type_id', $this->payment_type_id);
+
+        $criteria->together = true;
+        $criteria->with = array('supplier', 'purchaseOrder');
+        $criteria->compare('purchaseOrder.purchase_order_no', $this->purchase_order_number, true);
+        $criteria->compare('supplier.name', $this->supplier_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    public function searchByAdmin() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.purchase_order_id', $this->purchase_order_id);
+        $criteria->compare('t.payment_number', $this->payment_number, true);
+        $criteria->compare('t.payment_date', $this->payment_date, true);
+        $criteria->compare('supplier_id', $this->supplier_id);
+        $criteria->compare('payment_amount', $this->payment_amount, true);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('company_bank_id', $this->company_bank_id);
+        $criteria->compare('nomor_giro', $this->nomor_giro, true);
+        $criteria->compare('cash_payment_type', $this->cash_payment_type);
+        $criteria->compare('bank_id', $this->bank_id);
+        $criteria->compare('payment_type_id', $this->payment_type_id);
+
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');

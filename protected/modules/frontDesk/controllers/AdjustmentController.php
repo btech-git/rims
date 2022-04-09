@@ -28,6 +28,7 @@ class AdjustmentController extends Controller {
         $adjustment->header->user_id = Yii::app()->user->id;
         $adjustment->header->status = 'Draft';
         $adjustment->header->date_posting = date('Y-m-d');
+        $adjustment->header->date_created = date('Y-m-d H:i:s');
         $adjustment->header->branch_id = $adjustment->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $adjustment->header->branch_id;
 //        $adjustment->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($adjustment->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($adjustment->header->date_posting)), $adjustment->header->branch_id);
 

@@ -77,6 +77,39 @@ class PaymentOutController extends Controller {
         ));
     }
 
+    public function actionCreateSingle($receiveItemId) {
+        $paymentOut = $this->instantiate(null);
+        $receiveItem = TransactionReceiveItem::model()->findByPk($receiveItemId);
+        $supplier = Supplier::model()->findByPk($receiveItem->supplier_id);
+
+        $paymentOut->header->user_id = Yii::app()->user->id;
+        $paymentOut->header->payment_date = date('Y-m-d');
+        $paymentOut->header->date_created = date('Y-m-d H:i:s');
+        $paymentOut->header->supplier_id = $receiveItem->supplier_id;
+        $paymentOut->header->status = 'Draft';
+        $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+
+        $paymentOut->addInvoice($receiveItemId);
+        
+        if (isset($_POST['Cancel']))
+            $this->redirect(array('admin'));
+
+        if (isset($_POST['Submit'])) {
+            $this->loadState($paymentOut);
+            $paymentOut->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentOut->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentOut->header->payment_date)), $paymentOut->header->branch_id);
+
+            if ($paymentOut->save(Yii::app()->db)) {                
+                $this->redirect(array('view', 'id' => $paymentOut->header->id));
+            }
+        }
+
+        $this->render('createSingle', array(
+            'paymentOut' => $paymentOut,
+            'supplier' => $supplier,
+            'receiveItem' => $receiveItem,
+        ));
+    }
+
     public function actionUpdate($id) {
         $paymentOut = $this->instantiate($id);
         $supplier = Supplier::model()->findByPk($paymentOut->header->supplier_id);
@@ -148,7 +181,7 @@ class PaymentOutController extends Controller {
             unset($_GET['pageSize']);
         }
 
-        $dataProvider = $paymentOut->search();
+        $dataProvider = $paymentOut->searchByAdmin();
         $dataProvider->criteria->with = array(
             'supplier',
             'paymentOutApprovals',
@@ -164,32 +197,6 @@ class PaymentOutController extends Controller {
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
 
-        /*$purchaseOrder = new TransactionPurchaseOrder('search');
-        $purchaseOrder->unsetAttributes();
-        
-        if (isset($_GET['TransactionPurchaseOrder'])) {
-            $purchaseOrder->attributes = $_GET['TransactionPurchaseOrder'];
-        }
-        
-        $purchaseOrderCriteria = new CDbCriteria;
-        $purchaseOrderCriteria->addCondition('t.payment_status != "PAID"');
-        $purchaseOrderCriteria->addCondition('t.status_document = "Approved"');
-        $purchaseOrderCriteria->compare('purchase_order_no', $purchaseOrder->purchase_order_no, true);
-        $purchaseOrderCriteria->compare('purchase_order_date', $purchaseOrder->purchase_order_date, true);
-        $purchaseOrderCriteria->compare('total_price', $purchaseOrder->total_price, true);
-        $purchaseOrderCriteria->together = true;
-        $purchaseOrderCriteria->with = array('supplier');
-        $purchaseOrderCriteria->compare('supplier.name', $purchaseOrder->supplier_name, true);
-        $purchaseOrderDataProvider = new CActiveDataProvider('TransactionPurchaseOrder', array(
-            'criteria' => $purchaseOrderCriteria,
-            'sort' => array(
-                'defaultOrder' => 'purchase_order_date DESC',
-            ),
-            'pagination' => array(
-                'pageSize' => 10,
-            )
-        ));*/
-
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
             'dataProvider' => $dataProvider,
@@ -197,8 +204,6 @@ class PaymentOutController extends Controller {
             'receiveItem' => $receiveItem,
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'paymentApproval' => $paymentApproval,
-//            'purchaseOrder' => $purchaseOrder,
-//            'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
         ));
     }
 
@@ -208,9 +213,6 @@ class PaymentOutController extends Controller {
         $model = new PaymentOutApproval;
         $model->date = date('Y-m-d H:i:s');
         $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($paymentOut->purchase_order_id);
-//        $getCoa = "";
-//        $getCoaDetail = "";
-//        $branch = Branch::model()->findByPk($paymentOut->branch_id);
 
         if (isset($_POST['PaymentOutApproval'])) {
             $model->attributes = $_POST['PaymentOutApproval'];
@@ -253,43 +255,7 @@ class PaymentOutController extends Controller {
                     $jurnalHutang->transaction_type = 'Pout';
                     $jurnalHutang->save();
 
-//                    $priceBefore = empty($purchaseOrderHeader) ? $paymentOut->payment_amount : ($purchaseOrderHeader->ppn == 1) ? $paymentOut->payment_amount / 1.1 : $paymentOut->payment_amount;
-//                    $ppn = empty($purchaseOrderHeader) ? 0 : (int) $purchaseOrderHeader->ppn == 1 ? $priceBefore * 0.1 : 0;
                     if ($paymentOut->payment_type == "Cash") {
-//                        $getCoaHutang = '201.00.000';
-//                        $coaHutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHutang));
-//                        $jurnalHutang = new JurnalUmum;
-//                        $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
-//                        $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
-//                        $jurnalHutang->coa_id = $coaHutangWithCode->id;
-//                        $jurnalHutang->branch_id = $paymentOut->branch_id;
-//                        $jurnalHutang->total = $priceBefore;
-//                        $jurnalHutang->debet_kredit = 'D';
-//                        $jurnalHutang->tanggal_posting = date('Y-m-d');
-//                        $jurnalHutang->transaction_subject = $paymentOut->supplier->name;
-//                        $jurnalHutang->is_coa_category = 0;
-//                        $jurnalHutang->transaction_type = 'Pout';
-//                        $jurnalHutang->save();
-
-//                        if ($ppn == 1) {
-//                            $getCoaPpn = '143.00.001';
-//                            $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
-//                            $jurnalPpn = new JurnalUmum;
-//                            $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
-//                            $jurnalPpn->tanggal_transaksi = $paymentOut->payment_date;
-//                            $jurnalPpn->coa_id = $coaPpnWithCode->id;
-//                            $jurnalPpn->branch_id = $paymentOut->branch_id;
-//                            $jurnalPpn->total = $ppn;
-//                            $jurnalPpn->debet_kredit = 'D';
-//                            $jurnalPpn->tanggal_posting = date('Y-m-d');
-//                            $jurnalPpn->transaction_subject = $paymentOut->supplier->name;
-//                            $jurnalPpn->is_coa_category = 0;
-//                            $jurnalPpn->transaction_type = 'Pout';
-//                            $jurnalPpn->save();
-//                        }
-
-//                        $getCoaKas = '101.00.000';
-//                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
                         $jurnalUmumKas = new JurnalUmum;
                         $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
                         $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
@@ -303,40 +269,6 @@ class PaymentOutController extends Controller {
                         $jurnalUmumKas->transaction_type = 'Pout';
                         $jurnalUmumKas->save();
                     } else {
-//                        $getCoaHutang = '201.00.000';
-//                        $coaHutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaHutang));
-//                        if ($ppn == 1) {
-//                            $getCoaPpn = '143.00.001';
-//                            $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
-//                            $jurnalPpn = new JurnalUmum;
-//                            $jurnalPpn->kode_transaksi = $paymentOut->payment_number;
-//                            $jurnalPpn->tanggal_transaksi = $paymentOut->payment_date;
-//                            $jurnalPpn->coa_id = $coaPpnWithCode->id;
-//                            $jurnalPpn->branch_id = $paymentOut->branch_id;
-//                            $jurnalPpn->total = $ppn;
-//                            $jurnalPpn->debet_kredit = 'D';
-//                            $jurnalPpn->tanggal_posting = date('Y-m-d');
-//                            $jurnalPpn->transaction_subject = $paymentOut->supplier->name;
-//                            $jurnalPpn->is_coa_category = 0;
-//                            $jurnalPpn->transaction_type = 'Pout';
-//                            $jurnalPpn->save();
-//                        }
-                        
-//                        $getCoaKasBank = '102.00.000';
-//                        $coaKasBankWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKasBank));
-//                        $jurnalUmumKasBank = new JurnalUmum;
-//                        $jurnalUmumKasBank->kode_transaksi = $paymentOut->payment_number;
-//                        $jurnalUmumKasBank->tanggal_transaksi = $paymentOut->payment_date;
-//                        $jurnalUmumKasBank->coa_id = $coaKasBankWithCode->id;
-//                        $jurnalUmumKasBank->branch_id = $paymentOut->branch_id;
-//                        $jurnalUmumKasBank->total = $paymentOut->payment_amount;
-//                        $jurnalUmumKasBank->debet_kredit = 'K';
-//                        $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumKasBank->transaction_subject = $paymentOut->supplier->name;
-//                        $jurnalUmumKasBank->is_coa_category = 1;
-//                        $jurnalUmumKasBank->transaction_type = 'Pout';
-//                        $jurnalUmumKasBank->save();
-                        
                         $jurnalUmumBank = new JurnalUmum;
                         $jurnalUmumBank->kode_transaksi = $paymentOut->payment_number;
                         $jurnalUmumBank->tanggal_transaksi = $paymentOut->payment_date;

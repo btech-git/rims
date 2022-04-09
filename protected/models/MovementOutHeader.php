@@ -17,6 +17,7 @@
  * @property integer $supervisor_id
  * @property integer $material_request_header_id
  * @property string $status
+ * @property string $date_created
  *
  * The followings are the available model relations:
  * @property MovementOutApproval[] $movementOutApprovals
@@ -62,14 +63,14 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_out_no, date_posting, branch_id, movement_type, user_id, status', 'required'),
+            array('movement_out_no, date_posting, date_created, branch_id, movement_type, user_id, status', 'required'),
             array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id', 'numerical', 'integerOnly' => true),
             array('movement_out_no', 'length', 'max' => 30),
             array('status', 'length', 'max' => 20),
             array('movement_out_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_out_no, date_posting, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id', 'safe', 'on' => 'search'),
+            array('id, movement_out_no, date_posting, date_created, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id', 'safe', 'on' => 'search'),
         );
     }
 

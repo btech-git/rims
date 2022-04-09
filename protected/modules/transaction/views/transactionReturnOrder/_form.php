@@ -45,6 +45,7 @@
 //                                    'yearRange' => '1900:2020'
                             ),
                             'htmlOptions' => array(
+                                'readonly' => true,
                                 'value' => date('Y-m-d'),
                             ),
                         )); ?>

@@ -21,6 +21,7 @@
  * @property integer $payment_type_id
  * @property integer $is_tax_service
  * @property string $tax_service_amount
+ * @property string $date_created
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -59,7 +60,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_id, payment_number, payment_time, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount', 'required'),
+            array('invoice_id, payment_number, payment_time, payment_date, date_created, payment_amount, notes, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount', 'required'),
             array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount, tax_service_amount', 'length', 'max' => 18),
@@ -68,7 +69,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, payment_amount, notes, customer_id, vehicle_id, payment_type, user_id, branch_id,invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, date_created, payment_amount, notes, customer_id, vehicle_id, payment_type, user_id, branch_id,invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -156,6 +157,51 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('payment_type_id', $this->payment_type_id);
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
+
+        $criteria->together = 'true';
+        $criteria->with = array('invoice');
+        $criteria->compare('invoice.invoice_number', $this->invoice_number, true);
+        $criteria->compare('invoice.status', $this->invoice_status, true);
+        $criteria->compare('customer.name', $this->customer_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'payment_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+    }
+
+    public function searchByAdmin() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_id', $this->invoice_id);
+        $criteria->compare('payment_number', $this->payment_number, true);
+        $criteria->compare('payment_date', $this->payment_date, true);
+        $criteria->compare('payment_time', $this->payment_time, true);
+        $criteria->compare('payment_amount', $this->payment_amount, true);
+        $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.payment_type', $this->payment_type, true);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('t.company_bank_id', $this->company_bank_id);
+        $criteria->compare('nomor_giro', $this->nomor_giro, true);
+        $criteria->compare('cash_payment_type', $this->cash_payment_type);
+        $criteria->compare('bank_id', $this->bank_id);
+        $criteria->compare('payment_type_id', $this->payment_type_id);
+        $criteria->compare('is_tax_service', $this->is_tax_service);
+        $criteria->compare('tax_service_amount', $this->tax_service_amount);
+
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = 'true';
         $criteria->with = array('invoice');

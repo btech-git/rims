@@ -68,7 +68,7 @@ class ConsignmentInHeaderController extends Controller {
         
         $consignmentIn = $this->instantiate(null);
         $consignmentIn->header->receive_branch = $consignmentIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $consignmentIn->header->receive_branch;
-//        $consignmentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentIn->header->date_posting)), $consignmentIn->header->receive_branch);
+        $consignmentIn->header->date_created = date('Y-m-d H:i:s');
         $this->performAjaxValidation($consignmentIn->header);
         
         $supplier = new Supplier('search');

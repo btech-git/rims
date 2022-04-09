@@ -36,7 +36,21 @@
                             <?php echo $form->labelEx($movementIn->header, 'date_posting', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($movementIn->header, 'date_posting', array('value' => date('Y-m-d H:i:s'), 'readonly' => true,)); ?>
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                'model' => $movementIn->header,
+                                'attribute' => "date_posting",
+                                'options' => array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth' => true,
+                                    'changeYear' => true,
+                                    'yearRange' => '1900:2020'
+                                ),
+                                'htmlOptions' => array(
+                                    'readonly' => true,
+                                    'value' => date('Y-m-d'),
+                                ),
+                            )); ?>
+                            <?php //echo $form->textField($movementIn->header, 'date_posting', array('value' => date('Y-m-d H:i:s'), 'readonly' => true,)); ?>
                             <?php echo $form->error($movementIn->header, 'date_posting'); ?>
                         </div>
                     </div>

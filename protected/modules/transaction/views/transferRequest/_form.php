@@ -34,7 +34,23 @@
                         <?php echo CHtml::label('Request Tanggal', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($transferRequest->header, 'transfer_request_date'))); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $transferRequest->header,
+                            'attribute' => "transfer_request_date",
+                            // additional javascript options for the date picker plugin
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+//                                    'yearRange' => '1900:2020'
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                                'value' => $transferRequest->header->isNewRecord ? date('Y-m-d') : $transferRequest->header->transfer_request_date,
+                                //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
+                            ),
+                        ));
+                        ?>
                         <?php echo CHtml::error($transferRequest->header, 'transfer_request_date'); ?>
                     </div>
                 </div>

@@ -48,7 +48,19 @@
                             </label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($purchaseOrder->header, 'purchase_order_date', array('value'=>date('Y-m-d H:i:s'), 'readonly'=>true)); ?>
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                'model' => $purchaseOrder->header,
+                                'attribute' => "purchase_order_date",
+                                // additional javascript options for the date picker plugin
+                                'options' => array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth' => true,
+                                    'changeYear' => true,
+                                ),
+                                'htmlOptions' => array(
+                                    'readonly' => true,
+                                ),
+                            )); ?>
                             <?php echo $form->error($purchaseOrder->header, 'purchase_order_date'); ?>
                         </div>
                     </div>

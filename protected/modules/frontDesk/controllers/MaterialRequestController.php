@@ -45,6 +45,7 @@ class MaterialRequestController extends Controller {
         $materialRequest->header->user_id = Yii::app()->user->id;
         $materialRequest->header->transaction_date = date('Y-m-d');
         $materialRequest->header->transaction_time = date('H:i:s');
+        $materialRequest->header->date_created = date('Y-m-d H:i:s');
         $materialRequest->header->status_document = 'PENDING';
         $materialRequest->header->status_progress = 'NO MOVEMENT';
         $materialRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;

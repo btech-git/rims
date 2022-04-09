@@ -73,7 +73,7 @@ class MovementOutHeaderController extends Controller {
 
         $movementOut = $this->instantiate(null);
         $movementOut->header->branch_id = $movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementOut->header->branch_id;
-//        $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
+        $movementOut->header->date_created = date('Y-m-d H:i:s');
         $this->performAjaxValidation($movementOut->header);
 
         if ($movementType == 1) {

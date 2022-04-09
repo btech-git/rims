@@ -13,16 +13,17 @@ $this->menu = array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#registration-transaction-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
+    $('.search-button').click(function(){
+        $('.search-form').toggle();
+        return false;
+    });
+
+    $('.search-form form').submit(function(){
+        $('#registration-transaction-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+        return false;
+    });
 ");
 ?>
 
@@ -50,7 +51,9 @@ $('.search-form form').submit(function(){
     </div>
     <div class="clearfix"></div>
 </div>
+
 <br />
+
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'registration-transaction-grid',
@@ -94,23 +97,6 @@ $('.search-form form').submit(function(){
                 'value' => '$data->customer->name',
             ),
             'work_order_number',
-//            array(
-//                'header' => 'Invoice #',
-//                'filter' => false,
-//                'value' => function($data) {
-//                    $invoiceCriteria = new CDbCriteria;
-//                    $invoiceCriteria->addCondition("status !='CANCELLED'");
-//                    $invoiceCriteria->addCondition("registration_transaction_id = " . $data->id);
-//                    $invoice = InvoiceHeader::model()->findAll($invoiceCriteria);
-//                    $invoiceNumber = "";
-//
-//                    if (count($invoice) > 0) {
-//                        $invoiceNumber = $invoice->invoice_number;
-//                    }
-//
-//                    return $invoiceNumber;
-//                }
-//            ),
             array(
                 'header' => 'WO Status',
                 'name' => 'status',

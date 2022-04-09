@@ -46,7 +46,7 @@ Yii::app()->clientScript->registerScript('search', "
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'journal-adjustment-header-grid',
-                    'dataProvider' => $journalVoucher->search(),
+                    'dataProvider' => $journalVoucher->searchByAdmin(),
                     'filter' => $journalVoucher,
                     'columns' => array(
                         array(

@@ -166,16 +166,18 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <span class="prefix">User ID</span>
+                            <span class="prefix">User Admin</span>
                         </div>
                         <div class="small-8 columns">
                             <input type="text" readonly="true" value="<?php echo $model->user != null ? $model->user->username : ''; ?>"> 
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -186,6 +188,18 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Assigned Mechanic</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo !empty($model->user_id_assign_mechanic) ? $model->userIdAssignMechanic->username : ''; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
             </div><!-- end div large -->
         </div>
     </div>

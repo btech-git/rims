@@ -216,6 +216,63 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByAdmin() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('invoice_number', $this->invoice_number, true);
+        $criteria->compare('reference_type', $this->reference_type);
+        $criteria->compare('sales_order_id', $this->sales_order_id);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('customer_id', $this->customer_id);
+        $criteria->compare('vehicle_id', $this->vehicle_id);
+        $criteria->compare('coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('ppn', $this->ppn);
+        $criteria->compare('pph', $this->pph);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status, FALSE);
+        $criteria->compare('service_price', $this->service_price, true);
+        $criteria->compare('product_price', $this->product_price, true);
+        $criteria->compare('quick_service_price', $this->quick_service_price, true);
+        $criteria->compare('total_product', $this->total_product);
+        $criteria->compare('total_service', $this->total_service);
+        $criteria->compare('total_quick_service', $this->total_quick_service);
+        $criteria->compare('pph_total', $this->pph_total, true);
+        $criteria->compare('ppn_total', $this->ppn_total, true);
+        $criteria->compare('total_price', $this->total_price, true);
+        $criteria->compare('in_words', $this->in_words, true);
+        $criteria->compare('note', $this->note, true);
+
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
+            $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
+            $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
+        }
+
+        $criteria->together = 'true';
+        $criteria->with = array('customer');
+        $criteria->addSearchCondition('customer.name', $this->customer_name, true);
+        $criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+
     public function getSubTotal() {
         return $this->service_price + $this->product_price + $this->quick_service_price;
     }

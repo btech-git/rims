@@ -89,7 +89,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'Plate #', 
-                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->vehicle->plate_number'
+                            'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
                         ),
                         array(
                             'name' => 'payment_number',

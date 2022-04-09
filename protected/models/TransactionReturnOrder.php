@@ -20,6 +20,7 @@
  * @property integer $delivery_order_id
  * @property integer $consignment_in_id
  * @property string $status
+ * @property string $date_created
  *
  * The followings are the available model relations:
  * @property MovementOutHeader[] $movementOutHeaders
@@ -71,7 +72,7 @@ class TransactionReturnOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('return_order_no, return_order_date, receive_item_id, recipient_id, recipient_branch_id, request_type', 'required'),
+            array('return_order_no, return_order_date, date_created, receive_item_id, recipient_id, recipient_branch_id, request_type', 'required'),
             array('receive_item_id, recipient_id, recipient_branch_id, purchase_order_id, supplier_id, transfer_request_id, branch_destination_id, delivery_order_id, consignment_in_id', 'numerical', 'integerOnly' => true),
             array('receive_item_id, recipient_id, recipient_branch_id, purchase_order_id, supplier_id, transfer_request_id, branch_destination_id, delivery_order_id', 'numerical', 'integerOnly' => true),
             array('return_order_no, request_type', 'length', 'max' => 30),
@@ -80,7 +81,7 @@ class TransactionReturnOrder extends MonthlyTransactionActiveRecord {
             array('return_order_date, request_date, estimate_arrival_date', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, return_order_no, return_order_date, receive_item_id, recipient_id, recipient_branch_id, request_type, purchase_order_id, supplier_id, transfer_request_id, branch_destination_id, request_date, estimate_arrival_date, branch_name, receive_item_no, delivery_order_id, consignment_in_id, status', 'safe', 'on' => 'search'),
+            array('id, return_order_no, return_order_date, date_created, receive_item_id, recipient_id, recipient_branch_id, request_type, purchase_order_id, supplier_id, transfer_request_id, branch_destination_id, request_date, estimate_arrival_date, branch_name, receive_item_no, delivery_order_id, consignment_in_id, status', 'safe', 'on' => 'search'),
         );
     }
 

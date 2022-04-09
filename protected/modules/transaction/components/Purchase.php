@@ -195,7 +195,7 @@ class Purchase extends CComponent {
 //    }
 
     public function getCalculatedTax() {
-        return $this->getSubTotal() * (10 / 100);
+        return $this->getSubTotal() * (11 / 100);
     }
 
     public function getGrandTotal() {

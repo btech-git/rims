@@ -26,6 +26,7 @@
  * @property integer $ppn
  * @property string $ppn_price
  * @property string $note
+ * @property string $created_date_time
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
@@ -74,7 +75,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sale_order_no, sale_order_date, status_document, payment_type, requester_id, requester_branch_id, customer_id, total_quantity, total_price', 'required'),
+            array('sale_order_no, sale_order_date, status_document, payment_type, requester_id, requester_branch_id, customer_id, total_quantity, total_price, created_datetime', 'required'),
             array('requester_id, requester_branch_id, approved_id, approved_branch_id, customer_id, total_quantity, company_bank_id, ppn', 'numerical', 'integerOnly' => true),
             array('sale_order_no, status_document, payment_type', 'length', 'max' => 30),
             array('total_price, price_before_discount, subtotal, discount, ppn_price', 'length', 'max' => 18),
@@ -82,7 +83,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
             array('sale_order_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, sale_order_no, sale_order_date, status_document, payment_type, estimate_arrival_date, requester_id, requester_branch_id, approved_id, approved_branch_id, customer_id, total_quantity, total_price, estimate_payment_date, company_bank_id, price_before_discount, subtotal, discount, ppn_price, ppn, customer_name', 'safe', 'on' => 'search'),
+            array('id, sale_order_no, sale_order_date, status_document, payment_type, estimate_arrival_date, requester_id, requester_branch_id, approved_id, approved_branch_id, customer_id, total_quantity, total_price, estimate_payment_date, company_bank_id, price_before_discount, subtotal, discount, ppn_price, ppn, customer_name, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -188,6 +189,51 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByAdmin() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('sale_order_no', $this->sale_order_no, true);
+        $criteria->compare('sale_order_date', $this->sale_order_date, true);
+        $criteria->compare('status_document', $this->status_document, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('requester_id', $this->requester_id);
+        $criteria->compare('approved_id', $this->approved_id);
+        $criteria->compare('approved_branch_id', $this->approved_branch_id);
+        $criteria->compare('customer_id', $this->customer_id);
+        $criteria->compare('total_quantity', $this->total_quantity);
+        $criteria->compare('total_price', $this->total_price, true);
+        $criteria->compare('estimate_payment_date', $this->estimate_payment_date, true);
+        $criteria->compare('company_bank_id', $this->company_bank_id);
+        $criteria->compare('price_before_discount', $this->price_before_discount, true);
+        $criteria->compare('subtotal', $this->subtotal, true);
+        $criteria->compare('discount', $this->discount, true);
+        $criteria->compare('ppn', $this->ppn);
+        $criteria->compare('ppn_price', $this->ppn_price, true);
+        $criteria->compare('t.note', $this->note, true);
+
+        $criteria->addCondition("t.requester_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        $criteria->together = 'true';
+        $criteria->with = array('customer');
+        $criteria->compare('customer.name', $this->customer_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'sale_order_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+    
     public function searchByPendingDelivery() {
         //search purchase header which purchased quantity is not fully received yet
         $criteria = new CDbCriteria;

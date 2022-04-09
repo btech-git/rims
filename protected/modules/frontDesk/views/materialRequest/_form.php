@@ -17,24 +17,27 @@
     <?php echo CHtml::errorSummary($materialRequest->header); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php //echo CHtml::label('Request #', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php //echo CHtml::encode(CHtml::value($materialRequest->header, 'transaction_number')); ?>
-                        <?php //echo CHtml::error($materialRequest->header, 'transaction_number'); ?>
-                    </div>
-                </div>
-            </div>-->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
                         <?php echo CHtml::label('Request Tanggal', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($materialRequest->header, 'transaction_date'))); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $materialRequest->header,
+                            'attribute' => "transaction_date",
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                                'yearRange' => '1900:2020'
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                                'value' => date('Y-m-d'),
+                            ),
+                        )); ?>
+                        <?php //echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($materialRequest->header, 'transaction_date'))); ?>
                         <?php echo CHtml::error($materialRequest->header, 'transaction_date'); ?>
                     </div>
                 </div>

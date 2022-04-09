@@ -12,6 +12,7 @@
  * @property integer $user_id
  * @property integer $branch_id
  * @property string $status
+ * @property string $date_created
  *
  * The followings are the available model relations:
  * @property JournalAdjustmentDetail[] $journalAdjustmentDetails
@@ -36,14 +37,14 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, date, time, user_id, branch_id, status', 'required'),
+            array('transaction_number, date, time, user_id, branch_id, status, date_created', 'required'),
             array('user_id, branch_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, date, time, note, user_id, branch_id, status', 'safe', 'on' => 'search'),
+            array('id, transaction_number, date, time, note, user_id, branch_id, status, date_created', 'safe', 'on' => 'search'),
         );
     }
 
@@ -101,6 +102,27 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('status', $this->status, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    public function searchByAdmin() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('date', $this->date, true);
+        $criteria->compare('time', $this->time, true);
+        $criteria->compare('note', $this->note, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('status', $this->status, true);
+
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

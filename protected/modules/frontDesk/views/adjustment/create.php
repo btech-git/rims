@@ -13,8 +13,22 @@
                                     <?php echo CHtml::label('Tanggal', ''); ?>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeHiddenField($adjustment->header, 'date_posting'); ?>
-                                    <?php echo CHtml::encode($adjustment->header->date_posting); ?>
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'model' => $adjustment->header,
+                                        'attribute' => "date_posting",
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth' => true,
+                                            'changeYear' => true,
+                                            'yearRange' => '1900:2020'
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'value' => date('Y-m-d'),
+                                        ),
+                                    )); ?>
+                                    <?php //echo CHtml::activeHiddenField($adjustment->header, 'date_posting'); ?>
+                                    <?php //echo CHtml::encode($adjustment->header->date_posting); ?>
                                     <?php echo CHtml::error($adjustment->header, 'date_posting'); ?>
                                 </div>
                             </div>

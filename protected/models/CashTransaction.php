@@ -15,6 +15,7 @@
  * @property integer $branch_id
  * @property integer $user_id
  * @property string $status
+ * @property string $date_created
  *
  * The followings are the available model relations:
  * @property Coa $coa
@@ -52,7 +53,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id', 'required'),
+            array('transaction_number, transaction_date, date_created, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id', 'required'),
             array('coa_id, branch_id, user_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('transaction_type', 'length', 'max' => 20),
@@ -61,7 +62,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, date_created, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -128,6 +129,36 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+    }
+
+    public function searchByAdmin() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('transaction_time', $this->transaction_time, true);
+        $criteria->compare('transaction_type', $this->transaction_type, true);
+        $criteria->compare('coa_id', $this->coa_id);
+        $criteria->compare('debit_amount', $this->debit_amount, true);
+        $criteria->compare('credit_amount', $this->credit_amount, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('status', $this->status, true);
+
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

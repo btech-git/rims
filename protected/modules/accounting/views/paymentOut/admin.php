@@ -206,5 +206,13 @@ $('.search-form form').submit(function(){
             'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
             'htmlOptions' => array('style' => 'text-align: right'),
         ),
+        array(
+            'header' => '',
+            'type' => 'raw',
+            'value' => 'CHtml::link("Create", array("createSingle", "receiveItemId"=>$data->id))',
+            'htmlOptions' => array(
+                'style' => 'text-align: center;'
+            ),
+        ),
     ),
 )); ?>

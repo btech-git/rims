@@ -19,6 +19,7 @@
  * @property integer $customer_id
  * @property integer $consignment_out_id
  * @property integer $transfer_request_id
+ * @property string $date_created
  *
  * The followings are the available model relations:
  * @property MovementInHeader[] $movementInHeaders
@@ -67,7 +68,7 @@ class TransactionReturnItem extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('return_item_no, return_item_date, delivery_order_id, recipient_id, recipient_branch_id, request_type', 'required'),
+            array('return_item_no, return_item_date, date_created, delivery_order_id, recipient_id, recipient_branch_id, request_type', 'required'),
             array('delivery_order_id, recipient_id, recipient_branch_id, sent_request_id, destination_branch, sales_order_id, customer_id, consignment_out_id, transfer_request_id', 'numerical', 'integerOnly' => true),
             array('return_item_no, request_type', 'length', 'max' => 30),
             array('return_item_date, request_date, estimate_arrival_date, delivery_order_no', 'safe'),
@@ -75,7 +76,7 @@ class TransactionReturnItem extends MonthlyTransactionActiveRecord {
             array('return_item_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, return_item_no, return_item_date, delivery_order_id, recipient_id, recipient_branch_id, request_type, sent_request_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name, status, delivery_order_no', 'safe', 'on' => 'search'),
+            array('id, return_item_no, return_item_date, date_created, delivery_order_id, recipient_id, recipient_branch_id, request_type, sent_request_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name, status, delivery_order_no', 'safe', 'on' => 'search'),
         );
     }
 

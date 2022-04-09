@@ -117,6 +117,7 @@ class PaymentOutController extends Controller {
             )
         ));
 
+        $model->date_created = date('Y-m-d H:i:s');
         $model->branch_id = $model->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $model->branch_id;
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
 

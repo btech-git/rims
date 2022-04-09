@@ -66,15 +66,9 @@ class ConsignmentOutHeaderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        //$model=new ConsignmentOutHeader;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-
-
         $consignmentOut = $this->instantiate(null);
         $consignmentOut->header->branch_id = $consignmentOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $consignmentOut->header->branch_id;
-//        $consignmentOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentOut->header->date_posting)), $consignmentOut->header->branch_id);
+        $consignmentOut->header->date_created = date('Y-m-d H:i:s');
         $this->performAjaxValidation($consignmentOut->header);
         
         $customer = new Customer('search');

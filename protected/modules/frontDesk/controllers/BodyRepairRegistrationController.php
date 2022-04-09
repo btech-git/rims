@@ -385,7 +385,7 @@ class BodyRepairRegistrationController extends Controller {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
         
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchAdmin();
         $dataProvider->criteria->addCondition("repair_type = 'BR'");
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 

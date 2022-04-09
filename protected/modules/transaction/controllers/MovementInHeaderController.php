@@ -68,6 +68,7 @@ class MovementInHeaderController extends Controller {
 
         $movementIn = $this->instantiate(null);
         $movementIn->header->branch_id = $movementIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementIn->header->branch_id;
+        $movementIn->header->date_created = date('Y-m-d H:i:s');
         $this->performAjaxValidation($movementIn->header);
 
         if ($movementType == 1) {

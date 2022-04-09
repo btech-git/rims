@@ -163,10 +163,6 @@ class VehicleInspectionController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        /* $vehicleInspectionCriteria = new CDbCriteria;
-          $vehicleInspectionCriteria->select = 't.id'; // select fields which you want in output
-          $criteria->condition = 't.status = 1';
-          $vehicleInspection = VehicleInspection::model()->findAll($vehicleInspectionCriteria); */
         $plate_number = '';
         $vehicle = new RegistrationTransaction('search');
         $vehicle->unsetAttributes();  // clear any default values
@@ -175,7 +171,8 @@ class VehicleInspectionController extends Controller {
             $vehicle->attributes = $_GET['RegistrationTransaction'];
         }
         $vehicleCriteria = new CDbCriteria;
-        $vehicleCriteria->condition = 't.work_order_number IS NOT NULL';
+        $vehicleCriteria->condition = "t.work_order_number IS NOT NULL AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)";
+        $vehicleCriteria->params = array(':userId' => Yii::app()->user->id);
         $vehicleCriteria->together = 'true';
         $vehicleCriteria->with = array('vehicle');
         $vehicleCriteria->addSearchCondition('vehicle.plate_number', $plate_number, true);

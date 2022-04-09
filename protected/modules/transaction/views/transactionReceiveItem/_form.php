@@ -30,7 +30,20 @@
                             <?php echo $form->labelEx($receiveItem->header, 'receive_item_date', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($receiveItem->header, 'receive_item_date', array('readonly' => true)); ?>
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                'model' => $receiveItem->header,
+                                'attribute' => "receive_item_date",
+                                // additional javascript options for the date picker plugin
+                                'options' => array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth' => true,
+                                    'changeYear' => true,
+                                ),
+                                'htmlOptions' => array(
+                                    'readonly' => true,
+                                    'value' => date('Y-m-d'),
+                                ),
+                            )); ?>
                             <?php echo $form->error($receiveItem->header, 'receive_item_date'); ?>
                         </div>
                     </div>

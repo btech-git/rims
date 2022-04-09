@@ -1,5 +1,5 @@
 <?php if($vehicle != ""): ?>
-	<?php $historyTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id'=>$vehicle->id)); ?>
+	<?php $historyTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id'=>$vehicle->id), array('order' => 't.id DESC', 'limit' => 10)); ?>
 	<?php if(count($historyTransactions) > 0): ?>
         <div class="detail">
             <table>
