@@ -292,7 +292,11 @@ $('form').submit(function(){
                         'value'=>'$data->vehicle->getColor($data->vehicle,"color_id")',
                         'filter'=>CHtml::dropDownList('RegistrationTransaction[car_color]', 'car_color', CHtml::listData(Colors::model()->findAll(),'id','name'), array('class'=>'form-control','empty'=>'--Select Color--')),
                     ),
-                    'work_order_number',
+                    array(
+                        'name' => 'work_order_number', 
+                        'value' => 'CHtml::link($data->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
+                        'type' => 'raw'
+                    ),
                     'work_order_date',
                     array(
                         'header'=>'Services',

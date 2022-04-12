@@ -285,6 +285,11 @@
                                         'url' => array('/master/equipmentSubType/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate') || Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit') || Yii::app()->user->checkAccess('masterEquipmentSubTypeApproval')
                                     ),
+                                    array(
+                                        'label' => 'Permintaan Maintenance', 
+                                        'url' => array('/frontDesk/maintenanceRequest/admin'), 
+                //                        'visible' => (Yii::app()->user->checkAccess('maintenanceRequestCreate') || Yii::app()->user->checkAccess('maintenanceRequestEdit'))
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
@@ -440,6 +445,7 @@
                                     array(
                                         'label' => 'Customer', 
                                         'url' => array('/master/customer/admin'), 
+                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterCustomerCreate') || Yii::app()->user->checkAccess('masterCustomerEdit') || Yii::app()->user->checkAccess('masterCustomerApproval')
                                     ),
                                     array(

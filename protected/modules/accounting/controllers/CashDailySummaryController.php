@@ -97,7 +97,7 @@ class CashDailySummaryController extends Controller {
         $transactionJournalDataProvider->criteria->with = array('coa', 'branch');
         $transactionJournalDataProvider->criteria->compare('t.tanggal_transaksi', $transactionDate,true);
         $transactionJournalDataProvider->criteria->compare('t.is_coa_category', 0);
-//        $transactionJournalDataProvider->criteria->order('');
+        $transactionJournalDataProvider->criteria->addCondition('t.transaction_type = "JP"');
         
         $retailTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
 

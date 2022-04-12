@@ -85,35 +85,46 @@
             </div>
             
             <div class="row">
-                <p><h2>Cash Transaction In</h2></p>
-                <?php $this->renderPartial('_detailCashTransactionIn', array(
-                    'cashTransaction' => $cashTransaction,
-                    'cashTransactionInDataProvider' => $cashTransactionInDataProvider,
-                    'branchId' => $branchId,
-                    'transactionDate' => $transactionDate,
+                <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                    'tabs' => array(
+                        'Jurnal Umum' => array(
+                            'content' => $this->renderPartial('_viewTransactionJournal', array(
+                                'transactionJournal' => $transactionJournal,
+                                'transactionJournalDataProvider' => $transactionJournalDataProvider,
+                            ), true),
+                        ),
+                        'Transaction In' => array(
+                            'content' => $this->renderPartial('_detailCashTransactionIn', array(
+                                'cashTransaction' => $cashTransaction,
+                                'cashTransactionInDataProvider' => $cashTransactionInDataProvider,
+                                'branchId' => $branchId,
+                                'transactionDate' => $transactionDate,
+                            ), true),
+                        ),
+                        'Transaction Out' => array(
+                            'content' => $this->renderPartial('_detailCashTransactionOut', array(
+                                'cashTransaction' => $cashTransaction,
+                                'cashTransactionOutDataProvider' => $cashTransactionOutDataProvider,
+                                'branchId' => $branchId,
+                                'transactionDate' => $transactionDate,
+                            ), true),
+                        ),
+                    ),
+                    // additional javascript options for the tabs plugin
+                    'options' => array(
+                        'collapsible' => true,
+                    ),
+                    // set id for this widgets
+                    'id' => 'view_tab_cash',
                 )); ?>
             </div>
             
-            <div class="row">
-                <p><h2>Cash Transaction Out</h2></p>
-                <?php $this->renderPartial('_detailCashTransactionOut', array(
-                    'cashTransaction' => $cashTransaction,
-                    'cashTransactionOutDataProvider' => $cashTransactionOutDataProvider,
-                    'branchId' => $branchId,
-                    'transactionDate' => $transactionDate,
-                )); ?>
-            </div>
+            <br /> <br />
             
             <?php if (Yii::app()->user->checkAccess('cashDailyTransactionReport')): ?>
                 <div class="row">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
-                            'Jurnal Umum' => array(
-                                'content' => $this->renderPartial('_viewTransactionJournal', array(
-                                    'transactionJournal' => $transactionJournal,
-                                    'transactionJournalDataProvider' => $transactionJournalDataProvider,
-                                ), true),
-                            ),
                             'Sales Retail' => array(
                                 'content' => $this->renderPartial('_viewRetailTransaction', array(
                                     'retailTransaction' => $retailTransaction,
@@ -144,7 +155,7 @@
                             'collapsible' => true,
                         ),
                         // set id for this widgets
-                        'id' => 'view_tab',
+                        'id' => 'view_tab_transaction',
                     )); ?>
                 </div>
             <?php endif; ?>

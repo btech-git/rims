@@ -315,6 +315,11 @@
                             'url' => array('/master/equipmentSubType/admin'), 
                             'visible' => Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate') || Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit') || Yii::app()->user->checkAccess('masterEquipmentSubTypeApproval')
                         ),
+                        array(
+                            'label' => 'Permintaan Maintenance', 
+                            'url' => array('/frontDesk/maintenanceRequest/admin'), 
+    //                        'visible' => (Yii::app()->user->checkAccess('maintenanceRequestCreate') || Yii::app()->user->checkAccess('maintenanceRequestEdit'))
+                        ),
                     ),
                 )); ?>
             </li>

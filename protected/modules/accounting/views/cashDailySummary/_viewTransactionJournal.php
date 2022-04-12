@@ -2,7 +2,6 @@
     <thead>
         <tr>
             <th style="text-align: center">Transaction #</th>
-            <th style="text-align: center">Tanggal</th>
             <th style="text-align: center">Branch</th>
             <th style="text-align: center">Debit</th>
             <th style="text-align: center">Credit</th>
@@ -26,9 +25,6 @@
                     ));*/ ?>
                     <?php echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?>
                 </td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($header, 'tanggal_transaksi')); ?>
-                </td>
                 <td style="text-align: right">
                     <?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?>
                 </td>
@@ -51,7 +47,7 @@
     
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="3">TOTAL</td>
+            <td style="text-align: right" colspan="2">TOTAL</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?></td>
             <td>&nbsp;</td>

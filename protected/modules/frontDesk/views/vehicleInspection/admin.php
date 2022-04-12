@@ -130,10 +130,15 @@ $('.search-form form').submit(function(){
             'mergeColumns' => 'plate_number',
             'columns' => array(
                 array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
-                'transaction_number',
+                array(
+                    'header' => 'Registration #',
+                    'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
+                    'type' => 'raw'
+                ),
                 array(
                     'name' => 'work_order_number', 
-                    'value' => '$data->work_order_number'
+                    'value' => 'CHtml::link($data->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
+                    'type' => 'raw'
                 ),
                 array(
                     'header' => 'Tanggal',

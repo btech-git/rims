@@ -255,19 +255,9 @@
                         'visible' => (Yii::app()->user->checkAccess('movementServiceCreate') || Yii::app()->user->checkAccess('movementServiceEdit'))
                     ),
                     array(
-                        'label' => 'Penyesuaian Stok', 
-                        'url' => array('/frontDesk/adjustment/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('stockAdjustmentCreate') || Yii::app()->user->checkAccess('stockAdjustmentEdit'))
-                    ),
-                    array(
                         'label' => 'Permintaan Bahan', 
                         'url' => array('/frontDesk/materialRequest/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('materialRequestCreate') || Yii::app()->user->checkAccess('materialRequestEdit'))
-                    ),
-                    array(
-                        'label' => 'Permintaan Maintenance', 
-                        'url' => array('/frontDesk/maintenanceRequest/admin'), 
-//                        'visible' => (Yii::app()->user->checkAccess('maintenanceRequestCreate') || Yii::app()->user->checkAccess('maintenanceRequestEdit'))
                     ),
                     array(
                         'label' => 'Stok Gudang', 
@@ -278,6 +268,11 @@
                         'label' => 'Analisa Stok Barang', 
                         'url' => array('/master/forecastingProduct/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('stockAnalysisReport'))
+                    ),
+                    array(
+                        'label' => 'Penyesuaian Stok', 
+                        'url' => array('/frontDesk/adjustment/admin'), 
+                        'visible' => (Yii::app()->user->checkAccess('stockAdjustmentCreate') || Yii::app()->user->checkAccess('stockAdjustmentEdit'))
                     ),
                 ),
             )); ?>

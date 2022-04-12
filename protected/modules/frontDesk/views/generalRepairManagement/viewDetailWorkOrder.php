@@ -122,6 +122,8 @@ $('.search-form form').submit(function(){
             </table>
         </div>
         
+        <br />
+        
         <div>
             <span style="text-align: center"><h3>Products</h3></span>
             <table>
@@ -228,6 +230,8 @@ $('.search-form form').submit(function(){
             </table>
         </div>
         
+        <br />
+        
         <div>
             <span style="text-align: center"><h3>Service</h3></span>
             <div class="grid-view">
@@ -252,32 +256,7 @@ $('.search-form form').submit(function(){
             </div>
         </div>
         
-        <div>
-            <span style="text-align: center"><h3>Damage</h3></span>
-            <div class="grid-view">
-                <?php $this->widget('zii.widgets.grid.CGridView', array(
-                    'id' => 'registration-damage-grid',
-                    'dataProvider' => $registrationDamageDataProvider,
-                    'filter' => null, //$registrationService,
-                    'pager' => array(
-                        'cssFile' => false,
-                        'header' => '',
-                    ),
-                    'columns' => array(
-                        array(
-                            'header' => "No",
-                            'value' => '$this->grid->dataProvider->pagination->offset + $row+1',
-                        ),
-                        array('name' => 'service_id', 'value' => '$data->service->name'),
-                        'panel',
-                        'damage_type',
-                        'description',
-                        'hour',
-                        'waiting_time',
-                    ),
-                )); ?>
-            </div>
-        </div>
+        <br />
         
         <div>
             <span style="text-align: center"><h3>Service History</h3></span>
@@ -288,7 +267,6 @@ $('.search-form form').submit(function(){
                     <th>Invoice #</th>
                     <th>Quick Service</th>
                     <th>Repair Type</th>
-                    <th>Total Price</th>
                     <th>detail</th>
                 </thead>
 
@@ -303,7 +281,6 @@ $('.search-form form').submit(function(){
                                 <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'invoice_number')); ?></td>
                                 <td><?php echo $registrationHistory->is_quick_service == 1 ? 'Yes' : 'No'; ?></td>
                                 <td><?php echo $registrationHistory->repair_type; ?></td>
-                                <td style="text-align: right"><?php echo number_format($registrationHistory->grand_total,0); ?></td>
                                 <td>
                                     <?php echo CHtml::tag('button', array(
                                         'type'=>'button',

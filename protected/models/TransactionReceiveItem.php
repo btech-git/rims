@@ -198,6 +198,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.invoice_grand_total_rounded', $this->invoice_grand_total_rounded);
         $criteria->compare('t.invoice_rounding_nominal', $this->invoice_rounding_nominal);
 
+        $criteria->addCondition("t.recipient_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
         $criteria->together = 'true';
         $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'transferRequest', 'consignmentIn', 'deliveryOrder', 'movementOut');
         $criteria->compare('recipientBranch.name', $this->branch_name, true);
@@ -334,8 +337,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id_receive', $this->user_id_receive);
         $criteria->compare('user_id_invoice', $this->user_id_invoice);
 
-        $criteria->addCondition("t.recipient_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+//        $criteria->addCondition("t.recipient_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = 'true';
         $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'transferRequest', 'consignmentIn', 'deliveryOrder', 'movementOut');

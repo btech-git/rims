@@ -43,6 +43,7 @@ class JournalAdjustmentController extends Controller {
         $journalVoucher->header->date = date('Y-m-d');
         $journalVoucher->header->time = date('H:i:s');
         $journalVoucher->header->status = 'Draft';
+        $journalVoucher->header->date_created = date('Y-m-d H:i:s');
         $journalVoucher->header->user_id = Yii::app()->user->id;
 
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());

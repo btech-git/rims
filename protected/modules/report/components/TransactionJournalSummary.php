@@ -21,7 +21,7 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 100000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 10 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -30,8 +30,9 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.tanggal_transaksi DESC', 't.kode_transaksi ASC');
-        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+//        $this->dataProvider->sort->attributes = array('t.tanggal_transaksi DESC', 't.kode_transaksi ASC', 't.coa_id ASC');
+//        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+        $this->dataProvider->criteria->order = 't.tanggal_transaksi DESC, t.kode_transaksi ASC, t.coa_id ASC';
     }
 
     public function setupFilter($startDate, $endDate) {
@@ -39,10 +40,5 @@ class TransactionJournalSummary extends CComponent {
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
         $this->dataProvider->criteria->addCondition("is_coa_category = 0");
-//        $this->dataProvider->criteria->addCondition("coa.status = 'Approved' AND substring(coa.code, 8, 3) <> 000");
-//        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
-//        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
-//        $this->dataProvider->criteria->compare('branch.company_id', $companyId);        
-//        $this->dataProvider->criteria->compare('t.transaction_type', $transactionType);
     }
 }

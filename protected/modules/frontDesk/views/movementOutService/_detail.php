@@ -9,6 +9,7 @@
             <th>Sub Brand Series</th>
             <th class="required">Warehouse</th>
             <th class="required" style="width: 5%">Quantity</th>
+            <th class="required" style="width: 5%">Satuan</th>
             <th style="text-align: center; width: 5%"></th>
         </tr>
     </thead>
@@ -28,6 +29,7 @@
                 <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name'));  ?></td>
                 <td><?php echo CHtml::activeDropDownList($detail,"[$i]warehouse_id", CHtml::listData(Warehouse::model()->findAll(), 'id', 'code'), array('prompt' => '[--Select--]')); ?></td>
                 <td><?php echo CHtml::activeTextField($detail,"[$i]quantity");?></td>
+                <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name'));  ?></td>
                 <td>
                     <?php echo CHtml::button('X', array(
                         'onclick' => CHtml::ajax(array(
