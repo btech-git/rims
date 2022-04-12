@@ -6,7 +6,7 @@
     'pager'=>array(
         'cssFile'=>false,
         'header'=>'',
-        ),
+    ),
     //'summaryText'=>'',
     'columns'=>array(
         array(

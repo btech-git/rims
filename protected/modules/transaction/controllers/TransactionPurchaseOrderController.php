@@ -336,7 +336,7 @@ class TransactionPurchaseOrderController extends Controller {
             $model->attributes = $_GET['TransactionPurchaseOrder'];
         }
 
-        $dataProvider = $model->searchByAdmin();
+        $dataProvider = $model->search();
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'supplier',
@@ -347,25 +347,6 @@ class TransactionPurchaseOrderController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.purchase_order_date, 1, 10)', $startDate, $endDate);
-
-//        $request = new TransactionRequestOrder('search');
-//        $request->unsetAttributes();  // clear any default values
-//        if (isset($_GET['TransactionRequestOrder'])) {
-//            $request->attributes = $_GET['TransactionRequestOrder'];
-//        }
-//
-//        $requestCriteria = new CDbCriteria;
-//        $requestCriteria->compare('request_order_no', $request->request_order_no . '%', true, 'AND', false);
-//        $requestCriteria->compare('request_order_date', $request->request_order_date . '%', true, 'AND', false);
-//        $requestCriteria->addCondition("status_document = 'Approved' AND 
-//            t.id NOT IN (
-//                SELECT purchase_request_id
-//                FROM " . TransactionPurchaseOrderDetailRequest::model()->tableName() . "
-//            )"
-//        );
-//        $requestDataProvider = new CActiveDataProvider('TransactionRequestOrder', array(
-//            'criteria' => $requestCriteria,
-//        ));
 
         $this->render('admin', array(
             'model' => $model,

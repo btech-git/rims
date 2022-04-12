@@ -29,16 +29,12 @@ class GeneralLedgerSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $accountId, $branchId) {
+    public function setupFilter($startDate, $endDate, $branchId) {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
-//        $this->dataProvider->criteria->compare('t.status', 'Approved');
+        $this->dataProvider->criteria->addCondition("t.is_approved = 1 AND code NOT LIKE '%.000'");
 
-        if (!empty($accountId)) {
-            $this->dataProvider->criteria->compare('t.id', $accountId);
-	}
-        
         if (!empty($branchId)) {
             $this->dataProvider->criteria->compare('jurnalUmums.branch_id', $branchId);
         }

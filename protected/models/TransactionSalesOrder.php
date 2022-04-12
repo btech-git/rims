@@ -202,6 +202,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('payment_type', $this->payment_type, true);
         $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
         $criteria->compare('requester_id', $this->requester_id);
+        $criteria->compare('requester_branch_id', $this->requester_branch_id);
         $criteria->compare('approved_id', $this->approved_id);
         $criteria->compare('approved_branch_id', $this->approved_branch_id);
         $criteria->compare('customer_id', $this->customer_id);

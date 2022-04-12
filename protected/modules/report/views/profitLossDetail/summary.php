@@ -150,11 +150,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
                 </td>
             </tr>
-            <?php if ($account->coa_sub_category_id == 28 || $account->coa_sub_category_id == 30 || $account->coa_sub_category_id == 31): ?>
+            <?php /*if ($account->coa_sub_category_id == 28 || $account->coa_sub_category_id == 30 || $account->coa_sub_category_id == 31): ?>
                 <?php $accountCategoryTypeBalance -= $accountCategoryBalance; ?>
             <?php else: ?>
                 <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
-            <?php endif; ?>
+            <?php endif;*/ ?>
         <?php endforeach; ?>
         <tr>
             <td>&nbsp;</td>

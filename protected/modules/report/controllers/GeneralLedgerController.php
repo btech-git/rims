@@ -30,15 +30,32 @@ class GeneralLedgerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
-        $accountId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
-        $generalLedgerSummary->setupLoading($startDate, $endDate, $accountId);
+        $generalLedgerSummary->setupLoading($startDate, $endDate);
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
-        $generalLedgerSummary->setupFilter($startDate, $endDate, $accountId, $branchId);
+        $generalLedgerSummary->setupFilter($startDate, $endDate, $branchId);
         $generalLedgerSummary->getSaldo($startDate);
+
+        $coa = new Coa('search');
+        $coa->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['Coa'])) {
+            $coa->attributes = $_GET['Coa'];
+        }
+
+        $coaCriteria = new CDbCriteria;
+        $coaCriteria->addCondition("t.is_approved = 1 AND t.coa_id IS NOT NULL");
+        $coaCriteria->compare('t.code', $coa->code, true);
+        $coaCriteria->compare('t.name', $coa->name, true);
+        $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
+        $coaCriteria->compare('t.coa_sub_category_id', $coa->coa_sub_category_id);
+
+        $coaDataProvider = new CActiveDataProvider('Coa', array(
+            'criteria' => $coaCriteria,
+        ));
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -51,8 +68,9 @@ class GeneralLedgerController extends Controller {
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'number' => $number,
-            'accountId' => $accountId,
             'branchId' => $branchId,
+            'coa' => $coa,
+            'coaDataProvider' => $coaDataProvider,
         ));
     }
 

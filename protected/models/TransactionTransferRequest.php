@@ -162,17 +162,66 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function searchByAdmin() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transfer_request_no', $this->transfer_request_no, true);
+        $criteria->compare('transfer_request_date', $this->transfer_request_date, true);
+        $criteria->compare('status_document', $this->status_document, true);
+        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('requester_id', $this->requester_id);
+        $criteria->compare('requester_branch_id', $this->requester_branch_id);
+        $criteria->compare('approved_by', $this->approved_by);
+        $criteria->compare('destination_id', $this->destination_id);
+        $criteria->compare('destination_branch_id', $this->destination_branch_id);
+        $criteria->compare('total_quantity', $this->total_quantity);
+        $criteria->compare('total_price', $this->total_price, true);
+        $criteria->compare('destination_approval_status', $this->destination_approval_status);
+
+        $criteria->addCondition("t.requester_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        $criteria->together = 'true';
+        $criteria->with = array('requesterBranch');
+        $criteria->compare('requesterBranch.name', $this->branch_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transfer_request_date DESC',
+                'attributes' => array(
+                    'branch_name' => array(
+                        'asc' => 'requesterBranch.name ASC',
+                        'desc' => 'requesterBranch.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+    }
+
     public function searchByPendingDelivery() {
         //search purchase header which purchased quantity is not fully received yet
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-			SELECT COALESCE(SUM(d.quantity_delivery_left), 0) AS quantity_remaining
-			FROM " . TransactionTransferRequestDetail::model()->tableName() . " d
-			WHERE t.id = d.transfer_request_id AND status_document = 'Approved'
-			GROUP BY d.transfer_request_id
-			HAVING quantity_remaining > 0
-		)";
+            SELECT COALESCE(SUM(d.quantity_delivery_left), 0) AS quantity_remaining
+            FROM " . TransactionTransferRequestDetail::model()->tableName() . " d
+            WHERE t.id = d.transfer_request_id AND status_document = 'Approved'
+            GROUP BY d.transfer_request_id
+            HAVING quantity_remaining > 0
+        )";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transfer_request_no', $this->transfer_request_no, true);
@@ -203,11 +252,11 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-                SELECT COALESCE(SUM(d.quantity_delivery_left), 0) AS quantity_remaining
-                FROM " . TransactionTransferRequestDetail::model()->tableName() . " d
-                WHERE t.id = d.transfer_request_id
-                GROUP BY d.transfer_request_id
-                HAVING quantity_remaining > 0
+            SELECT COALESCE(SUM(d.quantity_delivery_left), 0) AS quantity_remaining
+            FROM " . TransactionTransferRequestDetail::model()->tableName() . " d
+            WHERE t.id = d.transfer_request_id
+            GROUP BY d.transfer_request_id
+            HAVING quantity_remaining > 0
         )";
 
         $criteria->compare('id', $this->id);

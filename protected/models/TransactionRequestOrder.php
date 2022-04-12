@@ -152,4 +152,53 @@ class TransactionRequestOrder extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function searchByAdmin() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('request_order_no', $this->request_order_no, true);
+        $criteria->compare('request_order_date', $this->request_order_date, true);
+        $criteria->compare('requester_id', $this->requester_id);
+        $criteria->compare('requester_branch_id', $this->requester_branch_id);
+        $criteria->compare('main_branch_id', $this->main_branch_id);
+        $criteria->compare('main_branch_approved_by', $this->main_branch_approved_by);
+        $criteria->compare('approved_by', $this->approved_by);
+        $criteria->compare('total_items', $this->total_items);
+        $criteria->compare('total_price', $this->total_price, true);
+        $criteria->compare('status_document', $this->status_document, true);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('has_compare', $this->has_compare, true);
+
+        $criteria->addCondition("t.main_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        $criteria->together = 'true';
+        $criteria->with = array('requesterBranch');
+        $criteria->compare('requesterBranch.name', $this->request_branch_name, true);
+
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'request_order_date DESC',
+                'attributes' => array(
+                    'request_branch_name' => array(
+                        'asc' => 'requesterBranch.name ASC',
+                        'desc' => 'requesterBranch.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+    }
 }

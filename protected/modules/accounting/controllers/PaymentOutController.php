@@ -181,7 +181,7 @@ class PaymentOutController extends Controller {
             unset($_GET['pageSize']);
         }
 
-        $dataProvider = $paymentOut->searchByAdmin();
+        $dataProvider = $paymentOut->search();
         $dataProvider->criteria->with = array(
             'supplier',
             'paymentOutApprovals',

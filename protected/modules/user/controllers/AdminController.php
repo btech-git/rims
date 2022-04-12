@@ -102,20 +102,15 @@ class AdminController extends Controller {
         $model->lastvisit_at = date('Y-m-d H:i:s');
         $employees = Employee::model()->findAll();
         
-//        $profile = new Profile;
         $this->performAjaxValidation(array($model));
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
             $model->employee_id = $_POST['User']['employee_id'];
             $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
-//            $profile->attributes = $_POST['Profile'];
-//            $profile->user_id = 0;
             if ($model->validate()) {
                 $model->password = Yii::app()->controller->module->encrypting($model->password);
                 
                 if ($model->save()) {
-//                    $profile->user_id = $model->id;
-//                    $profile->save();
                     $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
                     $authorizer->authManager->assign('Authenticated', $model->id);
                     
@@ -133,8 +128,6 @@ class AdminController extends Controller {
                     
                     $this->redirect(array('view', 'id' => $model->id));
                 }
-//            } else {
-//                $profile->validate();
             }
         }
 
@@ -152,20 +145,13 @@ class AdminController extends Controller {
     public function actionUpdate() {
         $model = $this->loadModel();
         $employees = Employee::model()->findAll();
-//        $profile = $model->profile;
         $this->performAjaxValidation(array($model));
+        
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
-//            $profile->attributes = $_POST['Profile'];
 
             if ($model->validate()) {
-//                $old_password = User::model()->notsafe()->findByPk($model->id);
-//                if ($old_password->password != $model->password) {
-//                    $model->password = Yii::app()->controller->module->encrypting($model->password);
-//                    $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
-//                }
                 $model->save();
-//                $profile->save();
                 $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
                 $authorizer->authManager->assign('Authenticated', $model->id);
 

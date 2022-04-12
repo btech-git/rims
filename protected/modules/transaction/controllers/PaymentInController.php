@@ -376,7 +376,7 @@ class PaymentInController extends Controller {
         if (isset($_GET['PaymentIn']))
             $model->attributes = $_GET['PaymentIn'];
         
-        $dataProvider = $model->searchByAdmin();
+        $dataProvider = $model->search();
         $dataProvider->criteria->with = array(
             'customer',
             'paymentInApprovals',

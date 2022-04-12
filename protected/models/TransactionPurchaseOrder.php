@@ -234,6 +234,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
         $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
         $criteria->compare('t.purchase_type', $this->purchase_type, true);
+        $criteria->compare('t.main_branch_id', $this->main_branch_id);
 
         $criteria->addCondition("t.main_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
         $criteria->params = array(':userId' => Yii::app()->user->id);

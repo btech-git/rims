@@ -16,6 +16,6 @@ $this->menu=array(
     <?php echo $this->renderPartial('_form', array(
         'model'=>$model,
         'employees' => $employees,
-//        'profile'=>$profile
+//        'branches' => $branches,
     )); ?>
 </div>

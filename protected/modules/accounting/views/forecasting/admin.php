@@ -68,10 +68,6 @@ Yii::app()->clientScript->registerScript('search', "
                             'filter'=>false,
                         ),
                         'due_date',
-                        // [
-                        // 	'header'=>'Estimasi payment',
-                        // 	'name'=>
-                        // ],
                         'payment_date',
                         'realization_date',
                         'amount',
@@ -139,7 +135,7 @@ Yii::app()->clientScript->registerScript('search', "
                         array (
                             'header'=>'Customer',
                             'name'=>'customer_name',
-                            'value'=>'$data->transaction_so->customer->name',
+                            'value'=>'CHtml::encode(CHtml::value($data, "transaction_so.customer.name"))',
                         ),
                         array (
                             'header'=>'Bank',

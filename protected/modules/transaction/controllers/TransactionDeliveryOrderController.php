@@ -260,12 +260,6 @@ class TransactionDeliveryOrderController extends Controller {
         if (isset($_GET['TransactionTransferRequest']))
             $transfer->attributes = $_GET['TransactionTransferRequest'];
 
-//		$transferCriteria = new CDbCriteria;
-//		$transferCriteria->compare('transfer_request_no',$transfer->transfer_request_no.'%',true,'AND', false);
-//		$transferCriteria->addCondition("status_document = 'Approved'");
-//		$transferDataProvider = new CActiveDataProvider('TransactionTransferRequest', array(
-//			'criteria'=>$transferCriteria,
-//		));
         $transferDataProvider = $transfer->searchByPendingDelivery();
 
         $sent = new TransactionSentRequest('search');
@@ -274,12 +268,6 @@ class TransactionDeliveryOrderController extends Controller {
         if (isset($_GET['TransactionSentRequest']))
             $sent->attributes = $_GET['TransactionSentRequest'];
 
-//		$sentCriteria = new CDbCriteria;
-//		$sentCriteria->compare('sent_request_no',$sent->sent_request_no.'%',true,'AND', false);
-//		$sentCriteria->addCondition("status_document = 'Approved'");
-//		$sentDataProvider = new CActiveDataProvider('TransactionSentRequest', array(
-//			'criteria'=>$sentCriteria,
-//		));
         $sentDataProvider = $sent->searchByPendingDelivery();
 
         $sales = new TransactionSalesOrder('search');
@@ -288,12 +276,6 @@ class TransactionDeliveryOrderController extends Controller {
         if (isset($_GET['TransactionSalesOrder']))
             $sales->attributes = $_GET['TransactionSalesOrder'];
 
-//		$salesCriteria = new CDbCriteria;
-//		$salesCriteria->compare('sale_order_no',$sales->sale_order_no.'%',true,'AND', false);
-//		$salesCriteria->addCondition("status_document = 'Approved'");
-//		$salesDataProvider = new CActiveDataProvider('TransactionSalesOrder', array(
-//			'criteria'=>$salesCriteria,
-//		));
         $salesDataProvider = $sales->searchByPendingDelivery();
         $salesDataProvider->criteria->addCondition("status_document = 'Approved'");
 
@@ -303,12 +285,6 @@ class TransactionDeliveryOrderController extends Controller {
         if (isset($_GET['ConsignmentOutHeader']))
             $consignment->attributes = $_GET['ConsignmentOutHeader'];
 
-//		$consignmentCriteria = new CDbCriteria;
-//		$consignmentCriteria->compare('consignment_out_no',$consignment->consignment_out_no.'%',true,'AND', false);
-//		$consignmentCriteria->addCondition("status = 'Approved'");
-//		$consignmentDataProvider = new CActiveDataProvider('ConsignmentOutHeader', array(
-//			'criteria'=>$consignmentCriteria,
-//		));
         $consignmentDataProvider = $consignment->searchByPendingDelivery();
 
         $this->render('admin', array(

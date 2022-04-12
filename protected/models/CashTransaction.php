@@ -76,6 +76,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
             'cashTransactionApprovals' => array(self::HAS_MANY, 'CashTransactionApproval', 'cash_transaction_id'),
             'cashTransactionDetails' => array(self::HAS_MANY, 'CashTransactionDetail', 'cash_transaction_id'),
             'cashTransactionImages' => array(self::HAS_MANY, 'CashTransactionImages', 'cash_transaction_id'),

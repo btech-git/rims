@@ -25,19 +25,6 @@ class PendingTransactionController extends Controller {
     }
 
     /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
-    // public function actionView($id)
-    // {
-    // 	$deliveryDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id'=>$id));
-    // 	$this->render('view',array(
-    // 		'model'=>$this->loadModel($id),
-    // 		'deliveryDetails'=>$deliveryDetails,
-    // 	));
-    // }
-
-    /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
@@ -179,17 +166,6 @@ class PendingTransactionController extends Controller {
             $movementInDataProvider->criteria->addCondition('t.status = :status');
             $movementInDataProvider->criteria->params[':status'] = $status_document;
         }
-//        else {
-//            $requestDataProvider->criteria->addCondition("status_document != 'Approved' AND status_document != 'Rejected'");
-//            $purchaseDataProvider->criteria->addCondition("status_document != 'Approved' AND status_document != 'Rejected'");
-//            $transferDataProvider->criteria->addCondition("status_document != 'Approved' AND status_document != 'Rejected'");
-//            $sentDataProvider->criteria->addCondition("status_document != 'Approved' AND status_document != 'Rejected'");
-//            $salesDataProvider->criteria->addCondition("status_document != 'Approved' AND status_document != 'Rejected'");
-//            $consignmentDataProvider->criteria->addCondition("status_document != 'Approved' AND status_document != 'Rejected'");
-//            $consignmentInDataProvider->criteria->addCondition("status_document != 'Approved' AND status_document != 'Rejected'");
-//            $movementDataProvider->criteria->addCondition("t.status != 'Approved' AND t.status != 'Rejected'");
-//            $movementInDataProvider->criteria->addCondition("t.status != 'Approved' AND t.status != 'Rejected'");
-//        }
 
         $this->render('index', array(
             'tanggal_mulai' => $tanggal_mulai,

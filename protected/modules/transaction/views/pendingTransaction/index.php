@@ -87,23 +87,24 @@ Yii::app()->clientScript->registerScript('report', '
             </div>
             <div class="row">
                 <div class="medium-6 columns">
-                    <div class="field">
+<!--                    <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
                                 <span class="prefix">Requester Branch</span>
                             </div>
                              <div class="small-8 columns">
-                                <?php echo CHtml::dropDownlist('RequesterBranch', $requesterBranch, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Requester Branch --')); ?>
+                                <?php //echo CHtml::dropDownlist('RequesterBranch', $requesterBranch, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Requester Branch --')); ?>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
+                    
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
                                 <span class="prefix">Main / Destination Branch</span>
                             </div>
                              <div class="small-8 columns">
-                                <?php echo CHtml::dropDownlist('MainBranch', $mainBranch, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Main Branch --')); ?>
+                                <?php echo CHtml::dropDownlist('MainBranch', $mainBranch, CHtml::listData(UserBranch::model()->findAllByAttributes(array('users_id' => Yii::app()->user->id)),'branch_id','branch.name'), array('empty'=>'-- All Main Branch --')); ?>
                             </div>
                         </div>
                     </div>

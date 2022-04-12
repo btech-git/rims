@@ -190,7 +190,6 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.customer_id', $this->customer_id);
         $criteria->compare('t.vehicle_id', $this->vehicle_id);
         $criteria->compare('t.payment_type', $this->payment_type, true);
-        $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
         $criteria->compare('t.company_bank_id', $this->company_bank_id);
         $criteria->compare('nomor_giro', $this->nomor_giro, true);
@@ -199,6 +198,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('payment_type_id', $this->payment_type_id);
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
+        $criteria->compare('t.branch_id', $this->branch_id);
 
         $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
         $criteria->params = array(':userId' => Yii::app()->user->id);

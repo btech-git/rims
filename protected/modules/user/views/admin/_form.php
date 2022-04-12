@@ -176,18 +176,6 @@ Yii::app()->clientScript->registerScript('userRoles', "
                 </div>
             </div>
 
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php /*echo $form->labelEx($model, 'superuser', array('class' => 'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->dropDownList($model, 'superuser', User::itemAlias('AdminStatus')); ?>
-                        <?php echo $form->error($model, 'superuser');*/ ?>
-                    </div>
-                </div>
-            </div>-->
-
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -206,14 +194,6 @@ Yii::app()->clientScript->registerScript('userRoles', "
                         <?php echo $form->labelEx($model, 'employee_id', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php /*if ($model->isNewRecord): ?>
-                            <?php $this->renderPartial('_employeeSelect', array(
-                                'model'=>$model,
-                                'employees' => $employees,
-                            )); ?>
-                        <?php else: ?>
-                            <?php echo CHtml::encode(CHtml::value($model, 'employee.name')); ?>
-                        <?php endif;*/ ?>
                         <?php echo CHtml::activeDropDownList($model, 'employee_id', CHtml::listData($employees, 'id', 'name'), array('empty' => '-- Pilih Employee --')); ?>
                         <?php echo CHtml::error($model, 'employee_id'); ?>
                     </div>
@@ -228,7 +208,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
                     <div class="small-8 columns">
                         <?php $branches = Branch::model()->findAll(array('order' => 'code')); ?>
                         <?php echo CHtml::checkBoxList('BranchId[]', false, CHtml::listData($branches, 'id', 'code'), array('labelOptions'=>array('style'=>'display:inline'), 'separator'=>' ',)); ?>
-                        <?php echo $form->error($model, 'branch_id'); ?>
+                        <?php //echo $form->error($model, 'branch_id'); ?>
                     </div>
                 </div>
             </div>

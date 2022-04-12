@@ -44,7 +44,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">COA</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CoaId', $accountId, CHtml::listData(Coa::model()->findAll(array('condition' => 'coa_id IS NOT NULL')), 'id', 'name'), array('empty' => '-- All COA --')); ?>
+                                        <?php echo CHtml::activeTextField($account, 'id', array('onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -116,4 +116,60 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             
         </div>
     </div>
+</div>
+
+<div class="grid-view">
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'coa-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'COA ',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id'=>'coa-grid',
+        'dataProvider'=>$coaDataProvider,
+        'filter'=>$coa,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager'=>array(
+           'cssFile'=>false,
+           'header'=>'',
+        ),
+        'selectionChanged'=>'js:function(id){
+            $("#coa-dialog").dialog("close");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxCoa', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                data: $("form").serialize(),
+                success: function(data) {
+                    $("#coa_id").val(data.id);
+                    $("#coa_name").val(data.code);
+                },
+            });
+            $("#coa-grid").find("tr.selected").each(function(){
+               $(this).removeClass( "selected" );
+            });
+        }',
+        'columns'=> array(
+            'code',
+            'name',
+            array(
+                'name' => 'coa_category_id',
+                'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
+            ),
+            array(
+                'name' => 'coa_sub_category_id',
+                'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
+            ),
+        ),
+    )); ?>
+    
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>
