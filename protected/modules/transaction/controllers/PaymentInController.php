@@ -551,12 +551,12 @@ class PaymentInController extends Controller {
                             'branch_id' => $paymentIn->branch_id,
                         ));
 
-                        $getCoaPiutang = ($paymentIn->customer->customer_type == 'Company') ? '121.00.001' : '121.00.002';
-                        $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
+//                        $getCoaPiutang = ($paymentIn->customer->customer_type == 'Company') ? '121.00.001' : '121.00.002';
+//                        $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
                         $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
-                        $jurnalPiutang->coa_id = $coaPiutangWithCode->id;
+                        $jurnalPiutang->coa_id = $paymentIn->customer->coa_id;
                         $jurnalPiutang->branch_id = $paymentIn->branch_id;
                         $jurnalPiutang->total = $paymentIn->payment_amount;
                         $jurnalPiutang->debet_kredit = 'K';
@@ -566,12 +566,13 @@ class PaymentInController extends Controller {
                         $jurnalPiutang->transaction_type = 'Pin';
                         $jurnalPiutang->save();
 
-                        $getCoaKas = '111.00.001';
-                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+//                        $getCoaKas = '111.00.001';
+//                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+                        $coaId = ($paymentIn->payment_type_id === 1) ? 1492 : $paymentIn->companyBank->coa_id;
                         $jurnalUmumKas = new JurnalUmum;
                         $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
                         $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
-                        $jurnalUmumKas->coa_id = $coaKasWithCode->id;
+                        $jurnalUmumKas->coa_id = $coaId;
                         $jurnalUmumKas->branch_id = $paymentIn->branch_id;
                         $jurnalUmumKas->total = $paymentIn->payment_amount;
                         $jurnalUmumKas->debet_kredit = 'D';
@@ -582,12 +583,12 @@ class PaymentInController extends Controller {
                         $jurnalUmumKas->save();
 
                         if ($paymentIn->tax_service_amount > 0) {
-                            $getCoaPph = '143.00.002';
-                            $coaPphWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPph));
+//                            $getCoaPph = '143.00.002';
+//                            $coaPphWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPph));
                             $jurnalPph = new JurnalUmum;
                             $jurnalPph->kode_transaksi = $paymentIn->payment_number;
                             $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalPph->coa_id = $coaPphWithCode->id;
+                            $jurnalPph->coa_id = 1473;
                             $jurnalPph->branch_id = $paymentIn->branch_id;
                             $jurnalPph->total = $paymentIn->tax_service_amount;
                             $jurnalPph->debet_kredit = 'D';

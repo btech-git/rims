@@ -132,7 +132,7 @@ class Customers extends CComponent {
         if ($this->header->customer_type == 'Individual') {
             $this->header->coa_id = 1449;
         } else {
-            $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => 346), array('order' => 'id DESC'));
+            $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => null), array('order' => 'id DESC'));
             $ordinal = substr($existingCoa->code, -3);
             $newOrdinal = $ordinal + 1;
             
@@ -141,7 +141,7 @@ class Customers extends CComponent {
             $coa->code = '108.00.' . sprintf('%03d', $newOrdinal);
             $coa->coa_category_id = 1;
             $coa->coa_sub_category_id = 8;
-            $coa->coa_id = 346;
+            $coa->coa_id = null;
             $coa->normal_balance = 'DEBIT';
             $coa->cash_transaction = 'NO';
             $coa->opening_balance = 0.00;

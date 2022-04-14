@@ -200,8 +200,8 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
         $criteria->compare('t.branch_id', $this->branch_id);
 
-        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+//        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = 'true';
         $criteria->with = array('invoice');

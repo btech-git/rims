@@ -217,8 +217,8 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('ppn_price', $this->ppn_price, true);
         $criteria->compare('t.note', $this->note, true);
 
-        $criteria->addCondition("t.requester_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+//        $criteria->addCondition("t.requester_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = 'true';
         $criteria->with = array('customer');

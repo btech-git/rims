@@ -538,13 +538,13 @@ class PaymentOutController extends Controller {
                             'branch_id' => $paymentOut->branch_id,
                         ));
 
-                        $coaHutang = Coa::model()->findByPk($paymentOut->supplier->coa->id);
-                        $getcoaHutang = $coaHutang->code;
-                        $coaHutangWithCode = Coa::model()->findByAttributes(array('code' => $getcoaHutang));
+//                        $coaHutang = Coa::model()->findByPk($paymentOut->supplier->coa->id);
+//                        $getcoaHutang = $coaHutang->code;
+//                        $coaHutangWithCode = Coa::model()->findByAttributes(array('code' => $getcoaHutang));
                         $jurnalHutang = new JurnalUmum;
                         $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
                         $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
-                        $jurnalHutang->coa_id = $coaHutangWithCode->id;
+                        $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
                         $jurnalHutang->branch_id = $paymentOut->branch_id;
                         $jurnalHutang->total = $paymentOut->payment_amount;
                         $jurnalHutang->debet_kredit = 'D';
@@ -557,13 +557,13 @@ class PaymentOutController extends Controller {
     //                    $priceBefore = $paymentOut->purchaseOrder->ppn == 1 ? $paymentOut->payment_amount / 1.1 : $paymentOut->payment_amount;
     //                    $ppn = $paymentOut->purchaseOrder->ppn == 1 ? $priceBefore * 0.1 : 0;
                         if ($paymentOut->payment_type_id == 1) { 
-                            $getCoaKas = '111.00.001';
-                            $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+//                            $getCoaKas = '111.00.001';
+//                            $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
 
                             $jurnalUmumKas = new JurnalUmum;
                             $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
                             $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
-                            $jurnalUmumKas->coa_id = $coaKasWithCode->id;
+                            $jurnalUmumKas->coa_id = 1492;
                             $jurnalUmumKas->branch_id = $paymentOut->branch_id;
                             $jurnalUmumKas->total = $paymentOut->payment_amount;
                             $jurnalUmumKas->debet_kredit = 'K';

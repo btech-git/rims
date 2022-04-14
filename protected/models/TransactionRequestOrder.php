@@ -176,8 +176,8 @@ class TransactionRequestOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('has_compare', $this->has_compare, true);
 
-        $criteria->addCondition("t.main_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+//        $criteria->addCondition("t.main_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = 'true';
         $criteria->with = array('requesterBranch');

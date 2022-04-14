@@ -186,8 +186,8 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         $criteria->compare('total_price', $this->total_price, true);
         $criteria->compare('destination_approval_status', $this->destination_approval_status);
 
-        $criteria->addCondition("t.requester_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+//        $criteria->addCondition("t.requester_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = 'true';
         $criteria->with = array('requesterBranch');

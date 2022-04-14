@@ -249,8 +249,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('in_words', $this->in_words, true);
         $criteria->compare('note', $this->note, true);
 
-        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+//        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
             $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
