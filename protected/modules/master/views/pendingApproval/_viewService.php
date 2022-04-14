@@ -46,5 +46,28 @@
                 'Inactive' => 'Inactive',
             )),
         ),
+        'user.username',
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{approve} {reject}',
+            'buttons'=>array (
+                'approve' => array (
+                    'label'=>'approve',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/serviceApproval", array("serviceId"=>$data->id))',
+//                    'imageUrl'=> Yii::app()->baseUrl . '/images/icons/check_green.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Approve this service?',
+                    ),
+                ),
+                'reject' => array (
+                    'label'=>'reject',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/serviceReject", array("serviceId"=>$data->id))',
+                    'imageUrl'=> '/images/icons/cancel.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Reject this service?',
+                    ),
+                ),
+            ),
+        ),
     ),
 )); ?>

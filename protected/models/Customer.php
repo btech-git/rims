@@ -24,6 +24,7 @@
  * @property integer $coa_id
  * @property integer $is_approved
  * @property string $date_approval
+ * @property integer $user_id
  *
  * The followings are the available model relations:
  * @property ConsignmentOutHeader[] $consignmentOutHeaders
@@ -40,6 +41,7 @@
  * @property TransactionDeliveryOrder[] $transactionDeliveryOrders
  * @property TransactionReturnItem[] $transactionReturnItems
  * @property TransactionSalesOrder[] $transactionSalesOrders
+ * @property User $user
  */
 class Customer extends CActiveRecord {
 
@@ -63,8 +65,8 @@ class Customer extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, address, province_id, city_id, customer_type', 'required'),
-            array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved', 'numerical', 'integerOnly' => true),
+            array('name, address, province_id, city_id, customer_type, user_id', 'required'),
+            array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
             array('name, email, phone, mobile_phone', 'length', 'max' => 100),
             array('email', 'email'),
             array('note, date_approval', 'safe'),
@@ -73,7 +75,7 @@ class Customer extends CActiveRecord {
             array('fax', 'length', 'max' => 20),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone, is_approved, date_approval', 'safe', 'on' => 'search'),
+            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -99,6 +101,7 @@ class Customer extends CActiveRecord {
             'transactionDeliveryOrders' => array(self::HAS_MANY, 'TransactionDeliveryOrder', 'customer_id'),
             'transactionReturnItems' => array(self::HAS_MANY, 'TransactionReturnItem', 'customer_id'),
             'transactionSalesOrders' => array(self::HAS_MANY, 'TransactionSalesOrder', 'customer_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 
@@ -127,6 +130,7 @@ class Customer extends CActiveRecord {
             'coa_id' => 'Coa',
             'is_approved' => 'Approval',
             'date_approval' => 'Tanggal Approval',
+            'user_id' => 'User Input',
         );
     }
 
@@ -167,6 +171,7 @@ class Customer extends CActiveRecord {
         $criteria->compare('t.coa_id', $this->coa_id);
         $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
 
         $criteria->together = 'true';
         $criteria->with = array('province', 'city', 'vehicles', 'coa');

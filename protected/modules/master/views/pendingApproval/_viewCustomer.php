@@ -39,7 +39,30 @@
                 )
             ),
         ),
+        'user.username',
         array('name'=>'coa_name','value'=>'$data->coa!="" ? $data->coa->name : ""'),
         array('name'=>'coa_code','value'=>'$data->coa!="" ? $data->coa->code : ""'),
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{approve} {reject}',
+            'buttons'=>array (
+                'approve' => array (
+                    'label'=>'approve',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/customerApproval", array("customerId"=>$data->id))',
+//                    'imageUrl'=> Yii::app()->baseUrl . '/images/icons/check_green.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Approve this customer?',
+                    ),
+                ),
+                'reject' => array (
+                    'label'=>'reject',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/customerReject", array("customerId"=>$data->id))',
+                    'imageUrl'=> '/images/icons/cancel.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Reject this customer?',
+                    ),
+                ),
+            ),
+        ),
     ),
 )); ?>

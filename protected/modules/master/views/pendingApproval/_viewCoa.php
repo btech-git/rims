@@ -7,7 +7,6 @@
         'cssFile'=>false,
         'header'=>'',
     ),
-    //'summaryText'=>'',
     'columns' => array(
         'id',
         array(
@@ -28,5 +27,28 @@
         ),
         'normal_balance',
         'opening_balance',
+        'user.username',
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{approve} {reject}',
+            'buttons'=>array (
+                'approve' => array (
+                    'label'=>'approve',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/coaApproval", array("coaId"=>$data->id))',
+//                    'imageUrl'=> Yii::app()->baseUrl . '/images/icons/check_green.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Approve this COA?',
+                    ),
+                ),
+                'reject' => array (
+                    'label'=>'reject',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/coaReject", array("coaId"=>$data->id))',
+                    'imageUrl'=> '/images/icons/cancel.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Reject this COA?',
+                    ),
+                ),
+            ),
+        ),
     ),
 )); ?>

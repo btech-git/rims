@@ -82,7 +82,7 @@ class ProductController extends Controller {
         $product = $this->instantiate(null);
         $product->header->date_posting = date('Y-m-d H:i:s');
         $product->header->ppn = 2;
-        $product->header->user_id = Yii::app()->user->getId();;
+        $product->header->user_id = Yii::app()->user->id;
         $product->header->user_id_approval = null;
         $product->header->date_approval = null;
         $productSpecificationBattery = new ProductSpecificationBattery;

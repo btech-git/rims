@@ -94,4 +94,182 @@ class PendingApprovalController extends Controller {
             'carSubModelDataProvider' => $carSubModelDataProvider,
         ));
     }
+    
+    public function actionCoaApproval($coaId) {
+        $coa = Coa::model()->findByPk($coaId);
+        $coa->status = 'Approved';
+        $coa->is_approved = 1;
+
+        if ($coa->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionCoaReject($coaId) {
+        $coa = Coa::model()->findByPk($coaId);
+        $coa->status = 'Reject';
+        $coa->is_approved = 2;
+
+        if ($coa->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionMakeApproval($makeId) {
+        $vehicleCarMake = VehicleCarMake::model()->findByPk($makeId);
+        $vehicleCarMake->status = 'Active';
+        $vehicleCarMake->is_approved = 1;
+
+        if ($vehicleCarMake->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionMakeReject($makeId) {
+        $vehicleCarMake = VehicleCarMake::model()->findByPk($makeId);
+        $vehicleCarMake->status = 'Reject';
+        $vehicleCarMake->is_approved = 2;
+
+        if ($vehicleCarMake->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionModelApproval($modelId) {
+        $vehicleCarModel = VehicleCarModel::model()->findByPk($modelId);
+        $vehicleCarModel->status = 'Active';
+        $vehicleCarModel->is_approved = 1;
+
+        if ($vehicleCarModel->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionModelReject($modelId) {
+        $vehicleCarModel = VehicleCarModel::model()->findByPk($modelId);
+        $vehicleCarModel->status = 'Reject';
+        $vehicleCarModel->is_approved = 2;
+
+        if ($vehicleCarModel->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionSubModelApproval($subModelId) {
+        $vehicleCarSubModel = VehicleCarSubModel::model()->findByPk($subModelId);
+        $vehicleCarSubModel->is_approved = 1;
+
+        if ($vehicleCarSubModel->update(array('is_approved'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionSubModelReject($subModelId) {
+        $vehicleCarSubModel = Coa::model()->findByPk($subModelId);
+        $vehicleCarSubModel->is_approved = 2;
+
+        if ($vehicleCarSubModel->update(array('is_approved'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionCustomerApproval($customerId) {
+        $customer = Customer::model()->findByPk($customerId);
+        $customer->status = 'Active';
+        $customer->is_approved = 1;
+
+        if ($customer->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionCustomerReject($customerId) {
+        $customer = Coa::model()->findByPk($customerId);
+        $customer->status = 'Reject';
+        $customer->is_approved = 2;
+
+        if ($customer->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductApproval($productId) {
+        $product = Product::model()->findByPk($productId);
+        $product->status = 'Active';
+        $product->is_approved = 1;
+
+        if ($product->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductReject($productId) {
+        $product = Product::model()->findByPk($productId);
+        $product->status = 'Reject';
+        $product->is_approved = 2;
+
+        if ($product->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionServiceApproval($serviceId) {
+        $service = Service::model()->findByPk($serviceId);
+        $service->status = 'Active';
+        $service->is_approved = 1;
+
+        if ($service->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionServiceReject($serviceId) {
+        $service = Service::model()->findByPk($serviceId);
+        $service->status = 'Reject';
+        $service->is_approved = 2;
+
+        if ($service->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionSupplierApproval($supplierId) {
+        $supplier = Supplier::model()->findByPk($supplierId);
+        $supplier->status = 'Active';
+        $supplier->is_approved = 1;
+
+        if ($supplier->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionSupplierReject($supplierId) {
+        $supplier = Supplier::model()->findByPk($supplierId);
+        $supplier->status = 'Reject';
+        $supplier->is_approved = 2;
+
+        if ($supplier->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionWarehouseApproval($warehouseId) {
+        $warehouse = Warehouse::model()->findByPk($warehouseId);
+        $warehouse->status = 'Active';
+        $warehouse->is_approved = 1;
+
+        if ($warehouse->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionWarehouseReject($warehouseId) {
+        $warehouse = Warehouse::model()->findByPk($warehouseId);
+        $warehouse->status = 'Reject';
+        $warehouse->is_approved = 2;
+
+        if ($warehouse->update(array('is_approved', 'status'))) {
+            $this->redirect(array('index'));
+        }
+    }
 }

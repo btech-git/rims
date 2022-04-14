@@ -2,6 +2,7 @@
     <table>
         <thead>
             <tr>
+                <th class="required">ID</th>
                 <th class="required">Code</th>
                 <th class="required">Product</th>
                 <th class="required">Transaction Quantity</th>
@@ -20,6 +21,7 @@
                 $list = CHtml::listData($warehouses, 'id', 'name');
                 ?>
                 <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, "product.id")); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($detail, "product.manufacturer_code")); ?></td>
                     
                     <td>

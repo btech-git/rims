@@ -2,6 +2,7 @@
     <table>
         <thead>
             <tr>
+                <th class="required">ID</th>
                 <th class="required">Product</th>
                 <th>Code</th>
                 <th>Kategori</th>
@@ -25,6 +26,7 @@
                 $product = Product::model()->findByPK($detail->product_id);
                 ?>
                 <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, "product.id")); ?></td>
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]delivery_order_detail_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]return_order_detail_id"); ?>

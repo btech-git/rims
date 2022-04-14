@@ -73,21 +73,8 @@ class WarehouseController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        //$model=new Warehouse;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['Warehouse']))
-        // {
-        // 	$model->attributes=$_POST['Warehouse'];
-        // 	$model->status='Active';
-        // 	if($model->save())
-        // 		$this->redirect(array('admin'));
-        // 		//$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('create',array(
-        // 	'model'=>$model,
-        // ));
         $warehouse = $this->instantiate(null);
+        $warehouse->header->user_id = Yii::app()->user->id;
 
         $branch = new Warehouse('search');
         $branch->unsetAttributes();  // clear any default values
@@ -95,7 +82,6 @@ class WarehouseController extends Controller {
             $branch->attributes = $_GET['Branch'];
 
         $branchCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $branchCriteria->compare('name', $branch->name, true);
 
         $branchDataProvider = new CActiveDataProvider('Branch', array(

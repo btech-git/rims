@@ -19,9 +19,9 @@ $this->menu = array(
 <!--<div class="row">
         <div class="small-12 columns">
                 <div class="breadcrumbs">
-                        <a href="<?php echo Yii::app()->baseUrl . '/site/index'; ?>">Home</a>
+                        <a href="<?php /*echo Yii::app()->baseUrl . '/site/index'; ?>">Home</a>
                         <a href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>">Vehicle</a>
-                        <a href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>">Vehicles</a>
+                        <a href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin';*/ ?>">Vehicles</a>
                         <span>View Vehicles</span>
                 </div>
         </div>
@@ -180,132 +180,5 @@ $this->menu = array(
                 )); ?>
             </div>
         </fieldset>
-<!--        <fieldset>
-            <legend>Transaction History</legend>
-            <?php /*foreach ($registrationTransactions as $i => $regDetail): ?>
-                <div class="row">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Transaction #</th>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Branch</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><?php echo $regDetail->transaction_number; ?></td>
-                                <td><?php echo $regDetail->transaction_date; ?></td>
-                                <td><?php echo $regDetail->repair_type; ?></td>
-                                <td><?php echo $regDetail->branch_id != "" ? $regDetail->branch->name : ''; ?></td>
-                                <td><?php echo Yii::app()->numberFormatter->format("#,##0.00", $regDetail->grand_total); ?></td>
-                                <td><?php echo $regDetail->status; ?></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="large-6 columns">
-                        <div class="row">
-                            <div class="small-4 columns">Details</b></div>
-                            <div class="small-8 columns">
-                                <?php echo CHtml::tag('button', array(
-                                    // 'name'=>'btnSubmit',
-                                    'type' => 'button',
-                                    'class' => 'hello button expand',
-                                    'onclick' => '$("#transaction-detail-' . $i . '").toggle();'
-                                ), '<span class="fa fa-caret-down"></span> Detail'); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="transaction-detail-<?php echo $i ?>" class="hide">
-                    <div class="large-12 columns">
-                        <table>
-                            <caption>Service</caption>
-                            <thead>
-                                <th>Service name</th>
-                                <th>Claim</th>
-                                <th>Price</th>
-                                <th>Discount Type</th>
-                                <th>Discount Price</th>
-                                <th>Total Price</th>
-                                <th>Hour</th>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($regDetail->registrationServices as $key => $service): ?>
-                                    <?php if ($service->is_body_repair == 0 && $service->is_quick_service == 0) : ?>
-                                        <tr>
-                                            <td><?php echo $service->service->name; ?></td>
-                                            <td><?php echo $service->claim; ?></td>
-                                            <td><?php echo number_format($service->price, 2); ?></td>
-                                            <td><?php echo $service->discount_type; ?></td>
-                                            <td><?php echo $service->discount_type == 'Percent' ? $service->discount_price : number_format($service->discount_price, 0); ?></td>
-                                            <td><?php echo number_format($service->total_price, 2); ?></td>
-                                            <td><?php echo $service->hour; ?></td>
-
-                                        </tr>
-                                    <?php endif; ?>
-                                <?php endforeach ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="large-12 columns">
-                        <table>
-                            <caption>Product</caption>
-                            <thead>
-                                <tr>
-                                    <th>Product name</th>
-                                    <th>Quantity</th>
-                                    <th>Retail Price</th>
-                                    <th>HPP</th>
-                                    <th>Sale Price</th>
-                                    <th>Discount Type</th>
-                                    <th>Discount</th>
-                                    <th>Total Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($regDetail->registrationProducts as $key => $product): ?>
-                                    <?php if ($product->is_material == 0): ?>
-                                        <tr>
-                                            <td><?php echo $product->product->name; ?></td>
-                                            <td><?php echo $product->quantity; ?></td>
-                                            <td><?php echo number_format($product->retail_price, 2); ?></td>
-                                            <td><?php echo number_format($product->hpp, 2); ?></td>
-                                            <td><?php echo number_format($product->sale_price, 2); ?></td>
-                                            <td><?php echo $product->discount_type; ?></td>
-                                            <td><?php echo $product->discount_type == 'Percent' ? $product->discount : number_format($product->discount, 0); ?></td>
-                                            <td><?php echo number_format($product->total_price, 2); ?></td>
-                                        </tr>
-                                    <?php endif ?>
-                                <?php endforeach ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="large-12 columns">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Inspection Date</th>
-                                    <th>Inspection</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($model->vehicleInspections as $key => $inspectionDetail): ?>
-                                    <tr>
-                                        <td><?php echo $inspectionDetail->inspection_date; ?></td>
-                                        <td><?php echo $inspectionDetail->inspection->name; ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            <?php endforeach;*/ ?>
-        </fieldset>-->
     </div>
 </div>

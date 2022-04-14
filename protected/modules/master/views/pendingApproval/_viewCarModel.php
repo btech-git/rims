@@ -27,5 +27,28 @@
                 'Inactive' => 'Inactive',
             )),
         ),
+        'user.username',
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{approve} {reject}',
+            'buttons'=>array (
+                'approve' => array (
+                    'label'=>'approve',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/modelApproval", array("modelId"=>$data->id))',
+//                    'imageUrl'=> Yii::app()->baseUrl . '/images/icons/check_green.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Approve this car model?',
+                    ),
+                ),
+                'reject' => array (
+                    'label'=>'reject',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/modelReject", array("modelId"=>$data->id))',
+                    'imageUrl'=> '/images/icons/cancel.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Reject this car model?',
+                    ),
+                ),
+            ),
+        ),
     ),
 )); ?>

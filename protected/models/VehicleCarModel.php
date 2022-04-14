@@ -11,6 +11,7 @@
  * @property integer $service_group_id
  * @property string $status
  * @property integer $is_approved
+ * @property integer $user_id
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -22,6 +23,7 @@
  * @property VehicleCarMake $carMake
  * @property VehicleCarSubModel[] $vehicleCarSubModels
  * @property VehicleCarSubModelDetail[] $vehicleCarSubModelDetails
+ * @property User $user
  */
 class VehicleCarModel extends CActiveRecord {
 
@@ -41,14 +43,14 @@ class VehicleCarModel extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, car_make_id, service_group_id, status', 'required'),
-            array('car_make_id, service_group_id, is_approved', 'numerical', 'integerOnly' => true),
+            array('name, car_make_id, service_group_id, status, user_id', 'required'),
+            array('car_make_id, service_group_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 30),
             array('description', 'length', 'max' => 60),
             array('status', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, description, car_make_id, service_group_id, car_make, status, is_approved', 'safe', 'on' => 'search'),
+            array('id, name, description, car_make_id, service_group_id, car_make, status, is_approved, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -68,6 +70,7 @@ class VehicleCarModel extends CActiveRecord {
             'serviceGroup' => array(self::BELONGS_TO, 'ServiceGroup', 'service_group_id'),
             'vehicleCarSubModels' => array(self::HAS_MANY, 'VehicleCarSubModel', 'car_model_id'),
             'vehicleCarSubModelDetails' => array(self::HAS_MANY, 'VehicleCarSubModelDetail', 'car_model_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 
@@ -83,6 +86,7 @@ class VehicleCarModel extends CActiveRecord {
             'service_group_id' => 'Service Group',
             'status' => 'Status',
             'is_approved' => 'Approval',
+            'user_id' => 'User Input',
         );
     }
 
@@ -110,6 +114,7 @@ class VehicleCarModel extends CActiveRecord {
         $criteria->compare('t.service_group_id', $this->service_group_id);
         $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('t.user_id', $this->user_id);
 
         $criteria->together = 'true';
         $criteria->with = array('carMake');

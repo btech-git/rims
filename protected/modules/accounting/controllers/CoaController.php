@@ -89,6 +89,7 @@ class CoaController extends Controller {
      */
     public function actionCreate() {
         $model = new Coa;
+        $model->user_id = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);

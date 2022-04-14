@@ -71,6 +71,7 @@ class InventoryController extends Controller {
         $this->render('detail', array(
             'detailTabs' => $detailTabs,
             'product' => $product,
+            'branches' => $branches,
         ));
     }
 

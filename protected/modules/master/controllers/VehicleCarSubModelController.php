@@ -46,6 +46,7 @@ class VehicleCarSubModelController extends Controller {
      */
     public function actionCreate() {
         $model = new VehicleCarSubModel;
+        $model->user_id = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);

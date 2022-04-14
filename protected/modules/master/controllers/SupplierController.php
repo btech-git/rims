@@ -45,6 +45,7 @@ class SupplierController extends Controller {
      */
     public function actionCreate() {
         $supplier = $this->instantiate(null);
+        $supplier->header->user_id = Yii::app()->user->id;
         $this->performAjaxValidation($supplier->header);
 
         $bank = new Bank('search');

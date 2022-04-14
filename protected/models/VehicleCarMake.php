@@ -9,6 +9,7 @@
  * @property string $status
  * @property integer $service_difficulty_rate
  * @property integer $is_approved
+ * @property integer $user_id
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -19,6 +20,7 @@
  * @property VehicleCarModel[] $vehicleCarModels
  * @property VehicleCarSubModel[] $vehicleCarSubModels
  * @property VehicleCarSubModelDetail[] $vehicleCarSubModelDetails
+ * @property User $user
  */
 class VehicleCarMake extends CActiveRecord {
 
@@ -46,13 +48,13 @@ class VehicleCarMake extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, status, service_difficulty_rate', 'required'),
+            array('name, status, service_difficulty_rate, user_id', 'required'),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
-            array('service_difficulty_rate, is_approved', 'numerical', 'integerOnly' => true),
+            array('service_difficulty_rate, is_approved, user_id', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, status, service_difficulty_rate, is_approved', 'safe', 'on' => 'search'),
+            array('id, name, status, service_difficulty_rate, is_approved, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -71,6 +73,7 @@ class VehicleCarMake extends CActiveRecord {
             'vehicleCarModels' => array(self::HAS_MANY, 'VehicleCarModel', 'car_make_id'),
             'vehicleCarSubModels' => array(self::HAS_MANY, 'VehicleCarSubModel', 'car_make_id'),
             'vehicleCarSubModelDetails' => array(self::HAS_MANY, 'VehicleCarSubModelDetail', 'car_make_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 
@@ -84,6 +87,7 @@ class VehicleCarMake extends CActiveRecord {
             'status' => 'Status',
             'service_difficulty_rate' => 'Service Difficulty Rate',
             'is_approved' => 'Approval',
+            'user_id' => 'User Input',
         );
     }
 
@@ -109,6 +113,7 @@ class VehicleCarMake extends CActiveRecord {
         $criteria->compare('t.service_difficulty_rate', $this->service_difficulty_rate);  
         $criteria->compare('t.is_approved', $this->is_approved);      
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('t.user_id', $this->user_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

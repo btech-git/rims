@@ -134,6 +134,7 @@ class ServiceController extends Controller {
 
         $service = $this->instantiate(null);
         $service->header->difficulty_level = 1;
+        $service->header->user_id = Yii::app()->user->id;
 
         $complement = new Service('search');
         $complement->unsetAttributes();  // clear any default values

@@ -7,7 +7,6 @@
         'cssFile'=>false,
         'header'=>'',
     ),
-    //'summaryText'=>'',
     'columns'=>array(
         array(
             'name'=>'name', 
@@ -25,6 +24,29 @@
                 'Active' => 'Active',
                 'Inactive' => 'Inactive',
             )),
+        ),
+        'user.username',
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{approve} {reject}',
+            'buttons'=>array (
+                'approve' => array (
+                    'label'=>'approve',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/makeApproval", array("makeId"=>$data->id))',
+//                    'imageUrl'=> Yii::app()->baseUrl . '/images/icons/check_green.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Approve this car make?',
+                    ),
+                ),
+                'reject' => array (
+                    'label'=>'reject',
+                    'url'=>'Yii::app()->createUrl("master/pendingApproval/makeReject", array("makeId"=>$data->id))',
+                    'imageUrl'=> '/images/icons/cancel.png',
+                    'options' => array(
+                        'confirm' => 'Are you sure to Reject this car make?',
+                    ),
+                ),
+            ),
         ),
     ),
 )); ?>

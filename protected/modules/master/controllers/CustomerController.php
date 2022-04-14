@@ -105,7 +105,10 @@ class CustomerController extends Controller {
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,
         ));
+        
         $customer = $this->instantiate(null);
+        $customer->header->user_id = Yii::app()->user->id;
+        
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service']))

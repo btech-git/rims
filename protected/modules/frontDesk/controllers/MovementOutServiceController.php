@@ -47,7 +47,7 @@ class MovementOutServiceController extends Controller {
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
         $vehicleNumber = isset($_GET['VehicleNumber']) ? $_GET['VehicleNumber'] : '';
 
-        $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
+        $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOutService();
         $registrationTransactionDataProvider->criteria->with = array(
             'customer',
             'vehicle',

@@ -20,6 +20,7 @@
  * @property string $date
  * @property integer $is_approved
  * @property string $date_approval
+ * @property integer $user_id
  *
  * The followings are the available model relations:
  * @property CashTransaction[] $cashTransactions
@@ -36,6 +37,7 @@
  * @property TransactionPurchaseOrder[] $transactionPurchaseOrders
  * @property TransactionSalesOrder[] $transactionSalesOrders
  * @property Bank[] $banks
+ * @property User $user
  */
 class Coa extends CActiveRecord {
 
@@ -57,8 +59,8 @@ class Coa extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, coa_category_id, coa_sub_category_id', 'required'),
-            array('coa_category_id, coa_sub_category_id, coa_id, is_approved', 'numerical', 'integerOnly' => true),
+            array('name, coa_category_id, coa_sub_category_id, user_id', 'required'),
+            array('coa_category_id, coa_sub_category_id, coa_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 50),
             array('normal_balance', 'length', 'max' => 10),
             array('code', 'length', 'max' => 15),
@@ -68,7 +70,7 @@ class Coa extends CActiveRecord {
             array('date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date, is_approved, date_approval', 'safe', 'on' => 'search'),
+            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -95,6 +97,7 @@ class Coa extends CActiveRecord {
             'coaIds' => array(self::HAS_MANY, 'Coa', 'coa_id'),
             'jurnalUmums' => array(self::HAS_MANY, 'JurnalUmum', 'coa_id'),
             'banks' => array(self::HAS_MANY, 'Bank', 'coa_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 
@@ -115,6 +118,7 @@ class Coa extends CActiveRecord {
             'credit' => 'Credit',
             'is_approved' => 'Approval',
             'date_approval' => 'Tanggal Approval',
+            'user_id' => 'User Input',
         );
     }
 
@@ -147,6 +151,7 @@ class Coa extends CActiveRecord {
         $criteria->compare('credit', $this->credit, true);
         $criteria->compare('t.is_approved', 1);
         $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
 
         $criteria->together = true;
         $criteria->with = array('coaCategory', 'coaSubCategory');

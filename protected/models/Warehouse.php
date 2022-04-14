@@ -14,6 +14,7 @@
  * @property integer $branch_id
  * @property integer $is_approved
  * @property string $date_approval
+ * @property integer $user_id
  *
  * The followings are the available model relations:
  * @property BranchWarehouse[] $branchWarehouses
@@ -22,6 +23,7 @@
  * @property WarehouseDivision[] $warehouseDivisions
  * @property WarehouseSection[] $warehouseSections
  * @property Branch $branch
+ * @property User $user
  */
 class Warehouse extends CActiveRecord {
 
@@ -41,8 +43,8 @@ class Warehouse extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('code, name, description, row, column', 'required'),
-            array('row, column, branch_id, is_approved', 'numerical', 'integerOnly' => true),
+            array('code, name, description, row, column, user_id', 'required'),
+            array('row, column, branch_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 50),
             array('description', 'length', 'max' => 100),
@@ -50,7 +52,7 @@ class Warehouse extends CActiveRecord {
             array('date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, name, description, row, column, status, warehouses, branch_id', 'safe', 'on' => 'search'),
+            array('id, code, name, description, row, column, status, warehouses, branch_id, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -67,6 +69,7 @@ class Warehouse extends CActiveRecord {
             'warehouseDivisions' => array(self::HAS_MANY, 'WarehouseDivision', 'warehouse_id'),
             'warehouseSections' => array(self::HAS_MANY, 'WarehouseSection', 'warehouse_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 
@@ -85,6 +88,7 @@ class Warehouse extends CActiveRecord {
             'branch_id' => 'Branch',
             'is_approved' => 'Approval',
             'date_approval' => 'Tanggal Approval',
+            'user_id' => 'User Input',
         );
     }
 
@@ -115,6 +119,7 @@ class Warehouse extends CActiveRecord {
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

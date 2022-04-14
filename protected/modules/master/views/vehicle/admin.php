@@ -81,7 +81,7 @@ $('.search-form form').submit(function(){
                     'name'=>'customer_id',
                     'header' => 'Customer',
                     'filter' => CHtml::textField('CustomerName', $customerName),
-                    'value'=>'empty($data->customer_id) ? "" : $data->customer->name'
+                    'value'=>'CHtml::encode(CHtml::value($data, "customer.name"))'
                 ),
                 array(
                     'header' => 'Type',
@@ -89,7 +89,7 @@ $('.search-form form').submit(function(){
                         'Company' => 'Company', 
                         'Individual' => 'Individual'
                     ), array('empty' => '-- All --')),
-                    'value'=>'empty($data->customer_id) ? "" : $data->customer->customer_type'
+                    'value'=>'CHtml::encode(CHtml::value($data, "customer.customer_type"))'
                 ),
                 'machine_number',
                 'frame_number',
