@@ -42,6 +42,7 @@ $this->menu=array(
                     'name' =>'purchase_type',
                     'value'=>$model->getPurchaseStatus($model->purchase_type),
                 ),
+                'tax_percentage',
                 array(
                     'name' =>'ppn',
                     'label' => 'PPN/NON',

@@ -27,6 +27,7 @@
  * @property string $ppn_price
  * @property string $note
  * @property string $created_date_time
+ * @property integer $tax_percentage
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
@@ -75,15 +76,15 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sale_order_no, sale_order_date, status_document, payment_type, requester_id, requester_branch_id, customer_id, total_quantity, total_price, created_datetime', 'required'),
-            array('requester_id, requester_branch_id, approved_id, approved_branch_id, customer_id, total_quantity, company_bank_id, ppn', 'numerical', 'integerOnly' => true),
+            array('sale_order_no, sale_order_date, status_document, payment_type, requester_id, requester_branch_id, customer_id, total_quantity, total_price, created_datetime, tax_percentage', 'required'),
+            array('requester_id, requester_branch_id, approved_id, approved_branch_id, customer_id, total_quantity, company_bank_id, ppn, tax_percentage', 'numerical', 'integerOnly' => true),
             array('sale_order_no, status_document, payment_type', 'length', 'max' => 30),
             array('total_price, price_before_discount, subtotal, discount, ppn_price', 'length', 'max' => 18),
             array('estimate_arrival_date, estimate_payment_date, note', 'safe'),
             array('sale_order_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, sale_order_no, sale_order_date, status_document, payment_type, estimate_arrival_date, requester_id, requester_branch_id, approved_id, approved_branch_id, customer_id, total_quantity, total_price, estimate_payment_date, company_bank_id, price_before_discount, subtotal, discount, ppn_price, ppn, customer_name, created_datetime', 'safe', 'on' => 'search'),
+            array('id, sale_order_no, sale_order_date, status_document, payment_type, estimate_arrival_date, requester_id, requester_branch_id, approved_id, approved_branch_id, customer_id, total_quantity, total_price, estimate_payment_date, company_bank_id, price_before_discount, subtotal, discount, ppn_price, ppn, customer_name, created_datetime, tax_percentage', 'safe', 'on' => 'search'),
         );
     }
 
@@ -136,7 +137,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
             'ppn' => 'Ppn',
             'ppn_price' => 'Ppn Price',
             'note' => 'Note',
-                //'coa_id' => 'Coa',
+            'tax_percentage' => 'PPn %',
         );
     }
 
@@ -173,6 +174,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('ppn', $this->ppn);
         $criteria->compare('ppn_price', $this->ppn_price, true);
         $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
 
         $criteria->together = 'true';
         $criteria->with = array('customer');

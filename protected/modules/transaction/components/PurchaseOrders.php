@@ -129,9 +129,9 @@ class PurchaseOrders extends CComponent {
 //        $this->header->total_quantity = $this->totalQuantity;
 //        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
 //        $this->header->discount = $this->subTotalDiscount;
-//        $this->header->ppn_price = $this->taxAmount;
+        $this->header->ppn_price = $this->taxAmount;
 //        $this->header->subtotal = $this->subTotal;
-//        $this->header->total_price = $this->grandTotal;
+        $this->header->total_price = $this->grandTotal;
         $this->header->payment_amount = 0;
         $this->header->payment_left = $this->grandTotal;
         $valid = $this->header->save();
@@ -147,8 +147,9 @@ class PurchaseOrders extends CComponent {
         //save request detail
         foreach ($this->details as $detail) {
             $detail->purchase_order_id = $this->header->id;
-            $detail->unit_price = $detail->getUnitPrice($this->header->ppn);
-            $detail->total_price = $detail->getSubTotal($this->header->ppn);
+            $detail->unit_price = $detail->getUnitPrice($this->header->ppn, $this->header->tax_percentage);
+            $detail->total_price = $detail->getSubTotal($this->header->ppn, $this->header->tax_percentage);
+            $detail->tax_amount = $detail->getTaxAmount($this->header->ppn, $this->header->tax_percentage);
             $detail->total_quantity = $detail->quantityAfterBonus;
 
             if ($isNewRecord) {
@@ -202,15 +203,12 @@ class PurchaseOrders extends CComponent {
         }
         
         if (!$isNewRecord) {
+            $subTotal = $this->header->subtotal;
             if ($this->header->payment_type == "Cash") {
-                $getCoaKas = '101.00.000';
-                $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-                $subTotal = $this->header->subtotal;
-                
                 $jurnalUmumKas = new JurnalUmum;
                 $jurnalUmumKas->kode_transaksi = $this->header->purchase_order_no;
                 $jurnalUmumKas->tanggal_transaksi = $this->header->purchase_order_date;
-                $jurnalUmumKas->coa_id = $coaKasWithCode->id;
+                $jurnalUmumKas->coa_id = 1492;
                 $jurnalUmumKas->branch_id = $this->header->main_branch_id;
                 $jurnalUmumKas->total = $subTotal;
                 $jurnalUmumKas->debet_kredit = 'K';
@@ -220,11 +218,10 @@ class PurchaseOrders extends CComponent {
                 $jurnalUmumKas->transaction_type = 'PO';
                 $jurnalUmumKas->save();
             } else {
-                $getCoaPayableWithCode = Coa::model()->findByAttributes(array('code' => '201.00.000'));
                 $jurnalUmumPayable = new JurnalUmum;
                 $jurnalUmumPayable->kode_transaksi = $this->header->purchase_order_no;
                 $jurnalUmumPayable->tanggal_transaksi = $this->header->purchase_order_date;
-                $jurnalUmumPayable->coa_id = $getCoaPayableWithCode->id;
+                $jurnalUmumPayable->coa_id = $this->header->supplier->coa_id;
                 $jurnalUmumPayable->branch_id = $this->header->main_branch_id;
                 $jurnalUmumPayable->total = $subTotal;
                 $jurnalUmumPayable->debet_kredit = 'D';
@@ -354,27 +351,22 @@ class PurchaseOrders extends CComponent {
         $total = 0.00;
 
         foreach ($this->details as $detail) {
-            $total += $detail->getTotalPriceBeforeTax($this->header->ppn);
+            $total += $detail->getTotalPriceBeforeTax($this->header->ppn, $this->header->tax_percentage);
         }
 
         return $total;
     }
 
     public function getTaxAmount() {
-        $total = 0.00;
 
-        foreach ($this->details as $detail) {
-            $total += $detail->getTaxAmount($this->header->ppn);
-        }
-
-        return $total;
+        return $this->subTotal * $this->header->tax_percentage / 100;
     }
 
     public function getGrandTotal() {
         $total = 0.00;
 
         foreach ($this->details as $detail) {
-            $total += $detail->getSubTotal($this->header->ppn);
+            $total += $detail->getSubTotal($this->header->ppn, $this->header->tax_percentage);
         }
 
         return $total;

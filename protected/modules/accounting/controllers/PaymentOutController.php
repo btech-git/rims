@@ -255,33 +255,26 @@ class PaymentOutController extends Controller {
                     $jurnalHutang->transaction_type = 'Pout';
                     $jurnalHutang->save();
 
-                    if ($paymentOut->payment_type == "Cash") {
-                        $jurnalUmumKas = new JurnalUmum;
-                        $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
-                        $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
-                        $jurnalUmumKas->coa_id = 19;
-                        $jurnalUmumKas->branch_id = $paymentOut->branch_id;
-                        $jurnalUmumKas->total = $paymentOut->payment_amount;
-                        $jurnalUmumKas->debet_kredit = 'K';
-                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumKas->transaction_subject = $paymentOut->supplier->name;
-                        $jurnalUmumKas->is_coa_category = 0;
-                        $jurnalUmumKas->transaction_type = 'Pout';
-                        $jurnalUmumKas->save();
+                    if ((int) $paymentOut->payment_type_id === 1) {
+                        $coaId = 1492;
+                    } elseif ((int) $paymentOut->payment_type_id === 11) { 
+                        $coaId = 19;
                     } else {
-                        $jurnalUmumBank = new JurnalUmum;
-                        $jurnalUmumBank->kode_transaksi = $paymentOut->payment_number;
-                        $jurnalUmumBank->tanggal_transaksi = $paymentOut->payment_date;
-                        $jurnalUmumBank->coa_id = $paymentOut->companyBank->coa_id;
-                        $jurnalUmumBank->branch_id = $paymentOut->branch_id;
-                        $jurnalUmumBank->total = $paymentOut->payment_amount;
-                        $jurnalUmumBank->debet_kredit = 'K';
-                        $jurnalUmumBank->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumBank->transaction_subject = $paymentOut->supplier->name;
-                        $jurnalUmumBank->is_coa_category = 0;
-                        $jurnalUmumBank->transaction_type = 'Pout';
-                        $jurnalUmumBank->save();
+                        $coaId = $paymentOut->companyBank->coa_id;
                     }
+                    
+                    $jurnalUmumKas = new JurnalUmum;
+                    $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
+                    $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
+                    $jurnalUmumKas->coa_id = $coaId;
+                    $jurnalUmumKas->branch_id = $paymentOut->branch_id;
+                    $jurnalUmumKas->total = $paymentOut->payment_amount;
+                    $jurnalUmumKas->debet_kredit = 'K';
+                    $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumKas->transaction_subject = $paymentOut->supplier->name;
+                    $jurnalUmumKas->is_coa_category = 0;
+                    $jurnalUmumKas->transaction_type = 'Pout';
+                    $jurnalUmumKas->save();
                 }
 
                 $this->redirect(array('view', 'id' => $headerId));

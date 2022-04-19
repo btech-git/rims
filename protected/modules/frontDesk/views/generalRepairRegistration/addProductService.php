@@ -109,6 +109,21 @@ $this->breadcrumbs=array(
                                                     }',
                                                 )),
                                             )); ?>
+                                            <?php echo CHtml::activeDropDownList($generalRepairRegistration->header, 'tax_percentage', array(
+                                                0 => 0,
+                                                10 => 10,
+                                                11 => 11,
+                                            ), array(
+                                                'onchange' => CHtml::ajax(array(
+                                                    'type' => 'POST',
+                                                    'dataType' => 'JSON',
+                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)),
+                                                    'success' => 'function(data) {
+                                                        $("#grand_total_transaction").html(data.grandTotal);
+                                                        $("#tax_item_amount").html(data.taxItemAmount);
+                                                    }',
+                                                )),
+                                            )); ?>
                                         </td>
                                         <td>
                                             <?php echo CHtml::activeCheckBox($generalRepairRegistration->header,'pph', array(
@@ -456,7 +471,7 @@ $this->breadcrumbs=array(
                             <div class="row">
                                 <div class="medium-12 columns">
                                     <div class="field buttons text-center">
-                                        <?php echo CHtml::hiddenField('_FormSubmit_', ''); ?>
+                                        <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
                                         <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
                                         <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton')); ?>
                                     </div>

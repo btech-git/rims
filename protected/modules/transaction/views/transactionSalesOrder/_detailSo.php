@@ -534,7 +534,7 @@
                 </span>
             </td>
             <td colspan="3">Sub Total</td>
-            <td>
+            <td style="text-align:right">
                 <span id="sub_total_detail_<?php echo $i; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'subTotal'))); ?>
                 </span>
@@ -549,7 +549,7 @@
                 </span>
             </td>
             <td colspan="3">PPn</td>
-            <td>
+            <td style="text-align:right">
                 <span id="tax_detail_<?php echo $i; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($salesOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($salesOrder->header->ppn))); ?>
                 </span>
@@ -559,7 +559,7 @@
         <tr>
             <td colspan="2">&nbsp;</td>
             <td colspan="3">Grand Total</td>
-            <td>
+            <td style="text-align:right">
                 <span id="grand_total_detail_<?php echo $i; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'grandTotal'))); ?>
                 </span>

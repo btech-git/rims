@@ -30,6 +30,7 @@
  * @property integer $coa_bank_id_estimate
  * @property integer $purchase_type
  * @property string $created_date_time
+ * @property integer $tax_percentage
  *
  * The followings are the available model relations:
  * @property PaymentOut[] $paymentOuts
@@ -81,8 +82,8 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, created_datetime', 'required'),
-            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate', 'numerical', 'integerOnly' => true),
+            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, created_datetime, tax_percentage', 'required'),
+            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
@@ -91,7 +92,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage', 'safe', 'on' => 'search'),
         );
     }
 
@@ -146,6 +147,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'payment_date_estimate' => 'Estimate Payment Date',
             'purchase_type' => 'Purchase Type',
             'coa_bank_id_estimate' => 'Coa Bank',
+            'tax_percentage' => 'PPn %',
         );
     }
 
@@ -190,6 +192,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
         $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
         $criteria->compare('t.purchase_type', $this->purchase_type, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
 
         $criteria->together = 'true';
         $criteria->with = array('supplier');
@@ -324,40 +327,6 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
         return ($totalRemaining = $this->total_quantity) ? 'Partial' : 'Pending';
     }
-
-//    public function searchForPaymentOut() {
-//        $criteria = new CDbCriteria;
-//
-//        $criteria->condition = " payment_left > 0 ";
-//        
-//        $criteria->compare('id', $this->id);
-//        $criteria->compare('purchase_order_no', $this->purchase_order_no, true);
-//        $criteria->compare('purchase_order_date', $this->purchase_order_date, true);
-//        $criteria->compare('status_document', $this->status_document, true);
-//        $criteria->compare('supplier_id', $this->supplier_id);
-//        $criteria->compare('payment_type', $this->payment_type, true);
-//        $criteria->compare('estimate_date_arrival', $this->estimate_date_arrival, true);
-//        $criteria->compare('requester_id', $this->requester_id);
-//        $criteria->compare('main_branch_id', $this->main_branch_id);
-//        $criteria->compare('approved_id', $this->approved_id);
-//        $criteria->compare('total_quantity', $this->total_quantity);
-//        $criteria->compare('price_before_discount', $this->price_before_discount, true);
-//        $criteria->compare('discount', $this->discount, true);
-//        $criteria->compare('subtotal', $this->subtotal, true);
-//        $criteria->compare('ppn', $this->ppn);
-//        $criteria->compare('ppn_price', $this->ppn_price, true);
-//        $criteria->compare('total_price', $this->total_price, true);
-//        $criteria->compare('payment_amount', $this->payment_amount, true);
-//        $criteria->compare('payment_left', $this->payment_left, true);
-//        $criteria->compare('company_bank_id', $this->company_bank_id);
-//        $criteria->compare('payment_status', $this->payment_status, true);
-//        $criteria->compare('estimate_payment_date', $this->estimate_payment_date, true);
-//        $criteria->compare('purchase_type', $this->purchase_type, true);
-//
-//        return new CActiveDataProvider(get_class($this), array(
-//            'criteria' => $criteria,
-//        ));
-//    }
 
     public function getTotalPayment() {
         $total = 0.00;

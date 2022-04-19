@@ -675,12 +675,10 @@ class BodyRepairRegistration extends CComponent {
         ));
 
 //        if ($this->header->customer->customer_type == 'Company') {
-            $getCoaPiutang = ($this->header->customer->customer_type == 'Company') ? '121.00.001' : '121.00.002';
-            $coaReceivable = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
             $jurnalUmumReceivable = new JurnalUmum;
             $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
             $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
-            $jurnalUmumReceivable->coa_id = $coaReceivable->id;
+            $jurnalUmumReceivable->coa_id = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
             $jurnalUmumReceivable->branch_id = $this->header->branch_id;
             $jurnalUmumReceivable->total = $this->header->grand_total;
             $jurnalUmumReceivable->debet_kredit = 'D';
@@ -989,7 +987,7 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ($this->header->ppn == 1) ? $this->subTotalTransaction * .11 : 0;
+        return ($this->header->ppn == 1) ? $this->subTotalTransaction * $this->header->tax_percentage / 100 : 0;
     }
 
     public function getTaxServiceAmount() {

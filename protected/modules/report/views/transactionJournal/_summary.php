@@ -80,13 +80,13 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
             <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
                 
-            <?php if (!isset($journalRefs[$header->coa_id])): ?>
-                <?php $journalRefs[$header->coa_id] = array('debit' => 0, 'credit' => 0); ?>
+            <?php if (!isset($journalRefs[$header->branchAccountId])): ?>
+                <?php $journalRefs[$header->branchAccountId] = array('debit' => 0, 'credit' => 0); ?>
             <?php endif; ?>
-            <?php $journalRefs[$header->coa_id]['code'] = $header->branchAccountCode; ?>
-            <?php $journalRefs[$header->coa_id]['name'] = $header->branchAccountName; ?>
-            <?php $journalRefs[$header->coa_id]['debit'] += $amountDebit; ?>
-            <?php $journalRefs[$header->coa_id]['credit'] += $amountCredit; ?>
+            <?php $journalRefs[$header->branchAccountId]['code'] = $header->branchAccountCode; ?>
+            <?php $journalRefs[$header->branchAccountId]['name'] = $header->branchAccountName; ?>
+            <?php $journalRefs[$header->branchAccountId]['debit'] += $amountDebit; ?>
+            <?php $journalRefs[$header->branchAccountId]['credit'] += $amountCredit; ?>
             
             <?php $totalDebit += $amountDebit; ?>
             <?php $totalCredit += $amountCredit; ?>

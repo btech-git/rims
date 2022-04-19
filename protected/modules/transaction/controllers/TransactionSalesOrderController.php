@@ -399,7 +399,7 @@ class TransactionSalesOrderController extends Controller {
             $totalQuantityDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($salesOrder->details[$index], 'totalQuantity')));
             $subTotalDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($salesOrder->details[$index], 'subTotal')));
             $totalDiscountDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($salesOrder->details[$index], 'totalDiscount')));
-            $taxDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $salesOrder->details[$index]->getTaxAmount($salesOrder->header->ppn)));
+            $taxDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $salesOrder->details[$index]->getTaxAmount($salesOrder->header->ppn, $salesOrder->header->tax_percentage)));
             $grandTotalDetail = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($salesOrder->details[$index], 'grandTotal')));
             $subTotalBeforeDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $salesOrder->subTotalBeforeDiscount));
             $subTotalDiscount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $salesOrder->subTotalDiscount));
@@ -628,7 +628,6 @@ class TransactionSalesOrderController extends Controller {
         $salesOrder = $this->instantiate($id);
         
         if ($salesOrder->saveInvoice(Yii::app()->db)) {
-
             $this->redirect(array('view', 'id' => $id));
         }
     }

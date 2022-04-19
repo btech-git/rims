@@ -2,37 +2,6 @@
 <table>
     <?php foreach ($purchaseOrderDetails as $key => $purchaseOrderDetail): ?>
         <thead>
-<!--            <tr>
-                <?php /*$purchaseOrderDetailRequests = TransactionPurchaseOrderDetailRequest::model()->findAllByAttributes(array('purchase_order_detail_id'=>$purchaseOrderDetail->id)); ?>
-                <td colspan="8">
-                    <table>
-                        <tr>
-                            <td>Purchase Request no</td>
-                            <td>PR Quantity</td>
-                            <td>ETA</td>
-                            <td>Branch</td>
-                            <td>PO Quantity</td>
-                            <td>Notes</td>
-
-                        </tr>
-                        <?php foreach ($purchaseOrderDetailRequests as $key => $purchaseOrderDetailRequest): ?>
-                            <?php $requestOrder = TransactionRequestOrder::model()->findByPK($purchaseOrderDetailRequest->purchase_request_id);  ?>
-                            <?php $requestOrderDetail = TransactionRequestOrderDetail::model()->findByPK($purchaseOrderDetailRequest->purchase_request_detail_id);  ?>
-                            <?php $branch = Branch::model()->findByPK($purchaseOrderDetailRequest->purchase_request_branch_id);  ?>
-                            <tr>
-                                <td><?php echo $requestOrder->request_order_no; ?></td>
-                                <td><?php echo $purchaseOrderDetailRequest->purchase_request_quantity; ?></td>
-                                <td><?php echo $purchaseOrderDetailRequest->estimate_date_arrival; ?></td>
-                                <td><?php echo $branch->name; ?></td>
-                                <td><?php echo $purchaseOrderDetailRequest->purchase_order_quantity; ?></td>
-                                <td><?php echo $purchaseOrderDetailRequest->notes; ?></td>
-                            </tr>
-                        <?php endforeach*/ ?>
-
-                    </table>
-                </td>
-
-            </tr>-->
             <tr>
                 <td>Product</td>
                 <td>Quantity</td>

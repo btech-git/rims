@@ -109,6 +109,21 @@ $this->breadcrumbs=array(
                                                     }',
                                                 )),
                                             )); ?>
+                                            <?php echo CHtml::activeDropDownList($generalRepairRegistration->header, 'tax_percentage', array(
+                                                0 => 0,
+                                                10 => 10,
+                                                11 => 11,
+                                            ), array(
+                                                'onchange' => CHtml::ajax(array(
+                                                    'type' => 'POST',
+                                                    'dataType' => 'JSON',
+                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)),
+                                                    'success' => 'function(data) {
+                                                        $("#grand_total_transaction").html(data.grandTotal);
+                                                        $("#tax_item_amount").html(data.taxItemAmount);
+                                                    }',
+                                                )),
+                                            )); ?>
                                         </td>
                                         <td>
                                             <?php echo CHtml::activeCheckBox($bodyRepairRegistration->header,'pph', array(

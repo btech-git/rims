@@ -1196,6 +1196,7 @@ class TransactionPurchaseOrderController extends Controller {
             $purchaseOrder = $this->instantiate($id);
             $this->loadState($purchaseOrder);
             $tax = $purchaseOrder->header->ppn;
+            $taxPercentage = $purchaseOrder->header->tax_percentage;
             
             $discount1Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount1Amount')));
             $discount2Nominal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'discount2Amount')));
@@ -1207,11 +1208,11 @@ class TransactionPurchaseOrderController extends Controller {
             $priceAfterDiscount3 = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPriceAfterDiscount3')));
             $priceAfterDiscount4 = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPriceAfterDiscount4')));
             $priceAfterDiscount5 = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder->details[$index], 'unitPriceAfterDiscount5')));
-            $unitPriceAfterDiscount = $purchaseOrder->details[$index]->getUnitPrice($tax);
-            $subTotalDetail = $purchaseOrder->details[$index]->getSubTotal($tax);
-            $priceBeforeTax = $purchaseOrder->details[$index]->getPriceBeforeTax($tax);
-            $totalPriceBeforeTax = $purchaseOrder->details[$index]->getTotalPriceBeforeTax($tax);
-            $taxAmount = $purchaseOrder->details[$index]->getTaxAmount($tax);
+            $unitPriceAfterDiscount = $purchaseOrder->details[$index]->getUnitPrice($tax, $taxPercentage);
+            $subTotalDetail = $purchaseOrder->details[$index]->getSubTotal($tax, $taxPercentage);
+            $priceBeforeTax = $purchaseOrder->details[$index]->getPriceBeforeTax($tax, $taxPercentage);
+            $totalPriceBeforeTax = $purchaseOrder->details[$index]->getTotalPriceBeforeTax($tax, $taxPercentage);
+            $taxAmount = $purchaseOrder->details[$index]->getTaxAmount($tax, $taxPercentage);
             $totalQuantityDetail = $purchaseOrder->details[$index]->quantityAfterBonus;
             $totalDiscountDetail = $purchaseOrder->details[$index]->totalDiscount;
             $subTotalBeforeDiscount = $purchaseOrder->subTotalBeforeDiscount;

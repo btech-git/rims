@@ -138,31 +138,41 @@
                     </div>
                 </div>
                 
-                <div class="field" style="padding-bottom: 10px;">
+                <div class="field">
                     <div class="row collapse">
-                        <div class="small-12 columns">
-                            <?php echo CHtml::hiddenField('DetailIndex', ''); ?>
-                            <?php echo CHtml::button('Add Details', array(
-                                'id' => 'detail-button',
-                                'name' => 'Detail',
-                                'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
-                                'onclick' => '$("#product-dialog").dialog("open"); return false;
-                                    jQuery.ajax({
-                                        type: "POST",
-                                        url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
-                                        data: jQuery("form").serialize(),
-                                        success: function(html) {
-                                            jQuery("#detail").html(html);
-                                        },
-                                    });'
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'ppn'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->dropDownList($purchaseOrder->header, 'ppn', array(
+                                '3' => 'Include PPN',
+                                '1' => 'Add PPN', 
+                                '2' => 'Non PPN',
+                            ), array(
+                                'empty' => '-- Pilih PPN --',
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'url' => CController::createUrl('ajaxHtmlUpdateAllTax', array('id' => $purchaseOrder->header->id)),
+                                    'update' => '#detail',
+                                )),
                             )); ?>
-
-                            <?php Yii::app()->clientScript->registerScript('updateGridView', '$.updateGridView = function(gridID, name, value) {
-                                $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
-                                $.fn.yiiGridView.update(gridID, {data: $.param(
-                                    $("#"+gridID+" .filters input, #"+gridID+" .filters select")
-                                )});
-                            }', CClientScript::POS_READY); ?>
+                            <?php echo $form->error($purchaseOrder->header, 'ppn'); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'tax_percentage'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeDropDownList($purchaseOrder->header, 'tax_percentage', array(
+                                0 => 0,
+                                10 => 10,
+                                11 =>11,
+                            )); ?>
+                            <?php echo $form->error($purchaseOrder->header, 'tax_percentage'); ?>
                         </div>
                     </div>
                 </div>
@@ -332,25 +342,31 @@
                     </div>
                 </div>
                 
-                <div class="field">
+                <div class="field" style="padding-bottom: 10px;">
                     <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'ppn'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->dropDownList($purchaseOrder->header, 'ppn', array(
-                                '3' => 'Include PPN',
-                                '1' => 'Add PPN', 
-                                '2' => 'Non PPN',
-                            ), array(
-                                'empty' => '-- Pilih PPN --',
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'POST',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateAllTax', array('id' => $purchaseOrder->header->id)),
-                                    'update' => '#detail',
-                                )),
+                        <div class="small-12 columns">
+                            <?php echo CHtml::hiddenField('DetailIndex', ''); ?>
+                            <?php echo CHtml::button('Add Details', array(
+                                'id' => 'detail-button',
+                                'name' => 'Detail',
+                                'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
+                                'onclick' => '$("#product-dialog").dialog("open"); return false;
+                                    jQuery.ajax({
+                                        type: "POST",
+                                        url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
+                                        data: jQuery("form").serialize(),
+                                        success: function(html) {
+                                            jQuery("#detail").html(html);
+                                        },
+                                    });'
                             )); ?>
-                            <?php echo $form->error($purchaseOrder->header, 'ppn'); ?>
+
+                            <?php Yii::app()->clientScript->registerScript('updateGridView', '$.updateGridView = function(gridID, name, value) {
+                                $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
+                                $.fn.yiiGridView.update(gridID, {data: $.param(
+                                    $("#"+gridID+" .filters input, #"+gridID+" .filters select")
+                                )});
+                            }', CClientScript::POS_READY); ?>
                         </div>
                     </div>
                 </div>
@@ -367,42 +383,6 @@
             <div class="clearfix"></div>
 
             <div class="small-12 medium-12 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-12 columns">
-                            <?php /*echo CHtml::button('Total', array(
-                                    'id' => 'total-button',
-                                    'name' => 'Detail',
-                                    'onclick' => '
-									$.ajax({
-										type: "POST",
-										url: "' . CController::createUrl('ajaxGetTotal',
-                                            array('id' => $purchaseOrder->header->id,)) . '",
-										data: $("form").serialize(),
-										dataType: "json",
-										success: function(data) {
-											//console.log(data.total);
-											console.log(data.requestType);
-											$("#TransactionPurchaseOrder_total_price").val(data.total);
-											$("#TransactionPurchaseOrder_total_quantity").val(data.totalItems);
-											$("#TransactionPurchaseOrder_subtotal").val(data.subtotal);
-											$("#TransactionPurchaseOrder_price_before_discount").val(data.priceBeforeDisc);
-											$("#TransactionPurchaseOrder_discount").val(data.discount);
-											$("#TransactionPurchaseOrder_ppn_price").val(data.ppn);
-											
-											$("#view_total_price").val(data.total.toLocaleString(\'id\'));
-											$("#view_subtotal").val(data.subtotal.toLocaleString(\'id\'));
-											$("#view_price_before_discount").val(data.priceBeforeDisc.toLocaleString(\'id\'));
-											$("#view_ppn_price").val(data.ppn.toLocaleString(\'id\'));
-										},
-									});',
-                                )
-                            );*/
-                            ?>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="field">
                     <div class="row collapse">
                         <table>

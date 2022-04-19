@@ -141,6 +141,10 @@ class JurnalUmum extends CActiveRecord {
         return parent::model($className);
     }
 
+    public function getBranchAccountId() {
+        return $this->branch_id . '.' . $this->coa_id;
+    }
+
     public function getBranchAccountCode() {
         $branch = empty($this->branch) ? '' : $this->branch;
         $coa = empty($this->coa) ? '' : $this->coa;

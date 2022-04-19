@@ -130,49 +130,7 @@
                     ',
                 )); ?>
             </td>
-<!--            <td>
-                <span id="tax_amount_detail_<?php //echo $i; ?>">
-                    <?php /*echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
-                </span>
-            </td>
-            <td style="text-align: right">
-                <?php echo CHtml::activeTextField($detail, "[$i]unit_price", array(
-                    'readonly' => ((int)$purchaseOrder->header->ppn == 3) ? false : true,
-                    'onchange' => '
-                        $.ajax({
-                            type: "POST",
-                            dataType: "JSON",
-                            url: "' . CController::createUrl('ajaxJsonTotal', array('id' => $purchaseOrder->header->id, 'index' => $i)) . '",
-                            data: $("form").serialize(),
-                            success: function(data) {
-                                $("#tax_amount_detail_' . $i . '").html(data.taxDetail);
-                                $("#' . CHtml::activeId($detail, "[$i]retail_price") . '").val(data.retailPrice);
-                                $("#discount_1_nominal_' . $i . '").html(data.discount1Nominal);
-                                $("#discount_2_nominal_' . $i . '").html(data.discount2Nominal);
-                                $("#discount_3_nominal_' . $i . '").html(data.discount3Nominal);
-                                $("#discount_4_nominal_' . $i . '").html(data.discount4Nominal);
-                                $("#discount_5_nominal_' . $i . '").html(data.discount5Nominal);
-                                $("#price_after_discount_1_' . $i . '").html(data.priceAfterDiscount1);
-                                $("#price_after_discount_2_' . $i . '").html(data.priceAfterDiscount2);
-                                $("#price_after_discount_3_' . $i . '").html(data.priceAfterDiscount3);
-                                $("#price_after_discount_4_' . $i . '").html(data.priceAfterDiscount4);
-                                $("#price_after_discount_5_' . $i . '").html(data.priceAfterDiscount5);
-                                $("#total_quantity_detail_' . $i . '").html(data.totalQuantityDetail);
-                                $("#unit_price_detail_' . $i . '").html(data.unitPriceAfterDiscount);
-//                                $("#sub_total_detail_' . $i . '").html(data.subTotalDetail);
-                                $("#total_discount_detail_' . $i . '").html(data.totalDiscountDetail);
-                                $("#grand_total_detail_' . $i . '").html(data.grandTotalDetail);
-                                $("#sub_total_before_discount").html(data.subTotalBeforeDiscount);
-                                $("#sub_total_discount").html(data.subTotalDiscount);
-                                $("#sub_total").html(data.subTotal);
-                                $("#total_quantity").html(data.totalQuantity);
-                                $("#tax_value").html(data.taxValue);
-                                $("#grand_total").html(data.grandTotal);
-                            },
-                        });	
-                    ',
-                ));*/ ?>
-            </td>-->
+            
             <td width="5%">
                 <?php echo CHtml::button('X', array(
                     'onclick' => CHtml::ajax(array(
@@ -719,7 +677,7 @@
             <td style="text-align:right">
                 <?php echo CHtml::activeHiddenField($detail, "[$i]tax_amount"); ?>
                 <span id="tax_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($purchaseOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($purchaseOrder->header->ppn))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->getTaxAmount($purchaseOrder->header->ppn, $purchaseOrder->header->tax_percentage))); ?>
                 </span>
             </td>
             <td>&nbsp;</td>

@@ -48,6 +48,11 @@ Yii::app()->clientScript->registerScript('search', "
                     'id' => 'journal-adjustment-header-grid',
                     'dataProvider' => $journalVoucher->searchByAdmin(),
                     'filter' => $journalVoucher,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager'=>array(
+                       'cssFile'=>false,
+                       'header'=>'',
+                    ),
                     'columns' => array(
                         array(
                             'name' => 'transaction_number',

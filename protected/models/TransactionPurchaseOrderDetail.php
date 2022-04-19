@@ -302,7 +302,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return $this->unitPriceAfterDiscount4 - $this->discount5Amount;
     }
 
-    public function getUnitPrice($tax) {
+    public function getUnitPrice($tax, $taxPercentage) {
         $unitPrice = 0.00;
 
         if ($this->discount_step == 1) {
@@ -319,7 +319,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             $unitPrice = $this->retail_price;
         }
 
-        return ($tax == 1) ? $unitPrice * 1.1 : $unitPrice;
+        return ($tax == 1) ? $unitPrice * (1 + ($taxPercentage / 100)) : $unitPrice;
     }
 
     public function getQuantityAfterBonus() {
@@ -336,7 +336,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return $this->getDiscount1Amount() + $this->getDiscount2Amount() + $this->getDiscount3Amount() + $this->getDiscount4Amount() + $this->getDiscount5Amount();
     }
 
-    public function getSubTotal($tax) {
+    public function getSubTotal($tax, $taxPercentage) {
         $total = 0.00;
 
         if ($this->discount_step == 1)
@@ -352,10 +352,10 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         else
             $total = $this->quantity * $this->retail_price;
 
-        return ($tax == 1) ? $total * 1.1 : $total;
+        return ($tax == 1) ? $total * (1 + ($taxPercentage / 100)) : $total;
     }
 
-    public function getPriceBeforeTax($tax) {
+    public function getPriceBeforeTax($tax, $taxPercentage) {
         $unitPrice = 0.00;
 
         if ($this->discount_step == 1) {
@@ -372,37 +372,16 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             $unitPrice = $this->retail_price;
         }
 
-        return ($tax == 3) ? $this->getUnitPrice($tax) / 1.1 : $unitPrice;
+        return ($tax == 3) ? $this->getUnitPrice($tax) / (1 + ($taxPercentage / 100)) : $unitPrice;
     }
     
-    public function getTotalPriceBeforeTax($tax) {
-        return $this->getPriceBeforeTax($tax) * $this->quantity;
+    public function getTotalPriceBeforeTax($tax, $taxPercentage) {
+        return $this->getPriceBeforeTax($tax, $taxPercentage) * $this->quantity;
     }
     
-    public function getTaxAmount($tax) {
-        
-        return ($tax == 2) ? 0 : $this->getTotalPriceBeforeTax($tax) * 0.1;
+    public function getTaxAmount($tax, $taxPercentage) {
+        return ($tax == 2) ? 0 : $this->getTotalPriceBeforeTax($tax, $taxPercentage) * $taxPercentage / 100;
     }
-
-//    public function getTaxAmount($tax) {
-//        $taxAmount = 0;
-//
-//        if ($tax == 1) {
-//            $taxAmount = $this->subTotal * .1;
-//        } elseif ($tax == 3) {
-//            $taxAmount = $this->subTotal / 1.1;
-//        } else {
-//            $taxAmount = 0;
-//        }
-//
-//        return $taxAmount;
-//    }
-
-//    public function getGrandTotal($tax) {
-//        $taxAmount = empty($this->purchaseOrder) ? 0 : $this->getTaxAmount($tax);
-//
-//        return $this->subTotal + 0; //$this->getTaxAmount($tax);
-//    }
 
     public function getTotalBeforeDiscount() {
         return $this->quantity * $this->retail_price;

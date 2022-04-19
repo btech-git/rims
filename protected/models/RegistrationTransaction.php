@@ -54,6 +54,7 @@
  * @property string $transaction_date_out
  * @property string $transaction_time_out
  * @property integer $user_id_assign_mechanic
+ * @property integer $tax_percentage
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
@@ -114,8 +115,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('customer_id, vehicle_id, service_status, vehicle_status', 'required'),
-            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed, user_id_assign_mechanic', 'numerical', 'integerOnly' => true),
+            array('customer_id, vehicle_id, service_status, vehicle_status, tax_percentage', 'required'),
+            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed, user_id_assign_mechanic, tax_percentage', 'numerical', 'integerOnly' => true),
             array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, vehicle_status', 'length', 'max' => 30),
             array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, down_payment_amount', 'length', 'max' => 18),
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
@@ -124,7 +125,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, user_id_assign_mechanic', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, user_id_assign_mechanic, tax_percentage', 'safe', 'on' => 'search'),
         );
     }
 
@@ -219,7 +220,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'customer_work_order_number' => 'SPK #',
             'transaction_date_out' => 'Check Out Date',
             'transaction_time_out' => 'Check Out Time',
-            'user_id_assign_mechanic' => 'Assign Mechanic'
+            'user_id_assign_mechanic' => 'Assign Mechanic',
+            'tax_percentage' => 'PPn %',
         );
     }
 
@@ -289,6 +291,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('transaction_date_out', $this->transaction_date_out, true);
         $criteria->compare('transaction_time_out', $this->transaction_time_out, true);
         $criteria->compare('user_id_assign_mechanic', $this->user_id_assign_mechanic);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
 
         $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
         $criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate));

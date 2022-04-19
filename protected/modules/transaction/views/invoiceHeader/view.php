@@ -210,7 +210,7 @@ $this->menu = array(
                     <td>Rp. <?php echo number_format($model->subTotal, 2) ?></td>
                 </tr>
                 <tr>
-                    <td class="title">PPN(10%)</td>
+                    <td class="title">PPN <?php echo CHtml::encode(CHtml::value($model, 'tax_percentage')); ?>%</td>
                     <td>Rp. <?php echo $model->ppn == 1 ? number_format($model->ppn_total, 2) : 0.00; ?>
                         <?php //if ($model->status !=  "PAID"): ?>
 <?php //echo CHtml::link('PPN<span class="fa fa-question"></span>', Yii::app()->baseUrl.'/transaction/invoiceHeader/ppn?id=' . $model->id. '&ppn_type=1&ref='.$model->reference_type, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.invoiceHeader.ppn")))  ?>

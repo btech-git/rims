@@ -185,14 +185,6 @@ class SalesOrders extends CComponent {
         $customer = Customer::model()->findByPk($this->header->customer_id);
         $duedate = $customer->tenor != "" ? date('Y-m-d', strtotime("+" . $customer->tenor . " days")) : date('Y-m-d', strtotime("+1 months"));
 
-//        $invoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $this->header->id));
-//        if (count($invoices) > 0) {
-//            foreach ($invoices as $invoice) {
-//                $invoice->status = "CANCELLED";
-//                $valid = $invoice->save(false);
-//            }
-//        }
-
         $model = new InvoiceHeader();
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->invoice_date)), $this->header->requester_branch_id);
         $model->invoice_date = date('Y-m-d');
@@ -210,7 +202,8 @@ class SalesOrders extends CComponent {
         $model->payment_left = $this->header->total_price;
         $model->ppn = $this->header->ppn;
         $model->ppn_total = $this->header->ppn_price;
-        $valid = $model->save(false) && $valid;
+        $model->tax_percentage = $this->header->tax_percentage;
+        $valid = $model->save(false);
 
         if ($valid) {
             if (count($this->details) > 0) {
