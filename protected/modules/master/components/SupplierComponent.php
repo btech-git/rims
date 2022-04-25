@@ -88,13 +88,13 @@ class SupplierComponent extends CComponent {
     public function flush() {
         
         if ($this->header->isNewRecord) {
-            $coaGroupHutang = Coa::model()->findByAttributes(array('coa_sub_category_id' => '15'));
+            $coaGroupHutang = Coa::model()->findByAttributes(array('coa_sub_category_id' => 15));
             $coaHutang = new Coa;
             $coaHutang->getCodeNumber($coaGroupHutang->coa_sub_category_id);
             $coaHutang->name = 'Hutang ' . $this->header->company;
-            $coaHutang->coa_category_id = $coaGroupHutang->coa_category_id;
-            $coaHutang->coa_sub_category_id = $coaGroupHutang->coa_sub_category_id;
-            $coaHutang->coa_id = $coaGroupHutang->id;
+            $coaHutang->coa_category_id = 3;
+            $coaHutang->coa_sub_category_id = 15;
+            $coaHutang->coa_id = null;
             $coaHutang->normal_balance = 'KREDIT';
             $coaHutang->cash_transaction = 'NO';
             $coaHutang->opening_balance = 0;
@@ -103,15 +103,18 @@ class SupplierComponent extends CComponent {
             $coaHutang->credit = 0;
             $coaHutang->status = 'Approved';
             $coaHutang->date = date('Y-m-d');
-            $coaHutang->save();
+            $coaHutang->date_approval = date('Y-m-d');
+            $coaHutang->is_approved = 1;
+            $coaHutang->user_id = Yii::app()->user->id;
+            $coaHutang->save(false);
             
-            $coaGroupOutstandingOrder = Coa::model()->findByAttributes(array('code' => '136.00.000'));
+            $coaGroupOutstandingOrder = Coa::model()->findByAttributes(array('coa_sub_category_id' => 16));
             $coaOutstandingOrder = new Coa;
             $coaOutstandingOrder->getCodeNumber($coaGroupOutstandingOrder->coa_sub_category_id);
             $coaOutstandingOrder->name = 'Outstanding Order - ' . $this->header->company;
-            $coaOutstandingOrder->coa_category_id = $coaGroupOutstandingOrder->coa_category_id;
-            $coaOutstandingOrder->coa_sub_category_id = $coaGroupOutstandingOrder->coa_sub_category_id;
-            $coaOutstandingOrder->coa_id = $coaGroupOutstandingOrder->id;
+            $coaOutstandingOrder->coa_category_id = 3;
+            $coaOutstandingOrder->coa_sub_category_id = 16;
+            $coaOutstandingOrder->coa_id = null;
             $coaOutstandingOrder->normal_balance = 'KREDIT';
             $coaOutstandingOrder->cash_transaction = 'NO';
             $coaOutstandingOrder->opening_balance = 0;
@@ -120,8 +123,13 @@ class SupplierComponent extends CComponent {
             $coaOutstandingOrder->credit = 0;
             $coaOutstandingOrder->status = 'Approved';
             $coaOutstandingOrder->date = date('Y-m-d');
-            $coaOutstandingOrder->save();
+            $coaOutstandingOrder->date_approval = date('Y-m-d');
+            $coaOutstandingOrder->is_approved = 1;
+            $coaOutstandingOrder->user_id = Yii::app()->user->id;
+            $coaOutstandingOrder->save(false);
 
+            $this->header->date_approval = date('Y-m-d');
+            $this->header->is_approved = 1;
             $this->header->coa_id = $coaHutang->id;
             $this->header->coa_outstanding_order = $coaOutstandingOrder->id;
         }

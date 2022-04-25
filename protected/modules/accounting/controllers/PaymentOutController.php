@@ -62,9 +62,19 @@ class PaymentOutController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
+            $paymentOut->header->payment_type = $paymentOut->header->payment_type_id;
             $paymentOut->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentOut->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentOut->header->payment_date)), $paymentOut->header->branch_id);
 
-            if ($paymentOut->save(Yii::app()->db)) {                
+            $valid = true; 
+
+            if ((int) $paymentOut->header->payment_type_id !== 1 && (int) $paymentOut->header->payment_type_id !== 11) {
+                if ($paymentOut->header->company_bank_id == null) {
+                    $valid = false; 
+                    $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
+                }
+            }
+
+            if ($valid && $paymentOut->save(Yii::app()->db)) {                
                 $this->redirect(array('view', 'id' => $paymentOut->header->id));
             }
         }
@@ -96,9 +106,19 @@ class PaymentOutController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
+            $paymentOut->header->payment_type = $paymentOut->header->payment_type_id;
             $paymentOut->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentOut->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentOut->header->payment_date)), $paymentOut->header->branch_id);
 
-            if ($paymentOut->save(Yii::app()->db)) {                
+            $valid = true; 
+
+            if ((int) $paymentOut->header->payment_type_id !== 1 || (int) $paymentOut->header->payment_type_id !== 11) {
+                if ($paymentOut->header->company_bank_id == null) {
+                    $valid = false; 
+                    $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
+                }
+            }
+
+            if ($valid && $paymentOut->save(Yii::app()->db)) {                
                 $this->redirect(array('view', 'id' => $paymentOut->header->id));
             }
         }

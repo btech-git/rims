@@ -69,9 +69,9 @@ $this->breadcrumbs = array(
     </div>
 </div>
 
-<div class="row">
+<!--<div class="row">
     <h5>Customer PIC</h5>
-    <?php if ($picDetails) { ?>
+    <?php /*if ($picDetails) { ?>
         <table class="detail">
             <thead>
                 <tr>
@@ -110,9 +110,9 @@ $this->breadcrumbs = array(
     <?php
     } else {
         echo "<h6><b>No Pic for this Customer.</b></h6>";
-    }
+    } */
     ?>
-</div>
+</div>-->
 
 <div class="row">
     <h5>Vehicles</h5>
@@ -142,29 +142,28 @@ $this->breadcrumbs = array(
                 <td><?php echo $vehicleDetail->carModel ? $vehicleDetail->carModel->name : ''; ?></td>
                 <td><?php echo $vehicleDetail->carSubModel ? $vehicleDetail->carSubModel->name : ''; ?></td>
                 <?php $color = Colors::model()->findByPk($vehicleDetail->color_id); ?>
-                <td><?php echo $color->name == '' ? '' : $color->name; ?></td>
+                <td><?php //echo $color->name == '' ? '' : $color->name; ?></td>
                 <td><?php echo $vehicleDetail->year; ?></td>
                 <td><?php echo $vehicleDetail->chasis_code; ?></td>
                 <td><?php echo $vehicleDetail->power; ?></td>
                 <td><?php echo $vehicleDetail->notes; ?></td>
                 <td>
-                    <a class="button warning center" style="margin-right:10px;" 
+                    <a class="button warning center" style="margin-right:3px;" 
                        href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/updateVehicle', array('custId' => $model->id, 'vehicleId' => $vehicleDetail->id)); ?>">
-                        <span class="fa fa-pencil"></span>edit
+                        <span class="fa fa-pencil"></span>
                     </a>
-                    
-                    <a class="button success center" style="margin-right:10px;" 
+                </td>
+                <td>
+                    <a class="button success center" style="margin-right:3px;" 
                        href="<?php echo Yii::app()->createUrl('/frontDesk/generalRepairRegistration/create', array('vehicleId' => $vehicleDetail->id)); ?>">
                         GR
                     </a>
-                    
-                    <a class="button success center" style="margin-right:10px;" 
+                </td>
+                <td>
+                    <a class="button success right" style="margin-right:3px;" 
                        href="<?php echo Yii::app()->createUrl('/frontDesk/bodyRepairRegistration/create', array('vehicleId' => $vehicleDetail->id)); ?>">
                         BR
-                    </a>
-                </td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                    </a></td>
             </tr>
         <?php endforeach; ?>
     </table>

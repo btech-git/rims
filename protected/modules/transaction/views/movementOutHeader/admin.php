@@ -89,6 +89,7 @@ $('.search-form form').submit(function(){
                             'name' => 'user_id',
                             'value' => '$data->user->username',
                         ),
+                        'date_created',
                         array(
                             'class' => 'CButtonColumn',
                             'template' => '{edit}',

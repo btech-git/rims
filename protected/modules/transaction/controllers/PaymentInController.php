@@ -134,11 +134,21 @@ class PaymentInController extends Controller {
 
         if (isset($_POST['PaymentIn']) && IdempotentManager::check()) {
             $model->attributes = $_POST['PaymentIn'];
+            $model->payment_type = $model->paymentType->name;
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
                 
             $dbTransaction = Yii::app()->db->beginTransaction();
             try {
-                $valid = IdempotentManager::build()->save() && $model->save();
+                $valid = true; 
+                
+                if ((int)$model->payment_type_id !== 1 && (int)$model->payment_type_id !== 11) {
+                    if ($model->company_bank_id == null) {
+                        $valid = false; 
+                        $model->addError('error', 'Company Bank harus diisi untuk payment type ini.');
+                    }
+                }
+                
+                $valid = $valid && IdempotentManager::build()->save() && $model->save();
 
                 if (!empty($registrationTransaction)) {
                     $registrationTransaction->payment_status = 'CLEAR';
@@ -551,8 +561,6 @@ class PaymentInController extends Controller {
                             'branch_id' => $paymentIn->branch_id,
                         ));
 
-//                        $getCoaPiutang = ($paymentIn->customer->customer_type == 'Company') ? '121.00.001' : '121.00.002';
-//                        $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
                         $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
@@ -566,9 +574,14 @@ class PaymentInController extends Controller {
                         $jurnalPiutang->transaction_type = 'Pin';
                         $jurnalPiutang->save();
 
-//                        $getCoaKas = '111.00.001';
-//                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-                        $coaId = ($paymentIn->payment_type_id === 1) ? 1492 : $paymentIn->companyBank->coa_id;
+                        if ((int) $paymentIn->payment_type_id === 1) {
+                            $coaId = 1492;
+                        } elseif ((int) $paymentIn->payment_type_id === 11) { 
+                            $coaId = 19;
+                        } else {
+                            $coaId = $paymentIn->companyBank->coa_id;
+                        }
+
                         $jurnalUmumKas = new JurnalUmum;
                         $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
                         $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
@@ -583,8 +596,6 @@ class PaymentInController extends Controller {
                         $jurnalUmumKas->save();
 
                         if ($paymentIn->tax_service_amount > 0) {
-//                            $getCoaPph = '143.00.002';
-//                            $coaPphWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPph));
                             $jurnalPph = new JurnalUmum;
                             $jurnalPph->kode_transaksi = $paymentIn->payment_number;
                             $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;

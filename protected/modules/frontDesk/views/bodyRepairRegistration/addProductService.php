@@ -83,8 +83,8 @@ $this->breadcrumbs=array(
                                         <th>Branch</th>
                                         <th>User</th>
                                         <th>PPn</th>
-                                        <!--<th>PPh</th>-->
-                                        <?php if($bodyRepairRegistration->header->work_order_number != ""): ?>
+                                        <th>PPh</th>
+                                        <?php if ($bodyRepairRegistration->header->work_order_number != ""): ?>
                                             <th>WO #</th>
                                         <?php endif; ?>
                                     </tr>
@@ -109,7 +109,7 @@ $this->breadcrumbs=array(
                                                     }',
                                                 )),
                                             )); ?>
-                                            <?php echo CHtml::activeDropDownList($generalRepairRegistration->header, 'tax_percentage', array(
+                                            <?php echo CHtml::activeDropDownList($bodyRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
                                                 11 => 11,

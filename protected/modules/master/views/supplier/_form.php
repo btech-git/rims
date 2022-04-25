@@ -235,6 +235,18 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($supplier->header,'position'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($supplier->header,'position',array('size'=>10,'maxlength'=>100)); ?>
+                            <?php echo $form->error($supplier->header,'position'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <label class="prefix"><?php echo $form->labelEx($supplier->header,'person_in_charge'); ?></label>
                         </div>
                         <div class="small-8 columns">

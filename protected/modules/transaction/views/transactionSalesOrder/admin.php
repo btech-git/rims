@@ -75,10 +75,10 @@ $('.search-form form').submit(function(){
                     ),
 
                     'sale_order_date',
-                    array(
-                        'name'=>'customer_name',
-                        'value'=>'empty($data->customer_id) ? "" : $data->customer->name'
-                    ),
+//                    array(
+//                        'name'=>'customer_name',
+//                        'value'=>'empty($data->customer_id) ? "" : $data->customer->name'
+//                    ),
                     'status_document',
                     'payment_type',
                     'estimate_arrival_date',
