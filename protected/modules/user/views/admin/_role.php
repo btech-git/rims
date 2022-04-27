@@ -99,9 +99,9 @@
                     true
                 )
             ),
-            'Head Department' => array(
+            'Laporan' => array(
                 'content' => $this->renderPartial(
-                    '_viewHeadDepartment',
+                    '_viewReport',
                     array('model' => $model, 'counter' => $counter+110),
                     true
                 )

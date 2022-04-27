@@ -5,7 +5,7 @@
                 <?php echo CHtml::checkBox("User[roles][accountingReport]", CHtml::resolveValue($model, "roles[accountingReport]"), array('id' => 'User_roles_' . $counter, 'value' => 'accountingReport')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
-            <th style="text-align: center">Laporan</th>
+            <th style="text-align: center">View</th>
         </tr>
     </thead>
     <tbody>

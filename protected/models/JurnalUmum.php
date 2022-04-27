@@ -131,6 +131,30 @@ class JurnalUmum extends CActiveRecord {
         ));
     }
 
+    public function searchByDailyCashReport() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        $criteria->compare('id', $this->id);
+        $criteria->compare('kode_transaksi', $this->kode_transaksi, true);
+        $criteria->compare('t.coa_id', $this->coa_id);
+        $criteria->compare('total', $this->total, true);
+        $criteria->compare('debet_kredit', $this->debet_kredit, true);
+        $criteria->compare('tanggal_posting', $this->tanggal_posting, true);
+        $criteria->compare('transaction_subject', $this->transaction_subject, true);
+        $criteria->compare('transaction_type', $this->transaction_type);
+
+        $criteria->addCondition("t. is_coa_category = 0 AND t.transaction_type = 'JP' AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!

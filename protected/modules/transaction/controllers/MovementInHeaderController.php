@@ -489,14 +489,14 @@ class MovementInHeaderController extends Controller {
                     $inventoryDetail->inventory_id = $inventoryId;
                     $inventoryDetail->product_id = $movementDetail->product_id;
                     $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
-                    $inventoryDetail->transaction_type = 'Movement';
+                    $inventoryDetail->transaction_type = 'MVI';
                     $inventoryDetail->transaction_number = $movementIn->header->movement_in_number;
                     $inventoryDetail->transaction_date = $movementIn->header->date_posting;
                     $inventoryDetail->stock_in = $movementDetail->quantity;
                     $inventoryDetail->stock_out = 0;
                     $inventoryDetail->notes = "Data from Movement In";
 
-                    $inventoryDetail->save();
+                    $inventoryDetail->save(false);
 
                     $jumlah = $movementDetail->quantity * $movementDetail->product->hpp;
 

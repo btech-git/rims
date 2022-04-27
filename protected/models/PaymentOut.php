@@ -199,19 +199,20 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('purchase_order_id', $this->purchase_order_id);
         $criteria->compare('payment_number', $this->payment_number, true);
-        $criteria->compare('payment_date', $this->payment_date, true);
         $criteria->compare('supplier_id', $this->supplier_id);
         $criteria->compare('payment_amount', $this->payment_amount, true);
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('payment_type', $this->payment_type, true);
         $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('status', $this->status, true);
         $criteria->compare('company_bank_id', $this->company_bank_id);
         $criteria->compare('nomor_giro', $this->nomor_giro, true);
         $criteria->compare('cash_payment_type', $this->cash_payment_type);
         $criteria->compare('bank_id', $this->bank_id);
         $criteria->compare('payment_type_id', $this->payment_type_id);
+
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');

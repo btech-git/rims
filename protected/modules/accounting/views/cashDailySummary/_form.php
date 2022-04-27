@@ -57,7 +57,7 @@
                 <p><h2>Payment In Retail</h2></p>
                 <?php $this->renderPartial('_detailPaymentInRetail', array(
                     'paymentTypes' => $paymentTypes,
-                    'branchId' => $branchId,
+//                    'branchId' => $branchId,
                     'transactionDate' => $transactionDate,
                     'paymentInRetailResultSet' => $paymentInRetailResultSet,
                     'paymentInRetailList' => $paymentInRetailList,
@@ -69,7 +69,7 @@
                 <?php $this->renderPartial('_detailPaymentInWholesale', array(
                     'paymentInWholesale' => $paymentInWholesale,
                     'paymentInWholesaleDataProvider' => $paymentInWholesaleDataProvider,
-                    'branchId' => $branchId,
+//                    'branchId' => $branchId,
                     'transactionDate' => $transactionDate,
                 )); ?>
             </div>
@@ -79,7 +79,7 @@
                 <?php $this->renderPartial('_detailPaymentOut', array(
                     'paymentOut' => $paymentOut,
                     'paymentOutDataProvider' => $paymentOutDataProvider,
-                    'branchId' => $branchId,
+//                    'branchId' => $branchId,
                     'transactionDate' => $transactionDate,
                 )); ?>
             </div>
@@ -97,7 +97,7 @@
                             'content' => $this->renderPartial('_detailCashTransactionIn', array(
                                 'cashTransaction' => $cashTransaction,
                                 'cashTransactionInDataProvider' => $cashTransactionInDataProvider,
-                                'branchId' => $branchId,
+//                                'branchId' => $branchId,
                                 'transactionDate' => $transactionDate,
                             ), true),
                         ),
@@ -105,7 +105,7 @@
                             'content' => $this->renderPartial('_detailCashTransactionOut', array(
                                 'cashTransaction' => $cashTransaction,
                                 'cashTransactionOutDataProvider' => $cashTransactionOutDataProvider,
-                                'branchId' => $branchId,
+//                                'branchId' => $branchId,
                                 'transactionDate' => $transactionDate,
                             ), true),
                         ),

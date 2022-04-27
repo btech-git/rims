@@ -67,11 +67,10 @@ class PaymentOutController extends Controller {
 
             $valid = true; 
 
-            if ((int) $paymentOut->header->payment_type_id !== 1 && (int) $paymentOut->header->payment_type_id !== 11) {
-                if ($paymentOut->header->company_bank_id == null) {
-                    $valid = false; 
-                    $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
-                }
+            $paymentType = PaymentType::model()->findByPk($paymentOut->header->payment_type_id);
+            if (empty($paymentType->coa_id) && $paymentOut->header->company_bank_id == null) {
+                $valid = false; 
+                $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
             }
 
             if ($valid && $paymentOut->save(Yii::app()->db)) {                
@@ -111,11 +110,10 @@ class PaymentOutController extends Controller {
 
             $valid = true; 
 
-            if ((int) $paymentOut->header->payment_type_id !== 1 || (int) $paymentOut->header->payment_type_id !== 11) {
-                if ($paymentOut->header->company_bank_id == null) {
-                    $valid = false; 
-                    $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
-                }
+            $paymentType = PaymentType::model()->findByPk($paymentOut->header->payment_type_id);
+            if (empty($paymentType->coa_id) && $paymentOut->header->company_bank_id == null) {
+                $valid = false; 
+                $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
             }
 
             if ($valid && $paymentOut->save(Yii::app()->db)) {                
@@ -248,10 +246,11 @@ class PaymentOutController extends Controller {
                             $purchaseOrderHeader->payment_amount += $paymentOut->payment_amount;
 
                         $purchaseOrderHeader->payment_left -= $paymentOut->payment_amount;
-                        if ($purchaseOrderHeader->payment_left > 0.00)
+                        if ($purchaseOrderHeader->payment_left > 0.00) {
                             $purchaseOrderHeader->payment_status = 'PARTIALLY PAID';
-                        else
+                        } else {
                             $purchaseOrderHeader->payment_status = 'PAID';
+                        }
 
                         $purchaseOrderHeader->update(array('payment_amount', 'payment_left', 'payment_status'));
                     }
@@ -275,14 +274,12 @@ class PaymentOutController extends Controller {
                     $jurnalHutang->transaction_type = 'Pout';
                     $jurnalHutang->save();
 
-                    if ((int) $paymentOut->payment_type_id === 1) {
-                        $coaId = 1492;
-                    } elseif ((int) $paymentOut->payment_type_id === 11) { 
-                        $coaId = 19;
+                    if (!empty($paymentOut->paymentType->coa_id)) {
+                        $coaId = $paymentOut->paymentType->coa_id;
                     } else {
                         $coaId = $paymentOut->companyBank->coa_id;
                     }
-                    
+
                     $jurnalUmumKas = new JurnalUmum;
                     $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
                     $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;

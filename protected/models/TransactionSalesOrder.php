@@ -326,6 +326,51 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function searchByDailyCashReport() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('sale_order_no', $this->sale_order_no, true);
+        $criteria->compare('status_document', $this->status_document, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('requester_id', $this->requester_id);
+        $criteria->compare('requester_branch_id', $this->requester_branch_id);
+        $criteria->compare('approved_branch_id', $this->approved_branch_id);
+        $criteria->compare('customer_id', $this->customer_id);
+        $criteria->compare('total_quantity', $this->total_quantity);
+        $criteria->compare('total_price', $this->total_price, true);
+        $criteria->compare('estimate_payment_date', $this->estimate_payment_date, true);
+        $criteria->compare('company_bank_id', $this->company_bank_id);
+        $criteria->compare('price_before_discount', $this->price_before_discount, true);
+        $criteria->compare('subtotal', $this->subtotal, true);
+        $criteria->compare('discount', $this->discount, true);
+        $criteria->compare('ppn', $this->ppn);
+        $criteria->compare('ppn_price', $this->ppn_price, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
+
+        $criteria->addCondition("t.approved_id IS NOT NULL AND t.requester_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'sale_order_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+
     public function getTotalRemainingQuantityDelivered() {
         $totalRemaining = 0;
 

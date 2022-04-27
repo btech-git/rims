@@ -265,6 +265,12 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('status', $this->status, true);
         $criteria->compare('cash_payment_type', $this->cash_payment_type);
         $criteria->compare('payment_type_id', $this->payment_type_id);
+        
+        $criteria->together = 'true';
+        $criteria->with = array('invoice', 'customer');
+
+        $criteria->addCondition("customer.customer_type = 'Company' AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

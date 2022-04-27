@@ -141,11 +141,10 @@ class PaymentInController extends Controller {
             try {
                 $valid = true; 
                 
-                if ((int)$model->payment_type_id !== 1 && (int)$model->payment_type_id !== 11) {
-                    if ($model->company_bank_id == null) {
-                        $valid = false; 
-                        $model->addError('error', 'Company Bank harus diisi untuk payment type ini.');
-                    }
+                $paymentType = PaymentType::model()->findByPk($model->payment_type_id);
+                if (empty($paymentType->coa_id) && $model->company_bank_id == null) {
+                    $valid = false; 
+                    $model->addError('error', 'Company Bank harus diisi untuk payment type ini.');
                 }
                 
                 $valid = $valid && IdempotentManager::build()->save() && $model->save();
@@ -357,7 +356,7 @@ class PaymentInController extends Controller {
         }
 
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.status IN ("INVOICING", "PARTIAL PAYMENT", "NOT PAID", "PARTIALLY PAID")');
+        $invoiceCriteria->addCondition('t.payment_left > 0');
         $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
         $invoiceCriteria->compare('due_date', $invoice->due_date, true);
@@ -574,10 +573,8 @@ class PaymentInController extends Controller {
                         $jurnalPiutang->transaction_type = 'Pin';
                         $jurnalPiutang->save();
 
-                        if ((int) $paymentIn->payment_type_id === 1) {
-                            $coaId = 1492;
-                        } elseif ((int) $paymentIn->payment_type_id === 11) { 
-                            $coaId = 19;
+                        if (!empty($paymentIn->paymentType->coa_id)) {
+                            $coaId = $paymentIn->paymentType->coa_id;
                         } else {
                             $coaId = $paymentIn->companyBank->coa_id;
                         }

@@ -179,14 +179,15 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
         $criteria->compare('transaction_type', $this->transaction_type, true);
         $criteria->compare('coa_id', $this->coa_id);
         $criteria->compare('debit_amount', $this->debit_amount, true);
         $criteria->compare('credit_amount', $this->credit_amount, true);
-        $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
+
+        $criteria->addCondition("t.status = 'Approved' AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

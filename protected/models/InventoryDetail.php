@@ -141,13 +141,12 @@ class InventoryDetail extends CActiveRecord {
         if ($branchId !== '') {
             $criteria->compare('warehouse.branch_id', $branchId);
         }
-        $criteria->addCondition('transaction_date > "2022-01-18"');
         $criteria->order = 't.transaction_date DESC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 20,
+                'pageSize' => 50,
                 'currentPage' => $currentPage,
             ),
         ));

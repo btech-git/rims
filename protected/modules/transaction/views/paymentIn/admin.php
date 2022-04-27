@@ -178,6 +178,16 @@ $('.search-form form').submit(function(){
                                 'htmlOptions' => array('style' => 'text-align: right'),
                             ),
                             array(
+                                'name' => 'payment_amount', 
+                                'value' => 'AppHelper::formatMoney($data->payment_amount)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
+                            ),
+                            array(
+                                'name' => 'payment_left', 
+                                'value' => 'AppHelper::formatMoney($data->payment_left)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
+                            ),
+                            array(
                                 'header' => '',
                                 'type' => 'raw',
                                 'value' => 'CHtml::link("Create", array("create", "invoiceId"=>$data->id))',
