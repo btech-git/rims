@@ -1305,8 +1305,12 @@ class TransactionRequestOrderController extends Controller
             $model->attributes = $_GET['TransactionRequestOrder'];
         }
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
+
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

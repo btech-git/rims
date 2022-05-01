@@ -152,36 +152,45 @@ class InventoryDetail extends CActiveRecord {
         ));
     }
 
-    public function getFastMovingItems() {
-        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out), 0) AS total_sale
+    public function getFastMovingItems($startDate, $endDate) {
+        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " c ON c.id = p.product_master_category_id
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date
                 GROUP BY i.product_id
                 ORDER BY total_sale DESC
                 LIMIT 50";
 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll();
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ));
 
         return $resultSet;
     }
 
-    public function getSlowMovingItems() {
-        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out), 0) AS total_sale
+    public function getSlowMovingItems($startDate, $endDate) {
+        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " c ON c.id = p.product_master_category_id
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date
                 GROUP BY i.product_id
+                HAVING total_sale > 0
                 ORDER BY total_sale ASC
                 LIMIT 50";
 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll();
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ));
 
         return $resultSet;
     }

@@ -246,8 +246,12 @@ class ConsignmentInHeaderController extends Controller {
             $model->attributes = $_GET['ConsignmentInHeader'];
         }
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('receive_branch', Yii::app()->user->branch_ids);
+        
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

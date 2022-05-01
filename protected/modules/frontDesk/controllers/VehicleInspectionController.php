@@ -163,37 +163,14 @@ class VehicleInspectionController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        $plate_number = '';
         $vehicle = new RegistrationTransaction('search');
         $vehicle->unsetAttributes();  // clear any default values
         
         if (isset($_GET['RegistrationTransaction'])) {
             $vehicle->attributes = $_GET['RegistrationTransaction'];
         }
-        $vehicleCriteria = new CDbCriteria;
-        $vehicleCriteria->condition = "t.work_order_number IS NOT NULL AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)";
-        $vehicleCriteria->params = array(':userId' => Yii::app()->user->id);
-        $vehicleCriteria->together = 'true';
-        $vehicleCriteria->with = array('vehicle');
-        $vehicleCriteria->addSearchCondition('vehicle.plate_number', $plate_number, true);
-        $vehicleCriteria->order = 'transaction_date DESC';
-
-        $vehicleDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
-            'criteria' => $vehicleCriteria,
-            'sort' => array(
-                'defaultOrder' => 'transaction_number',
-                'attributes' => array(
-                    'plate_number' => array(
-                        'asc' => 'vehicle.plate_number ASC',
-                        'desc' => 'vehicle.plate_number DESC',
-                    ),
-                    '*',
-                ),
-            ),
-            'pagination' => array(
-                'pageSize' => 10,
-            ),
-        ));
+        $vehicleDataProvider = $vehicle->searchAdmin();
+        $vehicleDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(
             'vehicle' => $vehicle,

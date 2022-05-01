@@ -60,7 +60,7 @@ $('.search-form form').submit(function(){
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'transaction-sales-order-grid',
-                'dataProvider' => $model->search(),
+                'dataProvider' => $dataProvider,
                 'filter' => $model,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',	
                 'pager' => array(

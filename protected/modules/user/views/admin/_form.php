@@ -207,8 +207,9 @@ Yii::app()->clientScript->registerScript('userRoles', "
                     </div>
                     <div class="small-8 columns">
                         <?php $branches = Branch::model()->findAll(array('order' => 'code')); ?>
-                        <?php echo CHtml::checkBoxList('BranchId[]', false, CHtml::listData($branches, 'id', 'code'), array('labelOptions'=>array('style'=>'display:inline'), 'separator'=>' ',)); ?>
-                        <?php //echo $form->error($model, 'branch_id'); ?>
+                        <?php $userBranches = UserBranch::model()->findAllByAttributes(array('users_id' => $model->id)); ?>
+                        <?php $branchIds = array_map(function ($userBranch) { return $userBranch->branch_id; }, $userBranches); ?>
+                        <?php echo CHtml::checkBoxList('BranchId[]', $branchIds, CHtml::listData($branches, 'id', 'code'), array('labelOptions'=>array('style'=>'display:inline'), 'separator'=>' ',)); ?>
                     </div>
                 </div>
             </div>

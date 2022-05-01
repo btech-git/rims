@@ -25,11 +25,14 @@ class StockAnalysisController extends Controller {
 
     public function actionSummary() {
         $inventoryDetail = Search::bind(new InventoryDetail(), isset($_GET['InventoryDetail']) ? $_GET['InventoryDetail'] : '');
-        $inventoryDetailDataProvider = $inventoryDetail->search();
 
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
         $this->render('summary', array(
             'inventoryDetail' => $inventoryDetail,
-            'inventoryDetailDataProvider' => $inventoryDetailDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 }

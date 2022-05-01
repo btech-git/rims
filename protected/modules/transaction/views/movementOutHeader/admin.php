@@ -54,7 +54,7 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'movement-out-header-grid',
-                    'dataProvider' => $model->search(),
+                    'dataProvider' => $dataProvider,
                     'filter' => null,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
@@ -113,11 +113,13 @@ $('.search-form form').submit(function(){
                             'Delivery Order' => array(
                                 'content' => $this->renderPartial('_viewDelivery', array(
                                     'deliveryOrder' => $deliveryOrder,
+                                    'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
                                 ), true)
                             ),
                             'Return Order' => array(
                                 'content' => $this->renderPartial('_viewReturn', array(
                                     'returnOrder' => $returnOrder,
+                                    'returnOrderDataProvider' => $returnOrderDataProvider,
                                 ), true)
                             ),
                             'Retail Sales' => array(

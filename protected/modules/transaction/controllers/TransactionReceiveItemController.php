@@ -296,6 +296,7 @@ class TransactionReceiveItemController extends Controller {
             $model->attributes = $_GET['TransactionReceiveItem'];
 
         $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'supplier',

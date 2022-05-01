@@ -252,8 +252,12 @@ class TransactionReturnItemController extends Controller {
         if (isset($_GET['TransactionReturnItem']))
             $model->attributes = $_GET['TransactionReturnItem'];
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
+
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

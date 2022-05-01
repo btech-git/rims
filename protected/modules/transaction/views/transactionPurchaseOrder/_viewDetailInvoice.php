@@ -40,6 +40,7 @@
                         <table>
                             <thead>
                                 <tr>
+                                    <td>ID</td>
                                     <td>Product</td>
                                     <td>Code</td>
                                     <td>Kategori</td>
@@ -57,6 +58,7 @@
                                 <?php foreach ($receiveHeader->transactionReceiveItemDetails as $key => $receiveDetail): ?>
                                     <tr>
                                         <?php $product = $receiveDetail->product; ?>
+                                        <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>

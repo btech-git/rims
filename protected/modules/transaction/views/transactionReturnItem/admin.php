@@ -63,7 +63,7 @@ Yii::app()->clientScript->registerScript('search', "
 
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'transaction-return-item-grid',
-                'dataProvider' => $model->search(),
+                'dataProvider' => $dataProvider,
                 'filter' => null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(

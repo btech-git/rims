@@ -118,6 +118,7 @@ class WorkOrderController extends Controller {
         }
 
         $modelDataProvider = $model->searchByWorkOrder();
+        $modelDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(
             'model' => $model,

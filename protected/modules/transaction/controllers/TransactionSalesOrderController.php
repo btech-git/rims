@@ -509,8 +509,12 @@ class TransactionSalesOrderController extends Controller {
         if (isset($_GET['TransactionSalesOrder']))
             $model->attributes = $_GET['TransactionSalesOrder'];
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

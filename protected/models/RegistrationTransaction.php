@@ -410,13 +410,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('total_time', $this->total_time);
         $criteria->compare('priority_level', $this->priority_level);
         $criteria->compare('customer_work_order_number', $this->customer_work_order_number);
-        
-//        if (empty($this->branch_id)) {
-//            $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-//            $criteria->params = array(':userId' => Yii::app()->user->id);
-//        } else {
-            $criteria->compare('t.branch_id', $this->branch_id);
-//        }
+        $criteria->compare('t.branch_id', $this->branch_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

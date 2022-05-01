@@ -240,8 +240,12 @@ class StockAdjustmentController extends Controller {
         if (isset($_GET['StockAdjustmentHeader']))
             $model->attributes = $_GET['StockAdjustmentHeader'];
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
+
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

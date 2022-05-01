@@ -3,7 +3,7 @@
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'return-order-grid',
-        'dataProvider'=>$returnOrder->searchByMovementOut(),
+        'dataProvider'=>$returnOrderDataProvider,
         'filter'=>$returnOrder,
         // 'summaryText'=>'',
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

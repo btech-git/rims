@@ -249,9 +249,11 @@ class CashTransactionController extends Controller {
         $user = Users::model()->findByPk(Yii::app()->user->getId());
         
         $cashInTransactionDataProvider = $model->search();
+        $cashInTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
         $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In" ');
 
         $cashOutTransactionDataProvider = $model->search();
+        $cashOutTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
         $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out" ');
         
 //        if ((int) $user->branch_id != 6) {

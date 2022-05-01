@@ -357,15 +357,13 @@ class PaymentInController extends Controller {
 
         $invoiceCriteria = new CDbCriteria;
         $invoiceCriteria->addCondition('t.payment_left > 0');
+        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
         $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
         $invoiceCriteria->compare('due_date', $invoice->due_date, true);
         $invoiceCriteria->compare('total_price', $invoice->total_price, true);
         $invoiceCriteria->compare('user_id', $invoice->user_id);
         
-        $invoiceCriteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $invoiceCriteria->params = array(':userId' => Yii::app()->user->id);
-
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer');
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
@@ -386,6 +384,7 @@ class PaymentInController extends Controller {
             $model->attributes = $_GET['PaymentIn'];
         
         $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
         $dataProvider->criteria->with = array(
             'customer',
             'paymentInApprovals',

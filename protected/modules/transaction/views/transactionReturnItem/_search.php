@@ -69,7 +69,7 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($model, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                        <?php echo CHtml::activeDropDownList($model, 'recipient_branch_id', CHtml::listData(Branch::model()->findAllByPk(Yii::app()->user->branch_ids, array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($model, 'destination_branch', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                        <?php echo CHtml::activeDropDownList($model, 'destination_branch', CHtml::listData(Branch::model()->findAllByPk(Yii::app()->user->branch_ids, array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>

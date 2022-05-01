@@ -233,11 +233,12 @@ class Customer extends CActiveRecord {
                 FROM (
                     SELECT invoice_number AS transaction_number, invoice_date AS transaction_date, 'Faktur Penjualan' AS transaction_type, note AS remark, total_price AS amount, total_price AS sale_amount, 0 AS payment_amount, customer_id AS customer
                     FROM " . InvoiceHeader::model()->tableName() . "
+                    WHERE invoice_date BETWEEN :start_date AND :end_date AND customer_id = :customer_id
                     UNION
                     SELECT payment_number AS transaction_number, payment_date AS transaction_date, 'Pelunasan Penjualan' AS transaction_type, notes AS remark, (payment_amount * -1) AS amount, 0 AS sale_amount, (payment_amount * -1) AS payment_amount, customer_id AS customer
                     FROM " . PaymentIn::model()->tableName() . "
+                    WHERE payment_date BETWEEN :start_date AND :end_date AND customer_id = :customer_id
                 ) transaction
-                WHERE transaction_date BETWEEN :start_date AND :end_date AND customer = :customer_id
                 ORDER BY transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(

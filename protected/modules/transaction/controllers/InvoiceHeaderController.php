@@ -229,6 +229,7 @@ class InvoiceHeaderController extends Controller {
             $model->attributes = $_GET['InvoiceHeader'];
         
         $dataProvider = $model->searchByAdmin();
+        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
         $dataProvider->criteria->with = array(
             'salesOrder',
             'registrationTransaction',

@@ -121,7 +121,7 @@
                         <?php echo $form->label($model,'branch_id', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
+                        <?php echo $form->dropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAllByPk(Yii::app()->user->branch_ids, array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
                     </div>
                 </div>
             </div>

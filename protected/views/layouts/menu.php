@@ -266,7 +266,7 @@
                     ),
                     array(
                         'label' => 'Analisa Stok Barang', 
-                        'url' => array('/master/forecastingProduct/admin'), 
+                        'url' => array('/report/stockAnalysis/summary'), 
                         'visible' => (Yii::app()->user->checkAccess('stockAnalysisReport'))
                     ),
                     array(
@@ -358,11 +358,11 @@
                     array('label' => 'Rincian Buku Besar Pembantu Piutang', 'url' => array('/report/receivableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('receivableJournalReport')),
                     array('label' => 'Rincian Buku Besar Pembantu Hutang', 'url' => array('/report/payableLedger/summary'), 'visible' => Yii::app()->user->checkAccess('payableJournalReport')),
                     array('label' => 'Analisa Keuangan', 'url' => array('/accounting/forecasting/admin'), 'visible' => Yii::app()->user->checkAccess('financialAnalysisReport')),
-                    array('label' => 'Laporan General Ledger (Buku Besar)', 'url' => array('/report/generalLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalLedgerReport')),
-                    array('label' => 'Laporan Balance Sheet (induk)', 'url' => array('/report/balanceSheet/summary'), 'visible' => Yii::app()->user->checkAccess('summaryBalanceSheetReport')),
-                    array('label' => 'Laporan Balance Sheet (Standar)', 'url' => array('/report/balanceSheetDetail/summary'), 'visible' => Yii::app()->user->checkAccess('standardBalanceSheetReport')),
-                    array('label' => 'Laporan Profit/Loss (induk)', 'url' => array('/report/profitLoss/summary'), 'visible' => Yii::app()->user->checkAccess('summaryProfitLossReport')),
-                    array('label' => 'Laporan Profit/Loss (Standar)', 'url' => array('/report/profitLossDetail/summary'), 'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')),
+                    array('label' => 'General Ledger (Buku Besar)', 'url' => array('/report/generalLedger/summary'), 'visible' => Yii::app()->user->checkAccess('generalLedgerReport')),
+                    array('label' => 'Balance Sheet (induk)', 'url' => array('/report/balanceSheet/summary'), 'visible' => Yii::app()->user->checkAccess('summaryBalanceSheetReport')),
+                    array('label' => 'Balance Sheet (Standar)', 'url' => array('/report/balanceSheetDetail/summary'), 'visible' => Yii::app()->user->checkAccess('standardBalanceSheetReport')),
+                    array('label' => 'Profit/Loss (induk)', 'url' => array('/report/profitLoss/summary'), 'visible' => Yii::app()->user->checkAccess('summaryProfitLossReport')),
+                    array('label' => 'Profit/Loss (Standar)', 'url' => array('/report/profitLossDetail/summary'), 'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')),
                     array('label' => 'Laporan Cash Transaction', 'url' => array('/report/cashTransaction/summary'), 'visible' => Yii::app()->user->checkAccess('cashTransactionReport')),
 //                    array('label' => 'Laporan Posisi Keuangan (Neraca)', 'url' => array('/report/balanceSheet/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
 //                    array('label' => 'Laporan Laba Rugi', 'url' => array('/report/profitLoss/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),

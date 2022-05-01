@@ -29,6 +29,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <td>ID</td>
                                 <td>Code</td>
                                 <td>Product</td>
                                 <td>Quantity</td>
@@ -41,6 +42,7 @@
                         <tbody>
                             <?php foreach ($receiveHeader->transactionReceiveItemDetails as $key => $receiveDetail): ?>
                                 <tr>
+                                    <td><?php echo $receiveDetail->product->id; ?></td>
                                     <td><?php echo $receiveDetail->product->manufacturer_code; ?></td>
                                     <td><?php echo $receiveDetail->product->name; ?></td>
                                     <td><?php echo $receiveDetail->qty_request; ?></td>

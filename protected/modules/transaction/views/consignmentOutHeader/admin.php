@@ -65,7 +65,7 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'consignment-out-header-grid',
-                    'dataProvider' => $model->search(),
+                    'dataProvider' => $dataProvider,
                     'filter' => $model,
                     // 'summaryText'=>'',
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

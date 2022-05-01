@@ -113,7 +113,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'user' => array(self::BELONGS_TO, 'User', 'requester_id'),
             'approval' => array(self::BELONGS_TO, 'User', 'approved_id'),
             'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
-            'requesterBranch' => array(self::BELONGS_TO, 'Branch', 'requester_branch_id'),
+//            'requesterBranch' => array(self::BELONGS_TO, 'Branch', 'requester_branch_id'),
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'Coa', 'coa_bank_id_estimate'),
         );
     }
@@ -280,7 +280,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         )";
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('purchase_order_no', $this->purchase_order_no . '%', true, 'AND', false);
+        $criteria->compare('purchase_order_no', $this->purchase_order_no, true);
         $criteria->compare('purchase_order_date', $this->purchase_order_date, true);
         
         $criteria->together = 'true';

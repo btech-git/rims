@@ -200,6 +200,7 @@ class PaymentOutController extends Controller {
         }
 
         $dataProvider = $paymentOut->search();
+        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
         $dataProvider->criteria->with = array(
             'supplier',
             'paymentOutApprovals',

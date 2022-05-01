@@ -254,6 +254,9 @@ class TransactionDeliveryOrderController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['TransactionDeliveryOrder']))
             $model->attributes = $_GET['TransactionDeliveryOrder'];
+        
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('sender_branch_id', Yii::app()->user->branch_ids);
 
         $transfer = new TransactionTransferRequest('search');
         $transfer->unsetAttributes();  // clear any default values
@@ -261,6 +264,7 @@ class TransactionDeliveryOrderController extends Controller {
             $transfer->attributes = $_GET['TransactionTransferRequest'];
 
         $transferDataProvider = $transfer->searchByPendingDelivery();
+        $transferDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
 
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
@@ -269,6 +273,7 @@ class TransactionDeliveryOrderController extends Controller {
             $sent->attributes = $_GET['TransactionSentRequest'];
 
         $sentDataProvider = $sent->searchByPendingDelivery();
+        $sentDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
@@ -278,6 +283,7 @@ class TransactionDeliveryOrderController extends Controller {
 
         $salesDataProvider = $sales->searchByPendingDelivery();
         $salesDataProvider->criteria->addCondition("status_document = 'Approved'");
+        $salesDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
 
         $consignment = new ConsignmentOutHeader('search');
         $consignment->unsetAttributes();  // clear any default values
@@ -286,9 +292,11 @@ class TransactionDeliveryOrderController extends Controller {
             $consignment->attributes = $_GET['ConsignmentOutHeader'];
 
         $consignmentDataProvider = $consignment->searchByPendingDelivery();
+        $consignmentDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
             'sent' => $sent,
             'sentDataProvider' => $sentDataProvider,
             'sales' => $sales,

@@ -444,6 +444,9 @@ class MovementOutHeaderController extends Controller {
         if (isset($_GET['MovementOutHeader']))
             $model->attributes = $_GET['MovementOutHeader'];
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+
         /* Delivery Order */
         $deliveryOrder = new TransactionDeliveryOrder('search');
         $deliveryOrder->unsetAttributes();
@@ -451,12 +454,18 @@ class MovementOutHeaderController extends Controller {
         if (isset($_GET['TransactionDeliveryOrder']))
             $deliveryOrder->attributes = $_GET['TransactionDeliveryOrder'];
         
+        $deliveryOrderDataProvider = $deliveryOrder->searchByMovementOut();
+        $deliveryOrderDataProvider->criteria->addInCondition('sender_branch_id', Yii::app()->user->branch_ids);
+
         /* Return Order */
         $returnOrder = new TransactionReturnOrder('search');
         $returnOrder->unsetAttributes();
         if (isset($_GET['TransactionReturnOrder']))
             $returnOrder->attributes = $_GET['TransactionReturnOrder'];
         
+        $returnOrderDataProvider = $returnOrder->searchByMovementOut();
+        $returnOrderDataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
+
         /* Registration Transaction */
         $registrationTransaction = new RegistrationTransaction('search');
         $registrationTransaction->unsetAttributes();
@@ -464,11 +473,16 @@ class MovementOutHeaderController extends Controller {
             $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
 
         $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
+        $registrationTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+
 
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
             'deliveryOrder' => $deliveryOrder,
+            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
             'returnOrder' => $returnOrder,
+            'returnOrderDataProvider' => $returnOrderDataProvider,
             'registrationTransaction' => $registrationTransaction,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
         ));

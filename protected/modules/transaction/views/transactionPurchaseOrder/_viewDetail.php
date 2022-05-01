@@ -3,6 +3,7 @@
     <?php foreach ($purchaseOrderDetails as $key => $purchaseOrderDetail): ?>
         <thead>
             <tr>
+                <td>ID</td>
                 <td>Product</td>
                 <td>Quantity</td>
                 <td>Unit</td>
@@ -17,6 +18,7 @@
         <tbody>
             <tr>
                 <?php $product = Product::model()->findByPK($purchaseOrderDetail->product_id); ?>
+                <td><?php echo $product->id; ?></td>
                 <td><?php echo $product->name; ?></td>
                 <td style="text-align: center"><?php echo $purchaseOrderDetail->quantity; ?></td>
                 <td><?php echo $product->unit->name; ?></td>

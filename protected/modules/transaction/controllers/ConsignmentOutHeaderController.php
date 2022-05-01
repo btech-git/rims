@@ -222,8 +222,12 @@ class ConsignmentOutHeaderController extends Controller {
         if (isset($_GET['ConsignmentOutHeader']))
             $model->attributes = $_GET['ConsignmentOutHeader'];
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

@@ -119,8 +119,7 @@ $('.search-form form').submit(function(){
 
         <?php $this->widget('ext.groupgridview.GroupGridView', array(
             'id' => 'vehicle-inspection-grid',
-            // 'dataProvider' => $vehicleDataProvider,
-            'dataProvider' => $vehicle->searchAdmin(),
+            'dataProvider' => $vehicleDataProvider,
             'filter' => $vehicle,
             'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
             'pager' => array(

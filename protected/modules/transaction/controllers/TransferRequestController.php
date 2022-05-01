@@ -259,8 +259,12 @@ class TransferRequestController extends Controller {
             $model->attributes = $_GET['TransactionTransferRequest'];
         }
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

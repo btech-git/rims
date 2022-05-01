@@ -239,17 +239,26 @@ class MovementInHeaderController extends Controller {
         if (isset($_GET['MovementInHeader']))
             $model->attributes = $_GET['MovementInHeader'];
         
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
         
         if (isset($_GET['TransactionReceiveItem']))
             $receiveItem->attributes = $_GET['TransactionReceiveItem'];
 
+        $receiveItemDataProvider = $receiveItem->searchByMovementIn();
+        $receiveItemDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
+
         $returnItem = new TransactionReturnItem('search');
         $returnItem->unsetAttributes();
         
         if (isset($_GET['TransactionReturnItem']))
             $returnItem->attributes = $_GET['TransactionReturnItem'];
+
+        $returnItemDataProvider = $returnItem->search();
+        $returnItemDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(
             'model' => $model,

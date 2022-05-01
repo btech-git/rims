@@ -39,6 +39,9 @@ class UserIdentity extends CUserIdentity
 		else if($user->status==-1)
 			$this->errorCode=self::ERROR_STATUS_BAN;
 		else {
+                    $userBranches = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
+                    $branchIds = array_map(function ($userBranch) { return $userBranch->branch_id; }, $userBranches);
+                    $this->setState('branch_ids', $branchIds);
 			$this->_id=$user->id;
 			$this->username=$user->username;
 			$this->errorCode=self::ERROR_NONE;
