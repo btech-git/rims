@@ -1,13 +1,11 @@
-<?php
-Yii::app()->clientScript->registerCss('_report', '
+<?php Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 2% }
     .width1-2 { width: 15% }
     .width1-3 { width: 50% }
     .width1-4 { width: 15% }
     .width1-5 { width: 15% }
 
-');
-?>
+'); ?>
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">
@@ -28,6 +26,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-3">Kode Transaksi</th>
             <th colspan="2">Keterangan</th>
         </tr>
+        
         <tr id="header2">
             <th>&nbsp;</th>
             <th class="width1-2">Kode COA</th>
@@ -42,6 +41,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <?php $journalRefs = array(); ?>
     <?php $totalDebit = 0; ?>
     <?php $totalCredit = 0; ?>
+    
     <tbody>
         <?php foreach ($jurnalUmumSummary->dataProvider->data as $i => $header): ?>
             <?php if ($lastId !== $header->kode_transaksi): ?>
@@ -55,6 +55,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalRef['credit'])); ?></td>
                         </tr>
                     <?php endforeach; ?>
+                        
                     <tr>
                         <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
                         <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid">
@@ -65,6 +66,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         </td>
                     </tr>
                 <?php endif; ?>
+                    
                 <?php $journalRefs = array(); ?>
                 <?php $totalDebit = 0; ?>
                 <?php $totalCredit = 0; ?>
@@ -83,6 +85,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php if (!isset($journalRefs[$header->branchAccountId])): ?>
                 <?php $journalRefs[$header->branchAccountId] = array('debit' => 0, 'credit' => 0); ?>
             <?php endif; ?>
+                
             <?php $journalRefs[$header->branchAccountId]['code'] = $header->branchAccountCode; ?>
             <?php $journalRefs[$header->branchAccountId]['name'] = $header->branchAccountName; ?>
             <?php $journalRefs[$header->branchAccountId]['debit'] += $amountDebit; ?>
@@ -90,9 +93,9 @@ Yii::app()->clientScript->registerCss('_report', '
             
             <?php $totalDebit += $amountDebit; ?>
             <?php $totalCredit += $amountCredit; ?>
-                
             <?php $lastId = $header->kode_transaksi; ?>
         <?php endforeach; ?>
+                
         <?php foreach ($journalRefs as $journalRef): ?>
             <tr>
                 <td class="width1-1">&nbsp;</td>
@@ -102,6 +105,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalRef['credit'])); ?></td>
             </tr>
         <?php endforeach; ?>
+            
         <tr>
             <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
             <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid">
