@@ -139,38 +139,44 @@ $this->menu = array(
 <br /><br />
 
 <div class="detail">
+    <?php 
+    $tabsArray = array(); 
+
+    $tabsArray['Detail Item'] = array(
+        'id' => 'test1',
+        'content' => $this->renderPartial('_viewDetail', array(
+            'model' => $model, 
+            'salesOrderDetails' => $salesOrderDetails, 
+            'ccontroller' => $ccontroller, 
+            'model' => $model
+        ), true)
+    );
+
+    $tabsArray['Detail Approval'] = array(
+        'id' => 'test2',
+        'content' => $this->renderPartial('_viewDetailApproval', array('model' => $model), true)
+    );
+
+    $tabsArray['Detail Delivery'] = array(
+        'id' => 'test3',
+        'content' => $this->renderPartial('_viewDetailDelivery', array(
+            'salesOrderDetails' => $salesOrderDetails, 
+            'model' => $model
+        ), true)
+    );
+
+    if (Yii::app()->user->checkAccess("generalManager")) {
+        $tabsArray['Journal'] = array(
+            'id' => 'test4',
+            'content' => $this->renderPartial('_viewJournal', array('model' => $model), true)
+        );
+    }
+    ?>
+    
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
-        'tabs' => array(
-            'Detail Item' => array(
-                'id' => 'test1',
-                'content' => $this->renderPartial('_viewDetail', array(
-                    'model' => $model, 
-                    'salesOrderDetails' => $salesOrderDetails, 
-                    'ccontroller' => $ccontroller, 
-                    'model' => $model
-                ), true)
-            ),
-            'Detail Approval' => array(
-                'id' => 'test2',
-                'content' => $this->renderPartial('_viewDetailApproval', array('model' => $model), true)
-            ),
-            //'Detail Approval'=>'',
-            'Detail Delivery' => array(
-                'id' => 'test3',
-                'content' => $this->renderPartial('_viewDetailDelivery', array(
-                    'salesOrderDetails' => $salesOrderDetails, 
-                    'model' => $model
-                ), true)
-            ),
-            'Journal' => array(
-                'id' => 'test4',
-                'content' => $this->renderPartial('_viewJournal', array('model' => $model), true)
-            ),
-        ),
+        'tabs' => $tabsArray,
         // additional javascript options for the tabs plugin
-        'options' => array(
-            'collapsible' => true,
-        ),
+        'options' => array('collapsible' => true,),
         // set id for this widgets
         'id' => 'view_tab',
     ));

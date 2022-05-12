@@ -52,23 +52,13 @@ $this->breadcrumbs = array(
                         $servicesReg = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'is_body_repair' => 0));
                         $quickServicesReg = RegistrationQuickService::model()->findByAttributes(array('registration_transaction_id' => $model->id));
                         ?>
-                        <?php /*if (empty($servicesReg) && empty($quickServicesReg) && empty($model->work_order_number)) : ?>
-                            <?php echo CHtml::button('Generate Work Order', array(
-                                'id' => 'detail-button',
-                                'name' => 'Detail',
-                                'class' => 'button cbutton left',
-                                'style' => 'margin-right:10px',
-                                'disabled' => true,
-                                'onclick' => ''
-                            )); ?>
-                        <?php else :*/ ?>
+                    
                         <?php if (count($model->registrationServices) > 0 && $model->status !== 'Finished' && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
                             <?php echo CHtml::button('Generate Work Order', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'class' => 'button cbutton left',
                                 'style' => 'margin-right:10px',
-//                                'disabled' => $model->work_order_number == null ? false : true,
                                 'onclick' => ' 
                                     $.ajax({
                                         type: "POST",
@@ -83,7 +73,6 @@ $this->breadcrumbs = array(
                                 '
                             )); ?>
                         <?php endif; ?>
-                        <?php //endif; ?>		
                     <?php endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
@@ -200,18 +189,22 @@ $this->breadcrumbs = array(
                     'model' => $model
                 ), TRUE)
             );
+            
             $tabsArray['Inspection'] = array(
                 'id' => 'inspection',
                 'content' => $this->renderPartial('_viewInspection', array(
                     'model' => $model
                 ), TRUE)
             );
-            $tabsArray['Journal'] = array(
-                'id' => 'journal',
-                'content' => $this->renderPartial('_viewJournal', array(
-                    'model' => $model
-                ), TRUE)
-            );
+            
+            if (Yii::app()->user->checkAccess("generalManager")) {
+                $tabsArray['Journal'] = array(
+                    'id' => 'journal',
+                    'content' => $this->renderPartial('_viewJournal', array(
+                        'model' => $model
+                    ), TRUE)
+                );
+            }
             ?>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => $tabsArray,

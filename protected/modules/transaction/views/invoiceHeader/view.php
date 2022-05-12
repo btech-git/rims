@@ -23,7 +23,6 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Invoices', Yii::app()->baseUrl . '/transaction/invoiceHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.invoiceHeader.admin"))) ?>
-        <?php //echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/invoiceHeader/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.invoiceHeader.update"))) ?>
         <?php if ($model->payment_left > 0.00): ?>
             <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment', array("/transaction/paymentIn/create", "invoiceId" => $model->id), array('class' => 'button success right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.paymentIn.create"))) ?>		
         <?php endif; ?>
@@ -211,11 +210,7 @@ $this->menu = array(
                 </tr>
                 <tr>
                     <td class="title">PPN <?php echo CHtml::encode(CHtml::value($model, 'tax_percentage')); ?>%</td>
-                    <td>Rp. <?php echo $model->ppn == 1 ? number_format($model->ppn_total, 2) : 0.00; ?>
-                        <?php //if ($model->status !=  "PAID"): ?>
-<?php //echo CHtml::link('PPN<span class="fa fa-question"></span>', Yii::app()->baseUrl.'/transaction/invoiceHeader/ppn?id=' . $model->id. '&ppn_type=1&ref='.$model->reference_type, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.invoiceHeader.ppn")))  ?>
-<?php //endif  ?>
-                    </td>
+                    <td>Rp. <?php echo $model->ppn == 1 ? number_format($model->ppn_total, 2) : 0.00; ?></td>
                 </tr>
 
                 <?php if ($model->reference_type == 2): ?>
