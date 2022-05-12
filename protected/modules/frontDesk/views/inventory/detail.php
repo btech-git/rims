@@ -49,12 +49,15 @@ $this->breadcrumbs=array(
                             <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
                         <?php endforeach; ?>
                         <th style="text-align: center">Total</th>
+                        <th style="text-align: center">COGS</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantities(); ?>
+                        <?php $inventoryCostOfGoodsSold = $product->getInventoryCostOfGoodsSold(); ?>
                         <?php $totalStock = 0; ?>
+                        <?php $totalCogs = 0; ?>
                         <?php foreach ($branches as $branch): ?>
                             <?php $index = -1; ?>
                             <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
@@ -67,12 +70,14 @@ $this->breadcrumbs=array(
                                 <td>
                                     <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
                                     <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
+                                    <?php $totalCogs += CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
                                 </td>
                             <?php else: ?>
                                 <td>0</td>
                             <?php endif; ?>
                         <?php endforeach; ?>
                         <td><?php echo CHtml::encode($totalStock); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCogs)); ?></td>
                     </tr>
                 </tbody>
             </table>

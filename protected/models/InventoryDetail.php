@@ -152,7 +152,25 @@ class InventoryDetail extends CActiveRecord {
         ));
     }
 
-    public function getFastMovingItems($startDate, $endDate) {
+    public function getFastMovingItems($startDate, $endDate, $brandId, $productMasterCategoryId) {
+        $brandIdConditionSql = '';
+        $productMasterCategoryIdConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($brandId)) {
+            $brandIdConditionSql = " AND p.brand_id = :brand_id";
+            $params[':brand_id'] = $brandId;
+        }
+
+        if (!empty($productMasterCategoryId)) {
+            $productMasterCategoryIdConditionSql = " AND p.product_master_category_id = :product_master_category_id";
+            $params[':product_master_category_id'] = $productMasterCategoryId;
+        }
+        
         $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
@@ -160,20 +178,35 @@ class InventoryDetail extends CActiveRecord {
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
-                WHERE i.transaction_date BETWEEN :start_date AND :end_date
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $productMasterCategoryIdConditionSql . " 
                 GROUP BY i.product_id
                 ORDER BY total_sale DESC
                 LIMIT 50";
 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
     }
 
-    public function getSlowMovingItems($startDate, $endDate) {
+    public function getSlowMovingItems($startDate, $endDate, $brandId, $productMasterCategoryId) {
+        $brandIdConditionSql = '';
+        $productMasterCategoryIdConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($brandId)) {
+            $brandIdConditionSql = " AND p.brand_id = :brand_id";
+            $params[':brand_id'] = $brandId;
+        }
+
+        if (!empty($productMasterCategoryId)) {
+            $productMasterCategoryIdConditionSql = " AND p.product_master_category_id = :product_master_category_id";
+            $params[':product_master_category_id'] = $productMasterCategoryId;
+        }
+        
         $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
@@ -181,16 +214,13 @@ class InventoryDetail extends CActiveRecord {
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
-                WHERE i.transaction_date BETWEEN :start_date AND :end_date
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $productMasterCategoryIdConditionSql . " 
                 GROUP BY i.product_id
                 HAVING total_sale > 0
                 ORDER BY total_sale ASC
                 LIMIT 50";
 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
     }

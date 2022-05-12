@@ -402,6 +402,19 @@ class Product extends CActiveRecord {
         return $resultSet;
     }
 
+    public function getInventoryCostOfGoodsSold() {
+        $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) * p.hpp AS cogs
+                FROM " . Inventory::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                WHERE i.product_id = :product_id 
+                GROUP BY w.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
+
+        return $resultSet;
+    }
+
     public function getRetailPriceTax() {
         return $this->retail_price * 10 / 100;
     }
@@ -491,5 +504,17 @@ class Product extends CActiveRecord {
         ));
 
         return ($value === false) ? 0 : $value;
+    }
+    
+    public function getAverageCogs() {
+        $unitPrice = 0;
+        $quantity = 0;
+        
+        foreach ($this->transactionPurchaseOrderDetails as $detail) {
+            $unitPrice += $detail->getTotalPriceBeforeTax(0, 0);
+            $quantity += $detail->quantity;
+        }
+        
+        return $unitPrice / $quantity;
     }
 }

@@ -291,10 +291,9 @@ $('form').submit(function(){
                             'views' => array(
                                 'label' => 'bill detail',
                                 'url' => 'Yii::app()->createUrl("transaction/paymentIn/create",array("invoiceId"=>$data->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("paymentInCreate") && !empty($data->registration_transaction_id)',
+                                'visible' => 'Yii::app()->user->checkAccess("paymentInCreate") && !empty($data->registration_transaction_id) && $data->payment_left > 0',
                                 'click' => "js:function(){
                                     var url = $(this).attr('href');
-
                                     newwindow=window.open(url,'name','height=600,width=1200,left=100');
                                     if (window.focus) {newwindow.focus()}
                                     newwindow.onbeforeunload = function(){  $.fn.yiiGridView.update('registration-transaction-grid')}

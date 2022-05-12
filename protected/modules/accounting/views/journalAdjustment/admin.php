@@ -71,7 +71,12 @@ Yii::app()->clientScript->registerScript('search', "
                         'status',
                         array(
                             'class' => 'CButtonColumn',
-                            'template' => '{view}{update}{delete}',
+                            'template' => '{view}{update}',
+                            'buttons' => array(
+                                'update' => array(
+                                    'visible' => '$data->status == "Draft"',
+                                ),
+                            ),
                         ),
                     ),
                 )); ?>

@@ -68,38 +68,22 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrderDetails = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
 
         if (isset($_POST['Process'])) {
-            if ($purchaseOrder->payment_type == "Cash") {
-                $getCoaKas = '121.00.002';
-                $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-                $jurnalUmumKas = new JurnalUmum;
-                $jurnalUmumKas->kode_transaksi = $purchaseOrder->purchase_order_no;
-                $jurnalUmumKas->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                $jurnalUmumKas->coa_id = $coaKasWithCode->id;
-                $jurnalUmumKas->branch_id = $purchaseOrder->main_branch_id;
-                $jurnalUmumKas->total = $purchaseOrder->total_price;
-                $jurnalUmumKas->debet_kredit = 'K';
-                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $purchaseOrder->supplier->name;
-                $jurnalUmumKas->is_coa_category = 0;
-                $jurnalUmumKas->transaction_type = 'PO';
-                $jurnalUmumKas->save();
-            } else {
-                $coaHutang = Coa::model()->findByPk($purchaseOrder->supplier->coa_id);
-                $getcoaHutang = $coaHutang->code;
-                $coaHutangWithCode = Coa::model()->findByAttributes(array('code' => $getcoaHutang));
-                $jurnalUmumHutang = new JurnalUmum;
-                $jurnalUmumHutang->kode_transaksi = $purchaseOrder->purchase_order_no;
-                $jurnalUmumHutang->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                $jurnalUmumHutang->coa_id = $coaHutangWithCode->id;
-                $jurnalUmumHutang->branch_id = $purchaseOrder->main_branch_id;
-                $jurnalUmumHutang->total = $purchaseOrder->total_price;
-                $jurnalUmumHutang->debet_kredit = 'K';
-                $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
-                $jurnalUmumHutang->transaction_subject = $purchaseOrder->supplier->name;
-                $jurnalUmumHutang->is_coa_category = 0;
-                $jurnalUmumHutang->transaction_type = 'PO';
-                $jurnalUmumHutang->save();
-            }
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $purchaseOrder->purchase_order_no,
+            ));
+            
+            $jurnalUmumHutang = new JurnalUmum;
+            $jurnalUmumHutang->kode_transaksi = $purchaseOrder->purchase_order_no;
+            $jurnalUmumHutang->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+            $jurnalUmumHutang->coa_id = $purchaseOrder->supplier->coa_id;
+            $jurnalUmumHutang->branch_id = $purchaseOrder->main_branch_id;
+            $jurnalUmumHutang->total = $purchaseOrder->total_price;
+            $jurnalUmumHutang->debet_kredit = 'K';
+            $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
+            $jurnalUmumHutang->transaction_subject = $purchaseOrder->supplier->name;
+            $jurnalUmumHutang->is_coa_category = 0;
+            $jurnalUmumHutang->transaction_type = 'PO';
+            $jurnalUmumHutang->save();
 
             if ($purchaseOrder->ppn_price > 0.00) {
                 $coaPpn = Coa::model()->findByAttributes(array('code' => '143.00.001'));
@@ -117,13 +101,10 @@ class TransactionPurchaseOrderController extends Controller {
                 $jurnalUmumPpn->save();
             }
 
-            $coaOutstanding = Coa::model()->findByPk($purchaseOrder->supplier->coaOutstandingOrder->id);
-            $getCoaOutstanding = $coaOutstanding->code;
-            $coaOutstandingWithCode = Coa::model()->findByAttributes(array('code' => $getCoaOutstanding));
             $jurnalUmumOutstanding = new JurnalUmum;
             $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
             $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-            $jurnalUmumOutstanding->coa_id = $coaOutstandingWithCode->id;
+            $jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coa_outstanding_order;
             $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
             $jurnalUmumOutstanding->total = $purchaseOrder->subtotal;
             $jurnalUmumOutstanding->debet_kredit = 'D';

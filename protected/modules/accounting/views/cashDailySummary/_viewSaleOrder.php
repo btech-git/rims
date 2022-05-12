@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th style="text-align: center">No</th>
             <th style="text-align: center">Transaction #</th>
             <th style="text-align: center">Tanggal</th>
             <th style="text-align: center">Customer</th>
@@ -12,9 +13,10 @@
     
     <tbody>
         <?php $grandTotal = 0.00; ?>
-        <?php foreach ($saleOrderDataProvider->data as $header): ?>
+        <?php foreach ($saleOrderDataProvider->data as $i => $header): ?>
             <?php $totalPrice = CHtml::value($header, 'total_price'); ?>
             <tr>
+                <td><?php echo CHtml::encode($i); ?></td>
                 <td>
                     <?php echo CHtml::link($header->sale_order_no, array('javascript:;'), array(
                         'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
@@ -44,7 +46,7 @@
     
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="3">TOTAL</td>
+            <td style="text-align: right" colspan="4">TOTAL</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
             <td colspan="2">&nbsp;</td>
         </tr>

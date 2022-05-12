@@ -31,11 +31,10 @@ class CashDailySummaryController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionSummary() {
-//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 10;
-//        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
         $user = Users::model()->findByPk(Yii::app()->user->id);
         $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $totalDaily = isset($_GET['TotalDaily']) ? $_GET['TotalDaily'] : 0.00;
         $paymentTypes = PaymentType::model()->findAll(); 
         
@@ -62,42 +61,51 @@ class CashDailySummaryController extends Controller {
         $paymentInWholesale = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
         $paymentInWholesaleDataProvider = $paymentInWholesale->searchByDailyCashReport();
         $paymentInWholesaleDataProvider->criteria->compare('t.payment_date', $transactionDate);
+        $paymentInWholesaleDataProvider->criteria->compare('t.branch_id', $branchId);
 
         $paymentOut = Search::bind(new PaymentOut(), isset($_GET['PaymentOut']) ? $_GET['PaymentOut'] : '');
         $paymentOutDataProvider = $paymentOut->searchByDailyCashReport();
         $paymentOutDataProvider->criteria->compare('t.payment_date', $transactionDate);
+        $paymentOutDataProvider->criteria->compare('t.branch_id', $branchId);
 
         $cashTransaction = Search::bind(new CashTransaction(), isset($_GET['CashTransaction']) ? $_GET['CashTransaction'] : '');
         
         $cashTransactionInDataProvider = $cashTransaction->searchByDailyCashReport();
         $cashTransactionInDataProvider->criteria->compare('t.transaction_date', $transactionDate);
         $cashTransactionInDataProvider->criteria->addCondition('t.transaction_type = "In"');
+        $cashTransactionInDataProvider->criteria->compare('t.branch_id', $branchId);
         
         $cashTransactionOutDataProvider = $cashTransaction->searchByDailyCashReport();
         $cashTransactionOutDataProvider->criteria->compare('t.transaction_date', $transactionDate);
         $cashTransactionOutDataProvider->criteria->addCondition('t.transaction_type = "Out"');
+        $cashTransactionOutDataProvider->criteria->compare('t.branch_id', $branchId);
         
         $saleOrder = Search::bind(new TransactionSalesOrder('search'), isset($_GET['TransactionSalesOrder']) ? $_GET['TransactionSalesOrder'] : '');
         $saleOrderDataProvider = $saleOrder->searchByDailyCashReport();
         $saleOrderDataProvider->criteria->compare('t.sale_order_date', $transactionDate);
+        $saleOrderDataProvider->criteria->compare('t.requester_branch_id', $branchId);
         
         $transactionJournal = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : '');
         $transactionJournalDataProvider = $transactionJournal->searchByDailyCashReport();
         $transactionJournalDataProvider->criteria->compare('t.tanggal_transaksi', $transactionDate,true);
+        $transactionJournalDataProvider->criteria->compare('t.branch_id', $branchId);
         
         $retailTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $retailTransactionDataProvider = $retailTransaction->searchByDailyCashReport();
         $retailTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
         $retailTransactionDataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        $retailTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
         
         $wholesaleTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $wholesaleTransactionDataProvider = $wholesaleTransaction->searchByDailyCashReport();
         $wholesaleTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
         $wholesaleTransactionDataProvider->criteria->addCondition('customer.customer_type = "Company"');
+        $wholesaleTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
         
         $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $purchaseOrderDataProvider = $purchaseOrder->searchByDailyCashReport();
         $purchaseOrderDataProvider->criteria->compare('t.purchase_order_date', $transactionDate,true);
+        $purchaseOrderDataProvider->criteria->compare('t.main_branch_id', $branchId);
         
         $paymentTypeIdList = array();
         foreach ($paymentTypes as $paymentType) {
@@ -140,7 +148,7 @@ class CashDailySummaryController extends Controller {
             'cashTransaction' => $cashTransaction,
             'cashTransactionInDataProvider' => $cashTransactionInDataProvider,
             'cashTransactionOutDataProvider' => $cashTransactionOutDataProvider,
-//            'branchId' => $branchId,
+            'branchId' => $branchId,
             'transactionDate' => $transactionDate,
             'paymentInRetailResultSet' => $paymentInRetailResultSet,
             'paymentInRetailList' => $paymentInRetailList,

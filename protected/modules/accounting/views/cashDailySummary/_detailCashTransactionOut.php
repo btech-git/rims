@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th style="text-align: center">No</th>
             <th style="text-align: center">Transaction #</th>
             <th style="text-align: center">Account</th>
             <th style="text-align: center">Amount</th>
@@ -13,9 +14,10 @@
     
     <tbody>
         <?php $totalOut = 0.00; ?>
-        <?php foreach ($cashTransactionOutDataProvider->data as $header): ?>
+        <?php foreach ($cashTransactionOutDataProvider->data as $i => $header): ?>
             <?php $amountOut = CHtml::value($header, 'debit_amount'); ?>
             <tr>
+                <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td>
                     <?php echo CHtml::link($header->transaction_number, array('javascript:;'), array(
                         'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
@@ -50,7 +52,7 @@
     
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="3">TOTAL</td>
+            <td style="text-align: right" colspan="4">TOTAL</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalOut)); ?></td>
             <td colspan="2">&nbsp;</td>
         </tr>
