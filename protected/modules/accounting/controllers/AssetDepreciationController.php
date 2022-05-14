@@ -43,6 +43,7 @@ class AssetDepreciationController extends Controller {
      */
     public function actionCreate() {
         $model = new AssetDepreciation;
+        $model->transaction_time = date('H:i:s');
         $model->user_id = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
@@ -50,6 +51,7 @@ class AssetDepreciationController extends Controller {
 
         if (isset($_POST['AssetDepreciation'])) {
             $model->attributes = $_POST['AssetDepreciation'];
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), 6);
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
         }

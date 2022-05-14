@@ -60,7 +60,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'transaction_time',
 		'sale_price',
 		'note',
-		'asset.name',
+		'assetPurchase.description',
 		'user.username',
 		array(
 			'class'=>'CButtonColumn',

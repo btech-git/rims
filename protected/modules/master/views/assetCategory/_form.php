@@ -26,16 +26,28 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'type'); ?>
+		<?php echo $form->textField($model,'type',array('size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->error($model,'type'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'number_of_years'); ?>
+		<?php echo $form->textField($model,'number_of_years',array('size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->error($model,'number_of_years'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'description'); ?>
 		<?php echo $form->textField($model,'description',array('size'=>45,'maxlength'=>45)); ?>
 		<?php echo $form->error($model,'description'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'status'); ?>
+<!--	<div class="row">
+		<?php /*echo $form->labelEx($model,'status'); ?>
 		<?php echo $form->textField($model,'status'); ?>
-		<?php echo $form->error($model,'status'); ?>
-	</div>
+		<?php echo $form->error($model,'status');*/ ?>
+	</div>-->
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>

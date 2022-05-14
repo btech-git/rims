@@ -60,7 +60,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'transaction_time',
 		'purchase_price',
 		'monthly_useful_life',
-		'asset.name',
+		'assetCategory.name',
 		'user.username',
 		/*
 		'depreciation_amount',

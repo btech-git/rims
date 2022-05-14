@@ -29,12 +29,12 @@ class BalanceSheetSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($endDate, $accountId, $branchId) {
-        //$startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
+    public function setupFilter($startDate, $endDate, $accountId, $branchId) {
+        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        //$this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
-	$this->dataProvider->criteria->addCondition('jurnalUmums.tanggal_transaksi <= :end_date AND t.id = :account_id');
-	$this->dataProvider->criteria->params[':end_date'] = $endDate;
+        $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
+	$this->dataProvider->criteria->addCondition('t.id = :account_id');
+//	$this->dataProvider->criteria->params[':end_date'] = $endDate;
 	$this->dataProvider->criteria->params[':account_id'] = $accountId;
 
         if (!empty($branchId)) {

@@ -1,28 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "{{asset_category}}".
+ * This is the model class for table "{{request_order_detail}}".
  *
- * The followings are the available columns in table '{{asset_category}}':
+ * The followings are the available columns in table '{{request_order_detail}}':
  * @property integer $id
- * @property string $code
- * @property string $description
- * @property integer $status
- * @property string $type
- * @property integer $number_of_years
- *
- * The followings are the available model relations:
- * @property AssetPurchase[] $assetPurchases
- * @property AssetTransaction[] $assetTransactions
+ * @property integer $request_order_id
+ * @property integer $product_id
+ * @property integer $unit_id
+ * @property integer $quantity
+ * @property integer $price
+ * @property integer $discount
+ * @property string $subtotal
  */
-class AssetCategory extends CActiveRecord
+class RequestOrderDetail extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{asset_category}}';
+		return '{{request_order_detail}}';
 	}
 
 	/**
@@ -33,14 +31,12 @@ class AssetCategory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('code, description', 'required'),
-			array('status, number_of_years', 'numerical', 'integerOnly'=>true),
-			array('code', 'length', 'max'=>20),
-			array('description', 'length', 'max'=>100),
-			array('type', 'length', 'max'=>45),
+			array('id, request_order_id, product_id, unit_id, quantity, price, discount, subtotal', 'required'),
+			array('id, request_order_id, product_id, unit_id, quantity, price, discount', 'numerical', 'integerOnly'=>true),
+			array('subtotal', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, code, description, status, type, number_of_years', 'safe', 'on'=>'search'),
+			array('id, request_order_id, product_id, unit_id, quantity, price, discount, subtotal', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,8 +48,6 @@ class AssetCategory extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'assetPurchases' => array(self::HAS_MANY, 'AssetPurchase', 'asset_category_id'),
-			'assetTransactions' => array(self::HAS_MANY, 'AssetTransaction', 'asset_category_id'),
 		);
 	}
 
@@ -64,11 +58,13 @@ class AssetCategory extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'code' => 'Code',
-			'description' => 'Description',
-			'status' => 'Status',
-			'type' => 'Type',
-			'number_of_years' => 'Number Of Years',
+			'request_order_id' => 'Request Order',
+			'product_id' => 'Product',
+			'unit_id' => 'Unit',
+			'quantity' => 'Quantity',
+			'price' => 'Price',
+			'discount' => 'Discount',
+			'subtotal' => 'Subtotal',
 		);
 	}
 
@@ -91,11 +87,13 @@ class AssetCategory extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('code',$this->code,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('status',$this->status);
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('number_of_years',$this->number_of_years);
+		$criteria->compare('request_order_id',$this->request_order_id);
+		$criteria->compare('product_id',$this->product_id);
+		$criteria->compare('unit_id',$this->unit_id);
+		$criteria->compare('quantity',$this->quantity);
+		$criteria->compare('price',$this->price);
+		$criteria->compare('discount',$this->discount);
+		$criteria->compare('subtotal',$this->subtotal,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -106,7 +104,7 @@ class AssetCategory extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return AssetCategory the static model class
+	 * @return RequestOrderDetail the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

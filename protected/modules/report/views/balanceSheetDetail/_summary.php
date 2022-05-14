@@ -55,7 +55,7 @@
                                 <tr>
                                     <td style="padding-left: 90px">
                                         <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
-                                        <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $coa->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                        <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $coa->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
                                     </td>
                                     <td style="text-align: right;">
                                         <?php if (empty($coa->coaIds)): ?> 
@@ -193,7 +193,7 @@
                                     <tr>
                                         <td style="padding-left: 90px">
                                             <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                            <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
                                         </td>
                                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
                                     </tr>
@@ -251,7 +251,7 @@
                                                 <tr>
                                                     <td style="padding-left: 110px">
                                                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
                                                     </td>
                                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
                                                 </tr>
@@ -310,7 +310,7 @@
                                         <tr>
                                             <td style="padding-left: 95px">
                                                 <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                                <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                                <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
                                             </td>
                                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
                                         </tr>

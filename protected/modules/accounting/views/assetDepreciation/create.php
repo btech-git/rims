@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create AssetDepreciation</h1>
+<h1>Create Asset Depreciation</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

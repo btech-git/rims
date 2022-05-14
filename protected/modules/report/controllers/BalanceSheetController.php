@@ -81,9 +81,7 @@ class BalanceSheetController extends Controller {
         $worksheet->setCellValue('A2', 'Laporan Balance Sheet');
         $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
 
-
         $counter = 6;
-
 
         foreach ($accountCategoryTypes as $accountCategoryType) {
             $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
@@ -107,12 +105,10 @@ class BalanceSheetController extends Controller {
             $counter++;
         }
 
-
-
         for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()
-                    ->getColumnDimension($col)
-                    ->setAutoSize(true);
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         header('Content-Type: application/xlsx');

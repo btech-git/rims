@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create AssetSale</h1>
+<h1>Create Asset Sale</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

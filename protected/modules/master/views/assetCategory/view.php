@@ -16,14 +16,16 @@ $this->menu=array(
 );
 ?>
 
-<h1>View AssetCategory #<?php echo $model->id; ?></h1>
+<h1>View Asset Category #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'code',
-		'description',
-		'status',
-	),
+    'data'=>$model,
+    'attributes'=>array(
+        'id',
+        'code',
+        'type',
+        'number_of_years',
+        'description',
+        'status',
+    ),
 )); ?>

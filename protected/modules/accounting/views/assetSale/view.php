@@ -27,7 +27,7 @@ $this->menu=array(
 		'transaction_time',
 		'sale_price',
 		'note',
-		'asset.name',
+		'assetPurchase.description',
 		'user.username',
 	),
 )); ?>

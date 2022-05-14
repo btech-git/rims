@@ -27,7 +27,7 @@ $this->menu=array(
 		'transaction_time',
 		'amount',
 		'number_of_month',
-		'asset.name',
+		'assetPurchase.description',
 		'user.username',
 	),
 )); ?>

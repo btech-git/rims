@@ -52,7 +52,7 @@ class BalanceSheetDetailController extends Controller {
         ));
     }
 
-    public function actionJurnalTransaction($coaId, $endDate, $branchId) {
+    public function actionJurnalTransaction($coaId, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -60,13 +60,14 @@ class BalanceSheetDetailController extends Controller {
 
         $balanceSheetSummary = new BalanceSheetSummary($coa->search());
         $balanceSheetSummary->setupLoading();
-        $balanceSheetSummary->setupPaging($pageSize, $currentPage);
+        $balanceSheetSummary->setupPaging(1000, 1);
         $balanceSheetSummary->setupSorting();
-        $balanceSheetSummary->setupFilter($endDate, $coaId, $branchId);
+        $balanceSheetSummary->setupFilter($startDate, $endDate, $coaId, $branchId);
 
         $this->render('jurnalTransaction', array(
             'coa' => $coa,
             'balanceSheetSummary' => $balanceSheetSummary,
+            'startDate' => $startDate,
             'endDate' => $endDate,
             'coaId' => $coaId,
             'branchId' => $branchId,

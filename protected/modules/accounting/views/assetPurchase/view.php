@@ -32,7 +32,7 @@ $this->menu=array(
 		'depreciation_end_date',
 		'status',
 		'note',
-		'asset.name',
+		'assetCategory.name',
 		'user.username',
 	),
 )); ?>
