@@ -41,10 +41,69 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">COA</span>
+                                        <span class="prefix">Category</span>
                                     </div>
+
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($account, 'id', array('onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;')); ?>
+                                        <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'order' => 'name',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateCoaSubCategorySelect'),
+                                                'update' => '#coa_sub_category',
+                                            )),
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Sub Category</span>
+                                    </div>
+                                    
+                                    <div class="small-8 columns" id="coa_sub_category">
+                                        <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">COA Code</span>
+                                    </div>
+                                    
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextField($account, 'code'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">COA Name</span>
+                                    </div>
+                                    
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextField($account, 'name'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -113,13 +172,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
                 <div class="clear"></div>
             </div>
-            
         </div>
     </div>
 </div>
 
 <div class="grid-view">
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    <?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'coa-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(
@@ -133,43 +191,46 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'coa-grid',
         'dataProvider'=>$coaDataProvider,
-        'filter'=>$coa,
+        'filter'=>$account,
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager'=>array(
            'cssFile'=>false,
            'header'=>'',
         ),
         'selectionChanged'=>'js:function(id){
+            $("#' . CHtml::activeId($account, 'id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#coa-dialog").dialog("close");
-            $.ajax({
-                type: "POST",
-                dataType: "JSON",
-                url: "' . CController::createUrl('ajaxCoa', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-                data: $("form").serialize(),
-                success: function(data) {
-                    $("#coa_id").val(data.id);
-                    $("#coa_name").val(data.code);
-                },
-            });
-            $("#coa-grid").find("tr.selected").each(function(){
-               $(this).removeClass( "selected" );
-            });
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#coa_id").html("");
+                $("#coa_name").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonCoa') . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#coa_id").html(data.id);
+                        $("#coa_name").html(data.name);
+                    },
+                });
+            }
         }',
         'columns'=> array(
             'code',
             'name',
             array(
                 'name' => 'coa_category_id',
-                'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'filter' => CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                 'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
             ),
             array(
                 'name' => 'coa_sub_category_id',
-                'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'filter' => CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                 'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
             ),
         ),
     )); ?>
     
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog');*/ ?>
 </div>

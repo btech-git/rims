@@ -152,9 +152,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             </tr>
             <?php /*if ($account->coa_sub_category_id == 28 || $account->coa_sub_category_id == 30 || $account->coa_sub_category_id == 31): ?>
                 <?php $accountCategoryTypeBalance -= $accountCategoryBalance; ?>
-            <?php else: ?>
+            <?php else:*/ ?>
                 <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
-            <?php endif;*/ ?>
+            <?php //endif; ?>
         <?php endforeach; ?>
         <tr>
             <td>&nbsp;</td>

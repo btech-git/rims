@@ -99,7 +99,14 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeTextField($jurnalUmum, 'coa_id', array('onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;')); ?>
+                                    <?php echo CHtml::activeTextField($jurnalUmum, 'coa_id', array(
+                                        'readonly' => true,
+                                        'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
+                                        'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
+                                    )); ?>
+                                    <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
+                                    <?php echo CHtml::encode(CHtml::value($jurnalUmum, 'coa.name')); ?>
+                                    <?php echo CHtml::closeTag('span'); ?> 
                                 </div>
                             </div>
                         </div>
@@ -195,46 +202,49 @@ Yii::app()->clientScript->registerScript('report', '
         ),
     )); ?>
     
-        <?php $this->widget('zii.widgets.grid.CGridView', array(
-            'id'=>'coa-grid',
-            'dataProvider'=>$coaDataProvider,
-            'filter'=>$coa,
-            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-            'pager'=>array(
-               'cssFile'=>false,
-               'header'=>'',
-            ),
-            'selectionChanged'=>'js:function(id){
-                $("#coa-dialog").dialog("close");
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id'=>'coa-grid',
+        'dataProvider'=>$coaDataProvider,
+        'filter'=>$coa,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager'=>array(
+           'cssFile'=>false,
+           'header'=>'',
+        ),
+        'selectionChanged'=>'js:function(id){
+            $("#' . CHtml::activeId($jurnalUmum, 'coa_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#coa-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#coa_id").html("");
+                $("#coa_name").html("");
+            } else {
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxCoa', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                    url: "' . CController::createUrl('ajaxJsonCoa') . '",
                     data: $("form").serialize(),
                     success: function(data) {
-                        $("#coa_id").val(data.id);
-                        $("#coa_name").val(data.code);
+                        $("#coa_id").html(data.id);
+                        $("#coa_name").html(data.name);
                     },
                 });
-                $("#coa-grid").find("tr.selected").each(function(){
-                   $(this).removeClass( "selected" );
-                });
-            }',
-            'columns'=> array(
-                'code',
-                'name',
-                array(
-                    'name' => 'coa_category_id',
-                    'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                    'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
-                ),
-                array(
-                    'name' => 'coa_sub_category_id',
-                    'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                    'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
-                ),
+            }
+        }',
+        'columns'=> array(
+            'code',
+            'name',
+            array(
+                'name' => 'coa_category_id',
+                'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
             ),
-        )); ?>
+            array(
+                'name' => 'coa_sub_category_id',
+                'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
+            ),
+        ),
+    )); ?>
     
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

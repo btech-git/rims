@@ -39,23 +39,23 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupFilter($startDate, $endDate, $branchId);
         $generalLedgerSummary->getSaldo($startDate);
 
-        $coa = new Coa('search');
-        $coa->unsetAttributes();  // clear any default values
+//        $coa = new Coa('search');
+//        $coa->unsetAttributes();  // clear any default values
+//
+//        if (isset($_GET['Coa'])) {
+//            $coa->attributes = $_GET['Coa'];
+//        }
 
-        if (isset($_GET['Coa'])) {
-            $coa->attributes = $_GET['Coa'];
-        }
-
-        $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("t.is_approved = 1 AND t.coa_id IS NOT NULL");
-        $coaCriteria->compare('t.code', $coa->code, true);
-        $coaCriteria->compare('t.name', $coa->name, true);
-        $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
-        $coaCriteria->compare('t.coa_sub_category_id', $coa->coa_sub_category_id);
-
-        $coaDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaCriteria,
-        ));
+//        $coaCriteria = new CDbCriteria;
+//        $coaCriteria->addCondition("t.is_approved = 1");
+//        $coaCriteria->compare('t.code', $account->code, true);
+//        $coaCriteria->compare('t.name', $account->name, true);
+//        $coaCriteria->compare('t.coa_category_id', $account->coa_category_id);
+//        $coaCriteria->compare('t.coa_sub_category_id', $account->coa_sub_category_id);
+//
+//        $coaDataProvider = new CActiveDataProvider('Coa', array(
+//            'criteria' => $coaCriteria,
+//        ));
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -69,8 +69,8 @@ class GeneralLedgerController extends Controller {
             'currentSort' => $currentSort,
             'number' => $number,
             'branchId' => $branchId,
-            'coa' => $coa,
-            'coaDataProvider' => $coaDataProvider,
+//            'coa' => $coa,
+//            'coaDataProvider' => $coaDataProvider,
         ));
     }
 
@@ -84,27 +84,37 @@ class GeneralLedgerController extends Controller {
         return $grandTotal;
     }
 
-    public function actionAjaxHtmlAccount() {
+    public function actionAjaxHtmlUpdateCoaSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $startAccount = (isset($_GET['StartAccount'])) ? $_GET['StartAccount'] : '';
-            $endAccount = (isset($_GET['EndAccount'])) ? $_GET['EndAccount'] : '';
+            $coaCategoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
 
-            $accounts = Account::model()->findAllByAttributes(array(
-                'branch_id' => $_POST['BranchId'],
-            ), array(
-                'order' => 'code ASC',
-            ));
-
-            $account = Search::bind(new Account('search'), isset($_GET['Account']) ? $_GET['Account'] : array());
-
-            $this->renderPartial('_account', array(
-                'account' => $account,
-                'accounts' => $accounts,
-                'startAccount' => $startAccount,
-                'endAccount' => $endAccount,
+            $this->renderPartial('_coaSubCategorySelect', array(
+                'coaCategoryId' => $coaCategoryId,
             ));
         }
     }
+
+//    public function actionAjaxHtmlAccount() {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $startAccount = (isset($_GET['StartAccount'])) ? $_GET['StartAccount'] : '';
+//            $endAccount = (isset($_GET['EndAccount'])) ? $_GET['EndAccount'] : '';
+//
+//            $accounts = Account::model()->findAllByAttributes(array(
+//                'branch_id' => $_POST['BranchId'],
+//            ), array(
+//                'order' => 'code ASC',
+//            ));
+//
+//            $account = Search::bind(new Account('search'), isset($_GET['Account']) ? $_GET['Account'] : array());
+//
+//            $this->renderPartial('_account', array(
+//                'account' => $account,
+//                'accounts' => $accounts,
+//                'startAccount' => $startAccount,
+//                'endAccount' => $endAccount,
+//            ));
+//        }
+//    }
 
     protected function saveToExcel($dataProvider, array $options = array()) {
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];

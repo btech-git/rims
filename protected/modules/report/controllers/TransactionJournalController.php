@@ -47,7 +47,7 @@ class TransactionJournalController extends Controller {
         }
 
         $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("t.status = 'Approved' AND t.coa_id IS NOT NULL");
+        $coaCriteria->addCondition("t.status = 'Approved'");
         $coaCriteria->compare('t.code', $coa->code, true);
         $coaCriteria->compare('t.name', $coa->name, true);
         $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
@@ -71,6 +71,20 @@ class TransactionJournalController extends Controller {
             'coaDataProvider' => $coaDataProvider,
             'currentSort' => $currentSort,
         ));
+    }
+
+    public function actionAjaxJsonCoa() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $coaId = (isset($_POST['JurnalUmum']['coa_id'])) ? $_POST['JurnalUmum']['coa_id'] : '';
+            $coa = Coa::model()->findByPk($coaId);
+
+            $object = array(
+                'coa_name' => CHtml::value($coa, 'name'),
+                'coa_code' => CHtml::value($coa, 'code'),
+            );
+            
+            echo CJSON::encode($object);
+        }
     }
 
     protected function saveToExcel($dataProvider, array $options = array()) {
