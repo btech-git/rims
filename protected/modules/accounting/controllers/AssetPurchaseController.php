@@ -51,9 +51,44 @@ class AssetPurchaseController extends Controller {
 
         if (isset($_POST['AssetPurchase'])) {
             $model->attributes = $_POST['AssetPurchase'];
+            $model->accumulated_depreciation_value = 0.00;
+            $model->current_value = $model->purchase_value;
+            $model->monthly_useful_life = $model->assetCategory->number_of_years * 12;
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), 6);
-            if ($model->save())
+            
+            if ($model->save()) {
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $model->transaction_number,
+                ));
+
+                $jurnalInventory = new JurnalUmum;
+                $jurnalInventory->kode_transaksi = $model->transaction_number;
+                $jurnalInventory->tanggal_transaksi = $model->transaction_date;
+                $jurnalInventory->coa_id = $model->assetCategory->coa_inventory_id;
+                $jurnalInventory->branch_id = 6;
+                $jurnalInventory->total = $model->purchase_value;
+                $jurnalInventory->debet_kredit = 'D';
+                $jurnalInventory->tanggal_posting = date('Y-m-d');
+                $jurnalInventory->transaction_subject = 'Pembelian Aset Tetap';
+                $jurnalInventory->is_coa_category = 0;
+                $jurnalInventory->transaction_type = 'PFA';
+                $jurnalInventory->save();
+
+                $jurnalBanking = new JurnalUmum;
+                $jurnalBanking->kode_transaksi = $model->transaction_number;
+                $jurnalBanking->tanggal_transaksi = $model->transaction_date;
+                $jurnalBanking->coa_id = $model->companyBank->coa_id;
+                $jurnalBanking->branch_id = 6;
+                $jurnalBanking->total = $model->purchase_value;
+                $jurnalBanking->debet_kredit = 'K';
+                $jurnalBanking->tanggal_posting = date('Y-m-d');
+                $jurnalBanking->transaction_subject = 'Pembelian Aset Tetap';
+                $jurnalBanking->is_coa_category = 0;
+                $jurnalBanking->transaction_type = 'PFA';
+                $jurnalBanking->save();
+
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(

@@ -32,18 +32,13 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'purchase_price'); ?>
-		<?php echo $form->textField($model,'purchase_price',array('size'=>18,'maxlength'=>18)); ?>
+		<?php echo $form->label($model,'purchase_value'); ?>
+		<?php echo $form->textField($model,'purchase_value',array('size'=>18,'maxlength'=>18)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'monthly_useful_life'); ?>
 		<?php echo $form->textField($model,'monthly_useful_life'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'depreciation_amount'); ?>
-		<?php echo $form->textField($model,'depreciation_amount',array('size'=>18,'maxlength'=>18)); ?>
 	</div>
 
 	<div class="row">

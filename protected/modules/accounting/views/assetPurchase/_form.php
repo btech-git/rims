@@ -75,8 +75,8 @@
                         <?php echo CHtml::label('Harga Beli', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'purchase_price',array('size'=>18,'maxlength'=>18)); ?>
-                        <?php echo $form->error($model,'purchase_price'); ?>
+                        <?php echo $form->textField($model,'purchase_value',array('size'=>18,'maxlength'=>18)); ?>
+                        <?php echo $form->error($model,'purchase_value'); ?>
                     </div>
                 </div>
             </div>    
@@ -140,6 +140,18 @@
                     <div class="small-8 columns">
                         <?php echo $form->textField($model,'status'); ?>
                         <?php echo $form->error($model,'status'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Payment Bank', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->dropDownlist($model, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => 1)),'id','bank.name'), array('empty' => '-- Pilih Bank --')); ?>
+                        <?php echo $form->error($model,'company_bank_id'); ?>
                     </div>
                 </div>
             </div>

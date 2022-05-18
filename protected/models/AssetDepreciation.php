@@ -118,15 +118,15 @@ class AssetDepreciation extends MonthlyTransactionActiveRecord {
         $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
         $cnYearCondition = "substring_index(substring_index(substring_index(transaction_number, '/', 2), '/', -1), '.', 1)";
         $cnMonthCondition = "substring_index(substring_index(substring_index(transaction_number, '/', 2), '/', -1), '.', -1)";
-        $assetPurchase = AssetDepreciation::model()->find(array(
+        $assetDepreciation = AssetDepreciation::model()->find(array(
             'order' => ' id DESC',
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth]),
         ));
 
         $branchCode = Branch::model()->findByPk($branchId)->code;
-        if ($assetPurchase !== null) {
-            $this->transaction_number = $assetPurchase->transaction_number;
+        if ($assetDepreciation !== null) {
+            $this->transaction_number = $assetDepreciation->transaction_number;
         }
 
         $this->setCodeNumberByNext('transaction_number', $branchCode, AssetDepreciation::CONSTANT, $currentMonth, $currentYear);

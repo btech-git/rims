@@ -28,12 +28,91 @@
                         <?php echo CHtml::label('Aset', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model, 'asset_purchase_id', CHtml::listData(AssetPurchase::model()->findAll(),'id','description'), array('empty' => '-- Pilih Aset --')); ?>
-                        <?php echo $form->error($model,'asset_purchase_id'); ?>
+                        <?php echo CHtml::encode(CHtml::value($model, 'assetPurchase.description')); ?>
                     </div>
                 </div>
             </div>
             
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Purchase #', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($model, 'assetPurchase.transaction_number')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Purchase Date', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($model, 'assetPurchase.transaction_date')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Category', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($model, 'assetPurchase.assetCategory.description')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Harga Beli', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'assetPurchase.purchase_value'))); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Akumulasi Depresiasi', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'assetPurchase.accumulated_depreciation_value'))); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Nilai Sekarang', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'assetPurchase.current_value'))); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Lama Depresiasi (Bulan)', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($model, 'assetPurchase.monthly_useful_life')); ?>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -58,9 +137,6 @@
                 </div>
             </div>
             
-        </div>
-        
-        <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -72,6 +148,18 @@
                     </div>
                 </div>
             </div>    
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Payment Bank', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->dropDownlist($model, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => 1)),'id','bank.name'), array('empty' => '-- Pilih Bank --')); ?>
+                        <?php echo $form->error($model,'company_bank_id'); ?>
+                    </div>
+                </div>
+            </div>
             
             <div class="field">
                 <div class="row collapse">

@@ -21,7 +21,7 @@
 	<?php echo CHtml::encode($data->transaction_time); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_price')); ?>:</b>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_value')); ?>:</b>
 	<?php echo CHtml::encode($data->purchase_price); ?>
 	<br />
 

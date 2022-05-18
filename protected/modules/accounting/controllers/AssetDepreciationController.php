@@ -37,14 +37,28 @@ class AssetDepreciationController extends Controller {
         ));
     }
 
+    public function actionAssetList() {
+
+        $assetPurchase = Search::bind(new AssetPurchase('search'), isset($_GET['AssetPurchase']) ? $_GET['AssetPurchase'] : array());
+        $assetPurchaseDataProvider = $assetPurchase->searchByDepreciation();
+
+        $this->render('assetList', array(
+            'assetPurchase' => $assetPurchase,
+            'assetPurchaseDataProvider' => $assetPurchaseDataProvider,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    public function actionCreate($assetId) {
         $model = new AssetDepreciation;
+        $model->asset_purchase_id = $assetId;
         $model->transaction_time = date('H:i:s');
         $model->user_id = Yii::app()->user->id;
+        $assetPurchase = AssetPurchase::model()->findByPk($assetId);
+        $model->amount = $assetPurchase->monthlyDepreciationAmount;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -52,8 +66,45 @@ class AssetDepreciationController extends Controller {
         if (isset($_POST['AssetDepreciation'])) {
             $model->attributes = $_POST['AssetDepreciation'];
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), 6);
-            if ($model->save())
+            
+            if ($model->save()) {
+                $assetPurchase->accumulated_depreciation_value = $assetPurchase->totalDepreciationValue;
+                $assetPurchase->current_value = $assetPurchase->purchase_value - $assetPurchase->totalDepreciationValue;
+                $assetPurchase->status = 'Depresiasi ke ' . $model->number_of_month;
+                $assetPurchase->update(array('accumulated_depreciation_value', 'current_value', 'status'));
+                
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $model->transaction_number,
+                ));
+
+                $jurnalExpense = new JurnalUmum;
+                $jurnalExpense->kode_transaksi = $model->transaction_number;
+                $jurnalExpense->tanggal_transaksi = $model->transaction_date;
+                $jurnalExpense->coa_id = $model->assetPurchase->assetCategory->coa_expense_id;
+                $jurnalExpense->branch_id = 6;
+                $jurnalExpense->total = $model->amount;
+                $jurnalExpense->debet_kredit = 'D';
+                $jurnalExpense->tanggal_posting = date('Y-m-d');
+                $jurnalExpense->transaction_subject = 'Depresiasi Aset Tetap';
+                $jurnalExpense->is_coa_category = 0;
+                $jurnalExpense->transaction_type = 'DFA';
+                $jurnalExpense->save();
+
+                $jurnalAccumulation = new JurnalUmum;
+                $jurnalAccumulation->kode_transaksi = $model->transaction_number;
+                $jurnalAccumulation->tanggal_transaksi = $model->transaction_date;
+                $jurnalAccumulation->coa_id = $model->assetPurchase->assetCategory->coa_accumulation_id;
+                $jurnalAccumulation->branch_id = 6;
+                $jurnalAccumulation->total = $model->amount;
+                $jurnalAccumulation->debet_kredit = 'K';
+                $jurnalAccumulation->tanggal_posting = date('Y-m-d');
+                $jurnalAccumulation->transaction_subject = 'Depresiasi Aset Tetap';
+                $jurnalAccumulation->is_coa_category = 0;
+                $jurnalAccumulation->transaction_type = 'DFA';
+                $jurnalAccumulation->save();
+
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(

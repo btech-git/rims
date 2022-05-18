@@ -56,12 +56,14 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'columns'=>array(
             'id',
             'code',
-            'type',
-            'number_of_years',
             'description',
-            'status',
+            'type',
+            'number_of_years: Lama (tahun)',
+            'coaInventory.name: COA Inventaris',
+            'coaExpense.name: COA Beban',
+            'coaAccumulation.name: COA Akumulasi',
             array(
-                    'class'=>'CButtonColumn',
+                'class'=>'CButtonColumn',
             ),
 	),
 )); ?>

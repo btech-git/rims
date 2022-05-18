@@ -3,25 +3,26 @@
 /* @var $model AssetSale */
 
 $this->breadcrumbs=array(
-	'Asset Sales'=>array('index'),
-	'Manage',
+    'Asset Sales'=>array('admin'),
+    'Manage',
 );
 
 $this->menu=array(
-	array('label'=>'List AssetSale', 'url'=>array('index')),
-	array('label'=>'Create AssetSale', 'url'=>array('create')),
+	array('label'=>'List AssetSale', 'url'=>array('admin')),
+	array('label'=>'Create AssetSale', 'url'=>array('assetList')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
+    $('.search-form').toggle();
+    return false;
 });
+
 $('.search-form form').submit(function(){
-	$('#asset-sale-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
+    $('#asset-sale-grid').yiiGridView('update', {
+        data: $(this).serialize()
+    });
+    return false;
 });
 ");
 ?>
@@ -29,7 +30,7 @@ $('.search-form form').submit(function(){
 <h1>Manage Asset Sales</h1>
 
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-plus"></span>New Sales', Yii::app()->baseUrl . '/accounting/assetSale/create', array(
+    <?php echo CHtml::link('<span class="fa fa-plus"></span>New Sales', Yii::app()->baseUrl . '/accounting/assetSale/assetList', array(
         'class' => 'button success right',
 //        'visible' => Yii::app()->user->checkAccess("transaction.paymentOut.create")
     )); ?>
@@ -44,26 +45,26 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 
 <?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
+    <?php $this->renderPartial('_search',array(
 	'model'=>$model,
-)); ?>
+    )); ?>
 </div><!-- search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'asset-sale-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'id',
-		'transaction_number',
-		'transaction_date',
-		'transaction_time',
-		'sale_price',
-		'note',
-		'assetPurchase.description',
-		'user.username',
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
+    'id'=>'asset-sale-grid',
+    'dataProvider'=>$model->search(),
+    'filter'=>$model,
+    'columns'=>array(
+        'id',
+        'transaction_number',
+        'transaction_date',
+        'transaction_time',
+        'sale_price',
+        'note',
+        'assetPurchase.description',
+        'user.username',
+        array(
+            'class'=>'CButtonColumn',
+        ),
+    ),
 )); ?>

@@ -23,9 +23,21 @@ $this->menu=array(
     'attributes'=>array(
         'id',
         'code',
+        'description',
         'type',
         'number_of_years',
-        'description',
+        array(
+            'label' => 'COA Inventaris',
+            'value' => $model->coaInventory->name,
+        ),
+        array(
+            'label' => 'COA Beban',
+            'value' => $model->coaExpense->name,
+        ),
+        array(
+            'label' => 'COA Akumulasi',
+            'value' => $model->coaAccumulation->name,
+        ),
         'status',
     ),
 )); ?>

@@ -12,10 +12,12 @@
  * @property string $note
  * @property integer $asset_purchase_id
  * @property integer $user_id
+ * @property integer $company_bank_id
  *
  * The followings are the available model relations:
  * @property AssetPurchase $assetPurchase
  * @property Users $user
+ * @property CompanyBank $companyBank
  */
 class AssetSale extends MonthlyTransactionActiveRecord {
 
@@ -35,14 +37,14 @@ class AssetSale extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, asset_purchase_id, user_id', 'required'),
-            array('asset_purchase_id, user_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, asset_purchase_id, user_id, company_bank_id', 'required'),
+            array('asset_purchase_id, user_id, company_bank_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('sale_price', 'length', 'max' => 18),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, sale_price, note, asset_purchase_id, user_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, sale_price, note, asset_purchase_id, user_id, company_bank_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -55,6 +57,7 @@ class AssetSale extends MonthlyTransactionActiveRecord {
         return array(
             'assetPurchase' => array(self::BELONGS_TO, 'AssetPurchase', 'asset_purchase_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
         );
     }
 
@@ -71,6 +74,7 @@ class AssetSale extends MonthlyTransactionActiveRecord {
             'note' => 'Note',
             'asset_purchase_id' => 'Asset Purchase',
             'user_id' => 'User',
+            'company_bank_id' => 'Company Bank',
         );
     }
 
@@ -99,6 +103,7 @@ class AssetSale extends MonthlyTransactionActiveRecord {
         $criteria->compare('note', $this->note, true);
         $criteria->compare('asset_purchase_id', $this->asset_purchase_id);
         $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('company_bank_id', $this->company_bank_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -119,18 +124,17 @@ class AssetSale extends MonthlyTransactionActiveRecord {
         $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
         $cnYearCondition = "substring_index(substring_index(substring_index(transaction_number, '/', 2), '/', -1), '.', 1)";
         $cnMonthCondition = "substring_index(substring_index(substring_index(transaction_number, '/', 2), '/', -1), '.', -1)";
-        $assetPurchase = AssetSale::model()->find(array(
+        $assetSale = AssetSale::model()->find(array(
             'order' => ' id DESC',
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth]),
         ));
 
         $branchCode = Branch::model()->findByPk($branchId)->code;
-        if ($assetPurchase !== null) {
-            $this->transaction_number = $assetPurchase->transaction_number;
+        if ($assetSale !== null) {
+            $this->transaction_number = $assetSale->transaction_number;
         }
 
         $this->setCodeNumberByNext('transaction_number', $branchCode, AssetSale::CONSTANT, $currentMonth, $currentYear);
     }
-    
 }

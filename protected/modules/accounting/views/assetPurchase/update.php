@@ -3,13 +3,13 @@
 /* @var $model AssetPurchase */
 
 $this->breadcrumbs=array(
-	'Asset Purchases'=>array('index'),
+	'Asset Purchases'=>array('admin'),
 	$model->id=>array('view','id'=>$model->id),
 	'Update',
 );
 
 $this->menu=array(
-	array('label'=>'List AssetPurchase', 'url'=>array('index')),
+	array('label'=>'List AssetPurchase', 'url'=>array('admin')),
 	array('label'=>'Create AssetPurchase', 'url'=>array('create')),
 	array('label'=>'View AssetPurchase', 'url'=>array('view', 'id'=>$model->id)),
 	array('label'=>'Manage AssetPurchase', 'url'=>array('admin')),
