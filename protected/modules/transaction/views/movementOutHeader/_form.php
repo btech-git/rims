@@ -72,26 +72,33 @@
                             <?php echo $form->labelEx($movementOut->header, 'branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownlist($movementOut->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]', 'onchange' => '
-                                //$("#delivery-order-grid .filters input[name=\"TransactionDeliveryOrder[branch_name]\"]").prop("readOnly","readOnly");
-                                $.updateGridView("delivery-order-grid", "TransactionDeliveryOrder[branch_name]", $("#MovementOutHeader_branch_id option:selected").text());
-                                $.updateGridView("return-order-grid", "TransactionReturnOrder[branch_name]", $("#MovementOutHeader_branch_id option:selected").text());
-                                $.updateGridView("registration-transaction-grid", "RegistrationTransaction[branch_name]", $("#MovementOutHeader_branch_id option:selected").text());
-                                $.ajax({
-                                    type: "POST",
-                                    //dataType: "JSON",
-                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementOut->header->id)) . '",
-                                    data: $("form").serialize(),
-                                    success: function(html) {
-                                        $("#mmtype").html(html);	
-                                    },
-                                });
-                            ')); ?>
+                            <?php echo $form->dropDownlist($movementOut->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
+                                'prompt' => '[--Select Branch--]', 
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'url' => CController::createUrl('ajaxHtmlUpdateAllWarehouse', array('id' => $movementOut->header->id)),
+                                    'update' => '#detail_div',
+                                )),
+                            )); ?>
                             <?php echo $form->error($movementOut->header, 'branch_id'); ?>
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($movementOut->header, 'status', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($movementOut->header, 'status', array('value' => $movementOut->header->isNewRecord ? 'Draft' : $movementOut->header->status, 'readonly' => true)); ?>
+                            <?php echo $form->error($movementOut->header, 'status'); ?>
+                        </div>
+                    </div>
+                </div>		
+
             </div>
+            
             <div class="small-12 medium-6 columns">
                 <?php if ((int) $movementOut->header->movement_type == 1): ?>
                     <div id="deliveryOrder">
@@ -222,18 +229,6 @@
                     </div>
                 </div>		
 
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($movementOut->header, 'status', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textField($movementOut->header, 'status', array('value' => $movementOut->header->isNewRecord ? 'Draft' : $movementOut->header->status, 'readonly' => true)); ?>
-                            <?php echo $form->error($movementOut->header, 'status'); ?>
-                        </div>
-                    </div>
-                </div>		
-
             </div>
         </div>
         <fieldset>
@@ -243,8 +238,11 @@
             
             <div class="row">
                 <div class="large-12 columns">
-                    <div class="detail" id="mmtype">
-                        <?php $this->renderPartial('_detail', array('movementOut' => $movementOut)); ?>
+                    <div class="detail" id="detail_div">
+                        <?php $this->renderPartial('_detail', array(
+                            'movementOut' => $movementOut,
+                            'warehouses' => $warehouses,
+                        )); ?>
                     </div>
                 </div>	
             </div>

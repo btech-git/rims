@@ -67,23 +67,27 @@ class MovementInHeaderController extends Controller {
     public function actionCreate($transactionId, $movementType) {
 
         $movementIn = $this->instantiate(null);
-        $movementIn->header->branch_id = $movementIn->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementIn->header->branch_id;
         $movementIn->header->date_created = date('Y-m-d H:i:s');
         $this->performAjaxValidation($movementIn->header);
 
         if ($movementType == 1) {
+            $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
             $movementIn->header->receive_item_id = $transactionId;
             $movementIn->header->return_item_id = null;
+            $movementIn->header->branch_id = $receiveItem->recipient_branch_id;
             
         } else if ($movementType == 2) {
+            $returnItem = TransactionReturnItem::model()->findByPk($transactionId);
             $movementIn->header->receive_item_id = null;
             $movementIn->header->return_item_id = $transactionId;
+            $movementIn->header->branch_id = $returnItem->recipient_branch_id;
             
         } else {
             $this->redirect(array('admin'));
         }
         
         $movementIn->header->movement_type = $movementType;
+        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
         $movementIn->addDetails($transactionId, $movementType);
         
         if (isset($_POST['Cancel'])) {
@@ -101,6 +105,7 @@ class MovementInHeaderController extends Controller {
 
         $this->render('create', array(
             'movementIn' => $movementIn,
+            'warehouses' => $warehouses,
         ));
     }
 
@@ -355,15 +360,29 @@ class MovementInHeaderController extends Controller {
         }
     }
 
-    public function actionAjaxHtmlRemoveDetailAll($id) {
+//    public function actionAjaxHtmlRemoveDetailAll($id) {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $movementIn = $this->instantiate($id);
+//            $this->loadState($movementIn);
+//
+//            $movementIn->removeDetailAll();
+//            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+//            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+//            $this->renderPartial('_detail', array('movementIn' => $movementIn), false, true);
+//        }
+//    }
+
+    public function actionAjaxHtmlUpdateAllWarehouse($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $movementIn = $this->instantiate($id);
             $this->loadState($movementIn);
 
-            $movementIn->removeDetailAll();
-            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('movementIn' => $movementIn), false, true);
+            $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
+
+            $this->renderPartial('_detail', array(
+                'movementIn' => $movementIn,
+                'warehouses' => $warehouses,
+            ));
         }
     }
 

@@ -146,7 +146,7 @@ class StockAdjustmentDetail extends CActiveRecord {
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
             ':product_id' => $productId,
-            ':branch_id' => empty($branchId) ? $this->stockAdjustmentHeader->branch_id : $branchId,
+            ':branch_id' => $branchId,
         ));
 
         return ($value === false) ? 0 : $value;

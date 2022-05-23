@@ -50,7 +50,6 @@
                                     'value' => date('Y-m-d'),
                                 ),
                             )); ?>
-                            <?php //echo $form->textField($movementIn->header, 'date_posting', array('value' => date('Y-m-d H:i:s'), 'readonly' => true,)); ?>
                             <?php echo $form->error($movementIn->header, 'date_posting'); ?>
                         </div>
                     </div>
@@ -59,127 +58,21 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($movementIn->header, 'movement_type', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::encode($movementIn->header->getMovementType($movementIn->header->movement_type)); ?>
-                            <?php /*echo $form->dropDownList($movementIn->header, 'movement_type', array('1' => 'Receive Item', '2' => 'Return Item'), array('prompt' => '[--Select Movement Type--]', 'onchange' => '
-                                $.ajax({
-                                    type: "POST",
-                                    //dataType: "JSON",
-                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementIn->header->id)) . '",
-                                    data: $("form").serialize(),
-                                    success: function(html) {
-                                        $("#mmtype").html(html);	
-                                    },
-                                });
-                            '));*/ ?>
-                            <?php echo $form->error($movementIn->header, 'movement_type'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
                             <?php echo $form->labelEx($movementIn->header, 'branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownlist($movementIn->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]', 'onchange' => '
-                                //$("#receive-item-grid .filters input[name=\"TransactionReceiveItem[branch_name]\"]").prop("readOnly","readOnly");
-                                $.updateGridView("receive-item-grid", "TransactionReceiveItem[branch_name]", $("#MovementInHeader_branch_id option:selected").text());
-                                $.updateGridView("return-item-grid", "TransactionReturnItem[branch_name]", $("#MovementInHeader_branch_id option:selected").text());
-                                $.ajax({
-                                    type: "POST",
-                                    //dataType: "JSON",
-                                    url: "' . CController::createUrl('ajaxHtmlRemoveDetailAll', array('id' => $movementIn->header->id)) . '",
-                                    data: $("form").serialize(),
-                                    success: function(html) {
-                                        $("#mmtype").html(html);	
-                                    },
-                                });
-                                $("#MovementInHeader_receive_item_id").val("");
-                                $("#MovementInHeader_receive_item_number").val("");
-                                $("#MovementInHeader_reference_type").val("");
-                                $("#MovementInHeader_reference_number").val("");
-                                $("#MovementInHeader_return_item_id").val("");
-                                $("#MovementInHeader_return_item_number").val("");
-                            ')); ?>
+                            <?php echo $form->dropDownlist($movementIn->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
+                                'prompt' => '[--Select Branch--]', 
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'url' => CController::createUrl('ajaxHtmlUpdateAllWarehouse', array('id' => $movementIn->header->id)),
+                                    'update' => '#detail_div',
+                                )),
+                            )); ?>
                             <?php echo $form->error($movementIn->header, 'branch_id'); ?>
                         </div>
                     </div>
-                </div>		
-            </div>
-            <div class="small-12 medium-6 columns">
-                <div id="receiveItem">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($movementIn->header, 'receive_item_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->hiddenField($movementIn->header, 'receive_item_id'); ?>
-                                <?php echo $form->textField($movementIn->header, 'receive_item_number', array('value' => $movementIn->header->receive_item_id == "" ? "" : TransactionReceiveItem::model()->findByPk($movementIn->header->receive_item_id)->receive_item_no, 'readonly' => true, )); ?>
-                                <?php echo $form->error($movementIn->header, 'receive_item_id'); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                    $type = $requestNumber = "";
-                    $receive = TransactionReceiveItem::model()->findByPk($movementIn->header->receive_item_id);
-                    if (!empty($receive)) {
-                        if ($receive->request_type == "Internal Delivery Order") {
-                            $type = "Internal Delivery Order";
-                            $requestNumber = $receive->deliveryOrder->delivery_order_no;
-                        } elseif ($receive->request_type == "Purchase Order") {
-                            $type = "Purchase Order";
-                            $requestNumber = $receive->purchaseOrder->purchase_order_no;
-                        } elseif ($receive->request_type == "Consignment In") {
-                            $type = "Consignment In";
-                            $requestNumber = $receive->consignmentIn->consignment_in_number;
-                        }
-                    }
-
-                    //var_dump($type);
-                    ?>
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label>Reference Type</label>
-                            </div>
-                            <div class="small-8 columns">
-                                <input id="MovementInHeader_reference_type" readonly="readonly" name="MovementInHeader[reference_type]" type="text" value="<?php echo $movementIn->header->receive_item_id == "" ? "" : $type; ?>">
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label>Reference #</label>
-                            </div>
-                            <div class="small-8 columns">
-                                <input id="MovementInHeader_reference_number" readonly="readonly" name="MovementInHeader[reference_number]" type="text" value="<?php echo $movementIn->header->receive_item_id == "" ? "" : $requestNumber; ?>">
-                            </div>
-                        </div>
-                    </div>		
                 </div>
-                <div id="returnItem">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($movementIn->header, 'return_item_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->hiddenField($movementIn->header, 'return_item_id'); ?>
-                                <?php echo $form->textField($movementIn->header, 'return_item_number', array('value' => $movementIn->header->return_item_id == "" ? "" : TransactionReturnItem::model()->findByPk($movementIn->header->return_item_id)->return_item_no, 'readonly' => true,)); ?>
-                                <?php echo $form->error($movementIn->header, 'return_item_id'); ?>
-                            </div>
-                        </div>
-                    </div>	
-                </div>
-
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -203,7 +96,102 @@
                             <?php echo $form->error($movementIn->header, 'status'); ?>
                         </div>
                     </div>
-                </div>		
+                </div>				
+            </div>
+            
+            <div class="small-12 medium-6 columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($movementIn->header, 'movement_type', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode($movementIn->header->getMovementType($movementIn->header->movement_type)); ?>
+                            <?php echo $form->error($movementIn->header, 'movement_type'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if (!empty($movementIn->header->receive_item_id)): ?>
+                    <div id="receiveItem">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <?php echo $form->labelEx($movementIn->header, 'receive_item_id', array('class' => 'prefix')); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo $form->hiddenField($movementIn->header, 'receive_item_id'); ?>
+                                    <?php echo $form->textField($movementIn->header, 'receive_item_number', array('value' => $movementIn->header->receive_item_id == "" ? "" : TransactionReceiveItem::model()->findByPk($movementIn->header->receive_item_id)->receive_item_no, 'readonly' => true, )); ?>
+                                    <?php echo $form->error($movementIn->header, 'receive_item_id'); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        $type = $requestNumber = "";
+                        $receive = TransactionReceiveItem::model()->findByPk($movementIn->header->receive_item_id);
+                        if (!empty($receive)) {
+                            if ($receive->request_type == "Internal Delivery Order") {
+                                $type = "Internal Delivery Order";
+                                $requestNumber = $receive->deliveryOrder->delivery_order_no;
+                            } elseif ($receive->request_type == "Purchase Order") {
+                                $type = "Purchase Order";
+                                $requestNumber = $receive->purchaseOrder->purchase_order_no;
+                            } elseif ($receive->request_type == "Consignment In") {
+                                $type = "Consignment In";
+                                $requestNumber = $receive->consignmentIn->consignment_in_number;
+                            }
+                        }
+
+                        ?>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label>Reference Type</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input id="MovementInHeader_reference_type" readonly="readonly" name="MovementInHeader[reference_type]" type="text" value="<?php echo $movementIn->header->receive_item_id == "" ? "" : $type; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label>Reference #</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input id="MovementInHeader_reference_number" readonly="readonly" name="MovementInHeader[reference_number]" type="text" value="<?php echo $movementIn->header->receive_item_id == "" ? "" : $requestNumber; ?>">
+                                </div>
+                            </div>
+                        </div>		
+                    </div>
+                <?php elseif (!empty($movementIn->header->return_item_id)): ?>
+                    <div id="returnItem">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <?php echo $form->labelEx($movementIn->header, 'return_item_id', array('class' => 'prefix')); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo $form->hiddenField($movementIn->header, 'return_item_id'); ?>
+                                    <?php echo $form->textField($movementIn->header, 'return_item_number', array('value' => $movementIn->header->return_item_id == "" ? "" : TransactionReturnItem::model()->findByPk($movementIn->header->return_item_id)->return_item_no, 'readonly' => true,)); ?>
+                                    <?php echo $form->error($movementIn->header, 'return_item_id'); ?>
+                                </div>
+                            </div>
+                        </div>	
+                    </div>
+                <?php else: ?>
+                    <div id="emptyItem">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">&nbsp;</div>
+                                <div class="small-8 columns">&nbsp;</div>
+                            </div>
+                        </div>	
+                    </div>
+                <?php endif; ?>
+
             </div>
         </div>
         <fieldset>
@@ -213,8 +201,11 @@
             
             <div class="row">
                 <div class="large-12 columns">
-                    <div class="detail" id="mmtype">
-                        <?php $this->renderPartial('_detail', array('movementIn' => $movementIn)); ?>
+                    <div class="detail" id="detail_div">
+                        <?php $this->renderPartial('_detail', array(
+                            'movementIn' => $movementIn,
+                            'warehouses' => $warehouses,
+                        )); ?>
                     </div>
                 </div>	
             </div>
@@ -257,34 +248,34 @@
     // console.log(sum + ' ' + thisted);
     });
     
-    if ($("#MovementInHeader_movement_type").val() == "1") {
-        $("#receiveItem").show();
-        $("#returnItem").hide();
-    } else if ($("#MovementInHeader_movement_type").val() == "2") {
-        $("#returnItem").show();
-        $("#receiveItem").hide();
-    } else {
-        $("#receiveItem").hide();
-        $("#returnItem").hide();
-    }
-    
-    $("#MovementInHeader_movement_type").change(function(){
-        //ClearFields();
-        $("#MovementInHeader_receive_item_id").val("");
-        $("#MovementInHeader_receive_item_number").val("");
-        $("#MovementInHeader_reference_type").val("");
-        $("#MovementInHeader_reference_number").val("");
-        $("#MovementInHeader_return_item_id").val("");
-        $("#MovementInHeader_return_item_number").val("");
-        if ($("#MovementInHeader_movement_type").val() == "1") {
-            $("#receiveItem").show();
-            $("#returnItem").hide();
-        } else if ($("#MovementInHeader_movement_type").val() == "2") {
-            $("#returnItem").show();
-            $("#receiveItem").hide();
-        } else {
-            $("#receiveItem").hide();
-            $("#returnItem").hide();
-        }
-    });
+//    if ($("#MovementInHeader_movement_type").val() == "1") {
+//        $("#receiveItem").show();
+//        $("#returnItem").hide();
+//    } else if ($("#MovementInHeader_movement_type").val() == "2") {
+//        $("#returnItem").show();
+//        $("#receiveItem").hide();
+//    } else {
+//        $("#receiveItem").hide();
+//        $("#returnItem").hide();
+//    }
+//    
+//    $("#MovementInHeader_movement_type").change(function(){
+//        //ClearFields();
+//        $("#MovementInHeader_receive_item_id").val("");
+//        $("#MovementInHeader_receive_item_number").val("");
+//        $("#MovementInHeader_reference_type").val("");
+//        $("#MovementInHeader_reference_number").val("");
+//        $("#MovementInHeader_return_item_id").val("");
+//        $("#MovementInHeader_return_item_number").val("");
+//        if ($("#MovementInHeader_movement_type").val() == "1") {
+//            $("#receiveItem").show();
+//            $("#returnItem").hide();
+//        } else if ($("#MovementInHeader_movement_type").val() == "2") {
+//            $("#returnItem").show();
+//            $("#receiveItem").hide();
+//        } else {
+//            $("#receiveItem").hide();
+//            $("#returnItem").hide();
+//        }
+//    });
 </script>

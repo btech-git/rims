@@ -17,8 +17,8 @@ class ReceivableLedgerSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 10000 : $pageSize;
-        $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 92000 : $pageSize;
+//        $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
         $currentPage = (empty($currentPage)) ? 0 : $currentPage - 1;
@@ -30,12 +30,12 @@ class ReceivableLedgerSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($filters) {
+//    public function setupFilter($filters) {
 //        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
 //        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
 //        
 //        $this->dataProvider->criteria->addBetweenCondition('invoiceHeaders.invoice_date', $startDate, $endDate);
 //        $this->dataProvider->criteria->addBetweenCondition('paymentIns.payment_date', $startDate, $endDate);
-    }
+//    }
 
 }

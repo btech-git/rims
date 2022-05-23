@@ -31,87 +31,8 @@ class MovementOuts extends CComponent {
         $this->header->setCodeNumberByNext('movement_out_no', $branchCode, MovementOutHeader::CONSTANT, $currentMonth, $currentYear);
     }
 
-//    public function addDetail($detailId, $type) {
-//
-//        if ($type == 1) {
-//            $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByPk($detailId);
-//            
-//            $exist = false;
-//            foreach ($this->details as $i => $detail) {
-//                if ($deliveryOrderDetail->id === $detail->delivery_order_detail_id) {
-//                    $exist = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!$exist) {
-//                $detail = new MovementOutDetail();
-//                $detail->delivery_order_detail_id = $deliveryOrderDetail->id;
-//                $detail->product_id = $deliveryOrderDetail->product_id;
-//                $detail->quantity_transaction = $deliveryOrderDetail->quantity_delivery;
-//                $this->details[] = $detail;
-//            }
-//        } elseif ($type == 2) {
-//            $returnOrderDetail = TransactionReturnOrderDetail::model()->findByPk($detailId);
-//            
-//            $exist = false;
-//            foreach ($this->details as $i => $detail) {
-//                if ($returnOrderDetail->id === $detail->return_order_detail_id) {
-//                    $exist = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!$exist) {
-//                $detail = new MovementOutDetail();
-//                $detail->return_order_detail_id = $returnOrderDetail->id;
-//                $detail->product_id = $returnOrderDetail->product_id;
-//                $detail->quantity_transaction = $returnOrderDetail->qty_reject;
-//                $this->details[] = $detail;
-//            }
-//        } elseif ($type == 3) {
-//            $registrationProduct = RegistrationProduct::model()->findByPk($detailId);
-//            
-//            $exist = false;
-//            foreach ($this->details as $i => $detail) {
-//                if ($registrationProduct->id === $detail->registration_product_id) {
-//                    $exist = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!$exist) {
-//                $detail = new MovementOutDetail();
-//                $detail->registration_product_id = $registrationProduct->id;
-//                $detail->product_id = $registrationProduct->product_id;
-//                $detail->quantity_transaction = $registrationProduct->quantity;
-//                $this->details[] = $detail;
-//            }
-//        } elseif ($type == 4) {
-//            $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detailId);
-//            
-//            $exist = false;
-//            foreach ($this->details as $i => $detail) {
-//                if ($materialRequestDetail->id === $detail->material_request_detail_id) {
-//                    $exist = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!$exist) {
-//                $detail = new MovementOutDetail();
-//                $detail->material_request_detail_id = $detailId;
-//                $detail->product_id = $materialRequestDetail->product_id;
-//                $detail->quantity_transaction = $materialRequestDetail->quantity;
-//                $this->details[] = $detail;
-//            }
-//        }
-//    }
-
     public function addDetails($transactionId, $movementType) {
 
-//        $this->details = array();
-        
         if ($movementType == 1) {
             $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
 
@@ -220,19 +141,7 @@ class MovementOuts extends CComponent {
         return $valid;
     }
 
-//    public function validateDetailsCount() {
-//        $valid = true;
-//        
-//        if (count($this->details) === 0) {
-//            $valid = false;
-//            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-//        }
-//
-//        return $valid;
-//    }
-
     public function flush() {
-//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
         $movementOutDetails = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $this->header->id));
@@ -247,9 +156,6 @@ class MovementOuts extends CComponent {
         //save request detail
         foreach ($this->details as $detail) {
             if ($detail->id == "") {
-                // $moveCriteria = new CDbCriteria();
-                // $moveCriteria->condition = "product_id =".$detail->product_id ." AND warehouse_id = ".$detail->warehouse_id . " AND movement_out_header_id = ". $this->header->id ." AND id != ''";
-                // $moveDetail = MovementOutDetail::model()->find($moveCriteria);
                 $moveDetail = MovementOutDetail::model()->findByAttributes(array('movement_out_header_id' => $this->header->id, 'product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
                 if (!empty($moveDetail)) {
                     $moveDetail->quantity += $detail->quantity;
@@ -266,15 +172,14 @@ class MovementOuts extends CComponent {
             $movementType = $this->header->movement_type;
             if ($movementType == 1) {
                 $criteria = new CDbCriteria;
-//				$criteria->together = 'true';
-//				$criteria->with = array('movementOutHeader');
                 $criteria->condition = "delivery_order_detail_id =" . $detail->delivery_order_detail_id . " AND product_id = " . $detail->product_id;
                 $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
 
                 $quantity = 0;
                 
-                foreach ($mvmntDetails as $mvmntDetail)
+                foreach ($mvmntDetails as $mvmntDetail) {
                     $quantity += $mvmntDetail->quantity;
+                }
 
                 $deliveryDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
                 $deliveryDetail->quantity_movement_left = $detail->quantity_transaction - $quantity;

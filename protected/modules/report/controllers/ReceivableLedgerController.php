@@ -43,15 +43,15 @@ class ReceivableLedgerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $receivableLedgerSummary = new ReceivableLedgerSummary($customer->search());
+        $receivableLedgerSummary = new ReceivableLedgerSummary($customer->searchByReceivable());
         $receivableLedgerSummary->setupLoading();
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
-        $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        );
-        $receivableLedgerSummary->setupFilter($filters);
+//        $filters = array(
+//            'startDate' => $startDate,
+//            'endDate' => $endDate,
+//        );
+//        $receivableLedgerSummary->setupFilter($filters);
         
         $this->render('summary', array(
             'customer' => $customer,

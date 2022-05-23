@@ -207,6 +207,50 @@ class Customer extends CActiveRecord {
         ));
     }
 
+    public function searchByReceivable() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.address', $this->address, true);
+        $criteria->compare('t.zipcode', $this->zipcode, true);
+        $criteria->compare('t.province_id', $this->province_id);
+        $criteria->compare('t.city_id', $this->city_id);
+        $criteria->compare('fax', $this->fax, true);
+        $criteria->compare('t.email', $this->email, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.default_payment_type', $this->default_payment_type);
+        $criteria->compare('t.tcustomer_type', $this->customer_type, true);
+        $criteria->compare('tenor', $this->tenor);
+        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('birthdate', $this->birthdate, true);
+        $criteria->compare('flat_rate', $this->flat_rate, true);
+        $criteria->compare('mobile_phone', $this->mobile_phone, true);
+        $criteria->compare('phone', $this->phone, true);
+        $criteria->compare('t.coa_id', $this->coa_id);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
+
+        $criteria->together = 'true';
+        $criteria->with = array('province', 'city', 'vehicles', 'coa');
+        $criteria->compare('province.name', $this->province_name, true);
+        $criteria->compare('city.name', $this->city_name, true);
+        $criteria->compare('coa.name', $this->coa_name, true);
+        $criteria->compare('coa.code', $this->coa_code, true);
+
+        if ($this->plate_number != NULL) {
+            $criteria->with = array('vehicles' => array('together' => true));
+            $criteria->compare('vehicles.plate_number', $this->plate_number, true);
+        }
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
@@ -256,6 +300,7 @@ class Customer extends CActiveRecord {
             FROM " . InvoiceHeader::model()->tableName() . "
             WHERE customer_id = :customer_id AND invoice_date < :start_date
             GROUP BY customer_id
+            HAVING beginning_balance > 0
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(

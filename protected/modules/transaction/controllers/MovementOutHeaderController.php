@@ -70,26 +70,31 @@ class MovementOutHeaderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($transactionId, $movementType) {
-
+        
         $movementOut = $this->instantiate(null);
-        $movementOut->header->branch_id = $movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementOut->header->branch_id;
         $movementOut->header->date_created = date('Y-m-d H:i:s');
         $this->performAjaxValidation($movementOut->header);
 
         if ($movementType == 1) {
+            $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = $transactionId;
             $movementOut->header->return_order_id = null;
             $movementOut->header->registration_transaction_id = null;
+            $movementOut->header->branch_id = $deliveryOrder->sender_branch_id;
             
         } else if ($movementType == 2) {
+            $returnOrder = TransactionReturnOrder::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = $transactionId;
             $movementOut->header->registration_transaction_id = null;
+            $movementOut->header->branch_id = $returnOrder->recipient_branch_id;
             
         } else if ($movementType == 3) {
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = null;
             $movementOut->header->registration_transaction_id = $transactionId;
+            $movementOut->header->branch_id = $registrationTransaction->branch_id;
         } else {
             $this->redirect(array('admin'));
         }
@@ -97,6 +102,8 @@ class MovementOutHeaderController extends Controller {
         $movementOut->header->material_request_header_id = null;
         $movementOut->header->registration_service_id = null;
         $movementOut->header->movement_type = $movementType;
+        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
+
         $movementOut->addDetails($transactionId, $movementType);
         
         if (isset($_POST['Cancel'])) {
@@ -114,164 +121,9 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('create', array(
             'movementOut' => $movementOut,
+            'warehouses' => $warehouses,
         ));
     }
-
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
-    /*public function actionCreate() {
-        //$model=new MovementOutHeader;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        $movementOut = $this->instantiate(null);
-        $movementOut->header->branch_id = $movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementOut->header->branch_id;
-        $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
-        $this->performAjaxValidation($movementOut->header);
-
-        $deliveryOrder = new TransactionDeliveryOrder('search');
-        $deliveryOrder->unsetAttributes();
-        
-        if (isset($_GET['TransactionDeliveryOrder']))
-            $deliveryOrder->attributes = $_GET['TransactionDeliveryOrder'];
-        
-        $deliveryOrderCriteria = new CDbCriteria;
-        $deliveryOrderCriteria->together = 'true';
-        $deliveryOrderCriteria->with = array('senderBranch');
-        $deliveryOrderCriteria->compare('senderBranch.name', $deliveryOrder->branch_name, true);
-        $deliveryOrderCriteria->compare('delivery_order_no', $deliveryOrder->delivery_order_no, true);
-        $deliveryOrderDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array('criteria' => $deliveryOrderCriteria));
-
-        $deliveryOrderDetail = new TransactionDeliveryOrderDetail('search');
-        $deliveryOrderDetail->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionDeliveryOrderDetail'])) {
-            $deliveryOrderDetail->attributes = $_GET['TransactionDeliveryOrderDetail'];
-        }
-        
-        $deliveryOrderDetailCriteria = new CDbCriteria;
-        $deliveryOrderDetailCriteria->together = 'true';
-        $deliveryOrderDetailCriteria->with = array('product', 'deliveryOrder');
-
-        $deliveryOrderDetailCriteria->compare('delivery_order_id', $deliveryOrderDetail->delivery_order_id, true);
-        $deliveryOrderDetailCriteria->compare('deliveryOrder.delivery_order_no', $deliveryOrderDetail->delivery_order_no, true);
-        $deliveryOrderDetailCriteria->compare('product.name', $deliveryOrderDetail->product_name, true);
-        $deliveryOrderDetailDataProvider = new CActiveDataProvider('TransactionDeliveryOrderDetail', array(
-            'criteria' => $deliveryOrderDetailCriteria,
-        ));
-
-        // Return Order 
-        $returnOrder = new TransactionReturnOrder('search');
-        $returnOrder->unsetAttributes();
-        
-        if (isset($_GET['TransactionReturnOrder'])) {
-            $returnOrder->attributes = $_GET['TransactionReturnOrder'];
-        }
-        
-        $returnOrderCriteria = new CDbCriteria;
-        $returnOrderCriteria->together = 'true';
-        $returnOrderCriteria->with = array('recipientBranch');
-
-        $returnOrderCriteria->compare('recipientBranch.name', $returnOrder->branch_name, true);
-        $returnOrderCriteria->compare('return_order_no', $returnOrder->return_order_no, true);
-        $returnOrderDataProvider = new CActiveDataProvider('TransactionReturnOrder', array('criteria' => $returnOrderCriteria));
-
-        $returnOrderDetail = new TransactionReturnOrderDetail('search');
-        $returnOrderDetail->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionReturnOrderDetail'])) {
-            $returnOrderDetail->attributes = $_GET['TransactionReturnOrderDetail'];
-        }
-        
-        $returnOrderDetailCriteria = new CDbCriteria;
-        $returnOrderDetailCriteria->together = 'true';
-        $returnOrderDetailCriteria->with = array('product', 'returnOrder');
-        $returnOrderDetailCriteria->compare('return_order_id', $returnOrderDetail->return_order_id, true);
-        $returnOrderDetailCriteria->compare('returnOrder.return_order_no', $returnOrderDetail->return_order_no, true);
-        $returnOrderDetailCriteria->compare('product.name', $returnOrderDetail->product_name, true);
-        
-        $returnOrderDetailDataProvider = new CActiveDataProvider('TransactionReturnOrderDetail', array(
-            'criteria' => $returnOrderDetailCriteria,
-        ));
-
-        // Registration Transaction 
-        $movementTransaction = new RegistrationTransaction('search');
-        $movementTransaction->unsetAttributes();
-        
-        if (isset($_GET['RegistrationTransaction'])) {
-            $movementTransaction->attributes = $_GET['RegistrationTransaction'];
-        }
-        
-        $movementTransactionCriteria = new CDbCriteria;
-        $movementTransactionCriteria->together = 'true';
-        $movementTransactionCriteria->with = array('branch');
-        $movementTransactionCriteria->compare('branch.name', $movementTransaction->branch_name, true);
-        $movementTransactionCriteria->compare('transaction_number', $movementTransaction->transaction_number, true);
-        $movementTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array('criteria' => $movementTransactionCriteria));
-
-        $movementProduct = new RegistrationProduct('search');
-        $movementProduct->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['RegistrationProduct'])) {
-            $movementProduct->attributes = $_GET['RegistrationProduct'];
-        }
-        
-        $movementProductCriteria = new CDbCriteria;
-        $movementProductCriteria->together = 'true';
-        $movementProductCriteria->with = array('product', 'registrationTransaction');
-
-        $movementProductCriteria->compare('registrationTransaction.transaction_number', $movementProduct->transaction_number);
-        $movementProductCriteria->compare('product.name', $movementProduct->product_name, true);
-        $movementProductDataProvider = new CActiveDataProvider('RegistrationProduct', array(
-            'criteria' => $movementProductCriteria,
-        ));
-
-        // Material Request 
-        $materialRequestHeader = Search::bind(new MaterialRequestHeader('search'), isset($_GET['MaterialRequestHeader']) ? $_GET['MaterialRequestHeader'] : array());
-        $materialRequestHeaderDataProvider = $materialRequestHeader->searchByMovementOut();
-
-        $materialRequestHeaderId = isset($_GET['RegistrationTransaction']['material_request_header_id']) ? $_GET['RegistrationTransaction']['material_request_header_id'] : '' ;
-        $materialRequestDetail = Search::bind(new MaterialRequestDetail('search'), isset($_GET['MaterialRequestDetail']) ? $_GET['MaterialRequestDetail'] : array());
-        $materialRequestDetailDataProvider = $materialRequestDetail->searchByMovementOut();
-        if (!empty($materialRequestHeaderId)) {
-            $materialRequestDetailDataProvider->criteria->compare('material_request_header_id', $materialRequestHeaderId);
-        }
-
-        if (isset($_POST['Cancel'])) {
-            $this->redirect(array('admin'));
-        }
-
-        if (isset($_POST['MovementOutHeader'])) {
-            $this->loadState($movementOut);
-            $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
-            
-            if ($movementOut->save(Yii::app()->db)) {
-                $this->redirect(array('view', 'id' => $movementOut->header->id));
-            }
-        }
-
-        $this->render('create', array(
-            'movementOut' => $movementOut,
-            'deliveryOrder' => $deliveryOrder,
-            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
-            'deliveryOrderDetail' => $deliveryOrderDetail,
-            'deliveryOrderDetailDataProvider' => $deliveryOrderDetailDataProvider,
-            'returnOrder' => $returnOrder,
-            'returnOrderDataProvider' => $returnOrderDataProvider,
-            'returnOrderDetail' => $returnOrderDetail,
-            'returnOrderDetailDataProvider' => $returnOrderDetailDataProvider,
-            'registrationTransaction' => $movementTransaction,
-            'registrationTransactionDataProvider' => $movementTransactionDataProvider,
-            'registrationProduct' => $movementProduct,
-            'registrationProductDataProvider' => $movementProductDataProvider,
-            'materialRequestHeader' => $materialRequestHeader,
-            'materialRequestHeaderDataProvider' => $materialRequestHeaderDataProvider,
-            'materialRequestDetail' => $materialRequestDetail,
-            'materialRequestDetailDataProvider' => $materialRequestDetailDataProvider,
-        ));
-    }*/
 
     /**
      * Updates a particular model.
@@ -574,15 +426,29 @@ class MovementOutHeaderController extends Controller {
         }
     }
 
-    public function actionAjaxHtmlRemoveDetailAll($id) {
+//    public function actionAjaxHtmlRemoveDetailAll($id) {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $movementOut = $this->instantiate($id);
+//            $this->loadState($movementOut);
+//
+//            $movementOut->removeDetailAll();
+//            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+//            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+//            $this->renderPartial('_detail', array('movementOut' => $movementOut), false, true);
+//        }
+//    }
+
+    public function actionAjaxHtmlUpdateAllWarehouse($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $movementOut = $this->instantiate($id);
             $this->loadState($movementOut);
 
-            $movementOut->removeDetailAll();
-            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('movementOut' => $movementOut), false, true);
+            $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
+
+            $this->renderPartial('_detail', array(
+                'movementOut' => $movementOut,
+                'warehouses' => $warehouses,
+            ));
         }
     }
 

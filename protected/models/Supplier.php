@@ -239,11 +239,12 @@ class Supplier extends CActiveRecord {
                 FROM (
                     SELECT purchase_order_no AS transaction_number, purchase_order_date AS transaction_date, 'Faktur Pembelian' AS transaction_type, status_document AS remark, total_price AS amount, total_price AS purchase_amount, 0 AS payment_amount, supplier_id AS supplier
                     FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                    WHERE substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND supplier_id = :supplier_id
                     UNION
                     SELECT payment_number AS transaction_number, payment_date AS transaction_date, 'Pembayaran Pembelian' AS transaction_type, notes AS remark, (payment_amount * -1) AS amount, 0 AS purchase_amount, (payment_amount * -1) AS payment_amount, supplier_id AS supplier
                     FROM " . PaymentOut::model()->tableName() . "
+                    WHERE substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND supplier_id = :supplier_id
                 ) transaction
-                WHERE substring(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND supplier = :supplier_id
                 ORDER BY transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -261,6 +262,7 @@ class Supplier extends CActiveRecord {
             FROM " . TransactionPurchaseOrder::model()->tableName() . "
             WHERE supplier_id = :supplier_id AND purchase_order_date < :start_date
             GROUP BY supplier_id
+            HAVING beginning_balance > 0
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(

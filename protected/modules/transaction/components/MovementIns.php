@@ -30,49 +30,6 @@ class MovementIns extends CComponent {
         $this->header->setCodeNumberByNext('movement_in_number', $branchCode, MovementInHeader::CONSTANT, $currentMonth, $currentYear);
     }
 
-//    public function addDetail($detailId, $type) {
-//
-//        // $detail = new MovementInDetail();
-//        // $this->details[] = $detail;
-//        if ($type == 1) {
-//            $receiveItemDetail = TransactionReceiveItemDetail::model()->findByPk($detailId);
-//            
-//            $exist = false;
-//            foreach ($this->details as $i => $detail) {
-//                if ($receiveItemDetail->id === $detail->receive_item_detail_id) {
-//                    $exist = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!$exist) {
-//                $detail = new MovementInDetail();
-//                $detail->receive_item_detail_id = $receiveItemDetail->id;
-//                $detail->product_id = $receiveItemDetail->product_id;
-//                $detail->quantity_transaction = $receiveItemDetail->quantity_movement_left;
-//                $this->details[] = $detail;
-//            }
-//        } else {
-//            $returnItemDetail = TransactionReturnItemDetail::model()->findByPk($detailId);
-//            
-//            $exist = false;
-//            foreach ($this->details as $i => $detail) {
-//                if ($returnItemDetail->id === $detail->return_item_detail_id) {
-//                    $exist = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!$exist) {
-//                $detail = new MovementInDetail();
-//                $detail->return_item_detail_id = $returnItemDetail->id;
-//                $detail->product_id = $returnItemDetail->product_id;
-//                $detail->quantity_transaction = $returnItemDetail->quantity_delivery;
-//                $this->details[] = $detail;
-//            }
-//        }
-//    }
-
     public function addDetails($transactionId, $movementType) {
 
         if ($movementType == 1) {

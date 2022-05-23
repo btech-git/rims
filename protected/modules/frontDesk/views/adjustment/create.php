@@ -52,10 +52,17 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">		
-                                    <?php echo CHtml::label('Cabang 1', ''); ?>
+                                    <?php echo CHtml::label('Cabang', ''); ?>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih Cabang --')); ?>
+                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
+                                        'empty' => '-- Pilih Cabang --',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateWarehouseSelect'),
+                                            'update' => '#warehouse_list',
+                                        ))
+                                    )); ?>
                                     <?php echo CHtml::error($adjustment->header, 'branch_id'); ?>
                                 </div>
                             </div>
@@ -66,8 +73,8 @@
                                 <div class="small-4 columns">
                                     <?php echo CHtml::label('Gudang', ''); ?>
                                 </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'warehouse_id', CHtml::listData(Warehouse::model()->findAll(), 'id', 'name'), array(
+                                <div class="small-8 columns" id="warehouse_list">
+                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'warehouse_id', CHtml::listData(Warehouse::model()->findAllByAttributes(array('branch_id' => $adjustment->header->branch_id)), 'id', 'name'), array(
                                         'empty' => '-- Pilih Warehouse --',
                                         'onchange' => CHtml::ajax(array(
                                             'type' => 'POST',

@@ -15,11 +15,6 @@
         
         <tbody>
             <?php foreach ($movementIn->details as $i => $detail): ?>
-                <?php
-                $branchId = isset($_POST['MovementInHeader']['branch_id']) ? $_POST['MovementInHeader']['branch_id'] : $movementIn->header->branch_id;
-                $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $branchId));
-                $list = CHtml::listData($warehouses, 'id', 'name');
-                ?>
                 <tr>
                     <td><?php echo CHtml::encode(CHtml::value($detail, "product.id")); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($detail, "product.manufacturer_code")); ?></td>
@@ -40,13 +35,15 @@
                                     $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
                                     $stock = !empty($inventory) != 0 ? $inventory->total_stock : 0;
                                 ?>
-                                    <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
+                                    <?php if ($stock < 0): ?>
+                                        <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </tr>
                         </table>
                     </td>
                     
-                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", $list, array('prompt' => '[--Select Warehouse--]')); ?></td>
+                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]')); ?></td>
                     <td>
                         <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
                             'class' => 'qtyleft_input productID_' . $detail->product_id, 

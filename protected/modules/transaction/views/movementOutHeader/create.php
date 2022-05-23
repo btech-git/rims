@@ -18,6 +18,7 @@ $this->breadcrumbs = array(
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'movementOut' => $movementOut,
+        'warehouses' => $warehouses,
 //        'deliveryOrder' => $deliveryOrder,
 //        'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
 //        'deliveryOrderDetail' => $deliveryOrderDetail,

@@ -19,12 +19,7 @@
         
         <tbody>
             <?php foreach ($movementOut->details as $i => $detail): ?>
-                <?php
-                $branchId = isset($_POST['MovementOutHeader']['branch_id']) ? $_POST['MovementOutHeader']['branch_id'] : $movementOut->header->branch_id;
-                $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $branchId));
-                $list = CHtml::listData($warehouses, 'id', 'name');
-                $product = Product::model()->findByPK($detail->product_id);
-                ?>
+                <?php $product = Product::model()->findByPK($detail->product_id); ?>
                 <tr>
                     <td><?php echo CHtml::encode(CHtml::value($detail, "product.id")); ?></td>
                     <td>
@@ -44,16 +39,18 @@
                     <td>
                         <table>
                             <tr>
-                                <?php foreach ($warehouses as $key => $warehouse) :
+                                <?php foreach ($warehouses as $key => $warehouse):
                                     $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
                                     $stock = !empty($inventory) ? $inventory->total_stock : 0;
-                                    ?>
-                                    <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
+                                ?>
+                                    <?php if ($stock < 0): ?>
+                                        <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </tr>
                         </table>
                     </td>
-                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", $list, array('prompt' => '[--Select Warehouse--]')); ?></td>
+                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]')); ?></td>
                     <td>
                         <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
                             'class' => 'qtyleft_input productID_' . $detail->product_id, 
