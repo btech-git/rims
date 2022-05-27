@@ -40,7 +40,39 @@ class MaterialRequestController extends Controller {
         $filterChain->run();
     }
 
-    public function actionCreate() {
+    public function actionRegistrationTransactionList() {
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
+        $vehicleNumber = isset($_GET['VehicleNumber']) ? $_GET['VehicleNumber'] : '';
+
+        $registrationTransactionDataProvider = $registrationTransaction->searchByMaterialRequest();
+        $registrationTransactionDataProvider->criteria->with = array(
+            'customer',
+            'vehicle',
+            'branch',
+        );
+
+        if (!empty($customerName)) {
+            $registrationTransactionDataProvider->criteria->addCondition('customer.name LIKE :customer_name');
+            $registrationTransactionDataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
+        }
+
+        if (!empty($vehicleNumber)) {
+            $registrationTransactionDataProvider->criteria->addCondition("vehicle.plate_number LIKE :vehicle_number");
+            $registrationTransactionDataProvider->criteria->params[':vehicle_number'] = "%{$vehicleNumber}%";
+        }
+
+        $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
+
+        $this->render('registrationTransactionList', array(
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'customerName' => $customerName,
+            'vehicleNumber' => $vehicleNumber,
+        ));
+    }
+
+    public function actionCreate($registrationTransactionId) {
         $materialRequest = $this->instantiate(null);
         $materialRequest->header->user_id = Yii::app()->user->id;
         $materialRequest->header->transaction_date = date('Y-m-d');
@@ -48,14 +80,16 @@ class MaterialRequestController extends Controller {
         $materialRequest->header->date_created = date('Y-m-d H:i:s');
         $materialRequest->header->status_document = 'PENDING';
         $materialRequest->header->status_progress = 'NO MOVEMENT';
+        $materialRequest->header->registration_transaction_id = $registrationTransactionId;
         $materialRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
-//        $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
-
-        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
-        $productDataProvider = $product->search();
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationTransactionId);
 
         $branches = Branch::model()->findAll();
         
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
+        $productDataProvider = $product->search();
+        $productDataProvider->criteria->compare('t.product_master_category_id', 7);
+
         if (isset($_POST['Submit'])) {
             $this->loadState($materialRequest);
             $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
@@ -70,6 +104,7 @@ class MaterialRequestController extends Controller {
 
         $this->render('create', array(
             'materialRequest' => $materialRequest,
+            'registrationTransaction' => $registrationTransaction,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
             'branches' => $branches,
@@ -78,7 +113,7 @@ class MaterialRequestController extends Controller {
 
     public function actionUpdate($id) {
         $materialRequest = $this->instantiate($id);
-        $materialRequest->header->setCodeNumberByRevision('transaction_number');
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($materialRequest->header->registration_transaction_id);
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
@@ -93,6 +128,7 @@ class MaterialRequestController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($materialRequest);
+            $materialRequest->header->setCodeNumberByRevision('transaction_number');
 
             if ($materialRequest->save(Yii::app()->db))
                 $this->redirect(array('view', 'id' => $materialRequest->header->id));
@@ -103,6 +139,7 @@ class MaterialRequestController extends Controller {
 
         $this->render('update', array(
             'materialRequest' => $materialRequest,
+            'registrationTransaction' => $registrationTransaction,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
             'branches' => $branches,

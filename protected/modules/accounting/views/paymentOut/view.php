@@ -140,7 +140,30 @@
 
 <br />
 
-<?php if (Yii::app()->user->checkAccess("generalManager")): ?>
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <fieldset>
+            <legend>Attached Images</legend>
+
+            <?php foreach ($postImages as $postImage):
+                $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $postImage->filename;
+                $src = Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $postImage->filename;
+            ?>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <div style="margin-bottom:.5rem">
+                            <?php echo CHtml::image($src, $paymentOut->payment_number . "Image"); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </fieldset>
+    </div>
+</div>
+
+<br />
+
+<?php if (Yii::app()->user->checkAccess("accountingHead")): ?>
     <fieldset>
         <legend>Journal Transactions</legend>
         <table class="report">
@@ -186,29 +209,6 @@
         </table>
     </fieldset>
 <?php endif; ?>
-
-<br />
-
-<div id="maincontent">
-    <div class="clearfix page-action">
-        <fieldset>
-            <legend>Attached Images</legend>
-
-            <?php foreach ($postImages as $postImage):
-                $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $postImage->filename;
-                $src = Yii::app()->baseUrl . '/images/uploads/paymentOut/' . $postImage->filename;
-            ?>
-                <div class="row">
-                    <div class="small-3 columns">
-                        <div style="margin-bottom:.5rem">
-                            <?php echo CHtml::image($src, $paymentOut->payment_number . "Image"); ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </fieldset>
-    </div>
-</div>
 
 <br />
 

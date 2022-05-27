@@ -116,7 +116,7 @@ $('.search-form form').submit(function(){
                                     'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
                                 ), true)
                             ),
-                            'Return Order' => array(
+                            'Return Pembelian' => array(
                                 'content' => $this->renderPartial('_viewReturn', array(
                                     'returnOrder' => $returnOrder,
                                     'returnOrderDataProvider' => $returnOrderDataProvider,
@@ -126,6 +126,12 @@ $('.search-form form').submit(function(){
                                 'content' => $this->renderPartial('_viewSales', array(
                                     'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
                                     'registrationTransaction' => $registrationTransaction,
+                                ), true)
+                            ),
+                            'Materail Request' => array(
+                                'content' => $this->renderPartial('_viewRequest', array(
+                                    'materialRequestDataProvider' => $materialRequestDataProvider,
+                                    'materialRequest' => $materialRequest,
                                 ), true)
                             ),
                         ),

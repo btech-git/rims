@@ -72,52 +72,52 @@ class PaymentInController extends Controller {
         if (isset($_POST['Process'])) {
             
             JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $paymentIn->payment_number,
-                'branch_id' => $paymentIn->branch_id,
+                'kode_transaksi' => $model->payment_number,
+                'branch_id' => $model->branch_id,
             ));
 
             $jurnalPiutang = new JurnalUmum;
-            $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
-            $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
-            $jurnalPiutang->coa_id = $paymentIn->customer->coa_id;
-            $jurnalPiutang->branch_id = $paymentIn->branch_id;
-            $jurnalPiutang->total = $paymentIn->payment_amount;
+            $jurnalPiutang->kode_transaksi = $model->payment_number;
+            $jurnalPiutang->tanggal_transaksi = $model->payment_date;
+            $jurnalPiutang->coa_id = $model->customer->coa_id;
+            $jurnalPiutang->branch_id = $model->branch_id;
+            $jurnalPiutang->total = $model->payment_amount;
             $jurnalPiutang->debet_kredit = 'K';
             $jurnalPiutang->tanggal_posting = date('Y-m-d');
-            $jurnalPiutang->transaction_subject = $paymentIn->customer->name;
+            $jurnalPiutang->transaction_subject = $model->customer->name;
             $jurnalPiutang->is_coa_category = 0;
             $jurnalPiutang->transaction_type = 'Pin';
             $jurnalPiutang->save();
 
-            if (!empty($paymentIn->paymentType->coa_id)) {
-                $coaId = $paymentIn->paymentType->coa_id;
+            if (!empty($model->paymentType->coa_id)) {
+                $coaId = $model->paymentType->coa_id;
             } else {
-                $coaId = $paymentIn->companyBank->coa_id;
+                $coaId = $model->companyBank->coa_id;
             }
 
             $jurnalUmumKas = new JurnalUmum;
-            $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
-            $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
+            $jurnalUmumKas->kode_transaksi = $model->payment_number;
+            $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
             $jurnalUmumKas->coa_id = $coaId;
-            $jurnalUmumKas->branch_id = $paymentIn->branch_id;
-            $jurnalUmumKas->total = $paymentIn->payment_amount;
+            $jurnalUmumKas->branch_id = $model->branch_id;
+            $jurnalUmumKas->total = $model->payment_amount;
             $jurnalUmumKas->debet_kredit = 'D';
             $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-            $jurnalUmumKas->transaction_subject = $paymentIn->customer->name;
+            $jurnalUmumKas->transaction_subject = $model->customer->name;
             $jurnalUmumKas->is_coa_category = 0;
             $jurnalUmumKas->transaction_type = 'Pin';
             $jurnalUmumKas->save();
 
-            if ($paymentIn->tax_service_amount > 0) {
+            if ($model->tax_service_amount > 0) {
                 $jurnalPph = new JurnalUmum;
-                $jurnalPph->kode_transaksi = $paymentIn->payment_number;
-                $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
+                $jurnalPph->kode_transaksi = $model->payment_number;
+                $jurnalPph->tanggal_transaksi = $model->payment_date;
                 $jurnalPph->coa_id = 1473;
-                $jurnalPph->branch_id = $paymentIn->branch_id;
-                $jurnalPph->total = $paymentIn->tax_service_amount;
+                $jurnalPph->branch_id = $model->branch_id;
+                $jurnalPph->total = $model->tax_service_amount;
                 $jurnalPph->debet_kredit = 'D';
                 $jurnalPph->tanggal_posting = date('Y-m-d');
-                $jurnalPph->transaction_subject = $paymentIn->customer->name;
+                $jurnalPph->transaction_subject = $model->customer->name;
                 $jurnalPph->is_coa_category = 0;
                 $jurnalPph->transaction_type = 'Pin';
                 $jurnalPph->save();

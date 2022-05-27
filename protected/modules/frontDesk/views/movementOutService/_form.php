@@ -19,122 +19,118 @@
 
             <div class="row">
                 <div class="medium-12 columns">
+                    <h2>Pengeluaran Bahan Pemakaian</h2>
+                    <p class="note">Fields with <span class="required">*</span> are required.</p>
+
+                    <hr />
+
                     <div class="row">
-                        <div class="medium-12 columns">
-                            <h2>Pengeluaran Bahan Pemakaian</h2>
-                            <p class="note">Fields with <span class="required">*</span> are required.</p>
-
-                            <hr />
-
-                            <div class="row">
-                                <div class="medium-6 columns">
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($movementOut->header,'date_posting'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                                    'model' => $movementOut->header,
-                                                    'attribute' => "date_posting",
-                                                    'options' => array(
-                                                        'dateFormat' => 'yy-mm-dd',
-                                                        'changeMonth' => true,
-                                                        'changeYear' => true,
-                                                        'yearRange' => '1900:2020'
-                                                    ),
-                                                    'htmlOptions' => array(
-                                                        'readonly' => true,
-                                                        'value' => date('Y-m-d'),
-                                                    ),
-                                                )); ?>
-                                                <?php //echo $form->textField($movementOut->header,'date_posting',array('readonly'=>true)); ?>
-                                                <?php echo $form->error($movementOut->header,'date_posting'); ?>
-                                            </div>
-                                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo $form->labelEx($movementOut->header,'date_posting'); ?></label>
                                     </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo 'Repair Type'; ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.repair_type')); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo 'WO #'; ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.work_order_number')); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo 'Tanggal Registration'; ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.transaction_date')); ?>
-                                            </div>
-                                        </div>
+                                    <div class="small-8 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'model' => $movementOut->header,
+                                            'attribute' => "date_posting",
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth' => true,
+                                                'changeYear' => true,
+                                                'yearRange' => '1900:2020'
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'value' => date('Y-m-d'),
+                                            ),
+                                        )); ?>
+                                        <?php //echo $form->textField($movementOut->header,'date_posting',array('readonly'=>true)); ?>
+                                        <?php echo $form->error($movementOut->header,'date_posting'); ?>
                                     </div>
                                 </div>
-                                
-                                <!-- END COLUMN 6-->
-                                <div class="medium-6 columns">
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($movementOut->header,'branch_id'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($movementOut->header,'branch_name',array('value'=>$movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $movementOut->header->branch->name,'readonly'=>true)); ?>
-                                                <?php echo $form->error($movementOut->header,'branch_id'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
+                            </div>
 
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo 'Registration Transaction #'; ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationTransaction.transaction_number')); ?>
-                                            </div>
-                                        </div>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Repair Type'; ?></label>
                                     </div>
-                                    
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($movementOut->header,'user_id'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->hiddenField($movementOut->header,'user_id'); ?>
-                                                <?php echo CHtml::encode($movementOut->header->user->username); ?>
-                                                <?php echo $form->error($movementOut->header,'user_id'); ?>
-                                            </div>
-                                        </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.repair_type')); ?>
                                     </div>
-                                    
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo 'Service Type'; ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.service_type')); ?>
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'WO #'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.work_order_number')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Tanggal Registration'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.transaction_date')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- END COLUMN 6-->
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo $form->labelEx($movementOut->header,'branch_id'); ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo $form->textField($movementOut->header,'branch_name',array('value'=>$movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $movementOut->header->branch->name,'readonly'=>true)); ?>
+                                        <?php echo $form->error($movementOut->header,'branch_id'); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Registration Transaction #'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationTransaction.transaction_number')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo $form->labelEx($movementOut->header,'user_id'); ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo $form->hiddenField($movementOut->header,'user_id'); ?>
+                                        <?php echo CHtml::encode($movementOut->header->user->username); ?>
+                                        <?php echo $form->error($movementOut->header,'user_id'); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Service Type'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($movementOut->header, 'registrationService.service_type')); ?>
                                     </div>
                                 </div>
                             </div>

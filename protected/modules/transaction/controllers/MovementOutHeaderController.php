@@ -73,12 +73,15 @@ class MovementOutHeaderController extends Controller {
         
         $movementOut = $this->instantiate(null);
         $movementOut->header->date_created = date('Y-m-d H:i:s');
+        $movementOut->header->registration_service_id = null;
+        $movementOut->header->movement_type = $movementType;
         $this->performAjaxValidation($movementOut->header);
 
         if ($movementType == 1) {
             $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = $transactionId;
             $movementOut->header->return_order_id = null;
+            $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = null;
             $movementOut->header->branch_id = $deliveryOrder->sender_branch_id;
             
@@ -86,6 +89,7 @@ class MovementOutHeaderController extends Controller {
             $returnOrder = TransactionReturnOrder::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = $transactionId;
+            $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = null;
             $movementOut->header->branch_id = $returnOrder->recipient_branch_id;
             
@@ -93,15 +97,20 @@ class MovementOutHeaderController extends Controller {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = null;
+            $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = $transactionId;
             $movementOut->header->branch_id = $registrationTransaction->branch_id;
+        } else if ($movementType == 4) {
+            $materialRequest = MaterialRequestHeader::model()->findByPk($transactionId);
+            $movementOut->header->delivery_order_id = null;
+            $movementOut->header->return_order_id = null;
+            $movementOut->header->registration_transaction_id = null;
+            $movementOut->header->material_request_header_id = $transactionId;
+            $movementOut->header->branch_id = $materialRequest->branch_id;
         } else {
             $this->redirect(array('admin'));
         }
             
-        $movementOut->header->material_request_header_id = null;
-        $movementOut->header->registration_service_id = null;
-        $movementOut->header->movement_type = $movementType;
         $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
 
         $movementOut->addDetails($transactionId, $movementType);
@@ -303,8 +312,9 @@ class MovementOutHeaderController extends Controller {
         $deliveryOrder = new TransactionDeliveryOrder('search');
         $deliveryOrder->unsetAttributes();
         
-        if (isset($_GET['TransactionDeliveryOrder']))
+        if (isset($_GET['TransactionDeliveryOrder'])) {
             $deliveryOrder->attributes = $_GET['TransactionDeliveryOrder'];
+        }
         
         $deliveryOrderDataProvider = $deliveryOrder->searchByMovementOut();
         $deliveryOrderDataProvider->criteria->addInCondition('sender_branch_id', Yii::app()->user->branch_ids);
@@ -312,8 +322,9 @@ class MovementOutHeaderController extends Controller {
         /* Return Order */
         $returnOrder = new TransactionReturnOrder('search');
         $returnOrder->unsetAttributes();
-        if (isset($_GET['TransactionReturnOrder']))
+        if (isset($_GET['TransactionReturnOrder'])) {
             $returnOrder->attributes = $_GET['TransactionReturnOrder'];
+        }
         
         $returnOrderDataProvider = $returnOrder->searchByMovementOut();
         $returnOrderDataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
@@ -321,12 +332,22 @@ class MovementOutHeaderController extends Controller {
         /* Registration Transaction */
         $registrationTransaction = new RegistrationTransaction('search');
         $registrationTransaction->unsetAttributes();
-        if (isset($_GET['RegistrationTransaction']))
+        if (isset($_GET['RegistrationTransaction'])) {
             $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
 
         $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
         $registrationTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
 
+        /* Registration Transaction */
+        $materialRequest = new MaterialRequestHeader('search');
+        $materialRequest->unsetAttributes();
+        if (isset($_GET['MaterialRequestHeader'])) {
+            $materialRequest->attributes = $_GET['MaterialRequestHeader'];
+        }
+
+        $materialRequestDataProvider = $materialRequest->searchByMovementOut();
+        $materialRequestDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(
             'model' => $model,
@@ -337,6 +358,8 @@ class MovementOutHeaderController extends Controller {
             'returnOrderDataProvider' => $returnOrderDataProvider,
             'registrationTransaction' => $registrationTransaction,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'materialRequestDataProvider' => $materialRequestDataProvider,
+            'materialRequest' => $materialRequest,
         ));
     }
 

@@ -137,6 +137,11 @@
                         'url' => array('/transaction/invoiceHeader/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
                     ),
+                    array(
+                        'label' => 'Faktur Upah', 
+                        'url' => array('/accounting/workOrderExpense/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
+                    ),
                     array('label' => 'PELUNASAN', 'url' => array('#'), 'itemOptions' => array('class' => 'title', 'style' => 'text-decoration: underline')),
                     array(
                         'label' => 'Payment In', 
@@ -249,11 +254,11 @@
                         'url' => array('/transaction/movementOutHeader/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('movementOutCreate') || Yii::app()->user->checkAccess('movementOutEdit'))
                     ),
-                    array(
-                        'label' => 'Pengeluaran Bahan Pemakaian', 
-                        'url' => array('/frontDesk/movementOutService/registrationTransactionList'), 
-                        'visible' => (Yii::app()->user->checkAccess('movementServiceCreate') || Yii::app()->user->checkAccess('movementServiceEdit'))
-                    ),
+//                    array(
+//                        'label' => 'Pengeluaran Bahan Pemakaian', 
+//                        'url' => array('/frontDesk/movementOutService/registrationTransactionList'), 
+//                        'visible' => (Yii::app()->user->checkAccess('movementServiceCreate') || Yii::app()->user->checkAccess('movementServiceEdit'))
+//                    ),
                     array(
                         'label' => 'Permintaan Bahan', 
                         'url' => array('/frontDesk/materialRequest/admin'), 

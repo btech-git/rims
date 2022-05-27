@@ -47,7 +47,7 @@ class MovementOutServiceController extends Controller {
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
         $vehicleNumber = isset($_GET['VehicleNumber']) ? $_GET['VehicleNumber'] : '';
 
-        $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOutService();
+        $registrationTransactionDataProvider = $registrationTransaction->searchByMaterialRequest();
         $registrationTransactionDataProvider->criteria->with = array(
             'customer',
             'vehicle',
@@ -332,8 +332,9 @@ class MovementOutServiceController extends Controller {
                     $movementOut->details[] = $detail;
                 }
             }
-            if (count($_POST['MovementOutDetail']) < count($movementOut->details))
+            if (count($_POST['MovementOutDetail']) < count($movementOut->details)) {
                 array_splice($movementOut->details, $i + 1);
+            }
         } else {
             $movementOut->details = array();
         }
@@ -349,5 +350,4 @@ class MovementOutServiceController extends Controller {
             Yii::app()->end();
         }
     }
-
 }

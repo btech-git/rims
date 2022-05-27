@@ -1,4 +1,4 @@
-<h2>Return Orders</h2>
+<h2>Return Pembelian</h2>
 <hr>
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -14,10 +14,15 @@
         'columns'=>array(
             array(
                 'name'=>'return_order_no', 
+                'header' => 'Retur Pembelian #',
                 'value'=>'CHTml::link($data->return_order_no, array("/transaction/transactionReturnOrder/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
-            'return_order_date',
+            array(
+                'name'=>'return_order_date', 
+                'header' => 'Retur Tanggal',
+                'value'=>'$data->return_order_date',
+            ),
             array(
                 'name'=>'supplier_id', 
                 'filter' => CHtml::activeTextField($returnOrder, 'supplier_name'), 

@@ -24,7 +24,7 @@
                     <td><?php echo $product->subBrand->name; ?></td>
                     <td><?php echo $product->subBrandSeries->name; ?></td>
                     <td style="text-align: center"><?php echo $materialRequestDetail->quantity; ?></td>
-                    <td><?php echo $product->unit->name; ?></td>
+                    <td><?php echo $materialRequestDetail->unit->name; ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

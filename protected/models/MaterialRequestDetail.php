@@ -9,10 +9,12 @@
  * @property integer $quantity_movement_out
  * @property integer $quantity_remaining
  * @property integer $product_id
+ * @property integer $unit_id
  * @property integer $material_request_header_id
  *
  * The followings are the available model relations:
  * @property Product $product
+ * @property Unit $unit
  * @property MaterialRequestHeader $materialRequestHeader
  * @property MovementOutDetail[] $movementOutDetails
  */
@@ -41,11 +43,11 @@ class MaterialRequestDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('product_id, material_request_header_id', 'required'),
-            array('quantity, quantity_movement_out, quantity_remaining,  product_id, material_request_header_id', 'numerical', 'integerOnly' => true),
+            array('product_id, unit_id, material_request_header_id', 'required'),
+            array('quantity, quantity_movement_out, quantity_remaining,  product_id, unit_id, material_request_header_id', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, quantity, quantity_movement_out, quantity_remaining, product_id, material_request_header_id', 'safe', 'on' => 'search'),
+            array('id, quantity, quantity_movement_out, quantity_remaining, product_id, unit_id, material_request_header_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -57,6 +59,7 @@ class MaterialRequestDetail extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
+            'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
             'materialRequestHeader' => array(self::BELONGS_TO, 'MaterialRequestHeader', 'material_request_header_id'),
             'movementOutDetails' => array(self::HAS_MANY, 'MovementOutDetail', 'material_request_detail_id'),
         );
@@ -72,6 +75,7 @@ class MaterialRequestDetail extends CActiveRecord {
             'quantity_movement_out' => 'Quantity Movement Out',
             'quantity_remaining' => 'Quantity Remaining',
             'product_id' => 'Product',
+            'unit_id' => 'Satuan',
             'material_request_header_id' => 'Material Request Header',
         );
     }
@@ -91,6 +95,7 @@ class MaterialRequestDetail extends CActiveRecord {
         $criteria->compare('quantity_movement_out', $this->quantity_movement_out);
         $criteria->compare('quantity_remaining', $this->quantity_remaining);
         $criteria->compare('product_id', $this->product_id);
+        $criteria->compare('unit_id', $this->unit_id);
         $criteria->compare('material_request_header_id', $this->material_request_header_id);
 
         return new CActiveDataProvider($this, array(
@@ -113,6 +118,7 @@ class MaterialRequestDetail extends CActiveRecord {
         $criteria->compare('quantity_movement_out', $this->quantity_movement_out);
         $criteria->compare('quantity_remaining', $this->quantity_remaining);
         $criteria->compare('product_id', $this->product_id);
+        $criteria->compare('unit_id', $this->unit_id);
         $criteria->compare('material_request_header_id', $this->material_request_header_id);
 
         $criteria->addCondition("t.quantity_remaining > 0");

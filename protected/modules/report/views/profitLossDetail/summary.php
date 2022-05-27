@@ -124,7 +124,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php if (!empty($coa->coaIds)): ?> 
                         <?php foreach ($coa->coaIds as $account): ?>
                             <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
-                            <?php if ($accountBalance != 0): ?>
+                            <?php if ($accountBalance !== 0): ?>
                                 <tr>
                                     <td style="padding-left: 75px; font-size: 10px">
                                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
@@ -132,12 +132,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </td>
                                     <td style="text-align: right; font-size: 10px"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
                                 </tr>
-                                <?php $accountGroupBalance += $accountBalance; ?>
+                                <?php //$accountCategoryBalance += $accountBalance; ?>
                             <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
+                    <?php $accountCategoryBalance += $accountGroupBalance; ?>
                 <?php endif; ?>
-                <?php $accountCategoryBalance += $accountGroupBalance; ?>
             <?php endforeach; ?>
         
             <tr>
@@ -150,11 +150,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
                 </td>
             </tr>
-            <?php /*if ($account->coa_sub_category_id == 28 || $account->coa_sub_category_id == 30 || $account->coa_sub_category_id == 31): ?>
+            <?php if ((int)$accountCategory->id === 28 || (int)$accountCategory->id === 30 || (int)$accountCategory->id === 31): ?>
                 <?php $accountCategoryTypeBalance -= $accountCategoryBalance; ?>
-            <?php else:*/ ?>
+            <?php else: ?>
                 <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
-            <?php //endif; ?>
+            <?php endif; ?>
         <?php endforeach; ?>
         <tr>
             <td>&nbsp;</td>

@@ -17,11 +17,13 @@
  * @property integer $quantity
  * @property integer $quantity_receive
  * @property integer $quantity_receive_left
+ * @property integer $unit_id
  *
  * The followings are the available model relations:
  * @property MovementOutHeader $movementOutHeader
  * @property TransactionDeliveryOrderDetail $deliveryOrderDetail
  * @property Product $product
+ * @property Unit $unit
  * @property Warehouse $warehouse
  * @property TransactionReturnOrderDetail $returnOrderDetail
  * @property MaterialRequestDetail $materialRequestDetail
@@ -48,11 +50,11 @@ class MovementOutDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_out_header_id, product_id, quantity_transaction, warehouse_id, quantity', 'required'),
-            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left', 'numerical', 'integerOnly' => true),
+            array('movement_out_header_id, product_id, unit_id, quantity_transaction, warehouse_id, quantity', 'required'),
+            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left', 'safe', 'on' => 'search'),
+            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left', 'safe', 'on' => 'search'),
         );
     }
 
@@ -66,6 +68,7 @@ class MovementOutDetail extends CActiveRecord {
             'movementOutHeader' => array(self::BELONGS_TO, 'MovementOutHeader', 'movement_out_header_id'),
             'deliveryOrderDetail' => array(self::BELONGS_TO, 'TransactionDeliveryOrderDetail', 'delivery_order_detail_id'),
             'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
+            'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
             'warehouse' => array(self::BELONGS_TO, 'Warehouse', 'warehouse_id'),
             'returnOrderDetail' => array(self::BELONGS_TO, 'TransactionReturnOrderDetail', 'return_order_detail_id'),
             'materialRequestDetail' => array(self::BELONGS_TO, 'MaterialRequestDetail', 'material_request_detail_id'),
@@ -88,6 +91,7 @@ class MovementOutDetail extends CActiveRecord {
             'registration_product_id' => 'Registration Product',
             'registration_service_id' => 'Registration Service',
             'product_id' => 'Product',
+            'unit_id' => 'Satuan',
             'quantity_transaction' => 'Quantity Transaction',
             'warehouse_id' => 'Warehouse',
             'quantity' => 'Quantity',
@@ -121,6 +125,7 @@ class MovementOutDetail extends CActiveRecord {
         $criteria->compare('registration_product_id', $this->registration_product_id);
         $criteria->compare('registration_service_id', $this->registration_service_id);
         $criteria->compare('product_id', $this->product_id);
+        $criteria->compare('unit_id', $this->unit_id);
         $criteria->compare('quantity_transaction', $this->quantity_transaction);
         $criteria->compare('warehouse_id', $this->warehouse_id);
         $criteria->compare('quantity', $this->quantity);

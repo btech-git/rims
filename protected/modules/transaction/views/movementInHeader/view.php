@@ -105,7 +105,7 @@ $this->menu = array(
                     if ($model->movement_type == 1) {
                         $movementType = "Receive Item";
                     } elseif ($model->movement_type == 2) {
-                        $movementType = "Return Item";
+                        $movementType = "Return Penjualan";
                     } else {
                         $movementType = "";
                     }

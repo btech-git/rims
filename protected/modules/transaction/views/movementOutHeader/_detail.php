@@ -9,10 +9,10 @@
                 <th>Brand</th>
                 <th>Sub Brand</th>
                 <th>Sub Brand Series</th>
-                <th class="required">Transaction Quantity</th>
-                <th class="required">Warehouses</th>
                 <th class="required">Warehouse</th>
-                <th class="required">Quantity</th>
+                <th class="required">Qty Req</th>
+                <th class="required">Qty Out</th>
+                <th class="required">Satuan</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -35,22 +35,11 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
-                    <td><?php echo CHtml::activeTextField($detail, "[$i]quantity_transaction", array('readonly' => true)); ?></td>
-                    <td>
-                        <table>
-                            <tr>
-                                <?php foreach ($warehouses as $key => $warehouse):
-                                    $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
-                                    $stock = !empty($inventory) ? $inventory->total_stock : 0;
-                                ?>
-                                    <?php if ($stock < 0): ?>
-                                        <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </tr>
-                        </table>
-                    </td>
                     <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]')); ?></td>
+                    <td>
+                        <?php echo CHtml::activeHiddenField($detail, "[$i]quantity_transaction"); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?>
+                    </td>
                     <td>
                         <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
                             'class' => 'qtyleft_input productID_' . $detail->product_id, 
@@ -69,6 +58,11 @@
                             ',
                         )); ?>
                     </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::activeHiddenField($detail, "[$i]unit_id"); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?>
+                        <?php echo CHtml::error($detail, 'unit_id'); ?>
+                    </td>
                     <td>
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
@@ -79,6 +73,16 @@
                         )); ?>
                     </td>
                 </tr>	
+                <tr>
+                    <?php foreach ($warehouses as $key => $warehouse):
+                        $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
+                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
+                    ?>
+                        <?php if ($stock < 0): ?>
+                            <td colspan="12"><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>

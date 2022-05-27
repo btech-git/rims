@@ -1,4 +1,4 @@
-<h2>Return Item</h2>
+<h2>Return Penjualan</h2>
 <hr />
 
 <div class="grid-view">
@@ -14,6 +14,7 @@
         ),
         'columns'=>array(
             array(
+                'header'=>'Retur #',
                 'name'=>'return_item_no', 
                 'value'=>'CHTml::link($data->return_item_no, array("/transaction/transactionReturnItem/view", "id"=>$data->id))', 
                 'type'=>'raw'

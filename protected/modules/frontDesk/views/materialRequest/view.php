@@ -47,16 +47,53 @@ $this->menu = array(
             'attributes' => array(
                 'transaction_number',
                 'dateTime',
+                array(
+                    'name' => 'registration_transaction_id', 
+                    'value' => $materialRequest->registrationTransaction->transaction_number
+                ),
+                array(
+                    'label' => 'WO #', 
+                    'value' => $materialRequest->registrationTransaction->work_order_number
+                ),
+                array(
+                    'name' => 'branch_id', 
+                    'value' => $materialRequest->branch->name
+                ),
+                array(
+                    'label' => 'Tanggal WO ', 
+                    'value' => $materialRequest->registrationTransaction->transaction_date
+                ),
+                array(
+                    'label' => 'Customer', 
+                    'value' => $materialRequest->registrationTransaction->customer->name
+                ),
+                array(
+                    'label' => 'Plate #', 
+                    'value' => $materialRequest->registrationTransaction->vehicle->plate_number
+                ),
+                array(
+                    'label' => 'Vehicle', 
+                    'value' => $materialRequest->registrationTransaction->vehicle->carMakeModelSubCombination
+                ),
+                array(
+                    'label' => 'Color', 
+                    'value' => $materialRequest->registrationTransaction->vehicle->color->name
+                ),
                 'status_document',
                 'status_progress',
                 'note',
-                array('name' => 'user_id', 'value' => $materialRequest->user->username),
-                array('name' => 'branch_id', 'value' => $materialRequest->branch->name),
+                array(
+                    'name' => 'user_id', 
+                    'value' => $materialRequest->user->username
+                ),
             ),
         )); ?>
 
     </div>
 </div>
+
+<hr />
+
 <div class="detail">
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(

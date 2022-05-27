@@ -16,12 +16,14 @@
  * @property string $note
  * @property integer $branch_id
  * @property integer $user_id
+ * @property integer $registration_transaction_id
  *
  * The followings are the available model relations:
  * @property MaterialRequestDetail[] $materialRequestDetails
  * @property MaterialRequestApproval[] $materialRequestApprovals
  * @property Branch $branch
  * @property Users $user
+ * @property RegistrationTransaction $registrationTransaction
  * @property MovementOutHeader[] $movementOutHeaders
  */
 class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
@@ -51,14 +53,14 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, branch_id, user_id', 'required'),
-            array('branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, branch_id, user_id, registration_transaction_id', 'required'),
+            array('branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining, registration_transaction_id', 'numerical', 'integerOnly' => true),
             array('transaction_number, status_document, status_progress', 'length', 'max' => 50),
             array('note', 'safe'),
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, status_document, status_progress, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, status_document, status_progress, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining, registration_transaction_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -74,6 +76,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'movementOutHeaders' => array(self::HAS_MANY, 'MovementOutHeader', 'material_request_header_id'),
+            'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
         );
     }
 
@@ -94,6 +97,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
             'note' => 'Note',
             'branch_id' => 'Branch',
             'user_id' => 'User',
+            'registration_transaction_id' => 'Registration Transaction',
         );
     }
 
@@ -119,6 +123,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('note', $this->note, true);
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -140,6 +145,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('note', $this->note, true);
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
 
         $criteria->addCondition("t.total_quantity_remaining > 0");
 

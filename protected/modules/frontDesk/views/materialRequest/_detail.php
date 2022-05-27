@@ -49,8 +49,7 @@
                 <?php echo CHtml::error($detail, 'quantity'); ?>
             </td>
             <td style="text-align: center">
-                <?php $unit = Unit::model()->findByPk($detail->product->unit_id); ?>
-                <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
+                <?php echo CHtml::activeDropDownList($detail, "[$i]unit_id", CHtml::listData(Unit::model()->findAll(), 'id', 'name'), array('prompt'=>'[--Select Unit --]')); ?>
                 <?php echo CHtml::error($detail, 'unit_id'); ?>
             </td>
             <td>
@@ -63,6 +62,7 @@
                 )); ?>
             </td>
         </tr>
+        
         <tr>
             <td colspan="9">
                 <div class="row">

@@ -203,6 +203,40 @@ class Coa extends CActiveRecord {
         ));
     }
 
+    public function searchForWorkOrderExpense() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.coa_category_id', 8);
+        $criteria->compare('t.coa_sub_category_id', $this->coa_sub_category_id);
+        $criteria->compare('normal_balance', $this->normal_balance, true);
+        $criteria->compare('opening_balance', $this->opening_balance, true);
+        $criteria->compare('closing_balance', $this->closing_balance, true);
+        $criteria->compare('debit', $this->debit, true);
+        $criteria->compare('credit', $this->credit, true);
+        $criteria->compare('t.is_approved', 1);
+        $criteria->compare('t.date_approval', $this->date_approval);
+
+        $criteria->together = true;
+        $criteria->with = array('coaCategory', 'coaSubCategory');
+        $criteria->compare('coaCategory.name', $this->coa_category_name, true);
+        $criteria->compare('coaSubCategory.name', $this->coa_sub_category_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.code ASC, t.name ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!

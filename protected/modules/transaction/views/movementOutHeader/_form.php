@@ -196,7 +196,8 @@
                             </div>
                         </div>
                     </div> <!-- end of Div RetailSales -->
-                <?php else: ?>
+                
+                <?php elseif ((int) $movementOut->header->movement_type == 4): ?>
                     <div id="materialRequest">
                         <div class="field">
                             <div class="row collapse">
@@ -204,9 +205,10 @@
                                     <?php echo $form->labelEx($movementOut->header, 'material_request_header_id', array('class' => 'prefix')); ?>
                                 </div>
                                 <div class="small-8 columns">
+                                    <?php $materialRequest = MaterialRequestHeader::model()->findByPk($movementOut->header->material_request_header_id); ?>
                                     <?php echo $form->hiddenField($movementOut->header, 'material_request_header_id'); ?>
-                                    <?php echo $form->textField($movementOut->header, 'material_request_number', array(
-                                        'value' => $movementOut->header->material_request_header_id == "" ? "" : MaterialRequestHeader::model()->findByPk($movementOut->header->material_request_header_id)->transaction_number,
+                                    <?php echo $form->textField($movementOut->header, 'transaction_number', array(
+                                        'value' => $materialRequest->transaction_number,
                                         'readonly' => true,
                                     )); ?>
                                     <?php echo $form->error($movementOut->header, 'material_request_header_id'); ?>
@@ -214,6 +216,8 @@
                             </div>
                         </div>
                     </div>
+                <?php else: ?>
+                    <div>NO DATA AVAILABLE</div>
                 <?php endif; ?>
                     
                 <div class="field">

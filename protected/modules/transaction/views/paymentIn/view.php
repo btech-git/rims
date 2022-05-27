@@ -564,7 +564,7 @@ $this->menu = array(
             
             <br />
 
-            <?php if (Yii::app()->user->checkAccess("generalManager")): ?>
+            <?php if (Yii::app()->user->checkAccess("accountingHead")): ?>
                 <fieldset>
                     <legend>Journal Transactions</legend>
                     <table class="report">

@@ -283,4 +283,8 @@ class Vehicle extends CActiveRecord {
         $vehiclePlateNumberPrefix = VehiclePlateNumberPrefix::model()->findByPk($this->plate_number_prefix_id);
         return $vehiclePlateNumberPrefix->code . " " .$this->plate_number_ordinal . " " . $this->plate_number_suffix; 
     }
+    
+    public function getCarMakeModelSubCombination() {
+        return $this->carMake->name . ' ' . $this->carModel->name . ' ' . $this->carSubModel->name;
+    }
 }

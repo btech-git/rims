@@ -10,6 +10,7 @@ $this->breadcrumbs = array(
 <div id="maincontent">
     <?php echo $this->renderPartial('_form', array(
         'materialRequest' => $materialRequest,
+        'registrationTransaction' => $registrationTransaction,
         'product' => $product,
         'productDataProvider' => $productDataProvider,
         'branches' => $branches,

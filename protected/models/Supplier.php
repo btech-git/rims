@@ -243,7 +243,7 @@ class Supplier extends CActiveRecord {
                     UNION
                     SELECT payment_number AS transaction_number, payment_date AS transaction_date, 'Pembayaran Pembelian' AS transaction_type, notes AS remark, (payment_amount * -1) AS amount, 0 AS purchase_amount, (payment_amount * -1) AS payment_amount, supplier_id AS supplier
                     FROM " . PaymentOut::model()->tableName() . "
-                    WHERE substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND supplier_id = :supplier_id
+                    WHERE substring(payment_date, 1, 10) BETWEEN :start_date AND :end_date AND supplier_id = :supplier_id
                 ) transaction
                 ORDER BY transaction_date ASC";
         

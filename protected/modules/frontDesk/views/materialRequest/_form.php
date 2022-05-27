@@ -11,93 +11,210 @@
 </script>
 
 
-<div class="form">
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <div class="form">
 
-    <?php echo CHtml::beginForm(); ?>
-    <?php echo CHtml::errorSummary($materialRequest->header); ?>
-    <div class="row">
-        <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Request Tanggal', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                            'model' => $materialRequest->header,
-                            'attribute' => "transaction_date",
-                            'options' => array(
-                                'dateFormat' => 'yy-mm-dd',
-                                'changeMonth' => true,
-                                'changeYear' => true,
-                                'yearRange' => '1900:2020'
-                            ),
-                            'htmlOptions' => array(
-                                'readonly' => true,
-                                'value' => date('Y-m-d'),
-                            ),
-                        )); ?>
-                        <?php //echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($materialRequest->header, 'transaction_date'))); ?>
-                        <?php echo CHtml::error($materialRequest->header, 'transaction_date'); ?>
+            <?php echo CHtml::beginForm(); ?>
+            <?php echo CHtml::errorSummary($materialRequest->header); ?>
+            <div class="row">
+                <div class="medium-12 columns">
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::label('Request Tanggal', ''); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'model' => $materialRequest->header,
+                                            'attribute' => "transaction_date",
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth' => true,
+                                                'changeYear' => true,
+                                                'yearRange' => '1900:2020'
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'value' => date('Y-m-d'),
+                                            ),
+                                        )); ?>
+                                        <?php echo CHtml::error($materialRequest->header, 'transaction_date'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Repair Type'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.repair_type')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Registration Transaction #'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.transaction_number')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'WO #'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.work_order_number')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Tanggal Registration'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.transaction_date')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Branch'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'branch.name')); ?>
+                                        <?php echo CHtml::error($materialRequest->header,'branch_id'); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo CHtml::label('User', ''); ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode($materialRequest->header->user->username); ?>
+                                        <?php echo CHtml::error($materialRequest->header,'user_id'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Customer'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.customer.name')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Plate #'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.plate_number')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Vehicle'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carMake.name')); ?> -
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carModel.name')); ?> -
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carSubModel.name')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Color'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.color.name')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::label('Note', ''); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextArea($materialRequest->header, 'note', array('rows' => 5, 'columns' => '10')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Requester', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'user.username')); ?>
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Branch', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'branch.name')); ?>
+
+                <hr />
+
+                <div class="row">
+                    <div class="medium-12 columns">
+                        <div>
+                            <?php $this->renderPartial('_detailService', array(
+                                'materialRequest' => $materialRequest,
+                                'registrationTransaction' => $registrationTransaction,
+                            )); ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Note', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeTextArea($materialRequest->header, 'note', array('rows' => 5, 'columns' => '10')); ?>
-                    </div>
+
+                <hr />
+
+                <div class="row">
+                    <?php echo CHtml::button('Cari Barang', array('name' => 'Search', 'onclick' => '$("#product-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#product-dialog").dialog("open"); return false; }')); ?>
+                    <?php echo CHtml::hiddenField('ProductId'); ?>
                 </div>
+
+                <br /><br />
+
+                <div id="detail_div">
+                    <?php $this->renderPartial('_detail', array(
+                        'materialRequest' => $materialRequest,
+                        'branches' => $branches,
+                    )); ?>
+                </div>
+
+                <div class="row buttons">
+                    <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
+                    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
+                </div>
+
+                <?php echo CHtml::endForm(); ?>
+
             </div>
         </div>
     </div>
-
-    <hr />
-
-    <div class="row">
-        <?php echo CHtml::button('Cari Barang', array('name' => 'Search', 'onclick' => '$("#product-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#product-dialog").dialog("open"); return false; }')); ?>
-        <?php echo CHtml::hiddenField('ProductId'); ?>
-    </div>
-    
-    <br /><br />
-    
-    <div id="detail_div">
-        <?php $this->renderPartial('_detail', array(
-            'materialRequest' => $materialRequest,
-            'branches' => $branches,
-        )); ?>
-    </div>
-
-    <div class="row buttons">
-        <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-        <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
-    </div>
-
-    <?php echo CHtml::endForm(); ?>
-
 </div><!-- form -->
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

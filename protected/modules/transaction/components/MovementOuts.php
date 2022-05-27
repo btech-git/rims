@@ -49,6 +49,7 @@ class MovementOuts extends CComponent {
                         $detail->return_order_detail_id = null;
                         $detail->registration_product_id = null;
                         $detail->product_id = $deliveryDetail->product_id;
+                        $detail->unit_id = $deliveryDetail->product->unit_id;
                         $detail->quantity_transaction = $deliveryDetail->quantity_movement_left;
                         $this->details[] = $detail;
                     }
@@ -70,6 +71,7 @@ class MovementOuts extends CComponent {
                         $detail->return_order_detail_id = $returnDetail->id;
                         $detail->registration_product_id = null;
                         $detail->product_id = $returnDetail->product_id;
+                        $detail->unit_id = $returnDetail->product->unit_id;
                         $detail->quantity_transaction = $returnDetail->quantity_movement_left;
                         $this->details[] = $detail;
                     }
@@ -91,11 +93,36 @@ class MovementOuts extends CComponent {
                         $detail->return_order_detail_id = null;
                         $detail->registration_product_id = $registrationDetail->id;
                         $detail->product_id = $registrationDetail->product_id;
+                        $detail->unit_id = $registrationDetail->product->unit_id;
                         $detail->quantity_transaction = $registrationDetail->quantity_movement_left;
                         $this->details[] = $detail;
                     }
                 }
             }
+        } else if ($movementType == 4) {
+            $materialRequest = MaterialRequestHeader::model()->findByPk($transactionId);
+
+            if ($materialRequest !== null) {
+                foreach ($materialRequest->materialRequestDetails as $materialRequestDetail) {
+
+                    if ($materialRequestDetail->quantity_remaining > 0) {
+                        $detail = new MovementOutDetail();
+                        $detail->material_request_detail_id = null;
+                        $detail->registration_service_id = null;
+                        $detail->quantity_receive = 0;
+                        $detail->quantity_receive_left = 0;
+                        $detail->delivery_order_detail_id = null;
+                        $detail->return_order_detail_id = null;
+                        $detail->material_request_detail_id = $materialRequestDetail->id;
+                        $detail->product_id = $materialRequestDetail->product_id;
+                        $detail->unit_id = $materialRequestDetail->unit_id;
+                        $detail->quantity_transaction = $materialRequestDetail->quantity_remaining;
+                        $this->details[] = $detail;
+                    }
+                }
+            }
+        } else {
+            $this->details[] = array();
         }
     }
 
