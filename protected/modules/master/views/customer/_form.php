@@ -42,43 +42,30 @@
                                 '' => '[--Select Customer Type--]',
                                 'Individual' => 'Individual',
                                 'Company' => 'Company',
-                            ), array(
-                                'onchange' => '
-                                clearFields();
-                                if (jQuery("#Customer_customer_type").val()=="Company") {
-                                    jQuery("#birthdate").hide();
-                                    jQuery("#coa").hide();
-                                    jQuery("#birthdate").val()=="0000-00-00";
-                                    jQuery("#flatrate").show();
-                                } else {
-                                    //clearFields();
-                                    jQuery("#coa").hide();
-                                    jQuery("#birthdate").show();
-                                    jQuery("#flatrate").hide();
-                                }
-                            '
                             )); ?>
                             <?php echo $form->error($customer->header, 'customer_type'); ?>
                         </div>
                     </div>			
                 </div>
                 
+                <?php if (!$customer->header->isNewRecord): ?>
                 <div id="coa">
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix"><?php //echo $form->labelEx($customer->header, 'coa_id'); ?></label>
+                                <label class="prefix"><?php echo $form->labelEx($customer->header, 'coa_id'); ?></label>
                             </div>
                             
                             <div class="small-8 columns">
-                                <?php /*echo $form->hiddenField($customer->header, 'coa_id'); ?>
+                                <?php echo $form->hiddenField($customer->header, 'coa_id'); ?>
                                 <?php echo $form->textField($customer->header, 'coa_name', array('readonly' => true, 'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;', 'value' => $customer->header->coa_id != "" ? $customer->header->coa->name : '')); ?>
                                 <?php echo $form->textField($customer->header, 'coa_code', array('readonly' => true, 'value' => $customer->header->coa_id != "" ? $customer->header->coa->code : '')); ?>
-                                <?php echo $form->error($customer->header, 'coa_id');*/ ?>
+                                <?php echo $form->error($customer->header, 'coa_id'); ?>
                             </div>
                         </div>			
                     </div>
                 </div>
+                <?php endif; ?>
 
                 <div class="field">
                     <div class="row collapse">
@@ -464,17 +451,5 @@
         //$('#coa').find('input:text').val('');
         //$('#coa').find('input:hidden').val('');
 
-    }
-    if (jQuery("#Customer_customer_type").val() == "Company") {
-        jQuery("#birthdate").hide();
-        jQuery("#coa").hide();
-        jQuery("#birthdate").val() == "0000-00-00";
-        jQuery("#flatrate").show();
-        // ClearFields();
-    } else {
-        jQuery("#coa").hide();
-        jQuery("#birthdate").show();
-        jQuery("#flatrate").hide();
-        // ClearFields();
     }
 </script>

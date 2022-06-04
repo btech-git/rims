@@ -80,17 +80,7 @@ class CustomerController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        // $model=new Customer;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['Customer']))
-        // {
-        // $model->attributes=$_POST['Customer'];
-        // $model->status='Active';
-        // if($model->save())
-        // 	$this->redirect(array('admin'));
-        //$this->redirect(array('view','id'=>$model->id));
-        // }
+        
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
         if (isset($_GET['Coa']))
@@ -108,6 +98,7 @@ class CustomerController extends Controller {
         
         $customer = $this->instantiate(null);
         $customer->header->user_id = Yii::app()->user->id;
+        $customer->header->date_created = date('Y-m-d H:i:s');
         
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
@@ -135,13 +126,9 @@ class CustomerController extends Controller {
             $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
         }
 
-        //$serviceCriteria->compare('rate',$service->rate,true);
-
         $serviceDataProvider = new CActiveDataProvider('Service', array(
             'criteria' => $serviceCriteria,
         ));
-
-        //$this->performAjaxValidation($customer->header);
 
         if (isset($_POST['Submit'])) {
             $this->loadState($customer);
@@ -198,16 +185,6 @@ class CustomerController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        // $model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['Customer']))
-        // {
-        // 	$model->attributes=$_POST['Customer'];
-        // 	if($model->save())
-        // 		$this->redirect(array('admin'));
-        // 		//$this->redirect(array('view','id'=>$model->id));
-        // }
 
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
@@ -266,7 +243,6 @@ class CustomerController extends Controller {
                 $this->redirect(array('view', 'id' => $customer->header->id));
             } else {
                 foreach ($customer->phoneDetails as $key => $detail) {
-                    //print_r(CJSON::encode($detail->jenis_persediaan_id));
                 }
             }
         }

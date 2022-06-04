@@ -7,14 +7,6 @@ $this->breadcrumbs = array(
     'Customers' => array('admin'),
     'View Customer ' . $model->name,
 );
-
-// $this->menu=array(
-// 	array('label'=>'List Customer', 'url'=>array('index')),
-// 	array('label'=>'Create Customer', 'url'=>array('create')),
-// 	array('label'=>'Update Customer', 'url'=>array('update', 'id'=>$model->id)),
-// 	array('label'=>'Delete Customer', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-// 	array('label'=>'Manage Customer', 'url'=>array('admin')),
-// );
 ?>
 
 <div id="maincontent">
@@ -64,55 +56,11 @@ $this->breadcrumbs = array(
                 'status',
                 'birthdate',
                 'flat_rate',
+                'date_created',
             ),
         )); ?>
     </div>
 </div>
-
-<!--<div class="row">
-    <h5>Customer PIC</h5>
-    <?php /*if ($picDetails) { ?>
-        <table class="detail">
-            <thead>
-                <tr>
-                    <td>Name</td>
-                    <td>Address</td>
-                    <td>Province</td>
-                    <td>City</td>
-                    <td>Zipcode</td>
-                    <td>Fax</td>
-                    <td>Email</td>
-                    <td>Note</td>
-                    <td>Birthdate</td>
-                    <td>Action</td>
-                </tr>
-            </thead>
-            
-            <?php foreach ($picDetails as $key => $picDetail): ?>
-                <tr>
-                    <td><?php echo $picDetail->name; ?></td>
-                    <td><?php echo $picDetail->address; ?></td>
-                    <td><?php echo ($picDetail->province ? $picDetail->province->name : ''); ?></td>
-                    <td><?php echo ($picDetail->city ? $picDetail->city->name : ''); ?></td>
-                    <td><?php echo $picDetail->zipcode; ?></td>
-                    <td><?php echo $picDetail->fax; ?></td>
-                    <td><?php echo $picDetail->email; ?></td>
-                    <td><?php echo $picDetail->note; ?></td>
-                    <td><?php echo $picDetail->birthdate; ?></td>
-                    <td>
-                        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/updatePic', array('custId' => $model->id, 'picId' => $picDetail->id)); ?>">
-                            <span class="fa fa-pencil"></span>edit
-                        </a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php
-    } else {
-        echo "<h6><b>No Pic for this Customer.</b></h6>";
-    } */
-    ?>
-</div>-->
 
 <div class="row">
     <h5>Vehicles</h5>
