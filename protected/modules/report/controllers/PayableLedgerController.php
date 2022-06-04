@@ -22,40 +22,42 @@ class PayableLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $supplier = new Supplier('search');
-        $supplier->unsetAttributes();  // clear any default values
-        if (isset($_GET['Supplier'])) {
-            $supplier->attributes = $_GET['Supplier'];
-        }
-        $supplierCriteria = new CDbCriteria;
-        $supplierCriteria->compare('t.name', $supplier->name, true);
-        $supplierCriteria->compare('t.company', $supplier->company, true);
-        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
-            'criteria' => $supplierCriteria,
-            'sort' => array(
-                "defaultOrder" => "t.status ASC, t.name ASC",
-            ),
-        ));
-
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $supplierName = (isset($_GET['SupplierName'])) ? $_GET['SupplierName'] : '';
 
         $payableLedgerSummary = new PayableLedgerSummary($supplier->search());
         $payableLedgerSummary->setupLoading();
         $payableLedgerSummary->setupPaging($pageSize, $currentPage);
         $payableLedgerSummary->setupSorting();
         $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'supplierName' => $supplierName,
         );
         $payableLedgerSummary->setupFilter($filters);
         
+//        $supplier->unsetAttributes();  // clear any default values
+//        if (isset($_GET['Supplier'])) {
+//            $supplier->attributes = $_GET['Supplier'];
+//        }
+//        $supplierCriteria = new CDbCriteria;
+//        $supplierCriteria->compare('t.name', $supplier->name, true);
+//        $supplierCriteria->compare('t.company', $supplier->company, true);
+//        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
+//            'criteria' => $supplierCriteria,
+//            'sort' => array(
+//                "defaultOrder" => "t.status ASC, t.name ASC",
+//            ),
+//        ));
+
         $this->render('summary', array(
             'supplier' => $supplier,
-            'supplierDataProvider' => $supplierDataProvider,
+            'supplierName' => $supplierName,
+//            'supplierDataProvider' => $supplierDataProvider,
             'payableLedgerSummary' => $payableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,

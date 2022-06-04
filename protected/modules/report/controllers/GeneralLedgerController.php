@@ -39,23 +39,23 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupFilter($startDate, $endDate, $branchId);
         $generalLedgerSummary->getSaldo($startDate);
 
-//        $coa = new Coa('search');
-//        $coa->unsetAttributes();  // clear any default values
-//
-//        if (isset($_GET['Coa'])) {
-//            $coa->attributes = $_GET['Coa'];
-//        }
+        $coa = new Coa('search');
+        $coa->unsetAttributes();  // clear any default values
 
-//        $coaCriteria = new CDbCriteria;
-//        $coaCriteria->addCondition("t.is_approved = 1");
-//        $coaCriteria->compare('t.code', $account->code, true);
-//        $coaCriteria->compare('t.name', $account->name, true);
-//        $coaCriteria->compare('t.coa_category_id', $account->coa_category_id);
-//        $coaCriteria->compare('t.coa_sub_category_id', $account->coa_sub_category_id);
-//
-//        $coaDataProvider = new CActiveDataProvider('Coa', array(
-//            'criteria' => $coaCriteria,
-//        ));
+        if (isset($_GET['Coa'])) {
+            $coa->attributes = $_GET['Coa'];
+        }
+
+        $coaCriteria = new CDbCriteria;
+        $coaCriteria->addCondition("t.is_approved = 1");
+        $coaCriteria->compare('t.code', $coa->code, true);
+        $coaCriteria->compare('t.name', $coa->name, true);
+        $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
+        $coaCriteria->compare('t.coa_sub_category_id', $coa->coa_sub_category_id);
+
+        $coaDataProvider = new CActiveDataProvider('Coa', array(
+            'criteria' => $coaCriteria,
+        ));
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -69,8 +69,8 @@ class GeneralLedgerController extends Controller {
             'currentSort' => $currentSort,
             'number' => $number,
             'branchId' => $branchId,
-//            'coa' => $coa,
-//            'coaDataProvider' => $coaDataProvider,
+            'coa' => $coa,
+            'coaDataProvider' => $coaDataProvider,
         ));
     }
 
@@ -84,15 +84,29 @@ class GeneralLedgerController extends Controller {
         return $grandTotal;
     }
 
-    public function actionAjaxHtmlUpdateCoaSubCategorySelect() {
+    public function actionAjaxJsonCoa() {
         if (Yii::app()->request->isAjaxRequest) {
-            $coaCategoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
+            $coaId = (isset($_POST['Coa']['id'])) ? $_POST['Coa']['id'] : '';
+            $coa = Coa::model()->findByPk($coaId);
 
-            $this->renderPartial('_coaSubCategorySelect', array(
-                'coaCategoryId' => $coaCategoryId,
-            ));
+            $object = array(
+                'coa_name' => CHtml::value($coa, 'combinationName'),
+                'coa_code' => CHtml::value($coa, 'code'),
+            );
+            
+            echo CJSON::encode($object);
         }
     }
+
+//    public function actionAjaxHtmlUpdateCoaSubCategorySelect() {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $coaCategoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
+//
+//            $this->renderPartial('_coaSubCategorySelect', array(
+//                'coaCategoryId' => $coaCategoryId,
+//            ));
+//        }
+//    }
 
 //    public function actionAjaxHtmlAccount() {
 //        if (Yii::app()->request->isAjaxRequest) {

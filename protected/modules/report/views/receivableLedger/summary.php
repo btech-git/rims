@@ -30,10 +30,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                     
                                     <div class="small-5 columns">
-                                        <?php echo CHtml::activeTextField($customer, 'id', array(
-                                            'readonly' => true, 
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;', 
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
+                                        <?php echo CHtml::textField('CustomerName', $customerName, array(
+//                                            'readonly' => true, 
+//                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;', 
+//                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
                                         )); ?>
                                     </div>
                                     
@@ -116,7 +116,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 </div>
 
 <div>
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    <?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'customer-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(

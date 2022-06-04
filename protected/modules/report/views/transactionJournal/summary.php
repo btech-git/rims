@@ -37,31 +37,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch </span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <?php if ($companyId == ""): ?>
-                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    <?php else: ?>
-                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active', 'company_id' => $company)), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -87,34 +63,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">COA </span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::activeTextField($jurnalUmum, 'coa_id', array(
-                                        'readonly' => true,
-                                        'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
-                                        'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
-                                    )); ?>
-                                    <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
-                                    <?php echo CHtml::encode(CHtml::value($jurnalUmum, 'coa.name')); ?>
-                                    <?php echo CHtml::closeTag('span'); ?> 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-2 columns">
@@ -145,6 +94,44 @@ Yii::app()->clientScript->registerScript('report', '
                                             'placeholder' => 'Sampai',
                                         ),
                                     )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch </span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php if ($companyId == ""): ?>
+                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    <?php else: ?>
+                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active', 'company_id' => $company)), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">COA </span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeTextField($jurnalUmum, 'coa_id', array(
+                                        'readonly' => true,
+                                        'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
+                                        'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
+                                    )); ?>
+                                    <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
+                                    <?php $coa = Coa::model()->findByPk($account->id); ?>
+                                    <?php echo CHtml::encode(CHtml::value($coa, 'combinationName')); ?>
+                                    <?php echo CHtml::closeTag('span'); ?> 
                                 </div>
                             </div>
                         </div>
@@ -215,7 +202,7 @@ Yii::app()->clientScript->registerScript('report', '
             $("#' . CHtml::activeId($jurnalUmum, 'coa_id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#coa-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "") {
-                $("#coa_id").html("");
+                $("#coa_code").html("");
                 $("#coa_name").html("");
             } else {
                 $.ajax({
@@ -224,8 +211,8 @@ Yii::app()->clientScript->registerScript('report', '
                     url: "' . CController::createUrl('ajaxJsonCoa') . '",
                     data: $("form").serialize(),
                     success: function(data) {
-                        $("#coa_id").html(data.id);
-                        $("#coa_name").html(data.name);
+                        $("#coa_id").html(data.coa_code);
+                        $("#coa_name").html(data.coa_name);
                     },
                 });
             }

@@ -47,7 +47,7 @@ class TransactionJournalController extends Controller {
         }
 
         $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("t.status = 'Approved'");
+        $coaCriteria->addCondition("t.is_approved = 1");
         $coaCriteria->compare('t.code', $coa->code, true);
         $coaCriteria->compare('t.name', $coa->name, true);
         $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
@@ -79,7 +79,7 @@ class TransactionJournalController extends Controller {
             $coa = Coa::model()->findByPk($coaId);
 
             $object = array(
-                'coa_name' => CHtml::value($coa, 'name'),
+                'coa_name' => CHtml::value($coa, 'combinationName'),
                 'coa_code' => CHtml::value($coa, 'code'),
             );
             

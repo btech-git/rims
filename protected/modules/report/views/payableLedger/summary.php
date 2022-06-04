@@ -25,22 +25,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <span class="prefix">Supplier</span>
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Supplier </span>
                                     </div>
-                                    
-                                    <div class="small-5 columns">
-                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
-                                            'readonly' => true, 
-                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;', 
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('SupplierName', $supplierName, array(
+//                                            'size' => 15,
+//                                            'maxlength' => 10,
+//                                            'readonly' => true,
+//                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+//                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
                                         )); ?>
-                                    </div>
-                                    
-                                    <div class="small-5 columns">
-                                        <?php echo CHtml::openTag('span', array('id' => 'supplier_company')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($supplier, 'company')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>
+                                        <?php /*echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                                        <?php $supplierAccount = Supplier::model()->findByPk($supplier->id); ?>
+                                        <?php echo CHtml::encode(CHtml::value($supplierAccount, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span');*/ ?> 
                                     </div>
                                 </div>
                             </div>
@@ -115,8 +115,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     </div>
 </div>
 
-<div>
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+<div class="grid-view">
+    <?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'supplier-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(
@@ -126,7 +126,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'modal' => true,
         ),
     )); ?>
-    
+
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'supplier-grid',
         'dataProvider' => $supplierDataProvider,
@@ -137,7 +137,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id) {
-            $("#' . CHtml::activeId($supplier, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#' . CHtml::activeId('SupplierId') . '").val($.fn.yiiGridView.getSelection(id));
             $("#supplier-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "") {
                 $("#supplier_company").html("");
@@ -160,9 +160,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         }',
         'columns' => array(
             'name',
+            'code',
             'company',
             'address',
+            'coa.name',
         ),
     )); ?>
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    <?php $this->endWidget(); ?>
 </div>

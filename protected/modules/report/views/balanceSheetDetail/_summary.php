@@ -50,7 +50,7 @@
                         </tr>
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null)); ?> 
                         <?php foreach ($coas as $coa): ?>
-                            <?php $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate); ?>
+                            <?php $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId); ?>
                             <?php if ($accountGroupBalance !== 0): ?>
                                 <tr>
                                     <td style="padding-left: 90px">
@@ -67,7 +67,7 @@
                                 <?php if (!empty($coa->coaIds)): ?> 
                                     <?php $groupBalance = 0; ?>
                                     <?php foreach ($coa->coaIds as $account): ?>
-                                        <?php $accountBalance = $account->getBalanceSheetBalance($startDate, $endDate); ?>
+                                        <?php $accountBalance = $account->getBalanceSheetBalance($startDate, $endDate, $branchId); ?>
                                         <?php if ($accountBalance !== 0): ?>
                                             <tr>
                                                 <td style="padding-left: 125px; font-size: 10px">

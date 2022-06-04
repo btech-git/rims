@@ -30,12 +30,12 @@ class ReceivableLedgerSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-//    public function setupFilter($filters) {
+    public function setupFilter($filters) {
+        $this->dataProvider->criteria->compare('t.name', $filters['customerName'], true);
 //        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
 //        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
 //        
 //        $this->dataProvider->criteria->addBetweenCondition('invoiceHeaders.invoice_date', $startDate, $endDate);
 //        $this->dataProvider->criteria->addBetweenCondition('paymentIns.payment_date', $startDate, $endDate);
-//    }
-
+    }
 }

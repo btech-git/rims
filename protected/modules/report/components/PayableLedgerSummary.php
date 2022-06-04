@@ -34,6 +34,7 @@ class PayableLedgerSummary extends CComponent {
 //        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
 //        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
 //        
+        $this->dataProvider->criteria->compare('t.name', $filters['supplierName'], true);
 //        $this->dataProvider->criteria->addBetweenCondition('transactionPurchaseOrders.purchase_order_date', $startDate, $endDate);
 //        $this->dataProvider->criteria->addBetweenCondition('paymentOuts.payment_date', $startDate, $endDate);
     }
