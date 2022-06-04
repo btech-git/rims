@@ -35,17 +35,17 @@
                 </div>		
             <?php endif; ?>
 
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo 'COA Grouping'; ?>
+                        <?php /*echo 'COA Grouping'; ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->dropDownlist($model, 'coa_id', CHtml::listData(Coa::model()->findAllByAttributes(array('coa_id' => null)),'id','name'), array('empty' => '-- Pilih Group --')); ?>
-                        <?php echo $form->error($model, 'coa_id'); ?>
+                        <?php echo $form->error($model, 'coa_id');*/ ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
             <div class="field">
                 <div class="row collapse">

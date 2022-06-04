@@ -17,7 +17,7 @@
         array(
             'name' => 'work_order_number',
             'header' => 'WO #',
-            'value' => '$data->transaction_number',
+            'value' => '$data->work_order_number',
         ),
         array(
             'header' => 'Tanggal',

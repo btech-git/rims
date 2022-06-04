@@ -12,27 +12,53 @@ class PaymentOutComponent extends CComponent {
         $this->image = $image;
     }
 
-    public function addInvoice($invoiceId) {
+    public function addInvoice($transactionId, $movementType) {
 
         $exist = FALSE;
-        $receiveItem = TransactionReceiveItem::model()->findByPk($invoiceId);
-
-        if ($receiveItem != null) {
-            foreach ($this->details as $detail) {
-                if ($detail->receive_item_id == $receiveItem->id) {
-                    $exist = TRUE;
-                    break;
+        
+        if ($movementType == 1) {
+            $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
+            
+            if ($receiveItem != null) {
+                foreach ($this->details as $detail) {
+                    if ($detail->receive_item_id == $receiveItem->id) {
+                        $exist = TRUE;
+                        break;
+                    }
                 }
-            }
 
-            if (!$exist) {
-                $detail = new PayOutDetail;
-                $detail->receive_item_id = $invoiceId;
-                $detail->total_invoice = $receiveItem->purchaseOrder->total_price;
-                $this->details[] = $detail;
-            }
-        } else
-            $this->header->addError('error', 'Invoice tidak ada di dalam detail');
+                if (!$exist) {
+                    $detail = new PayOutDetail;
+                    $detail->receive_item_id = $transactionId;
+                    $detail->work_order_expense_header_id = null;
+                    $detail->total_invoice = $receiveItem->purchaseOrder->total_price;
+                    $this->details[] = $detail;
+                }
+            } else
+                $this->header->addError('error', 'Invoice tidak ada di dalam detail');
+        } elseif ($movementType == 2) {
+            $workOrderExpense = WorkOrderExpenseHeader::model()->findByPk($transactionId);
+            
+            if ($workOrderExpense != null) {
+                foreach ($this->details as $detail) {
+                    if ($detail->work_order_expense_header_id == $workOrderExpense->id) {
+                        $exist = TRUE;
+                        break;
+                    }
+                }
+
+                if (!$exist) {
+                    $detail = new PayOutDetail;
+                    $detail->receive_item_id = null;
+                    $detail->work_order_expense_header_id = $transactionId;
+                    $detail->total_invoice = $workOrderExpense->grand_total;
+                    $this->details[] = $detail;
+                }
+            } else
+                $this->header->addError('error', 'Invoice tidak ada di dalam detail');
+        } else {
+            $exist;
+        }
     }
 
     public function removeDetailAt($index) {

@@ -140,79 +140,30 @@ $('.search-form form').submit(function(){
 
 <hr />
 
-<h1>List Hutang Supplier</h1>
-
-<br />
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'receive-item-grid',
-    'dataProvider' => $receiveItemDataProvider,
-    'filter' => $receiveItem,
-    'pager' => array(
-        'cssFile' => false,
-        'header' => '',
-    ),
-    'columns' => array(
-        array(
-            'name' => 'purchase_order_no',
-            'header' => 'PO #',
-            'value' => 'empty($data->purchase_order_id) ? "N/A" : CHtml::link($data->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->purchase_order_id))',
-            'type' => 'raw',
-        ),
-        array(
-            'name' => 'invoice_number',
-            'header' => 'Invoice #',
-            'value' => '$data->invoice_number',
-        ),
-        array(
-            'header' => 'Tanggal',
-            'name' => 'invoice_date',
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
-        ),
-        array(
-            'name' => 'supplier_name',
-            'header' => 'Supplier',
-            'value' => 'empty($data->supplier_id) ? "N/A" :$data->supplier->name',
-        ),
-        array(
-            'name' => 'supplier_delivery_number',
-            'header' => 'Supplier SJ #',
-            'value' => '$data->supplier_delivery_number',
-        ),
-        array(
-            'header' => 'Jatuh Tempo',
-            'name' => 'invoice_due_date',
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_due_date)'
-        ),
-        array(
-            'name' => 'user_id_invoice',
-            'filter' => CHtml::activeDropDownList($receiveItem, 'user_id_invoice', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
-            'header' => 'Created By',
-            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
-        ),
-        array(
-            'name' => 'recipient_branch_id',
-            'header' => 'Branch',
-            'filter' => CHtml::activeDropDownList($receiveItem, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-            'value' => '$data->recipientBranch->name',
-        ),
-        array(
-            'header' => 'Tanggal Input',
-            'value' => '$data->dateTimeCreated',
-        ),
-        array(
-            'header' => 'Total',
-            'filter' => false,
-            'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
-            'htmlOptions' => array('style' => 'text-align: right'),
-        ),
-        array(
-            'header' => '',
-            'type' => 'raw',
-            'value' => 'CHtml::link("Create", array("createSingle", "receiveItemId"=>$data->id))',
-            'htmlOptions' => array(
-                'style' => 'text-align: center;'
+<fieldset>
+    <legend>Pending Payment</legend>
+    <div>
+        <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+            'tabs' => array(
+                'Hutang Supplier' => array(
+                    'content' => $this->renderPartial('_viewReceivable', array(
+                        'receiveItem' => $receiveItem,
+                        'receiveItemDataProvider' => $receiveItemDataProvider,
+                    ), true)
+                ),
+                'Hutang Upah' => array(
+                    'content' => $this->renderPartial('_viewWorkExpense', array(
+                        'workOrderExpense' => $workOrderExpense,
+                        'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
+                    ), true)
+                ),
             ),
-        ),
-    ),
-)); ?>
+            // additional javascript options for the tabs plugin
+            'options' => array(
+                'collapsible' => true,
+            ),
+            // set id for this widgets
+            'id' => 'view_tab',
+        )); ?>
+    </div>
+</fieldset>

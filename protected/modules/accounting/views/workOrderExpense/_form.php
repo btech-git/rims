@@ -83,9 +83,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="small-12 medium-6 columns">
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -96,6 +94,67 @@
                             'empty' => '-- Select Branch --'
                         )); ?>
                         <?php echo CHtml::error($workOrderExpense->header, 'branch_id'); ?>
+                    </div>
+                </div>
+            </div>		
+        </div>
+        
+        <div class="small-12 medium-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix">
+                            <?php echo CHtml::label('Supplier', ''); ?>
+                        </label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeTextField($workOrderExpense->header, 'supplier_id', array(
+                            'size' => 15,
+                            'maxlength' => 10,
+                            'readonly' => true,
+                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
+                        )); ?>
+                        <?php echo CHtml::error($workOrderExpense->header, 'supplier_id'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Company', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'supplier_company')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'supplier.company')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>		
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Address', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'supplier_address')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'supplier.address')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>		
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('COA Receivables', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'supplier_coa')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'supplier.coa.name')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
                     </div>
                 </div>
             </div>		
@@ -264,3 +323,56 @@
     </div>
     <?php echo CHtml::endForm(); ?>
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'supplier-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Supplier',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => true,
+    ),
+)); ?>
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'supplier-grid',
+    'dataProvider' => $supplierDataProvider,
+    'filter' => $supplier,
+    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+    'pager' => array(
+        'cssFile' => false,
+        'header' => '',
+    ),
+    'selectionChanged' => 'js:function(id) {
+        $("#' . CHtml::activeId($workOrderExpense->header, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+        $("#supplier-dialog").dialog("close");
+        if ($.fn.yiiGridView.getSelection(id) == "") {
+            $("#supplier_name").html("");
+            $("#supplier_company").html("");
+            $("#supplier_address").html("");
+            $("#supplier_coa").html("");
+        } else {
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $workOrderExpense->header->id)) . '",
+                data: $("form").serialize(),
+                success: function(data) {
+                    $("#supplier_name").html(data.supplier_name);
+                    $("#supplier_company").html(data.supplier_company);
+                    $("#supplier_address").html(data.supplier_address); 
+                    $("#supplier_coa").html(data.supplier_coa);                                                             
+                },
+            });
+        }
+    }',
+    'columns' => array(
+        'name',
+        'company',
+        'address',
+        'phone',
+        'coa.name: COA',
+    ),
+)); ?>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    

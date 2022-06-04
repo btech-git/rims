@@ -70,6 +70,9 @@ class WorkOrderExpenseController extends Controller {
         $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $coaDataProvider = $coa->searchForWorkOrderExpense();
 
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+        
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
@@ -86,6 +89,8 @@ class WorkOrderExpenseController extends Controller {
             'workOrderExpense' => $workOrderExpense,
             'coaDataProvider' => $coaDataProvider,
             'coa' => $coa,
+            'supplierDataProvider' => $supplierDataProvider,
+            'supplier' => $supplier,
         ));
     }
 
@@ -205,6 +210,27 @@ class WorkOrderExpenseController extends Controller {
 //            'historis' => $historis,
 //        ));
 //    }
+
+    public function actionAjaxJsonSupplier($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $supplierId = (isset($_POST['WorkOrderExpenseHeader']['supplier_id'])) ? $_POST['WorkOrderExpenseHeader']['supplier_id'] : '';
+            
+            $workOrderExpense = $this->instantiate($id);
+            $this->loadState($workOrderExpense);
+
+            $supplier = Supplier::model()->findByPk($supplierId);
+        
+            $object = array(
+                'supplier_id' => CHtml::value($supplier, 'id'),
+                'supplier_name' => CHtml::value($supplier, 'name'),
+                'supplier_company' => CHtml::value($supplier, 'company'),
+                'supplier_address' => nl2br(CHtml::value($supplier, 'address')),
+                'supplier_coa' => nl2br(CHtml::value($supplier, 'coa.name')),
+                
+            );
+            echo CJSON::encode($object);
+        }
+    }
 
     public function actionAjaxHtmlAddDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {

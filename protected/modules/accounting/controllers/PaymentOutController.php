@@ -86,19 +86,28 @@ class PaymentOutController extends Controller {
         ));
     }
 
-    public function actionCreateSingle($receiveItemId) {
+    public function actionCreateSingle($transactionId, $movementType) {
         $paymentOut = $this->instantiate(null);
-        $receiveItem = TransactionReceiveItem::model()->findByPk($receiveItemId);
-        $supplier = Supplier::model()->findByPk($receiveItem->supplier_id);
-
+        
+        if ($movementType == 1) {
+            $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
+            $supplier = Supplier::model()->findByPk($receiveItem->supplier_id);
+            $paymentOut->header->supplier_id = $receiveItem->supplier_id;
+        } elseif ($movementType == 2) {
+            $workOrderExpense = WorkOrderExpenseHeader::model()->findByPk($transactionId);
+            $supplier = Supplier::model()->findByPk($workOrderExpense->supplier_id);
+            $paymentOut->header->supplier_id = $workOrderExpense->supplier_id;
+        } else {
+            $paymentOut->header->supplier_id = null;
+        }
+        
         $paymentOut->header->user_id = Yii::app()->user->id;
         $paymentOut->header->payment_date = date('Y-m-d');
         $paymentOut->header->date_created = date('Y-m-d H:i:s');
-        $paymentOut->header->supplier_id = $receiveItem->supplier_id;
         $paymentOut->header->status = 'Draft';
         $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
 
-        $paymentOut->addInvoice($receiveItemId);
+        $paymentOut->addInvoice($transactionId, $movementType);
         
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
@@ -256,6 +265,9 @@ class PaymentOutController extends Controller {
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
 
+        $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
+        $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
+
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
             'dataProvider' => $dataProvider,
@@ -263,6 +275,8 @@ class PaymentOutController extends Controller {
             'receiveItem' => $receiveItem,
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'paymentApproval' => $paymentApproval,
+            'workOrderExpense' => $workOrderExpense,
+            'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
         ));
     }
 

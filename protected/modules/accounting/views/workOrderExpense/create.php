@@ -9,5 +9,7 @@
     'workOrderExpense' => $workOrderExpense,
     'coaDataProvider' => $coaDataProvider,
     'coa' => $coa,
+    'supplierDataProvider' => $supplierDataProvider,
+    'supplier' => $supplier,
 )); ?>
 

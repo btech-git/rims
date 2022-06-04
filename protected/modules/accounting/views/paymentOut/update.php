@@ -9,6 +9,6 @@
     'paymentOut' => $paymentOut,
     'supplier' => $supplier,
     'receiveItem' => $receiveItem,
-    'receiveItemDataProvider' => $receiveItemDataProvider,
+//    'receiveItemDataProvider' => $receiveItemDataProvider,
 )); ?>
 
