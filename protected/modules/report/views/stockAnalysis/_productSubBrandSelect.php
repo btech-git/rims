@@ -1,4 +1,4 @@
-<?php echo CHtml::activeDropDownList(Product::model(), 'sub_brand_id', CHtml::listData(SubBrand::model()->findAllByAttributes(array('brand_id' => $productBrandId)), 'id', 'name'), array(
+<?php echo CHtml::dropDownList('SubBrandId', $subBrandId, CHtml::listData(SubBrand::model()->findAllByAttributes(array('brand_id' => $brandId)), 'id', 'name'), array(
     'empty' => '-- Pilih Sub Brand --',
     'order' => 'name',
     'onchange' => CHtml::ajax(array(

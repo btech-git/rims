@@ -35,13 +35,46 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Sub Brand</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_brand">
+                                    <?php echo CHtml::dropDownList('SubBrandId', $subBrandId, CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
+                                            'update' => '#product_sub_brand_series',
+                                        )),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Sub Brand Series</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_brand_series">
+                                    <?php echo CHtml::dropDownList('SubBrandSeriesId', $subBrandSeriesId, CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Category</span>
+                                    <span class="prefix">Master Category</span>
                                 </div>
 
                                 <div class="small-8 columns">
@@ -53,6 +86,39 @@ Yii::app()->clientScript->registerScript('report', '
                                             'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
                                             'update' => '#product_sub_master_category',
                                         )),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Sub Master Category</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_master_category">
+                                    <?php echo CHtml::dropDownList('ProductSubMasterCategoryId', $productSubMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
+                                            'update' => '#product_sub_category',
+                                        )),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Sub Category</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_category">
+                                    <?php echo CHtml::dropDownList('ProductSubCategoryId', $productSubCategoryId, CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
                                     )); ?>
                                 </div>
                             </div>
@@ -117,12 +183,12 @@ Yii::app()->clientScript->registerScript('report', '
                 'inventoryDetail' => $inventoryDetail,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
-                'productName' => $productName,
-                'productCode' => $productCode,
                 'brandId' => $brandId,
                 'subBrandId' => $subBrandId,
                 'subBrandSeriesId' => $subBrandSeriesId,
                 'productMasterCategoryId' => $productMasterCategoryId,
+                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+                'productSubCategoryId' => $productSubCategoryId,
             )); ?>
         </div>
     </div>

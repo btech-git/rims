@@ -29,24 +29,73 @@ class StockAnalysisController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $productName = (isset($_GET['ProductName'])) ? $_GET['ProductName'] : '';
-        $productCode = (isset($_GET['ProductCode'])) ? $_GET['ProductCode'] : '';
         $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
         $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
         $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
         $productMasterCategoryId = (isset($_GET['ProductMasterCategoryId'])) ? $_GET['ProductMasterCategoryId'] : '';
+        $productSubMasterCategoryId = (isset($_GET['ProductSubMasterCategoryId'])) ? $_GET['ProductSubMasterCategoryId'] : '';
+        $productSubCategoryId = (isset($_GET['ProductSubCategoryId'])) ? $_GET['ProductSubCategoryId'] : '';
         
         $this->render('summary', array(
             'inventoryDetail' => $inventoryDetail,
             'product' => $product,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'productName' => $productName,
-            'productCode' => $productCode,
             'brandId' => $brandId,
             'subBrandId' => $subBrandId,
             'subBrandSeriesId' => $subBrandSeriesId,
             'productMasterCategoryId' => $productMasterCategoryId,
+            'productSubMasterCategoryId' => $productSubMasterCategoryId,
+            'productSubCategoryId' => $productSubCategoryId,
         ));
     }
+    
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
+            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'brandId' => $brandId,
+                'subBrandId' => $subBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
+            $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'subBrandId' => $subBrandId,
+                'subBrandSeriesId' => $subBrandSeriesId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategoryId = (isset($_GET['ProductMasterCategoryId'])) ? $_GET['ProductMasterCategoryId'] : '';
+            $productSubMasterCategoryId = (isset($_GET['ProductSubMasterCategoryId'])) ? $_GET['ProductSubMasterCategoryId'] : '';
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'productMasterCategoryId' => $productMasterCategoryId,
+                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubMasterCategoryId = (isset($_GET['ProductSubMasterCategoryId'])) ? $_GET['ProductSubMasterCategoryId'] : '';
+            $productSubCategoryId = (isset($_GET['ProductSubCategoryId'])) ? $_GET['ProductSubCategoryId'] : '';
+
+            $this->renderPartial('_productSubCategorySelect', array(
+                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+                'productSubCategoryId' => $productSubCategoryId,
+            ));
+        }
+    }
+
 }

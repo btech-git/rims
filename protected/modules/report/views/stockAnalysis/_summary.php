@@ -19,7 +19,7 @@
                 </thead>
 
                 <tbody>
-                    <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $productMasterCategoryId); ?>
+                    <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId); ?>
                     <?php foreach ($fastMovingItems as $fastMovingItem): ?>
                         <tr>
                             <td><?php echo CHtml::encode($fastMovingItem['code']); ?></td>
@@ -56,7 +56,7 @@
                 </thead>
 
                 <tbody>
-                    <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $productMasterCategoryId); ?>
+                    <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId); ?>
                     <?php foreach ($slowMovingItems as $slowMovingItem): ?>
                         <tr>
                             <td><?php echo CHtml::encode($slowMovingItem['code']); ?></td>
