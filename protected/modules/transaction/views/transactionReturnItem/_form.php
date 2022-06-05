@@ -14,9 +14,9 @@
     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Return Item', Yii::app()->baseUrl . '/transaction/transactionReturnItem/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnItem.admin"))) ?>
     <h1>
         <?php if ($returnItem->header->id == "") {
-            echo "New Transaction Return Item";
+            echo "New Transaction Return Jual";
         } else {
-            echo "Update Transaction Return Item";
+            echo "Update Transaction Return Jual";
         } ?>
     </h1>
     <!-- begin FORM -->

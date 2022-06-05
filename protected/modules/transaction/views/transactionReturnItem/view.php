@@ -32,7 +32,7 @@ $this->menu = array(
         <?php if ($model->status != 'Approved' && $model->status != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnItem/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnItem.updateApproval"))) ?>
         <?php endif; ?>
-        <h1>View Transaction Return Item #<?php echo $model->id; ?></h1>
+        <h1>View Transaction Return Jual #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,

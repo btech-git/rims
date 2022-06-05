@@ -13,9 +13,9 @@
 <div class="clearfix page-action">
     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Return Order', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.admin"))) ?>
     <h1><?php if ($returnOrder->header->isNewRecord) {
-        echo "New Transaction Return Order";
+        echo "New Transaction Return Beli";
     } else {
-        echo "Update Transaction Return Order";
+        echo "Update Transaction Return Beli";
     } ?></h1>
     <!-- begin FORM -->
     <div class="form">

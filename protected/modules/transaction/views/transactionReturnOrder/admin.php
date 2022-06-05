@@ -42,7 +42,7 @@ Yii::app()->clientScript->registerScript('search', "
     <div class="clearfix page-action">
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Return Order', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("purchaseReturnCreate"))) ?>
 
-        <h1>Manage Transaction Return Order</h1>
+        <h1>Manage Transaction Return Beli</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <!--<div class="left clearfix bulk-action">

@@ -183,33 +183,32 @@
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label class="prefix">
+                                <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'supplier_id'); ?>
                                 <?php echo $form->labelEx($purchaseOrder->header, 'supplier_id'); ?>
                             </label>
                         </div>
                         <?php if ($purchaseOrder->header->isNewRecord): ?>
-                        <div class="small-2 columns">
-                            <a class="button expand" href="<?php echo Yii::app()->baseUrl . '/master/supplier/create'; ?>">
-                                <span class="fa fa-plus"></span>Add
-                            </a>
-                        </div>
-                        <div class="small-6 columns">
-                            <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'supplier_id'); ?>
-                            <?php echo CHtml::activeTextField($purchaseOrder->header, 'supplier_name', array(
-                                'size' => 15,
-                                'maxlength' => 10,
-                                'readonly' => true,
-                                'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
-                                'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
-                                'value' => $purchaseOrder->header->supplier_id == "" ? '' : Supplier::model()->findByPk($purchaseOrder->header->supplier_id)->name
-                            )); ?>
+                            <div class="small-2 columns">
+                                <a class="button expand" href="<?php echo Yii::app()->baseUrl . '/master/supplier/create'; ?>">
+                                    <span class="fa fa-plus"></span>Add
+                                </a>
+                            </div>
+                            <div class="small-6 columns">
+                                <?php echo CHtml::activeTextField($purchaseOrder->header, 'supplier_name', array(
+                                    'size' => 15,
+                                    'maxlength' => 10,
+                                    'readonly' => true,
+                                    'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                                    'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
+                                    'value' => $purchaseOrder->header->supplier_id == "" ? '' : Supplier::model()->findByPk($purchaseOrder->header->supplier_id)->name
+                                )); ?>
 
-                            <?php echo $form->error($purchaseOrder->header, 'supplier_id'); ?>
-                        </div>
+                                <?php echo $form->error($purchaseOrder->header, 'supplier_id'); ?>
+                            </div>
                         <?php else: ?>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'supplier_id'); ?>
-                            <?php echo CHtml::encode(CHtml::value($purchaseOrder->header, 'supplier.name')); ?>
-                        </div>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::encode(CHtml::value($purchaseOrder->header, 'supplier.name')); ?>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -232,8 +231,7 @@
                                     'readonly' => true
                                 )); ?>
                             <?php else: ?>
-                                <?php echo CHtml::activeTextField($purchaseOrder->header, 'coa_name',
-                                    array('readonly' => true)); ?>
+                                <?php echo CHtml::activeTextField($purchaseOrder->header, 'coa_name', array('readonly' => true)); ?>
                             <?php endif ?>
                         </div>
                     </div>
