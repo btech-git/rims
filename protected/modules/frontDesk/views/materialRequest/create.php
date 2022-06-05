@@ -8,9 +8,12 @@
 <div id="maincontent">
     <?php echo $this->renderPartial('_form', array(
         'materialRequest' => $materialRequest,
-        'registrationTransaction' => $registrationTransaction,
         'product' => $product,
         'productDataProvider' => $productDataProvider,
+        'registrationTransaction' => $registrationTransaction,
+        'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+        'customerName' => $customerName,
+        'vehicleNumber' => $vehicleNumber,
         'branches' => $branches,
     ));?>
 </div>

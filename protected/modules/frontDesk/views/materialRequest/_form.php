@@ -10,7 +10,6 @@
     }
 </script>
 
-
 <div id="maincontent">
     <div class="clearfix page-action">
         <div class="form">
@@ -49,47 +48,21 @@
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Repair Type'; ?></label>
+                                        <label class="prefix"><?php echo 'Work Order'; ?></label>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.repair_type')); ?>
+                                        <?php echo CHtml::activeTextField($materialRequest->header, 'registration_transaction_id', array(
+                                            'size' => 15,
+                                            'maxlength' => 10,
+                                            'readonly' => true,
+                                            'onclick' => '$("#registration-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#registration-dialog").dialog("open"); return false; }',
+                                        )); ?>
+                                        <?php echo CHtml::error($materialRequest->header, 'registration_transaction_id'); ?>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Registration Transaction #'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.transaction_number')); ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'WO #'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.work_order_number')); ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Tanggal Registration'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.transaction_date')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -113,55 +86,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Customer'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.customer.name')); ?>
-                                    </div>
-                                </div>
-                            </div>
                             
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Plate #'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.plate_number')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Vehicle'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carMake.name')); ?> -
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carModel.name')); ?> -
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carSubModel.name')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Color'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.color.name')); ?>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -173,6 +98,88 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'WO #'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::openTag('span', array('id' => 'work_order_number')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.work_order_number')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Tanggal WO'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::openTag('span', array('id' => 'work_order_date')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.transaction_date')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Repair Type'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::openTag('span', array('id' => 'work_order_type')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.repair_type')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Customer'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::openTag('span', array('id' => 'work_order_customer')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.customer.name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Plate #'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::openTag('span', array('id' => 'work_order_plate')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.plate_number')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <label class="prefix"><?php echo 'Vehicle'; ?></label>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::openTag('span', array('id' => 'work_order_vehicle')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carMake.name')); ?> -
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carModel.name')); ?> -
+                                        <?php echo CHtml::encode(CHtml::value($materialRequest->header, 'registrationTransaction.vehicle.carSubModel.name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -180,10 +187,21 @@
 
                 <div class="row">
                     <div class="medium-12 columns">
-                        <div>
+                        <div id="detail_service">
                             <?php $this->renderPartial('_detailService', array(
                                 'materialRequest' => $materialRequest,
-                                'registrationTransaction' => $registrationTransaction,
+                            )); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="row">
+                    <div class="medium-12 columns">
+                        <div id="detail_product">
+                            <?php $this->renderPartial('_detailProduct', array(
+                                'materialRequest' => $materialRequest,
                             )); ?>
                         </div>
                     </div>
@@ -217,6 +235,94 @@
     </div>
 </div><!-- form -->
 
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'registration-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Work Order',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => true,
+    ),
+)); ?>
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'registration-grid',
+    'dataProvider' => $registrationTransactionDataProvider,
+    'filter' => $registrationTransaction,
+    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+    'pager' => array(
+        'cssFile' => false,
+        'header' => '',
+    ),
+    'selectionChanged' => 'js:function(id) {
+        $("#' . CHtml::activeId($materialRequest->header, 'registration_transaction_id') . '").val($.fn.yiiGridView.getSelection(id));
+        $("#registration-dialog").dialog("close");
+        if ($.fn.yiiGridView.getSelection(id) == "") {
+            $("#work_order_number").html("");
+            $("#work_order_date").html("");
+            $("#work_order_customer").html("");
+            $("#work_order_vehicle").html("");
+            $("#work_order_plate").html("");
+            $("#work_order_type").html("");
+        } else {
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxJsonWorkOrder', array('id' => $materialRequest->header->id)) . '",
+                data: $("form").serialize(),
+                success: function(data) {
+                    $("#work_order_number").html(data.workOrderNumber);
+                    $("#work_order_date").html(data.workOrderDate);
+                    $("#work_order_customer").html(data.workOrderCustomer); 
+                    $("#work_order_vehicle").html(data.workOrderVehicle); 
+                    $("#work_order_plate").html(data.workOrderPlate);
+                    $("#work_order_type").html(data.workOrderType);
+                    $("#detail_service").html(html); 
+                    
+                },
+            });
+            $.ajax({
+                type: "POST",
+                url: "' . CController::createUrl('ajaxHtmlAddProduct', array('id' => $materialRequest->header->id)) . '",
+                data: $("form").serialize(),
+                success: function(html) { $("#detail_product").html(html); },
+            });
+            $.ajax({
+                type: "POST",
+                url: "' . CController::createUrl('ajaxHtmlAddService', array('id' => $materialRequest->header->id)) . '",
+                data: $("form").serialize(),
+                success: function(html) { $("#detail_service").html(html); },
+            });
+        }
+    }',
+    'columns' => array(
+        array(
+            'name' => 'work_order_number',
+            'header' => 'WO #',
+            'value' => '$data->work_order_number',
+        ),
+        array(
+            'header' => 'Tanggal',
+            'name' => 'transaction_date',
+            'filter' => false, 
+            'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->transaction_date)',
+        ),
+        'repair_type',
+        array(
+            'header' => 'Customer',
+            'filter' => CHtml::textField('CustomerName', $customerName, array('size' => '30', 'maxLength' => '60')),
+            'value' => 'CHtml::value($data, "customer.name")',
+        ),
+        array(
+            'header' => 'Plate #',
+            'filter' => CHtml::textField('VehicleNumber', $vehicleNumber),
+            'value' => 'CHtml::value($data, "vehicle.plate_number")',
+        ),
+        'note',
+    ),
+)); ?>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'product-dialog',
     // additional javascript options for the dialog plugin
@@ -424,6 +530,10 @@
                         'name' => 'unit_id',
                         'header' => 'Unit',
                         'value' => '$data->unit->name'
+                    ),
+                    array(
+                        'header' => 'COA',
+                        'value' => '$data->productSubMasterCategory->coaPersediaanBarangDagang->name'
                     ),
                 ),
             ));	?>

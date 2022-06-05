@@ -1,3 +1,7 @@
+<h2>Service List</h2>
+
+<br />
+
 <table style="border: 1px solid">
     <thead>
         <tr style="background-color: skyblue">
@@ -8,14 +12,16 @@
         </tr>
     </thead>
 
-    <tbody>
-        <?php foreach ($registrationTransaction->registrationServices as $i => $detail): ?>
-            <tr>
-                <td><?php echo $i + 1; ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($detail, 'service.name'));  ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($detail, 'service.serviceType.name'));  ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($detail, 'status'));  ?></td>
-            </tr>	
-        <?php endforeach; ?>
-    </tbody>
+    <?php if (!empty($materialRequest->header->registrationTransaction)): ?>
+        <tbody>
+            <?php foreach ($materialRequest->header->registrationTransaction->registrationServices as $i => $detail): ?>
+                <tr>
+                    <td><?php echo $i + 1; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'service.name'));  ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'service.serviceType.name'));  ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'status'));  ?></td>
+                </tr>	
+            <?php endforeach; ?>
+        </tbody>
+    <?php endif; ?>
 </table>

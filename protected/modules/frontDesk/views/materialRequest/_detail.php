@@ -1,5 +1,6 @@
 <table style="border: 1px solid">
     <tr style="background-color: skyblue">
+        <th style="text-align: center">ID</th>
         <th style="text-align: center">Nama Barang</th>
         <th style="text-align: center">Code</th>
         <th style="text-align: center">Kategori</th>
@@ -8,11 +9,15 @@
         <th style="text-align: center">Sub Brand Series</th>
         <th style="text-align: center; width: 10%">Quantity</th>
         <th style="text-align: center; width: 10%">Satuan</th>
+        <th style="text-align: center; width: 10%">COA</th>
         <th style="text-align: center; width: 5%"></th>
     </tr>
     <?php foreach ($materialRequest->details as $i => $detail): ?>
         <?php $productInfo = Product::model()->findByPk($detail->product_id); ?>
         <tr style="background-color: azure">
+            <td>
+                <?php echo CHtml::encode(CHtml::value($productInfo, 'id')); ?>
+            </td>
             <td>
                 <?php echo CHtml::activeHiddenField($detail, "[$i]product_id"); ?>
                 <?php echo CHtml::encode(CHtml::value($productInfo, 'name')); ?>
@@ -53,6 +58,9 @@
                 <?php echo CHtml::error($detail, 'unit_id'); ?>
             </td>
             <td>
+                <?php echo CHtml::encode(CHtml::value($productInfo, 'productSubMasterCategory.coaPersediaanBarangDagang.name')); ?>
+            </td>
+            <td>
                 <?php echo CHtml::button('Delete', array(
                     'onclick' => CHtml::ajax(array(
                         'type' => 'POST',
@@ -64,7 +72,7 @@
         </tr>
         
         <tr>
-            <td colspan="9">
+            <td colspan="11">
                 <div class="row">
                     <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
                         <table>
@@ -107,7 +115,7 @@
         </tr>
     <?php endforeach; ?>
     <tr style="background-color: aquamarine">
-        <td style="text-align: right; font-weight: bold" colspan="6">Total Qty:</td>
+        <td style="text-align: right; font-weight: bold" colspan="7">Total Qty:</td>
         <td style="text-align: right; font-weight: bold">
             <span id="total_qty">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $materialRequest->totalQuantity)); ?>
