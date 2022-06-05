@@ -26,12 +26,24 @@ class WorkOrderExpenseController extends Controller {
         $filterChain->run();
     }
 
-    public function actionRegistrationTransactionList() {
+    public function actionCreate() {
+        $workOrderExpense = $this->instantiate(null);
+
+        $workOrderExpense->header->user_id = Yii::app()->user->id;
+        $workOrderExpense->header->transaction_date = date('Y-m-d');
+        $workOrderExpense->header->transaction_time = date('H:i:s');
+        $workOrderExpense->header->date_created = date('Y-m-d H:i:s');
+        $workOrderExpense->header->status = 'Draft';
+        $workOrderExpense->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+        
         $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
         $vehicleNumber = isset($_GET['VehicleNumber']) ? $_GET['VehicleNumber'] : '';
 
-        $registrationTransactionDataProvider = $registrationTransaction->searchByWorkOrderExpense();
+        $registrationTransactionDataProvider = $registrationTransaction->search();
         $registrationTransactionDataProvider->criteria->with = array(
             'customer',
             'vehicle',
@@ -48,31 +60,8 @@ class WorkOrderExpenseController extends Controller {
             $registrationTransactionDataProvider->criteria->params[':vehicle_number'] = "%{$vehicleNumber}%";
         }
 
-        $this->render('registrationTransactionList', array(
-            'registrationTransaction' => $registrationTransaction,
-            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-            'customerName' => $customerName,
-            'vehicleNumber' => $vehicleNumber,
-        ));
-    }
+        $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
 
-    public function actionCreate($registrationTransactionId) {
-        $workOrderExpense = $this->instantiate(null);
-
-        $workOrderExpense->header->user_id = Yii::app()->user->id;
-        $workOrderExpense->header->transaction_date = date('Y-m-d');
-        $workOrderExpense->header->transaction_time = date('H:i:s');
-        $workOrderExpense->header->date_created = date('Y-m-d H:i:s');
-        $workOrderExpense->header->status = 'Draft';
-        $workOrderExpense->header->registration_transaction_id = $registrationTransactionId;
-        $workOrderExpense->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
-
-        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-        $coaDataProvider = $coa->searchForWorkOrderExpense();
-
-        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
-        $supplierDataProvider = $supplier->search();
-        
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
@@ -87,10 +76,12 @@ class WorkOrderExpenseController extends Controller {
 
         $this->render('create', array(
             'workOrderExpense' => $workOrderExpense,
-            'coaDataProvider' => $coaDataProvider,
-            'coa' => $coa,
             'supplierDataProvider' => $supplierDataProvider,
             'supplier' => $supplier,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'customerName' => $customerName,
+            'vehicleNumber' => $vehicleNumber,
         ));
     }
 
@@ -98,14 +89,29 @@ class WorkOrderExpenseController extends Controller {
         $workOrderExpense = $this->instantiate($id);
         $supplier = Supplier::model()->findByPk($workOrderExpense->header->supplier_id);
 
-        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
-        $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
+        $vehicleNumber = isset($_GET['VehicleNumber']) ? $_GET['VehicleNumber'] : '';
 
-        if (!empty($workOrderExpense->header->supplier_id)) {
-            $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
-            $receiveItemDataProvider->criteria->params[':supplier_id'] = $workOrderExpense->header->supplier_id;
+        $registrationTransactionDataProvider = $registrationTransaction->search();
+        $registrationTransactionDataProvider->criteria->with = array(
+            'customer',
+            'vehicle',
+            'branch',
+        );
+
+        if (!empty($customerName)) {
+            $registrationTransactionDataProvider->criteria->addCondition('customer.name LIKE :customer_name');
+            $registrationTransactionDataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
         }
-        
+
+        if (!empty($vehicleNumber)) {
+            $registrationTransactionDataProvider->criteria->addCondition("vehicle.plate_number LIKE :vehicle_number");
+            $registrationTransactionDataProvider->criteria->params[':vehicle_number'] = "%{$vehicleNumber}%";
+        }
+
+        $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
+
         if (isset($_POST['Submit'])) {
             $this->loadState($workOrderExpense);
 
@@ -114,10 +120,12 @@ class WorkOrderExpenseController extends Controller {
         }
 
         $this->render('update', array(
-            'paymentOut' => $workOrderExpense,
+            'workOrderExpense' => $workOrderExpense,
             'supplier' => $supplier,
-            'receiveItem' => $receiveItem,
-            'receiveItemDataProvider' => $receiveItemDataProvider,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'customerName' => $customerName,
+            'vehicleNumber' => $vehicleNumber,
         ));
     }
 
@@ -168,48 +176,61 @@ class WorkOrderExpenseController extends Controller {
         ));
     }
 
-//    public function actionUpdateApproval($headerId) {
-//        $workOrderExpense = PaymentOut::model()->findByPK($headerId);
-//        $historis = PaymentOutApproval::model()->findAllByAttributes(array('payment_out_id' => $headerId));
-//        $model = new PaymentOutApproval;
-//        $model->date = date('Y-m-d H:i:s');
-//        $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($workOrderExpense->purchase_order_id);
-//
-//        if (isset($_POST['PaymentOutApproval'])) {
-//            $model->attributes = $_POST['PaymentOutApproval'];
-//            if ($model->save()) {
-//                $workOrderExpense->status = $model->approval_type;
-//                $workOrderExpense->save(false);
-//
-//                if ($model->approval_type == 'Approved') {
-//                    if (!empty($purchaseOrderHeader)) {
-//                        if ($purchaseOrderHeader->payment_amount == 0) {
-//                            $purchaseOrderHeader->payment_amount = $workOrderExpense->payment_amount;
-//                        } else {
-//                            $purchaseOrderHeader->payment_amount += $workOrderExpense->payment_amount;
-//                        }
-//
-//                        $purchaseOrderHeader->payment_left -= $workOrderExpense->payment_amount;
-//                        if ($purchaseOrderHeader->payment_left > 0.00) {
-//                            $purchaseOrderHeader->payment_status = 'PARTIALLY PAID';
-//                        } else {
-//                            $purchaseOrderHeader->payment_status = 'PAID';
-//                        }
-//
-//                        $purchaseOrderHeader->update(array('payment_amount', 'payment_left', 'payment_status'));
-//                    }
-//                }
-//
-//                $this->redirect(array('view', 'id' => $headerId));
-//            }
-//        }
-//
-//        $this->render('updateApproval', array(
-//            'model' => $model,
-//            'paymentOut' => $workOrderExpense,
-//            'historis' => $historis,
-//        ));
-//    }
+    public function actionUpdateApproval($headerId) {
+        $workOrderExpense = WorkOrderExpenseHeader::model()->findByPK($headerId);
+        $historis = WorkOrderExpenseApproval::model()->findAllByAttributes(array('work_order_expense_header_id' => $headerId));
+        $model = new WorkOrderExpenseApproval;
+        $model->date = date('Y-m-d H:i:s');
+
+        if (isset($_POST['WorkOrderExpenseApproval'])) {
+            $model->attributes = $_POST['WorkOrderExpenseApproval'];
+            if ($model->save()) {
+                $workOrderExpense->status = $model->approval_type;
+                $workOrderExpense->save(false);
+
+                $this->redirect(array('view', 'id' => $headerId));
+            }
+        }
+
+        $this->render('updateApproval', array(
+            'model' => $model,
+            'workOrderExpense' => $workOrderExpense,
+            'historis' => $historis,
+        ));
+    }
+
+    public function actionAjaxJsonWorkOrder($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $registrationTransactionId = (isset($_POST['WorkOrderExpenseHeader']['registration_transaction_id'])) ? $_POST['WorkOrderExpenseHeader']['registration_transaction_id'] : '';
+            
+            $workOrderExpense = $this->instantiate($id);
+            $this->loadState($workOrderExpense);
+
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationTransactionId);
+        
+            $object = array(
+                'workOrderNumber' => CHtml::value($registrationTransaction, 'work_order_number'),
+                'workOrderDate' => CHtml::value($registrationTransaction, 'transaction_date'),
+                'workOrderCustomer' => CHtml::value($registrationTransaction, 'customer.name'),
+                'workOrderVehicle' => nl2br(CHtml::value($registrationTransaction, 'vehicle.carMakeModelSubCombination')),
+                'workOrderPlate' => nl2br(CHtml::value($registrationTransaction, 'vehicle.plate_number')),
+                'workOrderType' => nl2br(CHtml::value($registrationTransaction, 'repair_type')),
+                
+            );
+            echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxHtmlAddService($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $workOrderExpense = $this->instantiate($id);
+            $this->loadState($workOrderExpense);
+
+            $this->renderPartial('_detailService', array(
+                'workOrderExpense' => $workOrderExpense,
+            ));
+        }
+    }
 
     public function actionAjaxJsonSupplier($id) {
         if (Yii::app()->request->isAjaxRequest) {
@@ -237,9 +258,7 @@ class WorkOrderExpenseController extends Controller {
             $workOrderExpense = $this->instantiate($id);
             $this->loadState($workOrderExpense);
 
-            if (isset($_POST['CoaId'])) {
-                $workOrderExpense->addDetail($_POST['CoaId']);
-            }
+            $workOrderExpense->addDetail();
 
             $this->renderPartial('_detail', array(
                 'workOrderExpense' => $workOrderExpense,

@@ -87,7 +87,7 @@ class Customers extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
         
-        if ($this->header->customer_type == 'Company') {
+        if ($this->header->isNewRecord && $this->header->customer_type == 'Company') {
             $customerName = Customer::model()->findByAttributes(array('name' => $this->header->name));
             if (empty($customerName)) {
                 $valid = true;
@@ -117,12 +117,12 @@ class Customers extends CComponent {
             }
         }
 
-        if (count($this->vehicleDetails) > 0) {
-            foreach ($this->vehicleDetails as $vehicleDetail) {
-                $fields = array('plate_number', 'machine_number');
-                $valid = $vehicleDetail->validate($fields) && $valid;
-            }
-        }
+//        if (count($this->vehicleDetails) > 0) {
+//            foreach ($this->vehicleDetails as $vehicleDetail) {
+//                $fields = array('plate_number', 'machine_number');
+//                $valid = $vehicleDetail->validate($fields) && $valid;
+//            }
+//        }
 
         return $valid;
     }
@@ -137,7 +137,7 @@ class Customers extends CComponent {
             $newOrdinal = $ordinal + 1;
             
             $coa = new Coa;
-            $coa->name = $this->header->name;
+            $coa->name = 'Piutang ' . $this->header->name;
             $coa->code = '121.00.' . sprintf('%03d', $newOrdinal);
             $coa->coa_category_id = 1;
             $coa->coa_sub_category_id = 8;

@@ -152,9 +152,13 @@ class InventoryDetail extends CActiveRecord {
         ));
     }
 
-    public function getFastMovingItems($startDate, $endDate, $brandId, $productMasterCategoryId) {
+    public function getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId) {
         $brandIdConditionSql = '';
+        $subBrandIdConditionSql = '';
+        $subBrandSeriesIdConditionSql = '';
         $productMasterCategoryIdConditionSql = '';
+        $productSubMasterCategoryIdConditionSql = '';
+        $productSubCategoryIdConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -166,9 +170,29 @@ class InventoryDetail extends CActiveRecord {
             $params[':brand_id'] = $brandId;
         }
 
+        if (!empty($subBrandId)) {
+            $subBrandIdConditionSql = " AND p.sub_brand_id = :sub_brand_id";
+            $params[':sub_brand_id'] = $subBrandId;
+        }
+
+        if (!empty($subBrandSeriesId)) {
+            $subBrandSeriesIdConditionSql = " AND p.sub_brand_series_id = :sub_brand_series_id";
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        }
+
         if (!empty($productMasterCategoryId)) {
             $productMasterCategoryIdConditionSql = " AND p.product_master_category_id = :product_master_category_id";
             $params[':product_master_category_id'] = $productMasterCategoryId;
+        }
+        
+        if (!empty($productSubMasterCategoryId)) {
+            $productSubMasterCategoryIdConditionSql = " AND p.product_sub_master_category_id = :product_sub_master_category_id";
+            $params[':product_sub_master_category_id'] = $productSubMasterCategoryId;
+        }
+        
+        if (!empty($productSubCategoryId)) {
+            $productSubCategoryIdConditionSql = " AND p.product_sub_category_id = :product_sub_category_id";
+            $params[':product_sub_category_id'] = $productSubCategoryId;
         }
         
         $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
@@ -178,7 +202,7 @@ class InventoryDetail extends CActiveRecord {
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
-                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $productMasterCategoryIdConditionSql . " 
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $subBrandIdConditionSql . $subBrandSeriesIdConditionSql . $productSubMasterCategoryIdConditionSql . $productSubCategoryIdConditionSql . $productMasterCategoryIdConditionSql . " 
                 GROUP BY i.product_id
                 ORDER BY total_sale DESC
                 LIMIT 50";
@@ -188,9 +212,13 @@ class InventoryDetail extends CActiveRecord {
         return $resultSet;
     }
 
-    public function getSlowMovingItems($startDate, $endDate, $brandId, $productMasterCategoryId) {
+    public function getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId) {
         $brandIdConditionSql = '';
+        $subBrandIdConditionSql = '';
+        $subBrandSeriesIdConditionSql = '';
         $productMasterCategoryIdConditionSql = '';
+        $productSubMasterCategoryIdConditionSql = '';
+        $productSubCategoryIdConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -202,9 +230,29 @@ class InventoryDetail extends CActiveRecord {
             $params[':brand_id'] = $brandId;
         }
 
+        if (!empty($subBrandId)) {
+            $subBrandIdConditionSql = " AND p.sub_brand_id = :sub_brand_id";
+            $params[':sub_brand_id'] = $subBrandId;
+        }
+
+        if (!empty($subBrandSeriesId)) {
+            $subBrandSeriesIdConditionSql = " AND p.sub_brand_series_id = :sub_brand_series_id";
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        }
+
         if (!empty($productMasterCategoryId)) {
             $productMasterCategoryIdConditionSql = " AND p.product_master_category_id = :product_master_category_id";
             $params[':product_master_category_id'] = $productMasterCategoryId;
+        }
+        
+        if (!empty($productSubMasterCategoryId)) {
+            $productSubMasterCategoryIdConditionSql = " AND p.product_sub_master_category_id = :product_sub_master_category_id";
+            $params[':product_sub_master_category_id'] = $productSubMasterCategoryId;
+        }
+        
+        if (!empty($productSubCategoryId)) {
+            $productSubCategoryIdConditionSql = " AND p.product_sub_category_id = :product_sub_category_id";
+            $params[':product_sub_category_id'] = $productSubCategoryId;
         }
         
         $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
@@ -214,7 +262,7 @@ class InventoryDetail extends CActiveRecord {
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
-                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $productMasterCategoryIdConditionSql . " 
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $subBrandIdConditionSql . $subBrandSeriesIdConditionSql . $productSubMasterCategoryIdConditionSql . $productSubCategoryIdConditionSql . $productMasterCategoryIdConditionSql . " 
                 GROUP BY i.product_id
                 HAVING total_sale > 0
                 ORDER BY total_sale ASC

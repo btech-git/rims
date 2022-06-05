@@ -30,26 +30,10 @@ class WorkOrderExpense extends CComponent {
         $this->header->setCodeNumberByNext('transaction_number', $branchCode, WorkOrderExpenseHeader::CONSTANT, $currentMonth, $currentYear);
     }
 
-    public function addDetail($coaId) {
+    public function addDetail() {
 
-        $exist = FALSE;
-        $coa = Coa::model()->findByPk($coaId);
-
-        if ($coa != null) {
-            foreach ($this->details as $detail) {
-                if ($detail->coa_id == $coa->id) {
-                    $exist = TRUE;
-                    break;
-                }
-            }
-
-            if (!$exist) {
-                $detail = new WorkOrderExpenseDetail;
-                $detail->coa_id = $coaId;
-                $this->details[] = $detail;
-            }
-        } else
-            $this->header->addError('error', 'COA tidak ada di dalam detail');
+        $detail = new WorkOrderExpenseDetail;
+        $this->details[] = $detail;
     }
 
     public function removeDetailAt($index) {

@@ -14,12 +14,17 @@
  * @property integer $user_id
  * @property string $status
  * @property string $date_created
+ * @property string $grand_total
+ * @property string $total_payment
+ * @property string $payment_remaining
+ * @property integer $supplier_id
  *
  * The followings are the available model relations:
  * @property WorkOrderExpenseDetail[] $workOrderExpenseDetails
  * @property RegistrationTransaction $registrationTransaction
  * @property Branch $branch
  * @property Users $user
+ * @property Supplier $supplier
  */
 class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
 
@@ -39,12 +44,13 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, transaction_date, transaction_time, registration_transaction_id, branch_id, user_id, status, date_created', 'required'),
-            array('registration_transaction_id, branch_id, user_id', 'numerical', 'integerOnly' => true),
+            array('registration_transaction_id, branch_id, user_id, supplier_id', 'numerical', 'integerOnly' => true),
             array('transaction_number, status', 'length', 'max' => 50),
+            array('grand_total, total_payment, payment_remaining', 'length', 'max' => 18),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, note, registration_transaction_id, branch_id, user_id, status, date_created', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, note, registration_transaction_id, branch_id, user_id, status, date_created, grand_total, total_payment, payment_remaining, supplier_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -59,6 +65,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
         );
     }
 
@@ -77,6 +84,10 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
             'user_id' => 'User',
             'status' => 'Status',
             'date_created' => 'Date Created',
+            'grand_total' => 'Grand Total',
+            'total_payment' => 'Total Payment',
+            'payment_remaining' => 'Remaining',
+            'supplier_id' => 'Supplier',
         );
     }
 
@@ -107,6 +118,10 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
         $criteria->compare('date_created', $this->date_created, true);
+        $criteria->compare('grand_total', $this->grand_total, true);
+        $criteria->compare('total_payment', $this->total_payment, true);
+        $criteria->compare('payment_remaining', $this->payment_remaining, true);
+        $criteria->compare('supplier_id', $this->supplier_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -132,4 +147,31 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         
         return $total;
     }
+    
+    public function searchForPaymentOut() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->condition = "t.payment_remaining > 0";
+        
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('transaction_time', $this->transaction_time, true);
+        $criteria->compare('note', $this->note, true);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('date_created', $this->date_created, true);
+        $criteria->compare('grand_total', $this->grand_total, true);
+        $criteria->compare('total_payment', $this->total_payment, true);
+        $criteria->compare('payment_remaining', $this->payment_remaining, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
 }

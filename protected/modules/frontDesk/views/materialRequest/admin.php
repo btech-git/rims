@@ -71,7 +71,7 @@ Yii::app()->clientScript->registerScript('search', "
                     array(
                         'name'=>'branch_id',
                         'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                        'value'=>'$data->branch->name',
+                        'value'=>'$data->branch->code',
                     ),
                     array(
                         'name'=>'user_id',

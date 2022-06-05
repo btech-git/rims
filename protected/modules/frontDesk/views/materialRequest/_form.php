@@ -45,23 +45,25 @@
                                 </div>
                             </div>
                             
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix"><?php echo 'Work Order'; ?></label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($materialRequest->header, 'registration_transaction_id', array(
-                                            'size' => 15,
-                                            'maxlength' => 10,
-                                            'readonly' => true,
-                                            'onclick' => '$("#registration-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#registration-dialog").dialog("open"); return false; }',
-                                        )); ?>
-                                        <?php echo CHtml::error($materialRequest->header, 'registration_transaction_id'); ?>
+                            <?php if ($materialRequest->header->isNewRecord): ?>
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <label class="prefix"><?php echo 'Work Order'; ?></label>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo CHtml::activeTextField($materialRequest->header, 'registration_transaction_id', array(
+                                                'size' => 15,
+                                                'maxlength' => 10,
+                                                'readonly' => true,
+                                                'onclick' => '$("#registration-dialog").dialog("open"); return false;',
+                                                'onkeypress' => 'if (event.keyCode == 13) { $("#registration-dialog").dialog("open"); return false; }',
+                                            )); ?>
+                                            <?php echo CHtml::error($materialRequest->header, 'registration_transaction_id'); ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
 
                             <div class="field">
                                 <div class="row collapse">
@@ -235,94 +237,95 @@
     </div>
 </div><!-- form -->
 
-<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id' => 'registration-dialog',
-    // additional javascript options for the dialog plugin
-    'options' => array(
-        'title' => 'Work Order',
-        'autoOpen' => false,
-        'width' => 'auto',
-        'modal' => true,
-    ),
-)); ?>
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'registration-grid',
-    'dataProvider' => $registrationTransactionDataProvider,
-    'filter' => $registrationTransaction,
-    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-    'pager' => array(
-        'cssFile' => false,
-        'header' => '',
-    ),
-    'selectionChanged' => 'js:function(id) {
-        $("#' . CHtml::activeId($materialRequest->header, 'registration_transaction_id') . '").val($.fn.yiiGridView.getSelection(id));
-        $("#registration-dialog").dialog("close");
-        if ($.fn.yiiGridView.getSelection(id) == "") {
-            $("#work_order_number").html("");
-            $("#work_order_date").html("");
-            $("#work_order_customer").html("");
-            $("#work_order_vehicle").html("");
-            $("#work_order_plate").html("");
-            $("#work_order_type").html("");
-        } else {
-            $.ajax({
-                type: "POST",
-                dataType: "JSON",
-                url: "' . CController::createUrl('ajaxJsonWorkOrder', array('id' => $materialRequest->header->id)) . '",
-                data: $("form").serialize(),
-                success: function(data) {
-                    $("#work_order_number").html(data.workOrderNumber);
-                    $("#work_order_date").html(data.workOrderDate);
-                    $("#work_order_customer").html(data.workOrderCustomer); 
-                    $("#work_order_vehicle").html(data.workOrderVehicle); 
-                    $("#work_order_plate").html(data.workOrderPlate);
-                    $("#work_order_type").html(data.workOrderType);
-                    $("#detail_service").html(html); 
-                    
-                },
-            });
-            $.ajax({
-                type: "POST",
-                url: "' . CController::createUrl('ajaxHtmlAddProduct', array('id' => $materialRequest->header->id)) . '",
-                data: $("form").serialize(),
-                success: function(html) { $("#detail_product").html(html); },
-            });
-            $.ajax({
-                type: "POST",
-                url: "' . CController::createUrl('ajaxHtmlAddService', array('id' => $materialRequest->header->id)) . '",
-                data: $("form").serialize(),
-                success: function(html) { $("#detail_service").html(html); },
-            });
-        }
-    }',
-    'columns' => array(
-        array(
-            'name' => 'work_order_number',
-            'header' => 'WO #',
-            'value' => '$data->work_order_number',
+<?php if ($materialRequest->header->isNewRecord): ?>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'registration-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Work Order',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
         ),
-        array(
-            'header' => 'Tanggal',
-            'name' => 'transaction_date',
-            'filter' => false, 
-            'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->transaction_date)',
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'registration-grid',
+        'dataProvider' => $registrationTransactionDataProvider,
+        'filter' => $registrationTransaction,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
         ),
-        'repair_type',
-        array(
-            'header' => 'Customer',
-            'filter' => CHtml::textField('CustomerName', $customerName, array('size' => '30', 'maxLength' => '60')),
-            'value' => 'CHtml::value($data, "customer.name")',
+        'selectionChanged' => 'js:function(id) {
+            $("#' . CHtml::activeId($materialRequest->header, 'registration_transaction_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#registration-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#work_order_number").html("");
+                $("#work_order_date").html("");
+                $("#work_order_customer").html("");
+                $("#work_order_vehicle").html("");
+                $("#work_order_plate").html("");
+                $("#work_order_type").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonWorkOrder', array('id' => $materialRequest->header->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#work_order_number").html(data.workOrderNumber);
+                        $("#work_order_date").html(data.workOrderDate);
+                        $("#work_order_customer").html(data.workOrderCustomer); 
+                        $("#work_order_vehicle").html(data.workOrderVehicle); 
+                        $("#work_order_plate").html(data.workOrderPlate);
+                        $("#work_order_type").html(data.workOrderType);
+
+                    },
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "' . CController::createUrl('ajaxHtmlAddProduct', array('id' => $materialRequest->header->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(html) { $("#detail_product").html(html); },
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "' . CController::createUrl('ajaxHtmlAddService', array('id' => $materialRequest->header->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(html) { $("#detail_service").html(html); },
+                });
+            }
+        }',
+        'columns' => array(
+            array(
+                'name' => 'work_order_number',
+                'header' => 'WO #',
+                'value' => '$data->work_order_number',
+            ),
+            array(
+                'header' => 'Tanggal',
+                'name' => 'transaction_date',
+                'filter' => false, 
+                'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->transaction_date)',
+            ),
+            'repair_type',
+            array(
+                'header' => 'Customer',
+                'filter' => CHtml::textField('CustomerName', $customerName, array('size' => '30', 'maxLength' => '60')),
+                'value' => 'CHtml::value($data, "customer.name")',
+            ),
+            array(
+                'header' => 'Plate #',
+                'filter' => CHtml::textField('VehicleNumber', $vehicleNumber),
+                'value' => 'CHtml::value($data, "vehicle.plate_number")',
+            ),
+            'note',
         ),
-        array(
-            'header' => 'Plate #',
-            'filter' => CHtml::textField('VehicleNumber', $vehicleNumber),
-            'value' => 'CHtml::value($data, "vehicle.plate_number")',
-        ),
-        'note',
-    ),
-)); ?>
-<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-    
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+<?php endif; ?>
+
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'product-dialog',
     // additional javascript options for the dialog plugin

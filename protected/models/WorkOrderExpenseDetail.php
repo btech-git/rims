@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $amount
  * @property string $memo
+ * @property string $description
  * @property integer $work_order_expense_header_id
  * @property integer $coa_id
  *
@@ -30,13 +31,13 @@ class WorkOrderExpenseDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('work_order_expense_header_id, coa_id', 'required'),
+            array('work_order_expense_header_id, description', 'required'),
             array('work_order_expense_header_id, coa_id', 'numerical', 'integerOnly' => true),
             array('amount', 'length', 'max' => 18),
-            array('memo', 'length', 'max' => 100),
+            array('memo, description', 'length', 'max' => 100),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, amount, memo, work_order_expense_header_id, coa_id', 'safe', 'on' => 'search'),
+            array('id, amount, memo, work_order_expense_header_id, coa_id, description', 'safe', 'on' => 'search'),
         );
     }
 
@@ -58,6 +59,7 @@ class WorkOrderExpenseDetail extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
+            'description' => 'Description',
             'amount' => 'Amount',
             'memo' => 'Memo',
             'work_order_expense_header_id' => 'Work Order Expense Header',
@@ -83,6 +85,7 @@ class WorkOrderExpenseDetail extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
+        $criteria->compare('description', $this->description, true);
         $criteria->compare('amount', $this->amount, true);
         $criteria->compare('memo', $this->memo, true);
         $criteria->compare('work_order_expense_header_id', $this->work_order_expense_header_id);

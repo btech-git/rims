@@ -442,7 +442,7 @@ class Coa extends CActiveRecord {
     }
     
     public function getProfitLossBalance($startDate, $endDate, $branchId) {
-//        $branchConditionSql = '';
+        $branchConditionSql = '';
         
         $params = array(
             ':coa_id' => $this->id,
@@ -450,22 +450,23 @@ class Coa extends CActiveRecord {
             ':end_date' => $endDate,
         );
         
-        /*if (!empty($branchId)) {
+        if (!empty($branchId)) {
             $branchConditionSql = ' AND branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
-        }*/
+        }
         
         $sql = "SELECT SUM(total) AS balance
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date
-                GROUP BY coa_id";
+                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql .
+                " GROUP BY coa_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
         return ($value === false) ? 0 : $value;
     }
     
-    public function getBalanceSheetBalance($startDate, $endDate) {
+    public function getBalanceSheetBalance($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
         
         $params = array(
             ':coa_id' => $this->id,
@@ -473,17 +474,22 @@ class Coa extends CActiveRecord {
             ':end_date' => $endDate,
         );
         
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
         $sql = "SELECT SUM(balance_debit) - SUM(balance_credit) AS total_balance
                 FROM (
                     SELECT coa_id, SUM(total) AS balance_debit, 0 AS balance_credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND tanggal_transaksi BETWEEN :start_date AND :end_date
-                    GROUP BY coa_id
+                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql .
+                    " GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 AS balance_debit, SUM(total) AS balance_credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND tanggal_transaksi BETWEEN :start_date AND :end_date
-                    GROUP BY coa_id
+                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql .
+                    " GROUP BY coa_id
                 ) transaction
                 GROUP BY coa_id";
 
@@ -595,5 +601,9 @@ class Coa extends CActiveRecord {
         ));
         
         return $resultSet;
+    }
+    
+    public function getCombinationName() {
+        return $this->code . ' - ' . $this->name . ' - ' . $this->coaCategory->name . ' - ' . $this->coaSubCategory->name;
     }
 }

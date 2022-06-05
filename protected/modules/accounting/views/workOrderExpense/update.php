@@ -3,12 +3,14 @@
     'Update',
 ); ?>
 
-<h1>Revisi Payment Out</h1>
+<h1>Revisi Sub Pekerjaan Luar</h1>
 
 <?php echo $this->renderPartial('_form', array(
-    'paymentOut' => $paymentOut,
+    'workOrderExpense' => $workOrderExpense,
     'supplier' => $supplier,
-    'receiveItem' => $receiveItem,
-    'receiveItemDataProvider' => $receiveItemDataProvider,
+    'registrationTransaction' => $registrationTransaction,
+    'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+    'customerName' => $customerName,
+    'vehicleNumber' => $vehicleNumber,
 )); ?>
 

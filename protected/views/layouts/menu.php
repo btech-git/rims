@@ -138,7 +138,7 @@
                         'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
                     ),
                     array(
-                        'label' => 'Faktur Upah', 
+                        'label' => 'Sub Pekerjaan Luar', 
                         'url' => array('/accounting/workOrderExpense/admin'), 
 //                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
                     ),

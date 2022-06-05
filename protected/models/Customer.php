@@ -161,7 +161,7 @@ class Customer extends CActiveRecord {
         $criteria->compare('t.email', $this->email, true);
         $criteria->compare('t.note', $this->note, true);
         $criteria->compare('t.default_payment_type', $this->default_payment_type);
-        $criteria->compare('t.tcustomer_type', $this->customer_type, true);
+        $criteria->compare('t.customer_type', $this->customer_type, true);
         $criteria->compare('tenor', $this->tenor);
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
         $criteria->compare('birthdate', $this->birthdate, true);

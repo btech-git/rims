@@ -3,13 +3,15 @@
     'Create',
 ); ?>
 
-<h1>Invoice Upah</h1>
+<h1> Sub Pekerjaan Luar</h1>
 
 <?php echo $this->renderPartial('_form', array(
     'workOrderExpense' => $workOrderExpense,
-    'coaDataProvider' => $coaDataProvider,
-    'coa' => $coa,
     'supplierDataProvider' => $supplierDataProvider,
     'supplier' => $supplier,
+    'registrationTransaction' => $registrationTransaction,
+    'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+    'customerName' => $customerName,
+    'vehicleNumber' => $vehicleNumber,
 )); ?>
 

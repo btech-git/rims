@@ -31,10 +31,10 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Kelola Data Upah WO</h1>
+<h1>Kelola Data Sub Pekerjaan Luar</h1>
 
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-plus"></span>New Upah WO', Yii::app()->baseUrl . '/accounting/workOrderExpense/registrationTransactionList', array(
+    <?php echo CHtml::link('<span class="fa fa-plus"></span> Sub Pekerjaan Luar', Yii::app()->baseUrl . '/accounting/workOrderExpense/create', array(
         'class' => 'button success right',
 //        'visible' => Yii::app()->user->checkAccess("transaction.paymentOut.create")
     )); ?>
@@ -89,7 +89,7 @@ $('.search-form form').submit(function(){
     'columns' => array(
         array(
             'name' => 'transaction_number',
-            'header' => 'Upah #',
+            'header' => 'Sub Pekerjaan Luar #',
             'value' => '$data->transaction_number',
         ),
         array(
@@ -98,12 +98,12 @@ $('.search-form form').submit(function(){
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
         ),
-        array(
-            'header' => 'Tanggal Input',
-            'name' => 'date_created',
-            'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
-        ),
+//        array(
+//            'header' => 'Tanggal Input',
+//            'name' => 'date_created',
+//            'filter' => false,
+//            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
+//        ),
         array(
             'header' => 'WO #',
             'value' => 'CHtml::value($data, "registrationTransaction.work_order_number")',
@@ -118,9 +118,12 @@ $('.search-form form').submit(function(){
         ),
         array(
             'header' => 'Branch',
-            'value' => 'CHtml::value($data, "branch.name")',
+            'value' => 'CHtml::value($data, "branch.code")',
         ),
-        'note',
+        array(
+            'name' => 'note',
+            'value' => 'substr(CHtml::value($data, "note"), 0, 50)',
+        ),
         array(
             'header' => 'Created By',
             'name' => 'user_id',

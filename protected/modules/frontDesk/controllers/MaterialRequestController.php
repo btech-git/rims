@@ -46,7 +46,7 @@ class MaterialRequestController extends Controller {
         $materialRequest->header->transaction_date = date('Y-m-d');
         $materialRequest->header->transaction_time = date('H:i:s');
         $materialRequest->header->date_created = date('Y-m-d H:i:s');
-        $materialRequest->header->status_document = 'PENDING';
+        $materialRequest->header->status_document = 'Draft';
         $materialRequest->header->status_progress = 'NO MOVEMENT';
         $materialRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
 
@@ -60,7 +60,7 @@ class MaterialRequestController extends Controller {
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
         $vehicleNumber = isset($_GET['VehicleNumber']) ? $_GET['VehicleNumber'] : '';
 
-        $registrationTransactionDataProvider = $registrationTransaction->searchByMaterialRequest();
+        $registrationTransactionDataProvider = $registrationTransaction->search();
         $registrationTransactionDataProvider->criteria->with = array(
             'customer',
             'vehicle',

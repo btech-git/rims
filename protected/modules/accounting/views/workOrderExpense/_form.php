@@ -6,10 +6,9 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Tanggal Payment', false); ?>
+                        <label class="prefix"><?php echo CHtml::label('Tanggal Transaksi', false); ?></label>
                     </div>
                     <div class="small-8 columns">
-                        <?php //echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($workOrderExpense->header, 'payment_date'))); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                             'model' => $workOrderExpense->header,
                             'attribute' => "transaction_date",
@@ -17,7 +16,6 @@
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
                                 'changeYear'=>true,
-//                                'yearRange'=>'1900:2020'
                             ),
                             'htmlOptions'=>array(
                                 'value'=>date('Y-m-d'),
@@ -28,94 +26,36 @@
                     </div>
                 </div>
             </div>
-            
+
+            <?php if ($workOrderExpense->header->isNewRecord): ?>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo 'Work Order'; ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeTextField($workOrderExpense->header, 'registration_transaction_id', array(
+                                'size' => 15,
+                                'maxlength' => 10,
+                                'readonly' => true,
+                                'onclick' => '$("#registration-dialog").dialog("open"); return false;',
+                                'onkeypress' => 'if (event.keyCode == 13) { $("#registration-dialog").dialog("open"); return false; }',
+                            )); ?>
+                            <?php echo CHtml::error($workOrderExpense->header, 'registration_transaction_id'); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('WO #', ''); ?>
+                        <label class="prefix"><?php echo CHtml::label('WO #', ''); ?></label>
                     </div>
                     <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'work_order_number')); ?>
                         <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.work_order_number')); ?>
-                    </div>
-                </div>
-            </div>		
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Customer', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.customer.name')); ?>
-                    </div>
-                </div>
-            </div>		
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Plate #', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.vehicle.plate_number')); ?>
-                    </div>
-                </div>
-            </div>		
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Status', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'status')); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('User', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'user.username')); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Branch', false); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($workOrderExpense->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                            'empty' => '-- Select Branch --'
-                        )); ?>
-                        <?php echo CHtml::error($workOrderExpense->header, 'branch_id'); ?>
-                    </div>
-                </div>
-            </div>		
-        </div>
-        
-        <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <label class="prefix">
-                            <?php echo CHtml::label('Supplier', ''); ?>
-                        </label>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeTextField($workOrderExpense->header, 'supplier_id', array(
-                            'size' => 15,
-                            'maxlength' => 10,
-                            'readonly' => true,
-                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
-                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
-                        )); ?>
-                        <?php echo CHtml::error($workOrderExpense->header, 'supplier_id'); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
                     </div>
                 </div>
             </div>
@@ -123,7 +63,98 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Company', false); ?>
+                        <label class="prefix"><?php echo 'Tanggal WO'; ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'work_order_date')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.transaction_date')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo 'Repair Type'; ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'work_order_type')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.repair_type')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo 'Customer'; ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'work_order_customer')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.customer.name')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo 'Plate #'; ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'work_order_plate')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.vehicle.plate_number')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo 'Vehicle'; ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::openTag('span', array('id' => 'work_order_vehicle')); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.vehicle.carMake.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.vehicle.carModel.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'registrationTransaction.vehicle.carSubModel.name')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="small-12 medium-6 columns">
+            <?php if ($workOrderExpense->header->isNewRecord): ?>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix">
+                                <?php echo CHtml::label('Supplier', ''); ?>
+                            </label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeTextField($workOrderExpense->header, 'supplier_id', array(
+                                'size' => 15,
+                                'maxlength' => 10,
+                                'readonly' => true,
+                                'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                                'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
+                            )); ?>
+                            <?php echo CHtml::error($workOrderExpense->header, 'supplier_id'); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo CHtml::label('Company', false); ?></label>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::openTag('span', array('id' => 'supplier_company')); ?>
@@ -136,7 +167,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Address', false); ?>
+                        <label class="prefix"><?php echo CHtml::label('Address', false); ?></label>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::openTag('span', array('id' => 'supplier_address')); ?>
@@ -149,7 +180,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('COA Receivables', false); ?>
+                        <label class="prefix"><?php echo CHtml::label('COA Receivables', false); ?></label>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::openTag('span', array('id' => 'supplier_coa')); ?>
@@ -157,12 +188,48 @@
                         <?php echo CHtml::closeTag('span'); ?>
                     </div>
                 </div>
-            </div>		
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo CHtml::label('Status', ''); ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'status')); ?>
+                    </div>
+                </div>
+            </div>
             
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Catatan', ''); ?>
+                        <label class="prefix"><?php echo CHtml::label('User', ''); ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'user.username')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo CHtml::label('Branch', false); ?></label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeDropDownList($workOrderExpense->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
+                            'empty' => '-- Select Branch --'
+                        )); ?>
+                        <?php echo CHtml::error($workOrderExpense->header, 'branch_id'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix"><?php echo CHtml::label('Catatan', ''); ?></label>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::activeTextArea($workOrderExpense->header, 'note', array('rows' => 5, 'cols' => 30)); ?>
@@ -177,8 +244,25 @@
     <hr />
 
     <div class="row">
-        <?php echo CHtml::button('Tambah Biaya', array('name' => 'Search', 'onclick' => '$("#coa-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }')); ?>
-        <?php echo CHtml::hiddenField('CoaId'); ?>
+        <div class="medium-12 columns">
+            <div id="detail_service">
+                <?php $this->renderPartial('_detailService', array(
+                    'workOrderExpense' => $workOrderExpense,
+                )); ?>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <?php echo CHtml::button('Tambah Pekerjaan', array('name' => 'AddDetail',
+            'onclick' => CHtml::ajax(array(
+                'type' => 'POST',
+                'url' => CController::createUrl('ajaxHtmlAddDetail', array('id' => $workOrderExpense->header->id)),
+                'update' => '#detail_div',
+            )),
+        )); ?>
     </div>
 
     <br />
@@ -195,184 +279,138 @@
 
 </div><!-- form -->
 
-<!--COA Detail-->
-<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id' => 'coa-dialog',
-    // additional javascript options for the dialog plugin
-    'options' => array(
-        'title' => 'COA',
-        'autoOpen' => false,
-        'width' => 'auto',
-        'modal' => true,
-    ),
-)); ?>
-    <?php echo CHtml::beginForm(); ?>
-    <div class="row">
-        <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-            <table>
-                <thead>
-                    <tr>
-                        <td>Code</td>
-                        <td>Name</td>
-                        <!--<td>Category</td>-->
-                        <td>Sub Category</td>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <tr>
-                        <td>
-                            <?php echo CHtml::activeTextField($coa, 'code', array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
-                                    code: $(this).val(),
-                                    name: $("#coa_name").val(),
-                                    coa_category_id: $("#coa_category_id").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            )); ?>
-                        </td>
-                        
-                        <td>
-                            <?php echo CHtml::activeTextField($coa, 'name', array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
-                                    name: $(this).val(),
-                                    code: $("#coa_code").val(),
-                                    coa_category_id: $("#coa_category_id").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            )); ?>
-                        </td>
-                        
-<!--                        <td>
-                            <?php /*echo CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
-                                'empty' => '-- All --',
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateSubCategorySelect'),
-                                    'update' => '#sub_category',
-                                )) . '$.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
-                                    coa_category_id: $(this).val(),
-                                    id: $("#coa_id").val(),
-                                    code: $("#coa_code").val(),
-                                    name: $("#coa_name").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            ));*/ ?>
-                        </td>-->
-                        
-                        <td>
-                            <div id="sub_category">
-                                <?php echo CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => 8), array('order' => 't.name')), 'id', 'name'), array(
-                                    'empty' => '-- All --',
-                                    'onchange' => '
-                                    $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
-                                        coa_sub_category_id: $(this).val(),
-                                        code: $("#coa_code").val(),
-                                        coa_category_id: $("#coa_category_id").val(),
-                                        name: $("#coa_name").val(),
-                                    } } });',
-                                )); ?>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id' => 'coa-detail-grid',
-                'dataProvider' => $coaDataProvider,
-                'filter' => null,
-                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                'pager' => array(
-                    'cssFile' => false,
-                    'header' => '',
-                ),
-                'selectionChanged' => 'js:function(id) {
-                    $("#CoaId").val($.fn.yiiGridView.getSelection(id));
-                    $("#coa-dialog").dialog("close");
-                    $.ajax({
-                        type: "POST",
-                        url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $workOrderExpense->header->id,)) . '",
-                        data: $("form").serialize(),
-                        success: function(html) { $("#detail_div").html(html); },
-                    });
-                }',
-                'columns' => array(
-                    array(
-                        'name' => 'name', 
-                        'value' => '$data->name', 
-                        'type' => 'raw'
-                    ),
-                    'code',
-                    array(
-                        'name' => 'coa_category_id',
-                        'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                        'value' => '$data->coaCategory!="" ?$data->coaCategory->name:""',
-                    ),
-                    array(
-                        'name' => 'coa_sub_category_id',
-                        'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                        'value' => '$data->coaSubCategory!="" ?$data->coaSubCategory->name:""'
-                    ),
-                    'normal_balance',
-                ),
-            )); ?>
-        </div>
-    </div>
-    <?php echo CHtml::endForm(); ?>
-<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+<?php if ($workOrderExpense->header->isNewRecord): ?>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'registration-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Work Order',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'registration-grid',
+        'dataProvider' => $registrationTransactionDataProvider,
+        'filter' => $registrationTransaction,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#' . CHtml::activeId($workOrderExpense->header, 'registration_transaction_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#registration-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#work_order_number").html("");
+                $("#work_order_date").html("");
+                $("#work_order_customer").html("");
+                $("#work_order_vehicle").html("");
+                $("#work_order_plate").html("");
+                $("#work_order_type").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonWorkOrder', array('id' => $workOrderExpense->header->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#work_order_number").html(data.workOrderNumber);
+                        $("#work_order_date").html(data.workOrderDate);
+                        $("#work_order_customer").html(data.workOrderCustomer); 
+                        $("#work_order_vehicle").html(data.workOrderVehicle); 
+                        $("#work_order_plate").html(data.workOrderPlate);
+                        $("#work_order_type").html(data.workOrderType);
 
-<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id' => 'supplier-dialog',
-    // additional javascript options for the dialog plugin
-    'options' => array(
-        'title' => 'Supplier',
-        'autoOpen' => false,
-        'width' => 'auto',
-        'modal' => true,
-    ),
-)); ?>
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'supplier-grid',
-    'dataProvider' => $supplierDataProvider,
-    'filter' => $supplier,
-    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-    'pager' => array(
-        'cssFile' => false,
-        'header' => '',
-    ),
-    'selectionChanged' => 'js:function(id) {
-        $("#' . CHtml::activeId($workOrderExpense->header, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
-        $("#supplier-dialog").dialog("close");
-        if ($.fn.yiiGridView.getSelection(id) == "") {
-            $("#supplier_name").html("");
-            $("#supplier_company").html("");
-            $("#supplier_address").html("");
-            $("#supplier_coa").html("");
-        } else {
-            $.ajax({
-                type: "POST",
-                dataType: "JSON",
-                url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $workOrderExpense->header->id)) . '",
-                data: $("form").serialize(),
-                success: function(data) {
-                    $("#supplier_name").html(data.supplier_name);
-                    $("#supplier_company").html(data.supplier_company);
-                    $("#supplier_address").html(data.supplier_address); 
-                    $("#supplier_coa").html(data.supplier_coa);                                                             
-                },
-            });
-        }
-    }',
-    'columns' => array(
-        'name',
-        'company',
-        'address',
-        'phone',
-        'coa.name: COA',
-    ),
-)); ?>
-<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+                    },
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "' . CController::createUrl('ajaxHtmlAddService', array('id' => $workOrderExpense->header->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(html) { $("#detail_service").html(html); },
+                });
+            }
+        }',
+        'columns' => array(
+            array(
+                'name' => 'work_order_number',
+                'header' => 'WO #',
+                'value' => '$data->work_order_number',
+            ),
+            array(
+                'header' => 'Tanggal',
+                'name' => 'transaction_date',
+                'filter' => false, 
+                'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->transaction_date)',
+            ),
+            'repair_type',
+            array(
+                'header' => 'Customer',
+                'filter' => CHtml::textField('CustomerName', $customerName, array('size' => '30', 'maxLength' => '60')),
+                'value' => 'CHtml::value($data, "customer.name")',
+            ),
+            array(
+                'header' => 'Plate #',
+                'filter' => CHtml::textField('VehicleNumber', $vehicleNumber),
+                'value' => 'CHtml::value($data, "vehicle.plate_number")',
+            ),
+            'note',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'supplier-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Supplier',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'supplier-grid',
+        'dataProvider' => $supplierDataProvider,
+        'filter' => $supplier,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#' . CHtml::activeId($workOrderExpense->header, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#supplier-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#supplier_name").html("");
+                $("#supplier_company").html("");
+                $("#supplier_address").html("");
+                $("#supplier_coa").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $workOrderExpense->header->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#supplier_name").html(data.supplier_name);
+                        $("#supplier_company").html(data.supplier_company);
+                        $("#supplier_address").html(data.supplier_address); 
+                        $("#supplier_coa").html(data.supplier_coa);                                                             
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'name',
+            'company',
+            'address',
+            'phone',
+            'coa.name: COA',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+<?php endif; ?>
     
