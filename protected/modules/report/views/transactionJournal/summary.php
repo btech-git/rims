@@ -6,10 +6,6 @@ Yii::app()->clientScript->registerScript('report', '
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 <div class="tab reportTab">
-    <div class="tabHead">
-        <?php //$this->renderPartial('../../../admin/views/layouts/_menu_report');?>
-    </div>
-
     <div class="tabBody">
         <div id="detail_div">
             <div class="myForm tabForm customer">
@@ -129,7 +125,7 @@ Yii::app()->clientScript->registerScript('report', '
                                         'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
                                     )); ?>
                                     <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
-                                    <?php $coa = Coa::model()->findByPk($account->id); ?>
+                                    <?php $coa = Coa::model()->findByPk($jurnalUmum->coa_id); ?>
                                     <?php echo CHtml::encode(CHtml::value($coa, 'combinationName')); ?>
                                     <?php echo CHtml::closeTag('span'); ?> 
                                 </div>
@@ -165,11 +161,6 @@ Yii::app()->clientScript->registerScript('report', '
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                     'companyId' => $companyId,
-//                    'branchId' => $branchId,
-//                    'transactionType' => $transactionType,
-//                    'coaId' => $coaId,
-                    'coa' => $coa,
-                    'coaDataProvider' => $coaDataProvider,
                 )); ?>
             </div>
             <div class="clear"></div>
@@ -191,8 +182,8 @@ Yii::app()->clientScript->registerScript('report', '
     
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'coa-grid',
-        'dataProvider'=>$coaDataProvider,
-        'filter'=>$coa,
+        'dataProvider'=>$accountDataProvider,
+        'filter'=>$account,
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager'=>array(
            'cssFile'=>false,
@@ -202,7 +193,7 @@ Yii::app()->clientScript->registerScript('report', '
             $("#' . CHtml::activeId($jurnalUmum, 'coa_id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#coa-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "") {
-                $("#coa_code").html("");
+                $("#coa_id").html("");
                 $("#coa_name").html("");
             } else {
                 $.ajax({
@@ -222,16 +213,15 @@ Yii::app()->clientScript->registerScript('report', '
             'name',
             array(
                 'name' => 'coa_category_id',
-                'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'filter' => CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                 'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
             ),
             array(
                 'name' => 'coa_sub_category_id',
-                'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                'filter' => CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                 'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
             ),
         ),
     )); ?>
-    
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

@@ -195,7 +195,7 @@ class ReceiveItems extends CComponent {
             $left_quantity = 0;
             
             if ($this->header->request_type == 'Purchase Order') {
-                $left_quantity = $detail->purchaseOrderDetail->purchase_order_quantity_left;
+                $left_quantity = $detail->purchaseOrderDetail->quantityReceiveRemaining;
             } elseif ($this->header->request_type == 'Internal Delivery Order') {
                 $left_quantity = $detail->qty_request - $detail->qty_received - $detail->deliveryOrderDetail->getTotalQuantityReceived();
                 $detail->quantity_delivered_left = $left_quantity;
@@ -309,7 +309,7 @@ class ReceiveItems extends CComponent {
             $jurnalUmumOutstanding->tanggal_transaksi = $this->header->receive_item_date;
             $jurnalUmumOutstanding->coa_id = $coaOutstanding->id;
             $jurnalUmumOutstanding->branch_id = $this->header->recipient_branch_id;
-            $jurnalUmumOutstanding->total = $this->header->subTotal;
+            $jurnalUmumOutstanding->total = array_sum($journalReference['values']);
             $jurnalUmumOutstanding->debet_kredit = 'K';
             $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
             $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;

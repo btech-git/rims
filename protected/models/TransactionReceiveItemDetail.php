@@ -168,6 +168,7 @@ class TransactionReceiveItemDetail extends CActiveRecord {
     
     public function getTotalPrice() {
         $unitPrice = 0.00; 
+        $taxPercentage = $this->purchaseOrderDetail->purchaseOrder->tax_percentage;
         
         if (!empty($this->purchase_order_detail_id)) {
             $unitPrice = $this->purchaseOrderDetail->unit_price;
@@ -176,6 +177,6 @@ class TransactionReceiveItemDetail extends CActiveRecord {
         } else {
             $unitPrice = $this->product->hpp;
         }
-        return $this->qty_received * $unitPrice;
+        return $this->qty_received * $unitPrice * (1 + ($taxPercentage / 100));
     }
 }

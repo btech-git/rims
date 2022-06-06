@@ -42,16 +42,16 @@ $('.search-form form').submit(function(){
         <h1>Manage Customer Vehicles</h1>
 
         <div class="search-bar">
-            <div class="clearfix button-bar">
+<!--            <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>   
-            </div>
+            </div>-->
 
             <div class="clearfix"></div>
             
             <div class="search-form" style="display:none">
-                <?php $this->renderPartial('_search',array(
+                <?php /*$this->renderPartial('_search',array(
                     'model'=>$model,
-                )); ?>
+                ));*/ ?>
             </div><!-- search-form -->
         </div>
 			
