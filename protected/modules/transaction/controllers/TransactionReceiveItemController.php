@@ -79,7 +79,7 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem->header->supplier_id = $purchaseOrder->supplier_id;
             $receiveItem->header->request_type = 'Purchase Order';
             $receiveItem->header->destination_branch = null;
-            $receiveItem->header->estimate_arrival_date = null;
+            $receiveItem->header->estimate_arrival_date = date('Y-m-d');
             $receiveItem->header->request_date = $purchaseOrder->purchase_order_date;
             
         } else if ($movementType == 2) {
@@ -105,7 +105,7 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem->header->supplier_id = $consignmentIn->supplier_id;
             $receiveItem->header->request_type = 'Consignment In';
             $receiveItem->header->destination_branch = null;
-            $receiveItem->header->estimate_arrival_date = null;
+            $receiveItem->header->estimate_arrival_date = date('Y-m-d');
             $receiveItem->header->request_date = $consignmentIn->date_posting;
             
         }  else if ($movementType == 4) {
@@ -118,7 +118,7 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem->header->supplier_id = null;
             $receiveItem->header->request_type = 'Movement Out';
             $receiveItem->header->destination_branch = null;
-            $receiveItem->header->estimate_arrival_date = null;
+            $receiveItem->header->estimate_arrival_date = date('Y-m-d');
             $receiveItem->header->request_date = $movementOut->date_posting;
             
         } else {
@@ -163,6 +163,11 @@ class TransactionReceiveItemController extends Controller {
         if (isset($_POST['TransactionReceiveItem'])) {
             
             $this->loadState($receiveItem);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $receiveItem->header->receive_item_no,
+                'branch_id' => $receiveItem->header->recipient_branch_id,
+            ));
+
             $receiveItem->header->setCodeNumberByRevision('receive_item_no');
             
             if ($receiveItem->save(Yii::app()->db)) {

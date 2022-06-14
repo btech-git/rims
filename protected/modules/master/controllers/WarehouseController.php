@@ -107,12 +107,13 @@ class WarehouseController extends Controller {
         if (isset($_GET['Product']))
             $product->attributes = $_GET['Product'];
 
-        $productCriteria = new CDbCriteria;
-        $productCriteria->compare('name', $product->name, true);
+//        $productCriteria = new CDbCriteria;
+//        $productCriteria->compare('name', $product->name, true);
 
-        $productDataProvider = new CActiveDataProvider('Product', array(
-            'criteria' => $productCriteria,
-        ));
+//        $productDataProvider = new CActiveDataProvider('Product', array(
+//            'criteria' => $productCriteria,
+//        ));
+        $productDataProvider = $product->search();
 
         $this->performAjaxValidation($warehouse->header);
 
@@ -141,20 +142,6 @@ class WarehouseController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['Warehouse']))
-        // {
-        // 	$model->attributes=$_POST['Warehouse'];
-        // 	if($model->save())
-        // 		$this->redirect(array('admin'));
-        // 		//$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('update',array(
-        // 	'model'=>$model,
-        // ));
-
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values
         
@@ -181,17 +168,20 @@ class WarehouseController extends Controller {
             'criteria' => $divisionCriteria,
         ));
 
-        $product = new Product('search');
-        $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
-            $product->attributes = $_GET['Product'];
+//        $product = new Product('search');
+//        $product->unsetAttributes();  // clear any default values
+//        if (isset($_GET['Product']))
+//            $product->attributes = $_GET['Product'];
+        
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
+        $productDataProvider = $product->search();
 
-        $productCriteria = new CDbCriteria;
-        $productCriteria->compare('name', $product->name, true);
-
-        $productDataProvider = new CActiveDataProvider('Product', array(
-            'criteria' => $productCriteria,
-        ));
+//        $productCriteria = new CDbCriteria;
+//        $productCriteria->compare('name', $product->name, true);
+//
+//        $productDataProvider = new CActiveDataProvider('Product', array(
+//            'criteria' => $productCriteria,
+//        ));
 
         $warehouse = $this->instantiate($id);
 
@@ -351,6 +341,10 @@ class WarehouseController extends Controller {
 
             $object = array(
                 'name' => $product->name,
+                'brand_id' => $product->brand_id,
+                'product_master_category_name' => $product->product_master_category_name,
+                'product_sub_master_category_name' => $product->product_sub_master_category_name,
+                'product_sub_category_name' => $product->product_sub_category_name,
             );
 
             echo CJSON::encode($object);

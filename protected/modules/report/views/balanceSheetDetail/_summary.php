@@ -64,8 +64,8 @@
                                     </td>
                                 </tr>
 
+                                <?php $groupBalance = 0; ?>
                                 <?php if (!empty($coa->coaIds)): ?> 
-                                    <?php $groupBalance = 0; ?>
                                     <?php foreach ($coa->coaIds as $account): ?>
                                         <?php $accountBalance = $account->getBalanceSheetBalance($startDate, $endDate, $branchId); ?>
                                         <?php if ($accountBalance !== 0): ?>
@@ -79,13 +79,15 @@
                                             <?php $groupBalance += $accountBalance; ?>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
-                                            <tr>
-                                                <td style="border-top: 1px solid; text-align: right">Total <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> </td>
-                                                <td style="border-top: 1px solid; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $groupBalance)); ?></td>
-                                            </tr>
+                                    <tr>
+                                        <td style="border-top: 1px solid; text-align: right">Total <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> </td>
+                                        <td style="border-top: 1px solid; text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $groupBalance)); ?>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
                             <?php endif; ?>
-                            <?php $accountCategoryBalance += $accountGroupBalance; ?>
+                            <?php $accountCategoryBalance += $groupBalance; ?>
                         <?php endforeach; ?>
                         <tr>
                             <td style="text-align: right; font-weight: bold">

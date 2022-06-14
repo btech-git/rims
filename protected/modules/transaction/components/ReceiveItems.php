@@ -191,6 +191,11 @@ class ReceiveItems extends CComponent {
         
         //save request detail
         foreach ($this->details as $detail) {
+            
+            if ($detail->qty_received == 0) {
+                continue;
+            }
+            
             $detail->receive_item_id = $this->header->id;
             $left_quantity = 0;
             
@@ -204,7 +209,7 @@ class ReceiveItems extends CComponent {
             } else {
                 $left_quantity = 0;
             }
-            $detail->qty_request_left = $left_quantity - $detail->qty_received;
+            $detail->qty_request_left = $left_quantity;
             $detail->quantity_movement = 0;
             $detail->quantity_movement_left = $detail->qty_received;
             $detail->total_price = $detail->totalPrice;
@@ -287,6 +292,7 @@ class ReceiveItems extends CComponent {
             }
         }
         
+        $totalJournal = 0;
         foreach ($journalReferences as $coaId => $journalReference) {
             $jurnalUmumPersediaan = new JurnalUmum();
             $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
@@ -300,6 +306,8 @@ class ReceiveItems extends CComponent {
             $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
             $jurnalUmumPersediaan->transaction_type = $transactionType;
             $jurnalUmumPersediaan->save();
+            
+            $totalJournal += array_sum($journalReference['values']);
         }
 
         if ($this->header->request_type == 'Purchase Order') {
@@ -309,7 +317,7 @@ class ReceiveItems extends CComponent {
             $jurnalUmumOutstanding->tanggal_transaksi = $this->header->receive_item_date;
             $jurnalUmumOutstanding->coa_id = $coaOutstanding->id;
             $jurnalUmumOutstanding->branch_id = $this->header->recipient_branch_id;
-            $jurnalUmumOutstanding->total = array_sum($journalReference['values']);
+            $jurnalUmumOutstanding->total = $totalJournal;
             $jurnalUmumOutstanding->debet_kredit = 'K';
             $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
             $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;

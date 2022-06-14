@@ -153,7 +153,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->condition = "t.payment_remaining > 0";
+        $criteria->condition = "t.payment_remaining > 0 AND t.status = 'Approved'";
         
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
@@ -163,11 +163,11 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('status', $this->status, true);
+//        $criteria->compare('status', $this->status, true);
         $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('total_payment', $this->total_payment, true);
-        $criteria->compare('payment_remaining', $this->payment_remaining, true);
+//        $criteria->compare('payment_remaining', $this->payment_remaining, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

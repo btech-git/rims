@@ -21,7 +21,7 @@ $this->menu = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/warehouse/admin'; ?>"><span class="fa fa-th-list"></span>Manage Warehouses</a>
-        <?php if (Yii::app()->user->checkAccess("master.warehouse.update")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterWarehouseEdit")) { ?>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-th-list"></span>edit</a>
         <?php } ?>
         <h1>View Warehouse <?php echo $model->id; ?></h1>
@@ -69,14 +69,14 @@ $this->menu = array(
         <?php foreach ($warehouseDivisions as $key => $warehouseDivision): ?>
             <tr>
                 <?php $division = Division::model()->findByPK($warehouseDivision->division_id); ?>
-                <td><?php echo $division->name; ?></td>	
+                <td><?php echo CHtml::encode(CHtml::value($division, 'name')); ?></td>	
             </tr>
         <?php endforeach; ?>
     </table>
 </div>
 
 <div class="row">
-    <h3>Division</h3>
+    <h3>Section</h3>
     <table >
         <thead>
             <tr>
@@ -96,8 +96,8 @@ $this->menu = array(
     </table>
 </div>
 
-<div class="row">
-    <?php $form = $this->beginWidget('CActiveForm', array(
+<!--<div class="row">
+    <?php /*$form = $this->beginWidget('CActiveForm', array(
         'id' => 'warehouse-form',
         // Please note: When you enable ajax validation, make sure the corresponding
         // controller action is handling ajax validation correctly.
@@ -124,8 +124,8 @@ $this->menu = array(
         '
     )); ?>
 
-    <?php $this->endWidget(); ?>
-</div>
+    <?php $this->endWidget();*/ ?>
+</div>-->
 
 <br/>
 
