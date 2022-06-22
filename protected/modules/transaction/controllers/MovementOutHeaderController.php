@@ -146,96 +146,98 @@ class MovementOutHeaderController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementOut->header);
 
-        $deliveryOrder = new TransactionDeliveryOrder('search');
-        $deliveryOrder->unsetAttributes();
-        
-        if (isset($_GET['TransactionDeliveryOrder']))
-            $deliveryOrder->attributes = $_GET['TransactionDeliveryOrder'];
-        
-        $deliveryOrderCriteria = new CDbCriteria;
-        $deliveryOrderCriteria->compare('sender_branch_id', $movementOut->header->branch_id);
-        $deliveryOrderCriteria->together = 'true';
-        $deliveryOrderCriteria->with = array('senderBranch');
-        $deliveryOrderCriteria->compare('senderBranch.name', $deliveryOrder->branch_name, true);
-        $deliveryOrderCriteria->compare('delivery_order_no', $deliveryOrder->delivery_order_no, true);
-        $deliveryOrderDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array('criteria' => $deliveryOrderCriteria));
+//        $deliveryOrder = new TransactionDeliveryOrder('search');
+//        $deliveryOrder->unsetAttributes();
+//        
+//        if (isset($_GET['TransactionDeliveryOrder']))
+//            $deliveryOrder->attributes = $_GET['TransactionDeliveryOrder'];
+//        
+//        $deliveryOrderCriteria = new CDbCriteria;
+//        $deliveryOrderCriteria->compare('sender_branch_id', $movementOut->header->branch_id);
+//        $deliveryOrderCriteria->together = 'true';
+//        $deliveryOrderCriteria->with = array('senderBranch');
+//        $deliveryOrderCriteria->compare('senderBranch.name', $deliveryOrder->branch_name, true);
+//        $deliveryOrderCriteria->compare('delivery_order_no', $deliveryOrder->delivery_order_no, true);
+//        $deliveryOrderDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array('criteria' => $deliveryOrderCriteria));
+//
+//        $deliveryOrderDetail = new TransactionDeliveryOrderDetail('search');
+//        $deliveryOrderDetail->unsetAttributes();  // clear any default values
+//        
+//        if (isset($_GET['TransactionDeliveryOrderDetail']))
+//            $deliveryOrderDetail->attributes = $_GET['TransactionDeliveryOrderDetail'];
+//        
+//        $deliveryOrderDetailCriteria = new CDbCriteria;
+//        $deliveryOrderDetailCriteria->compare('delivery_order_id', $movementOut->header->delivery_order_id);
+//        $deliveryOrderDetailCriteria->together = 'true';
+//        $deliveryOrderDetailCriteria->with = array('product', 'deliveryOrder');
+//        $deliveryOrderDetailCriteria->compare('delivery_order_id', $deliveryOrderDetail->delivery_order_id, true);
+//        $deliveryOrderDetailCriteria->compare('deliveryOrder.delivery_order_no', $deliveryOrderDetail->delivery_order_no, true);
+//        $deliveryOrderDetailCriteria->compare('product.name', $deliveryOrderDetail->product_name, true);
+//        $deliveryOrderDetailDataProvider = new CActiveDataProvider('TransactionDeliveryOrderDetail', array(
+//            'criteria' => $deliveryOrderDetailCriteria,
+//        ));
+//
+//        /* Return Order */
+//        $returnOrder = new TransactionReturnOrder('search');
+//        $returnOrder->unsetAttributes();
+//        
+//        if (isset($_GET['TransactionReturnOrder']))
+//            $returnOrder->attributes = $_GET['TransactionReturnOrder'];
+//        
+//        $returnOrderCriteria = new CDbCriteria;
+//        $returnOrderCriteria->compare('recipient_branch_id', $returnOrder->recipient_branch_id, true);
+//        $returnOrderCriteria->together = 'true';
+//        $returnOrderCriteria->with = array('recipientBranch');
+//        $returnOrderCriteria->compare('recipientBranch.name', $returnOrder->branch_name, true);
+//        $returnOrderCriteria->compare('return_order_no', $returnOrder->return_order_no, true);
+//        $returnOrderDataProvider = new CActiveDataProvider('TransactionReturnOrder', array('criteria' => $returnOrderCriteria));
+//
+//        $returnOrderDetail = new TransactionReturnOrderDetail('search');
+//        $returnOrderDetail->unsetAttributes();  // clear any default values
+//        
+//        if (isset($_GET['TransactionReturnOrderDetail']))
+//            $returnOrderDetail->attributes = $_GET['TransactionReturnOrderDetail'];
+//        
+//        $returnOrderDetailCriteria = new CDbCriteria;
+//        $returnOrderDetailCriteria->together = 'true';
+//        $returnOrderDetailCriteria->with = array('product', 'returnOrder');
+//        $returnOrderDetailCriteria->compare('return_order_id', $returnOrderDetail->return_order_id, true);
+//        $returnOrderDetailCriteria->compare('returnOrder.return_order_no', $returnOrderDetail->return_order_no, true);
+//        $returnOrderDetailCriteria->compare('product.name', $returnOrderDetail->product_name, true);
+//        $returnOrderDetailDataProvider = new CActiveDataProvider('TransactionReturnOrderDetail', array(
+//            'criteria' => $returnOrderDetailCriteria,
+//        ));
+//
+//        /* Registration Transaction */
+//        $movementTransaction = new RegistrationTransaction('search');
+//        $movementTransaction->unsetAttributes();
+//        
+//        if (isset($_GET['RegistrationTransaction']))
+//            $movementTransaction->attributes = $_GET['RegistrationTransaction'];
+//        
+//        $movementTransactionCriteria = new CDbCriteria;
+//        $movementTransactionCriteria->together = 'true';
+//        $movementTransactionCriteria->with = array('branch');
+//        $movementTransactionCriteria->compare('branch.name', $movementTransaction->branch_name, true);
+//        $movementTransactionCriteria->compare('transaction_number', $movementTransaction->transaction_number, true);
+//        $movementTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array('criteria' => $movementTransactionCriteria));
+//
+//        $movementProduct = new RegistrationProduct('search');
+//        $movementProduct->unsetAttributes();  // clear any default values
+//        
+//        if (isset($_GET['RegistrationProduct']))
+//            $movementProduct->attributes = $_GET['RegistrationProduct'];
+//        
+//        $movementProductCriteria = new CDbCriteria;
+//        $movementProductCriteria->together = 'true';
+//        $movementProductCriteria->with = array('product', 'registrationTransaction');
+//        $movementProductCriteria->compare('registrationTransaction.transaction_number', $movementProduct->transaction_number);
+//        $movementProductCriteria->compare('product.name', $movementProduct->product_name, true);
+//        $movementProductDataProvider = new CActiveDataProvider('RegistrationProduct', array(
+//            'criteria' => $movementProductCriteria,
+//        ));
 
-        $deliveryOrderDetail = new TransactionDeliveryOrderDetail('search');
-        $deliveryOrderDetail->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionDeliveryOrderDetail']))
-            $deliveryOrderDetail->attributes = $_GET['TransactionDeliveryOrderDetail'];
-        
-        $deliveryOrderDetailCriteria = new CDbCriteria;
-        $deliveryOrderDetailCriteria->compare('delivery_order_id', $movementOut->header->delivery_order_id);
-        $deliveryOrderDetailCriteria->together = 'true';
-        $deliveryOrderDetailCriteria->with = array('product', 'deliveryOrder');
-        $deliveryOrderDetailCriteria->compare('delivery_order_id', $deliveryOrderDetail->delivery_order_id, true);
-        $deliveryOrderDetailCriteria->compare('deliveryOrder.delivery_order_no', $deliveryOrderDetail->delivery_order_no, true);
-        $deliveryOrderDetailCriteria->compare('product.name', $deliveryOrderDetail->product_name, true);
-        $deliveryOrderDetailDataProvider = new CActiveDataProvider('TransactionDeliveryOrderDetail', array(
-            'criteria' => $deliveryOrderDetailCriteria,
-        ));
-
-        /* Return Order */
-        $returnOrder = new TransactionReturnOrder('search');
-        $returnOrder->unsetAttributes();
-        
-        if (isset($_GET['TransactionReturnOrder']))
-            $returnOrder->attributes = $_GET['TransactionReturnOrder'];
-        
-        $returnOrderCriteria = new CDbCriteria;
-        $returnOrderCriteria->compare('recipient_branch_id', $returnOrder->recipient_branch_id, true);
-        $returnOrderCriteria->together = 'true';
-        $returnOrderCriteria->with = array('recipientBranch');
-        $returnOrderCriteria->compare('recipientBranch.name', $returnOrder->branch_name, true);
-        $returnOrderCriteria->compare('return_order_no', $returnOrder->return_order_no, true);
-        $returnOrderDataProvider = new CActiveDataProvider('TransactionReturnOrder', array('criteria' => $returnOrderCriteria));
-
-        $returnOrderDetail = new TransactionReturnOrderDetail('search');
-        $returnOrderDetail->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionReturnOrderDetail']))
-            $returnOrderDetail->attributes = $_GET['TransactionReturnOrderDetail'];
-        
-        $returnOrderDetailCriteria = new CDbCriteria;
-        $returnOrderDetailCriteria->together = 'true';
-        $returnOrderDetailCriteria->with = array('product', 'returnOrder');
-        $returnOrderDetailCriteria->compare('return_order_id', $returnOrderDetail->return_order_id, true);
-        $returnOrderDetailCriteria->compare('returnOrder.return_order_no', $returnOrderDetail->return_order_no, true);
-        $returnOrderDetailCriteria->compare('product.name', $returnOrderDetail->product_name, true);
-        $returnOrderDetailDataProvider = new CActiveDataProvider('TransactionReturnOrderDetail', array(
-            'criteria' => $returnOrderDetailCriteria,
-        ));
-
-        /* Registration Transaction */
-        $movementTransaction = new RegistrationTransaction('search');
-        $movementTransaction->unsetAttributes();
-        
-        if (isset($_GET['RegistrationTransaction']))
-            $movementTransaction->attributes = $_GET['RegistrationTransaction'];
-        
-        $movementTransactionCriteria = new CDbCriteria;
-        $movementTransactionCriteria->together = 'true';
-        $movementTransactionCriteria->with = array('branch');
-        $movementTransactionCriteria->compare('branch.name', $movementTransaction->branch_name, true);
-        $movementTransactionCriteria->compare('transaction_number', $movementTransaction->transaction_number, true);
-        $movementTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array('criteria' => $movementTransactionCriteria));
-
-        $movementProduct = new RegistrationProduct('search');
-        $movementProduct->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['RegistrationProduct']))
-            $movementProduct->attributes = $_GET['RegistrationProduct'];
-        
-        $movementProductCriteria = new CDbCriteria;
-        $movementProductCriteria->together = 'true';
-        $movementProductCriteria->with = array('product', 'registrationTransaction');
-        $movementProductCriteria->compare('registrationTransaction.transaction_number', $movementProduct->transaction_number);
-        $movementProductCriteria->compare('product.name', $movementProduct->product_name, true);
-        $movementProductDataProvider = new CActiveDataProvider('RegistrationProduct', array(
-            'criteria' => $movementProductCriteria,
-        ));
+        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
 
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
@@ -250,18 +252,19 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('update', array(
             'movementOut' => $movementOut,
-            'deliveryOrder' => $deliveryOrder,
-            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
-            'deliveryOrderDetail' => $deliveryOrderDetail,
-            'deliveryOrderDetailDataProvider' => $deliveryOrderDetailDataProvider,
-            'returnOrder' => $returnOrder,
-            'returnOrderDataProvider' => $returnOrderDataProvider,
-            'returnOrderDetail' => $returnOrderDetail,
-            'returnOrderDetailDataProvider' => $returnOrderDetailDataProvider,
-            'registrationTransaction' => $movementTransaction,
-            'registrationTransactionDataProvider' => $movementTransactionDataProvider,
-            'registrationProduct' => $movementProduct,
-            'registrationProductDataProvider' => $movementProductDataProvider,
+            'warehouses' => $warehouses,
+//            'deliveryOrder' => $deliveryOrder,
+//            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
+//            'deliveryOrderDetail' => $deliveryOrderDetail,
+//            'deliveryOrderDetailDataProvider' => $deliveryOrderDetailDataProvider,
+//            'returnOrder' => $returnOrder,
+//            'returnOrderDataProvider' => $returnOrderDataProvider,
+//            'returnOrderDetail' => $returnOrderDetail,
+//            'returnOrderDetailDataProvider' => $returnOrderDetailDataProvider,
+//            'registrationTransaction' => $movementTransaction,
+//            'registrationTransactionDataProvider' => $movementTransactionDataProvider,
+//            'registrationProduct' => $movementProduct,
+//            'registrationProductDataProvider' => $movementProductDataProvider,
         ));
     }
 

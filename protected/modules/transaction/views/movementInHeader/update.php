@@ -19,14 +19,16 @@ $this->breadcrumbs=array(
 <!--<h1>Update MovementInHeader <?php echo $movementIn->header->id; ?></h1>-->
 
 <div id="maincontent">
-	<?php $this->renderPartial('_form', array(
-		'movementIn'=>$movementIn,
-		'receiveItemDetail'=>$receiveItemDetail,
-		'receiveItemDetailDataProvider'=>$receiveItemDetailDataProvider,
-		'receiveItem'=>$receiveItem,
-		'receiveItemDataProvider'=>$receiveItemDataProvider,
-		'returnItem'=>$returnItem,
-		'returnItemDataProvider'=>$returnItemDataProvider,
-		'returnItemDetail'=>$returnItemDetail,
-		'returnItemDetailDataProvider'=>$returnItemDetailDataProvider,
-	)); ?></div>
+    <?php $this->renderPartial('_form', array(
+        'movementIn'=>$movementIn,
+        'warehouses' => $warehouses,
+//		'receiveItemDetail'=>$receiveItemDetail,
+//		'receiveItemDetailDataProvider'=>$receiveItemDetailDataProvider,
+//		'receiveItem'=>$receiveItem,
+//		'receiveItemDataProvider'=>$receiveItemDataProvider,
+//		'returnItem'=>$returnItem,
+//		'returnItemDataProvider'=>$returnItemDataProvider,
+//		'returnItemDetail'=>$returnItemDetail,
+//		'returnItemDetailDataProvider'=>$returnItemDetailDataProvider,
+	)); ?>
+</div>

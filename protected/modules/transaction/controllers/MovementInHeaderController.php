@@ -116,82 +116,83 @@ class MovementInHeaderController extends Controller {
      */
     public function actionUpdate($id) {
         $movementIn = $this->instantiate($id);
-        $movementIn->header->setCodeNumberByRevision('movement_in_number');
+        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementIn->header);
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
         
-        if (isset($_GET['TransactionReceiveItem']))
-            $receiveItem->attributes = $_GET['TransactionReceiveItem'];
-        
-        $receiveItemCriteria = new CDbCriteria;
-        $receiveItemCriteria->compare('recipient_branch_id', $movementIn->header->branch_id);
-        $receiveItemCriteria->together = 'true';
-        $receiveItemCriteria->with = array('recipientBranch');
-        $receiveItemCriteria->compare('recipientBranch.name', $receiveItem->branch_name, true);
-        $receiveItemCriteria->compare('receive_item_no', $receiveItem->receive_item_no, true);
-
-        $receiveItemDataProvider = new CActiveDataProvider('TransactionReceiveItem', array('criteria' => $receiveItemCriteria));
-
-        $receiveItemDetail = new TransactionReceiveItemDetail('search');
-        $receiveItemDetail->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionReceiveItemDetail']))
-            $receiveItemDetail->attributes = $_GET['TransactionReceiveItemDetail'];
-        
-        $receiveItemDetailCriteria = new CDbCriteria;
-        $receiveItemDetailCriteria->compare('receive_item_id', $movementIn->header->receive_item_id);
-        $receiveItemDetailCriteria->together = 'true';
-        $receiveItemDetailCriteria->with = array('product', 'receiveItem');
-
-        $receiveItemDetailCriteria->compare('receive_item_id', $receiveItemDetail->receive_item_id, true);
-        $receiveItemDetailCriteria->compare('receiveItem.receive_item_no', $receiveItemDetail->receive_item_no, true);
-        $receiveItemDetailCriteria->compare('product.name', $receiveItemDetail->product_name, true);
-        $receiveItemDetailDataProvider = new CActiveDataProvider('TransactionReceiveItemDetail', array(
-            'criteria' => $receiveItemDetailCriteria,
-        ));
-
-        /* Return Item */
-        $returnItem = new TransactionReturnItem('search');
-        $returnItem->unsetAttributes();
-        
-        if (isset($_GET['TransactionReturnItem']))
-            $returnItem->attributes = $_GET['TransactionReturnItem'];
-        
-        $returnItemCriteria = new CDbCriteria;
-        $receiveItemCriteria->compare('recipient_branch_id', $movementIn->header->branch_id);
-        $returnItemCriteria->together = 'true';
-        $returnItemCriteria->with = array('recipientBranch');
-        
-        $returnItemCriteria->compare('recipientBranch.name', $returnItem->branch_name, true);
-        $returnItemCriteria->compare('return_item_no', $returnItem->return_item_no, true);
-        $returnItemDataProvider = new CActiveDataProvider('TransactionReturnItem', array('criteria' => $returnItemCriteria));
-
-        $returnItemDetail = new TransactionReturnItemDetail('search');
-        $returnItemDetail->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionReturnItemDetail']))
-            $returnItemDetail->attributes = $_GET['TransactionReturnItemDetail'];
-        
-        $returnItemDetailCriteria = new CDbCriteria;
-        $returnItemDetailCriteria->compare('return_item_id', $movementIn->header->return_item_id);
-        $returnItemDetailCriteria->together = 'true';
-        $returnItemDetailCriteria->with = array('product', 'returnItem');
-
-        $returnItemDetailCriteria->compare('return_item_id', $returnItemDetail->return_item_id, true);
-        $returnItemDetailCriteria->compare('returnItem.return_item_no', $returnItemDetail->return_item_no, true);
-        $returnItemDetailCriteria->compare('product.name', $returnItemDetail->product_name, true);
-        $returnItemDetailDataProvider = new CActiveDataProvider('TransactionReturnItemDetail', array(
-            'criteria' => $returnItemDetailCriteria,
-        ));
+//        if (isset($_GET['TransactionReceiveItem']))
+//            $receiveItem->attributes = $_GET['TransactionReceiveItem'];
+//        
+//        $receiveItemCriteria = new CDbCriteria;
+//        $receiveItemCriteria->compare('recipient_branch_id', $movementIn->header->branch_id);
+//        $receiveItemCriteria->together = 'true';
+//        $receiveItemCriteria->with = array('recipientBranch');
+//        $receiveItemCriteria->compare('recipientBranch.name', $receiveItem->branch_name, true);
+//        $receiveItemCriteria->compare('receive_item_no', $receiveItem->receive_item_no, true);
+//
+//        $receiveItemDataProvider = new CActiveDataProvider('TransactionReceiveItem', array('criteria' => $receiveItemCriteria));
+//
+//        $receiveItemDetail = new TransactionReceiveItemDetail('search');
+//        $receiveItemDetail->unsetAttributes();  // clear any default values
+//        
+//        if (isset($_GET['TransactionReceiveItemDetail']))
+//            $receiveItemDetail->attributes = $_GET['TransactionReceiveItemDetail'];
+//        
+//        $receiveItemDetailCriteria = new CDbCriteria;
+//        $receiveItemDetailCriteria->compare('receive_item_id', $movementIn->header->receive_item_id);
+//        $receiveItemDetailCriteria->together = 'true';
+//        $receiveItemDetailCriteria->with = array('product', 'receiveItem');
+//
+//        $receiveItemDetailCriteria->compare('receive_item_id', $receiveItemDetail->receive_item_id, true);
+//        $receiveItemDetailCriteria->compare('receiveItem.receive_item_no', $receiveItemDetail->receive_item_no, true);
+//        $receiveItemDetailCriteria->compare('product.name', $receiveItemDetail->product_name, true);
+//        $receiveItemDetailDataProvider = new CActiveDataProvider('TransactionReceiveItemDetail', array(
+//            'criteria' => $receiveItemDetailCriteria,
+//        ));
+//
+//        /* Return Item */
+//        $returnItem = new TransactionReturnItem('search');
+//        $returnItem->unsetAttributes();
+//        
+//        if (isset($_GET['TransactionReturnItem']))
+//            $returnItem->attributes = $_GET['TransactionReturnItem'];
+//        
+//        $returnItemCriteria = new CDbCriteria;
+//        $receiveItemCriteria->compare('recipient_branch_id', $movementIn->header->branch_id);
+//        $returnItemCriteria->together = 'true';
+//        $returnItemCriteria->with = array('recipientBranch');
+//        
+//        $returnItemCriteria->compare('recipientBranch.name', $returnItem->branch_name, true);
+//        $returnItemCriteria->compare('return_item_no', $returnItem->return_item_no, true);
+//        $returnItemDataProvider = new CActiveDataProvider('TransactionReturnItem', array('criteria' => $returnItemCriteria));
+//
+//        $returnItemDetail = new TransactionReturnItemDetail('search');
+//        $returnItemDetail->unsetAttributes();  // clear any default values
+//        
+//        if (isset($_GET['TransactionReturnItemDetail']))
+//            $returnItemDetail->attributes = $_GET['TransactionReturnItemDetail'];
+//        
+//        $returnItemDetailCriteria = new CDbCriteria;
+//        $returnItemDetailCriteria->compare('return_item_id', $movementIn->header->return_item_id);
+//        $returnItemDetailCriteria->together = 'true';
+//        $returnItemDetailCriteria->with = array('product', 'returnItem');
+//
+//        $returnItemDetailCriteria->compare('return_item_id', $returnItemDetail->return_item_id, true);
+//        $returnItemDetailCriteria->compare('returnItem.return_item_no', $returnItemDetail->return_item_no, true);
+//        $returnItemDetailCriteria->compare('product.name', $returnItemDetail->product_name, true);
+//        $returnItemDetailDataProvider = new CActiveDataProvider('TransactionReturnItemDetail', array(
+//            'criteria' => $returnItemDetailCriteria,
+//        ));
 
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['MovementInHeader'])) {
             $this->loadState($movementIn);
+            $movementIn->header->setCodeNumberByRevision('movement_in_number');
             
             if ($movementIn->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $movementIn->header->id));
@@ -200,14 +201,15 @@ class MovementInHeaderController extends Controller {
 
         $this->render('update', array(
             'movementIn' => $movementIn,
-            'receiveItemDetail' => $receiveItemDetail,
-            'receiveItemDetailDataProvider' => $receiveItemDetailDataProvider,
-            'receiveItem' => $receiveItem,
-            'receiveItemDataProvider' => $receiveItemDataProvider,
-            'returnItem' => $returnItem,
-            'returnItemDataProvider' => $returnItemDataProvider,
-            'returnItemDetail' => $returnItemDetail,
-            'returnItemDetailDataProvider' => $returnItemDetailDataProvider,
+            'warehouses' => $warehouses,
+//            'receiveItemDetail' => $receiveItemDetail,
+//            'receiveItemDetailDataProvider' => $receiveItemDetailDataProvider,
+//            'receiveItem' => $receiveItem,
+//            'receiveItemDataProvider' => $receiveItemDataProvider,
+//            'returnItem' => $returnItem,
+//            'returnItemDataProvider' => $returnItemDataProvider,
+//            'returnItemDetail' => $returnItemDetail,
+//            'returnItemDetailDataProvider' => $returnItemDetailDataProvider,
         ));
     }
 

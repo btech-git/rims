@@ -254,11 +254,6 @@
                         'url' => array('/transaction/movementOutHeader/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('movementOutCreate') || Yii::app()->user->checkAccess('movementOutEdit'))
                     ),
-//                    array(
-//                        'label' => 'Pengeluaran Bahan Pemakaian', 
-//                        'url' => array('/frontDesk/movementOutService/registrationTransactionList'), 
-//                        'visible' => (Yii::app()->user->checkAccess('movementServiceCreate') || Yii::app()->user->checkAccess('movementServiceEdit'))
-//                    ),
                     array(
                         'label' => 'Permintaan Bahan', 
                         'url' => array('/frontDesk/materialRequest/admin'), 
@@ -315,22 +310,22 @@
                     array(
                         'label' => 'Daftar Kehadiran', 
                         'url' => array('/master/employeeAttendance/index'), 
-                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Index')
+//                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Index')
                     ),
                     array(
                         'label' => 'Absensi', 
                         'url' => array('/master/employeeAttendance/attendance'), 
-                        'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff'))
+//                        'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff'))
                     ),
                     array(
                         'label' => 'Gaji', 
                         'url' => array('/master/employeeAttendance/salary'), 
-                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Salary')
+//                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Salary')
                     ),
                     array(
                         'label' => 'Libur Karyawan', 
                         'url' => array('/master/employeeDayoff/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
+//                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
                     ),
                 ),
             )); ?>
@@ -374,7 +369,7 @@
 //                    array('label' => 'Buku Besar', 'url' => array('/report/generalLedger/summary'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
                     array('label' => 'Kertas Kerja', 'url' => array('/accounting/coa/kertasKerja'), 'visible' => Yii::app()->user->checkAccess('kertasKerjaReport')),
                     array('label' => 'Jurnal Umum', 'url' => array('/report/transactionJournal/summary'), 'visible' => Yii::app()->user->checkAccess('transactionJournalReport')),
-                    array('label' => 'Jurnal Umum Rekap', 'url' => array('/accounting/jurnalUmum/jurnalUmumRekap'), 'visible' => Yii::app()->user->checkAccess('journalSummaryReport')),
+                    array('label' => 'Jurnal Umum Rekap', 'url' => array('/report/transactionJournalSummary/summary'), 'visible' => Yii::app()->user->checkAccess('transactionJournalReport')),
                     array('label' => 'Laporan Kas Harian', 'url' => array('/report/kasharian/report'), 'visible' => Yii::app()->user->checkAccess('cashDailyReport')),
                     array('label' => 'Approval Kas Harian', 'url' => array('/accounting/cashDailySummary/summary'), 'visible' => Yii::app()->user->checkAccess('cashDailyApprovalReport')),
                     array('label' => 'Summary Kas Harian', 'url' => array('/accounting/cashDailySummary/admin'), 'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport')),

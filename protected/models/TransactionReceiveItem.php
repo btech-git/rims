@@ -309,7 +309,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             t.id NOT IN (
                 SELECT receive_item_id
                 FROM " . PayOutDetail::model()->tableName() . " 
-            ) AND t.purchase_order_id IS NOT NULL
+            ) AND t.invoice_number IS NOT NULL
         ";
         
         $criteria->compare('id', $this->id);
@@ -360,5 +360,19 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     
     public function getDateTimeCreated() {
         return Yii::app()->dateFormatter->format("d MMM yyyy", $this->invoice_date_created) . ' ' . $this->invoice_time_created;
+    }
+    
+    public static function totalPayables() {
+        
+        $sql = "SELECT SUM(invoice_grand_total) AS remaining
+                FROM " . TransactionReceiveItem::model()->tableName() . "
+                WHERE id NOT IN (
+                    SELECT receive_item_id
+                    FROM " . PayOutDetail::model()->tableName() . " 
+                ) AND invoice_number IS NOT NULL";
+                
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array());
+
+        return ($value === false) ? 0 : $value;
     }
 }

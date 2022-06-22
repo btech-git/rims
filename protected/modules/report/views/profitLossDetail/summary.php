@@ -111,16 +111,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             
             <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $coa): ?>
-                <?php $accountGroupBalance = $coa->getProfitLossBalance($startDate, $endDate, $branchId); ?>
-                <?php if ($accountGroupBalance > 0): ?>
+                <?php //if ($accountGroupBalance > 0): ?>
                     <tr>
                         <td style="padding-left: 50px;">
                             <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
                             <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?>
                         </td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountGroupBalance)); ?></td>
+                        <td><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountGroupBalance)); ?></td>
                     </tr>
 
+                    <?php $accountGroupBalance = 0.00; ?>
                     <?php if (!empty($coa->coaIds)): ?> 
                         <?php foreach ($coa->coaIds as $account): ?>
                             <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
@@ -130,14 +130,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
                                         <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
                                     </td>
-                                    <td style="text-align: right; font-size: 10px"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?></td>
+                                    <td style="text-align: right; font-size: 10px">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?>
+                                    </td>
                                 </tr>
-                                <?php //$accountCategoryBalance += $accountBalance; ?>
+                                <?php $accountGroupBalance += $accountBalance; ?>
                             <?php endif; ?>
                         <?php endforeach; ?>
+                        <tr>
+                            <td style="text-align: right; font-size: 11px;">TOTAL <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></td>
+                            <td style="text-align: right; font-size: 11px; border-top: 1px solid">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountGroupBalance)); ?>
+                            </td>
+                        </tr>
                     <?php endif; ?>
                     <?php $accountCategoryBalance += $accountGroupBalance; ?>
-                <?php endif; ?>
+                <?php //endif; ?>
             <?php endforeach; ?>
         
             <tr>

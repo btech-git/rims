@@ -126,17 +126,17 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('movement_out_no', $this->movement_out_no, true);
-        $criteria->compare('date_posting', $this->date_posting, true);
-        $criteria->compare('delivery_order_id', $this->delivery_order_id);
-        $criteria->compare('return_order_id', $this->return_order_id);
-        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
-        $criteria->compare('registration_service_id', $this->registration_service_id);
-        $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('supervisor_id', $this->supervisor_id);
-        $criteria->compare('status', $this->status, true);
-        $criteria->compare('material_request_header_id', $this->material_request_header_id);
+        $criteria->compare('t.movement_out_no', $this->movement_out_no, true);
+        $criteria->compare('t.date_posting', $this->date_posting, true);
+        $criteria->compare('t.delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('t.return_order_id', $this->return_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.registration_service_id', $this->registration_service_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('t.material_request_header_id', $this->material_request_header_id);
 
         $criteria->together = 'true';
         $criteria->with = array('deliveryOrder', 'branch', 'returnOrder');

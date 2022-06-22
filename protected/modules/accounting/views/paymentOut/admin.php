@@ -151,7 +151,7 @@ $('.search-form form').submit(function(){
                         'receiveItemDataProvider' => $receiveItemDataProvider,
                     ), true)
                 ),
-                'Hutang Upah' => array(
+                'Biaya Sub Pekerjaan' => array(
                     'content' => $this->renderPartial('_viewWorkExpense', array(
                         'workOrderExpense' => $workOrderExpense,
                         'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,

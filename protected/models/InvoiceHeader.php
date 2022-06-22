@@ -329,4 +329,15 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     public function getReferenceTypeLiteral() {
         return $this->reference_type  == 1 ? 'Sales Order' : 'Retail Sales';
     }
+    
+    public static function totalReceivables() {
+        
+        $sql = "SELECT SUM(payment_left) AS remaining
+                FROM " . InvoiceHeader::model()->tableName() . "
+                WHERE payment_left > 0";
+                
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array());
+
+        return ($value === false) ? 0 : $value;
+    }
 }

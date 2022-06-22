@@ -323,7 +323,7 @@ class PaymentOutController extends Controller {
         ));
     }
 
-    public function actionAjaxHtmlAddInvoices($id) {
+    public function actionAjaxHtmlAddInvoices($id, $movementType) {
         if (Yii::app()->request->isAjaxRequest) {
             $paymentOut = $this->instantiate($id);
             $this->loadState($paymentOut);
@@ -333,7 +333,7 @@ class PaymentOutController extends Controller {
                 $invoices = $_POST['selectedIds'];
 
                 foreach ($invoices as $invoice)
-                    $paymentOut->addInvoice($invoice);
+                    $paymentOut->addInvoice($invoice, $movementType);
             }
 
             $this->renderPartial('_detail', array(

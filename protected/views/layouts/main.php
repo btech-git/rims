@@ -124,7 +124,6 @@
                 $movementInCriteria->addCondition(" branch_id = " . $branchId . " AND DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
                 $movementIn = MovementInHeader::model()->findAll($movementInCriteria);
 
-
                 $count = count($requestOrder) + count($purchase) + count($sales) + count($transfer) + count($sent) + count($consignment) + count($consignmentIn) + count($movement) + count($movementIn);
             }
         }

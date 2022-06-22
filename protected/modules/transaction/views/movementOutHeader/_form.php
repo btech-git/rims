@@ -100,7 +100,7 @@
             </div>
             
             <div class="small-12 medium-6 columns">
-                <?php if ((int) $movementOut->header->movement_type == 1): ?>
+                <?php if ((int) $movementOut->header->movement_type == 1 || !empty($movementOut->header->delivery_order_id)): ?>
                     <div id="deliveryOrder">
                         <div class="field">
                             <div class="row collapse">
@@ -159,26 +159,25 @@
                             </div>
                         </div>
                     </div> <!-- End div Delivery Order -->
-                <?php elseif ((int) $movementOut->header->movement_type == 2): ?>
-
-                <div id="returnOrder">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($movementOut->header, 'return_order_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->hiddenField($movementOut->header, 'return_order_id'); ?>
-                                <?php echo $form->textField($movementOut->header, 'return_order_number', array(
-                                    'value' => $movementOut->header->return_order_id == "" ? "" : TransactionReturnOrder::model()->findByPk($movementOut->header->return_order_id)->return_order_no,
-                                    'readonly' => true,
-                                )); ?>
-                                <?php echo $form->error($movementOut->header, 'return_order_id'); ?>
+                <?php elseif ((int) $movementOut->header->movement_type == 2 || !empty($movementOut->header->return_order_id)): ?>
+                    <div id="returnOrder">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <?php echo $form->labelEx($movementOut->header, 'return_order_id', array('class' => 'prefix')); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo $form->hiddenField($movementOut->header, 'return_order_id'); ?>
+                                    <?php echo $form->textField($movementOut->header, 'return_order_number', array(
+                                        'value' => $movementOut->header->return_order_id == "" ? "" : TransactionReturnOrder::model()->findByPk($movementOut->header->return_order_id)->return_order_no,
+                                        'readonly' => true,
+                                    )); ?>
+                                    <?php echo $form->error($movementOut->header, 'return_order_id'); ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div> <!-- end of DIV ReturnOrder -->
-                <?php elseif ((int) $movementOut->header->movement_type == 3): ?>
+                    </div> <!-- end of DIV ReturnOrder -->
+                <?php elseif ((int) $movementOut->header->movement_type == 3 || !empty($movementOut->header->registration_transaction_id)): ?>
                     <div id="retailSales">
                         <div class="field">
                             <div class="row collapse">
@@ -196,8 +195,7 @@
                             </div>
                         </div>
                     </div> <!-- end of Div RetailSales -->
-                
-                <?php elseif ((int) $movementOut->header->movement_type == 4): ?>
+                <?php elseif ((int) $movementOut->header->movement_type == 4 || !empty($movementOut->header->material_request_header_id)): ?>
                     <div id="materialRequest">
                         <div class="field">
                             <div class="row collapse">
@@ -225,6 +223,7 @@
                         <div class="small-4 columns">
                             <?php echo $form->labelEx($movementOut->header, 'user_id', array('class' => 'prefix')); ?>
                         </div>
+                        
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($movementOut->header, 'user_id', array('readonly' => true, 'value' => $movementOut->header->isNewRecord ? Yii::app()->user->getId() : $movementOut->header->user_id)); ?>
                             <?php echo $movementOut->header->isNewRecord ? CHtml::encode(Yii::app()->user->getName()) : $movementOut->header->user->username; ?>
@@ -232,9 +231,9 @@
                         </div>
                     </div>
                 </div>		
-
             </div>
         </div>
+        
         <fieldset>
             <legend>Detail</legend>
 
@@ -261,6 +260,7 @@
 
     </div><!-- form -->
 </div>
+
 <script type="text/javascript">
     $(document).on("change", ".qtyleft_input", function() {
     var sum = 0;

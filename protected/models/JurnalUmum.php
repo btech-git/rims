@@ -206,5 +206,38 @@ class JurnalUmum extends CActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
-
+    
+    public static function graphSalePerBranch() {
+        
+        $sql = "SELECT b.name AS branch_name, SUM(j.total) AS total
+                FROM " . JurnalUmum::model()->tableName() . " j
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = j.branch_id
+                WHERE j.transaction_type IN ('RG', 'SO')
+                GROUP BY j.branch_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        
+        return $resultSet;
+    }
+    
+    public static function graphIncomeExpense() {
+        
+        $sql = "SELECT year, month, SUM(total_debit) as debit, SUM(total_kredit) as kredit
+                FROM  (
+                    SELECT SUBSTRING(tanggal_transaksi, 1, 4) AS year, SUBSTRING(tanggal_transaksi, 6, 2) AS month, SUM(total) AS total_debit, 0 AS total_kredit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE (SUBSTRING(CURRENT_DATE, 1, 4) - SUBSTRING(tanggal_transaksi, 1, 4)) * 12 + (SUBSTRING(CURRENT_DATE, 6, 2) - SUBSTRING(tanggal_transaksi, 6, 2)) <= 12 AND transaction_type IN ('Pin', 'CASH') AND debet_kredit = 'D'
+                    GROUP BY SUBSTRING(tanggal_transaksi, 1, 4), SUBSTRING(tanggal_transaksi, 6, 2)
+                    UNION
+                    SELECT SUBSTRING(tanggal_transaksi, 1, 4) AS year, SUBSTRING(tanggal_transaksi, 6, 2) AS month, 0 AS total_debit, SUM(total) AS total_kredit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE (SUBSTRING(CURRENT_DATE, 1, 4) - SUBSTRING(tanggal_transaksi, 1, 4)) * 12 + (SUBSTRING(CURRENT_DATE, 6, 2) - SUBSTRING(tanggal_transaksi, 6, 2)) <= 12 AND transaction_type IN ('Pout', 'CASH') AND debet_kredit = 'K'
+                    GROUP BY SUBSTRING(tanggal_transaksi, 1, 4), SUBSTRING(tanggal_transaksi, 6, 2)
+                ) transaction
+                GROUP BY year, month";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        
+        return $resultSet;
+    }
 }

@@ -976,4 +976,15 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return sprintf('%dh %dm %ds', $hours, $minutes, $seconds);
     }
     
+    public static function graphSale() {
+        
+        $sql = "SELECT SUBSTRING(transaction_date, 1, 4) AS year, SUBSTRING(transaction_date, 6, 2) AS month, SUM(grand_total) AS grand_total
+                FROM " . RegistrationTransaction::model()->tableName() . "
+                WHERE (SUBSTRING(CURRENT_DATE, 1, 4) - SUBSTRING(transaction_date, 1, 4)) * 12 + (SUBSTRING(CURRENT_DATE, 6, 2) - SUBSTRING(transaction_date, 6, 2)) <= 12
+                GROUP BY SUBSTRING(transaction_date, 1, 4), SUBSTRING(transaction_date, 6, 2)";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        
+        return $resultSet;
+    }
 }
