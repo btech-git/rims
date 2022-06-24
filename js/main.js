@@ -1,7 +1,7 @@
 /*
 * Name : Main Scripts
-* Author : Ervandra Halim
-* Author URI : http://www.cakrastudio.com/
+* Author : Purwasis Mahendro
+* Author URI : http://www.bloomingtech.com/
 */
 //;jQvan = jQuery.noConflict(); 
 /*jQvan(document).ready(function($){

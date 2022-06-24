@@ -98,15 +98,14 @@ $('.search-form form').submit(function(){
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
         ),
-//        array(
-//            'header' => 'Tanggal Input',
-//            'name' => 'date_created',
-//            'filter' => false,
-//            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
-//        ),
         array(
             'header' => 'WO #',
-            'value' => 'CHtml::value($data, "registrationTransaction.work_order_number")',
+            'value'=>'CHTml::link($data->registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
+            'type'=>'raw',
+        ),
+        array(
+            'header' => 'Repair Type',
+            'value' => 'CHtml::value($data, "registrationTransaction.repair_type")',
         ),
         array(
             'header' => 'Customer',
@@ -122,7 +121,7 @@ $('.search-form form').submit(function(){
         ),
         array(
             'name' => 'note',
-            'value' => 'substr(CHtml::value($data, "note"), 0, 50)',
+            'value' => 'substr(CHtml::value($data, "note"), 0, 30)',
         ),
         array(
             'header' => 'Created By',

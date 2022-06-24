@@ -184,9 +184,41 @@ class WorkOrderExpenseController extends Controller {
 
         if (isset($_POST['WorkOrderExpenseApproval'])) {
             $model->attributes = $_POST['WorkOrderExpenseApproval'];
+            
             if ($model->save()) {
                 $workOrderExpense->status = $model->approval_type;
                 $workOrderExpense->save(false);
+
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $workOrderExpense->transaction_number,
+                    'branch_id' => $workOrderExpense->branch_id,
+                ));
+
+                $jurnalHutang = new JurnalUmum;
+                $jurnalHutang->kode_transaksi = $workOrderExpense->transaction_number;
+                $jurnalHutang->tanggal_transaksi = $workOrderExpense->transaction_date;
+                $jurnalHutang->coa_id = $workOrderExpense->supplier->coa_id;
+                $jurnalHutang->branch_id = $workOrderExpense->branch_id;
+                $jurnalHutang->total = $workOrderExpense->grand_total;
+                $jurnalHutang->debet_kredit = 'K';
+                $jurnalHutang->tanggal_posting = date('Y-m-d');
+                $jurnalHutang->transaction_subject = $workOrderExpense->supplier->name;
+                $jurnalHutang->is_coa_category = 0;
+                $jurnalHutang->transaction_type = 'WOE';
+                $jurnalHutang->save();
+
+                $jurnalUmumKas = new JurnalUmum;
+                $jurnalUmumKas->kode_transaksi = $workOrderExpense->transaction_number;
+                $jurnalUmumKas->tanggal_transaksi = $workOrderExpense->transaction_date;
+                $jurnalUmumKas->coa_id = 2149;
+                $jurnalUmumKas->branch_id = $workOrderExpense->branch_id;
+                $jurnalUmumKas->total = $workOrderExpense->grand_total;
+                $jurnalUmumKas->debet_kredit = 'D';
+                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                $jurnalUmumKas->transaction_subject = $workOrderExpense->supplier->name;
+                $jurnalUmumKas->is_coa_category = 0;
+                $jurnalUmumKas->transaction_type = 'WOE';
+                $jurnalUmumKas->save();
 
                 $this->redirect(array('view', 'id' => $headerId));
             }

@@ -127,6 +127,10 @@ class WorkOrderExpense extends CComponent {
 //    }
 
     public function flush() {
+        $this->header->grand_total = $this->totalDetail;
+        $this->header->total_payment = 0.00;
+        $this->header->payment_remaining = $this->totalDetail;
+        
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {

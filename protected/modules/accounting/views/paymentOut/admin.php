@@ -109,7 +109,6 @@ $('.search-form form').submit(function(){
             'filter' => CHtml::textField('SupplierName', $supplierName),
             'value' => 'CHtml::value($data, "supplier.name")',
         ),
-//        'paymentType.name: Payment Type',
         array(
             'name' => 'payment_amount', 
             'value' => 'number_format($data->payment_amount, 0)',
@@ -117,8 +116,6 @@ $('.search-form form').submit(function(){
                 'style' => 'text-align: right'         
             ),
         ),
-//        'notes',
-//        'branch.name: Branch',
         array(
             'header' => 'Created By',
             'name' => 'user_id',
