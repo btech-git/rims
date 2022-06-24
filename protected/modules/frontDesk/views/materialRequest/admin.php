@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-    array('label'=>'List MaterialRequest', 'url'=>array('index')),
+    //array('label'=>'List MaterialRequest', 'url'=>array('index')),
     array('label'=>'Create MaterialRequest', 'url'=>array('create')),
 );
 
