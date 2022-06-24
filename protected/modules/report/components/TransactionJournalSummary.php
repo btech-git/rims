@@ -35,10 +35,16 @@ class TransactionJournalSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.tanggal_transaksi DESC, t.kode_transaksi ASC, t.coa_id ASC';
     }
 
-    public function setupFilter($startDate, $endDate) {
+    public function setupFilter($startDate, $endDate, $branchId, $companyId) {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
         $this->dataProvider->criteria->addCondition("is_coa_category = 0");
+        if (!empty($branchId) && empty($companyId) || !empty($branchId) && !empty($companyId)) {
+            $this->dataProvider->criteria->addColumnCondition(array('t.branch_id' => $branchId));
+        } else if (empty($branchId) && !empty($companyId)) {
+            $this->dataProvider->criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . CompanyBranch::model()->tableName() . " WHERE company_id = :company_id)");
+            $this->dataProvider->criteria->params[':company_id'] = $companyId;
+        }
     }
 }

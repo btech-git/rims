@@ -39,23 +39,20 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupFilter($startDate, $endDate, $branchId);
         $generalLedgerSummary->getSaldo($startDate);
 
-        $coa = new Coa('search');
-        $coa->unsetAttributes();  // clear any default values
+        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $coaDataProvider = $coa->search();
+        $coaDataProvider->criteria->compare('t.is_approved', 1);
 
-        if (isset($_GET['Coa'])) {
-            $coa->attributes = $_GET['Coa'];
-        }
-
-        $coaCriteria = new CDbCriteria;
-        $coaCriteria->addCondition("t.is_approved = 1");
-        $coaCriteria->compare('t.code', $coa->code, true);
-        $coaCriteria->compare('t.name', $coa->name, true);
-        $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
-        $coaCriteria->compare('t.coa_sub_category_id', $coa->coa_sub_category_id);
-
-        $coaDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaCriteria,
-        ));
+//        $coaCriteria = new CDbCriteria;
+//        $coaCriteria->addCondition("t.is_approved = 1");
+//        $coaCriteria->compare('t.code', $coa->code, true);
+//        $coaCriteria->compare('t.name', $coa->name, true);
+//        $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
+//        $coaCriteria->compare('t.coa_sub_category_id', $coa->coa_sub_category_id);
+//
+//        $coaDataProvider = new CActiveDataProvider('Coa', array(
+//            'criteria' => $coaCriteria,
+//        ));
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));

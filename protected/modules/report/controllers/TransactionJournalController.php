@@ -26,7 +26,7 @@ class TransactionJournalController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
-//        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 //        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
 //        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 10000;
@@ -37,7 +37,7 @@ class TransactionJournalController extends Controller {
         $jurnalUmumSummary->setupLoading();
         $jurnalUmumSummary->setupPaging($pageSize, $currentPage);
         $jurnalUmumSummary->setupSorting();
-        $jurnalUmumSummary->setupFilter($startDate, $endDate);
+        $jurnalUmumSummary->setupFilter($startDate, $endDate, $branchId, $companyId);
 
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $accountDataProvider = $account->search();
@@ -53,6 +53,7 @@ class TransactionJournalController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'companyId' => $companyId,
+            'branchId' => $branchId,
             'account' => $account,
             'accountDataProvider' => $accountDataProvider,
             'currentSort' => $currentSort,
@@ -70,6 +71,18 @@ class TransactionJournalController extends Controller {
             );
             
             echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxHtmlUpdateBranchSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $companyId = isset($_GET['CompanyId']) ? $_GET['CompanyId'] : 0;
+            $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : 0;
+
+            $this->renderPartial('_branchSelect', array(
+                'companyId' => $companyId,
+                'branchId' => $branchId,
+            ));
         }
     }
 

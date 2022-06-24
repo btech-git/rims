@@ -1,5 +1,12 @@
-<div class="clearfix page-action">
+<div class="clearfix page-action" id="service-type-processing-<?php echo $serviceType->id; ?>">
     <div>
+        <?php echo CHtml::link('Queue', '#', array('class' => 'status-link', 'data-status-type' => 'queue', 'data-processing-id' => $serviceType->id)); ?>
+        <?php echo CHtml::link('Assigned', '#', array('class' => 'status-link', 'data-status-type' => 'assigned', 'data-processing-id' => $serviceType->id)); ?>
+        <?php echo CHtml::link('On - Progress', '#', array('class' => 'status-link', 'data-status-type' => 'on-progress', 'data-processing-id' => $serviceType->id)); ?>
+        <?php echo CHtml::link('Ready to QC', '#', array('class' => 'status-link', 'data-status-type' => 'ready-to-qc', 'data-processing-id' => $serviceType->id)); ?>
+        <?php echo CHtml::link('Finished', '#', array('class' => 'status-link', 'data-status-type' => 'finished', 'data-processing-id' => $serviceType->id)); ?>
+    </div>
+    <div class="status-<?php echo $serviceType->id; ?>" id="status-<?php echo $serviceType->id; ?>-queue" style="display: none">
         <?php $numbering = 1; ?>
         <h3>Queue</h3>
         <table>
@@ -44,7 +51,7 @@
         </table>
     </div>
     
-    <div>
+    <div class="status-<?php echo $serviceType->id; ?>" id="status-<?php echo $serviceType->id; ?>-assigned" style="display: none">
         <h3>Assigned</h3>
         <table>
             <thead>
@@ -88,7 +95,7 @@
         </table>
     </div>
     
-    <div>
+    <div class="status-<?php echo $serviceType->id; ?>" id="status-<?php echo $serviceType->id; ?>-on-progress" style="display: none">
         <h3>On-Progress</h3>
         <table>
             <thead>
@@ -132,7 +139,7 @@
         </table>
     </div>
     
-    <div>
+    <div class="status-<?php echo $serviceType->id; ?>" id="status-<?php echo $serviceType->id; ?>-ready-to-qc" style="display: none">
         <h3>Ready to QC</h3>
         <table>
             <thead>
@@ -176,7 +183,7 @@
         </table>
     </div>
     
-    <div>
+    <div class="status-<?php echo $serviceType->id; ?>" id="status-<?php echo $serviceType->id; ?>-finished" style="display: none">
         <h3>Finished</h3>
         <table>
             <thead>

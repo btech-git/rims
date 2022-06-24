@@ -46,7 +46,7 @@ class LoginController extends Controller
     private function attendance()
     {
         $userData = User::model()->notsafe()->findByPk(Yii::app()->user->id);
-        //echo $userData->id;
+        echo $userData->id;
         $attendance = EmployeeAttendance::model()->findbyAttributes(array(
             'user_id' => Yii::app()->user->id,
             'date' => date('y-m-d')

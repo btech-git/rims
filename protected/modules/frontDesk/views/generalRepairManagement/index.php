@@ -92,3 +92,11 @@ Yii::app()->clientScript->registerScript('search', "
         </div>
     </div>
 </div>
+
+<script>
+    $('.status-link').click(function(e) {
+        e.preventDefault();
+        $('.status-' + $(this).attr('data-processing-id')).hide();
+        $('#status-' + $(this).attr('data-processing-id') + '-' + $(this).attr('data-status-type')).show();
+    });
+</script>

@@ -3,9 +3,6 @@ Yii::app()->clientScript->registerScript('report', '
 
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $generalLedgerSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($generalLedgerSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
-    $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>

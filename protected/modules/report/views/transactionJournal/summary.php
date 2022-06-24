@@ -19,16 +19,11 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                                 <div class="small-8 columns">
                                     <?php echo CHtml::dropDownlist('CompanyId', $companyId, CHtml::listData(Company::model()->findAllByAttributes(array('is_deleted' => 0)), 'id', 'name'), array('empty' => '-- All Company --',
-                                        'onchange' => 'jQuery.ajax({
-                                            type: "POST",
-                                            url: "' . CController::createUrl('ajaxGetBranch') . '",
-                                            data: jQuery("form").serialize(),
-                                            success: function(data){
-                                                console.log(data);
-                                                jQuery("#branch").html(data);
-
-                                            },
-                                        });'
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateBranchSelect'),
+                                            'update' => '#branch',
+                                        ))
                                     )); ?>
                                 </div>
                             </div>
@@ -96,20 +91,11 @@ Yii::app()->clientScript->registerScript('report', '
                     </div>
                     
                     <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch </span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <?php if ($companyId == ""): ?>
-                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    <?php else: ?>
-                                        <?php echo CHtml::activeDropDownlist($jurnalUmum, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active', 'company_id' => $company)), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                        <div id="branch">
+                            <?php $this->renderPartial('_branchSelect', array(
+                                'companyId' => $companyId,
+                                'branchId' => $branchId,
+                            )); ?>
                         </div>
                         
                         <div class="field">
