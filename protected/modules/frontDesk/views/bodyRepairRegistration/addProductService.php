@@ -117,7 +117,7 @@ $this->breadcrumbs=array(
                                                 'onchange' => CHtml::ajax(array(
                                                     'type' => 'POST',
                                                     'dataType' => 'JSON',
-                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)),
+                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $bodyRepairRegistration->header->id)),
                                                     'success' => 'function(data) {
                                                         $("#grand_total_transaction").html(data.grandTotal);
                                                         $("#tax_item_amount").html(data.taxItemAmount);
