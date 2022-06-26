@@ -17,7 +17,7 @@ class PayableLedgerSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 9000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 90000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 

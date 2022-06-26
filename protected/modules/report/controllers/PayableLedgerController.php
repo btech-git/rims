@@ -31,7 +31,7 @@ class PayableLedgerController extends Controller {
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $supplierName = (isset($_GET['SupplierName'])) ? $_GET['SupplierName'] : '';
 
-        $payableLedgerSummary = new PayableLedgerSummary($supplier->search());
+        $payableLedgerSummary = new PayableLedgerSummary($supplier->searchByPayable($startDate));
         $payableLedgerSummary->setupLoading();
         $payableLedgerSummary->setupPaging($pageSize, $currentPage);
         $payableLedgerSummary->setupSorting();

@@ -223,6 +223,53 @@ class Supplier extends CActiveRecord {
         ));
     }
 
+    public function searchByPayable($startDate) {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("EXISTS (
+            SELECT COALESCE(SUM(payment_left), 0) AS beginning_balance 
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE t.id = supplier_id AND purchase_order_date < :start_date
+            GROUP BY supplier_id
+            HAVING SUM(payment_left) > 0
+        )");
+        
+        $criteria->params = array(
+            ':start_date' => $startDate
+        );
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.date', $this->date, true);
+        $criteria->compare('.code', $this->code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.company', $this->company, true);
+        $criteria->compare('t.position', $this->position, true);
+        $criteria->compare('t.address', $this->address, true);
+        $criteria->compare('t.province_id', $this->province_id);
+        $criteria->compare('t.city_id', $this->city_id);
+        $criteria->compare('t.zipcode', $this->zipcode, true);
+        $criteria->compare('t.email_personal', $this->email_personal, true);
+        $criteria->compare('email_company', $this->email_company, true);
+        $criteria->compare('npwp', $this->npwp, true);
+        $criteria->compare('tenor', $this->tenor);
+        $criteria->compare('company_attribute', $this->company_attribute, true);
+        $criteria->compare('t.coa_id', $this->coa_id);
+        $criteria->compare('t.coa_outstanding_order', $this->coa_outstanding_order);
+        $criteria->compare('t.description', $this->description);
+        $criteria->compare('person_in_charge', $this->person_in_charge);
+        $criteria->compare('phone', $this->phone);
+        $criteria->compare('mobile_phone', $this->mobile_phone);
+        $criteria->compare('t.is_approved', 1);
+        $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!

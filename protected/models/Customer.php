@@ -207,10 +207,22 @@ class Customer extends CActiveRecord {
         ));
     }
 
-    public function searchByReceivable() {
+    public function searchByReceivable($startDate) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+
+        $criteria->addCondition("EXISTS (
+            SELECT COALESCE(SUM(payment_left), 0) AS beginning_balance 
+            FROM " . InvoiceHeader::model()->tableName() . " 
+            WHERE t.id = customer_id AND invoice_date < :start_date
+            GROUP BY customer_id
+            HAVING SUM(payment_left) > 0
+        )");
+        
+        $criteria->params = array(
+            ':start_date' => $startDate
+        );
 
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.name', $this->name, true);
@@ -230,21 +242,9 @@ class Customer extends CActiveRecord {
         $criteria->compare('mobile_phone', $this->mobile_phone, true);
         $criteria->compare('phone', $this->phone, true);
         $criteria->compare('t.coa_id', $this->coa_id);
-        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.is_approved', 1);
         $criteria->compare('t.date_approval', $this->date_approval);
         $criteria->compare('t.user_id', $this->user_id);
-
-        $criteria->together = 'true';
-        $criteria->with = array('province', 'city', 'vehicles', 'coa');
-        $criteria->compare('province.name', $this->province_name, true);
-        $criteria->compare('city.name', $this->city_name, true);
-        $criteria->compare('coa.name', $this->coa_name, true);
-        $criteria->compare('coa.code', $this->coa_code, true);
-
-        if ($this->plate_number != NULL) {
-            $criteria->with = array('vehicles' => array('together' => true));
-            $criteria->compare('vehicles.plate_number', $this->plate_number, true);
-        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
