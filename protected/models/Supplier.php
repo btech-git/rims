@@ -262,7 +262,7 @@ class Supplier extends CActiveRecord {
             FROM " . TransactionPurchaseOrder::model()->tableName() . "
             WHERE supplier_id = :supplier_id AND purchase_order_date < :start_date
             GROUP BY supplier_id
-            HAVING beginning_balance > 0
+            HAVING SUM(payment_left) > 0
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(

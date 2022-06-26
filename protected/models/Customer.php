@@ -300,7 +300,7 @@ class Customer extends CActiveRecord {
             FROM " . InvoiceHeader::model()->tableName() . "
             WHERE customer_id = :customer_id AND invoice_date < :start_date
             GROUP BY customer_id
-            HAVING beginning_balance > 0
+            HAVING SUM(payment_left) > 0
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
