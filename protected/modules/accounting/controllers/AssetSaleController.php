@@ -163,11 +163,12 @@ class AssetSaleController extends Controller {
 
         if (isset($_POST['AssetSale'])) {
             $model->attributes = $_POST['AssetSale'];
-            if ($model->save()) {
-                JurnalUmum::model()->deleteAllByAttributes(array(
-                    'kode_transaksi' => $model->transaction_number,
-                ));
+            
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->transaction_number,
+            ));
 
+            if ($model->save()) {
                 $jurnalSale = new JurnalUmum;
                 $jurnalSale->kode_transaksi = $model->transaction_number;
                 $jurnalSale->tanggal_transaksi = $model->transaction_date;
