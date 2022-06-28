@@ -21,6 +21,15 @@
                     <?php if (!empty($coa->coaIds)): ?> 
                         <?php foreach ($coa->coaIds as $account): ?>
                             <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
+                                <tr>
+                                    <td style="padding-left: 75px; font-size: 10px">
+                                        <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
+                                    </td>
+                                    <td style="text-align: right; font-size: 10px">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?>
+                                    </td>
+                                </tr>
                             <?php $accountGroupBalance += $accountBalance; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
