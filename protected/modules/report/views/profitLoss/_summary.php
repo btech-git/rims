@@ -12,9 +12,23 @@
     <?php $profitLossAmount = 0.00; ?>
     <?php foreach ($accountCategoryTypes as $accountCategoryType): ?>
 	<?php $accountCategoryTypeBalance = 0.00; ?>
+        <tr>
+            <td style="font-size: larger; font-weight: bold; text-transform: uppercase">
+                <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'code')); ?> - 
+                <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
+            </td>
+            <td></td>
+        </tr>
 	<?php $coaSubCategories = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code ASC')); ?> 
         <?php foreach ($coaSubCategories as $accountCategory): ?>
             <?php $accountCategoryBalance = 0.00; ?>
+            <tr>
+                <td style="padding-left: 25px; font-weight: bold; text-transform: capitalize; font-size: 14px;">
+                    <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
+                </td>
+                <td style="text-align: right; font-weight: bold"></td>
+            </tr>
             <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $coa): ?>
                     <?php $accountGroupBalance = 0.00; ?>
@@ -29,8 +43,7 @@
         
             <tr>
                 <td style="font-weight: bold">
-                    <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
+                    TOTAL <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                 </td>
                 
                 <td style="text-align: right; font-weight: bold">
@@ -49,8 +62,7 @@
         </tr>
         <tr>
             <td style="font-weight: bold; border-top: 1px solid; text-transform: uppercase">
-                <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'code')); ?> - 
-                <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
+                TOTAL <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
             </td>
             
             <td style="text-align: right; font-weight: bold; border-top: 1px solid">
