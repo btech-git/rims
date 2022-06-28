@@ -48,7 +48,6 @@
                                 'changeYear'=>true,
                             ),
                             'htmlOptions'=>array(
-                                'value'=>date('Y-m-d'),
                                 'readonly' => true,
                             ),
                         )); ?>

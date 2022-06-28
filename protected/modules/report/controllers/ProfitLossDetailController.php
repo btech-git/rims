@@ -28,8 +28,8 @@ class ProfitLossDetailController extends Controller {
 
         $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
-//        if (isset($_GET['SaveExcel']))
-//            $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
+        if (isset($_GET['SaveExcel']))
+            $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
 
         $this->render('summary', array(
             'accountCategoryTypes' => $accountCategoryTypes,
