@@ -55,7 +55,7 @@
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="font-weight: bold; border-top: 1px solid; text-transform: uppercase">
+            <td style="text-align: right; font-weight: bold; border-top: 1px solid; text-transform: uppercase">
                 TOTAL <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
             </td>
             
