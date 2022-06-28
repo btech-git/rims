@@ -74,7 +74,7 @@
                 <tr class="items1">
                     <td class="width1-1" style="text-align: center"><?php echo CHtml::encode(++$index); ?></td>
                     <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
-                    <td class="width1-3"><?php echo CHtml::link($header->kode_transaksi, Yii::app()->createUrl("accounting/jurnalUmum/redirectTransaction", array("codeNumber" => $header->kode_transaksi)), array('target' => '_blank')); ?></td>
+                    <td class="width1-3"><?php echo CHtml::link($header->kode_transaksi, Yii::app()->createUrl("report/transactionJournal/redirectTransaction", array("codeNumber" => $header->kode_transaksi)), array('target' => '_blank')); ?></td>
                     <td colspan="2" style="text-align: center"><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
                 </tr>
             <?php endif; ?>

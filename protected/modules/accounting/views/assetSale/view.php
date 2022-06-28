@@ -53,6 +53,14 @@ $this->menu=array(
             'label' => 'Nilai Jual',
             'value' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'sale_price'))),
         ),
+        array(
+            'label' => 'Bank',
+            'value' => $model->companyBank->bank->name,
+        ),
+        array(
+            'label' => 'Coa Bank',
+            'value' => $model->companyBank->coa->name,
+        ),
         'note',
         'user.username',
     ),

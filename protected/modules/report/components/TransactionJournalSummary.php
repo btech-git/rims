@@ -43,7 +43,7 @@ class TransactionJournalSummary extends CComponent {
         if (!empty($branchId) && empty($companyId) || !empty($branchId) && !empty($companyId)) {
             $this->dataProvider->criteria->addColumnCondition(array('t.branch_id' => $branchId));
         } else if (empty($branchId) && !empty($companyId)) {
-            $this->dataProvider->criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . CompanyBranch::model()->tableName() . " WHERE company_id = :company_id)");
+            $this->dataProvider->criteria->addCondition("t.branch_id IN (SELECT id FROM " . Branch::model()->tableName() . " WHERE company_id = :company_id)");
             $this->dataProvider->criteria->params[':company_id'] = $companyId;
         }
     }

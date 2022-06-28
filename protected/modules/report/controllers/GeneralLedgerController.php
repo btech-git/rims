@@ -259,6 +259,9 @@ class GeneralLedgerController extends Controller {
         } else if ($codeNumberConstant === 'MO') {
             $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
             $this->redirect(array('/transaction/movementOutHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'MI') {
+            $model = MovementInHeader::model()->findByAttributes(array('movement_in_number' => $codeNumber));
+            $this->redirect(array('/transaction/movementInHeader/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'Pin') {
             $model = PaymentIn::model()->findByAttributes(array('payment_number' => $codeNumber));
             $this->redirect(array('/transaction/paymentIn/view', 'id' => $model->id));
@@ -274,6 +277,21 @@ class GeneralLedgerController extends Controller {
         } else if ($codeNumberConstant === 'SR') {
             $model = TransactionSentRequest::model()->findByAttributes(array('sent_request_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionSentRequest/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'JAD') {
+            $model = JournalAdjustmentHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/accounting/journalAdjustment/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'SA') {
+            $model = StockAdjustmentHeader::model()->findByAttributes(array('stock_adjustment_number' => $codeNumber));
+            $this->redirect(array('/frontDest/adjustment/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'DAS') {
+            $model = AssetDepreciation::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/accounting/assetDepreciation/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'SAS') {
+            $model = AssetSale::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/accounting/assetSale/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'PAS') {
+            $model = AssetPurchase::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/accounting/assetPurchase/view', 'id' => $model->id));
         }
     }
 
