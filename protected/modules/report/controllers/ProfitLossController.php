@@ -132,8 +132,8 @@ class ProfitLossController extends Controller {
             ->setAutoSize(true);
         }
 
-        header('Content-Type: application/xlsx');
-        header('Content-Disposition: attachment;filename="Laporan Profit Loss Induk.xlsx"');
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment;filename="Laporan Profit Loss Induk.csv"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
