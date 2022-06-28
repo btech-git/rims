@@ -48,7 +48,7 @@
                             </td>
                             <td></td>
                         </tr>
-                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 't.code ASC')); ?> 
+                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 't.name ASC')); ?> 
                         <?php foreach ($coas as $coa): ?>
                             <?php $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId); ?>
                             <?php if ((int) $accountGroupBalance !== 0): ?>
