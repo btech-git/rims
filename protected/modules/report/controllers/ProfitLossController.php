@@ -132,9 +132,11 @@ class ProfitLossController extends Controller {
             ->setAutoSize(true);
         }
 
+        ob_end_clean();
         header('Content-Type: application/xlsx');
         header('Content-Disposition: attachment;filename="Laporan Profit Loss Induk.xlsx"');
         header('Cache-Control: max-age=0');
+        ob_end_clean();
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
