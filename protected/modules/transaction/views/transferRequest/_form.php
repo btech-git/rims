@@ -330,28 +330,23 @@
                     'name',
                     'manufacturer_code',
                     array(
-                        'header' => 'Kategori',
-                        'value' => '$data->masterSubCategoryCode'
+                        'name'=>'product_brand_name', 
+                        'value'=>'empty($data->brand_id) ? "" : $data->brand->name'
                     ),
                     array(
-                        'name' => 'product_brand_name',
-                        'header' => 'Brand',
-                        'value' => '$data->brand->name'
+                        'header' => 'Sub Brand', 
+                        'name' => 'product_sub_brand_name', 
+                        'value' => 'empty($data->sub_brand_id) ? "" : $data->subBrand->name'
                     ),
                     array(
-                        'name' => 'product_sub_brand_name',
-                        'header' => 'Sub Brand',
-                        'value' => 'empty($data->subBrand) ? "" : $data->subBrand->name'
+                        'header' => 'Sub Brand Series', 
+                        'name' => 'product_sub_brand_series_name', 
+                        'value' => 'empty($data->sub_brand_series_id) ? "" : $data->subBrandSeries->name'
                     ),
+                    'masterSubCategoryCode: Kategori',
                     array(
-                        'name' => 'product_sub_brand_series_name',
-                        'header' => 'Sub Brand Series',
-                        'value' => 'empty($data->subBrandSeries) ? "" : $data->subBrandSeries->name'
-                    ),
-                    array(
-                        'name' => 'unit_id',
-                        'header' => 'Unit',
-                        'value' => '$data->unit->name'
+                        'name'=>'unit_id', 
+                        'value'=>'empty($data->unit_id) ? "" : $data->unit->name'
                     ),
                 ),
             ));	?>

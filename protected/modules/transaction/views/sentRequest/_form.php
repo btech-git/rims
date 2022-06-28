@@ -114,11 +114,25 @@
     'columns' => array(
         'name',
         'manufacturer_code',
-        'productMasterCategory.name: Kategori',
-        'productSubMasterCategory.name: Sub Master Kategori',
-        'productSubCategory.name: Sub Kategori',
-        'production_year',
-        'brand.name: Merk',
+        array(
+            'name'=>'product_brand_name', 
+            'value'=>'empty($data->brand_id) ? "" : $data->brand->name'
+        ),
+        array(
+            'header' => 'Sub Brand', 
+            'name' => 'product_sub_brand_name', 
+            'value' => 'empty($data->sub_brand_id) ? "" : $data->subBrand->name'
+        ),
+        array(
+            'header' => 'Sub Brand Series', 
+            'name' => 'product_sub_brand_series_name', 
+            'value' => 'empty($data->sub_brand_series_id) ? "" : $data->subBrandSeries->name'
+        ),
+        'masterSubCategoryCode: Kategori',
+        array(
+            'name'=>'unit_id', 
+            'value'=>'empty($data->unit_id) ? "" : $data->unit->name'
+        ),
     ),
 ));	?>
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
