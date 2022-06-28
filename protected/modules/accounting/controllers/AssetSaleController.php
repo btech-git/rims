@@ -163,8 +163,80 @@ class AssetSaleController extends Controller {
 
         if (isset($_POST['AssetSale'])) {
             $model->attributes = $_POST['AssetSale'];
-            if ($model->save())
+            if ($model->save()) {
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $model->transaction_number,
+                ));
+
+                $jurnalSale = new JurnalUmum;
+                $jurnalSale->kode_transaksi = $model->transaction_number;
+                $jurnalSale->tanggal_transaksi = $model->transaction_date;
+                $jurnalSale->coa_id = $model->companyBank->coa_id;
+                $jurnalSale->branch_id = 6;
+                $jurnalSale->total = $model->sale_price;
+                $jurnalSale->debet_kredit = 'D';
+                $jurnalSale->tanggal_posting = date('Y-m-d');
+                $jurnalSale->transaction_subject = 'Penjualan Aset Tetap';
+                $jurnalSale->is_coa_category = 0;
+                $jurnalSale->transaction_type = 'SFA';
+                $jurnalSale->save();
+
+                $jurnalAccumulation = new JurnalUmum;
+                $jurnalAccumulation->kode_transaksi = $model->transaction_number;
+                $jurnalAccumulation->tanggal_transaksi = $model->transaction_date;
+                $jurnalAccumulation->coa_id = $model->assetPurchase->assetCategory->coa_accumulation_id;
+                $jurnalAccumulation->branch_id = 6;
+                $jurnalAccumulation->total = $model->assetPurchase->accumulated_depreciation_value;
+                $jurnalAccumulation->debet_kredit = 'D';
+                $jurnalAccumulation->tanggal_posting = date('Y-m-d');
+                $jurnalAccumulation->transaction_subject = 'Penjualan Aset Tetap';
+                $jurnalAccumulation->is_coa_category = 0;
+                $jurnalAccumulation->transaction_type = 'SFA';
+                $jurnalAccumulation->save();
+
+                if ($model->sale_price > $model->assetPurchase->purchase_value) {
+                    $jurnalOtherIncome = new JurnalUmum;
+                    $jurnalOtherIncome->kode_transaksi = $model->transaction_number;
+                    $jurnalOtherIncome->tanggal_transaksi = $model->transaction_date;
+                    $jurnalOtherIncome->coa_id = 796;
+                    $jurnalOtherIncome->branch_id = 6;
+                    $jurnalOtherIncome->total = $model->sale_price + $model->assetPurchase->accumulated_depreciation_value - $model->assetPurchase->purchase_value;
+                    $jurnalOtherIncome->debet_kredit = 'K';
+                    $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
+                    $jurnalOtherIncome->transaction_subject = 'Penjualan Aset Tetap';
+                    $jurnalOtherIncome->is_coa_category = 0;
+                    $jurnalOtherIncome->transaction_type = 'SFA';
+                    $jurnalOtherIncome->save();
+                } else {
+                    $jurnalOtherIncome = new JurnalUmum;
+                    $jurnalOtherIncome->kode_transaksi = $model->transaction_number;
+                    $jurnalOtherIncome->tanggal_transaksi = $model->transaction_date;
+                    $jurnalOtherIncome->coa_id = 1491;
+                    $jurnalOtherIncome->branch_id = 6;
+                    $jurnalOtherIncome->total = $model->assetPurchase->purchase_value - $model->sale_price + $model->assetPurchase->accumulated_depreciation_value;
+                    $jurnalOtherIncome->debet_kredit = 'D';
+                    $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
+                    $jurnalOtherIncome->transaction_subject = 'Penjualan Aset Tetap';
+                    $jurnalOtherIncome->is_coa_category = 0;
+                    $jurnalOtherIncome->transaction_type = 'SFA';
+                    $jurnalOtherIncome->save();
+                }
+
+                $jurnalInventory = new JurnalUmum;
+                $jurnalInventory->kode_transaksi = $model->transaction_number;
+                $jurnalInventory->tanggal_transaksi = $model->transaction_date;
+                $jurnalInventory->coa_id = $model->assetPurchase->assetCategory->coa_inventory_id;
+                $jurnalInventory->branch_id = 6;
+                $jurnalInventory->total = $model->assetPurchase->purchase_value;
+                $jurnalInventory->debet_kredit = 'K';
+                $jurnalInventory->tanggal_posting = date('Y-m-d');
+                $jurnalInventory->transaction_subject = 'Penjualan Aset Tetap';
+                $jurnalInventory->is_coa_category = 0;
+                $jurnalInventory->transaction_type = 'SFA';
+                $jurnalInventory->save();
+
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
