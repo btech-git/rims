@@ -33,7 +33,7 @@
                     <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                 </td>
                 
-                <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+                <td style="text-align: right; font-weight: bold">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
                 </td>
             </tr>
