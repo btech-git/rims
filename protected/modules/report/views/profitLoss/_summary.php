@@ -25,12 +25,10 @@
             <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $coa): ?>
                 <?php $accountGroupBalance = 0.00; ?>
-                <?php if (!empty($coa->coaIds)): ?> 
-                    <?php foreach ($coa->coaIds as $account): ?>
-                        <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
-                        <?php $accountGroupBalance += $accountBalance; ?>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <?php foreach ($coa->coaIds as $account): ?>
+                    <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
+                    <?php $accountGroupBalance += $accountBalance; ?>
+                <?php endforeach; ?>
                 <?php $accountCategoryBalance += $accountGroupBalance; ?>
             <?php endforeach; ?>
         
