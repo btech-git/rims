@@ -1,52 +1,87 @@
-<style>
-    .account {
-        font-size: 8pt;
-    }
-
-    .summary td {
-        border-top: 1px solid;
-        font-weight: bold;
-    }
-
-    .number {
-        text-align: right;
-    }
-</style>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">LAPORAN LABA / RUGI</div>
-</div> 
+    <?php $branch = Branch::model()->findByPk($branchId); ?>
+    <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
+    <div style="font-size: larger">Laporan Profit/Loss Induk</div>
+    <div><?php echo ' Periode: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+</div>
 
 <br />
-<br />
 
-<table style="margin: 0 auto; width: 70%; font-size: larger">
-    <?php $profitLossGross = 0.00; ?>
-    <?php $profitLossNet = 0.00; ?>
-    <?php foreach ($rows as $row): ?>
-        <?php if ((int)$row['id'] === 29): ?>
-            <tr class="summary">
-                <td class="">LABA / RUGI KOTOR</td>
-                <td class="number">
-                    <?php echo Yii::app()->numberFormatter->format('#,##0.00', $profitLossGross); ?>
+<table style="width: 60%; margin: 0 auto; border-spacing: 0pt">
+    <?php $profitLossAmount = 0.00; ?>
+    <?php foreach ($accountCategoryTypes as $accountCategoryType): ?>
+	<?php $accountCategoryTypeBalance = 0.00; ?>
+        <tr>
+            <td style="font-size: larger; font-weight: bold; text-transform: uppercase">
+                <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'code')); ?> - 
+                <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
+            </td>
+            <td></td>
+        </tr>
+	<?php $coaSubCategories = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code ASC')); ?> 
+        <?php foreach ($coaSubCategories as $accountCategory): ?>
+            <?php $accountCategoryBalance = 0.00; ?>
+            <tr>
+                <td style="padding-left: 25px; font-weight: bold; text-transform: capitalize; font-size: 14px;">
+                    <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
+                </td>
+                <td style="text-align: right; font-weight: bold"></td>
+            </tr>
+            
+            <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC')); ?> 
+            <?php foreach ($coas as $coa): ?>
+                    <?php $accountGroupBalance = 0.00; ?>
+                    <?php if (!empty($coa->coaIds)): ?> 
+                        <?php foreach ($coa->coaIds as $account): ?>
+                            <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
+                            <?php $accountGroupBalance += $accountBalance; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    <?php $accountCategoryBalance += $accountGroupBalance; ?>
+            <?php endforeach; ?>
+        
+            <tr>
+                <td style="text-align: right; font-weight: bold">
+                    TOTAL
+                    <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
+                </td>
+                
+                <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
                 </td>
             </tr>
-        <?php endif; ?>
+            <?php if ((int)$accountCategory->id === 28 || (int)$accountCategory->id === 30 || (int)$accountCategory->id === 31): ?>
+                <?php $accountCategoryTypeBalance -= $accountCategoryBalance; ?>
+            <?php else: ?>
+                <?php $accountCategoryTypeBalance += $accountCategoryBalance; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
         <tr>
-            <td><?php echo $row['name']; ?></td>       
-            <td class="number">
-                <?php echo Yii::app()->numberFormatter->format('#,##0.00', abs($row['amount'])); ?>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="text-align: right; font-weight: bold; border-top: 1px solid; text-transform: uppercase">
+                TOTAL 
+                <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
+            </td>
+            
+            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryTypeBalance)); ?>
             </td>
         </tr>
-        <?php if ((int)$row['id'] === 26 || (int)$row['id'] === 28): ?>
-            <?php $profitLossGross += $row['amount']; ?>
+        <?php if ($accountCategoryType->id == 7 || $accountCategoryType->id == 8 || $accountCategoryType->id == 10): ?>
+            <?php $profitLossAmount -= $accountCategoryTypeBalance; ?>
+        <?php else: ?>
+            <?php $profitLossAmount += $accountCategoryTypeBalance; ?>
         <?php endif; ?>
-        <?php $profitLossNet += $row['amount']; ?>
     <?php endforeach; ?>
-        <tr class="summary">
-            <td class="">LABA / RUGI BERSIH</td>
-            <td class="number">
-                <?php echo Yii::app()->numberFormatter->format('#,##0.00', $profitLossNet); ?>
-            </td>
-        </tr>
+    <tr>
+        <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
+        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossAmount)); ?>
+        </td>
+    </tr>
 </table>
