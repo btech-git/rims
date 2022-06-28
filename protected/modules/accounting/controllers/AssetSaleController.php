@@ -119,7 +119,7 @@ class AssetSaleController extends Controller {
                     $jurnalOtherIncome->tanggal_transaksi = $model->transaction_date;
                     $jurnalOtherIncome->coa_id = 1491;
                     $jurnalOtherIncome->branch_id = 6;
-                    $jurnalOtherIncome->total = $model->sale_price + $model->assetPurchase->accumulated_depreciation_value - $model->assetPurchase->purchase_value;
+                    $jurnalOtherIncome->total = $model->assetPurchase->purchase_value - $model->sale_price + $model->assetPurchase->accumulated_depreciation_value;
                     $jurnalOtherIncome->debet_kredit = 'D';
                     $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
                     $jurnalOtherIncome->transaction_subject = 'Penjualan Aset Tetap';
