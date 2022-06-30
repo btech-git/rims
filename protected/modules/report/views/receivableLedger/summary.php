@@ -25,22 +25,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <span class="prefix">Customer</span>
+                                    <div class="small-4 columns">
+                                        <span class="prefix">COA </span>
                                     </div>
-                                    
-                                    <div class="small-5 columns">
-                                        <?php echo CHtml::textField('CustomerName', $customerName, array(
-//                                            'readonly' => true, 
-//                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;', 
-//                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
-                                        )); ?>
-                                    </div>
-                                    
-                                    <div class="small-5 columns">
-                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CoaId', $coaId, CHtml::listData(Coa::model()->findAllbyAttributes(array('is_approved' => 1, 'coa_sub_category_id' => 8), array('order' => 't.code ASC')), 'id', 'codeName'), array('empty' => '-- All COA --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +93,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'receivableLedgerSummary' => $receivableLedgerSummary,
-                        'customer' => $customer,
+                        'account' => $account,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>
@@ -113,56 +103,4 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             </div>
         </div>
     </div>
-</div>
-
-<div>
-    <?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'customer-dialog',
-        // additional javascript options for the dialog plugin
-        'options' => array(
-            'title' => 'Customer',
-            'autoOpen' => false,
-            'width' => 'auto',
-            'modal' => true,
-        ),
-    )); ?>
-    
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'customer-grid',
-        'dataProvider' => $customerDataProvider,
-        'filter' => $customer,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
-        'selectionChanged' => 'js:function(id) {
-            $("#' . CHtml::activeId($customer, 'id') . '").val($.fn.yiiGridView.getSelection(id));
-            $("#customer-dialog").dialog("close");
-            if ($.fn.yiiGridView.getSelection(id) == "") {
-                $("#customer_type").html("");
-                $("#customer_name").html("");
-                $("#customer_address").html("");
-
-            } else {
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonCustomer') . '",
-                    data: $("form").serialize(),
-                    success: function(data) {
-                        $("#customer_type").html(data.customer_type);
-                        $("#customer_name").html(data.customer_name);
-                        $("#customer_address").html(data.customer_address);
-                    },
-                });
-            }
-        }',
-        'columns' => array(
-            'name',
-            'customer_type',
-            'address',
-        ),
-    )); ?>
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

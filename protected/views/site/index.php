@@ -99,7 +99,7 @@
     <div style="font-size:30px">Raperind Information Management System (RIMS) Dashboard</div>
     <br /><br/>
     
-<!--    <table>
+    <table>
         <thead>
             <tr>
                 <th colspan="9" style="text-align: center; font-weight: bold; font-size: 14px">New Transactions</th>
@@ -109,7 +109,7 @@
         <tbody>
             <tr>
                 <td style="text-align: center; font-weight: bold; font-size: 12px">
-                    <?php /*echo CHtml::link('Request', array('/transaction/transactionRequestOrder/admin'), array('target' => '_blank')); ?>
+                    <?php echo CHtml::link('Request', array('/transaction/transactionRequestOrder/admin'), array('target' => '_blank')); ?>
                 </td>
                 <td style="text-align: center; font-weight: bold; font-size: 12px">
                     <?php echo CHtml::link('Purchase', array('/transaction/transactionPurchaseOrder/admin'), array('target' => '_blank')); ?>
@@ -183,7 +183,7 @@
                 </td>
                 
                 <td style="font-weight: bold; text-align: center">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayables));*/ ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayables)); ?>
                 </td>
             </tr>
         </table>
@@ -204,6 +204,6 @@
                 <div class="completed-right" id="income_expense_chart_div" style="width: 100%; height: 300px;"></div>
             </td>
         </tr>
-    </table>-->
+    </table>
     
 </div>

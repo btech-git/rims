@@ -265,6 +265,11 @@
                         'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
                     ),
                     array(
+                        'label' => 'Nilai Persediaan Barang', 
+                        'url' => array('/report/inventoryValue/summary'), 
+                        'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
+                    ),
+                    array(
                         'label' => 'Analisa Stok Barang', 
                         'url' => array('/report/stockAnalysis/summary'), 
                         'visible' => (Yii::app()->user->checkAccess('stockAnalysisReport'))

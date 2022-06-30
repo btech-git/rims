@@ -126,7 +126,7 @@ class ProfitLossController extends Controller {
         $worksheet->setCellValue("A{$counter}", 'PROFIT / LOSS ');
         $worksheet->setCellValue("C{$counter}", CHtml::encode($profitLossAmount));
 
-        for ($col = 'A'; $col !== 'C'; $col++) {
+        for ($col = 'A'; $col !== 'E'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

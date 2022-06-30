@@ -651,6 +651,109 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
+    public function searchByReceivable() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("EXISTS (
+            SELECT j.coa_id, SUM(j.debet) - SUM(j.credit) as balance
+            FROM (
+                SELECT coa_id, SUM(total) as debet, 0 AS credit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG')
+                GROUP BY coa_id
+                UNION
+                SELECT coa_id, 0 as debet, SUM(total) AS credit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
+                GROUP BY coa_id
+            ) j
+            WHERE t.id = j.coa_id
+            GROUP BY j.coa_id
+            HAVING balance > 0
+        )");
+        
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.coa_category_id', $this->coa_category_id);
+        $criteria->compare('t.coa_sub_category_id', $this->coa_sub_category_id);
+        $criteria->compare('normal_balance', $this->normal_balance, true);
+        $criteria->compare('opening_balance', $this->opening_balance, true);
+        $criteria->compare('closing_balance', $this->closing_balance, true);
+        $criteria->compare('debit', $this->debit, true);
+        $criteria->compare('credit', $this->credit, true);
+        $criteria->compare('t.is_approved', 1);
+        $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.code ASC',
+            ),
+        ));
+    }
+
+    public function getReceivableBeginningBalance($startDate) {
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+        );
+        
+        $sql = "SELECT SUM(j.debet) - SUM(j.credit) as balance
+                FROM (
+                    SELECT coa_id, SUM(total) as debet, 0 AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    GROUP BY coa_id
+                    UNION
+                    SELECT coa_id, 0 as debet, SUM(total) AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    GROUP BY coa_id
+                ) j
+                WHERE j.coa_id = :coa_id
+                GROUP BY j.coa_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+        
+    }
+    
+    public function getReceivableLedgerReport($startDate, $endDate) {
+        
+        $sql = "SELECT kode_transaksi, tanggal_transaksi, transaction_type, remark, amount, sale_amount, payment_amount, customer
+                FROM (
+                    SELECT j.coa_id, SUM(total) AS amount, SUM(total) AS sale_amount, 0 AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS customer
+                    FROM " . JurnalUmum::model()->tableName() . " j
+                    INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'D'
+                    GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
+                    UNION
+                    SELECT j.coa_id, SUM(total) AS amount, 0 AS sale_amount, SUM(total) AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS customer
+                    FROM " . JurnalUmum::model()->tableName() . " j
+                    INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'K'
+                    GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
+                ) t
+                ORDER BY tanggal_transaksi ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':coa_id' => $this->id,
+        ));
+        
+        return $resultSet;
+    }
+    
+    public function getCodeName() {
+        return $this->code . ' - ' . $this->name;
+    }
+    
     public function getCombinationName() {
         return $this->code . ' - ' . $this->name . ' - ' . $this->coaCategory->name . ' - ' . $this->coaSubCategory->name;
     }

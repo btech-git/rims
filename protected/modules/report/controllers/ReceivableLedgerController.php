@@ -22,41 +22,28 @@ class ReceivableLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $customer = new Customer('search');
-//        $customer->unsetAttributes();  // clear any default values
-//        if (isset($_GET['Customer'])) {
-//            $customer->attributes = $_GET['Customer'];
-//        }
-//        $customerCriteria = new CDbCriteria;
-//        $customerCriteria->compare('t.name', $customer->name, true);
-//        $customerCriteria->compare('t.customer_type', $customer->customer_type, true);
-//        $customerDataProvider = new CActiveDataProvider('Customer', array(
-//            'criteria' => $customerCriteria,
-//            'sort' => array(
-//                "defaultOrder" => "t.status ASC, t.name ASC",
-//            ),
-//        ));
+        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
 
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
-        $receivableLedgerSummary = new ReceivableLedgerSummary($customer->searchByReceivable($startDate));
-        $receivableLedgerSummary->setupLoading();
+        $receivableLedgerSummary = new ReceivableLedgerSummary($account->searchByReceivable());
+        $receivableLedgerSummary->setupLoading($startDate, $endDate);
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
-        $filters = array(
-            'customerName' => $customerName,
-            'endDate' => $endDate,
-        );
-        $receivableLedgerSummary->setupFilter($filters);
+        $receivableLedgerSummary->setupFilter();
+
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($receivableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+        }
         
         $this->render('summary', array(
-            'customer' => $customer,
-            'customerName' => $customerName,
+            'account' => $account,
+            'coaId' => $coaId,
             'receivableLedgerSummary' => $receivableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
