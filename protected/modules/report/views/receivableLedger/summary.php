@@ -91,12 +91,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
-                    <?php /*$this->renderPartial('_summary', array(
+                    <?php $this->renderPartial('_summary', array(
                         'receivableLedgerSummary' => $receivableLedgerSummary,
                         'account' => $account,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
-                    ));*/ ?>
+                    )); ?>
                 </div>
                 
                 <div class="clear"></div>
