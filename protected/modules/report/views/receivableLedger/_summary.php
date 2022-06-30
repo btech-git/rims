@@ -41,7 +41,7 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <tbody>
             <?php foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
-                <?php $saldo = $header->getBeginningBalanceReceivable($startDate); ?>
+                <?php $saldo = 0; //$header->getBeginningBalanceReceivable($startDate); ?>
                 <?php //if ($saldo > 0.00): ?>
                     <tr class="items1">
                         <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
