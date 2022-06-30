@@ -59,7 +59,12 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $saleAmount = $receivableRow['sale_amount']; ?>
                         <?php $paymentAmount = $receivableRow['payment_amount']; ?>
                         <?php $amount = $receivableRow['amount']; ?>
-                        <?php $saldo += $amount; ?>
+                        <?php if ($receivableRow['transaction_type'] == 'D'): ?>
+                            <?php $saldo += $amount; ?>
+                        <?php else: ?>
+                            <?php $saldo -= $amount; ?>
+                        <?php endif; ?>
+                    
                         <tr class="items2">
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['tanggal_transaksi']))); ?></td>
                             <td><?php echo CHtml::encode($receivableRow['transaction_type']); ?></td>
