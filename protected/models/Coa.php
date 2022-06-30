@@ -706,15 +706,14 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG')
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
                     GROUP BY coa_id
                 ) j
-                WHERE j.coa_id = :coa_id
                 GROUP BY j.coa_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
