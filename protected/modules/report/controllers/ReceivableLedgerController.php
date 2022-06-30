@@ -31,7 +31,7 @@ class ReceivableLedgerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $receivableLedgerSummary = new ReceivableLedgerSummary($account->searchByReceivable());
+        $receivableLedgerSummary = new ReceivableLedgerSummary($account->search());
         $receivableLedgerSummary->setupLoading($startDate, $endDate);
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
