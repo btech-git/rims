@@ -40,7 +40,7 @@ Yii::app()->clientScript->registerCss('_report', '
         </thead>
         
         <tbody>
-            <?php foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
+            <?php /*foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
                 <?php $saldo = 0; //$header->getBeginningBalanceReceivable($startDate); ?>
                 <?php //if ($saldo > 0.00): ?>
                     <tr class="items1">
@@ -92,7 +92,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td colspan="6">&nbsp;</td>
                     </tr>
                 <?php //endif; ?>
-            <?php endforeach; ?>
+            <?php endforeach;*/ ?>
         </tbody>
     </table>
 </div>
