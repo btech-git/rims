@@ -696,7 +696,7 @@ class Coa extends CActiveRecord {
         ));
     }
 
-    public function getReceivableBeginningBalance($startDate) {
+    public function getBeginningBalanceReceivable($startDate) {
         $params = array(
             ':coa_id' => $this->id,
             ':start_date' => $startDate,
