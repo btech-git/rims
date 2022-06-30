@@ -99,7 +99,7 @@
                         </div>
                         <div class="small-8 columns">
                             <?php $color = Colors::model()->findByPK($model->vehicle->color_id); ?>
-                            <input type="text" readonly="true" value="<?php echo $color->name; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($color, 'name')); ?>"> 
                         </div>
                     </div>
                 </div>
