@@ -16,7 +16,7 @@ class ReceivableLedgerSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 30000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 25000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
