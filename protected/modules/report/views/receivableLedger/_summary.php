@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         </td>
                     </tr>
 
-                    <?php $receivableData = $header->getReceivableLedgerReport($startDate, $endDate); ?>
+                    <?php $receivableData = 0; //$header->getReceivableLedgerReport($startDate, $endDate); ?>
                     <?php $positiveAmount = 0; ?>
                     <?php $negativeAmount = 0; ?>
                     <?php foreach ($receivableData as $receivableRow): ?>
