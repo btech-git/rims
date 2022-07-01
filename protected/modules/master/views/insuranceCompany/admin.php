@@ -143,7 +143,7 @@ $('.search-form form').submit(function(){
 </div>
 
 <!--Price Dialog -->
-<?php$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+<?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'price-dialog',
     'options' => array(
         'title' => 'Price List',
