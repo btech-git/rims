@@ -323,7 +323,6 @@
                         array(
                             'label' => 'Permintaan Maintenance', 
                             'url' => array('/frontDesk/maintenanceRequest/admin'), 
-    //                        'visible' => (Yii::app()->user->checkAccess('maintenanceRequestCreate') || Yii::app()->user->checkAccess('maintenanceRequestEdit'))
                         ),
                     ),
                 )); ?>
@@ -433,16 +432,6 @@
                             'url' => array('/master/inspectionModule/admin'), 
                             'visible' => Yii::app()->user->checkAccess('masterInspectionModuleCreate') || Yii::app()->user->checkAccess('masterInspectionModuleEdit') || Yii::app()->user->checkAccess('masterInspectionModuleApproval')
                         ),
-                        /*array(
-                            'label' => 'Inspection Checklist Type', 
-                            'url' => array('/master/inspectionChecklistType/admin'), 
-                            'visible' => Yii::app()->user->checkAccess('master.inspectionChecklistType.admin')
-                        ),
-                        array(
-                            'label' => 'Inspection Checklist Module', 
-                            'url' => array('/master/inspectionChecklistModule/admin'), 
-                            'visible' => Yii::app()->user->checkAccess('masterInspectionModuleCreate') || Yii::app()->user->checkAccess('masterInspectionModuleEdit') || Yii::app()->user->checkAccess('masterInspectionModuleApproval')
-                        ),*/
                     ),
                 )); ?>
             </li>
@@ -534,13 +523,5 @@
                 )); ?>
             </li>
         <?php endif; ?>
-        <?php /*if (
-            Yii::app()->user->checkAccess('pendingTransactionView') || 
-            Yii::app()->user->checkAccess('orderOutstandingView') || 
-            Yii::app()->user->checkAccess('requestApprovalView') || 
-            Yii::app()->user->checkAccess('masterApprovalView')
-        ): ?>
-            <li>CRM</li>
-        <?php endif;*/ ?>
     </ul>
 </nav>
