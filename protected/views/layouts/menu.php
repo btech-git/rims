@@ -379,10 +379,7 @@
                     array('label' => 'Approval Kas Harian', 'url' => array('/accounting/cashDailySummary/summary'), 'visible' => Yii::app()->user->checkAccess('cashDailyApprovalReport')),
                     array('label' => 'Summary Kas Harian', 'url' => array('/accounting/cashDailySummary/admin'), 'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport')),
                     array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('financialForecastReport')),
-                    array('label' => 'Asset Category', 'url' => array('/master/assetCategory/admin')),
-                    array('label' => 'Pembelian Aset', 'url' => array('/accounting/assetPurchase/admin')),
-                    array('label' => 'Depresiasi Aset', 'url' => array('/accounting/assetDepreciation/admin')),
-                    array('label' => 'Penjualan Aset', 'url' => array('/accounting/assetSale/admin')),
+                    array('label' => 'Aset Management', 'url' => array('/accounting/assetManagement/admin')),
                 ),
             )); ?>
         </li>

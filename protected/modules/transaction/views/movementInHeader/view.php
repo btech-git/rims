@@ -78,7 +78,10 @@ $this->menu = array(
                 //'id',
                 'movement_in_number',
                 'date_posting',
-                array('name' => 'branch_id', 'value' => $model->branch_id == "" ? '-' : $model->branch->name),
+                array(
+                    'name' => 'branch_id', 
+                    'value' => $model->branch_id == "" ? '-' : $model->branch->name,
+                ),
                 //'branch_id',
                 //array('name'=>'movement_type', 'value'=>$model->movement_type == 1 ? 'Receive Item' : 'Return Item'),
                 //'movement_type',

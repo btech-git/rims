@@ -223,9 +223,14 @@
                             'url' => array('/master/paymentType/admin'), 
                             'visible' => Yii::app()->user->checkAccess('masterPaymentTypeCreate') || Yii::app()->user->checkAccess('masterPaymentTypeEdit') || Yii::app()->user->checkAccess('masterPaymentTypeApproval')
                         ),
+                        array(
+                            'label' => 'Asset Category', 
+                            'url' => array('/master/assetCategory/admin')
+                        ),
                     ),
                 )); ?>
             </li>
+                    
         <?php endif; ?>
             
         <?php if (

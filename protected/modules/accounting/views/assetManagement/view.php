@@ -16,8 +16,10 @@ $this->menu=array(
 );
 ?>
 
-<h1>View Asset Purchase #<?php echo $model->id; ?></h1>
+<h1>View Asset Management #<?php echo $model->id; ?></h1>
 
+<a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/assetManagement/admin';?>"><span class="fa fa-th-list"></span>Manage Asset</a>
+                        
 <?php $this->widget('zii.widgets.CDetailView', array(
     'data'=>$model,
     'attributes'=>array(
@@ -87,7 +89,7 @@ $this->menu=array(
             </thead>
 
             <tbody>
-                <?php $totalDebit = 0; $totalCredit = 0; ?>
+                <?php $totalDebit = 0; $totalCredit = 0; $count = 0; ?>
                 <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->transaction_number, 'is_coa_category' => 0)); ?>
                 <?php foreach ($transactions as $i => $header): ?>
 
@@ -95,7 +97,7 @@ $this->menu=array(
                     <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
 
                     <tr>
-                        <td style="text-align: center"><?php echo $i + 1; ?></td>
+                        <td style="text-align: center"><?php echo $count + 1; ?></td>
                         <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
                         <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
                         <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
@@ -104,8 +106,59 @@ $this->menu=array(
 
                     <?php $totalDebit += $amountDebit; ?>
                     <?php $totalCredit += $amountCredit; ?>
+                    <?php $count += 1; ?>
 
                 <?php endforeach; ?>
+                    
+                <?php if (!empty($model->assetDepreciations)): ?>
+                    <?php $depreciationTransactions = AssetDepreciation::model()->findAllByAttributes(array('asset_purchase_id' => $model->id)); ?>
+                    <?php foreach ($depreciationTransactions as $depreciationTransaction): ?>
+                        <?php $depreciationJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $depreciationTransaction->transaction_number, 'is_coa_category' => 0)); ?>
+                        <?php foreach ($depreciationJournals as $i => $depreciationJournal): ?>
+
+                            <?php $amountDebit = $depreciationJournal->debet_kredit == 'D' ? CHtml::value($depreciationJournal, 'total') : 0; ?>
+                            <?php $amountCredit = $depreciationJournal->debet_kredit == 'K' ? CHtml::value($depreciationJournal, 'total') : 0; ?>
+
+                            <tr>
+                                <td style="text-align: center"><?php echo $count + 1; ?></td>
+                                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($depreciationJournal, 'branchAccountCode')); ?></td>
+                                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($depreciationJournal, 'branchAccountName')); ?></td>
+                                <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
+                                <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
+                            </tr>
+
+                            <?php $totalDebit += $amountDebit; ?>
+                            <?php $totalCredit += $amountCredit; ?>
+                            <?php $count += 1; ?>
+
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                            
+                <?php if (!empty($model->assetSales)): ?>
+                    <?php $saleTransactions = AssetSale::model()->findAllByAttributes(array('asset_purchase_id' => $model->id)); ?>
+                    <?php foreach ($saleTransactions as $saleTransaction): ?>
+                        <?php $saleJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $saleTransaction->transaction_number, 'is_coa_category' => 0)); ?>
+                        <?php foreach ($saleJournals as $i => $saleJournal): ?>
+
+                            <?php $amountDebit = $saleJournal->debet_kredit == 'D' ? CHtml::value($saleJournal, 'total') : 0; ?>
+                            <?php $amountCredit = $saleJournal->debet_kredit == 'K' ? CHtml::value($saleJournal, 'total') : 0; ?>
+
+                            <tr>
+                                <td style="text-align: center"><?php echo $count + 1; ?></td>
+                                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($saleJournal, 'branchAccountCode')); ?></td>
+                                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($saleJournal, 'branchAccountName')); ?></td>
+                                <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
+                                <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
+                            </tr>
+
+                            <?php $totalDebit += $amountDebit; ?>
+                            <?php $totalCredit += $amountCredit; ?>
+                            <?php $count += 1; ?>
+
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
 
             <tfoot>
@@ -142,12 +195,12 @@ $this->menu=array(
                     </tr>
                 </tbody>
             <?php endforeach; ?>
-                <tfoot>
-                    <tr>
-                        <td colspan="3">Total</td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'totalDepreciationValue'))); ?></td>
-                    </tr>
-                </tfoot>
+            <tfoot>
+                <tr>
+                    <td colspan="3">Total</td>
+                    <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'totalDepreciationValue'))); ?></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 <?php endif; ?>

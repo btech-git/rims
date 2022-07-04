@@ -42,7 +42,7 @@ $('.search-form form').submit(function(){
             <div class="row">
                 <div class="small-12 columns">		
                     <div class="clearfix page-action">
-                        <?php if (Yii::app()->user->checkAccess("master.branch.create")) { ?>
+                        <?php if (Yii::app()->user->checkAccess("masterBranchCreate")) { ?>
                             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/branch/create'; ?>"><span class="fa fa-plus"></span>New Branch</a>
                         <?php } ?>
                         <h2>Manage Branch</h2>

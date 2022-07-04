@@ -20,16 +20,16 @@ $this->breadcrumbs = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/master/branch/admin'; ?>"><span class="fa fa-th-list"></span>Manage Branch</a>
-        <?php if (Yii::app()->user->checkAccess("master.branch.update")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterBranchEdit")) { ?>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addInterbranch', array('id' => $model->id)); ?>"><span class="fa fa-plus"></span>Add COA Interbranch</a>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>Edit</a>
         <?php } ?>
+            
         <h1>Branch <?php echo $model->code ?></h1>
-        <?php
-        $this->widget('zii.widgets.CDetailView', array(
+        
+        <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
-                //'id',
                 array('name' => 'company', 'value' => $model->company != "" ? $model->company->name : ''),
                 'coa_prefix',
                 'name',
@@ -37,56 +37,47 @@ $this->breadcrumbs = array(
                 'address',
                 array('name' => 'province_name', 'value' => $model->province->name),
                 array('name' => 'city_name', 'value' => $model->city->name),
-                array('name' => 'coa_interbranch_inventory_name', 'value' => $model->coaInterbranchInventory != "" ? $model->coaInterbranchInventory->name : ''),
-                array('name' => 'coa_interbranch_inventory_code', 'value' => $model->coaInterbranchInventory != "" ? $model->coaInterbranchInventory->code : ''),
-                //'city',
+                array(
+                    'name' => 'coa_interbranch_inventory_name', 
+                    'value' => $model->coaInterbranchInventory != "" ? $model->coaInterbranchInventory->name : ''
+                ),
+                array(
+                    'name' => 'coa_interbranch_inventory_code', 
+                    'value' => $model->coaInterbranchInventory != "" ? $model->coaInterbranchInventory->code : ''
+                ),
                 'zipcode',
-                // 'phone',
-                // 'fax',	
                 'email',
                 'status',
             ),
-        ));
-        ?>
+        )); ?>
     </div>
+    
     <div class="row">
         <div class="small-12 columns">
             <h3>Phones</h3>
-            <table >
-
-<!-- <tr>
-        <td>Name</td>
-        
-</tr> -->
+            <table>
                 <?php foreach ($branchPhones as $key => $branchPhone): ?>
                     <tr>
-
                         <td><?php echo $branchPhone->phone_no; ?></td>	
-
                     </tr>
                 <?php endforeach ?>
             </table>
         </div>
     </div>
+    
     <div class="row">
         <div class="small-12 columns">
             <h3>Fax</h3>
-            <table >
-
-<!-- <tr>
-        <td>Name</td>
-        
-</tr> -->
+            <table>
                 <?php foreach ($branchFaxes as $key => $branchFax): ?>
                     <tr>
-
                         <td><?php echo $branchFax->fax_no; ?></td>	
-
                     </tr>
                 <?php endforeach ?>
             </table>
         </div>
     </div>
+    
     <div class="row">
         <div class="small-12 columns">
             <h3>Warehouses</h3>
@@ -97,24 +88,22 @@ $this->breadcrumbs = array(
                         <th>Description</th>
                     </tr>
                 </thead>
-                <!-- <tr>
-                        <td>Name</td>
-                        
-                </tr> -->
+                
                 <?php foreach ($branchWarehouses as $key => $branchWarehouse): ?>
                     <tr>
-                        <?php //$warehouse = Warehouse::model()->findByPK($branchWarehouse->warehouse_id);  ?>
                         <td><?php echo $branchWarehouse->name; ?></td>	
                         <td><?php echo $branchWarehouse->description; ?></td>
 
                     </tr>
-                <?php endforeach ?>
+                <?php endforeach; ?>
             </table>
         </div>
     </div>
+    
     <div class="row">
         <div class="small-12 columns">
             <h3>Division - Position - Level - Employee</h3>
+            
             <table >
                 <thead>
                     <tr>
@@ -122,54 +111,56 @@ $this->breadcrumbs = array(
                         <td>Details</td>
                     </tr>
                 </thead>
-                <?php foreach ($divisionBranches as $key => $divisionBranch): ?>
-                    <tr>
-                        <?php $division = Division::model()->findByPK($divisionBranch->division_id); ?>
-                        <td><?php echo $division->name; ?></td>
-                        <td>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Position</td>
-                                    </tr>
-                                </thead>
-                                <?php $divisionPositions = DivisionPosition::model()->findAllByAttributes(array('division_id' => $division->id)); ?>
-                                <?php foreach ($divisionPositions as $key => $divisionPosition): ?>
-                                    <tr>
-                                        <?php $position = Position::model()->findByPK($divisionPosition->position_id); ?>
-                                        <td><?php echo $position->name; ?></td>
-                                        <td>
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <td>Level</td>
-                                                        <td>Employees</td>
-                                                    </tr>
-                                                </thead>
-                                                <?php $positionLevels = PositionLevel::model()->findAllByAttributes(array('position_id' => $position->id)); ?>
-                                                <?php foreach ($positionLevels as $positionLevel): ?>
-                                                    <tr>
-                                                        <?php $level = Level::model()->findByPK($positionLevel->level_id); ?>
-                                                        <td><?php echo $level->name ?></td>
-                                                        <?php
-                                                        $branchEmployees = EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array('branch_id' => $model->id, 'division_id' => $division->id, 'position_id' => $position->id, 'level_id' => $level->id));
-                                                        $count = count($branchEmployees);
-                                                        ?>
-                                                        <td><?php echo $count; ?></td>
-                                                    </tr>
-                                                <?php endforeach ?>
+                <tbody>
+                    <?php foreach ($divisionBranches as $key => $divisionBranch): ?>
+                        <tr>
+                            <?php $division = Division::model()->findByPK($divisionBranch->division_id); ?>
+                            <td><?php echo $division->name; ?></td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>Position</td>
+                                        </tr>
+                                    </thead>
+                                    <?php $divisionPositions = DivisionPosition::model()->findAllByAttributes(array('division_id' => $division->id)); ?>
+                                    <?php foreach ($divisionPositions as $key => $divisionPosition): ?>
+                                        <tr>
+                                            <?php $position = Position::model()->findByPK($divisionPosition->position_id); ?>
+                                            <td><?php echo $position->name; ?></td>
+                                            <td>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <td>Level</td>
+                                                            <td>Employees</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <?php $positionLevels = PositionLevel::model()->findAllByAttributes(array('position_id' => $position->id)); ?>
+                                                    <?php foreach ($positionLevels as $positionLevel): ?>
+                                                        <tr>
+                                                            <?php $level = Level::model()->findByPK($positionLevel->level_id); ?>
+                                                            <td><?php echo $level->name ?></td>
+                                                            <?php
+                                                            $branchEmployees = EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array('branch_id' => $model->id, 'division_id' => $division->id, 'position_id' => $position->id, 'level_id' => $level->id));
+                                                            $count = count($branchEmployees);
+                                                            ?>
+                                                            <td><?php echo $count; ?></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
 
-                                            </table>
-                                        </td>
-                                    </tr>
-                                <?php endforeach ?>
-
-                            </table>
-                        </td>
-                    </tr>
-                <?php endforeach ?>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
             </table>
-        </div></div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="small-12 columns">
@@ -184,14 +175,13 @@ $this->breadcrumbs = array(
                 </thead>
 
                 <?php foreach ($divisionBranches as $key => $divisionBranch): ?>
-
                     <tr>
                         <?php $division = Division::model()->findByPK($divisionBranch->division_id); ?>
                         <td><?php echo $division->name; ?></td>	
                         <td><?php echo $divisionBranch->email; ?></td>	
                         <td><a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/updateDivision', array('branchId' => $model->id, 'divisionId' => $divisionBranch->id)); ?>"><span class="fa fa-pencil"></span>edit</a></td>
                     </tr>
-                <?php endforeach ?>
+                <?php endforeach; ?>
             </table>
         </div>
     </div>
@@ -210,13 +200,12 @@ $this->breadcrumbs = array(
                 </thead>
 
                 <?php foreach ($equipments as $key => $equipment): ?>
-
                     <tr>
                         <td><?php echo $equipment->name; ?></td>	
                         <td><?php echo $equipment->equipmentType->name; ?></td>	
                         <td><?php echo $equipment->equipmentSubType->name; ?></td>	
                     </tr>
-                <?php endforeach ?>
+                <?php endforeach; ?>
             </table>
         </div>
     </div>
@@ -236,18 +225,15 @@ $this->breadcrumbs = array(
                 </thead>
 
                 <?php foreach ($model->branchCoaInterbranches as $coaInterbranch): ?>
-
                     <tr>
                         <td><?php echo $coaInterbranch->branchIdTo->code; ?></td>	
                         <td><?php echo $coaInterbranch->branchIdTo->name; ?></td>	
                         <td><?php echo $coaInterbranch->coa->name; ?></td>	
                     </tr>
-                <?php endforeach ?>
+                <?php endforeach; ?>
             </table>
         </div>
     </div>
-    <!-- End of To display list Interbranch related to this Branch -->
-
 </div>
 
 
