@@ -26,7 +26,8 @@ $this->menu = array(
         <?php } ?>
         <h1>View Warehouse <?php echo $model->id; ?></h1>
 
-        <?php $this->widget('zii.widgets.CDetailView', array(
+        <?php
+        $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
                 //'id',
@@ -36,7 +37,8 @@ $this->menu = array(
                 'status',
                 'branch.name'
             ),
-        )); ?>
+        ));
+        ?>
     </div>
 </div>
 
@@ -51,11 +53,11 @@ $this->menu = array(
                 </thead>
 <?php //foreach ($branchesWarehouses as $key => $branchesWarehouse): ?>
                         <tr>
-<?php //$branch = Branch::model()->findByPK($branchesWarehouse->branch_id);  ?>
-                                <td><?php //echo $branch->name;  ?></td>	
+<?php //$branch = Branch::model()->findByPK($branchesWarehouse->branch_id);   ?>
+                                <td><?php //echo $branch->name;   ?></td>	
                                 
                         </tr>
-<?php //endforeach  ?>
+<?php //endforeach   ?>
         </table>
 </div> -->
 <div class="row">
@@ -66,12 +68,12 @@ $this->menu = array(
                 <td>Name</td>
             </tr>
         </thead>
-        <?php foreach ($warehouseDivisions as $key => $warehouseDivision): ?>
+            <?php foreach ($warehouseDivisions as $key => $warehouseDivision): ?>
             <tr>
-                <?php $division = Division::model()->findByPK($warehouseDivision->division_id); ?>
+            <?php $division = Division::model()->findByPK($warehouseDivision->division_id); ?>
                 <td><?php echo CHtml::encode(CHtml::value($division, 'name')); ?></td>	
             </tr>
-        <?php endforeach; ?>
+<?php endforeach; ?>
     </table>
 </div>
 
@@ -85,57 +87,57 @@ $this->menu = array(
                 <td>Rack Number</td>
             </tr>
         </thead>
-        <?php foreach ($warehouseSections as $key => $warehouseSection): ?>
+            <?php foreach ($warehouseSections as $key => $warehouseSection): ?>
             <tr>
                 <td><?php echo $warehouseSection->code; ?></td>
-                <?php $product = Product::model()->findByPK($warehouseSection->product_id); ?>
+    <?php $product = Product::model()->findByPK($warehouseSection->product_id); ?>
                 <td><?php echo $product->name; ?></td>	
                 <td><?php echo $warehouseSection->rack_number; ?></td>
             </tr>
-        <?php endforeach; ?>
+<?php endforeach; ?>
     </table>
 </div>
 
 <!--<div class="row">
-    <?php /*$form = $this->beginWidget('CActiveForm', array(
-        'id' => 'warehouse-form',
-        // Please note: When you enable ajax validation, make sure the corresponding
-        // controller action is handling ajax validation correctly.
-        // There is a call to performAjaxValidation() commented in generated controller code.
-        // See class documentation of CActiveForm for details on this.
-        'enableAjaxValidation' => false,
-    )); ?>
+<?php /* $form = $this->beginWidget('CActiveForm', array(
+  'id' => 'warehouse-form',
+  // Please note: When you enable ajax validation, make sure the corresponding
+  // controller action is handling ajax validation correctly.
+  // There is a call to performAjaxValidation() commented in generated controller code.
+  // See class documentation of CActiveForm for details on this.
+  'enableAjaxValidation' => false,
+  )); ?>
 
-    <?php echo cHtml::activeCheckBoxList($model, 'warehouses', CHtml::listData(Warehouse::model()->findAll('id != ' . $model->id), 'id', 'name')); ?>
+  <?php echo cHtml::activeCheckBoxList($model, 'warehouses', CHtml::listData(Warehouse::model()->findAll('id != ' . $model->id), 'id', 'name')); ?>
 
-    <?php echo CHtml::button('Assign Section', array(
-        'class' => 'button cbutton',
-        'confirm' => 'All previously assigned sections will be lost. Are you sure?',
-        'onclick' => '
-            $.ajax({
-                type: "POST",
-                //dataType: "JSON",
-                url: "' . CController::createUrl('ajaxAssignSection', array('id' => $model->id)) . '",
-                data: $("form").serialize(),
-                success: function(data){
-                    //$("#section").html(data);
-                },
-            });
-        '
-    )); ?>
+  <?php echo CHtml::button('Assign Section', array(
+  'class' => 'button cbutton',
+  'confirm' => 'All previously assigned sections will be lost. Are you sure?',
+  'onclick' => '
+  $.ajax({
+  type: "POST",
+  //dataType: "JSON",
+  url: "' . CController::createUrl('ajaxAssignSection', array('id' => $model->id)) . '",
+  data: $("form").serialize(),
+  success: function(data){
+  //$("#section").html(data);
+  },
+  });
+  '
+  )); ?>
 
-    <?php $this->endWidget();*/ ?>
+  <?php $this->endWidget(); */ ?>
 </div>-->
 
 <br/>
 
 <div>
-    <?php if ((int) $model->is_approved === 0): ?>
+        <?php if ((int) $model->is_approved === 0): ?>
         <div style="float: left; margin-left: 20px;">
             <?php echo CHtml::beginForm(); ?>
-                <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
-            <?php echo CHtml::endForm(); ?>
+        <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
+        <?php echo CHtml::endForm(); ?>
         </div>
-    <?php endif; ?>
+<?php endif; ?>
     <div class="clear"></div>
 </div>

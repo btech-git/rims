@@ -38,7 +38,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php if (Yii::app()->user->checkAccess("master.servicePricelist.create")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterPricelistSetCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/servicePricelist/create'; ?>" data-reveal-id="color"><span class="fa fa-plus"></span>New Service Pricelist</a>
         <?php } ?>
         <h1>Manage Service Price lists</h1>
@@ -47,32 +47,36 @@ Yii::app()->clientScript->registerScript('search', "
             <div class="clearfix button-bar">
                 <div class="row">
                     <div class="medium-12 columns">
-                        <?php $form = $this->beginWidget('CActiveForm', array(
+                        <?php
+                        $form = $this->beginWidget('CActiveForm', array(
                             'action' => Yii::app()->createUrl($this->route),
                             'method' => 'get',
-                        )); ?>
+                        ));
+                        ?>
                         <div class="row">
                             <div class="medium-3 columns">
-                                <?php //echo $form->textField($model, 'findkeyword', array('placeholder' => 'Find By Keyword', "style" => "margin-bottom:0px;")); ?>
+                                <?php //echo $form->textField($model, 'findkeyword', array('placeholder' => 'Find By Keyword', "style" => "margin-bottom:0px;"));  ?>
                             </div>
                             <div class="medium-3 columns">
-                                <?php echo $form->dropDownList($model, 'service_id', CHtml::listData(Service::model()->findAll(), 'id', 'name'), array(
-                                    'prompt' => '[--Select Service--]', 
+                                <?php
+                                echo $form->dropDownList($model, 'service_id', CHtml::listData(Service::model()->findAll(), 'id', 'name'), array(
+                                    'prompt' => '[--Select Service--]',
                                     "style" => "margin-bottom:0px;",
-                                )); ?>
+                                ));
+                                ?>
                             </div>
                             <div class="medium-3 columns">
-                                <?php /*echo $form->dropDownList($model, 'service_type_code', CHtml::listData(ServiceType::model()->findAll(), 'name', 'name'), array(
-                                    'prompt' => '[--Select Service Type--]', "style" => "margin-bottom:0px;"
-                                )); ?>
-                            </div>
-                            <div class="medium-3 columns">
-                                <?php echo $form->dropDownList($model, 'service_category_code', CHtml::listData(ServiceCategory::model()->findAll(), 'name', 'name'), array(
-                                    'prompt' => '[--Select Service Category--]', "style" => "margin-bottom:0px;"
-                                ));*/ ?>
+                                <?php /* echo $form->dropDownList($model, 'service_type_code', CHtml::listData(ServiceType::model()->findAll(), 'name', 'name'), array(
+                                  'prompt' => '[--Select Service Type--]', "style" => "margin-bottom:0px;"
+                                  )); ?>
+                                  </div>
+                                  <div class="medium-3 columns">
+                                  <?php echo $form->dropDownList($model, 'service_category_code', CHtml::listData(ServiceCategory::model()->findAll(), 'name', 'name'), array(
+                                  'prompt' => '[--Select Service Category--]', "style" => "margin-bottom:0px;"
+                                  )); */ ?>
                             </div>
                         </div>
-                        <?php $this->endWidget(); ?>
+                    <?php $this->endWidget(); ?>
                     </div>
             <?php /* <div class="medium-2 columns">
               <a href="#" class="search-button right button cbutton secondary" id="advsearch" style="display: none;">Advanced Search</a>
@@ -91,7 +95,8 @@ Yii::app()->clientScript->registerScript('search', "
     </div>
 
     <div class="grid-view">
-        <?php $this->widget('zii.widgets.grid.CGridView', array(
+        <?php
+        $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'service-pricelist-grid',
             'dataProvider' => $model->search(),
             'filter' => $model,
@@ -129,13 +134,14 @@ Yii::app()->clientScript->registerScript('search', "
                     'buttons' => array(
                         'edit' => array(
                             'label' => 'edit',
-                            'visible' => '(Yii::app()->user->checkAccess("master.servicePricelist.update"))',
+                            'visible' => '(Yii::app()->user->checkAccess("masterPricelistSetEdit"))',
                             'url' => 'Yii::app()->createUrl("master/servicePricelist/update",array("id"=>$data->id))',
                         ),
                     ),
                 ),
             ),
-        )); ?>
+        ));
+        ?>
     </div>
 </div>
 

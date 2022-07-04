@@ -21,7 +21,7 @@ $this->breadcrumbs = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/service/admin'; ?>"><span class="fa fa-th-list"></span>Manage Services</a>
-        <?php if (Yii::app()->user->checkAccess("master.service.update")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterServiceEdit")) { ?>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addProduct', array('id' => $model->id)); ?>"><span class="fa fa-plus"></span>Add Materials</a>
         <?php } ?>
@@ -73,7 +73,7 @@ $this->breadcrumbs = array(
         <tbody>
             <?php foreach ($serviceEquipments as $key => $serviceEquipment): ?>
                 <tr>
-                <?php $equipment = Equipments::model()->findByPK($serviceEquipment->equipment_id); ?>
+                    <?php $equipment = Equipments::model()->findByPK($serviceEquipment->equipment_id); ?>
                     <td><?php echo $equipment->name; ?></td>	
                 </tr>
             <?php endforeach; ?>
@@ -101,23 +101,23 @@ $this->breadcrumbs = array(
                 <td>Common Price</td>
             </tr>
         </thead>
-        <?php /*foreach ($pricelists as $key => $pricelist): ?>
-            <tr>
-                <td><?php echo $pricelist->carMake->name; ?></td>
-                <td><?php echo $pricelist->carModel->name; ?></td>
-                <td><?php echo $pricelist->carSubDetail->name; ?></td>
-                <td><?php echo $pricelist->difficulty; ?></td>
-                <td><?php echo $pricelist->difficulty_value; ?></td>
-                <td><?php echo $pricelist->regular; ?></td>
-                <td><?php echo $pricelist->luxury; ?></td>
-                <td><?php echo $pricelist->luxury_value; ?></td>
-                <td><?php echo $pricelist->luxury_calc; ?></td>
-                <td><?php echo $pricelist->standard_flat_rate_per_hour; ?></td>
-                <td><?php echo $pricelist->flat_rate_hour; ?></td>
-                <td><?php echo $pricelist->price; ?></td>
-                <td><?php echo $pricelist->common_price; ?></td>
-            </tr>
-        <?php endforeach;*/ ?>
+<?php /* foreach ($pricelists as $key => $pricelist): ?>
+  <tr>
+  <td><?php echo $pricelist->carMake->name; ?></td>
+  <td><?php echo $pricelist->carModel->name; ?></td>
+  <td><?php echo $pricelist->carSubDetail->name; ?></td>
+  <td><?php echo $pricelist->difficulty; ?></td>
+  <td><?php echo $pricelist->difficulty_value; ?></td>
+  <td><?php echo $pricelist->regular; ?></td>
+  <td><?php echo $pricelist->luxury; ?></td>
+  <td><?php echo $pricelist->luxury_value; ?></td>
+  <td><?php echo $pricelist->luxury_calc; ?></td>
+  <td><?php echo $pricelist->standard_flat_rate_per_hour; ?></td>
+  <td><?php echo $pricelist->flat_rate_hour; ?></td>
+  <td><?php echo $pricelist->price; ?></td>
+  <td><?php echo $pricelist->common_price; ?></td>
+  </tr>
+  <?php endforeach; */ ?>
     </table>
 </div>-->
 
@@ -187,7 +187,7 @@ $this->breadcrumbs = array(
                         <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?>
                     </td>
                     <td style="text-align:center;">
-                <?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -201,7 +201,7 @@ $this->breadcrumbs = array(
     <?php if ((int) $model->is_approved === 0): ?>
         <div style="float: left; margin-left: 20px;">
             <?php echo CHtml::beginForm(); ?>
-                <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
+            <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
             <?php echo CHtml::endForm(); ?>
         </div>
     <?php endif; ?>

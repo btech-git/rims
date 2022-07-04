@@ -35,7 +35,7 @@ $('.search-form form').submit(function(){
 ?>
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php if (Yii::app()->user->checkAccess("master.vehicleCarMake.create")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterCarMakeCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/vehicleCarMake/create'; ?>" data-reveal-id="vehicle-brand"><span class="fa fa-plus"></span>New Vehicle Car Make</a>
         <?php } ?>
         <h1>Manage Vehicle Car Makes</h1>
@@ -129,7 +129,8 @@ $('.search-form form').submit(function(){
         </div>
 
         <div class="grid-view">
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
+            <?php
+            $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'vehicle-car-make-grid',
                 'dataProvider' => $model->search(),
                 'filter' => $model,
@@ -147,8 +148,8 @@ $('.search-form form').submit(function(){
                         'value' => '$data->id',
                     ),
                     array(
-                        'name' => 'name', 
-                        'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+                        'name' => 'name',
+                        'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))',
                         'type' => 'raw'
                     ),
                     array(
@@ -168,12 +169,13 @@ $('.search-form form').submit(function(){
                         'buttons' => array(
                             'edit' => array(
                                 'label' => 'edit',
-                                'visible' => '(Yii::app()->user->checkAccess("master.vehicleCarMake.update"))',
+                                'visible' => '(Yii::app()->user->checkAccess("masterCarMakeEdit"))',
                                 'url' => 'Yii::app()->createUrl("master/vehicleCarMake/update", array("id"=>$data->id))',
                             ),
                         ),
                     ),
                 ),
-            )); ?>
+            ));
+            ?>
         </div>
     </div>

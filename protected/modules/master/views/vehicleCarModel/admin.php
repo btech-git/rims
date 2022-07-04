@@ -34,7 +34,7 @@ $('.search-form form').submit(function(){
 ?>
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php if (Yii::app()->user->checkAccess("master.vehicleCarModel.create")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterCarModelCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/vehicleCarModel/create'; ?>" data-reveal-id="vehicle-model"><span class="fa fa-plus"></span>New Vehicle Car Models</a>
         <?php } ?>
         <h1>Manage Vehicle Car Models</h1>
@@ -43,15 +43,18 @@ $('.search-form form').submit(function(){
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>   
                 <div class="clearfix"></div>
                 <div class="search-form" style="display:none">
-                    <?php $this->renderPartial('_search', array(
+                    <?php
+                    $this->renderPartial('_search', array(
                         'model' => $model,
-                    )); ?>
+                    ));
+                    ?>
                 </div><!-- search-form -->	
             </div>
         </div>
 
         <div class="grid-view">
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
+            <?php
+            $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'vehicle-car-model-grid',
                 'dataProvider' => $model->search(),
                 'filter' => $model,
@@ -75,29 +78,30 @@ $('.search-form form').submit(function(){
                         'type' => 'raw',
                     ),
                     array(
-                        'name' => 'name', 
-                        'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+                        'name' => 'name',
+                        'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))',
                         'type' => 'raw'
                     ),
                     array(
-                        'name' => 'service_group_id', 
-                        'value' => '$data->serviceGroup->name', 
+                        'name' => 'service_group_id',
+                        'value' => '$data->serviceGroup->name',
                         'type' => 'raw'
                     ),
                     'description',
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit}',
-                        'buttons' => array (
-                            'edit' => array (
+                        'buttons' => array(
+                            'edit' => array(
                                 'label' => 'edit',
-                                'visible' => '(Yii::app()->user->checkAccess("master.vehicleCarModel.update"))',
+                                'visible' => '(Yii::app()->user->checkAccess("masterCarModelEdit"))',
                                 'url' => 'Yii::app()->createUrl("master/vehicleCarModel/update", array("id"=>$data->id))',
                             ),
                         ),
                     ),
                 ),
-            )); ?>
+            ));
+            ?>
         </div>
     </div>
 </div>

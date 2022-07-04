@@ -37,7 +37,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php if (Yii::app()->user->checkAccess("master.service.create")) { ?>
+        <?php if (Yii::app()->user->checkAccess("masterServiceCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/service/create'; ?>" data-reveal-id="color"><span class="fa fa-plus"></span>New Service</a>
         <?php } ?>
         <h1>Manage Services</h1>
@@ -126,7 +126,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array(
                                 'label' => 'edit',
                                 // 'visible'=>'($data->is_deleted == 0)? TRUE:FALSE',
-                                'visible' => '(Yii::app()->user->checkAccess("master.service.update"))',
+                                'visible' => '(Yii::app()->user->checkAccess("masterServiceEdit"))',
                                 'url' => 'Yii::app()->createUrl("master/service/update",array("id"=>$data->id))',
                             ),
                             'hapus' => array(
