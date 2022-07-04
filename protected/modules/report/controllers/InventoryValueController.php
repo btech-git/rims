@@ -1,5 +1,4 @@
 <?php
-
 class InventoryValueController extends Controller {
 
     public $layout = '//layouts/column1';
@@ -33,9 +32,9 @@ class InventoryValueController extends Controller {
             $product->unsetAttributes();
         }
 
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($productDataProvider, array());
+        }
         
         $this->render('summary', array(
             'currentSort' => $currentSort,
@@ -100,9 +99,6 @@ class InventoryValueController extends Controller {
     }
 
     protected function saveToExcel($dataProvider, array $options = array()) {
-        $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
-        $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
-        
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
         spl_autoload_register(array('YiiBase', 'autoload'));
@@ -111,90 +107,95 @@ class InventoryValueController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('PT. Raperind Motor');
-        $documentProperties->setTitle('Laporan Buku Besar');
+        $documentProperties->setTitle('Laporan Nilai Persediaan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Buku Besar');
+        $worksheet->setTitle('Laporan Nilai Persediaan');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
+        $worksheet->mergeCells('A1:Q1');
+        $worksheet->mergeCells('A2:Q2');
+        $worksheet->mergeCells('A3:Q3');
 
+        $worksheet->getStyle('A1:Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
 
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
+        $worksheet->setCellValue('A2', 'Laporan Nilai Persediaan');
 
-        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A2', 'Laporan Buku Besar');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
+        $worksheet->setCellValue('A5', 'ID');        
+        $worksheet->setCellValue('B5', 'Code');
+        $worksheet->setCellValue('C5', 'Name');
+        $worksheet->setCellValue('D5', 'Brand');
+        $worksheet->setCellValue('E5', 'Sub Brand');
+        $worksheet->setCellValue('F5', 'Sub Brand Series');
+        $worksheet->setCellValue('G5', 'Kategori');
+        $branches = Branch::model()->findAll();
+        $column = 'H';
+        foreach ($branches as $branch) {
+            $worksheet->setCellValue($column . '5', $branch->code);
+            $column++;
+        }
+        $worksheet->setCellValue('O5', 'Stock');
+        $worksheet->setCellValue('P5', 'HPP');
+        $worksheet->setCellValue('Q5', 'Inventory');
 
-        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->setCellValue('A5', 'Akun');
-        $worksheet->mergeCells('A5:D5');
-        $worksheet->setCellValue('E5', 'Total Debit');
-        $worksheet->setCellValue('F5', 'Total Kredit');
-        $worksheet->setCellValue('G5', 'Saldo Akhir');
-
-        $worksheet->setCellValue('A6', 'Transaksi');
-        $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Description');
-        $worksheet->setCellValue('D6', 'Memo');
-        $worksheet->setCellValue('E6', 'Debit');
-        $worksheet->setCellValue('F6', 'Kredit');
-        $worksheet->setCellValue('G6', 'Saldo');
-
-        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
 
         foreach ($dataProvider->data as $header) {
-            $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-            $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')) . '-' . CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->mergeCells("A{$counter}:D{$counter}");
-            $counter++;$counter++;
-
-            $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->getStyle("G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $worksheet->mergeCells("A{$counter}:F{$counter}");
-            $worksheet->setCellValue("A{$counter}", 'SALDO AWAL');
-            $worksheet->setCellValue("G{$counter}", CHtml::encode($header->getBeginningBalanceLedger($startDate)));
-            $counter++;$counter++;
-
-            foreach ($header->jurnalUmums as $detail) {
-                $worksheet->getStyle("A{$counter}:D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-                $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detail, 'kode_transaksi')));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($detail->tanggal_transaksi))));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_subject')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_type')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($detail->debet_kredit == 'D' ? $detail->total : 0));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($detail->debet_kredit == 'K' ? $detail->total : 0));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($detail->currentSaldo));
-
-                $counter++;
+            $inventoryTotalQuantities = $header->getInventoryTotalQuantities(); 
+            $inventoryCostOfGoodsSold = $header->getInventoryCostOfGoodsSold(); 
+            $totalStock = 0; 
+            $totalCogs = 0; 
+            $totalValue = 0; 
+            
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')));
+            
+            $column = 'H'; 
+            foreach ($branches as $branch) {
+                $index = -1;
+                foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
+                    if ($inventoryTotalQuantity['branch_id'] == $branch->id) {
+                        $index = $i;
+                        break;
+                    }
+                }
+                $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
+                if ($index >= 0) {
+                    $worksheet->setCellValue($column . "{$counter}", CHtml::encode($stockValue));
+                } else {
+                    $worksheet->setCellValue($column . "{$counter}", "0");
+                }
+                
+                $column++;
+                $totalStock += $stockValue; 
+                $totalCogs += CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); 
+                $totalValue += CHtml::value($inventoryCostOfGoodsSold[$i], 'value'); 
             }
+                        
+            $worksheet->setCellValue("O{$counter}", CHtml::encode($totalStock));
+            $worksheet->setCellValue("P{$counter}", CHtml::encode($totalCogs));
+            $worksheet->setCellValue("Q{$counter}", CHtml::encode($totalValue));
+            $counter++;
+
         }
 
-        for ($col = 'A'; $col !== 'G'; $col++) {
+        for ($col = 'A'; $col !== 'R'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
         }
 
         header('Content-Type: application/xlsx');
-        header('Content-Disposition: attachment;filename="Laporan Buku Besar.xlsx"');
+        header('Content-Disposition: attachment;filename="Laporan Nilai Persediaan.xlsx"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -266,5 +267,4 @@ class InventoryValueController extends Controller {
             $this->redirect(array('/accounting/assetPurchase/view', 'id' => $model->id));
         }
     }
-
 }
