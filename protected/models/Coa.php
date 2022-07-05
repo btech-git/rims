@@ -667,7 +667,7 @@ class Coa extends CActiveRecord {
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE debet_kredit = 'K' AND is_coa_category = 0 
             ) j
-            WHERE t.id = j.coa_id AND t.coa_sub_category_id = 8 AND is_approved = 1
+            WHERE t.id = j.coa_id
             GROUP BY j.coa_id
             HAVING beginning_balance > 0
         )");
