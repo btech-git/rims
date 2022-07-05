@@ -334,6 +334,20 @@
                             </div>
                         </div>			
                     </div>
+                
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($model, 'insurance_company_id', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::activeDropDownList($model, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(), 'id', 'name'), array(
+                                    'prompt' => '[--Select Insurance Company--]',
+                                )); ?>
+                                <?php echo $form->error($model, 'insurance_company_id'); ?>
+                            </div>
+                        </div>		
+                    </div>
                 </div>
             </div>
         </div>

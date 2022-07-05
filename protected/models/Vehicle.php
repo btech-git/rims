@@ -25,6 +25,7 @@
  * @property integer $power
  * @property string $drivetrain
  * @property string $notes
+ * @property integer $insurance_company_id
  *
  * The followings are the available model relations:
  * @property RegistrationTransaction[] $registrationTransactions
@@ -36,6 +37,7 @@
  * @property Customer $customer
  * @property CustomerPic $customerPic
  * @property VehicleInspection[] $vehicleInspections
+ * @property Customer $insuranceCompany
  */
 class Vehicle extends CActiveRecord {
 
@@ -66,7 +68,7 @@ class Vehicle extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('plate_number, car_make_id, car_model_id, car_sub_model_id', 'required'),
-            array('car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, power, plate_number_prefix_id', 'numerical', 'integerOnly' => true),
+            array('car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, power, plate_number_prefix_id, insurance_company_id', 'numerical', 'integerOnly' => true),
             array('year, drivetrain, plate_number_suffix', 'length', 'max' => 10),
             array('plate_number', 'unique', 'message' => 'Plate number already exists.'),
             array('plate_number_prefix_id', 'uniqueValidator', 'attributeName' => array(
@@ -77,7 +79,7 @@ class Vehicle extends CActiveRecord {
             array('notes', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, plate_number, machine_number, frame_number, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, car_make,color,car_color,car_model,car_sub_model,color, customer_name, customer_type, customer_name_checked, plate_number_checked, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix', 'safe', 'on' => 'search'),
+            array('id, plate_number, machine_number, frame_number, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, car_make,color,car_color,car_model,car_sub_model,color, customer_name, customer_type, customer_name_checked, plate_number_checked, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, insurance_company_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -98,6 +100,7 @@ class Vehicle extends CActiveRecord {
             'customerPic' => array(self::BELONGS_TO, 'CustomerPic', 'customer_pic_id'),
             'vehiclePlateNumberPrefix' => array(self::BELONGS_TO, 'VehiclePlateNumberPrefix', 'plate_number_prefix_id'),
             'vehicleInspections' => array(self::HAS_MANY, 'VehicleInspection', 'vehicle_id'),
+            'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
         );
     }
 
@@ -124,6 +127,7 @@ class Vehicle extends CActiveRecord {
             'power' => 'Power',
             'drivetrain' => 'Drivetrain',
             'notes' => 'Notes',
+            'insurance_company_id' => 'Insurance Company',
         );
     }
 
@@ -165,6 +169,7 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('power', $this->power);
         $criteria->compare('drivetrain', $this->drivetrain, true);
         $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('insurance_company_id', $this->insurance_company_id);
 
         $criteria->together = 'true';
         //$criteria->with = array('carMake','carModel','carSubModel','color');

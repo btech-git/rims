@@ -50,6 +50,7 @@ Yii::app()->clientScript->registerScript('report', '
                                         'Pout' => 'PAYMENT OUT',
                                         'SO' => 'SALES',
                                         'CASH' => 'CASH TRANSACTION',
+                                        'JP' => 'JURNAL UMUM',
                                     ), array('empty' => '-- All Transaction --')); ?>
                                 </div>
                             </div>
