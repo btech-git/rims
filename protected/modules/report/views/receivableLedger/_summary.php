@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         </td>
                     </tr>
 
-                    <?php $receivableData = $header->getReceivableLedgerReport($startDate, $endDate); ?>
+                    <?php /*$receivableData = $header->getReceivableLedgerReport($startDate, $endDate); ?>
                     <?php $positiveAmount = 0; ?>
                     <?php $negativeAmount = 0; ?>
                     <?php foreach ($receivableData as $receivableRow): ?>
@@ -75,27 +75,27 @@ Yii::app()->clientScript->registerCss('_report', '
                         </tr>
                         <?php $positiveAmount += $saleAmount; ?>
                         <?php $negativeAmount += $paymentAmount; ?>
-                    <?php endforeach; ?>
+                    <?php endforeach;*/ ?>
 
-                    <tr>
+<!--                    <tr>
                         <td colspan="4" style="text-align: right; font-weight: bold">Total Penambahan</td>
-                        <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
+                        <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php //echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td colspan="4" style="text-align: right; font-weight: bold">Total Penurunan</td>
-                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $negativeAmount); ?></td>
+                        <td style="text-align: right; font-weight: bold"><?php //echo Yii::app()->numberFormatter->format('#,##0', $negativeAmount); ?></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td colspan="4" style="text-align: right; font-weight: bold">Perubahan Bersih</td>
-                        <?php $differenceAmount = $positiveAmount + $negativeAmount; ?>
-                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $saldo); ?></td>
+                        <?php //$differenceAmount = $positiveAmount + $negativeAmount; ?>
+                        <td style="text-align: right; font-weight: bold"><?php //echo Yii::app()->numberFormatter->format('#,##0', $saldo); ?></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td colspan="6">&nbsp;</td>
-                    </tr>
+                    </tr>-->
                 <?php //endif; ?>
             <?php endforeach; ?>
         </tbody>
