@@ -131,11 +131,12 @@ class DeliveryController extends Controller {
             $counter++;
         }
 
-        header('Content-Type: application/xlsx');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Delivery Order.xlsx"');
         header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();
