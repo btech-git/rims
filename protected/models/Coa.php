@@ -657,21 +657,19 @@ class Coa extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->addCondition("EXISTS (
-            SELECT j.coa_id, SUM(j.debet) - SUM(j.credit) as balance
+            SELECT IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
             FROM (
-                SELECT coa_id, SUM(total) as debet, 0 AS credit
+                SELECT coa_id, tanggal_transaksi, total AS amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG')
-                GROUP BY coa_id
-                UNION
-                SELECT coa_id, 0 as debet, SUM(total) AS credit
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 
+                UNION ALL
+                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
-                GROUP BY coa_id
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 
             ) j
-            WHERE t.id = j.coa_id
+            INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
+            WHERE j.coa_id = t.id
             GROUP BY j.coa_id
-            HAVING balance > 0
         )");
         
         $criteria->compare('t.id', $this->id);
