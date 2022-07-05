@@ -41,13 +41,13 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <tbody>
             <?php foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
-                <?php $saldo = $header->getBeginningBalanceReceivable($startDate); ?>
+                <?php //$saldo = $header->getBeginningBalanceReceivable($startDate); ?>
                 <?php //if ($saldo > 0.00): ?>
                     <tr class="items1">
                         <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
 
                         <td style="text-align: right; font-weight: bold">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
+                            <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
                         </td>
                     </tr>
 
