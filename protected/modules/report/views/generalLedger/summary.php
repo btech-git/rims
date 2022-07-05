@@ -67,13 +67,50 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         
                         <div class="medium-6 columns">
                             <div class="field">
-                                <div class="row collapse">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Code</td>
+                        <td>Name</td>
+                        <td>Category</td>
+                        <td>Sub Category</td>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr>
+                        <td>
+                            <?php echo CHtml::activeTextField($account, 'code'); ?>
+                        </td>
+                        
+                        <td>
+                            <?php echo CHtml::activeTextField($account, 'name'); ?>
+                        </td>
+                        
+                        <td>
+                            <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                'empty' => '-- All --',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <div id="sub_category">
+                                <?php echo CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                    'empty' => '-- All --',
+                                )); ?>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+<!--                                <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">COA </span>
                                     </div>
 
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($account, 'id', array(
+                                    <div class="small-8 columns">-->
+                                        <?php /*echo CHtml::activeTextField($account, 'id', array(
                                             'readonly' => true,
                                             'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
@@ -81,9 +118,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
                                         <?php $coaAccount = Coa::model()->findByPk($account->id); ?>
                                         <?php echo CHtml::encode(CHtml::value($coaAccount, 'combinationName')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?> 
-                                    </div>
-                                </div>
+                                        <?php echo CHtml::closeTag('span');*/ ?> 
+<!--                                    </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
