@@ -207,6 +207,44 @@ class JurnalUmum extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function searchByReceivable() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("EXISTS (
+            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
+            FROM (
+                SELECT coa_id, tanggal_transaksi, total AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 
+                UNION ALL
+                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 
+            ) j
+            WHERE t.coa_id = j.coa_id
+            GROUP BY j.coa_id
+            HAVING beginning_balance > 0
+        )");
+        
+        $criteria->compare('id', $this->id);
+        $criteria->compare('kode_transaksi', $this->kode_transaksi, true);
+        $criteria->compare('tanggal_transaksi', $this->tanggal_transaksi, true);
+        $criteria->compare('t.coa_id', $this->coa_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('total', $this->total, true);
+        $criteria->compare('debet_kredit', $this->debet_kredit, true);
+        $criteria->compare('tanggal_posting', $this->tanggal_posting, true);
+        $criteria->compare('transaction_subject', $this->transaction_subject, true);
+        $criteria->compare('transaction_type', $this->transaction_type);
+        $criteria->compare('is_coa_category', $this->is_coa_category);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     public static function graphSalePerBranch() {
         
         $sql = "SELECT b.name AS branch_name, SUM(j.total) AS total

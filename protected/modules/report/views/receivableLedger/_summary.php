@@ -40,11 +40,73 @@ Yii::app()->clientScript->registerCss('_report', '
         </thead>
         
         <tbody>
-            <?php foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
+            <?php foreach ($accounts as $account): ?>
+                <?php $receivableAmount = $account->getReceivableAmount(); ?>
+                <?php if ($receivableAmount > 0): ?>
+                    <tr>
+                        <td colspan="5">
+                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($account, 'name')); ?>
+                        </td>
+                        <td style="text-align: right; font-weight: bold">
+                            <?php $saldo = $account->getBeginningBalanceReceivable($startDate); ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
+                        </td>
+                    </tr>
+
+                    <?php $receivableData = $account->getReceivableLedgerReport($startDate, $endDate); ?>
+                    <?php $positiveAmount = 0; ?>
+                    <?php $negativeAmount = 0; ?>
+                    <?php foreach ($receivableData as $receivableRow): ?>
+                        <?php $transactionNumber = $receivableRow['kode_transaksi']; ?>
+                        <?php $saleAmount = $receivableRow['sale_amount']; ?>
+                        <?php $paymentAmount = $receivableRow['payment_amount']; ?>
+                        <?php $amount = $receivableRow['amount']; ?>
+                        <?php if ($receivableRow['transaction_type'] == 'D'): ?>
+                            <?php $saldo += $amount; ?>
+                        <?php else: ?>
+                            <?php $saldo -= $amount; ?>
+                        <?php endif; ?>
+                    
+                        <tr class="items2">
+                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['tanggal_transaksi']))); ?></td>
+                            <td><?php echo CHtml::encode($receivableRow['transaction_type']); ?></td>
+                            <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/receivableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
+                            <td><?php echo CHtml::encode($receivableRow['remark']); ?></td>
+                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $amount); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
+                        </tr>
+                        <?php $positiveAmount += $saleAmount; ?>
+                        <?php $negativeAmount += $paymentAmount; ?>
+                    <?php endforeach; ?>
+
+                    <tr>
+                        <td colspan="5" style="text-align: right; font-weight: bold">Total Penambahan</td>
+                        <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align: right; font-weight: bold">Total Penurunan</td>
+                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $negativeAmount); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align: right; font-weight: bold">Perubahan Bersih</td>
+                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $saldo); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+        
+        
+        
+<!--        <tbody>
+            <?php /*foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
                 <?php //$saldo = $header->getBeginningBalanceReceivable($startDate); ?>
                 <?php //if ($saldo > 0.00): ?>
                     <tr class="items1">
-                        <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                        <td colspan="5"><?php echo CHtml::encode(CHtml::value($header, 'coa.code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>
 
                         <td style="text-align: right; font-weight: bold">
                             <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
@@ -75,9 +137,9 @@ Yii::app()->clientScript->registerCss('_report', '
                         </tr>
                         <?php $positiveAmount += $saleAmount; ?>
                         <?php $negativeAmount += $paymentAmount; ?>
-                    <?php endforeach;*/ ?>
+                    <?php endforeach; ?>
 
-<!--                    <tr>
+                    <tr>
                         <td colspan="4" style="text-align: right; font-weight: bold">Total Penambahan</td>
                         <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php //echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
                         <td>&nbsp;</td>
@@ -95,9 +157,9 @@ Yii::app()->clientScript->registerCss('_report', '
                     </tr>
                     <tr>
                         <td colspan="6">&nbsp;</td>
-                    </tr>-->
+                    </tr>
                 <?php //endif; ?>
-            <?php endforeach; ?>
-        </tbody>
+            <?php endforeach;*/ ?>
+        </tbody>-->
     </table>
 </div>

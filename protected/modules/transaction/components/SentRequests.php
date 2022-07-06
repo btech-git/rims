@@ -37,12 +37,23 @@ class SentRequests extends CComponent {
     }
 
     public function addDetail($productId) {
-        $detail = new TransactionSentRequestDetail();
-        $detail->product_id = $productId;
         $product = Product::model()->findByPK($productId);
-        $detail->unit_id = $product->unit_id;
+        
+        $exist = false;
+        foreach ($this->details as $i => $detail) {
+            if ($product->id === $detail->product_id) {
+                $exist = true;
+                break;
+            }
+        }
 
-        $this->details[] = $detail;
+        if (!$exist) {
+            $detail = new TransactionSentRequestDetail();
+            $detail->product_id = $productId;
+            $detail->unit_id = $product->unit_id;
+            $detail->unit_price = $product->hpp;
+            $this->details[] = $detail;
+        }
     }
 
     public function removeDetailAt($index) {
@@ -55,19 +66,15 @@ class SentRequests extends CComponent {
             $valid = $this->validate() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
-                //print_r('1');
             } else {
                 $dbTransaction->rollback();
-                //print_r('2');
             }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
-            //print_r($e);
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
@@ -83,7 +90,6 @@ class SentRequests extends CComponent {
             $valid = true;
         }
 
-        //print_r($valid);
         return $valid;
     }
 
@@ -100,9 +106,8 @@ class SentRequests extends CComponent {
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
         $this->header->total_quantity = $this->totalQuantity;
-        $this->header->total_price = 0;
+        $this->header->total_price = $this->grandTotal;
         $valid = $this->header->save();
-        //echo "valid";
 
         $requestDetails = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $this->header->id));
         $detail_id = array();
@@ -113,12 +118,14 @@ class SentRequests extends CComponent {
 
         //save request detail
         foreach ($this->details as $detail) {
-            $detail->sent_request_id = $this->header->id;
-            if ($isNewRecord)
+            if ($isNewRecord) {
                 $detail->sent_request_quantity_left = $detail->quantity;
+            }
+            
+            $detail->sent_request_id = $this->header->id;
+            $detail->amount = $detail->total;
             $valid = $detail->save(false) && $valid;
             $new_detail[] = $detail->id;
-            //echo 'test';
         }
 
 
@@ -131,6 +138,15 @@ class SentRequests extends CComponent {
         }
 
         return $valid;
+    }
+    
+    public function getGrandTotal() {
+        $total = 0.00;
+
+        foreach ($this->details as $detail)
+            $total += $detail->total;
+
+        return $total;
     }
     
     public function getTotalQuantity() {

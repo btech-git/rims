@@ -11,7 +11,7 @@ class ReceivableLedgerSummary extends CComponent {
     public function setupLoading() {
         $this->dataProvider->criteria->together = TRUE;
         $this->dataProvider->criteria->with = array(
-            'jurnalUmums',
+            'coa',
         );
     }
 
@@ -25,12 +25,13 @@ class ReceivableLedgerSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.code');
-        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+//        $this->dataProvider->sort->attributes = array('coa.code DESC');
+        $this->dataProvider->criteria->order = 'coa.code ASC'; //$this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter() {
-        $this->dataProvider->criteria->addCondition("t.is_approved = 1 AND code NOT LIKE '%.000'");
-        $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
+        $this->dataProvider->criteria->addCondition("coa.code NOT LIKE '%.000'");
+        $this->dataProvider->criteria->compare('coa.coa_sub_category_id', 8);
+        $this->dataProvider->criteria->compare('coa.is_approved', 1);
     }
 }

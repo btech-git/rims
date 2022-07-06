@@ -124,7 +124,6 @@ class TransferRequestController extends Controller {
                 
                 JurnalUmum::model()->deleteAllByAttributes(array(
                     'kode_transaksi' => $transferRequest->transfer_request_no,
-//                    'branch_id' => $transferRequest->requester_branch_id,
                 ));
 
                 $transferRequest->status_document = $model->approval_type;
@@ -155,29 +154,12 @@ class TransferRequestController extends Controller {
                     $jurnalUmumInterbranchRequester->transaction_type = 'TR';
                     $jurnalUmumInterbranchRequester->save();
 
-                    $jurnalUmumInterbranchDestination = new JurnalUmum;
-                    $jurnalUmumInterbranchDestination->kode_transaksi = $transferRequest->transfer_request_no;
-                    $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-                    $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
-                    $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
-                    $jurnalUmumInterbranchDestination->total = $transferRequest->total_price;
-                    $jurnalUmumInterbranchDestination->debet_kredit = 'K';
-                    $jurnalUmumInterbranchDestination->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInterbranchDestination->transaction_subject = 'Transfer Request Destination';
-                    $jurnalUmumInterbranchDestination->is_coa_category = 0;
-                    $jurnalUmumInterbranchDestination->transaction_type = 'TR';
-                    $jurnalUmumInterbranchDestination->save();
-
                     foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
                         $transferRequestDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->id, 'transfer_request_id' => $transferRequest->id));
                         $transferRequestDetail->quantity_delivery_left = $detail->quantity - $detail->quantity_delivery;
                         $transferRequestDetail->quantity_delivery = $detail->quantity_delivery;
-    //                        $left_quantity = $transferRequestDetail->quantity_delivery_left;
                         $transferRequestDetail->save(false);
-    //                    $detail->quantity_receive_left = $detail->quantity_delivery;
 
-    //                        $transfer = TransactionTransferRequest::model()->findByPk($transferRequest->id);
-    //                        $branch = Branch::model()->findByPk($transferRequest->requester_branch_id);
                         $hppPrice = $detail->product->hpp * $detail->quantity;
 
                         //save coa persediaan product master
@@ -208,6 +190,29 @@ class TransferRequestController extends Controller {
                         $jurnalUmumOutstandingPartRequester->transaction_type = 'TR';
                         $jurnalUmumOutstandingPartRequester->save();
 
+                    }
+                    
+                    $jurnalUmumInterbranchDestination = new JurnalUmum;
+                    $jurnalUmumInterbranchDestination->kode_transaksi = $transferRequest->transfer_request_no;
+                    $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
+                    $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
+                    $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
+                    $jurnalUmumInterbranchDestination->total = $transferRequest->total_price;
+                    $jurnalUmumInterbranchDestination->debet_kredit = 'K';
+                    $jurnalUmumInterbranchDestination->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumInterbranchDestination->transaction_subject = 'Transfer Request Destination';
+                    $jurnalUmumInterbranchDestination->is_coa_category = 0;
+                    $jurnalUmumInterbranchDestination->transaction_type = 'TR';
+                    $jurnalUmumInterbranchDestination->save();
+
+                    foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
+                        $transferRequestDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->id, 'transfer_request_id' => $transferRequest->id));
+                        $transferRequestDetail->quantity_delivery_left = $detail->quantity - $detail->quantity_delivery;
+                        $transferRequestDetail->quantity_delivery = $detail->quantity_delivery;
+                        $transferRequestDetail->save(false);
+
+                        $hppPrice = $detail->product->hpp * $detail->quantity;
+
                         //save coa persediaan product master
                         $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
                         $jurnalUmumMasterOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
@@ -236,6 +241,7 @@ class TransferRequestController extends Controller {
                         $jurnalUmumOutstandingPartDestination->transaction_type = 'TR';
                         $jurnalUmumOutstandingPartDestination->save();
                     }
+                    
                 }
 
                 $transferRequest->save(false);

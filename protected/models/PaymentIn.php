@@ -269,8 +269,8 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->together = 'true';
         $criteria->with = array('invoice', 'customer');
 
-        $criteria->addCondition("customer.customer_type = 'Company' AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+        $criteria->addCondition("customer.customer_type = 'Company'"); // AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

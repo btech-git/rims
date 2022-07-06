@@ -32,9 +32,11 @@
                 <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::activeTextField($detail, "[$i]quantity", array('size' => 7, 'maxLength' => 20,
+                <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
+                    'size' => 7, 
+                    'maxLength' => 20,
                     'onchange' => 'if (parseInt($(this).val()) > parseInt($("#current_stock_' . $i . '").val())) $(this).val($("#current_stock_' . $i . '").val())
-						$.ajax({
+                        $.ajax({
                             type: "POST",
                             dataType: "JSON",
                             url: "' . CController::createUrl('ajaxJsonTotal', array('id' => $transferRequest->header->id, 'index' => $i)) . '",
@@ -45,11 +47,12 @@
                                 $("#grand_total").html(data.grandTotal);
                             },
                         });	
-					',
+                    ',
                 )); ?>
                 <?php echo CHtml::error($detail, 'quantity'); ?>
             </td>
             <td style="text-align: center">
+                <?php echo CHtml::activeHiddenField($detail, "[$i]unit_price"); ?>
                 <?php echo CHtml::activeHiddenField($detail, "[$i]unit_id"); ?>
                 <?php $unit = Unit::model()->findByPk($detail->unit_id); ?>
                 <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>

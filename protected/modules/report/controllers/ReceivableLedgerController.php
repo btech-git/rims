@@ -22,7 +22,7 @@ class ReceivableLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+//        $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
 
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
@@ -31,20 +31,23 @@ class ReceivableLedgerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $receivableLedgerSummary = new ReceivableLedgerSummary($account->searchByReceivable());
-        $receivableLedgerSummary->setupLoading($startDate, $endDate);
-        $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
-        $receivableLedgerSummary->setupSorting();
-        $receivableLedgerSummary->setupFilter();
+//        $receivableLedgerSummary = new ReceivableLedgerSummary($jurnalUmum->search());
+//        $receivableLedgerSummary->setupLoading();
+//        $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
+//        $receivableLedgerSummary->setupSorting();
+//        $receivableLedgerSummary->setupFilter();
 
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
-        }
+        $accounts = Coa::model()->findAll(array('condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1', 'order' => 't.code ASC'));
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($receivableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+//        }
         
         $this->render('summary', array(
-            'account' => $account,
+//            'jurnalUmum' => $jurnalUmum,
             'coaId' => $coaId,
-            'receivableLedgerSummary' => $receivableLedgerSummary,
+            'accounts' => $accounts,
+//            'receivableLedgerSummary' => $receivableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,

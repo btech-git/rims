@@ -44,6 +44,7 @@ class SentRequest extends CComponent {
         if (!$exist) {
             $sentRequestDetail = new TransactionSentRequestDetail();
             $sentRequestDetail->product_id = $id;
+            $sentRequestDetail->unit_price = $product->hpp;
             $this->details[] = $sentRequestDetail;
         }
     }
@@ -155,8 +156,9 @@ class SentRequest extends CComponent {
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {
-            if ($detail->quantity <= 0)
+            if ($detail->quantity <= 0) {
                 continue;
+            }
 
             $detail->sent_request_id = $this->header->id;
             $detail->amount = $detail->total;

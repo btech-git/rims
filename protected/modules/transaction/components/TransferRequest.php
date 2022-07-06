@@ -45,6 +45,7 @@ class TransferRequest extends CComponent {
             $transferRequestDetail = new TransactionTransferRequestDetail();
             $transferRequestDetail->product_id = $id;
             $transferRequestDetail->unit_id = $product->unit_id;
+            $transferRequestDetail->unit_price = $product->hpp;
             $this->details[] = $transferRequestDetail;
         }
     }
