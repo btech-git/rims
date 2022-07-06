@@ -29,8 +29,9 @@ class InventoryController extends Controller {
         $productDataProvider = $product->searchByStockCheck($pageNumber);
         $branches = Branch::model()->findAll();
 
-        if (isset($_GET['Clear']))
+        if (isset($_GET['Clear'])) {
             $product->unsetAttributes();
+        }
 
         $this->render('check', array(
             'product' => $product,

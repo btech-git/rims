@@ -39,10 +39,10 @@
                     <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
                         <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
                             <?php $index = $i; ?>
+                            <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
                     <?php if ($index >= 0): ?>
                         <td><?php echo CHtml::encode($stockValue); ?></td>
                     <?php else: ?>
