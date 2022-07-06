@@ -6,7 +6,7 @@ class TransferRequestController extends Controller {
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -17,12 +17,12 @@ class TransferRequestController extends Controller {
         }
         
         if ($filterChain->action->id === 'update') {
-            if (Yii::app()->user->checkAccess('transferRequestEdit'))
+            if (!Yii::app()->user->checkAccess('transferRequestEdit'))
                 $this->redirect(array('/site/login'));
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (Yii::app()->user->checkAccess('transferRequestApproval'))
+            if (!Yii::app()->user->checkAccess('transferRequestApproval'))
                 $this->redirect(array('/site/login'));
         }
         

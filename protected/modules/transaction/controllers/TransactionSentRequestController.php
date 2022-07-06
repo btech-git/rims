@@ -230,6 +230,7 @@ class TransactionSentRequestController extends Controller
                     
                     //save coa persediaan product master
                     $hppPrice = $detail->product->hpp * $detail->quantity;
+                    
                     $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
                     $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $sentRequest->sent_request_no;
                     $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $sentRequest->sent_request_date;
@@ -299,6 +300,8 @@ class TransactionSentRequestController extends Controller
                 $jurnalUmumInterbranchDestination->save();
                 
                 foreach ($sentRequest->transactionSentRequestDetails as $detail) {
+                    
+                    $hppPrice = $detail->product->hpp * $detail->quantity;
                     
                     //save coa persediaan product master
                     $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
