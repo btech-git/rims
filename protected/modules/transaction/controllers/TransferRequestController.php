@@ -71,7 +71,6 @@ class TransferRequestController extends Controller {
 
     public function actionUpdate($id) {
         $transferRequest = $this->instantiate($id);
-        $transferRequest->header->setCodeNumberByRevision('transfer_request_no');
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
@@ -85,6 +84,12 @@ class TransferRequestController extends Controller {
         if (isset($_POST['Submit'])) {
             $this->loadState($transferRequest);
 
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $transferRequest->header->transfer_request_no,
+            ));
+
+            $transferRequest->header->setCodeNumberByRevision('transfer_request_no');
+        
             if ($transferRequest->save(Yii::app()->db))
                 $this->redirect(array('view', 'id' => $transferRequest->header->id));
         }
