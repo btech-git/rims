@@ -147,8 +147,8 @@ class TransactionSentRequestController extends Controller
             $this->loadState($sentRequest);
             
             JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $sentRequest->sent_request_no,
-                'branch_id' => $sentRequest->requester_branch_id,
+                'kode_transaksi' => $sentRequest->header->sent_request_no,
+                'branch_id' => $sentRequest->header->requester_branch_id,
             ));
 
             $sentRequest->header->setCodeNumberByRevision('sent_request_no');
