@@ -145,6 +145,12 @@ class TransactionSentRequestController extends Controller
 
         if (isset($_POST['TransactionSentRequest'])) {
             $this->loadState($sentRequest);
+            
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $sentRequest->sent_request_no,
+                'branch_id' => $sentRequest->requester_branch_id,
+            ));
+
             $sentRequest->header->setCodeNumberByRevision('sent_request_no');
             
             if ($sentRequest->save(Yii::app()->db)) {
