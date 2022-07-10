@@ -74,35 +74,45 @@ $this->menu = array(
 <br />
 
 <div class="detail">
-    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
-        'tabs' => array(
-            'Detail Item' => array(
-                'id' => 'test1',
-                'content' => $this->renderPartial(
-                    '_viewDetail',
-                    array('transferDetails' => $transferDetails, 'ccontroller' => $ccontroller, 'model' => $transferRequest),
-                    true)
-            ),
-            'Detail Approval' => array(
-                'id' => 'test2',
-                'content' => $this->renderPartial(
-                    '_viewDetailApproval',
-                    array('model' => $transferRequest), true)
-            ),
-            //'Detail Approval'=>'',
+    <?php 
+    $tabsArray = array(); 
 
-            'Detail Receive' => array(
-                'id' => 'test3',
-                'content' => $this->renderPartial(
-                    '_viewDetailReceive',
-                    array('transferDetails' => $transferDetails, 'model' => $transferRequest), true)
-            ),
-            
-            'Journal' => array(
-                'id' => 'test4',
-                'content' => $this->renderPartial('_viewJournal', array('model' => $transferRequest), true)
-            ),
-        ),
+    $tabsArray['Detail Item'] = array(
+        'id' => 'test1',
+        'content' => $this->renderPartial('_viewDetail', array(
+            'transferDetails' => $transferDetails, 
+            'ccontroller' => $ccontroller, 
+            'model' => $transferRequest
+        ), true)
+    );
+
+    $tabsArray['Detail Approval'] = array(
+        'id' => 'test2',
+        'content' => $this->renderPartial('_viewDetailApproval', array(
+            'model' => $transferRequest
+        ), true)
+    );
+
+    $tabsArray['Detail Receive'] = array(
+        'id' => 'test3',
+        'content' => $this->renderPartial('_viewDetailReceive', array(
+            'transferDetails' => $transferDetails,
+            'model' => $transferRequest
+        ), true)
+    );
+
+    if (Yii::app()->user->checkAccess("generalManager")) {
+        $tabsArray['Journal'] = array(
+            'id' => 'test4',
+            'content' => $this->renderPartial('_viewJournal', array(
+                'model' => $transferRequest
+            ), true)
+        );
+    }
+    ?>
+    
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+        'tabs' => $tabsArray,
 
         // additional javascript options for the tabs plugin
         'options' => array(

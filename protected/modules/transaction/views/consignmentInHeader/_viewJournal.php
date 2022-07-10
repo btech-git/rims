@@ -1,4 +1,3 @@
-
 <table class="report">
     <thead>
         <tr id="header1">

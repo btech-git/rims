@@ -72,37 +72,43 @@ $this->menu = array(
     </div>
 </div>
 <div class="detail">
-    <?php
-    $this->widget('zii.widgets.jui.CJuiTabs', array(
-        'tabs' => array(
-            'Detail Item' => array(
-                'id' => 'test1',
-                'content' => $this->renderPartial(
-                    '_viewDetail',
-                    array('transferDetails' => $transferDetails, 'ccontroller' => $ccontroller, 'model' => $model),
-                    true)
-            ),
-            'Detail Approval' => array(
-                'id' => 'test2',
-                'content' => $this->renderPartial(
-                    '_viewDetailApproval',
-                    array('model' => $model), true)
-            ),
-            //'Detail Approval'=>'',
+    <?php 
+    $tabsArray = array(); 
 
-            'Detail Receive' => array(
-                'id' => 'test3',
-                'content' => $this->renderPartial(
-                    '_viewDetailReceive',
-                    array('transferDetails' => $transferDetails, 'model' => $model), true)
-            ),
-            
-            'Journal' => array(
-                'id' => 'test4',
-                'content' => $this->renderPartial('_viewJournal', array('model' => $model), true)
-            ),
-        ),
+    $tabsArray['Detail Item'] = array(
+        'id' => 'test1',
+        'content' => $this->renderPartial('_viewDetail', array(
+            'transferDetails' => $transferDetails, 
+            'ccontroller' => $ccontroller, 
+            'model' => $model
+        ), true)
+    );
 
+    $tabsArray['Detail Approval'] = array(
+        'id' => 'test2',
+        'content' => $this->renderPartial('_viewDetailApproval',array(
+            'model' => $model
+        ), true)
+    );
+
+    $tabsArray['Detail Receive'] = array(
+        'id' => 'test3',
+        'content' => $this->renderPartial('_viewDetailReceive', array(
+            'transferDetails' => $transferDetails, 
+            'model' => $model
+        ), true)
+    );
+
+    if (Yii::app()->user->checkAccess("generalManager")) {
+        $tabsArray['Journal'] = array(
+            'id' => 'test4',
+            'content' => $this->renderPartial('_viewJournal', array('model' => $model), true)
+        );
+    }
+    ?>
+    
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+        'tabs' => $tabsArray,
 
         // additional javascript options for the tabs plugin
         'options' => array(
@@ -110,8 +116,7 @@ $this->menu = array(
         ),
         // set id for this widgets
         'id' => 'view_tab',
-    ));
-    ?>
+    )); ?>
 </div>
 	
 

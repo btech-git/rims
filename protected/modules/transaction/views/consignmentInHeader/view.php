@@ -46,26 +46,33 @@ $this->menu=array(
 <br />
 
 <div class="detail">
-    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
-        'tabs' => array(
-            'Detail Item'=>array(
-                'id'=>'test1','content'=>$this->renderPartial('_viewDetail', array(
-                    'model' => $model,
-                    'details'=>$details
-                ),TRUE)
-            ),
-            'Detail Approval'=>array(
-                'id'=>'test2','content'=>$this->renderPartial('_viewDetailApproval', array(
-                    'historis'=>$historis
-                ),TRUE)
-            ),
-            'Journal'=>array(
-                'id'=>'test3','content'=>$this->renderPartial('_viewJournal', array(
-                    'model' => $model,
-                ),TRUE)
-            ),
-        ),                       
+    <?php 
+    $tabsArray = array(); 
 
+    $tabsArray['Detail Item'] = array(
+        'id'=>'test1',
+        'content'=>$this->renderPartial('_viewDetail', array(
+            'model' => $model,
+            'details'=>$details
+        ),TRUE)
+    );
+    $tabsArray['Detail Approval'] = array(
+        'id'=>'test2',
+        'content'=>$this->renderPartial('_viewDetailApproval', array(
+            'historis'=>$historis
+        ),TRUE)
+    );
+    if (Yii::app()->user->checkAccess("generalManager")) {
+        $tabsArray['Journal'] = array(
+            'id'=>'test3',
+            'content'=>$this->renderPartial('_viewJournal', array(
+                'model' => $model,
+            ),TRUE)
+        );
+    }
+    ?>
+    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+        'tabs' => $tabsArray,
         // additional javascript options for the tabs plugin
         'options' => array(
             'collapsible' => true,
