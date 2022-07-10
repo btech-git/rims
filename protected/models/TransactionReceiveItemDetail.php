@@ -167,16 +167,18 @@ class TransactionReceiveItemDetail extends CActiveRecord {
     }
     
     public function getTotalPrice() {
-        $unitPrice = 0.00; 
-        $taxPercentage = $this->purchaseOrderDetail->purchaseOrder->tax_percentage;
+        $total = 0.00; 
         
         if (!empty($this->purchase_order_detail_id)) {
             $unitPrice = $this->purchaseOrderDetail->unit_price;
+            $taxPercentage = $this->purchaseOrderDetail->purchaseOrder->tax_percentage;
+            $total = $unitPrice * (1 + ($taxPercentage / 100));
         } elseif (!empty($this->consignment_in_detail_id)) {
-            $unitPrice = $this->consignmentInDetail->price;
+            $total = $this->consignmentInDetail->price;
         } else {
-            $unitPrice = $this->product->hpp;
+            $total = $this->product->hpp;
         }
-        return $this->qty_received * $unitPrice * (1 + ($taxPercentage / 100));
+        
+        return $this->qty_received * $total;
     }
 }
