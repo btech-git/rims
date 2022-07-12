@@ -77,6 +77,9 @@ class ReceivableLedgerController extends Controller {
         } else if ($codeNumberConstant === 'INV') {
             $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
             $this->redirect(array('/transaction/invoiceHeader/view', 'id' => $model->id));
-        }
+        } else if ($codeNumberConstant === 'RG') {
+            $model = RegistrationTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/frontDesk/registrationTransaction/view', 'id' => $model->id));
+        } 
     }
 }

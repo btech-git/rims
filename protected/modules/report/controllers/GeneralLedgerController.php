@@ -268,7 +268,7 @@ class GeneralLedgerController extends Controller {
             $this->redirect(array('/transaction/paymentIn/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'Pout') {
             $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
-            $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/paymentOut/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'RTI') {
             $model = TransactionReturnItem::model()->findByAttributes(array('return_item_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionReturnItem/view', 'id' => $model->id));

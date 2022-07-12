@@ -42,7 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($accounts as $account): ?>
                 <?php $receivableAmount = $account->getReceivableAmount(); ?>
-                <?php if ($receivableAmount > 0): ?>
+                <?php if ($receivableAmount !== 0): ?>
                     <tr>
                         <td colspan="5">
                             <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
