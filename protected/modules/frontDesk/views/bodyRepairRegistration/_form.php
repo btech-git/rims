@@ -120,7 +120,7 @@
                                                 <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'repair_type'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepairRegistration->header, 'repair_type', array('value'=>'GR','readonly'=>true)); ?>
+                                                <?php echo $form->textField($bodyRepairRegistration->header, 'repair_type', array('value'=>'BR','readonly'=>true)); ?>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'repair_type'); ?>
                                             </div>
                                         </div>

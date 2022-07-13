@@ -265,11 +265,6 @@
                         'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
                     ),
                     array(
-                        'label' => 'Nilai Persediaan Barang', 
-                        'url' => array('/report/inventoryValue/summary'), 
-                        'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
-                    ),
-                    array(
                         'label' => 'Analisa Stok Barang', 
                         'url' => array('/report/stockAnalysis/summary'), 
                         'visible' => (Yii::app()->user->checkAccess('stockAnalysisReport'))
@@ -380,6 +375,10 @@
                     array('label' => 'Summary Kas Harian', 'url' => array('/accounting/cashDailySummary/admin'), 'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport')),
                     array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('financialForecastReport')),
                     array('label' => 'Aset Management', 'url' => array('/accounting/assetManagement/admin')),
+                    array(
+                        'label' => 'Nilai Persediaan Barang', 
+                        'url' => array('/report/inventoryValue/summary'), 
+                    ),
                 ),
             )); ?>
         </li>

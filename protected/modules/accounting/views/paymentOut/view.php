@@ -78,8 +78,9 @@
     <thead>
         <tr style="background-color: skyblue">
             <th style="text-align: center; width: 15%">Invoice #</th>
-            <th style="text-align: center; width: 15%">Tanggal</th>
+            <th style="text-align: center; width: 15%">Tanggal Invoice</th>
             <th style="text-align: center; width: 15%">PO #</th>
+            <th style="text-align: center; width: 15%">Tanggal PO</th>
             <th style="text-align: center; width: 15%">Jatuh Tempo</th>
             <th style="text-align: center">Memo</th>
             <th style="text-align: center; width: 15%">Amount</th>
@@ -107,6 +108,10 @@
                 </td>
                 
                 <td>
+                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'purchaseOrder.purchase_order_date'))); ?>
+                </td>
+                
+                <td>
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_due_date'))); ?>
                 </td>
                 
@@ -123,14 +128,14 @@
     
     <tfoot>
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="5">Total Hutang</td>
+            <td style="text-align: right; font-weight: bold" colspan="6">Total Hutang</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>
         </tr>
         
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="5">Pembayaran</td>
+            <td style="text-align: right; font-weight: bold" colspan="6">Pembayaran</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'payment_amount'))); ?>
             </td>

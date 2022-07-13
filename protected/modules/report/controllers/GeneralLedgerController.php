@@ -241,7 +241,11 @@ class GeneralLedgerController extends Controller {
             $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'RG') {
             $model = RegistrationTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/frontDesk/registrationTransaction/view', 'id' => $model->id));
+            if ($model->repair_type == 'GR') {
+                $this->redirect(array('/frontDesk/generalRepairRegistration/view', 'id' => $model->id));
+            } else {
+                $this->redirect(array('/frontDesk/bodyRepairRegistration/view', 'id' => $model->id));                
+            }
         } else if ($codeNumberConstant === 'DO') {
             $model = TransactionDeliveryOrder::model()->findByAttributes(array('delivery_order_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionDeliveryOrder/view', 'id' => $model->id));
@@ -286,13 +290,13 @@ class GeneralLedgerController extends Controller {
             $this->redirect(array('/frontDest/adjustment/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'DAS') {
             $model = AssetDepreciation::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetDepreciation/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->asset_purchase_id));
         } else if ($codeNumberConstant === 'SAS') {
             $model = AssetSale::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetSale/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->asset_purchase_id));
         } else if ($codeNumberConstant === 'PAS') {
             $model = AssetPurchase::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetPurchase/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->id));
         }
     }
 

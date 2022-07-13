@@ -403,7 +403,7 @@ class Product extends CActiveRecord {
     }
 
     public function getInventoryCostOfGoodsSold() {
-        $sql = "SELECT w.branch_id, p.hpp AS cogs, COALESCE(SUM(i.total_stock), 0) * p.hpp AS value
+        $sql = "SELECT w.branch_id, p.hpp AS cogs
                 FROM " . Inventory::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id

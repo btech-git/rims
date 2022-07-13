@@ -26,8 +26,6 @@
             <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantities(); ?>
             <?php $inventoryCostOfGoodsSold = $product->getInventoryCostOfGoodsSold(); ?>
             <?php $totalStock = 0; ?>
-            <?php $totalCogs = 0; ?>
-            <?php $totalValue = 0; ?>
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
@@ -52,10 +50,10 @@
                         <td><?php echo 0; ?></td>
                     <?php endif; ?>
                     <?php $totalStock += $stockValue; ?>
-                    <?php $totalCogs += CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
-                    <?php $totalValue += CHtml::value($inventoryCostOfGoodsSold[$i], 'value'); ?>
                 <?php endforeach; ?>
                         
+                <?php $totalCogs = CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
+                <?php $totalValue = $totalCogs * $totalStock; ?>
                 <td style="text-align: center"><?php echo CHtml::encode($totalStock); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCogs)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalValue)); ?></td>

@@ -235,7 +235,11 @@ class TransactionJournalController extends Controller {
             $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'RG') {
             $model = RegistrationTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/frontDesk/registrationTransaction/view', 'id' => $model->id));
+            if ($model->repair_type == 'GR') {
+                $this->redirect(array('/frontDesk/generalRepairRegistration/view', 'id' => $model->id));
+            } else {
+                $this->redirect(array('/frontDesk/bodyRepairRegistration/view', 'id' => $model->id));                
+            }
         } else if ($codeNumberConstant === 'DO') {
             $model = TransactionDeliveryOrder::model()->findByAttributes(array('delivery_order_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionDeliveryOrder/view', 'id' => $model->id));
@@ -262,13 +266,13 @@ class TransactionJournalController extends Controller {
             $this->redirect(array('/transaction/paymentIn/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'Pout') {
             $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
-            $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/paymentOut/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'RTI') {
             $model = TransactionReturnItem::model()->findByAttributes(array('return_item_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionReturnItem/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'TR') {
             $model = TransactionTransferRequest::model()->findByAttributes(array('transfer_request_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionTransferRequest/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/transferRequest/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'SR') {
             $model = TransactionSentRequest::model()->findByAttributes(array('sent_request_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionSentRequest/view', 'id' => $model->id));
@@ -280,13 +284,13 @@ class TransactionJournalController extends Controller {
             $this->redirect(array('/frontDest/adjustment/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'DAS') {
             $model = AssetDepreciation::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetDepreciation/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->asset_purchase_id));
         } else if ($codeNumberConstant === 'SAS') {
             $model = AssetSale::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetSale/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->asset_purchase_id));
         } else if ($codeNumberConstant === 'PAS') {
             $model = AssetPurchase::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetPurchase/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->id));
         }
     }
 }
