@@ -68,6 +68,7 @@ class MovementInHeaderController extends Controller {
 
         $movementIn = $this->instantiate(null);
         $movementIn->header->date_created = date('Y-m-d H:i:s');
+        $movementIn->header->date_posting = date('Y-m-d H:i:s');
         $this->performAjaxValidation($movementIn->header);
 
         if ($movementType == 1) {

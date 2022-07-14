@@ -77,7 +77,7 @@
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
-                                    'value' => date('Y-m-d'),
+//                                    'value' => date('Y-m-d'),
                                 ),
                             )); ?>
                             <?php echo $form->error($consignmentIn->header, 'date_posting'); ?>

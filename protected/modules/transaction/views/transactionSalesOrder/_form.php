@@ -47,7 +47,7 @@
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
-                                    'value' => $salesOrder->header->isNewRecord ? date('Y-m-d') : $salesOrder->header->sale_order_date,
+//                                    'value' => $salesOrder->header->isNewRecord ? date('Y-m-d') : $salesOrder->header->sale_order_date,
                                 ),
                             )); ?>
                             <?php echo $form->error($salesOrder->header, 'sale_order_date'); ?>

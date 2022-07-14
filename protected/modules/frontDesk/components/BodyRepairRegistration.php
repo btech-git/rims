@@ -475,6 +475,10 @@ class BodyRepairRegistration extends CComponent {
         foreach ($this->serviceDetails as $serviceDetail) {
             $serviceDetail->registration_transaction_id = $this->header->id;
             $serviceDetail->total_price = $serviceDetail->totalAmount;
+            $serviceDetail->start = null;
+            $serviceDetail->end = null;
+            $serviceDetail->pause = null;
+            $serviceDetail->resume = null;
             $valid = $serviceDetail->save(false) && $valid;
 
             $new_service[] = $serviceDetail->id;
@@ -673,35 +677,19 @@ class BodyRepairRegistration extends CComponent {
             'kode_transaksi' => $this->header->transaction_number,
             'branch_id' => $this->header->branch_id,
         ));
-
-//        if ($this->header->customer->customer_type == 'Company') {
-            $jurnalUmumReceivable = new JurnalUmum;
-            $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
-            $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
-            $jurnalUmumReceivable->coa_id = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
-            $jurnalUmumReceivable->branch_id = $this->header->branch_id;
-            $jurnalUmumReceivable->total = $this->header->grand_total;
-            $jurnalUmumReceivable->debet_kredit = 'D';
-            $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-            $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
-            $jurnalUmumReceivable->is_coa_category = 0;
-            $jurnalUmumReceivable->transaction_type = 'RG';
-            $jurnalUmumReceivable->save();
-//        } else {
-//            $coaReceivable = Coa::model()->findByAttributes(array('code' => '121.00.002'));
-//            $jurnalUmumReceivable = new JurnalUmum;
-//            $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
-//            $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
-//            $jurnalUmumReceivable->coa_id = $coaReceivable->id;
-//            $jurnalUmumReceivable->branch_id = $this->header->branch_id;
-//            $jurnalUmumReceivable->total = $this->header->grand_total;
-//            $jurnalUmumReceivable->debet_kredit = 'D';
-//            $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-//            $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
-//            $jurnalUmumReceivable->is_coa_category = 0;
-//            $jurnalUmumReceivable->transaction_type = 'RG';
-//            $jurnalUmumReceivable->save();                
-//        }
+        
+        $jurnalUmumReceivable = new JurnalUmum;
+        $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
+        $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
+        $jurnalUmumReceivable->coa_id = (empty($this->header->insurance_company_id)) ? $this->header->customer->coa_id : $this->header->insuranceCompany->coa_id;
+        $jurnalUmumReceivable->branch_id = $this->header->branch_id;
+        $jurnalUmumReceivable->total = $this->header->grand_total;
+        $jurnalUmumReceivable->debet_kredit = 'D';
+        $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
+        $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
+        $jurnalUmumReceivable->is_coa_category = 0;
+        $jurnalUmumReceivable->transaction_type = 'RG';
+        $jurnalUmumReceivable->save();
 
         if ($this->header->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));

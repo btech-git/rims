@@ -60,19 +60,18 @@
 
             <div class="row">
                 <div class="small-12 medium-6 columns">
-                    <div class="field">
+<!--                    <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <?php echo $form->labelEx($requestOrder->header, 'request_order_no',
-                                    array('class' => 'prefix')); ?>
+                                <?php //echo $form->labelEx($requestOrder->header, 'request_order_no',array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo CHtml::encode(CHtml::value($requestOrder->header, 'request_order_no')); ?>
+                                <?php //echo CHtml::encode(CHtml::value($requestOrder->header, 'request_order_no')); ?>
                                 <?php //echo $form->textField($requestOrder->header, 'request_order_no', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
                                 <?php //echo $form->error($requestOrder->header, 'request_order_no'); ?>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="field">
                         <div class="row collapse">
@@ -81,21 +80,22 @@
                                     array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->textField($requestOrder->header, 'request_order_date', array('value'=>date('Y-m-d'), 'readonly'=>true)); ?>
-                                <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                <?php //echo $form->textField($requestOrder->header, 'request_order_date', array('value'=>date('Y-m-d'), 'readonly'=>true)); ?>
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'model' => $requestOrder->header,
                                     'attribute' => "request_order_date",
                                     'options' => array(
                                         'dateFormat' => 'yy-mm-dd',
                                         'changeMonth' => true,
                                         'changeYear' => true,
-                                        'yearRange' => '1900:2020'
+                                        'yearRange' => '1900:2050'
                                     ),
                                     'htmlOptions' => array(
-                                        'value' => $requestOrder->header->isNewRecord ? date('Y-m-d') : $requestOrder->header->request_order_date,
+//                                        'value' => $requestOrder->header->isNewRecord ? date('Y-m-d') : $requestOrder->header->request_order_date,
                                         //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
+                                        'readOnly' => true,
                                     ),
-                                ));*/ ?>
+                                )); ?>
                                 <?php echo $form->error($requestOrder->header, 'request_order_date'); ?>
                             </div>
                         </div>

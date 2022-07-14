@@ -69,6 +69,7 @@ class ConsignmentOutHeaderController extends Controller {
         $consignmentOut = $this->instantiate(null);
         $consignmentOut->header->branch_id = $consignmentOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $consignmentOut->header->branch_id;
         $consignmentOut->header->date_created = date('Y-m-d H:i:s');
+        $consignmentOut->header->date_posting = date('Y-m-d H:i:s');
         $this->performAjaxValidation($consignmentOut->header);
         
         $customer = new Customer('search');

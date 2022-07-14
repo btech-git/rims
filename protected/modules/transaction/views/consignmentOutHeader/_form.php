@@ -52,7 +52,7 @@
                         ),
                         'htmlOptions' => array(
                             'readonly' => true,
-                            'value' => date('Y-m-d'),
+//                            'value' => date('Y-m-d'),
                         ),
                     )); ?>
                     <?php //echo $form->textField($consignmentOut->header, 'date_posting', array('value' => date('Y-m-d'), 'readonly' => true,)); ?>

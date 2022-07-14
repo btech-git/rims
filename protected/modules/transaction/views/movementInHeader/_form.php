@@ -43,11 +43,11 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020'
+                                    'yearRange' => '1900:2050'
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
-                                    'value' => date('Y-m-d'),
+//                                    'value' => date('Y-m-d'),
                                 ),
                             )); ?>
                             <?php echo $form->error($movementIn->header, 'date_posting'); ?>

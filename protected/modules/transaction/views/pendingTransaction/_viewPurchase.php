@@ -22,7 +22,10 @@
         ),
         'status_document',
         array('name'=>'requester_id','value'=> '$data->user->username'),
-        array('name' =>'main_branch_id','value'=> '$data->mainBranch->name'),
+        array(
+            'name' =>'main_branch_id',
+            'value'=> 'CHtml::encode(CHtml::value($data, "mainBranch.name"))'
+        ),
         array(
             'header' => 'Status',
             'value' => '$data->totalRemainingQuantityReceived',

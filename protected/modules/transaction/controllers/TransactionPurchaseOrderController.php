@@ -131,7 +131,7 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder = $this->instantiate(null);
         $purchaseOrder->header->main_branch_id = $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
-        $purchaseOrder->header->purchase_order_date = date('Y-m-d');
+        $purchaseOrder->header->purchase_order_date = date('Y-m-d H:i:s');
         $this->performAjaxValidation($purchaseOrder->header);
 
         $supplier = new Supplier('search');
