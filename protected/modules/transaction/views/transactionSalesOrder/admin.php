@@ -90,6 +90,11 @@ $('.search-form form').submit(function(){
                     'user.username: Maker',
                     'approval.username: Approval',
                     array(
+                        'header' => 'Approval',
+                        'filter' => false,
+                        'value' => 'CHtml::encode(CHtml::value($data, "approval.username"))',
+                    ),
+                    array(
                         'header' => 'Invoice #',
                         'filter' => false,
                         'value' => function ($data) {
