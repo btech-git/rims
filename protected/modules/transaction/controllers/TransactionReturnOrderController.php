@@ -81,7 +81,7 @@ class TransactionReturnOrderController extends Controller {
 
         $returnOrder = $this->instantiate(null);
         $returnOrder->header->recipient_branch_id = $returnOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnOrder->header->recipient_branch_id;
-        $returnOrder->header->date_created = date('Y-m-d H:i:s');
+        $returnOrder->header->created_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($returnOrder->header);
 
         if (isset($_POST['Cancel']))

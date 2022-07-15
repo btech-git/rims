@@ -109,7 +109,7 @@ class TransactionReturnItemController extends Controller {
 
         $returnItem = $this->instantiate(null);
         $returnItem->header->recipient_branch_id = $returnItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnItem->header->recipient_branch_id;
-        $returnItem->header->date_created = date('Y-m-d H:i:s');
+        $returnItem->header->created_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($returnItem->header);
 
         if (isset($_POST['Cancel']))
