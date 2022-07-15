@@ -9,7 +9,7 @@
                             <span class="prefix">Plate Number</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle->plate_number; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                             <span class="prefix">Machine Number</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle->machine_number; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.machine_number')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                             <span class="prefix">Frame Number</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle->frame_number; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.frame_number')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                             <span class="prefix">Chasis Code</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle->chasis_code; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.chasis_code')); ?>"> 
 
 
                         </div>
@@ -54,7 +54,7 @@
                             <span class="prefix">Power CC</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle->power; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.power')); ?>"> 
                         </div>
                     </div>
                 </div>

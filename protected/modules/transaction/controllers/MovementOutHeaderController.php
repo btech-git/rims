@@ -72,7 +72,7 @@ class MovementOutHeaderController extends Controller {
     public function actionCreate($transactionId, $movementType) {
         
         $movementOut = $this->instantiate(null);
-        $movementOut->header->date_created = date('Y-m-d H:i:s');
+        $movementOut->header->created_datetime = date('Y-m-d H:i:s');
         $movementOut->header->date_posting = date('Y-m-d H:i:s');
         $movementOut->header->registration_service_id = null;
         $movementOut->header->movement_type = $movementType;
