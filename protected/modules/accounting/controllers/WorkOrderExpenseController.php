@@ -32,7 +32,7 @@ class WorkOrderExpenseController extends Controller {
         $workOrderExpense->header->user_id = Yii::app()->user->id;
         $workOrderExpense->header->transaction_date = date('Y-m-d');
         $workOrderExpense->header->transaction_time = date('H:i:s');
-        $workOrderExpense->header->date_created = date('Y-m-d H:i:s');
+        $workOrderExpense->header->created_datetime = date('Y-m-d H:i:s');
         $workOrderExpense->header->status = 'Draft';
         $workOrderExpense->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
 
