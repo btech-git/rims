@@ -99,12 +99,6 @@ $('.search-form form').submit(function(){
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->payment_date)'
         ),
         array(
-            'header' => 'Tanggal Input',
-            'name' => 'date_created',
-            'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
-        ),
-        array(
             'header' => 'Supplier',
             'filter' => CHtml::textField('SupplierName', $supplierName),
             'value' => 'CHtml::value($data, "supplier.name")',
@@ -125,6 +119,12 @@ $('.search-form form').submit(function(){
         array(
             'header' => 'Approved By',
             'value' => 'empty($data->paymentOutApprovals) ? "N/A" : $data->paymentOutApprovals[0]->supervisor->username '
+        ),
+        array(
+            'header' => 'Tanggal Input',
+            'name' => 'created_datetime',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
         ),
         array(
             'class' => 'CButtonColumn',

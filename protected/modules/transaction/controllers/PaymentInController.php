@@ -178,7 +178,7 @@ class PaymentInController extends Controller {
         $model->customer_id = $invoice->customer_id;
         $model->vehicle_id = $invoice->vehicle_id;
         $model->payment_time = date('H:i:s');
-        $model->date_created = date('Y-m-d H:i:s');
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         $model->branch_id = $model->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $model->branch_id;
         $images = $model->images = CUploadedFile::getInstances($model, 'images');

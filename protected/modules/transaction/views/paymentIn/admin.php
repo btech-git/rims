@@ -122,6 +122,12 @@ $('.search-form form').submit(function(){
                             'header' => 'Approved By',
                             'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->paymentInApprovals[0]->supervisor->username '
                         ),
+                        array(
+                            'header' => 'Tanggal Input',
+                            'name' => 'created_datetime',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
+                        ),
                     ),
                 )); ?>
             </div>
