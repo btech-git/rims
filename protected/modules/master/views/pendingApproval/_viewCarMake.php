@@ -27,6 +27,10 @@
         ),
         'user.username',
         array(
+            'header' => 'Input', 
+            'value' => '$data->created_datetime', 
+        ),
+        array(
             'class'=>'CButtonColumn',
             'template'=>'{approve} {reject}',
             'buttons'=>array (

@@ -148,7 +148,11 @@ $('.search-form form').submit(function(){
                     'value' => '$data->id',
                 ),
                 //'code',
-                array('name' => 'name', 'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 'type' => 'raw'),
+                array(
+                    'name' => 'name', 
+                    'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+                    'type' => 'raw'
+                ),
                 //'description',
                 array(
                     'header' => 'Status',
@@ -161,6 +165,11 @@ $('.search-form form').submit(function(){
                         'Inactive' => 'Inactive',
                             )
                     ),
+                ),
+                array(
+                    'header' => 'Input',
+                    'name' => 'created_datetime',
+                    'value' => '$data->created_datetime',
                 ),
                 array(
                     'class' => 'CButtonColumn',

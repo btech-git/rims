@@ -48,6 +48,7 @@ $this->breadcrumbs = array(
                 'description',
                 'status',
                 'luxury_value',
+                'created_datetime',
             ),
         ));
         ?>

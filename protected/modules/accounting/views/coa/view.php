@@ -46,6 +46,15 @@ $this->menu = array(
                 'closing_balance',
                 'debit',
                 'credit',
+                'status',
+                array(
+                    'label' => 'Created',
+                    'value' => $model->createdDatetime,
+                ),
+                array(
+                    'label' => 'Approved',
+                    'value' => $model->approvedDatetime,
+                ),
             ),
         )); ?>
     </div>

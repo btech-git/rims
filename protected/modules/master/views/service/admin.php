@@ -112,12 +112,10 @@ Yii::app()->clientScript->registerScript('search', "
                             'Inactive' => 'Inactive',
                         )),
                     ),
-//                    array(
-//                        'name' => 'difficulty_level',
-//                        'header' => 'Difficulty Level',
-//                        'value' => array($model, 'getLevel'),
-//                        'filter' => CHtml::textField('Service[difficulty_level]', ''),
-//                    ),
+                    array(
+                        'header' => 'Input', 
+                        'value' => '$data->created_datetime', 
+                    ),
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit} {hapus} {restore}',

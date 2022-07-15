@@ -19,9 +19,9 @@ $this->menu = array(
 <!--<div class="row">
         <div class="small-12 columns">
                 <div class="breadcrumbs">
-                        <a href="<?php echo Yii::app()->baseUrl . '/site/index'; ?>">Home</a>
+                        <a href="<?php /*echo Yii::app()->baseUrl . '/site/index'; ?>">Home</a>
                         <a href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>">Vehicle</a>
-                        <a href="<?php echo Yii::app()->baseUrl . '/master/vehicleCarMake/admin'; ?>">Vehicle Car Make</a>
+                        <a href="<?php echo Yii::app()->baseUrl . '/master/vehicleCarMake/admin';*/ ?>">Vehicle Car Make</a>
                         
                         <span>View Vehicle Car Make </span>
                 </div>
@@ -37,15 +37,14 @@ $this->menu = array(
         <?php } ?>
         <h1>View Vehicle Car Make <?php echo $model->name; ?></h1>
 
-        <?php
-        $this->widget('zii.widgets.CDetailView', array(
+        <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
                 'id',
                 'name',
                 'status',
+                'created_datetime',
             ),
-        ));
-        ?>
+        )); ?>
     </div>
 </div>

@@ -51,6 +51,9 @@ $this->breadcrumbs = array(
                 array('name' => 'coa_code', 'value' => $model->coa != "" ? $model->coa->code : ''),
                 array('name' => 'coa_outstanding_name', 'value' => $model->coaOutstandingOrder != "" ? $model->coaOutstandingOrder->name : ''),
                 array('name' => 'coa_outstanding_code', 'value' => $model->coaOutstandingOrder != "" ? $model->coaOutstandingOrder->code : ''),
+                'status',
+                'createdDatetime',
+                'approvedDatetime',
             ),
         )); ?>
     </div>

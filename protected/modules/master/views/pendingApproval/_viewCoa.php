@@ -29,6 +29,10 @@
         'opening_balance',
         'user.username',
         array(
+            'header' => 'Input', 
+            'value' => '$data->createdDatetime', 
+        ),
+        array(
             'class'=>'CButtonColumn',
             'template'=>'{approve} {reject}',
             'buttons'=>array (

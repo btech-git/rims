@@ -99,7 +99,16 @@ $('.search-form form').submit(function(){
                         'filter' => CHtml::activeDropDownList($model, 'car_model_id', CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value' => '$data->carModel->name'
                     ),
-                    array('name' => 'name', 'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 'type' => 'raw'),
+                    array(
+                        'name' => 'name', 
+                        'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+                        'type' => 'raw'
+                    ),
+                    array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'value' => '$data->created_datetime',
+                    ),
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit}',

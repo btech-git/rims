@@ -34,7 +34,7 @@
             'value' => 'CHTml::link($data->name, array("/master/service/view", "id"=>$data->id))', 
             'type' => 'raw'
         ),
-        'description',
+//        'description',
         array(
             'header' => 'Status',
             'name' => 'status',
@@ -47,6 +47,10 @@
             )),
         ),
         'user.username',
+        array(
+            'header' => 'Input', 
+            'value' => '$data->created_datetime', 
+        ),
         array(
             'class'=>'CButtonColumn',
             'template'=>'{approve} {reject}',

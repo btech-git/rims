@@ -56,6 +56,15 @@ $this->breadcrumbs = array(
                 'price_medium',
                 'price_hard',
                 'price_luxury',
+                'status',
+                array(
+                    'label' => 'Created',
+                    'value' => $model->created_datetime,
+                ),
+                array(
+                    'label' => 'Approved',
+                    'value' => $model->date_approval,
+                ),
             ),
         ));
         ?>

@@ -89,6 +89,10 @@ class CoaController extends Controller {
      */
     public function actionCreate() {
         $model = new Coa;
+        $model->date = date('Y-m-d');
+        $model->time_created = date('H:i:s');
+        $model->date_approval = null;
+        $model->time_approval = null;
         $model->user_id = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed

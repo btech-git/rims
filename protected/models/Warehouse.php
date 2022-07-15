@@ -15,6 +15,7 @@
  * @property integer $is_approved
  * @property string $date_approval
  * @property integer $user_id
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property BranchWarehouse[] $branchWarehouses
@@ -52,7 +53,7 @@ class Warehouse extends CActiveRecord {
             array('date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, name, description, row, column, status, warehouses, branch_id, user_id', 'safe', 'on' => 'search'),
+            array('id, code, name, description, row, column, status, warehouses, created_datetime, branch_id, user_id', 'safe', 'on' => 'search'),
         );
     }
 

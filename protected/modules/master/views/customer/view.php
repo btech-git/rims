@@ -57,6 +57,8 @@ $this->breadcrumbs = array(
                 'birthdate',
                 'flat_rate',
                 'date_created',
+                'date_approval',
+                'status',
             ),
         )); ?>
     </div>

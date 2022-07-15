@@ -42,6 +42,7 @@
  * @property integer $is_approved
  * @property string $date_approval
  * @property integer $user_id
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property CustomerServiceRate[] $customerServiceRates
@@ -99,7 +100,7 @@ class Service extends CActiveRecord {
             array('status, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, code, name, price, description, service_category_id, service_type_id, status, difficulty_level, service_category_name,service_type_name,service_category_code, service_type_code, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, is_deleted, findkeyword, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, code, name, price, description, created_datetime, service_category_id, service_type_id, status, difficulty_level, service_category_name,service_type_name,service_category_code, service_type_code, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, is_deleted, findkeyword, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 

@@ -19,9 +19,9 @@ $this->menu = array(
 <!--<div class="row">
         <div class="small-12 columns">
                 <div class="breadcrumbs">
-                        <a href="<?php echo Yii::app()->baseUrl . '/site/index'; ?>">Home</a>
+                        <a href="<?php /*echo Yii::app()->baseUrl . '/site/index'; ?>">Home</a>
                                 <a href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>">Vehicle</a>
-                                <a href="<?php echo Yii::app()->baseUrl . '/master/vehicleCarSubDetail/admin'; ?>">Vehicle Car Sub Detail</a>
+                                <a href="<?php echo Yii::app()->baseUrl . '/master/vehicleCarSubDetail/admin';*/ ?>">Vehicle Car Sub Detail</a>
                         <span>View Vehicle Car Sub Detail</span>
                 </div>
         </div>
@@ -47,7 +47,8 @@ $this->menu = array(
                 //'fuel_type',
                 array('name' => 'car_make_id', 'value' => $model->carMake->name),
                 array('name' => 'car_model_id', 'value' => $model->carModel->name),
-            //'status',
+                'created_datetime',
+                'status',
             //'power_id',
             //'drivetrain',
             //'chasis_code',

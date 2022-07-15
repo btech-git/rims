@@ -14,7 +14,7 @@
             'value' => 'CHTml::link($data->name, array("/master/supplier/view", "id"=>$data->id))', 
             'type' => 'raw'
         ),
-        'date',
+//        'date',
         'code',
         'company',
         'person_in_charge',
@@ -31,6 +31,10 @@
             'value' => '$data->coaOutstandingOrder!=""?$data->coaOutstandingOrder->code : ""'
         ),
         'user.username',
+        array(
+            'header' => 'Input', 
+            'value' => '$data->createdDatetime', 
+        ),
         array(
             'class'=>'CButtonColumn',
             'template'=>'{approve} {reject}',

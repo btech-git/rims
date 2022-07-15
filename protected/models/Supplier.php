@@ -28,6 +28,8 @@
  * @property integer $is_approved
  * @property string $date_approval
  * @property integer $user_id
+ * @property string $time_created
+ * @property string $time_approval
  *
  * The followings are the available model relations:
  * @property ConsignmentInHeader[] $consignmentInHeaders
@@ -90,7 +92,7 @@ class Supplier extends CActiveRecord {
             array('date, note, date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, date, code, name, company, position, address, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, company_attribute,product_name, coa_id, coa_name, coa_code, coa_outstanding_code, coa_outstanding_name, note, status, phone, person_in_charge, mobile_phone, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, date, code, name, company, position, address, time_created, time_approval, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, company_attribute,product_name, coa_id, coa_name, coa_code, coa_outstanding_code, coa_outstanding_name, note, status, phone, person_in_charge, mobile_phone, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -318,5 +320,13 @@ class Supplier extends CActiveRecord {
         ));
 
         return ($value === false) ? 0 : $value;
+    }
+    
+    public function getCreatedDatetime() {
+        return $this->date . " " . $this->time_created;
+    }
+    
+    public function getApprovedDatetime() {
+        return $this->date_approval . " " . $this->time_approval;
     }
 }

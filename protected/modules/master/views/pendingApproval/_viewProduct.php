@@ -45,8 +45,8 @@
             'value' => '$data->productSubCategory->name',
             'filter' => false,
         ),
-        'date_posting',
         'user.username',
+        'date_posting',
         array(
             'class'=>'CButtonColumn',
             'template'=>'{approve} {reject}',

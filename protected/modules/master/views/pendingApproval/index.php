@@ -26,49 +26,6 @@ Yii::app()->clientScript->registerScript('report', '
         
         <fieldset>
             <legend>List Data Master</legend>
-<!--            <div class="myForm" id="myForm">
-
-                <?php /*echo CHtml::beginForm(array(''), 'get'); ?>
-                <div class="row">
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-2 columns">
-                                    <span class="prefix">Tanggal </span>
-                                </div>
-                                <div class="small-5 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'tanggal_mulai',
-                                        'options' => array(
-                                            'dateFormat' => 'yy-mm-dd',
-                                        ),
-                                        'htmlOptions' => array(
-                                            'readonly' => true,
-                                            'placeholder' => 'Mulai',
-                                        ),
-                                    )); ?>
-                                </div>
-
-                                <div class="small-5 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'tanggal_sampai',
-                                        'options' => array(
-                                            'dateFormat' => 'yy-mm-dd',
-                                        ),
-                                        'htmlOptions' => array(
-                                            'readonly' => true,
-                                            'placeholder' => 'Sampai',
-                                        ),
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                <?php echo CHtml::endForm();*/ ?>
-            </div>-->
             
             <br />
 

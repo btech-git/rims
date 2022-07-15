@@ -18,6 +18,7 @@
  * @property string $description
  * @property string $status
  * @property string $luxury_value
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property Vehicle[] $vehicles
@@ -51,7 +52,7 @@ class VehicleCarSubDetail extends CActiveRecord
 			array('description', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, car_make_id, car_model_id, name, chasis_code, assembly_year_start, assembly_year_end, transmission, fuel_type, power, drivetrain, description, status, luxury_value', 'safe', 'on'=>'search'),
+			array('id, car_make_id, car_model_id, name, created_datetime, chasis_code, assembly_year_start, assembly_year_end, transmission, fuel_type, power, drivetrain, description, status, luxury_value', 'safe', 'on'=>'search'),
 		);
 	}
 

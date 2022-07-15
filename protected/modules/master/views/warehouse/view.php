@@ -30,12 +30,17 @@ $this->menu = array(
         $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
-                //'id',
+                'id',
+                array(
+                    'label' => 'Branch',
+                    'value' => $model->branch->name,
+                ),
                 'code',
                 'name',
                 'description',
                 'status',
-                'branch.name'
+                'created_datetime',
+                'date_approval',
             ),
         ));
         ?>

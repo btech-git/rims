@@ -89,6 +89,11 @@ $('.search-form form').submit(function(){
                     ),
                     'description',
                     array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'value' => '$data->created_datetime',
+                    ),
+                    array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit}',
                         'buttons' => array(

@@ -12,6 +12,7 @@
  * @property string $status
  * @property integer $is_approved
  * @property integer $user_id
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -50,7 +51,7 @@ class VehicleCarModel extends CActiveRecord {
             array('status', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, description, car_make_id, service_group_id, car_make, status, is_approved, user_id', 'safe', 'on' => 'search'),
+            array('id, name, description, car_make_id, service_group_id, created_datetime, car_make, status, is_approved, user_id', 'safe', 'on' => 'search'),
         );
     }
 

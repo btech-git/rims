@@ -88,16 +88,17 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     'columns' => array(
                         'id',
-                        array('name' => 'name', 'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 'type' => 'raw'),
+                        array(
+                            'name' => 'name', 
+                            'value' => 'CHTml::link($data->name, array("view", "id"=>$data->id))', 
+                            'type' => 'raw'
+                        ),
                         'code',
-                        //'coa_category_id',
-                        //array('name'=>'coa_category_id', 'value'=>'$data->coaCategory->name'),
                         array(
                             'name' => 'coa_category_id',
                             'filter' => CHtml::activeDropDownList($model, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                             'value' => '$data->coaCategory!="" ?$data->coaCategory->name:""',
                         ),
-                        //'coa_sub_category_id',
                         array(
                             'name' => 'coa_sub_category_id',
                             'filter' => CHtml::activeDropDownList($model, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
@@ -106,10 +107,13 @@ Yii::app()->clientScript->registerScript('search', "
                         'normal_balance',
                         'opening_balance',
                         array(
+                            'header' => 'Input', 
+                            'value' => '$data->createdDatetime', 
+                        ),
+                        array(
                             'class' => 'CButtonColumn',
                             'template' => '{edit} {update opening balance}',
-                            'buttons' => array
-                                (
+                            'buttons' => array(
                                 'edit' => array(
                                     'label' => 'edit',
                                     // 'visible'=>'($data->is_deleted == 0)? TRUE:FALSE',

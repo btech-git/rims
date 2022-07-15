@@ -17,10 +17,12 @@
  * @property string $debit
  * @property string $credit
  * @property string $status
- * @property string $date
- * @property integer $is_approved
- * @property string $date_approval
  * @property integer $user_id
+ * @property integer $is_approved
+ * @property string $date
+ * @property string $date_approval
+ * @property string $time_created
+ * @property string $time_approval
  *
  * The followings are the available model relations:
  * @property CashTransaction[] $cashTransactions
@@ -778,5 +780,13 @@ class Coa extends CActiveRecord {
     
     public function getCombinationName() {
         return $this->code . ' - ' . $this->name . ' - ' . $this->coaCategory->name . ' - ' . $this->coaSubCategory->name;
+    }
+    
+    public function getCreatedDatetime() {
+        return $this->date . " " . $this->time_created;
+    }
+    
+    public function getApprovedDatetime() {
+        return $this->date_approval . " " . $this->time_approval;
     }
 }

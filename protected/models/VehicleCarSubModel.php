@@ -10,6 +10,7 @@
  * @property string $name
  * @property integer $is_approved
  * @property integer $user_id
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property ServicePricelist[] $servicePricelists
@@ -43,7 +44,7 @@ class VehicleCarSubModel extends CActiveRecord {
             array('name', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, car_make_id, car_model_id, name,car_make,car_model, is_approved, user_id', 'safe', 'on' => 'search'),
+            array('id, car_make_id, car_model_id, name,car_make,car_model, created_datetime, is_approved, user_id', 'safe', 'on' => 'search'),
         );
     }
 

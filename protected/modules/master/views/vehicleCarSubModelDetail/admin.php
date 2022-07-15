@@ -87,6 +87,11 @@ $('.search-form form').submit(function(){
                     'transmission',
                     'fuel_type',
                     'power',
+                    array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'value' => '$data->created_datetime',
+                    ),
                     /*
                       'drivetrain',
                       'description',

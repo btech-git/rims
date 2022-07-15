@@ -10,6 +10,7 @@
  * @property integer $service_difficulty_rate
  * @property integer $is_approved
  * @property integer $user_id
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -54,7 +55,7 @@ class VehicleCarMake extends CActiveRecord {
             array('service_difficulty_rate, is_approved, user_id', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, status, service_difficulty_rate, is_approved, user_id', 'safe', 'on' => 'search'),
+            array('id, name, status, service_difficulty_rate, is_approved, created_datetime, user_id', 'safe', 'on' => 'search'),
         );
     }
 

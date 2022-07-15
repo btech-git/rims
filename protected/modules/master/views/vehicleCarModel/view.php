@@ -38,6 +38,7 @@ $this->menu = array(
                     'value' => $model->serviceGroup->name,
                 ),
                 'status',
+                'created_datetime',
             ),
         ));
         ?>

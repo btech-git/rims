@@ -43,6 +43,10 @@
         array('name'=>'coa_name','value'=>'$data->coa!="" ? $data->coa->name : ""'),
         array('name'=>'coa_code','value'=>'$data->coa!="" ? $data->coa->code : ""'),
         array(
+            'header' => 'Input', 
+            'value' => '$data->date_created', 
+        ),
+        array(
             'class'=>'CButtonColumn',
             'template'=>'{approve} {reject}',
             'buttons'=>array (
