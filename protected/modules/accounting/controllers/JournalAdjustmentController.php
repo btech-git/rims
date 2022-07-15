@@ -100,15 +100,12 @@ class JournalAdjustmentController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        $journalVoucher = new JournalAdjustmentHeader('search');
-        $journalVoucher->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['CashTransaction'])) {
-            $journalVoucher->attributes = $_GET['CashTransaction'];
-        }
+        $journalAdjustmentHeader = Search::bind(new JournalAdjustmentHeader('search'), isset($_GET['JournalAdjustmentHeader']) ? $_GET['JournalAdjustmentHeader'] : array());
+        $journalAdjustmentHeaderDataProvider = $journalAdjustmentHeader->searchByAdmin();
         
         $this->render('admin', array(
-            'journalVoucher' => $journalVoucher,
+            'journalAdjustmentHeader' => $journalAdjustmentHeader,
+            'journalAdjustmentHeaderDataProvider' => $journalAdjustmentHeaderDataProvider,
         ));
     }
 

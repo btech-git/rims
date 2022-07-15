@@ -20,12 +20,12 @@
             <tr>
                 <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td>
-                    <?php /*echo CHtml::link($header->sale_order_no, array('javascript:;'), array(
+                    <?php echo CHtml::link($header->kode_transaksi, array('javascript:;'), array(
                         'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
-                            "codeNumber" => $header->sale_order_no
+                            "codeNumber" => $header->kode_transaksi
                         )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                    ));*/ ?>
-                    <?php echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?>
+                    )); ?>
+                    <?php //echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?>
                 </td>
                 <td style="text-align: right">
                     <?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?>

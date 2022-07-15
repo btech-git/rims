@@ -61,7 +61,7 @@ class TransactionReceiveItemController extends Controller {
         $receiveItem = $this->instantiate(null);
         $receiveItem->header->receive_item_date = date('Y-m-d');
         $receiveItem->header->arrival_date = date('Y-m-d');
-        $receiveItem->header->date_created = date('Y-m-d H:i:s');
+        $receiveItem->header->created_datetime = date('Y-m-d H:i:s');
         $receiveItem->header->user_id_receive = Yii::app()->user->id;
         $receiveItem->header->user_id_invoice = null;
         $receiveItem->header->recipient_branch_id = $receiveItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $receiveItem->header->recipient_branch_id;

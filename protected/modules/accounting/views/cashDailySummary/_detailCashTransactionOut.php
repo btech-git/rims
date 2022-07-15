@@ -52,9 +52,9 @@
     
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="4">TOTAL</td>
+            <td style="text-align: right" colspan="3">TOTAL</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalOut)); ?></td>
-            <td colspan="2">&nbsp;</td>
+            <td colspan="4">&nbsp;</td>
         </tr>
     </tfoot>
 </table>
