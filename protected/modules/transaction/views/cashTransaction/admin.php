@@ -100,13 +100,19 @@ $('.search-form form').submit(function(){
                             ),
                         ),
                         'status',
-                        array(
-                            'name' => 'branch_id', 
-                            'value' => '$data->branch != "" ? $data->branch->name : "" '
-                        ),
+//                        array(
+//                            'name' => 'branch_id', 
+//                            'value' => '$data->branch != "" ? $data->branch->name : "" '
+//                        ),
                         array(
                             'header' => 'Approved By',
                             'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
+                        ),
+                        array(
+                            'header' => 'Input',
+                            'name' => 'created_datetime',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
                         array(
                             'class' => 'CButtonColumn',

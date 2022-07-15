@@ -115,10 +115,10 @@ $('.search-form form').submit(function(){
             'header' => 'Plate #',
             'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
         ),
-        array(
-            'header' => 'Branch',
-            'value' => 'CHtml::value($data, "branch.code")',
-        ),
+//        array(
+//            'header' => 'Branch',
+//            'value' => 'CHtml::value($data, "branch.code")',
+//        ),
         array(
             'name' => 'note',
             'value' => 'substr(CHtml::value($data, "note"), 0, 30)',
@@ -128,6 +128,12 @@ $('.search-form form').submit(function(){
             'name' => 'user_id',
             'filter' => false,
             'value' => 'empty($data->user_id) ? "N/A" : $data->user->username '
+        ),
+        array(
+            'header' => 'Input',
+            'name' => 'created_datetime',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
         ),
         array(
             'class' => 'CButtonColumn',

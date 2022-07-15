@@ -103,6 +103,12 @@ Yii::app()->clientScript->registerScript('search', "
 //                        'filter' => CHtml::activeDropDownList($model, 'destination_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value'=>'$data->destinationBranch->name'
                     ),
+                    array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'filter' => false,
+                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                    ),
                     /*
                       'request_type',
                       'sent_request_id',

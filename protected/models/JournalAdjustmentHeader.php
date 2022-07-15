@@ -12,7 +12,7 @@
  * @property integer $user_id
  * @property integer $branch_id
  * @property string $status
- * @property string $date_created
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property JournalAdjustmentDetail[] $journalAdjustmentDetails
@@ -37,14 +37,14 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, date, time, user_id, branch_id, status, date_created', 'required'),
+            array('transaction_number, date, time, user_id, branch_id, status', 'required'),
             array('user_id, branch_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, date, time, note, user_id, branch_id, status, date_created', 'safe', 'on' => 'search'),
+            array('id, transaction_number, date, time, note, user_id, branch_id, status, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 

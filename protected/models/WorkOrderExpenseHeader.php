@@ -13,7 +13,7 @@
  * @property integer $branch_id
  * @property integer $user_id
  * @property string $status
- * @property string $date_created
+ * @property string $created_datetime
  * @property string $grand_total
  * @property string $total_payment
  * @property string $payment_remaining
@@ -43,14 +43,14 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, registration_transaction_id, branch_id, user_id, status, date_created', 'required'),
+            array('transaction_number, transaction_date, transaction_time, registration_transaction_id, branch_id, user_id, status', 'required'),
             array('registration_transaction_id, branch_id, user_id, supplier_id', 'numerical', 'integerOnly' => true),
             array('transaction_number, status', 'length', 'max' => 50),
             array('grand_total, total_payment, payment_remaining', 'length', 'max' => 18),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, note, registration_transaction_id, branch_id, user_id, status, date_created, grand_total, total_payment, payment_remaining, supplier_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, note, registration_transaction_id, branch_id, user_id, status, created_datetime, grand_total, total_payment, payment_remaining, supplier_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -83,7 +83,6 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
             'branch_id' => 'Branch',
             'user_id' => 'User',
             'status' => 'Status',
-            'date_created' => 'Date Created',
             'grand_total' => 'Grand Total',
             'total_payment' => 'Total Payment',
             'payment_remaining' => 'Remaining',
@@ -117,7 +116,6 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
-        $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('total_payment', $this->total_payment, true);
         $criteria->compare('payment_remaining', $this->payment_remaining, true);
@@ -164,7 +162,6 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
 //        $criteria->compare('status', $this->status, true);
-        $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('total_payment', $this->total_payment, true);
 //        $criteria->compare('payment_remaining', $this->payment_remaining, true);

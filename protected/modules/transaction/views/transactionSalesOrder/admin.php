@@ -75,13 +75,13 @@ $('.search-form form').submit(function(){
                     ),
 
                     'sale_order_date',
-//                    array(
-//                        'name'=>'customer_name',
-//                        'value'=>'empty($data->customer_id) ? "" : $data->customer->name'
-//                    ),
+                    array(
+                        'name'=>'customer_id',
+                        'value'=>'empty($data->customer_id) ? "" : $data->customer->name'
+                    ),
                     'status_document',
-                    'payment_type',
-                    'estimate_arrival_date',
+//                    'payment_type',
+//                    'estimate_arrival_date',
                     array(
                         'name' => 'total_price',
                         'filter' => false,
@@ -101,15 +101,21 @@ $('.search-form form').submit(function(){
                             return $invoiceNumber;
                         }
                     ),
-                    array(
-                        'name' => 'requester_branch_id',
-                        'header' => 'Branch',
-                        'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                        'value' => 'empty($data->requesterBranch) ? "" : $data->requesterBranch->name',
-                    ),
+//                    array(
+//                        'name' => 'requester_branch_id',
+//                        'header' => 'Branch',
+//                        'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                        'value' => 'empty($data->requesterBranch) ? "" : $data->requesterBranch->name',
+//                    ),
                     array(
                         'header' => 'Status',
                         'value' => '$data->totalRemainingQuantityDelivered',
+                    ),
+                    array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'filter' => false,
+                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
                     /*
                     'requester_id',

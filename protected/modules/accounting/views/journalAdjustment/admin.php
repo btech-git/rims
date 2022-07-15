@@ -67,8 +67,14 @@ Yii::app()->clientScript->registerScript('search', "
                         ),
                         'note',
                         'user.username',
-                        'branch.name',
+//                        'branch.name',
                         'status',
+                        array(
+                            'header' => 'Input',
+                            'name' => 'created_datetime',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                        ),
                         array(
                             'class' => 'CButtonColumn',
                             'template' => '{view}{update}',

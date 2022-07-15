@@ -109,15 +109,21 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'empty($data->approval) ? "" : $data->approval->username',
                     ),
-                    array(
-                        'name' => 'main_branch_id',
-                        'header' => 'Branch',
-                        'filter' => CHtml::activeDropDownList($model, 'main_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                        'value' => 'empty($data->mainBranch) ? "" : $data->mainBranch->name',
-                    ),
+//                    array(
+//                        'name' => 'main_branch_id',
+//                        'header' => 'Branch',
+//                        'filter' => CHtml::activeDropDownList($model, 'main_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                        'value' => 'empty($data->mainBranch) ? "" : $data->mainBranch->code',
+//                    ),
                     array(
                         'header' => 'Status',
                         'value' => '$data->totalRemainingQuantityReceived',
+                    ),
+                    array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'filter' => false,
+                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
                     array(
                         'class'=>'CButtonColumn',

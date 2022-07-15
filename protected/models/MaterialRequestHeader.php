@@ -17,6 +17,7 @@
  * @property integer $branch_id
  * @property integer $user_id
  * @property integer $registration_transaction_id
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property MaterialRequestDetail[] $materialRequestDetails
@@ -60,7 +61,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, status_document, status_progress, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining, registration_transaction_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, created_datetime, status_document, status_progress, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining, registration_transaction_id', 'safe', 'on' => 'search'),
         );
     }
 

@@ -18,7 +18,7 @@
  * @property integer $user_id_requestor
  * @property string $status
  * @property integer $is_inactive
- * @property string $date_created
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property MaintenanceRequestApproval[] $maintenanceRequestApprovals
@@ -47,7 +47,7 @@ class MaintenanceRequestHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, date_created, branch_id, user_id, user_id_requestor, status', 'required'),
+            array('transaction_number, transaction_date, transaction_time, branch_id, user_id, user_id_requestor, status', 'required'),
             array('priority_level, branch_id, user_id, user_id_supervisor, user_id_requestor, is_inactive', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('maintenance_type', 'length', 'max' => 20),
@@ -55,7 +55,7 @@ class MaintenanceRequestHeader extends MonthlyTransactionActiveRecord {
             array('description, note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, date_created, description, note, maintenance_type, priority_level, branch_id, user_id, user_id_supervisor, user_id_requestor, status, is_inactive', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, created_datetime, description, note, maintenance_type, priority_level, branch_id, user_id, user_id_supervisor, user_id_requestor, status, is_inactive', 'safe', 'on' => 'search'),
         );
     }
 

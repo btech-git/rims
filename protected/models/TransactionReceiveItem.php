@@ -35,7 +35,7 @@
  * @property string $invoice_grand_total_rounded
  * @property string $invoice_date_created
  * @property string $invoice_time_created
- * @property string $date_created
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property MovementInHeader[] $movementInHeaders
@@ -91,7 +91,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('receive_item_no, receive_item_date, date_created, user_id_receive', 'required'),
+            array('receive_item_no, receive_item_date, user_id_receive', 'required'),
             array('recipient_id, recipient_branch_id, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id, user_id_receive, user_id_invoice', 'numerical', 'integerOnly' => true),
             array('receive_item_no, request_type', 'length', 'max' => 30),
             array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
@@ -100,7 +100,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note, invoice_date_created, invoice_time_created', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_no, receive_item_date, arrival_date, date_created, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created', 'safe', 'on' => 'search'),
+            array('id, receive_item_no, receive_item_date, arrival_date, created_datetime, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created', 'safe', 'on' => 'search'),
         );
     }
 

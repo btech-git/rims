@@ -105,6 +105,12 @@ Yii::app()->clientScript->registerScript('search', "
                         'value' => '$data->totalRemainingQuantityReceived',
                     ),
                     array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'filter' => false,
+                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                    ),
+                    array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit}',
                         'buttons' => array(
