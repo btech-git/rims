@@ -14,7 +14,7 @@
  * @property integer $user_id
  * @property integer $supervisor_id
  * @property string $status
- * @property string $date_created
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property MovementInApproval[] $movementInApprovals
@@ -55,13 +55,13 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_in_number, date_posting, date_created, branch_id, movement_type, user_id, status', 'required'),
+            array('movement_in_number, date_posting, branch_id, movement_type, user_id, status', 'required'),
             array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id', 'numerical', 'integerOnly' => true),
             array('movement_in_number, status', 'length', 'max' => 30),
             array('movement_in_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_in_number, date_posting, date_created, branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, status, receive_item_number,return_item_number', 'safe', 'on' => 'search'),
+            array('id, movement_in_number, date_posting, created_datetime, branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, status, receive_item_number,return_item_number', 'safe', 'on' => 'search'),
         );
     }
 

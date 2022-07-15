@@ -17,7 +17,7 @@
  * @property integer $total_quantity
  * @property string $total_price
  * @property integer $destination_approval_status
- * @property string $date_created
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property TransactionDeliveryOrder[] $transactionDeliveryOrders
@@ -65,14 +65,14 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transfer_request_no, status_document, requester_id, date_created, requester_branch_id, destination_branch_id, total_quantity, total_price', 'required'),
+            array('transfer_request_no, status_document, requester_id, requester_branch_id, destination_branch_id, total_quantity, total_price', 'required'),
             array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity, destination_approval_status', 'numerical', 'integerOnly' => true),
             array('transfer_request_no, status_document', 'length', 'max' => 30),
             array('total_price', 'length', 'max' => 18),
             array('transfer_request_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transfer_request_no, transfer_request_date, date_created, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status', 'safe', 'on' => 'search'),
+            array('id, transfer_request_no, transfer_request_date, created_datetime, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status', 'safe', 'on' => 'search'),
         );
     }
 

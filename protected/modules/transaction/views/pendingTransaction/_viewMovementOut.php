@@ -22,5 +22,11 @@
         array('name'=>'branch_id','value'=>'$data->branch->name'),
         'status',
         array('name'=>'user_id','value'=> '$data->user->username'),
+        array(
+            'header' => 'Input',
+            'name' => 'created_datetime',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+        ),
     ),
 )); ?>

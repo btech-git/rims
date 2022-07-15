@@ -16,6 +16,7 @@
  * @property string $total_price
  * @property string $status_document
  * @property string $notes
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property TransactionPurchaseOrderDetail[] $transactionPurchaseOrderDetails
@@ -60,10 +61,10 @@ class TransactionRequestOrder extends MonthlyTransactionActiveRecord {
             array('total_price', 'length', 'max' => 18),
             array('status_document', 'length', 'max' => 20),
             array('request_order_no', 'unique'),
-            array('notes', 'safe'),
+            array('notes, created_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, request_order_no, request_order_date, requester_id, requester_branch_id, main_branch_id, main_branch_approved_by, approved_by, total_items, total_price, request_branch_name, status_document, notes, has_compare', 'safe', 'on' => 'search'),
+            array('id, request_order_no, request_order_date, created_datetime, requester_id, requester_branch_id, main_branch_id, main_branch_approved_by, approved_by, total_items, total_price, request_branch_name, status_document, notes, has_compare', 'safe', 'on' => 'search'),
         );
     }
 

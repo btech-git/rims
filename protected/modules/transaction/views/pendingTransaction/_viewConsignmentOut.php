@@ -20,11 +20,21 @@
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->date_posting)'
         ),
         'status',
+        array(
+            'name' => 'customer_name',
+            'value' => '$data->customer->name',
+        ),
         array('name'=>'sender_id','value'=> '$data->user->employee->name'),
         array('name'=>'branch_id','value'=>'$data->branch->name'),
         array(
             'header' => 'Status',
             'value' => '$data->totalRemainingQuantityDelivered',
+        ),
+        array(
+            'header' => 'Input',
+            'name' => 'created_datetime',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
         ),
     ),
 )); ?>

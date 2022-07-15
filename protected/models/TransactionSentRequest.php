@@ -17,6 +17,7 @@
  * @property integer $total_quantity
  * @property string $total_price
  * @property integer $destination_approval_status
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property TransactionDeliveryOrder[] $transactionDeliveryOrders
@@ -67,7 +68,7 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
             array('sent_request_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, sent_request_no, sent_request_date, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity,branch_name, total_price, destination_approval_status', 'safe', 'on' => 'search'),
+            array('id, sent_request_no, sent_request_date, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity,branch_name, total_price, destination_approval_status, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 

@@ -76,9 +76,9 @@ class PendingTransactionController extends Controller {
 
         $consignment = Search::bind(new ConsignmentOutHeader('search'), isset($_GET['ConsignmentOutHeader']) ? $_GET['ConsignmentOutHeader'] : '');
         $consignmentDataProvider = $consignment->search();
-        $consignmentDataProvider->criteria->with = array('branch');
-        $consignmentDataProvider->criteria->order = 't.date_posting DESC';
-        $consignmentDataProvider->criteria->addBetweenCondition('t.date_posting', $tanggal_mulai, $tanggal_sampai);
+//        $consignmentDataProvider->criteria->with = array('branch');
+//        $consignmentDataProvider->criteria->order = 't.date_posting DESC';
+//        $consignmentDataProvider->criteria->addBetweenCondition('t.date_posting', $tanggal_mulai, $tanggal_sampai);
 
         $consignmentIn = Search::bind(new ConsignmentInHeader('search'), isset($_GET['ConsignmentInHeader']) ? $_GET['ConsignmentInHeader'] : '');
         $consignmentInDataProvider = $consignmentIn->search();
@@ -154,7 +154,7 @@ class PendingTransactionController extends Controller {
             $salesDataProvider->criteria->addCondition('status_document = :status_document');
             $salesDataProvider->criteria->params[':status_document'] = $status_document;
 
-            $consignmentDataProvider->criteria->addCondition('status_document = :status_document');
+            $consignmentDataProvider->criteria->addCondition('t.status = :status_document');
             $consignmentDataProvider->criteria->params[':status_document'] = $status_document;
 
             $consignmentInDataProvider->criteria->addCondition('status_document = :status_document');

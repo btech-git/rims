@@ -17,7 +17,7 @@
  * @property string $total_price
  * @property integer $approved_by
  * @property string $status_document
- * @property string $date_created
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property ConsignmentOutApproval[] $consignmentOutApprovals
@@ -56,7 +56,7 @@ class ConsignmentOutHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('consignment_out_no, date_posting, date_created, status, customer_id, sender_id, periodic, total_quantity, total_price', 'required'),
+            array('consignment_out_no, date_posting, status, customer_id, sender_id, periodic, total_quantity, total_price', 'required'),
             array('customer_id, sender_id, branch_id, periodic, total_quantity, approved_by', 'numerical', 'integerOnly' => true),
             array('consignment_out_no, status_document', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
@@ -65,7 +65,7 @@ class ConsignmentOutHeader extends MonthlyTransactionActiveRecord {
             array('consignment_out_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, consignment_out_no, date_posting, date_created, status, customer_id, delivery_date, sender_id, branch_id, periodic, total_quantity, total_price, approved_by, status_document, customer_name,branch_name', 'safe', 'on' => 'search'),
+            array('id, consignment_out_no, date_posting, created_datetime, status, customer_id, delivery_date, sender_id, branch_id, periodic, total_quantity, total_price, approved_by, status_document, customer_name,branch_name', 'safe', 'on' => 'search'),
         );
     }
 

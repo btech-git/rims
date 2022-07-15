@@ -33,5 +33,11 @@
             'name'=>'requester_id',
             'value'=> '$data->user->username'
         ),
+        array(
+            'header' => 'Input',
+            'name' => 'input_date',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->input_date)'
+        ),
     ),
 )); ?>

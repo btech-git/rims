@@ -21,10 +21,16 @@
         ),
         'status_document',
         array('name'=>'receive_id','value'=> '$data->user->username'),
-        array('name'=>'receive_branch','value'=> '$data->branch->name'),
+        array('name'=>'receive_branch','value'=> '$data->receiveBranch->name'),
         array(
             'header' => 'Status',
             'value' => '$data->totalRemainingQuantityReceived',
+        ),
+        array(
+            'header' => 'Input',
+            'name' => 'created_datetime',
+            'filter' => false,
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
         ),
     ),
 )); ?>

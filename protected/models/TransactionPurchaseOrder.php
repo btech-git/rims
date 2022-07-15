@@ -29,7 +29,7 @@
  * @property string $payment_date_estimate
  * @property integer $coa_bank_id_estimate
  * @property integer $purchase_type
- * @property string $created_date_time
+ * @property string $created_datetime
  * @property integer $tax_percentage
  *
  * The followings are the available model relations:
@@ -82,7 +82,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, created_datetime, tax_percentage', 'required'),
+            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage', 'required'),
             array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),

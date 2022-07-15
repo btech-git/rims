@@ -14,7 +14,7 @@
  * @property integer $receive_branch
  * @property string $total_price
  * @property integer $total_quantity
- * @property string $date_created
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property ConsignmentInDetail[] $consignmentInDetails
@@ -54,14 +54,14 @@ class ConsignmentInHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('consignment_in_number, date_posting, date_created, status_document, supplier_id, date_arrival, total_price', 'required'),
+            array('consignment_in_number, date_posting, status_document, supplier_id, date_arrival, total_price', 'required'),
             array('supplier_id, receive_id, receive_branch, total_quantity', 'numerical', 'integerOnly' => true),
             array('consignment_in_number, status_document', 'length', 'max' => 30),
             array('total_price', 'length', 'max' => 18),
             array('consignment_in_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, consignment_in_number, date_posting, date_created, status_document, supplier_id, date_arrival, receive_id, receive_branch, total_price, total_quantity,supplier_name, branch_name', 'safe', 'on' => 'search'),
+            array('id, consignment_in_number, date_posting, created_datetime, status_document, supplier_id, date_arrival, receive_id, receive_branch, total_price, total_quantity,supplier_name, branch_name', 'safe', 'on' => 'search'),
         );
     }
 
