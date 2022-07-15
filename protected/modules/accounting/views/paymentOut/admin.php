@@ -124,7 +124,7 @@ $('.search-form form').submit(function(){
             'header' => 'Tanggal Input',
             'name' => 'created_datetime',
             'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_created)'
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
         ),
         array(
             'class' => 'CButtonColumn',
