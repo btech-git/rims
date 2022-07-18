@@ -311,6 +311,7 @@ class PaymentInController extends Controller {
                         $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
                         $payment = PaymentIn::model()->findAll($criteria);
                         $invoiceData = InvoiceHeader::model()->findByPk($model->invoice_id);
+                        $totalRemaining = $invoiceData->getTotalRemaining();
 
                         if (count($payment) == 0) {
                             $countTotal = $invoiceData->total_price - $model->payment_amount;
@@ -318,15 +319,17 @@ class PaymentInController extends Controller {
                             $countTotal = $invoiceData->payment_left - $model->payment_amount;
                         }
 
-                        if ($countTotal != 0)
+                        if ($totalRemaining > 0) {
                             $invoiceData->status = 'PARTIALLY PAID';
-                        elseif ($countTotal == 0)
+                        } elseif ($totalRemaining == 0) {
                             $invoiceData->status = 'PAID';
-                        else
+                        } else {
                             $invoiceData->status = 'NOT PAID';
+                        }
 
-                        $invoiceData->payment_amount = $model->payment_amount;
-                        $invoiceData->payment_left = $countTotal;
+                        $invoiceData->payment_amount = $invoiceData->getTotalPayment();
+                        $invoiceData->payment_left = $totalRemaining;
+//                        $invoiceData->update(array('payment_amount', 'payment_left'));
                         $invoiceData->save(false);
 
                         PaymentInImages::model()->deleteAllByAttributes(array(

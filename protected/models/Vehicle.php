@@ -67,7 +67,7 @@ class Vehicle extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('plate_number, car_make_id, car_model_id, car_sub_model_id', 'required'),
+            array('plate_number, car_make_id, car_model_id, car_sub_model_id, color_id', 'required'),
             array('car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, power, plate_number_prefix_id, insurance_company_id', 'numerical', 'integerOnly' => true),
             array('year, drivetrain, plate_number_suffix', 'length', 'max' => 10),
             array('plate_number', 'unique', 'message' => 'Plate number already exists.'),
