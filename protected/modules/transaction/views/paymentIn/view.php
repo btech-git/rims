@@ -564,6 +564,7 @@ $this->menu = array(
             
             <br />
 
+            <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->payment_number, 'is_coa_category' => 0)); ?>
             <?php if (Yii::app()->user->checkAccess("accountingHead")): ?>
                 <fieldset>
                     <legend>Journal Transactions</legend>
@@ -580,7 +581,6 @@ $this->menu = array(
 
                         <tbody>
                             <?php $totalDebit = 0; $totalCredit = 0; ?>
-                            <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->payment_number, 'is_coa_category' => 0)); ?>
                             <?php foreach ($transactions as $i => $header): ?>
 
                                 <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
@@ -613,7 +613,7 @@ $this->menu = array(
 
             <br />
 
-            <?php if (Yii::app()->user->checkAccess("accountingHead") && $model->status === 'Approved'): ?>
+            <?php if (Yii::app()->user->checkAccess("accountingHead") && $model->status === 'Approved' && empty($transactions)): ?>
                 <div class="field buttons text-center">
                     <?php echo CHtml::beginForm(); ?>
                     <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>

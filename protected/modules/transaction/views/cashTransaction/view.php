@@ -27,8 +27,9 @@ $this->menu = array(
         <?php if ($model->status != "Approved" && $model->status != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/cashTransaction/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.update"))) ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/cashTransaction/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.updateApproval"))) ?>
-        <?php endif ?>
+        <?php endif; ?>
         <h1>View Cash Transaction #<?php echo $model->id; ?></h1>
+        <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->transaction_number, 'is_coa_category' => 0)); ?>
 
         <div class="row">
             <div class="large-12 columns">
@@ -290,7 +291,6 @@ $this->menu = array(
 
                             <tbody>
                                 <?php $totalDebit = 0; $totalCredit = 0; ?>
-                                <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->transaction_number, 'is_coa_category' => 0)); ?>
                                 <?php foreach ($transactions as $i => $header): ?>
 
                                     <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
@@ -350,7 +350,7 @@ $this->menu = array(
             
         <br />
 
-        <?php if (Yii::app()->user->checkAccess("cashierHead") && $model->status === 'Approved'): ?>
+        <?php if (Yii::app()->user->checkAccess("cashierHead") && $model->status === 'Approved' && empty($transactions)): ?>
             <div class="field buttons text-center">
                 <?php echo CHtml::beginForm(); ?>
                 <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>

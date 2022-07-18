@@ -62,7 +62,7 @@
         ),
         array(
             'label' => 'Tanggal Input',
-            'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOut->date_created),
+            'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOut->created_datetime),
         ),
         array(
             'label' => 'Catatan',
@@ -168,6 +168,7 @@
 
 <br />
 
+<?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $paymentOut->payment_number, 'is_coa_category' => 0)); ?>
 <?php if (Yii::app()->user->checkAccess("accountingHead")): ?>
     <fieldset>
         <legend>Journal Transactions</legend>
@@ -184,7 +185,6 @@
 
             <tbody>
                 <?php $totalDebit = 0; $totalCredit = 0; ?>
-                <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $paymentOut->payment_number, 'is_coa_category' => 0)); ?>
                 <?php foreach ($transactions as $i => $header): ?>
 
                     <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
@@ -217,7 +217,7 @@
 
 <br />
 
-<?php if (Yii::app()->user->checkAccess("accountingHead") && $paymentOut->status === 'Approved'): ?>
+<?php if (Yii::app()->user->checkAccess("accountingHead") && $paymentOut->status === 'Approved' && empty($transactions)): ?>
     <div class="field buttons text-center">
         <?php echo CHtml::beginForm(); ?>
         <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
