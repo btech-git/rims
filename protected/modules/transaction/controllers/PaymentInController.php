@@ -179,7 +179,6 @@ class PaymentInController extends Controller {
         $model->vehicle_id = $invoice->vehicle_id;
         $model->payment_time = date('H:i:s');
         $model->created_datetime = date('Y-m-d H:i:s');
-
         $model->branch_id = $model->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $model->branch_id;
         $images = $model->images = CUploadedFile::getInstances($model, 'images');
 
@@ -257,7 +256,7 @@ class PaymentInController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $model->payment_time = date('H:i:s');
-        $model->setCodeNumberByRevision('payment_number');
+        $images = $model->images = CUploadedFile::getInstances($model, 'images');
 
         $invoice = new InvoiceHeader('search');
         $invoice->unsetAttributes();
@@ -296,52 +295,69 @@ class PaymentInController extends Controller {
             $this->redirect(array('admin'));
 
         if (isset($_POST['PaymentIn'])) {
-            $model->attributes = $_POST['PaymentIn'];
-            
-            if ((int)$model->payment_type_id !== 1 && (int)$model->company_bank_id == null) {
-                $model->addError('error', 'Company Bank cannot be empty!');
-            } else {
-                if ($model->save()) {
-                    //update Invoice
-                    $criteria = new CDbCriteria;
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = true; 
+                $model->attributes = $_POST['PaymentIn'];
+                $model->setCodeNumberByRevision('payment_number');
 
-                    $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
-                    $payment = PaymentIn::model()->findAll($criteria);
-                    // $payment = PaymentIn::model()->findAllByAttributes(array('invoice_id'=>$model->invoice_id));
-                    $invoiceData = InvoiceHeader::model()->findByPk($model->invoice_id);
+                if ((int)$model->payment_type_id !== 1 && (int)$model->company_bank_id == null) {
+                    $model->addError('error', 'Company Bank cannot be empty!');
+                } else {
+                    if ($model->save()) {
+                        //update Invoice
+                        $criteria = new CDbCriteria;
 
-                    if (count($payment) == 0) {
-                        $countTotal = $invoiceData->total_price - $model->payment_amount;
-                    } else {
-                        $countTotal = $invoiceData->payment_left - $model->payment_amount;
+                        $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
+                        $payment = PaymentIn::model()->findAll($criteria);
+                        $invoiceData = InvoiceHeader::model()->findByPk($model->invoice_id);
+
+                        if (count($payment) == 0) {
+                            $countTotal = $invoiceData->total_price - $model->payment_amount;
+                        } else {
+                            $countTotal = $invoiceData->payment_left - $model->payment_amount;
+                        }
+
+                        if ($countTotal != 0)
+                            $invoiceData->status = 'PARTIALLY PAID';
+                        elseif ($countTotal == 0)
+                            $invoiceData->status = 'PAID';
+                        else
+                            $invoiceData->status = 'NOT PAID';
+
+                        $invoiceData->payment_amount = $model->payment_amount;
+                        $invoiceData->payment_left = $countTotal;
+                        $invoiceData->save(false);
+
+                        PaymentInImages::model()->deleteAllByAttributes(array(
+                            'payment_in_id' => $model->id,
+                        ));
+
+                        foreach ($images as $file) {
+                            $contentImage = new PaymentInImages();
+                            $contentImage->payment_in_id = $model->id;
+                            $contentImage->is_inactive = PaymentIn::STATUS_ACTIVE;
+                            $contentImage->extension = $file->extensionName;
+                            $valid = $contentImage->save(false) && $valid;
+
+                            $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $contentImage->filename;
+                            $file->saveAs($originalPath);
+                        }
+
+                        if ($valid) {
+                            $dbTransaction->commit();
+                        } else {
+                            $dbTransaction->rollback();
+                        }
                     }
-
-                    if ($countTotal != 0)
-                        $invoiceData->status = 'PARTIALLY PAID';
-                    elseif ($countTotal == 0)
-                        $invoiceData->status = 'PAID';
-                    else
-                        $invoiceData->status = 'NOT PAID';
-
-                    $invoiceData->payment_amount = $model->payment_amount;
-                    $invoiceData->payment_left = $countTotal;
-                    $invoiceData->save(false);
-
-                    $images = $model->images = CUploadedFile::getInstances($model, 'images');
-
-                    foreach ($images as $file) {
-                        $contentImage = new PaymentInImages();
-                        $contentImage->payment_in_id = $model->id;
-                        $contentImage->is_inactive = PaymentIn::STATUS_ACTIVE;
-                        $contentImage->extension = $file->extensionName;
-                        $valid = $contentImage->save(false) && $valid;
-
-                        $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $contentImage->filename;
-                        $file->saveAs($originalPath);
-                    }
-
-                    $this->redirect(array('view', 'id' => $model->id));
                 }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
+            }
+
+            if ($valid) {
+                $this->redirect(array('view', 'id' => $model->id));
             }
         }
 
