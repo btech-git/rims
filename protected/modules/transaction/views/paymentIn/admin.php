@@ -81,7 +81,7 @@ $('.search-form form').submit(function(){
                     'columns' => array(
                         array(
                             'name' => 'invoice_id', 
-                            'value' => 'CHtml::link($data->invoice->invoice_number, array("view", "id"=>$data->invoice_id))',
+                            'value' => 'CHtml::link($data->invoice->invoice_number, array("invoiceHeader/invoiceview", "id"=>$data->invoice_id))',
                             'type' => 'raw'
                         ),
                         array(
