@@ -35,7 +35,6 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'invoice_date'); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                             'model' => $model,
                             'attribute' => "invoice_date",
@@ -60,7 +59,6 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'due_date'); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                             'model' => $model,
                             'attribute' => "due_date",

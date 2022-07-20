@@ -32,7 +32,6 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'date_posting'); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                             'model' => $model,
                             'attribute' => "date_posting",
