@@ -110,7 +110,7 @@ $this->breadcrumbs = array(
 
             <fieldset>
                 <legend>Information</legend>
-                <div class="row" style="height: 500px">
+                <div class="row" style="height: 550px">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
                             'Registration' => array(
@@ -156,6 +156,8 @@ $this->breadcrumbs = array(
             </fieldset>
         </div>
     </div>
+    
+    <hr /><br />
     
     <div class="detail">
         <fieldset>

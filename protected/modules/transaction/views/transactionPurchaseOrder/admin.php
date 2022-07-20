@@ -94,7 +94,7 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     array(
                         'name'=>'supplier_name',
-                        'value'=>'$data->supplier->name',
+                        'value'=>'empty($data->supplier_id) ? "" : $data->supplier->name',
                     ),
                     'status_document',
                     array(
