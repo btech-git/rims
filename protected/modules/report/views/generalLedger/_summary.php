@@ -72,6 +72,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php //endif; ?>
                         </td>
                     </tr>
+                    <?php $totalDebit = 0; $totalCredit = 0; ?>
                     <?php foreach ($header->jurnalUmums as $detail): ?>
                         <tr>
                             <td class="width2-1">
@@ -98,7 +99,19 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detail->currentSaldo)); ?>
                             </td>
                         </tr>
+                        <?php $totalDebit += $debitAmount; ?>
+                        <?php $totalCredit += $creditAmount; ?>
                     <?php endforeach; ?>
+                        <tr>
+                            <td colspan="4" style="text-align: right">Total</td>
+                            <td class="width2-6" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                            </td>
+                            <td class="width2-7" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+                            </td>
+                            <td>&nbsp;</td>
+                        </tr>
                 </table>
             </td>
         </tr>
