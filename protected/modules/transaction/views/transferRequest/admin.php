@@ -48,14 +48,9 @@ Yii::app()->clientScript->registerScript('search', "
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Transfer Request', Yii::app()->baseUrl.'/transaction/transferRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionTransferRequest.create"))) ?>
-        <h1>Manage Transaction Transfer Request</h1>
+        <h1>Manage Transfer Request</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
-            <!--<div class="left clearfix bulk-action">
-                <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-                <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-                <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-            </div>-->
             <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
             <div class="clearfix"></div>
             <div class="search-form" style="display:none">
@@ -66,8 +61,8 @@ Yii::app()->clientScript->registerScript('search', "
             </div>
          </div>
 
+        <h3>Request Branch Asal</h3>
          <div class="grid-view">
-
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-transfer-request-grid',
                 'dataProvider'=>$dataProvider,
@@ -115,7 +110,65 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionTransferRequest.update")',
+                                'visible'=> '$data->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestEdit")',
+                            ),
+                        ),
+                    ),
+                ),
+            )); ?>
+        </div>
+        <br /> <hr />
+        
+        <h3>Request Branch Tujuan</h3>
+         <div class="grid-view">
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id'=>'transaction-transfer-request-grid',
+                'dataProvider'=>$destinationBranchDataProvider,
+                'filter'=> null,
+                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                'pager'=>array(
+                    'cssFile'=>false,
+                    'header'=>'',
+                    ),
+                'columns'=>array(
+                    array(
+                        'name'=>'transfer_request_no', 
+                        'value'=>'CHTml::link($data->transfer_request_no, array("view", "id"=>$data->id))', 
+                        'type'=>'raw'
+                    ),
+                    'transfer_request_date',
+                    'status_document',
+                    'estimate_arrival_date',
+                    array(
+                        'name'=>'requester_branch_id',
+                        'header' => 'Requester',
+                        'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                        'value'=>'$data->requesterBranch->name'
+                    ),
+                    array(
+                        'name'=>'destination_branch_id',
+                        'header' => 'Destination',
+                        'filter' => CHtml::activeDropDownList($model, 'destination_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                        'value'=>'$data->destinationBranch->name'
+                    ),
+                    array(
+                        'header' => 'Delivery Status',
+                        'value' => '$data->totalRemainingQuantityDelivered',
+                    ),
+                    array(
+                        'header' => 'Input',
+                        'name' => 'created_datetime',
+                        'filter' => false,
+                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                    ),
+                    array(
+                        'class'=>'CButtonColumn',
+                        'template'=>'{approve}',
+                        'buttons'=>array (
+                            'approve' => array (
+                                'label'=>'approve',
+                                'url'=>'Yii::app()->createUrl("transaction/transferRequest/updateApprovalDestination", array("id"=>$data->id))',
+                                'visible'=> 'Yii::app()->user->checkAccess("transferRequestEdit")',
                             ),
                         ),
                     ),

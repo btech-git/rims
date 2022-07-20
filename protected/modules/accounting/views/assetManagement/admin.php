@@ -30,22 +30,22 @@ $('.search-form form').submit(function(){
 
 <div id="link">
     <span style="display: inline-block">
-    <?php echo CHtml::link('<span class="fa fa-plus"></span>Purchase', Yii::app()->baseUrl . '/accounting/assetManagement/createPurchase', array(
-        'class' => 'button success right',
-    )); ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>Purchase', Yii::app()->baseUrl . '/accounting/assetManagement/createPurchase', array(
+            'class' => 'button success right',
+        )); ?>
     </span>
 <!--    <span style="display: inline-block; width: 9px">&nbsp;</span>
     <span style="display: inline-block">
     <?php /*echo CHtml::link('<span class="fa fa-minus"></span>Sell', Yii::app()->baseUrl . '/accounting/assetPurchase/createSale', array(
         'class' => 'button alert right',
-    )); ?>
-    </span>
-    <span style="display: inline-block; width: 9px">&nbsp;</span>
-    <span style="display: inline-block">
-    <?php echo CHtml::link('<span class="fa fa-arrow-down"></span>Depreciating', Yii::app()->baseUrl . '/accounting/assetPurchase/createDepreciation', array(
-        'class' => 'button warning right',
     ));*/ ?>
     </span>-->
+    <span style="display: inline-block; width: 9px">&nbsp;</span>
+    <span style="display: inline-block">
+        <?php echo CHtml::link('<span class="fa fa-arrow-down"></span>Depreciating', Yii::app()->baseUrl . '/accounting/assetManagement/createDepreciation', array(
+            'class' => 'button warning right',
+        )); ?>
+    </span>
 </div>
 
 <br />
@@ -108,17 +108,12 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         */
         array(
             'class'=>'CButtonColumn',
-            'template' => '{views} {depr} {sale}',
+            'template' => '{views} {sale}',
             'buttons' => array(
                 'views' => array(
                     'label' => 'view',
                     'url' => 'Yii::app()->createUrl("accounting/assetManagement/view", array("id"=>$data->id))',
                     'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")',
-                ),
-                'depr' => array(
-                    'label' => 'depr',
-                    'url' => 'Yii::app()->createUrl("accounting/assetManagement/createDepreciation", array("id"=>$data->id))',
-                    'visible' => '$data->status !== "Sold" && Yii::app()->user->checkAccess("bodyRepairEdit")',
                 ),
                 'sale' => array(
                     'label' => 'sale',

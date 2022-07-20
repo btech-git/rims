@@ -65,6 +65,8 @@ Yii::app()->clientScript->registerScript('search', "
             </div>
         </div>
 
+        <h3>Request Branch Asal</h3>
+        
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-sent-request-grid',
@@ -83,15 +85,12 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     'sent_request_date',
                     'estimate_arrival_date',
-                    // 'requester_id',
                     array(
                         'name'=>'requester_branch_id',
-//                        'filter' => CHtml::activeDropDownList($model, 'requester_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value'=>'$data->requesterBranch->name'
                     ),
                     array(
                         'name'=>'destination_branch_id',
-//                        'filter' => CHtml::activeDropDownList($model, 'destination_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value'=>'$data->destinationBranch->name'
                     ),
                     'status_document',
@@ -125,6 +124,59 @@ Yii::app()->clientScript->registerScript('search', "
                                 'options' => array(
                                     'confirm' => 'Are you sure to delete this transaction?',
                                 ),
+                            ),
+                        ),
+                    ),
+                ),
+            )); ?>
+        </div>
+        
+        <br /> <hr />
+        
+        <h3>Request Branch Tujuan</h3>
+         <div class="grid-view">
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id'=>'transaction-transfer-request-grid',
+                'dataProvider'=>$destinationBranchDataProvider,
+                'filter'=> null,
+                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                'pager'=>array(
+                    'cssFile'=>false,
+                    'header'=>'',
+                    ),
+                'columns'=>array(
+                    array(
+                        'name'=>'sent_request_no', 
+                        'value'=>'CHTml::link($data->sent_request_no, array("view", "id"=>$data->id))', 
+                        'type'=>'raw'
+                    ),
+                    'sent_request_date',
+                    'estimate_arrival_date',
+                    array(
+                        'name'=>'requester_branch_id',
+                        'value'=>'$data->requesterBranch->name'
+                    ),
+                    array(
+                        'name'=>'destination_branch_id',
+                        'value'=>'$data->destinationBranch->name'
+                    ),
+                    'status_document',
+                    array(
+                        'name'=>'approved_by',
+                        'value'=>'$data->approval!= null?$data->approval->username:""',
+                    ),
+                    array(
+                        'header' => 'Delivery Status',
+                        'value' => '$data->totalRemainingQuantityDelivered',
+                    ),
+                    array(
+                        'class'=>'CButtonColumn',
+                        'template'=>'{approve}',
+                        'buttons'=>array (
+                            'approve' => array (
+                                'label'=>'approve',
+                                'url'=>'Yii::app()->createUrl("transaction/transactionSentRequest/updateApprovalDestination", array("id"=>$data->id))',
+                                'visible'=> 'Yii::app()->user->checkAccess("sentRequestEdit")',
                             ),
                         ),
                     ),

@@ -153,6 +153,7 @@ class TransferRequest extends CComponent {
     public function flush() {
         $this->header->total_quantity = $this->totalQuantity;
         $this->header->total_price = $this->grandTotal;
+        $this->header->created_datetime = date('Y-m-d H:i:s');
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {

@@ -37,7 +37,18 @@ class ReceivableLedgerController extends Controller {
 //        $receivableLedgerSummary->setupSorting();
 //        $receivableLedgerSummary->setupFilter();
 
-        $accounts = Coa::model()->findAll(array('condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1', 'order' => 't.code ASC'));
+        if (!empty($coaId)) {
+            $accounts = Coa::model()->findAll(array(
+                'condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1 AND t.id = :coa_id', 
+                'params' => array(':coa_id' => $coaId),
+                'order' => 't.code ASC'
+            ));
+        } else {
+            $accounts = Coa::model()->findAll(array(
+                'condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1', 
+                'order' => 't.code ASC'
+            ));
+        }
         
 //        if (isset($_GET['SaveExcel'])) {
 //            $this->saveToExcel($receivableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));

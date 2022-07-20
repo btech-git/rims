@@ -29,22 +29,22 @@ $this->menu = array(
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Transfer Request',
             Yii::app()->baseUrl . '/transaction/transferRequest/admin', array(
                 'class' => 'button cbutton right',
-                'visible' => Yii::app()->user->checkAccess("transaction.transferRequest.admin")
+                'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
             ));  ?>
 
-        <?php if ($transferRequest->status_document != 'Approved' && $transferRequest->status_document != 'Rejected'): ?>
+        <?php if ($transferRequest->status_document == 'Draft'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit',
                 Yii::app()->baseUrl . '/transaction/transferRequest/update?id=' . $transferRequest->id, array(
                     'class' => 'button cbutton right',
                     'style' => 'margin-right:10px',
-                    'visible' => Yii::app()->user->checkAccess("transaction.transferRequest.update")
+                    'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
                 )); ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval',
                 Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id,
                 array(
                     'class' => 'button cbutton right',
                     'style' => 'margin-right:10px',
-                    'visible' => Yii::app()->user->checkAccess("transaction.transferRequest.updateApproval")
+                    'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
                 )); ?>
         <?php endif; ?>
 

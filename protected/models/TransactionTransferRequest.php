@@ -18,6 +18,7 @@
  * @property string $total_price
  * @property integer $destination_approval_status
  * @property string $created_datetime
+ * @property integer $destination_approved_by
  *
  * The followings are the available model relations:
  * @property TransactionDeliveryOrder[] $transactionDeliveryOrders
@@ -72,7 +73,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
             array('transfer_request_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transfer_request_no, transfer_request_date, created_datetime, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status', 'safe', 'on' => 'search'),
+            array('id, transfer_request_no, transfer_request_date, created_datetime, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status, destination_approved_by', 'safe', 'on' => 'search'),
         );
     }
 
@@ -88,6 +89,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'transfer_request_id'),
             'requesterBranch' => array(self::BELONGS_TO, 'Branch', 'requester_branch_id'),
             'approvedBy' => array(self::BELONGS_TO, 'Users', 'approved_by'),
+            'destinationApprovedBy' => array(self::BELONGS_TO, 'Users', 'destination_approved_by'),
             'destinationBranch' => array(self::BELONGS_TO, 'Branch', 'destination_branch_id'),
             'user' => array(self::BELONGS_TO, 'User', 'requester_id'),
             'transactionTransferRequestApprovals' => array(self::HAS_MANY, 'TransactionTransferRequestApproval', 'transfer_request_id'),

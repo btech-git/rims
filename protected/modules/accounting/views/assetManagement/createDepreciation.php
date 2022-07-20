@@ -15,4 +15,4 @@ $this->menu=array(
 
 <h1>Create Asset Depreciation</h1>
 
-<?php $this->renderPartial('_formDepreciation', array('model'=>$model)); ?>
+<?php $this->renderPartial('_formDepreciation', array('assetDepreciation' => $assetDepreciation,)); ?>

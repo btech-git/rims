@@ -46,7 +46,6 @@ class TransferRequestController extends Controller {
         $transferRequest->header->status_document = 'Draft';
         $transferRequest->header->total_quantity =  0;
         $transferRequest->header->total_price = 0;
-//        $transferRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($transferRequest->header->transfer_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($transferRequest->header->transfer_request_date)), $transferRequest->header->requester_branch_id);
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
@@ -114,7 +113,6 @@ class TransferRequestController extends Controller {
         ));
     }
 
-
     public function actionUpdateApproval($headerId)
     {
         $transferRequest = TransactionTransferRequest::model()->findByPk($headerId);
@@ -139,11 +137,6 @@ class TransferRequestController extends Controller {
                     $coaInterbranchRequester = BranchCoaInterbranch::model()->findByAttributes(array(
                         'branch_id_from' => $transferRequest->requester_branch_id, 
                         'branch_id_to' => $transferRequest->destination_branch_id,
-                    ));
-
-                    $coaInterbranchDestination = BranchCoaInterbranch::model()->findByAttributes(array(
-                        'branch_id_from' => $transferRequest->destination_branch_id, 
-                        'branch_id_to' => $transferRequest->requester_branch_id,
                     ));
 
                     $jurnalUmumInterbranchRequester = new JurnalUmum;
@@ -197,19 +190,6 @@ class TransferRequestController extends Controller {
 
                     }
                     
-                    $jurnalUmumInterbranchDestination = new JurnalUmum;
-                    $jurnalUmumInterbranchDestination->kode_transaksi = $transferRequest->transfer_request_no;
-                    $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-                    $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
-                    $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
-                    $jurnalUmumInterbranchDestination->total = $transferRequest->total_price;
-                    $jurnalUmumInterbranchDestination->debet_kredit = 'K';
-                    $jurnalUmumInterbranchDestination->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInterbranchDestination->transaction_subject = 'Transfer Request Destination';
-                    $jurnalUmumInterbranchDestination->is_coa_category = 0;
-                    $jurnalUmumInterbranchDestination->transaction_type = 'TR';
-                    $jurnalUmumInterbranchDestination->save();
-
                     foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
                         $transferRequestDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->id, 'transfer_request_id' => $transferRequest->id));
                         $transferRequestDetail->quantity_delivery_left = $detail->quantity - $detail->quantity_delivery;
@@ -218,33 +198,6 @@ class TransferRequestController extends Controller {
 
                         $hppPrice = $detail->product->hpp * $detail->quantity;
 
-                        //save coa persediaan product master
-                        $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
-                        $jurnalUmumMasterOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
-                        $jurnalUmumMasterOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-                        $jurnalUmumMasterOutstandingPartDestination->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
-                        $jurnalUmumMasterOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
-                        $jurnalUmumMasterOutstandingPartDestination->total = $hppPrice;
-                        $jurnalUmumMasterOutstandingPartDestination->debet_kredit = 'D';
-                        $jurnalUmumMasterOutstandingPartDestination->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumMasterOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
-                        $jurnalUmumMasterOutstandingPartDestination->is_coa_category = 1;
-                        $jurnalUmumMasterOutstandingPartDestination->transaction_type = 'TR';
-                        $jurnalUmumMasterOutstandingPartDestination->save();
-
-                        //save coa persedian product sub master
-                        $jurnalUmumOutstandingPartDestination = new JurnalUmum;
-                        $jurnalUmumOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
-                        $jurnalUmumOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-                        $jurnalUmumOutstandingPartDestination->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
-                        $jurnalUmumOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
-                        $jurnalUmumOutstandingPartDestination->total = $hppPrice;
-                        $jurnalUmumOutstandingPartDestination->debet_kredit = 'D';
-                        $jurnalUmumOutstandingPartDestination->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
-                        $jurnalUmumOutstandingPartDestination->is_coa_category = 0;
-                        $jurnalUmumOutstandingPartDestination->transaction_type = 'TR';
-                        $jurnalUmumOutstandingPartDestination->save();
                     }
                     
                 }
@@ -262,6 +215,67 @@ class TransferRequestController extends Controller {
         ));
     }
 
+    public function actionUpdateApprovalDestination($id)
+    {
+        $transferRequest = TransactionTransferRequest::model()->findByPk($id);
+        $transferRequest->destination_approval_status = 1;
+        $transferRequest->destination_approved_by = Yii::app()->user->id;
+        $transferRequest->status_document = 'Approved by Destination Branch';
+        $transferRequest->update(array('destination_approval_status', 'destination_approved_by', 'status_document'));
+
+        $coaInterbranchDestination = BranchCoaInterbranch::model()->findByAttributes(array(
+            'branch_id_from' => $transferRequest->destination_branch_id, 
+            'branch_id_to' => $transferRequest->requester_branch_id,
+        ));
+
+        $jurnalUmumInterbranchDestination = new JurnalUmum;
+        $jurnalUmumInterbranchDestination->kode_transaksi = $transferRequest->transfer_request_no;
+        $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
+        $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
+        $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
+        $jurnalUmumInterbranchDestination->total = $transferRequest->total_price;
+        $jurnalUmumInterbranchDestination->debet_kredit = 'K';
+        $jurnalUmumInterbranchDestination->tanggal_posting = date('Y-m-d');
+        $jurnalUmumInterbranchDestination->transaction_subject = 'Transfer Request Destination';
+        $jurnalUmumInterbranchDestination->is_coa_category = 0;
+        $jurnalUmumInterbranchDestination->transaction_type = 'TR';
+        $jurnalUmumInterbranchDestination->save();
+
+        foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
+            $hppPrice = $detail->product->hpp * $detail->quantity;
+
+            //save coa persediaan product master
+            $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
+            $jurnalUmumMasterOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
+            $jurnalUmumMasterOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
+            $jurnalUmumMasterOutstandingPartDestination->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
+            $jurnalUmumMasterOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
+            $jurnalUmumMasterOutstandingPartDestination->total = $hppPrice;
+            $jurnalUmumMasterOutstandingPartDestination->debet_kredit = 'D';
+            $jurnalUmumMasterOutstandingPartDestination->tanggal_posting = date('Y-m-d');
+            $jurnalUmumMasterOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
+            $jurnalUmumMasterOutstandingPartDestination->is_coa_category = 1;
+            $jurnalUmumMasterOutstandingPartDestination->transaction_type = 'TR';
+            $jurnalUmumMasterOutstandingPartDestination->save();
+
+            //save coa persedian product sub master
+            $jurnalUmumOutstandingPartDestination = new JurnalUmum;
+            $jurnalUmumOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
+            $jurnalUmumOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
+            $jurnalUmumOutstandingPartDestination->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+            $jurnalUmumOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
+            $jurnalUmumOutstandingPartDestination->total = $hppPrice;
+            $jurnalUmumOutstandingPartDestination->debet_kredit = 'D';
+            $jurnalUmumOutstandingPartDestination->tanggal_posting = date('Y-m-d');
+            $jurnalUmumOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
+            $jurnalUmumOutstandingPartDestination->is_coa_category = 0;
+            $jurnalUmumOutstandingPartDestination->transaction_type = 'TR';
+            $jurnalUmumOutstandingPartDestination->save();
+        }
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionAdmin() {
         $model = new TransactionTransferRequest('search');
         $model->unsetAttributes();  // clear any default values
@@ -273,9 +287,15 @@ class TransferRequestController extends Controller {
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
         
+        $destinationBranchDataProvider = $model->search();
+        $destinationBranchDataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
+        $destinationBranchDataProvider->criteria->compare('t.status_document', "Approved");
+        $destinationBranchDataProvider->criteria->compare('t.destination_approved_by', null);
+        
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'destinationBranchDataProvider' => $destinationBranchDataProvider,
         ));
     }
 

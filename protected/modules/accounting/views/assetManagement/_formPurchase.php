@@ -131,17 +131,17 @@
                 </div>
             </div>
             
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Status', false); ?>
+                        <?php /*echo CHtml::label('Status', false); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->textField($model,'status'); ?>
-                        <?php echo $form->error($model,'status'); ?>
+                        <?php echo $form->error($model,'status');*/ ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
             
             <div class="field">
                 <div class="row collapse">
@@ -166,9 +166,9 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
 
         </div>

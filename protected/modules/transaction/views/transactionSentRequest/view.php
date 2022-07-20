@@ -31,17 +31,17 @@ $this->menu = array(
             'visible' => Yii::app()->user->checkAccess("transaction.transactionSentRequest.admin")
         )); ?>
 
-        <?php if ($model->status_document != "Approved" && $model->status_document != 'Rejected'): ?>
+        <?php if ($model->status_document == "Draft"): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionSentRequest/update?id=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("transaction.transactionSentRequest.update")
+                'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
             )); ?>
         
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("transaction.transactionSentRequest.updateApproval")
+                'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
             )); ?>
         <?php endif; ?>
 

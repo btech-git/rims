@@ -16,44 +16,20 @@
         </tr>
         <?php $accountCategoryAssetDebitBalance = 0.00; $accountCategoryAssetCreditBalance = 0.00; ?>
         <?php foreach ($accountCategoryAssets as $accountCategoryAsset): ?>
-            <tr>
-                <td colspan="3" style="font-size: larger; font-weight: bold; text-transform: uppercase">
-                    <?php echo CHtml::encode(CHtml::value($accountCategoryAsset, 'name')); ?>
-                </td>
-            </tr>
-
             <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryAsset->id), array('order' => 'code')); ?>
             <?php foreach ($accountCategoryPrimarys as $accountCategoryPrimary): ?>
                 <?php $accountCategoryPrimaryDebitBalance = 0.00; $accountCategoryPrimaryCreditBalance = 0.00; ?>
-                <tr>
-                    <td colspan="3" style="font-size: large; font-weight: bold; text-transform: uppercase">
-                        <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
-                    </td>
-                </tr>
-
                 <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
                 <?php foreach ($accountCategorySubs as $accountCategorySub): ?>
                     <?php $accountCategorySubDebitBalance = 0.00; $accountCategorySubCreditBalance = 0.00; ?>
-                    <tr>
-                        <td colspan="3" style="font-size: large; font-weight: bold; text-transform: uppercase">
-                            <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
-                        </td>
-                    </tr>
-
                     <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code')); ?>
                     <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                         <?php $accountCategoryDebitBalance = 0.00; $accountCategoryCreditBalance = 0.00; ?>
-                        <tr>
-                            <td colspan="3" style="font-weight: bold; text-transform: capitalize">
-                                <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
-                                <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                            </td>
-                        </tr>
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null)); ?> 
                         <?php foreach ($coas as $coa): ?>
                             <?php $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId); ?>
                             <?php $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId); ?>
-                            <?php if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0): ?>
+                            <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance): ?>
                                 <tr>
                                     <td>
                                         <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
@@ -76,7 +52,7 @@
                                     <?php foreach ($coa->coaIds as $account): ?>
                                         <?php $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId); ?>
                                         <?php $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId); ?>
-                                        <?php if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0): ?>
+                                        <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance): ?>
                                             <tr>
                                                 <td style="font-size: 10px">
                                                     <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
@@ -93,32 +69,11 @@
                                             <?php $groupCreditBalance += $journalCreditBalance; ?>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
-                                    <tr>
-                                        <td style="border-top: 1px solid; text-align: right">Total <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> </td>
-                                        <td style="border-top: 1px solid; text-align: right">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $groupDebitBalance)); ?>
-                                        </td>
-                                        <td style="border-top: 1px solid; text-align: right">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $groupCreditBalance)); ?>
-                                        </td>
-                                    </tr>
                                 <?php endif; ?>
                             <?php endif; ?>
                             <?php $accountCategoryDebitBalance += $journalDebitBalance; ?>
                             <?php $accountCategoryCreditBalance += $journalCreditBalance; ?>
                         <?php endforeach; ?>
-                        <tr>
-                            <td style="text-align: right; font-weight: bold">
-                                TOTAL 
-                                <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                            </td>
-                            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryDebitBalance)); ?>
-                            </td>
-                            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryCreditBalance)); ?>
-                            </td>
-                        </tr>
                         <?php $accountCategorySubDebitBalance += $accountCategoryDebitBalance; ?>
                         <?php $accountCategorySubCreditBalance += $accountCategoryCreditBalance; ?>
                     <?php endforeach; ?>
@@ -141,28 +96,14 @@
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySubCreditBalance)); ?>
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+
                     <?php $accountCategoryPrimaryDebitBalance += $accountCategorySubDebitBalance; ?>
                     <?php $accountCategoryPrimaryCreditBalance += $accountCategorySubCreditBalance; ?>
                 <?php endforeach; ?>
 
-                <tr>
-                    <td colspan="3">&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td style="text-align: right; font-weight: bold; border-top: 3px solid; text-transform: uppercase">
-                        TOTAL 
-                        <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
-                    </td>
-
-                    <td style="text-align: right; font-weight: bold; border-top: 3px solid">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryPrimaryDebitBalance)); ?>
-                    </td>
-
-                    <td style="text-align: right; font-weight: bold; border-top: 3px solid">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryPrimaryCreditBalance)); ?>
-                    </td>
-                </tr>
                 <?php $accountCategoryAssetDebitBalance += $accountCategoryPrimaryDebitBalance; ?>
                 <?php $accountCategoryAssetCreditBalance += $accountCategoryPrimaryCreditBalance; ?>
             <?php endforeach; ?>
@@ -171,10 +112,10 @@
                 <td colspan="3">&nbsp;</td>
             </tr>
 
-            <tr>
+<!--            <tr>
                 <td style="text-align: right; font-weight: bold; border-top: 4px solid; text-transform: uppercase">
                     TOTAL 
-                    <?php echo CHtml::encode(CHtml::value($accountCategoryAsset, 'name')); ?>
+                    <?php /*echo CHtml::encode(CHtml::value($accountCategoryAsset, 'name')); ?>
                 </td>
 
                 <td style="text-align: right; font-weight: bold; border-top: 4px solid">
@@ -182,9 +123,9 @@
                 </td>
 
                 <td style="text-align: right; font-weight: bold; border-top: 4px solid">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryAssetCreditBalance)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryAssetCreditBalance));*/ ?>
                 </td>
-            </tr>
+            </tr>-->
         <?php endforeach; ?>
     </table>
 
@@ -193,31 +134,13 @@
     <table style="width: 60%; margin: 0 auto; border-spacing: 0pt">
         <?php $accountCategoryLiabilityEquityDebitBalance = 0.00; $accountCategoryLiabilityEquityCreditBalance = 0.00; ?>
         <?php foreach ($accountCategoryLiabilitiesEquities as $accountCategoryLiabilitiesEquity): ?>
-            <tr>
-                <td colspan="3" style="font-size: larger; font-weight: bold; text-transform: uppercase">
-                    <?php echo CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')); ?>
-                </td>
-            </tr>
-
             <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryLiabilitiesEquity->id), array('order' => 'code')); ?>
             <?php foreach ($accountCategoryPrimarys as $accountCategoryPrimary): ?>
                 <?php $accountCategoryPrimaryDebitBalance = 0.00; $accountCategoryPrimaryCreditBalance = 0.00; ?>
-                <tr>
-                    <td colspan="3" style="font-size: large; font-weight: bold; text-transform: uppercase">
-                        <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
-                    </td>
-                </tr>
-
                 <?php if ($accountCategoryPrimary->id == 5): ?>
                     <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
                     <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                         <?php $accountCategoryDebitBalance = 0.00; $accountCategoryCreditBalance = 0.00; ?>
-                        <tr>
-                            <td colspan="3" style="font-weight: bold; text-transform: capitalize">
-                                <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
-                                <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                            </td>
-                        </tr>
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                         <?php foreach ($coas as $account): ?>
                             <?php $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId); ?>
@@ -235,20 +158,6 @@
                             <?php $accountCategoryDebitBalance += $journalDebitBalance; ?>
                             <?php $accountCategoryCreditBalance += $journalCreditBalance; ?>
                         <?php endforeach; ?>
-                        <tr>
-                            <td style="text-align: right; font-weight: bold">
-                                TOTAL
-                                <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                            </td>
-
-                            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryDebitBalance)); ?>
-                            </td>
-
-                            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryCreditBalance)); ?>
-                            </td>
-                        </tr>
                         <?php $accountCategoryPrimaryDebitBalance += $accountCategoryDebitBalance; ?>
                         <?php $accountCategoryPrimaryCreditBalance += $accountCategoryCreditBalance; ?>
                     <?php endforeach; ?>
@@ -256,36 +165,18 @@
                     <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
                     <?php foreach ($accountCategorySubs as $accountCategorySub): ?>
                         <?php $accountCategorySubDebitBalance = 0.00; $accountCategorySubCreditBalance = 0.00; ?>
-                        <tr>
-                            <td colspan="3" style="font-size: large; font-weight: bold; text-transform: uppercase">
-                                <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
-                            </td>
-                        </tr>
-
                         <?php if ($accountCategorySub->id == 3): ?>
                             <?php $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code')); ?>
                             <?php foreach ($coaCategorySecondaries as $coaCategorySecondary): ?>
                                 <?php $accountCategorySecondaryDebitBalance = 0.00; $accountCategorySecondaryCreditBalance = 0.00;  ?>
-                                <tr>
-                                    <td colspan="3" style="font-weight: bold; text-transform: capitalize">
-                                        <?php echo CHtml::encode(CHtml::value($coaCategorySecondary, 'name')); ?>
-                                    </td>
-                                </tr>
                                 <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $coaCategorySecondary->id), array('order' => 'code')); ?>
                                 <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                                     <?php $accountCategoryDebitBalance = 0.00; $accountCategoryCreditBalance = 0.00; ?>
-                                    <tr>
-                                        <td colspan="3" style="font-weight: bold; text-transform: capitalize">
-                                            <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
-                                            <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                                        </td>
-                                    </tr>
-
                                     <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                     <?php foreach ($coas as $account): ?>
                                         <?php $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId); ?>
                                         <?php $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId); ?>
-                                        <?php if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0): ?>
+                                        <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance): ?>
                                             <tr>
                                                 <td>
                                                     <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
@@ -298,19 +189,6 @@
                                         <?php $accountCategoryDebitBalance += $journalDebitBalance; ?>
                                         <?php $accountCategoryCreditBalance += $journalCreditBalance; ?>
                                     <?php endforeach; ?>
-                                    <tr>
-                                        <td style="text-align: right; font-weight: bold">
-                                            TOTAL <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                                        </td>
-
-                                        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryDebitBalance)); ?>
-                                        </td>
-
-                                        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryCreditBalance)); ?>
-                                        </td>
-                                    </tr>
                                     <?php $accountCategorySecondaryDebitBalance += $accountCategoryDebitBalance; ?>
                                     <?php $accountCategorySecondaryCreditBalance += $accountCategoryCreditBalance; ?>
                                 <?php endforeach; ?>
@@ -319,10 +197,10 @@
                                     <td colspan="3">&nbsp;</td>
                                 </tr>
 
-                                <tr>
+<!--                                <tr>
                                     <td style="text-align: right; font-weight: bold; border-top: 2px solid; text-transform: uppercase">
                                         TOTAL 
-                                        <?php echo CHtml::encode(CHtml::value($coaCategorySecondary, 'name')); ?>
+                                        <?php /*echo CHtml::encode(CHtml::value($coaCategorySecondary, 'name')); ?>
                                     </td>
 
                                     <td style="text-align: right; font-weight: bold; border-top: 2px solid">
@@ -330,9 +208,9 @@
                                     </td>
 
                                     <td style="text-align: right; font-weight: bold; border-top: 2px solid">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySecondaryCreditBalance)); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySecondaryCreditBalance));*/ ?>
                                     </td>
-                                </tr>
+                                </tr>-->
                                 <?php $accountCategorySubDebitBalance += $accountCategorySecondaryDebitBalance; ?>
                                 <?php $accountCategorySubCreditBalance += $accountCategorySecondaryCreditBalance; ?>
 
@@ -343,35 +221,18 @@
                             <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code')); ?>
                             <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                                 <?php $accountCategoryDebitBalance = 0.00; $accountCategoryCreditBalance = 0.00; ?>
-                                <tr>
-                                    <td colspan="3" style="font-weight: bold; text-transform: capitalize">
-                                        <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
-                                        <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
-                                    </td>
-                                </tr>
-                                
                                 <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                                 <?php foreach ($coas as $account): ?>
                                     <?php $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId); ?>
                                     <?php $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId); ?>
-                                    <?php if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0): ?>
-                                        <tr>
-                                            <td>
-                                                <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                                <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array("coaId" => $account->id, "startDate" => $startDate, "endDate" => $endDate, "branchId" => $branchId)), array('target' => '_blank')); ?>
-                                            </td>
-                                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalDebitBalance)); ?></td>
-                                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalCreditBalance)); ?></td>
-                                        </tr>
-                                    <?php endif; ?>
                                     <?php $accountCategoryDebitBalance += $journalDebitBalance; ?>
                                     <?php $accountCategoryCreditBalance += $journalCreditBalance; ?>
                                 <?php endforeach; ?>
                                     
-                                <tr>
+<!--                                <tr>
                                     <td style="text-align: right; font-weight: bold">
                                         TOTAL 
-                                        <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
+                                        <?php /*echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                                     </td>
 
                                     <td style="text-align: right; font-weight: bold; border-top: 1px solid">
@@ -379,22 +240,18 @@
                                     </td>
 
                                     <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryCreditBalance)); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryCreditBalance));*/ ?>
                                     </td>
-                                </tr>
+                                </tr>-->
                                 <?php $accountCategorySubDebitBalance += $accountCategoryDebitBalance; ?>
                                 <?php $accountCategorySubCreditBalance += $accountCategoryCreditBalance; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
 
-                        <tr>
-                            <td colspan="3">&nbsp;</td>
-                        </tr>
-
-                        <tr>
+<!--                        <tr>
                             <td style="text-align: right; font-weight: bold; border-top: 1px solid; text-transform: uppercase">
                                 TOTAL 
-                                <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
+                                <?php /*echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
                             </td>
 
                             <td style="text-align: right; font-weight: bold; border-top: 1px solid">
@@ -402,22 +259,18 @@
                             </td>
 
                             <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySubCreditBalance)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySubCreditBalance));*/ ?>
                             </td>
-                        </tr>
+                        </tr>-->
                         <?php $accountCategoryPrimaryDebitBalance += $accountCategorySubDebitBalance; ?>
                         <?php $accountCategoryPrimaryCreditBalance += $accountCategorySubCreditBalance; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
 
-                <tr>
-                    <td colspan="3">&nbsp;</td>
-                </tr>
-
-                <tr>
+<!--                <tr>
                     <td style="text-align: right; font-weight: bold; border-top: 1px solid; text-transform: uppercase">
                         TOTAL 
-                        <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
+                        <?php /*echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
                     </td>
 
                     <td style="text-align: right; font-weight: bold; border-top: 1px solid">
@@ -425,21 +278,17 @@
                     </td>
 
                     <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryPrimaryCreditBalance)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryPrimaryCreditBalance));*/ ?>
                     </td>
-                </tr>
+                </tr>-->
                 <?php $accountCategoryLiabilityEquityDebitBalance += $accountCategoryPrimaryDebitBalance; ?>
                 <?php $accountCategoryLiabilityEquityCreditBalance += $accountCategoryPrimaryCreditBalance; ?>
             <?php endforeach; ?>
 
-            <tr>
-                <td colspan="3">&nbsp;</td>
-            </tr>
-
-            <tr>
+<!--            <tr>
                 <td style="text-align: right; font-weight: bold; border-top: 1px solid; text-transform: uppercase">
                     TOTAL 
-                    <?php echo CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')); ?>
+                    <?php /*echo CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')); ?>
                 </td>
 
                 <td style="text-align: right; font-weight: bold; border-top: 1px solid">
@@ -447,9 +296,9 @@
                 </td>
 
                 <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryLiabilityEquityCreditBalance)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryLiabilityEquityCreditBalance));*/ ?>
                 </td>
-            </tr>
+            </tr>-->
         <?php endforeach; ?>
     </table>
 </div>

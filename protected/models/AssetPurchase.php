@@ -22,15 +22,23 @@
  * @property integer $company_bank_id
  *
  * The followings are the available model relations:
- * @property AssetDepreciation[] $assetDepreciations
+ * @property AssetDepreciationDetail[] $assetDepreciationDetails
  * @property AssetCategory $assetCategory
- * @property Users $user
  * @property CompanyBank $companyBank
- * @property AssetSale[] $assetSales
+ * @property Users $user
  */
 class AssetPurchase extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'PAS';
+
+    /**
+     * Returns the static model of the specified AR class.
+     * @param string $className active record class name.
+     * @return AssetPurchase the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
 
     /**
      * @return string the associated database table name
@@ -54,7 +62,7 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
             array('description', 'length', 'max' => 100),
             array('note', 'safe'),
             // The following rule is used by search().
-            // @todo Please remove those attributes that should not be searched.
+            // Please remove those attributes that should not be searched.
             array('id, transaction_number, transaction_date, transaction_time, purchase_value, monthly_useful_life, accumulated_depreciation_value, depreciation_start_date, depreciation_end_date, status, note, asset_category_id, user_id, description, current_value, company_bank_id', 'safe', 'on' => 'search'),
         );
     }
@@ -66,11 +74,10 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'assetDepreciations' => array(self::HAS_MANY, 'AssetDepreciation', 'asset_purchase_id'),
+            'assetDepreciationDetails' => array(self::HAS_MANY, 'AssetDepreciationDetail', 'asset_purchase_id'),
             'assetCategory' => array(self::BELONGS_TO, 'AssetCategory', 'asset_category_id'),
-            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
-            'assetSales' => array(self::HAS_MANY, 'AssetSale', 'asset_purchase_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 
@@ -100,18 +107,11 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
 
     /**
      * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
      */
     public function search() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
         $criteria = new CDbCriteria;
 
@@ -137,14 +137,27 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return AssetPurchase the static model class
-     */
-    public static function model($className = __CLASS__) {
-        return parent::model($className);
+    public function getTotalDepreciationValue() {
+        
+        $total = 0; 
+        
+        foreach ($this->assetDepreciationDetails as $detail) {
+            $total += $detail->amount; 
+        }
+        
+        return $total;
+    }
+
+    public function getDepreciationMonthlyNumber() {
+        
+        $assetDepreciationDetail = AssetDepreciationDetail::model()->findByAttributes(array('asset_purchase_id' => $this->id), array('order' => 't.id DESC'));
+        
+        return empty($assetDepreciationDetail) ? 1 : $assetDepreciationDetail->number_of_month + 1;
+    }
+    
+    public function getMonthlyDepreciationAmount() {
+        
+        return $this->purchase_value / $this->monthly_useful_life;
     }
 
     public function generateCodeNumber($currentMonth, $currentYear, $branchId) {
@@ -162,95 +175,6 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
             $this->transaction_number = $assetPurchase->transaction_number;
         }
 
-        $this->setCodeNumberByNext('transaction_number', $branchCode, AssetPurchase::CONSTANT, $currentMonth, $currentYear);
-    }
-    
-    public function getTotalDepreciationValue() {
-        $total = 0.00;
-        
-        foreach ($this->assetDepreciations as $detail) {
-            $total += $detail->amount;
-        }
-        
-        return $total;
-    }
-    
-    public function getMonthlyDepreciationAmount() {
-        
-        return $this->purchase_value / $this->monthly_useful_life;
-    }
-    
-    public function searchByDepreciation() {
-        $criteria = new CDbCriteria;
-
-        $criteria->condition = "NOT EXISTS (
-            SELECT asset_purchase_id
-            FROM " . AssetSale::model()->tableName() . "
-            WHERE t.id = asset_purchase_id
-        ) AND t.current_value > 0";
-
-        $criteria->compare('id', $this->id);
-        $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
-        $criteria->compare('transaction_time', $this->transaction_time, true);
-        $criteria->compare('purchase_value', $this->purchase_value, true);
-        $criteria->compare('monthly_useful_life', $this->monthly_useful_life);
-        $criteria->compare('accumulated_depreciation_value', $this->accumulated_depreciation_value, true);
-        $criteria->compare('depreciation_start_date', $this->depreciation_start_date, true);
-        $criteria->compare('depreciation_end_date', $this->depreciation_end_date, true);
-        $criteria->compare('status', $this->status, true);
-        $criteria->compare('note', $this->note, true);
-        $criteria->compare('asset_category_id', $this->asset_category_id);
-        $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('description', $this->description, true);
-        $criteria->compare('current_value', $this->current_value, true);
-        $criteria->compare('company_bank_id', $this->company_bank_id);
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 'transaction_date ASC',
-            ),
-            'pagination' => array(
-                'pageSize' => 50,
-            ),
-        ));
-    }
-    
-    public function searchBySale() {
-        $criteria = new CDbCriteria;
-
-        $criteria->condition = "NOT EXISTS (
-            SELECT asset_purchase_id
-            FROM " . AssetSale::model()->tableName() . "
-            WHERE t.id = asset_purchase_id
-        )";
-
-        $criteria->compare('id', $this->id);
-        $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
-        $criteria->compare('transaction_time', $this->transaction_time, true);
-        $criteria->compare('purchase_value', $this->purchase_value, true);
-        $criteria->compare('monthly_useful_life', $this->monthly_useful_life);
-        $criteria->compare('accumulated_depreciation_value', $this->accumulated_depreciation_value, true);
-        $criteria->compare('depreciation_start_date', $this->depreciation_start_date, true);
-        $criteria->compare('depreciation_end_date', $this->depreciation_end_date, true);
-        $criteria->compare('status', $this->status, true);
-        $criteria->compare('note', $this->note, true);
-        $criteria->compare('asset_category_id', $this->asset_category_id);
-        $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('description', $this->description, true);
-        $criteria->compare('current_value', $this->current_value, true);
-        $criteria->compare('company_bank_id', $this->company_bank_id);
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 'transaction_date ASC',
-            ),
-            'pagination' => array(
-                'pageSize' => 50,
-            ),
-        ));
+        $this->setCodeNumberByNext('transaction_number', $branchCode, AssetSale::CONSTANT, $currentMonth, $currentYear);
     }
 }
