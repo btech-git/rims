@@ -103,7 +103,7 @@ class PaymentOutController extends Controller {
         
         $paymentOut->header->user_id = Yii::app()->user->id;
         $paymentOut->header->payment_date = date('Y-m-d');
-        $paymentOut->header->date_created = date('Y-m-d H:i:s');
+        $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->status = 'Draft';
         $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
 
