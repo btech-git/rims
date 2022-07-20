@@ -786,7 +786,6 @@ class TransactionPurchaseOrderController extends Controller {
             $historis = TransactionPurchaseOrderApproval::model()->findAllByAttributes(array('purchase_order_id' => $headerId));
             $model = new TransactionPurchaseOrderApproval;
             $model->date = date('Y-m-d H:i:s');
-    //        $branch = Branch::model()->findByPk($purchaseOrder->main_branch_id);
 
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $purchaseOrder->purchase_order_no,

@@ -82,7 +82,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage', 'required'),
+            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage, supplier_id, requester_id, main_branch_id', 'required'),
             array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
@@ -366,10 +366,16 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $totalRemaining = 0;
 
         foreach ($this->transactionPurchaseOrderDetails as $detail) {
-            $totalRemaining += $detail->totalQuantityReceived;
+            $totalRemaining += $detail->purchase_order_quantity_left;
         }
-
-        return ($totalRemaining > 0) ? 'Partial' : 'Pending';
+        
+        if ($this->total_quantity == $totalRemaining) {
+            return 'Pending';
+        } elseif ($totalRemaining > 0) {
+            return 'Partial';
+        } else {
+            return 'Completed';
+        }
     }
 
     public function getTotalPayment() {

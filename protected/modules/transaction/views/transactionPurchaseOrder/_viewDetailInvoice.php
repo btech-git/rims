@@ -75,15 +75,15 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="10" style="text-align: right">SUB TOTAL</td>
+                                    <td colspan="11" style="text-align: right">SUB TOTAL</td>
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'subTotal'))); ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="10" style="text-align: right">PPn 10%</td>
+                                    <td colspan="11" style="text-align: right">PPn 10%</td>
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'taxNominal'))); ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="10" style="text-align: right">GRAND TOTAL</td>
+                                    <td colspan="11" style="text-align: right">GRAND TOTAL</td>
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'grandTotal'))); ?></td>
                                 </tr>
                             </tfoot>

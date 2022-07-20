@@ -46,6 +46,18 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->textField($model,'payment_date'); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                            'model' => $model,
+                            'attribute' => "payment_date",
+                            'options'=>array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth'=>true,
+                                'changeYear'=>true,
+                            ),
+                            'htmlOptions'=>array(
+                                'readonly' => true,
+                            ),
+                        )); ?>
                     </div>
                 </div>
             </div>	

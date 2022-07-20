@@ -116,7 +116,7 @@ Yii::app()->clientScript->registerScript('search', "
 //                        'value' => 'empty($data->mainBranch) ? "" : $data->mainBranch->code',
 //                    ),
                     array(
-                        'header' => 'Status',
+                        'header' => 'Status Receive',
                         'value' => '$data->totalRemainingQuantityReceived',
                     ),
                     array(

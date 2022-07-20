@@ -200,7 +200,7 @@ class ReceiveItems extends CComponent {
             $left_quantity = 0;
             
             if ($this->header->request_type == 'Purchase Order') {
-                $left_quantity = $detail->purchaseOrderDetail->quantityReceiveRemaining;
+                $left_quantity = $detail->qty_request_left - $detail->qty_received;
             } elseif ($this->header->request_type == 'Internal Delivery Order') {
                 $left_quantity = $detail->qty_request - $detail->qty_received - $detail->deliveryOrderDetail->getTotalQuantityReceived();
                 $detail->quantity_delivered_left = $left_quantity;
@@ -261,7 +261,7 @@ class ReceiveItems extends CComponent {
                 $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id, 'purchase_order_id' => $this->header->purchase_order_id));
                 $totalQuantityReceived = $purchaseOrderDetail->getTotalQuantityReceived();
                 $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->quantity - $totalQuantityReceived;
-                $purchaseOrderDetail->receive_quantity = $detail->qty_received + $totalQuantityReceived;
+                $purchaseOrderDetail->receive_quantity = $totalQuantityReceived;
 
                 $purchaseOrderDetail->save(false);
 
