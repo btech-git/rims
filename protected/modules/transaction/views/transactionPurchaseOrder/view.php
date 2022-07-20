@@ -53,7 +53,7 @@ $this->menu=array(
                 array('name' =>'requester_id','value'=> $model->user != null ? $model->user->username : null),
                 array('name' =>'main_branch_id','value'=>$model->mainBranch->name),
                 array('name' => 'approved_id', 'value'=> $model->approval != null ? $model->approval->username : null),
-                array('name'=>'supplier_name','value'=>$model->supplier->name),
+                array('name'=>'supplier_name','value'=>empty($model->supplier_id) ? "" : $model->supplier->name),
                 'estimate_date_arrival',
                 'payment_date_estimate',
                 array(
