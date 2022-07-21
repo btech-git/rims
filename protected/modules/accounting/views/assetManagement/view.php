@@ -83,6 +83,7 @@ $this->menu=array(
                     <th style="width: 5%">No</th>
                     <th style="width: 15%">Kode COA</th>
                     <th>Nama COA</th>
+                    <th style="width: 15%">Date</th>
                     <th style="width: 15%">Debit</th>
                     <th style="width: 15%">Kredit</th>
                 </tr>
@@ -98,10 +99,11 @@ $this->menu=array(
 
                     <tr>
                         <td style="text-align: center"><?php echo $count + 1; ?></td>
-                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
-                        <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                        <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
-                        <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($header, 'tanggal_transaksi'))); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
                     </tr>
 
                     <?php $totalDebit += $amountDebit; ?>
@@ -163,7 +165,7 @@ $this->menu=array(
 
             <tfoot>
                 <tr>
-                    <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
+                    <td colspan="4" style="text-align: right; font-weight: bold">TOTAL</td>
                     <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?></td>
                     <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?></td>
                 </tr>        
