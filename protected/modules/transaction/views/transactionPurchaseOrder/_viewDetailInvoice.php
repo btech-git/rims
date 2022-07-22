@@ -68,7 +68,7 @@
                                         <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_request')); ?></td>
                                         <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveDetail, 'purchaseOrderDetail.unit_price'))); ?></td>
+                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $receiveDetail->purchaseOrderDetail->unit_price)); ?></td>
                                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveDetail, 'totalPrice'))); ?></td>
                                     </tr>
                                 <?php endforeach ?>
@@ -79,7 +79,7 @@
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'subTotal'))); ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="11" style="text-align: right">PPn 10%</td>
+                                    <td colspan="11" style="text-align: right">PPn <?php echo CHtml::encode(CHtml::value($receiveHeader, 'purchaseOrder.tax_percentage'));?>%</td>
                                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'taxNominal'))); ?></td>
                                 </tr>
                                 <tr>

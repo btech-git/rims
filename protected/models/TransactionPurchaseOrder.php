@@ -363,11 +363,15 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
     }
 
     public function getTotalRemainingQuantityReceived() {
-        $totalRemaining = 0;
+        $quantityReceived = 0;
 
         foreach ($this->transactionPurchaseOrderDetails as $detail) {
-            $totalRemaining += $detail->purchase_order_quantity_left;
+            foreach ($detail->transactionReceiveItemDetails as $receive) {
+                $quantityReceived += $receive->qty_received;
+            }
         }
+        
+        $totalRemaining = $this->total_quantity - $quantityReceived;
         
         if ($this->total_quantity == $totalRemaining) {
             return 'Pending';

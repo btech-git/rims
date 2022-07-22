@@ -25,9 +25,9 @@ Yii::app()->clientScript->registerCss('_report', '
 <table class="report">
     <tr id="header1">
         <th class="width1-1" style ="text-align: left;">Akun</th>
-        <th class="width1-2" style ="text-align: right;">Total Debit</th>
+<!--        <th class="width1-2" style ="text-align: right;">Total Debit</th>
         <th class="width1-3" style ="text-align: right;">Total Kredit</th>
-        <th class="width1-4" style ="text-align: right;">Saldo Akhir</th>
+        <th class="width1-4" style ="text-align: right;">Saldo Akhir</th>-->
 
     </tr>
     <tr id="header2">
@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <?php foreach ($generalLedgerSummary->dataProvider->data as $header): ?>
         <tr class="items1">
             <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-            <td style ="text-align: right;">
+<!--            <td style ="text-align: right;">
                 <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndDebitLedger($header->id, $startDate, $endDate))); ?>
             </td>
             <td style ="text-align: right;">
@@ -56,7 +56,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </td>
             <td style ="text-align: right;">
                 <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndBalanceLedger($header->id, $endDate))); ?>
-            </td>
+            </td>-->
         </tr>
         
         <tr class="items2">
