@@ -256,7 +256,7 @@ class TransactionDeliveryOrderController extends Controller {
             $model->attributes = $_GET['TransactionDeliveryOrder'];
         
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('sender_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addInCondition('destination_branch', Yii::app()->user->branch_ids);
 
         $transfer = new TransactionTransferRequest('search');
         $transfer->unsetAttributes();  // clear any default values
@@ -264,7 +264,7 @@ class TransactionDeliveryOrderController extends Controller {
             $transfer->attributes = $_GET['TransactionTransferRequest'];
 
         $transferDataProvider = $transfer->searchByPendingDelivery();
-        $transferDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        $transferDataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
 
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
@@ -273,7 +273,7 @@ class TransactionDeliveryOrderController extends Controller {
             $sent->attributes = $_GET['TransactionSentRequest'];
 
         $sentDataProvider = $sent->searchByPendingDelivery();
-        $sentDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        $sentDataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values

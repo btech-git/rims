@@ -288,18 +288,16 @@
                                     type: "POST",
                                     dataType: "JSON",
                                     url: "' . CController::createUrl('ajaxGetSubModelDetails') . '",
-                                    //url: "' . CController::createUrl('ajaxGetTransmission') . '",
                                     data: jQuery("form").serialize(),
                                     success: function(data){
                                         //console.log(data.transmission);
-                                        jQuery("#Vehicle_chasis_code").val(data.chasis);
                                         jQuery("#Vehicle_power").html(data.power);
                                         jQuery("#Vehicle_fuel_type").html(data.fuel_type);
                                         jQuery("#Vehicle_transmission").html(data.transmission);
                                         jQuery("#Vehicle_chasis_code").val(data.chasis_code);
+                                        jQuery("#Vehicle_car_sub_model_detail_id").html(data.model_detail);
 
                                         //jQuery("#sub_model_detail").slideDown();
-                                        //jQuery("#Vehicle_car_sub_model_detail_id").html(data);
                                     },
                                 });',
                             )); ?>
@@ -311,6 +309,21 @@
                             <?php echo $form->error($model, 'car_sub_model_id'); ?>
                         </div>
                         <div class="small-2 columns"><a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/master/vehicleCarSubModel/create'; ?>"><span class="fa fa-plus"></span>Add</a>
+                        </div>
+                    </div>			
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($model, 'car_sub_model_detail_id', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeDropDownList($model, 'car_sub_model_detail_id', CHtml::listData(VehicleCarSubModelDetail::model()->findAll(), 'id', 'name'), array(
+                                'prompt' => '[--Select Car Sub Model--]', 'order' => 't.name ASC',
+                            )); ?>
+                            <?php //echo CHtml::activeTextField($model, 'car_sub_model_detail_id', array('readonly' => true)); ?>
+                            <?php echo $form->error($model, 'car_sub_model_detail_id'); ?>
                         </div>
                     </div>			
                 </div>

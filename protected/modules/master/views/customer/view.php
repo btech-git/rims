@@ -92,7 +92,7 @@ $this->breadcrumbs = array(
                 <td><?php echo $vehicleDetail->carModel ? $vehicleDetail->carModel->name : ''; ?></td>
                 <td><?php echo $vehicleDetail->carSubModel ? $vehicleDetail->carSubModel->name : ''; ?></td>
                 <?php $color = Colors::model()->findByPk($vehicleDetail->color_id); ?>
-                <td><?php //echo $color->name == '' ? '' : $color->name; ?></td>
+                <td><?php echo $color->name == '' ? '' : $color->name; ?></td>
                 <td><?php echo $vehicleDetail->year; ?></td>
                 <td><?php echo $vehicleDetail->chasis_code; ?></td>
                 <td><?php echo $vehicleDetail->power; ?></td>

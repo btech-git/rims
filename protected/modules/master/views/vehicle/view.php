@@ -62,7 +62,7 @@ $this->menu = array(
                         ),
                         array(
                             'label' => 'Color', 
-                            'value' => $model->color->name
+                            'value' => empty($model->color_id) ? '' : $model->color->name,
                         ),
                         'year',
                         'chasis.name: Chassis',

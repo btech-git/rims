@@ -435,17 +435,31 @@ class VehicleController extends Controller {
         $chasisCriteria->distinct = true;
         $chasisCriteria->condition = '"' . $_POST['Vehicle']['year'] . '" BETWEEN assembly_year_start and assembly_year_end' . ' AND car_sub_model_id = ' . $_POST['Vehicle']['car_sub_model_id'];
 
+        $modelDetailCriteria = new CDbCriteria;
+        $modelDetailCriteria->select = 'name';
+        $modelDetailCriteria->distinct = true;
+        $modelDetailCriteria->condition = 'car_sub_model_id = ' . $_POST['Vehicle']['car_sub_model_id'];
+
         $transmissions = VehicleCarSubModelDetail::model()->findAll($transmissionCriteria);
         $powers = VehicleCarSubModelDetail::model()->findAll($powerCriteria);
         $fuel_types = VehicleCarSubModelDetail::model()->findAll($fuelTypeCriteria);
         $chasis = VehicleCarSubModelDetail::model()->find($chasisCriteria);
+        $subModelDetails = VehicleCarSubModelDetail::model()->findAll($modelDetailCriteria);
 
 
         $power = CHtml::tag('option', array('value' => ''), '[--Select Power--]', true);
         $transmission = CHtml::tag('option', array('value' => ''), '[--Select Transmission--]', true);
         $fuel_type = CHtml::tag('option', array('value' => ''), '[--Select Fuel Type--]', true);
+        $subModelDetail = CHtml::tag('option', array('value' => ''), '[--Select Sub Model Detail--]', true);
 
         $object = array();
+
+        if ($subModelDetails != NULL) {
+            foreach ($subModelDetails as $s) {
+                $subModelDetail .= CHtml::tag('option', array('value' => $s->name), CHtml::encode($s->name), true);
+            }
+            $object['model_detail'] = $subModelDetail;
+        }
 
         if ($transmissions != NULL) {
             foreach ($transmissions as $t) {

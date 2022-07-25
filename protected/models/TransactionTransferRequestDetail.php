@@ -128,7 +128,7 @@ class TransactionTransferRequestDetail extends CActiveRecord {
     }
 
     public function getTotal() {
-        return $this->quantity * $this->unit_price;
+        return $this->quantity * $this->product->hpp;
     }
 
     public function getQuantityReceiveRemaining() {
