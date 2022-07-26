@@ -165,7 +165,7 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
         $criteria->condition = "EXISTS (
 			SELECT COALESCE(SUM(d.quantity - d.delivery_quantity), 0) AS quantity_remaining
 			FROM " . TransactionSentRequestDetail::model()->tableName() . " d
-			WHERE t.id = d.sent_request_id AND status_document = 'Approved'
+			WHERE t.id = d.sent_request_id AND status_document NOT IN ('Draft', 'Rejected')
 			GROUP BY d.sent_request_id
 			HAVING quantity_remaining > 0
 		)";
