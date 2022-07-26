@@ -33,7 +33,7 @@ class GeneralLedgerSummary extends CComponent {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
-        $this->dataProvider->criteria->addCondition("t.is_approved = 1 AND code NOT LIKE '%.000'");
+        $this->dataProvider->criteria->addCondition("t.is_approved = 1");
 
         if (!empty($branchId)) {
             $this->dataProvider->criteria->compare('jurnalUmums.branch_id', $branchId);
