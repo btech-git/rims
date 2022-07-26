@@ -220,7 +220,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         $criteria->condition = "EXISTS (
             SELECT COALESCE(SUM(d.quantity_delivery_left), 0) AS quantity_remaining
             FROM " . TransactionTransferRequestDetail::model()->tableName() . " d
-            WHERE t.id = d.transfer_request_id AND status_document = 'Approved'
+            WHERE t.id = d.transfer_request_id AND status_document NOT IN ('Draft', 'Rejected')
             GROUP BY d.transfer_request_id
             HAVING quantity_remaining > 0
         )";
