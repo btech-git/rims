@@ -151,9 +151,11 @@ class PaymentOutController extends Controller {
         
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
+            $paymentOut->header->setCodeNumberByRevision('payment_number');
 
-            if ($paymentOut->save(Yii::app()->db))
+            if ($paymentOut->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $paymentOut->header->id));
+            }
         }
 
         $this->render('update', array(

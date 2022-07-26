@@ -114,9 +114,11 @@ class WorkOrderExpenseController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($workOrderExpense);
+            $workOrderExpense->header->setCodeNumberByRevision('transaction_number');
 
-            if ($workOrderExpense->save(Yii::app()->db))
+            if ($workOrderExpense->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $workOrderExpense->header->id));
+            }
         }
 
         $this->render('update', array(
