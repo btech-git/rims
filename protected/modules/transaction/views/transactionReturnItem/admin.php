@@ -115,6 +115,7 @@ Yii::app()->clientScript->registerScript('search', "
         
         <hr /><br />
         
+        <h3>Pending Order</h3>
         <div>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(
