@@ -35,7 +35,7 @@ Yii::app()->clientScript->registerScript('search', "
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.create"))) ?>
-        <h1>Manage Transaction Delivery Orders</h1>
+        <h1>Manage Delivery Orders</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>

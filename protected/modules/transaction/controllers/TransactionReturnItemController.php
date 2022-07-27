@@ -61,57 +61,43 @@ class TransactionReturnItemController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() { 
+    public function actionCreate($transactionId, $returnType) { 
         
-        $transfer = new TransactionSentRequest('search');
-        $transfer->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionSentRequest'])) {
-            $transfer->attributes = $_GET['TransactionSentRequest'];
-        }
-
-        $transferCriteria = new CDbCriteria;
-        $transferCriteria->compare('sent_request_no', $transfer->sent_request_no . '%', true, 'AND', false);
-
-        $transferDataProvider = new CActiveDataProvider('TransactionSentRequest', array(
-            'criteria' => $transferCriteria,
-        ));
-
-        $sales = new TransactionSalesOrder('search');
-        $sales->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionSalesOrder'])) {
-            $sales->attributes = $_GET['TransactionSalesOrder'];
-        }
-
-        $salesCriteria = new CDbCriteria;
-        $salesCriteria->compare('sale_order_no', $sales->sale_order_no . '%', true, 'AND', false);
-
-        $salesDataProvider = new CActiveDataProvider('TransactionSalesOrder', array(
-            'criteria' => $salesCriteria,
-        ));
-
-        $delivery = new TransactionDeliveryOrder('search');
-        $delivery->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['TransactionDeliveryOrder'])) {
-            $delivery->attributes = $_GET['TransactionDeliveryOrder'];
-        }
-
-        $deliveryCriteria = new CDbCriteria;
-        $deliveryCriteria->compare('delivery_order_no', $delivery->delivery_order_no . '%', true, 'AND', false);
-        $deliveryCriteria->compare('delivery_date', $delivery->delivery_date, true);
-        $deliveryCriteria->compare('request_type', $delivery->request_type, true);
-
-        $deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
-            'criteria' => $deliveryCriteria,
-        ));
-
         $returnItem = $this->instantiate(null);
         $returnItem->header->recipient_branch_id = $returnItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnItem->header->recipient_branch_id;
         $returnItem->header->created_datetime = date('Y-m-d H:i:s');
+        
+        if ($returnType == 1) {
+            $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
+            $returnItem->header->request_type = 'Delivery Order';
+            $returnItem->header->delivery_order_id = $transactionId;
+            $returnItem->header->transfer_request_id = empty($deliveryOrder->transfer_request_id) ? null : $deliveryOrder->transfer_request_id;
+            $returnItem->header->sent_request_id = empty($deliveryOrder->sent_request_id) ? null : $deliveryOrder->sent_request_id;
+            $returnItem->header->consignment_out_id = empty($deliveryOrder->consignment_out_id) ? null : $deliveryOrder->consignment_out_id;
+            $returnItem->header->sales_order_id = empty($deliveryOrder->sales_order_id) ? null : $deliveryOrder->sales_order_id;
+            $returnItem->header->registration_transaction_id = null;
+            $returnItem->header->customer_id = empty($deliveryOrder->customer_id) ? null : $deliveryOrder->customer_id;
+            $returnItem->header->destination_branch = empty($deliveryOrder->destination_branch) ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $deliveryOrder->destination_branch;
+            $returnItem->header->request_date = $deliveryOrder->request_date;
+            $returnItem->header->estimate_arrival_date = $deliveryOrder->estimate_arrival_date;
+        } else {
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($transactionId);
+            $returnItem->header->request_type = 'Retail Sales';
+            $returnItem->header->delivery_order_id = null;
+            $returnItem->header->transfer_request_id = null;
+            $returnItem->header->sent_request_id = null;
+            $returnItem->header->consignment_out_id = null;
+            $returnItem->header->sales_order_id = null;
+            $returnItem->header->registration_transaction_id = $transactionId;
+            $returnItem->header->customer_id = empty($registrationTransaction->customer_id) ? null : $registrationTransaction->customer_id;
+            $returnItem->header->destination_branch = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+            $returnItem->header->request_date = date('Y-m-d');
+            $returnItem->header->estimate_arrival_date = date('Y-m-d');
+        }
         $this->performAjaxValidation($returnItem->header);
 
+        $returnItem->addDetails($transactionId, $returnType);
+        
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
@@ -126,12 +112,6 @@ class TransactionReturnItemController extends Controller {
 
         $this->render('create', array(
             'returnItem' => $returnItem,
-            'transfer' => $transfer,
-            'transferDataProvider' => $transferDataProvider,
-            'sales' => $sales,
-            'salesDataProvider' => $salesDataProvider,
-            'delivery' => $delivery,
-            'deliveryDataProvider' => $deliveryDataProvider,
         ));
     }
 
@@ -249,15 +229,41 @@ class TransactionReturnItemController extends Controller {
     public function actionAdmin() {
         $model = new TransactionReturnItem('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionReturnItem']))
+        if (isset($_GET['TransactionReturnItem'])) {
             $model->attributes = $_GET['TransactionReturnItem'];
-
+        }
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
+
+        $retailTransaction = new RegistrationTransaction('search');
+        $retailTransaction->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationTransaction'])) {
+            $retailTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
+        $retailTransactionDataProvider = $retailTransaction->search();
+        $retailTransactionDataProvider->criteria->compare('transaction_number', $retailTransaction->transaction_number . '%', true, 'AND', false);
+        $retailTransactionDataProvider->criteria->addCondition("total_product > 0");
+
+        $delivery = new TransactionDeliveryOrder('search');
+        $delivery->unsetAttributes();  // clear any default values
+        if (isset($_GET['TransactionDeliveryOrder'])) {
+            $delivery->attributes = $_GET['TransactionDeliveryOrder'];
+        }
+        $deliveryCriteria = new CDbCriteria;
+        $deliveryCriteria->compare('delivery_order_no', $delivery->delivery_order_no . '%', true, 'AND', false);
+        $deliveryCriteria->compare('delivery_date', $delivery->delivery_date, true);
+        $deliveryCriteria->compare('request_type', $delivery->request_type, true);
+        $deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
+            'criteria' => $deliveryCriteria,
+        ));
 
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'retailTransaction' => $retailTransaction,
+            'retailTransactionDataProvider' => $retailTransactionDataProvider,
+            'delivery' => $delivery,
+            'deliveryDataProvider' => $deliveryDataProvider,
         ));
     }
 

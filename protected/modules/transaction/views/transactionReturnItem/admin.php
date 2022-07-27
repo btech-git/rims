@@ -44,11 +44,6 @@ Yii::app()->clientScript->registerScript('search', "
         <h1>Manage Transaction Return Jual</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
-                <!--<div class="left clearfix bulk-action">
-                <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-                <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-                <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-                </div>-->
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
                 <div class="clearfix"></div>
                 <div class="search-form" style="display:none">
@@ -60,7 +55,6 @@ Yii::app()->clientScript->registerScript('search', "
         </div>
 
         <div class="grid-view">
-
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'transaction-return-item-grid',
                 'dataProvider' => $dataProvider,
@@ -78,29 +72,24 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     'return_item_date',
                     array(
-                        'name' => 'delivery_order_id', 
-                        'value' => 'CHtml::link($data->deliveryOrder->delivery_order_no, array("view", "id"=>$data->delivery_order_id))', 
+                        'header' => 'Reference #', 
+                        'value' => 'empty($data->delivery_order_id) ? CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank")) : CHtml::link($data->deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id"=>$data->delivery_order_id), array("target" => "blank"))', 
                         'type' => 'raw'
                     ),
-//                    'delivery_order_id',
-                    // 'recipient_id',
-                    // 'recipient_branch_id',
                     array(
                         'name' => 'customer_name',
-                        'value' => '!empty($data->customer->name)?$data->customer->name:""'
+                        'value' => '!empty($data->customer->name) ? $data->customer->name : "" '
                     ),
                     array(
                         'name' => 'recipient_id',
-                        'value' => '!empty($data->user->username)?$data->user->username:""'
+                        'value' => '!empty($data->user->username) ? $data->user->username : ""'
                     ),
                     array(
                         'name' => 'recipient_branch_id',
-//                        'filter' => CHtml::activeDropDownList($model, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value' => '$data->recipientBranch->name'
                     ),
                     array(
                         'name'=>'destination_branch',
-//                        'filter' => CHtml::activeDropDownList($model, 'destination_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value'=>'$data->destinationBranch->name'
                     ),
                     array(
@@ -109,15 +98,6 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    /*
-                      'request_type',
-                      'sent_request_id',
-                      'request_date',
-                      'estimate_arrival_date',
-                      'destination_branch',
-                      'sales_order_id',
-                      'customer_id',
-                     */
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit}',
@@ -130,6 +110,33 @@ Yii::app()->clientScript->registerScript('search', "
                         ),
                     ),
                 ),
+            )); ?>
+        </div>
+        
+        <div>
+            <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                'tabs' => array(
+                    'Retail GR / BR' => array(
+                        'content' => $this->renderPartial('_viewRetail', array(
+                            'retailTransaction' => $retailTransaction,
+                            'retailTransactionDataProvider' => $retailTransactionDataProvider,
+                            'model' => $model
+                        ), true),
+                    ),
+                    'Delivery' => array(
+                        'content' => $this->renderPartial('_viewDelivery', array(
+                            'delivery' => $delivery,
+                            'deliveryDataProvider' => $deliveryDataProvider,
+                            'model' => $model
+                        ), true),
+                    ),
+                ),
+                // additional javascript options for the tabs plugin
+                'options' => array(
+                    'collapsible' => true,
+                ),
+                // set id for this widgets
+                'id' => 'view_tab',
             )); ?>
         </div>
     </div>

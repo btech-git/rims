@@ -19,6 +19,7 @@
  * @property integer $customer_id
  * @property integer $consignment_out_id
  * @property integer $transfer_request_id
+ * @property integer $registration_transaction_id
  * @property string $created_datetime
  *
  * The followings are the available model relations:
@@ -34,7 +35,7 @@
  * @property TransactionTransferRequest $transferRequest
  * @property TransactionReturnItemDetail[] $transactionReturnItemDetails
  * @property TransactionSalesOrder $salesOrder
- * @property TransactionDeliveryOrder $deliveryOrder
+ * @property RegistrationTransaction $registrationTransaction
  */
 class TransactionReturnItem extends MonthlyTransactionActiveRecord {
 
@@ -68,15 +69,15 @@ class TransactionReturnItem extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('return_item_no, return_item_date, delivery_order_id, recipient_id, recipient_branch_id, request_type', 'required'),
-            array('delivery_order_id, recipient_id, recipient_branch_id, sent_request_id, destination_branch, sales_order_id, customer_id, consignment_out_id, transfer_request_id', 'numerical', 'integerOnly' => true),
+            array('return_item_no, return_item_date, recipient_id, recipient_branch_id, request_type', 'required'),
+            array('delivery_order_id, recipient_id, recipient_branch_id, sent_request_id, destination_branch, sales_order_id, customer_id, consignment_out_id, transfer_request_id, registration_transaction_id', 'numerical', 'integerOnly' => true),
             array('return_item_no, request_type', 'length', 'max' => 30),
             array('return_item_date, request_date, estimate_arrival_date, delivery_order_no', 'safe'),
             array('status', 'length', 'max' => 20),
             array('return_item_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, return_item_no, return_item_date, created_datetime, delivery_order_id, recipient_id, recipient_branch_id, request_type, sent_request_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name, status, delivery_order_no', 'safe', 'on' => 'search'),
+            array('id, return_item_no, return_item_date, created_datetime, delivery_order_id, recipient_id, recipient_branch_id, request_type, sent_request_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name, status, delivery_order_no, registration_transaction_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -100,6 +101,7 @@ class TransactionReturnItem extends MonthlyTransactionActiveRecord {
             'transactionReturnItemDetails' => array(self::HAS_MANY, 'TransactionReturnItemDetail', 'return_item_id'),
             'consignmentOut' => array(self::BELONGS_TO, 'ConsignmentOutHeader', 'consignment_out_id'),
             'transferRequest' => array(self::BELONGS_TO, 'TransactionTransferRequest', 'transfer_request_id'),
+            'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
         );
     }
 

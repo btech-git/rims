@@ -861,13 +861,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.status', $this->status);
         $criteria->compare('note', $this->note, true);
 
-//        $criteria->addCondition("EXISTS ("
-//            . "SELECT registration_transaction_id "
-//            . "FROM " . RegistrationService::model()->tableName() . " "
-//            . "WHERE t.id = registration_transaction_id"
-//            . ") AND t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.status != 'Finished'"
-//        );
-        
         $criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'GR' AND t.service_status = 'Pending' AND t.status = 'Processing WO'");
         $criteria->order = 'registrationTransaction.priority_level ASC, registrationTransaction.work_order_date DESC, registrationTransaction.id ASC';
         

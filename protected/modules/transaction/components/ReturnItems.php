@@ -36,49 +36,32 @@ class ReturnItems extends CComponent {
         $this->header->setCodeNumberByNext('return_item_no', $branchCode, TransactionReturnItem::CONSTANT, $currentMonth, $currentYear);
     }
 
-    public function addDetail($requestType, $requestId) {
+    public function addDetails($transactionId, $returnType) {
         $this->details = array();
-        if ($requestType == 1) {
-            $sales = TransactionSalesOrderDetail::model()->findAllByAttributes(array('sales_order_id' => $requestId));
-            foreach ($sales as $key => $sale) {
+        
+        if ($returnType == 1) {
+            $deliveryDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $transactionId));
+            foreach ($deliveryDetails as $key => $deliveryDetail) {
                 $detail = new TransactionReturnItemDetail();
-                $detail->product_id = $sale->product_id;
-                $detail->quantity_delivery = $sale->quantity;
-                $detail->price = $sale->unit_price;
-                $detail->return_type = 'Sales Order';
+                $detail->product_id = $deliveryDetail->product_id;
+                $detail->quantity_delivery = $deliveryDetail->quantity_delivery;
+                $detail->price = $deliveryDetail->product->hpp;
+                $detail->return_type = 'Delivery Order';
                 $this->details[] = $detail;
             } //endforeach
         }//end if
-        elseif ($requestType == 2) {
-            $sents = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $requestId));
-            foreach ($sents as $key => $sent) {
+        elseif ($returnType == 2) {
+            $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $transactionId));
+            foreach ($registrationProducts as $key => $registrationProduct) {
                 $detail = new TransactionReturnItemDetail();
-                $detail->product_id = $sent->product_id;
-                $detail->quantity_delivery = $sent->quantity;
-                $detail->price = 0.00;
-                $detail->return_type = 'Sent Request';
+                $detail->product_id = $registrationProduct->product_id;
+                $detail->quantity_delivery = $registrationProduct->quantity;
+                $detail->price = $registrationProduct->total_price;
+                $detail->return_type = 'Retail Sales';
                 $this->details[] = $detail;
             }
-        } elseif ($requestType == 3) {
-            $transfers = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $requestId));
-            foreach ($transfers as $key => $transfer) {
-                $detail = new TransactionReturnItemDetail();
-                $detail->product_id = $transfer->product_id;
-                $detail->quantity_delivery = $transfer->quantity;
-                $detail->price = 0.00;
-                $detail->return_type = 'Transfer Request';
-                $this->details[] = $detail;
-            }
-        } elseif ($requestType == 4) {
-            $consignments = ConsignmentOutDetail::model()->findAllByAttributes(array('consignment_out_id' => $requestId));
-            foreach ($consignments as $key => $consignment) {
-                $detail = new TransactionReturnItemDetail();
-                $detail->product_id = $consignment->product_id;
-                $detail->quantity_delivery = $consignment->qty_sent;
-                $detail->price = $consignment->sale_price;
-                $detail->return_type = 'Consignment Out';
-                $this->details[] = $detail;
-            }
+        } else {
+            $this->details[] = array();
         }
     }
 
