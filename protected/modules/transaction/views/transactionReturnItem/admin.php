@@ -113,6 +113,8 @@ Yii::app()->clientScript->registerScript('search', "
             )); ?>
         </div>
         
+        <hr /><br />
+        
         <div>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(
