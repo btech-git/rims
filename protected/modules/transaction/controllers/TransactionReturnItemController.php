@@ -255,6 +255,9 @@ class TransactionReturnItemController extends Controller {
         $deliveryCriteria->compare('request_type', $delivery->request_type, true);
         $deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
             'criteria' => $deliveryCriteria,
+            'sort' => array(
+                'defaultOrder' => 'delivery_date DESC',
+            ),
         ));
 
         $this->render('admin', array(
