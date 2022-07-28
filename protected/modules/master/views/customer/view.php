@@ -88,11 +88,11 @@ $this->breadcrumbs = array(
                 <td><?php echo CHtml::link($vehicleDetail->plate_number, Yii::app()->createUrl("master/vehicle/view", array("id" => $vehicleDetail->id)), array('target' => '_blank')); ?></td>
                 <td><?php echo $vehicleDetail->machine_number; ?></td>
                 <td><?php echo $vehicleDetail->frame_number; ?></td>
-                <td><?php echo $vehicleDetail->carMake ? $vehicleDetail->carMake->name : ''; ?></td>
-                <td><?php echo $vehicleDetail->carModel ? $vehicleDetail->carModel->name : ''; ?></td>
-                <td><?php echo $vehicleDetail->carSubModel ? $vehicleDetail->carSubModel->name : ''; ?></td>
+                <td><?php echo $vehicleDetail->carMake ? CHtml::encode(CHtml::value($vehicleDetail, 'carMake.name')) : ''; ?></td>
+                <td><?php echo $vehicleDetail->carModel ? CHtml::encode(CHtml::value($vehicleDetail, 'carModel.name')) : ''; ?></td>
+                <td><?php echo $vehicleDetail->carSubModel ? CHtml::encode(CHtml::value($vehicleDetail, 'carSubModel.name')) : ''; ?></td>
                 <?php $color = Colors::model()->findByPk($vehicleDetail->color_id); ?>
-                <td><?php echo $color->name == '' ? '' : $color->name; ?></td>
+                <td><?php echo empty($color) ? '' : CHtml::encode(CHtml::value($color, 'name')); ?></td>
                 <td><?php echo $vehicleDetail->year; ?></td>
                 <td><?php echo $vehicleDetail->chasis_code; ?></td>
                 <td><?php echo $vehicleDetail->power; ?></td>
