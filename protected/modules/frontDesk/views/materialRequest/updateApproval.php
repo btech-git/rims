@@ -14,7 +14,7 @@ $this->menu = array(
 ?>
 
 <div id="maincontent">
-    <?php echo $this->renderPartial('_approval', array(
+    <?php echo $this->renderPartial('_approvalMaterial', array(
         'model' => $model,
         'materialRequest' => $materialRequest,
         'historis' => $historis,

@@ -31,14 +31,14 @@ $this->menu = array(
             'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.admin")
         ));  ?>
 
-        <?php //if ($materialRequest->status != 'Approved' && $materialRequest->status != 'Rejected'): ?>
+        <?php if ($materialRequest->status_document != 'Approved' && $materialRequest->status_document != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/frontDesk/materialRequest/update?id=' . $materialRequest->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.update")
             )); ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.materialRequest.updateApproval"))) ?>
-        <?php //endif; ?>
+        <?php endif; ?>
 
         <h1>View Permintaan Bahan #<?php echo $materialRequest->id; ?></h1>
 
@@ -103,12 +103,12 @@ $this->menu = array(
                     'model' => $materialRequest
                 ), true)
             ),
-//            'Detail Approval' => array(
-//                'id' => 'test2',
-//                'content' => $this->renderPartial(
-//                    '_viewDetailApproval',
-//                    array('model' => $materialRequest), true)
-//            ),
+            'Detail Approval' => array(
+                'id' => 'test2',
+                'content' => $this->renderPartial(
+                    '_viewDetailApproval',
+                    array('model' => $materialRequest), true)
+            ),
 
             'Detail Movement Out' => array(
                 'id' => 'test3',
