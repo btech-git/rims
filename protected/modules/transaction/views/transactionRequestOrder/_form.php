@@ -454,11 +454,7 @@ $supplierDataProvider = new CActiveDataProvider('Supplier', array(
                         </td>
                         <td>
                             <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                    'update' => '#product_stock_table',
-                                )) . '$.fn.yiiGridView.update("product-grid", {data: {Product: {
+                                'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
                                     product_supplier: [$("#TransactionPurchaseOrder_supplier_id").val()],
                                     brand_id: $("#Product_brand_id").val(),
                                     sub_brand_id: $("#Product_sub_brand_id").val(),
@@ -666,10 +662,10 @@ $supplierDataProvider = new CActiveDataProvider('Supplier', array(
                         'name'=>'unit_id', 
                         'value'=>'empty($data->unit_id) ? "" : $data->unit->name'
                     ),
-                    array(
-                        'name' => 'product_supplier', 
-                        'value' => '$data->product_supplier'
-                    ),
+//                    array(
+//                        'name' => 'product_supplier', 
+//                        'value' => '$data->product_supplier'
+//                    ),
                 ),
             )); ?>
         </div>

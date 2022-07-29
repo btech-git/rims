@@ -108,19 +108,18 @@ class TransactionRequestOrderController extends Controller
         $productCriteria->compare('t.id', $product->id);
         $productCriteria->compare('t.name', $product->name, true);
         $productCriteria->compare('t.manufacturer_code', $product->manufacturer_code, true);
-        $productCriteria->together = true;
-        $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.company as product_supplier';
-        $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';
-//        $productCriteria->group = 't.id';
-        $productCriteria->distinct = true;
-        $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
-        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
-        $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
-        $productCriteria->compare('rims_supplier.company', $product->product_supplier, true);
-        $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
-
+        $productCriteria->compare('t.brand_id', $product->brand_id);
+        $productCriteria->compare('t.sub_brand_id', $product->sub_brand_id);
+        $productCriteria->compare('t.sub_brand_series_id', $product->sub_brand_series_id);
+        $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
+        $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
+        $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
+        
         $productDataProvider = new CActiveDataProvider('Product', array(
-            'criteria' => $productCriteria
+            'criteria' => $productCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
         ));
 
         $supplier = new Supplier('search');
@@ -128,18 +127,14 @@ class TransactionRequestOrderController extends Controller
         if (isset($_GET['Supplier'])) {
             $supplier->attributes = $_GET['Supplier'];
         }
-
         $supplierCriteria = new CDbCriteria;
         $supplierCriteria->compare('t.name', $supplier->name, true);
         $supplierCriteria->compare('t.company', $supplier->company, true);
-
-        $supplierCriteria->select = 't.*,rims_supplier_product.supplier_id, rims_product.name as product_name';
-        $supplierCriteria->join = 'LEFT OUTER JOIN `rims_supplier_product`ON t.id = rims_supplier_product.supplier_id LEFT OUTER JOIN `rims_product`ON rims_supplier_product.product_id = rims_product.id ';
-
-        $supplierCriteria->compare('rims_product.name ', $supplier->product_name, true);
-
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
             'criteria' => $supplierCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
         ));
 
         $price = new ProductPrice('search');
@@ -1359,6 +1354,20 @@ class TransactionRequestOrderController extends Controller
         }
     }
     
+    public function actionAjaxHtmlUpdateProductStockTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $productDataProvider = $product->searchByStockCheck($pageNumber);
+            $branches = Branch::model()->findAll();
+
+            $this->renderPartial('_productStockTable', array(
+                'productDataProvider' => $productDataProvider,
+                'branches' => $branches,
+            ));
+        }
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

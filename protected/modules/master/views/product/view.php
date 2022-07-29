@@ -36,6 +36,7 @@ $this->menu=array(
             'attributes'=>array(
                 'id',
                 'code',
+                'manufacturer_code',
                 'name',
                 'description',
                 'production_year',
