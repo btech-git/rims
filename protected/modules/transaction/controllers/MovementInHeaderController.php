@@ -244,8 +244,9 @@ class MovementInHeaderController extends Controller {
         $model = new MovementInHeader('search');
         $model->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['MovementInHeader']))
+        if (isset($_GET['MovementInHeader'])) {
             $model->attributes = $_GET['MovementInHeader'];
+        }
         
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
@@ -253,8 +254,9 @@ class MovementInHeaderController extends Controller {
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
         
-        if (isset($_GET['TransactionReceiveItem']))
+        if (isset($_GET['TransactionReceiveItem'])) {
             $receiveItem->attributes = $_GET['TransactionReceiveItem'];
+        }
 
         $receiveItemDataProvider = $receiveItem->searchByMovementIn();
         $receiveItemDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
@@ -262,8 +264,9 @@ class MovementInHeaderController extends Controller {
         $returnItem = new TransactionReturnItem('search');
         $returnItem->unsetAttributes();
         
-        if (isset($_GET['TransactionReturnItem']))
+        if (isset($_GET['TransactionReturnItem'])) {
             $returnItem->attributes = $_GET['TransactionReturnItem'];
+        }
 
         $returnItemDataProvider = $returnItem->search();
         $returnItemDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
@@ -271,7 +274,9 @@ class MovementInHeaderController extends Controller {
         $this->render('admin', array(
             'model' => $model,
             'receiveItem' => $receiveItem,
+            'receiveItemDataProvider' => $receiveItemDataProvider,
             'returnItem' => $returnItem,
+            'returnItemDataProvider' => $returnItemDataProvider,
         ));
     }
 

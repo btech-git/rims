@@ -4,7 +4,7 @@
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'return-item-grid',
-        'dataProvider'=>$returnItem->search(),
+        'dataProvider'=>$returnItemDataProvider,
         'filter'=>$returnItem,
         // 'summaryText'=>'',
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

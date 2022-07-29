@@ -2,7 +2,7 @@
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'receive-item-grid',
-        'dataProvider'=>$receiveItem->searchByMovementIn(),
+        'dataProvider'=>$receiveItemDataProvider,
         'filter'=>$receiveItem,
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager'=>array(

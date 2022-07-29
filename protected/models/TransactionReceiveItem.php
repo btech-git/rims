@@ -269,6 +269,16 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.invoice_grand_total_rounded', $this->invoice_grand_total_rounded);
         $criteria->compare('t.invoice_rounding_nominal', $this->invoice_rounding_nominal);
 
+        $criteria->together = 'true';
+        $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'transferRequest', 'consignmentIn', 'deliveryOrder', 'movementOut');
+        $criteria->compare('recipientBranch.name', $this->branch_name, true);
+        $criteria->compare('supplier.name', $this->supplier_name, true);
+        $criteria->compare('purchaseOrder.purchase_order_no', $this->purchase_order_no, true);
+        $criteria->compare('transferRequest.transfer_request_no', $this->transfer_request_no, true);
+        $criteria->compare('consignmentIn.consignment_in_no', $this->consignment_in_no, true);
+        $criteria->compare('deliveryOrder.delivery_order_no', $this->delivery_order_no, true);
+        $criteria->compare('movementOut.movement_out_no', $this->movement_out_no, true);
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

@@ -104,6 +104,7 @@ $('.search-form form').submit(function(){
                     ),
                 )); ?>
             </div>
+            
             <fieldset>
                 <legend>Pending Orders</legend>
                 <div>
@@ -112,11 +113,13 @@ $('.search-form form').submit(function(){
                             'Receive Item' => array(
                                 'content' => $this->renderPartial('_viewReceive', array(
                                     'receiveItem' => $receiveItem,
+                                    'receiveItemDataProvider' => $receiveItemDataProvider,
                                 ), true)
                             ),
-                            'Return Item' => array(
+                            'Return Penjualan' => array(
                                 'content' => $this->renderPartial('_viewReturn', array(
                                     'returnItem' => $returnItem,
+                                    'returnItemDataProvider' => $returnItemDataProvider,
                                 ), true)
                             ),
                         ),
