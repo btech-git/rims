@@ -45,7 +45,7 @@ class MaintenanceRequestController extends Controller {
         $maintenanceRequest->header->user_id = Yii::app()->user->id;
         $maintenanceRequest->header->transaction_date = date('Y-m-d');
         $maintenanceRequest->header->transaction_time = date('H:i:s');
-        $maintenanceRequest->header->date_created = date('Y-m-d H:i:s');
+        $maintenanceRequest->header->created_datetime = date('Y-m-d H:i:s');
         $maintenanceRequest->header->status = 'PENDING';
         $maintenanceRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
 

@@ -101,7 +101,7 @@ Yii::app()->clientScript->registerScript('search', "
                 //'id',
                 array('name' => 'service_type_code', 'value' => '$data->service->serviceType->name'),
                 array('name' => 'service_category_code', 'value' => '$data->service->serviceCategory->name'),
-                array('name' => 'service_name', 'value' => 'CHTml::link($data->service->name, array("view", "id"=>$data->service->id))', 'type' => 'raw'),
+                array('name' => 'service_name', 'value' => 'CHTml::link($data->service->name, array("/master/service/view", "id"=>$data->service_id))', 'type' => 'raw'),
                 array('name' => 'service_code', 'value' => '$data->service->code'),
                 array('name' => 'qs_code', 'value' => 'CHTml::link($data->quickService->code, array("view", "id"=>$data->quick_service_id))', 'type' => 'raw'),
                 //'code',

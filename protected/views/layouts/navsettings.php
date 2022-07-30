@@ -163,11 +163,11 @@
                             'linkOptions' => array('class' => 'titleNav'), 
                             'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitApproval')
                         ),
-                        array(
-                            'label' => 'Unit Conversion', 
-                            'url' => array('/master/unitConversion/admin'), 
-                            'visible' => Yii::app()->user->checkAccess('masterConversionCreate') || Yii::app()->user->checkAccess('masterConversionEdit') || Yii::app()->user->checkAccess('masterConversionApproval')
-                        ),
+//                        array(
+//                            'label' => 'Unit Conversion', 
+//                            'url' => array('/master/unitConversion/admin'), 
+//                            'visible' => Yii::app()->user->checkAccess('masterConversionCreate') || Yii::app()->user->checkAccess('masterConversionEdit') || Yii::app()->user->checkAccess('masterConversionApproval')
+//                        ),
                         array(
                             'label' => 'Public Holiday', 
                             'url' => array('/master/publicDayOff/admin'), 
