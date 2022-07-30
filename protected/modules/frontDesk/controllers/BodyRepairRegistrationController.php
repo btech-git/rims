@@ -232,7 +232,6 @@ class BodyRepairRegistrationController extends Controller {
 
         if (count($bodyRepairRegistration->productDetails) > 0) {
             foreach ($bodyRepairRegistration->productDetails as $key => $rProduct) {
-                $value = $jumlah;
                 $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
                 $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
                 $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
