@@ -365,7 +365,11 @@
                         <?php echo $form->labelEx($service->header, 'flat_rate_hour', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($service->header, 'flat_rate_hour', array('size' => 10, 'maxlength' => 10, 'value' => $service->header->isNewRecord ? $servicePrice->flat_rate_hour : $service->header->flat_rate_hour)); ?>
+                        <?php echo $form->textField($service->header, 'flat_rate_hour', array(
+                            'size' => 10, 
+                            'maxlength' => 10, 
+//                            'value' => $service->header->isNewRecord ? $servicePrice->flat_rate_hour : $service->header->flat_rate_hour
+                        )); ?>
                         <?php echo $form->error($service->header, 'flat_rate_hour'); ?>
                     </div>
                 </div>
