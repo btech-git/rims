@@ -323,7 +323,7 @@ class BodyRepairRegistrationController extends Controller {
                 $jurnalUmumPenjualan->debet_kredit = 'K';
                 $jurnalUmumPenjualan->tanggal_posting = date('Y-m-d');
                 $jurnalUmumPenjualan->transaction_subject = $bodyRepairRegistration->header->customer->name;
-                $jurnalUmumPenjualan->is_coa_category = 1;
+                $jurnalUmumPenjualan->is_coa_category = 0;
                 $jurnalUmumPenjualan->transaction_type = 'RG';
                 $jurnalUmumPenjualan->save();
 
