@@ -1,7 +1,7 @@
 <?php
 
-class TransactionSentRequestController extends Controller
-{
+class TransactionSentRequestController extends Controller {
+
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -21,8 +21,8 @@ class TransactionSentRequestController extends Controller
         }
 
         if (
-            $filterChain->action->id === 'delete' ||
-            $filterChain->action->id === 'update'
+                $filterChain->action->id === 'delete' ||
+                $filterChain->action->id === 'update'
         ) {
             if (!(Yii::app()->user->checkAccess('sentRequestEdit')))
                 $this->redirect(array('/site/login'));
@@ -34,9 +34,9 @@ class TransactionSentRequestController extends Controller
         }
 
         if (
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'view'
+                $filterChain->action->id === 'admin' ||
+                $filterChain->action->id === 'index' ||
+                $filterChain->action->id === 'view'
         ) {
             if (!(Yii::app()->user->checkAccess('sentRequestCreate')) || !(Yii::app()->user->checkAccess('sentRequestEdit')) || !(Yii::app()->user->checkAccess('sentRequestApproval')))
                 $this->redirect(array('/site/login'));
@@ -49,8 +49,7 @@ class TransactionSentRequestController extends Controller
      * Displays a particular model.
      * @param integer $id the ID of the model to be displayed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         $sentDetails = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $id));
 
         $this->render('view', array(
@@ -63,8 +62,7 @@ class TransactionSentRequestController extends Controller
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -89,7 +87,7 @@ class TransactionSentRequestController extends Controller
         $sentRequest->header->sent_request_date = date('Y-m-d H:i:s');
 //        $sentRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($sentRequest->header->sent_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($sentRequest->header->sent_request_date)), $sentRequest->header->requester_branch_id);
         $this->performAjaxValidation($sentRequest->header);
-        
+
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
@@ -115,11 +113,10 @@ class TransactionSentRequestController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $sentRequest = $this->instantiate($id);
         $this->performAjaxValidation($sentRequest->header);
-        
+
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -140,19 +137,18 @@ class TransactionSentRequestController extends Controller
             'criteria' => $productCriteria,
         ));
 
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['TransactionSentRequest'])) {
             $this->loadState($sentRequest);
-            
+
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $sentRequest->header->sent_request_no,
-                'branch_id' => $sentRequest->header->requester_branch_id,
             ));
 
             $sentRequest->header->setCodeNumberByRevision('sent_request_no');
-            
+
             if ($sentRequest->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $sentRequest->header->id));
             } else {
@@ -169,21 +165,19 @@ class TransactionSentRequestController extends Controller
         ));
     }
 
-    public function actionUpdateApproval($headerId)
-    {
+    public function actionUpdateApproval($headerId) {
         $sentRequest = TransactionSentRequest::model()->findByPk($headerId);
         $historis = TransactionSentRequestApproval::model()->findAllByAttributes(array('sent_request_id' => $headerId));
         $model = new TransactionSentRequestApproval;
         $model->date = date('Y-m-d H:i:s');
-        
+
         if (isset($_POST['TransactionSentRequestApproval'])) {
             $model->attributes = $_POST['TransactionSentRequestApproval'];
 
             if ($model->save()) {
-                
+
                 JurnalUmum::model()->deleteAllByAttributes(array(
                     'kode_transaksi' => $sentRequest->sent_request_no,
-                    'branch_id' => $sentRequest->requester_branch_id,
                 ));
 
                 $sentRequest->status_document = $model->approval_type;
@@ -191,7 +185,7 @@ class TransactionSentRequestController extends Controller
                     $sentRequest->approved_by = $model->supervisor_id;
                 }
                 $sentRequest->save(false);
-                
+
                 $jurnalUmumMasterInterbranchRequester = new JurnalUmum;
                 $jurnalUmumMasterInterbranchRequester->kode_transaksi = $sentRequest->sent_request_no;
                 $jurnalUmumMasterInterbranchRequester->tanggal_transaksi = $sentRequest->sent_request_date;
@@ -217,12 +211,12 @@ class TransactionSentRequestController extends Controller
                 $jurnalUmumInterbranchRequester->is_coa_category = 0;
                 $jurnalUmumInterbranchRequester->transaction_type = 'SR';
                 $jurnalUmumInterbranchRequester->save();
-                
+
                 foreach ($sentRequest->transactionSentRequestDetails as $detail) {
-                    
+
                     //save coa persediaan product master
                     $hppPrice = $detail->product->hpp * $detail->quantity;
-                    
+
                     $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
                     $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $sentRequest->sent_request_no;
                     $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $sentRequest->sent_request_date;
@@ -249,9 +243,8 @@ class TransactionSentRequestController extends Controller
                     $jurnalUmumOutstandingPartRequester->is_coa_category = 0;
                     $jurnalUmumOutstandingPartRequester->transaction_type = 'SR';
                     $jurnalUmumOutstandingPartRequester->save();
-                    
                 }
-                
+
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -263,8 +256,7 @@ class TransactionSentRequestController extends Controller
         ));
     }
 
-    public function actionUpdateApprovalDestination($id)
-    {
+    public function actionUpdateApprovalDestination($id) {
         $sentRequest = TransactionSentRequest::model()->findByPk($id);
         $sentRequest->destination_approval_status = 1;
         $sentRequest->destination_approved_by = Yii::app()->user->id;
@@ -342,29 +334,26 @@ class TransactionSentRequestController extends Controller
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
             $model = $this->instantiate($id);
 
             if ($model->header->purchaseReturnHeaders != NULL || $model->header->receiveHeaders != NULL) {
                 Yii::app()->user->setFlash('message', 'Cannot DELETE this transaction');
             } else {
-                foreach ($model->details as $detail) 
+                foreach ($model->details as $detail)
                     $detail->delete();
-                
+
                 $model->header->delete();
             }
-        }
-        else
+        } else
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
     /**
      * Lists all models.
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $dataProvider = new CActiveDataProvider('TransactionSentRequest');
         $this->render('index', array(
             'dataProvider' => $dataProvider,
@@ -374,8 +363,7 @@ class TransactionSentRequestController extends Controller
     /**
      * Manages all models.
      */
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
         $model = new TransactionSentRequest('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['TransactionSentRequest'])) {
@@ -389,7 +377,7 @@ class TransactionSentRequestController extends Controller
         $destinationBranchDataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
         $destinationBranchDataProvider->criteria->compare('t.status_document', "Approved");
         $destinationBranchDataProvider->criteria->compare('t.destination_approved_by', null);
-        
+
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
@@ -404,9 +392,7 @@ class TransactionSentRequestController extends Controller
      * @return TransactionSentRequest the loaded model
      * @throws CHttpException
      */
-
-    public function actionAjaxProduct($id)
-    {
+    public function actionAjaxProduct($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $product = Product::model()->findByPk($id);
             $unitName = Unit::model()->findByPk($product->unit_id)->name;
@@ -424,34 +410,22 @@ class TransactionSentRequestController extends Controller
         }
     }
 
-    public function actionAjaxGetTotal($id)
-    {
+    public function actionAjaxGetTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $sentRequest = $this->instantiate($id);
             $this->loadState($sentRequest);
-            //$requestType =$sentRequest->header->request_type;
+
             $total = 0;
             $totalItems = 0;
-            // if($requestType == 'Request for Purchase'){
-            // 	foreach ($sentRequest->details as $key => $detail) {
-            // 		$totalItems += $detail->total;
-            // 		$total += $detail->subtotal;_quantity;
-            // 	}
-            // } else if($requestType == 'Request for Transfer'){
-            // 	foreach ($sentRequest->transferDetails as $key => $transferDetail) {
-            // 		$totalItems += $transferDetail->quantity;
-            // 	}
-            // }
+            
             foreach ($sentRequest->details as $key => $detail) {
                 $totalItems += $detail->quantity;
                 $total += $detail->unit_price * $totalItems;
             }
-            //echo($totalItems);
+
             $object = array('total' => $total, 'totalItems' => $totalItems);
             echo CJSON::encode($object);
-
         }
-
     }
 
     public function actionAjaxJsonTotal($id, $index) {
@@ -468,8 +442,7 @@ class TransactionSentRequestController extends Controller
     }
 
     //Add Detail
-    public function actionAjaxHtmlAddDetail($id, $productId)
-    {
+    public function actionAjaxHtmlAddDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
@@ -489,7 +462,7 @@ class TransactionSentRequestController extends Controller
             $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
             $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
             $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
-            
+
             $productDataProvider = new CActiveDataProvider('Product', array(
                 'criteria' => $productCriteria,
             ));
@@ -504,14 +477,11 @@ class TransactionSentRequestController extends Controller
             $this->renderPartial('_detail', array(
                 'sentRequest' => $sentRequest,
                 'product' => $product,
-//                'productDataProvider' => $productDataProvider,
-
             ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $product = new Product('search');
@@ -526,10 +496,8 @@ class TransactionSentRequestController extends Controller
             $productCriteria->together = true;
             $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name';
             $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id ';
-            $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name,
-                true);
-            $productCriteria->compare('rims_product_sub_master_category.name',
-                $product->product_sub_master_category_name, true);
+            $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
+            $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
             $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
             $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
             $productDataProvider = new CActiveDataProvider('Product', array(
@@ -546,13 +514,11 @@ class TransactionSentRequestController extends Controller
                 'sentRequest' => $sentRequest,
                 'product' => $product,
                 'productDataProvider' => $productDataProvider,
-
             ), false, true);
         }
     }
 
-	public function actionAjaxHtmlUpdateProductSubBrandSelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
 
@@ -561,9 +527,8 @@ class TransactionSentRequestController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
 
@@ -572,9 +537,8 @@ class TransactionSentRequestController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubMasterCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
 
@@ -583,9 +547,8 @@ class TransactionSentRequestController extends Controller
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
 
@@ -594,9 +557,8 @@ class TransactionSentRequestController extends Controller
             ));
         }
     }
-    
-    public function instantiate($id)
-    {
+
+    public function instantiate($id) {
         if (empty($id)) {
             $sentRequest = new SentRequests(new TransactionSentRequest(), array());
             //print_r("test");
@@ -608,8 +570,7 @@ class TransactionSentRequestController extends Controller
         return $sentRequest;
     }
 
-    public function loadState($sentRequest)
-    {
+    public function loadState($sentRequest) {
         if (isset($_POST['TransactionSentRequest'])) {
             $sentRequest->header->attributes = $_POST['TransactionSentRequest'];
         }
@@ -619,12 +580,10 @@ class TransactionSentRequestController extends Controller
             foreach ($_POST['TransactionSentRequestDetail'] as $i => $item) {
                 if (isset($sentRequest->details[$i])) {
                     $sentRequest->details[$i]->attributes = $item;
-
                 } else {
                     $detail = new TransactionSentRequestDetail();
                     $detail->attributes = $item;
                     $sentRequest->details[] = $detail;
-
                 }
             }
             if (count($_POST['TransactionSentRequestDetail']) < count($sentRequest->details)) {
@@ -632,14 +591,10 @@ class TransactionSentRequestController extends Controller
             }
         } else {
             $sentRequest->details = array();
-
         }
-
-
     }
 
-    public function loadModel($id)
-    {
+    public function loadModel($id) {
         $model = TransactionSentRequest::model()->findByPk($id);
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
@@ -651,11 +606,11 @@ class TransactionSentRequestController extends Controller
      * Performs the AJAX validation.
      * @param TransactionSentRequest $model the model to be validated
      */
-    protected function performAjaxValidation($model)
-    {
+    protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'transaction-sent-request-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
+
 }

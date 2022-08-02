@@ -143,8 +143,9 @@ class GeneralRepairRegistrationController extends Controller {
         if (isset($_POST['Submit'])) {
             $this->loadStateDetails($generalRepairRegistration);
 
-            if ($generalRepairRegistration->saveDetails(Yii::app()->db))
+            if ($generalRepairRegistration->saveDetails(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+            }
         }
 //        }
 
