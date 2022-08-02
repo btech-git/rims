@@ -139,22 +139,22 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('t.invoice_id', $this->invoice_id);
-        $criteria->compare('payment_number', $this->payment_number, true);
-        $criteria->compare('payment_date', $this->payment_date, true);
-        $criteria->compare('payment_time', $this->payment_time, true);
-        $criteria->compare('payment_amount', $this->payment_amount, true);
+        $criteria->compare('t.payment_number', $this->payment_number, true);
+        $criteria->compare('t.payment_date', $this->payment_date, true);
+        $criteria->compare('t.payment_time', $this->payment_time, true);
+        $criteria->compare('t.payment_amount', $this->payment_amount, true);
         $criteria->compare('t.notes', $this->notes, true);
         $criteria->compare('t.customer_id', $this->customer_id);
         $criteria->compare('t.vehicle_id', $this->vehicle_id);
         $criteria->compare('t.payment_type', $this->payment_type, true);
         $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('t.branch_id', $this->branch_id);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('t.status', $this->status, true);
         $criteria->compare('t.company_bank_id', $this->company_bank_id);
         $criteria->compare('nomor_giro', $this->nomor_giro, true);
         $criteria->compare('cash_payment_type', $this->cash_payment_type);
-        $criteria->compare('bank_id', $this->bank_id);
-        $criteria->compare('payment_type_id', $this->payment_type_id);
+        $criteria->compare('t.bank_id', $this->bank_id);
+        $criteria->compare('t.payment_type_id', $this->payment_type_id);
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
 
