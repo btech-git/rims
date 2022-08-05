@@ -3,7 +3,7 @@
 class BodyRepairRegistrationController extends Controller {
 
     public $layout = '//layouts/column1';
-    
+
     public function filters() {
         return array(
             'access',
@@ -16,7 +16,7 @@ class BodyRepairRegistrationController extends Controller {
                 $this->redirect(array('/site/login'));
             }
         }
-        
+
         if ($filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('bodyRepairEdit'))) {
                 $this->redirect(array('/site/login'));
@@ -24,14 +24,14 @@ class BodyRepairRegistrationController extends Controller {
         }
 
         if (
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'addProductService' || 
-            $filterChain->action->id === 'generateInvoice' || 
-            $filterChain->action->id === 'generateSalesOrder' || 
-            $filterChain->action->id === 'generateWorkOrder' || 
-            $filterChain->action->id === 'insuranceAddition' || 
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'showRealization'
+                $filterChain->action->id === 'admin' ||
+                $filterChain->action->id === 'addProductService' ||
+                $filterChain->action->id === 'generateInvoice' ||
+                $filterChain->action->id === 'generateSalesOrder' ||
+                $filterChain->action->id === 'generateWorkOrder' ||
+                $filterChain->action->id === 'insuranceAddition' ||
+                $filterChain->action->id === 'view' ||
+                $filterChain->action->id === 'showRealization'
         ) {
             if (!(Yii::app()->user->checkAccess('bodyRepairCreate')) || !(Yii::app()->user->checkAccess('bodyRepairEdit'))) {
                 $this->redirect(array('/site/login'));
@@ -45,7 +45,7 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration = $this->instantiate(null);
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
-        
+
         $bodyRepairRegistration->header->transaction_date = date('Y-m-d H:i:s');
         $bodyRepairRegistration->header->work_order_time = date('H:i:s');
         $bodyRepairRegistration->header->user_id = Yii::app()->user->id;
@@ -69,8 +69,7 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionInsuranceAddition($id)
-    {
+    public function actionInsuranceAddition($id) {
         $registrationInsuranceData = new RegistrationInsuranceData();
         $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
         $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
@@ -78,19 +77,19 @@ class BodyRepairRegistrationController extends Controller {
         $insuranceCompany = InsuranceCompany::model()->findByPk($registrationTransaction->insurance_company_id);
         $registrationInsuranceData->registration_transaction_id = $id;
         $registrationInsuranceData->insurance_company_id = $registrationTransaction->insurance_company_id;
-        
-        if (isset($_POST['Cancel'])) 
+
+        if (isset($_POST['Cancel']))
             $this->redirect(array('view', 'id' => $id));
 
         if (isset($_POST['_FormSubmit_'])) {
             if ($_POST['_FormSubmit_'] === 'Submit') {
-                if (isset($_POST['RegistrationInsuranceData'])) 
+                if (isset($_POST['RegistrationInsuranceData']))
                     $registrationInsuranceData->attributes = $_POST['RegistrationInsuranceData'];
 
-                if ($registrationInsuranceData->save(Yii::app()->db)) 
+                if ($registrationInsuranceData->save(Yii::app()->db))
                     $this->redirect(array('view', 'id' => $id));
             }
-        } 
+        }
 
         $this->render('insuranceAddition', array(
             'registrationInsuranceData' => $registrationInsuranceData,
@@ -100,12 +99,12 @@ class BodyRepairRegistrationController extends Controller {
             'insuranceCompany' => $insuranceCompany,
         ));
     }
-    
+
     public function actionAddProductService($registrationId) {
         $bodyRepairRegistration = $this->instantiate($registrationId);
         $customer = Customer::model()->findByPk($bodyRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
-        $branches = Branch::model()->findAll(); 
+        $branches = Branch::model()->findAll();
         $bodyRepairRegistration->header->pph = 1;
 
         $damage = new Service('search');
@@ -123,7 +122,7 @@ class BodyRepairRegistrationController extends Controller {
         $damageCriteria->compare('t.service_category_id', $damage->service_category_id);
         $damageCriteria->compare('t.service_type_id', 2);
         $explodeKeyword = explode(" ", $damage->findkeyword);
-        
+
         foreach ($explodeKeyword as $key) {
             $damageCriteria->compare('t.code', $key, true, 'OR');
             $damageCriteria->compare('t.name', $key, true, 'OR');
@@ -139,7 +138,7 @@ class BodyRepairRegistrationController extends Controller {
         ));
 
         $damageArray = array();
-        
+
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -155,7 +154,7 @@ class BodyRepairRegistrationController extends Controller {
         $serviceCriteria->compare('t.service_category_id', $service->service_category_id);
         $serviceCriteria->compare('t.service_type_id', 2);
         $explodeKeyword = explode(" ", $service->findkeyword);
-        
+
         foreach ($explodeKeyword as $key) {
             $serviceCriteria->compare('t.code', $key, true, 'OR');
             $serviceCriteria->compare('t.name', $key, true, 'OR');
@@ -171,7 +170,7 @@ class BodyRepairRegistrationController extends Controller {
         ));
 
         $serviceArray = array();
-        
+
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -180,16 +179,16 @@ class BodyRepairRegistrationController extends Controller {
 
         $productDataProvider = $product->search();
 
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel']))
             $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
 
         //if (isset($_POST['_FormSubmit_'])) {
-            if (isset($_POST['Submit'])) {
-                $this->loadStateDetails($bodyRepairRegistration);
+        if (isset($_POST['Submit'])) {
+            $this->loadStateDetails($bodyRepairRegistration);
 
-                if ($bodyRepairRegistration->saveDetails(Yii::app()->db)) 
-                    $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
-            }
+            if ($bodyRepairRegistration->saveDetails(Yii::app()->db))
+                $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
+        }
         //}
 
         $this->render('addProductService', array(
@@ -197,7 +196,7 @@ class BodyRepairRegistrationController extends Controller {
             'vehicle' => $vehicle,
             'customer' => $customer,
             'damage' => $damage,
-            'damageDataProvider' =>$damageDataProvider,
+            'damageDataProvider' => $damageDataProvider,
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
             'product' => $product,
@@ -207,14 +206,13 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $bodyRepairRegistration = $this->instantiate($id);
         $bodyRepairRegistration->header->setCodeNumberByRevision('transaction_number');
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $type = "";
-        
+
         $damage = new Service('search');
         $damage->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -316,18 +314,18 @@ class BodyRepairRegistrationController extends Controller {
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($bodyRepairRegistration);
-            
+
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
             }
         }
-        
+
         $this->render('update', array(
             'bodyRepairRegistration' => $bodyRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
             'damage' => $damage,
-            'damageDataProvider' =>$damageDataProvider,
+            'damageDataProvider' => $damageDataProvider,
             'qs' => $qs,
             'qsDataProvider' => $qsDataProvider,
             'service' => $service,
@@ -339,8 +337,7 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionView($id)
-    {
+    public function actionView($id) {
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
         $services = RegistrationService::model()->findAllByAttributes(array(
             'registration_transaction_id' => $id,
@@ -360,7 +357,7 @@ class BodyRepairRegistrationController extends Controller {
             $registrationMemo->user_id = Yii::app()->user->id;
             $registrationMemo->save();
         }
-        
+
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'services' => $services,
@@ -373,18 +370,17 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
-        
+
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
-        
+
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
-        
+
         $dataProvider = $model->searchAdmin();
         $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
         $dataProvider->criteria->addCondition("repair_type = 'BR'");
@@ -398,21 +394,18 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionGenerateInvoice($id)
-    {
+    public function actionGenerateInvoice($id) {
         $registration = $this->instantiate($id);
-        
+
         if ($registration->saveInvoice(Yii::app()->db)) {
 
             $this->redirect(array('view', 'id' => $id));
         }
-        
     }
 
-    public function actionGenerateSalesOrder($id)
-    {
+    public function actionGenerateSalesOrder($id) {
         $model = $this->instantiate($id);
-        
+
         $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->sales_order_date = date('Y-m-d');
         $model->header->status = 'Processing SO';
@@ -432,10 +425,9 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-    public function actionGenerateWorkOrder($id)
-    {
+    public function actionGenerateWorkOrder($id) {
         $model = $this->instantiate($id);
-        
+
         $model->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->work_order_date = date('Y-m-d');
         $model->header->work_order_time = date('H:i:s');
@@ -470,8 +462,7 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-    public function actionShowRealization($id)
-    {
+    public function actionShowRealization($id) {
         $head = RegistrationTransaction::model()->findByPk($id);
         $reals = RegistrationRealizationProcess::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $this->render('realization', array(
@@ -566,68 +557,64 @@ class BodyRepairRegistrationController extends Controller {
 //        }
 //    }
 
-    public function actionPdf($id)
-    {
+    public function actionPdf($id) {
         $bodyRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
         $customer = Customer::model()->findByPk($bodyRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($bodyRepairRegistration->branch_id);
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        
+
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
-            'bodyRepairRegistration' => $bodyRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'bodyRepairRegistration' => $bodyRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output();
     }
 
-    public function actionPdfSaleOrder($id)
-    {
+    public function actionPdfSaleOrder($id) {
         $bodyRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
         $customer = Customer::model()->findByPk($bodyRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($bodyRepairRegistration->branch_id);
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        
+
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfSaleOrder', array(
-            'bodyRepairRegistration' => $bodyRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'bodyRepairRegistration' => $bodyRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output();
     }
 
-    public function actionPdfWorkOrder($id)
-    {
+    public function actionPdfWorkOrder($id) {
         $bodyRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
         $customer = Customer::model()->findByPk($bodyRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($bodyRepairRegistration->branch_id);
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        
+
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfWorkOrder', array(
-            'bodyRepairRegistration' => $bodyRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'bodyRepairRegistration' => $bodyRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output();
     }
 
-    public function actionUpdateSpk($id)
-    {
+    public function actionUpdateSpk($id) {
         $model = RegistrationInsuranceData::model()->findByPk($id);
 
         if (isset($_POST['RegistrationInsuranceData'])) {
@@ -636,7 +623,7 @@ class BodyRepairRegistrationController extends Controller {
             if (isset($featured_image) && !empty($featured_image)) {
                 $model->spk_insurance = $featured_image->extensionName;
             }
-            
+
             if ($model->save()) {
                 $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                     'registration_transaction_id' => $model->registration_transaction_id,
@@ -666,11 +653,9 @@ class BodyRepairRegistrationController extends Controller {
         $this->render('updateSpk', array(
             'model' => $model,
         ));
-
     }
 
-    public function actionUpdateImages($id)
-    {
+    public function actionUpdateImages($id) {
         $model = RegistrationInsuranceData::model()->findByPk($id);
 
         $insuranceImages = RegistrationInsuranceImages::model()->findAllByAttributes(array(
@@ -720,8 +705,7 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionDeleteImage($id)
-    {
+    public function actionDeleteImage($id) {
         $model = RegistrationInsuranceImages::model()->findByPk($id);
         $model->scenario = 'delete';
 
@@ -732,11 +716,11 @@ class BodyRepairRegistrationController extends Controller {
         if (file_exists($dir)) {
             unlink($dir);
         }
-        
+
         if (file_exists($dir_thumb)) {
             unlink($dir_thumb);
         }
-        
+
         if (file_exists($dir_square)) {
             unlink($dir_square);
         }
@@ -747,8 +731,7 @@ class BodyRepairRegistrationController extends Controller {
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
-    public function actionDeleteFeatured($id)
-    {
+    public function actionDeleteFeatured($id) {
         $model = RegistrationInsuranceData::model()->findByPk($id);
         $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/insurance/' . $model->id . '/' . $model->featuredname;
         if (file_exists($dir)) {
@@ -760,8 +743,7 @@ class BodyRepairRegistrationController extends Controller {
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
-    public function actionDeleteImageRealization($id)
-    {
+    public function actionDeleteImageRealization($id) {
         $model = RegistrationRealizationImages::model()->findByPk($id);
         $model->scenario = 'delete';
 
@@ -792,42 +774,39 @@ class BodyRepairRegistrationController extends Controller {
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
-    public function actionAjaxHtmlAddDamageDetail($id, $serviceId)
-    {
+    public function actionAjaxHtmlAddDamageDetail($id, $serviceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
-            
+
             $bodyRepairRegistration->addDamageDetail($serviceId);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailDamage', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveDamageDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveDamageDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $bodyRepairRegistration->removeDamageDetailAt($index);
-            
+
             $this->renderPartial('_detailDamage', array(
                 'registrationTransaction' => $bodyRepairRegistration
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveDamageDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveDamageDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
@@ -838,217 +817,205 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-    public function actionAjaxHtmlAddServiceInsuranceDetail($id, $serviceId, $insuranceId, $damageType, $repair)
-    {
+    public function actionAjaxHtmlAddServiceInsuranceDetail($id, $serviceId, $insuranceId, $damageType, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
 
             $bodyRepairRegistration->addServiceInsuranceDetail($serviceId, $insuranceId, $damageType, $repair);
-            
+
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailService', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
 //Add Service
-    public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair)
-    {
+    public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
 
             $bodyRepairRegistration->addServiceDetail($serviceId, $customerId, $custType, $vehicleId, $repair);
-            
+
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailService', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveServiceDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $bodyRepairRegistration->removeServiceDetailAt($index);
-            
+
             $this->renderPartial('_detailService', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxHtmlRemoveServiceDetailAll($id)
-    {
+    public function actionAjaxHtmlRemoveServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $bodyRepairRegistration->removeServiceDetailAll();
-            
+
             $this->renderPartial('_detailService', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
 //Add Product
-    public function actionAjaxHtmlAddProductDetail($id, $productId)
-    {
+    public function actionAjaxHtmlAddProductDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
-            $branches = Branch::model()->findAll(); 
+            $branches = Branch::model()->findAll();
 
             $bodyRepairRegistration->addProductDetail($productId);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            
+
             $this->renderPartial('_detailProduct', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
                 'branches' => $branches,
-            ), false, true);
+                    ), false, true);
         }
     }
 
     //Delete Phone Detail
-    public function actionAjaxHtmlRemoveProductDetail($id, $index)
-    {
+    public function actionAjaxHtmlRemoveProductDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
-            
+
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $bodyRepairRegistration->removeProductDetailAt($index);
-            
-            $branches = Branch::model()->findAll(); 
-            
+
+            $branches = Branch::model()->findAll();
+
             $this->renderPartial('_detailProduct', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
                 'branches' => $branches,
-            ), false, true);
+                    ), false, true);
         }
     }
 
-	public function actionAjaxJsonTotalService($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$bodyRepairRegistration = $this->instantiate($id);
-			$this->loadStateDetails($bodyRepairRegistration);
+    public function actionAjaxJsonTotalService($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $bodyRepairRegistration = $this->instantiate($id);
+            $this->loadStateDetails($bodyRepairRegistration);
 
-			$totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($bodyRepairRegistration->serviceDetails[$index], 'totalAmount')));
+            $totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($bodyRepairRegistration->serviceDetails[$index], 'totalAmount')));
             $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $bodyRepairRegistration->totalQuantityService));
-			$subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalService));
-			$totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalDiscountService));
-			$grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalService));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
-			$taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
-			$grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
+            $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalService));
+            $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalDiscountService));
+            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalService));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
+            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
 
-			echo CJSON::encode(array(
-				'totalAmount' => $totalAmount,
+            echo CJSON::encode(array(
+                'totalAmount' => $totalAmount,
                 'totalQuantityService' => $totalQuantityService,
-				'subTotalService' => $subTotalService,
-				'totalDiscountService' => $totalDiscountService,
-				'grandTotalService'=>$grandTotalService,
+                'subTotalService' => $subTotalService,
+                'totalDiscountService' => $totalDiscountService,
+                'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
                 'taxServiceAmount' => $taxServiceAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
-			));
-		}
-	}
+            ));
+        }
+    }
 
-	public function actionAjaxJsonTotalProduct($id, $index)
-	{
-		if (Yii::app()->request->isAjaxRequest)
-		{
-			$bodyRepairRegistration = $this->instantiate($id);
-			$this->loadStateDetails($bodyRepairRegistration);
+    public function actionAjaxJsonTotalProduct($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $bodyRepairRegistration = $this->instantiate($id);
+            $this->loadStateDetails($bodyRepairRegistration);
 
-			$totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($bodyRepairRegistration->productDetails[$index], 'totalAmountProduct')));
+            $totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($bodyRepairRegistration->productDetails[$index], 'totalAmountProduct')));
             $totalQuantityProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $bodyRepairRegistration->totalQuantityProduct));
-			$subTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalProduct));
-			$totalDiscountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalDiscountProduct));
-			$grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalProduct));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
-			$taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
-			$grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
+            $subTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalProduct));
+            $totalDiscountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalDiscountProduct));
+            $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalProduct));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
+            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
 
-			echo CJSON::encode(array(
-				'totalAmountProduct' => $totalAmountProduct,
+            echo CJSON::encode(array(
+                'totalAmountProduct' => $totalAmountProduct,
                 'totalQuantityProduct' => $totalQuantityProduct,
-				'subTotalProduct' => $subTotalProduct,
-				'totalDiscountProduct' => $totalDiscountProduct,
-				'grandTotalProduct'=>$grandTotalProduct,
+                'subTotalProduct' => $subTotalProduct,
+                'totalDiscountProduct' => $totalDiscountProduct,
+                'grandTotalProduct' => $grandTotalProduct,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
                 'taxServiceAmount' => $taxServiceAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
-			));
-		}
-	}
+            ));
+        }
+    }
 
-	public function actionAjaxJsonGrandTotal($id)
-	{
-		if (Yii::app()->request->isAjaxRequest) {
-			$bodyRepairRegistration = $this->instantiate($id);
-			$this->loadStateDetails($bodyRepairRegistration);
+    public function FactionAjaxJsonGrandTotal($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $bodyRepairRegistration = $this->instantiate($id);
+            $this->loadStateDetails($bodyRepairRegistration);
 
 //			$totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalQuickServiceQuantity));
 //			$subTotalQuickService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalQuickService));
             $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $bodyRepairRegistration->totalQuantityService));
-			$subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalService));
-			$totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalDiscountService));
-			$grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalService));
-			$subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
-			$taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
+            $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalService));
+            $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalDiscountService));
+            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalService));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
             $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
-			$grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
+            $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
 
-			echo CJSON::encode(array(
+            echo CJSON::encode(array(
 //                'totalQuickServiceQuantity' => $totalQuickServiceQuantity,
 //                'subTotalQuickService' => $subTotalQuickService,
                 'totalQuantityService' => $totalQuantityService,
-				'subTotalService' => $subTotalService,
-				'totalDiscountService' => $totalDiscountService,
-				'grandTotalService'=>$grandTotalService,
+                'subTotalService' => $subTotalService,
+                'totalDiscountService' => $totalDiscountService,
+                'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
-				'taxItemAmount' => $taxItemAmount,
-				'taxServiceAmount' => $taxServiceAmount,
-				'grandTotal' => $grandTotal,
-			));
-		}
-	}
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotal' => $grandTotal,
+            ));
+        }
+    }
 
-    public function actionAjaxShowPricelist($index, $serviceId, $customerId, $vehicleId, $insuranceId)
-    {
+    public function actionAjaxShowPricelist($index, $serviceId, $customerId, $vehicleId, $insuranceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $this->renderPartial('_price-dialog', array(
                 'index' => $index,
@@ -1056,14 +1023,12 @@ class BodyRepairRegistrationController extends Controller {
                 'service' => $serviceId,
                 'vehicle' => $vehicleId,
                 'insurance' => $insuranceId
-            ), false, true);
+                    ), false, true);
         }
     }
 
-    public function actionAjaxGetCity()
-    {
-        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['RegistrationInsuranceData']['insured_province_id']),
-            array('order' => 'name ASC'));
+    public function actionAjaxGetCity() {
+        $data = City::model()->findAllByAttributes(array('province_id' => $_POST['RegistrationInsuranceData']['insured_province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
             $data = CHtml::listData($data, 'id', 'name');
@@ -1076,14 +1041,13 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-    public function actionAjaxGetCityDriver()
-    {
+    public function actionAjaxGetCityDriver() {
         $data = City::model()->findAllByAttributes(array('province_id' => $_POST['RegistrationInsuranceData']['driver_province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
             $data = CHtml::listData($data, 'id', 'name');
             echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
-            
+
             foreach ($data as $value => $name) {
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
@@ -1092,8 +1056,7 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-	public function actionAjaxHtmlUpdateProductSubBrandSelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
 
@@ -1102,9 +1065,8 @@ class BodyRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
 
@@ -1113,9 +1075,8 @@ class BodyRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubMasterCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
 
@@ -1124,9 +1085,8 @@ class BodyRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-	public function actionAjaxHtmlUpdateProductSubCategorySelect()
-	{
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
 
@@ -1135,35 +1095,29 @@ class BodyRepairRegistrationController extends Controller {
             ));
         }
     }
-    
-    public function instantiate($id)
-    {
+
+    public function instantiate($id) {
         if (empty($id)) {
             $bodyRepairRegistration = new BodyRepairRegistration(new RegistrationTransaction(), array(), array(), array());
         } else {
             $bodyRepairRegistrationModel = $this->loadModel($id);
-            $bodyRepairRegistration = new BodyRepairRegistration($bodyRepairRegistrationModel,
-                $bodyRepairRegistrationModel->registrationQuickServices,
-                $bodyRepairRegistrationModel->registrationServices,
-                $bodyRepairRegistrationModel->registrationProducts
+            $bodyRepairRegistration = new BodyRepairRegistration($bodyRepairRegistrationModel, $bodyRepairRegistrationModel->registrationQuickServices, $bodyRepairRegistrationModel->registrationServices, $bodyRepairRegistrationModel->registrationProducts
             );
         }
         return $bodyRepairRegistration;
     }
 
-    public function loadState($bodyRepairRegistration)
-    {
+    public function loadState($bodyRepairRegistration) {
         if (isset($_POST['RegistrationTransaction'])) {
             $bodyRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
         }
     }
 
-    public function loadStateDetails($bodyRepairRegistration)
-    {
+    public function loadStateDetails($bodyRepairRegistration) {
         if (isset($_POST['RegistrationTransaction'])) {
             $bodyRepairRegistration->header->attributes = $_POST['RegistrationTransaction'];
         }
-        
+
         if (isset($_POST['RegistrationDamage'])) {
             foreach ($_POST['RegistrationDamage'] as $i => $item) {
                 if (isset($bodyRepairRegistration->damageDetails[$i])) {
@@ -1216,23 +1170,19 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-    public function instantiateRegistrationService($id)
-    {
+    public function instantiateRegistrationService($id) {
         if (empty($id)) {
             $registrationService = new RegistrationServices(new RegistrationService(), array(), array());
             //print_r("test");
         } else {
             //$registrationServiceModel = $this->loadModel($id);
             $registrationServiceModel = RegistrationService::model()->findByAttributes(array('id' => $id));
-            $registrationService = new RegistrationServices($registrationServiceModel,
-                $registrationServiceModel->registrationServiceEmployees,
-                $registrationServiceModel->registrationServiceSupervisors);
+            $registrationService = new RegistrationServices($registrationServiceModel, $registrationServiceModel->registrationServiceEmployees, $registrationServiceModel->registrationServiceSupervisors);
         }
         return $registrationService;
     }
 
-    public function loadStateRegistrationService($registrationService)
-    {
+    public function loadStateRegistrationService($registrationService) {
         if (isset($_POST['RegistrationService'])) {
             $registrationService->header->attributes = $_POST['RegistrationService'];
         }
@@ -1271,12 +1221,12 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-    public function loadModel($id)
-    {
+    public function loadModel($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
-        if ($model === null) 
+        if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
-        
+
         return $model;
     }
+
 }
