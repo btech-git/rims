@@ -109,6 +109,7 @@ class PaymentOutComponent extends CComponent {
 
         $valid = $this->validateDetailsCount() && $valid;
         $valid = $this->validateDetailsUnique() && $valid;
+        $valid = $this->validatePaymentAmount() && $valid;
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
@@ -117,6 +118,16 @@ class PaymentOutComponent extends CComponent {
             }
         } else
             $valid = false;
+
+        return $valid;
+    }
+
+    public function validatePaymentAmount() {
+        $valid = true;
+        if ($this->header->payment_amount > $this->totalInvoice) {
+            $valid = false;
+            $this->header->addError('error', 'Pelunasan tidak dapat melebihi total invoice.');
+        }
 
         return $valid;
     }

@@ -62,7 +62,6 @@ class PaymentOutController extends Controller {
 
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
-            $paymentOut->header->payment_type = $paymentOut->header->payment_type_id;
             $paymentOut->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentOut->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentOut->header->payment_date)), $paymentOut->header->branch_id);
 
             $valid = true; 
@@ -71,6 +70,8 @@ class PaymentOutController extends Controller {
             if (empty($paymentType->coa_id) && $paymentOut->header->company_bank_id == null) {
                 $valid = false; 
                 $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
+            } else {
+                $paymentOut->header->payment_type = $paymentType->name;
             }
 
             if ($valid && $paymentOut->save(Yii::app()->db)) {                
