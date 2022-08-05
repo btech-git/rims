@@ -60,7 +60,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_id, payment_number, payment_time, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount', 'required'),
+            array('invoice_id, payment_number, payment_time, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
             array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount, tax_service_amount', 'length', 'max' => 18),
