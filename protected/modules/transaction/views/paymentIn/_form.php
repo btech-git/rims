@@ -316,8 +316,18 @@
                                     alert("Payment Amount could not be higher than Invoice Amount");
                                     $("#PaymentIn_payment_amount").val("");
                                 }
-                            '
+                            ' . CHtml::ajax(array(
+                                'type'=>'POST',
+                                'dataType'=>'JSON',
+                                'url'=>CController::createUrl('ajaxJsonAmount', array('id' => $model->id)),
+                                'success'=>'function(data) {
+                                    $("#amount").html(data.amount);
+                                }',
+                            )),
                         )); ?>
+                        <div id="amount" style="text-align: left; font-size: smaller; margin-left: 15px;">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))); ?>
+                        </div>
                         <?php echo $form->error($model, 'payment_amount'); ?>
                     </div>
                 </div>

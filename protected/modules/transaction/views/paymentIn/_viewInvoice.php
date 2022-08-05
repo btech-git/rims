@@ -63,7 +63,8 @@
                         <span class="prefix">Grand Total</span>
                     </div>
                     <div class="small-8 columns">
-                        <input type="text" readonly="true" id="Invoice_total_price" value="<?php echo $model->invoice_id != "" ? $model->invoice->total_price : '0,00' ?>"> 
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'invoice.total_price'))); ?>
+                        <!--<input type="text" readonly="true" id="Invoice_total_price" value="<?php //echo $model->invoice_id != "" ? $model->invoice->total_price : '0,00' ?>">--> 
                     </div>
                 </div>
             </div>
@@ -73,7 +74,8 @@
                         <span class="prefix">Payment Amount</span>
                     </div>
                     <div class="small-8 columns">
-                        <input type="text" readonly="true" id="Invoice_payment_amount" value="<?php echo $model->invoice_id != "" ? $model->invoice->payment_amount : '0,00' ?>"> 
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'invoice.payment_amount'))); ?>
+                        <!--<input type="text" readonly="true" id="Invoice_payment_amount" value="<?php // echo $model->invoice_id != "" ? $model->invoice->payment_amount : '0,00' ?>">--> 
                     </div>
                 </div>
             </div>
@@ -83,7 +85,8 @@
                         <span class="prefix">Remaining</span>
                     </div>
                     <div class="small-8 columns">
-                        <input type="text" readonly="true" id="Invoice_payment_left" value="<?php echo $model->invoice_id != "" ? $model->invoice->payment_left : '0,00' ?>"> 
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'invoice.payment_left'))); ?>
+                        <!--<input type="text" readonly="true" id="Invoice_payment_left" value="<?php // echo $model->invoice_id != "" ? $model->invoice->payment_left : '0,00' ?>">--> 
                     </div>
                 </div>
             </div>
