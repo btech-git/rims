@@ -188,7 +188,6 @@ class PaymentInController extends Controller {
 
         if (isset($_POST['PaymentIn']) && IdempotentManager::check()) {
             $model->attributes = $_POST['PaymentIn'];
-            $model->payment_type = $model->paymentType->name;
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
                 
             $dbTransaction = Yii::app()->db->beginTransaction();
@@ -199,6 +198,8 @@ class PaymentInController extends Controller {
                 if (empty($paymentType->coa_id) && $model->company_bank_id == null) {
                     $valid = false; 
                     $model->addError('error', 'Company Bank harus diisi untuk payment type ini.');
+                } else {
+                    $model->payment_type = $model->paymentType->name;
                 }
                 
                 $valid = $valid && IdempotentManager::build()->save() && $model->save();

@@ -297,7 +297,7 @@
                         <?php echo $form->textField($model, 'payment_amount', array(
                             'size' => 18, 
                             'maxlength' => 18, 
-                            'readonly' => $model->isNewRecord ? false : true,
+//                            'readonly' => $model->isNewRecord ? false : true,
                             'onchange' => '
                                 var relCount = $("#PaymentIn_invoice_id").attr("rel");
                                 var count = 0;
@@ -312,10 +312,10 @@
                                 } else {
                                     count = invoiceLeft - paymentAmount;
                                 }
-                                //if (count < 0) {
-                                  //  alert("Payment Amount could not be higher than Invoice Amount");
-                                   // $("#PaymentIn_payment_amount").val("");
-                                //}
+                                if (count < 0) {
+                                    alert("Payment Amount could not be higher than Invoice Amount");
+                                    $("#PaymentIn_payment_amount").val("");
+                                }
                             '
                         )); ?>
                         <?php echo $form->error($model, 'payment_amount'); ?>
