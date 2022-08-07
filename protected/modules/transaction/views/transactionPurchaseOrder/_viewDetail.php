@@ -53,7 +53,7 @@
                 <td style="text-align: right"><?php echo $this->format_money($purchaseOrderDetail->total_price); ?></td>
             </tr>
             <tr>
-                <td colspan="7">
+                <td colspan="9">
                     <?php $unit = Unit::model()->findByPk($purchaseOrderDetail->unit_id); ?>
                     Manufacture Code: <?php echo CHtml::Encode(CHtml::value($purchaseOrderDetail, 'product.manufacturer_code')); ?> ||
                     Category: <?php echo CHtml::Encode(CHtml::value($purchaseOrderDetail, 'product.masterSubCategoryCode')); ?> ||
@@ -62,8 +62,6 @@
                     Brand Series: <?php echo CHtml::Encode(CHtml::value($purchaseOrderDetail, 'product.subBrandSeries.name')); ?> ||
                     Unit: <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
                 </td>
-                <td style="text-align: right">Total Qty</td>
-                <td style="text-align: center"><?php echo $purchaseOrderDetail->total_quantity; ?></td>
             </tr>
             <tr>
                 <td style="text-align:right" colspan="5">Total DPP</td>
@@ -76,7 +74,11 @@
                 </td>
             </tr>
             <tr>
-                <td  colspan="8" style="text-align:right">PPN</td>
+                <td style="text-align:right" colspan="5">Total Quantity</td>
+                <td style="text-align:right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrderDetail, 'total_quantity'))); ?>
+                </td>
+                <td  colspan="2" style="text-align:right">PPN</td>
                 <td style="text-align:right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrderDetail->tax_amount)); ?>
                 </td>
@@ -92,11 +94,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align:right" colspan="5">Total Quantity</td>
-                <td style="text-align:right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrderDetail, 'total_quantity'))); ?>
-                </td>
-                <td colspan="2" style="text-align:right">Sub Total (DPP + PPN)</td>
+                <td colspan="8" style="text-align:right">Sub Total (DPP + PPN)</td>
                 <td style="text-align:right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrderDetail->total_price)); ?>
                 </td>

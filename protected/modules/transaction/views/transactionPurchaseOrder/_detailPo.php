@@ -399,7 +399,6 @@
                         <div class="row collapse">
                             <div class="small-2 columns">
                                 <label class="prefix">Step 3</label>
-
                             </div>
                             <div class="small-10 columns">
                                 <div class="row">
@@ -687,7 +686,7 @@
             <td style="text-align:right">
                 <?php echo CHtml::activeHiddenField($detail, "[$i]total_quantity"); ?>
                 <span id="total_quantity_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_quantity'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total_quantity'))); ?>
                 </span>
             </td>
             <td colspan="2" style="text-align:right">Sub Total (DPP + PPN)</td>
