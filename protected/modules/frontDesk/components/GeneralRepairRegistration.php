@@ -938,6 +938,6 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getGrandTotalTransaction() {
-        return $this->subTotalTransaction + $this->taxItemAmount; // - $this->taxServiceAmount;
+        return $this->subTotalTransaction + $this->taxItemAmount - $this->taxServiceAmount;
     }
 }
