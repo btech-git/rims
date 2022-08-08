@@ -210,7 +210,7 @@ class PurchaseOrders extends CComponent {
             $jurnalUmumPayable->debet_kredit = 'K';
             $jurnalUmumPayable->tanggal_posting = date('Y-m-d');
             $jurnalUmumPayable->transaction_subject = $this->header->supplier->name;
-            $jurnalUmumPayable->is_coa_category = 1;
+            $jurnalUmumPayable->is_coa_category = 0;
             $jurnalUmumPayable->transaction_type = 'PO';
             $jurnalUmumPayable->save();
 
