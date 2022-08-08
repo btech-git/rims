@@ -118,14 +118,6 @@ class PurchaseOrders extends CComponent {
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
         
-        if (!$isNewRecord) {
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $this->header->purchase_order_no,
-                'tanggal_transaksi' => $this->header->purchase_order_date,
-                'branch_id' => $this->header->main_branch_id,
-            ));
-        }
-        
 //        $this->header->total_quantity = $this->totalQuantity;
 //        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
 //        $this->header->discount = $this->subTotalDiscount;

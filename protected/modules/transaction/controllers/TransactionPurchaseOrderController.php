@@ -215,8 +215,6 @@ class TransactionPurchaseOrderController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $purchaseOrder = $this->instantiate($id);
-        $purchaseOrder->header->setCodeNumberByRevision('purchase_order_no');
-
         $this->performAjaxValidation($purchaseOrder->header);
 
         $product = new Product('search');
@@ -255,6 +253,13 @@ class TransactionPurchaseOrderController extends Controller {
 
         if (isset($_POST['TransactionPurchaseOrder'])) {
             $this->loadState($purchaseOrder);
+            
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $purchaseOrder->header->purchase_order_no,
+                'branch_id' => $purchaseOrder->header->main_branch_id,
+            ));
+        
+            $purchaseOrder->header->setCodeNumberByRevision('purchase_order_no');
             
             if ($purchaseOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $purchaseOrder->header->id));
