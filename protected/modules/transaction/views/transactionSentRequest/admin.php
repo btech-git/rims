@@ -138,7 +138,7 @@ Yii::app()->clientScript->registerScript('search', "
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-transfer-request-grid',
                 'dataProvider'=>$destinationBranchDataProvider,
-                'filter'=> $destinationBranch,
+                'filter'=> $model,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
                     'cssFile'=>false,
