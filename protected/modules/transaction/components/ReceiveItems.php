@@ -145,11 +145,6 @@ class ReceiveItems extends CComponent {
     }
 
     public function flush() {
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $this->header->receive_item_no,
-            'branch_id' => $this->header->recipient_branch_id,
-        ));
-
         if ($this->header->request_type == 'Internal Delivery Order') {
             $this->header->invoice_sub_total = 0;
             $this->header->invoice_tax_nominal = 0;
@@ -226,38 +221,32 @@ class ReceiveItems extends CComponent {
                     $journalReferences[$coaId]['values'][] = $value;
                 } else if ($this->header->request_type == 'Internal Delivery Order') {
                     $value = $detail->qty_received * $detail->product->hpp;
-                    $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $detail->product->productMasterCategory->coa_outstanding_part_id;
-                    $journalReferences[$coaId]['debet_kredit'] = 'K';
-                    $journalReferences[$coaId]['is_coa_category'] = 1;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
-                    $journalReferences[$coaId]['debet_kredit'] = 'K';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaIdTransit = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaIdTransit]['debet_kredit'] = 'D';
+                    $journalReferences[$coaIdTransit]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdTransit]['values'][] = $value;
+                    $coaIdOutstandingMaster = $detail->product->productMasterCategory->coa_outstanding_part_id;
+                    $journalReferences[$coaIdOutstandingMaster]['debet_kredit'] = 'K';
+                    $journalReferences[$coaIdOutstandingMaster]['is_coa_category'] = 1;
+                    $journalReferences[$coaIdOutstandingMaster]['values'][] = $value;
+                    $coaIdOutstandingSub = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+                    $journalReferences[$coaIdOutstandingSub]['debet_kredit'] = 'K';
+                    $journalReferences[$coaIdOutstandingSub]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdOutstandingSub]['values'][] = $value;
                 } else if ($this->header->request_type == 'Consignment In') {
                     $value = $detail->qty_received * $detail->consignmentInDetail->price;
-                    $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $detail->product->productSubMasterCategory->coa_consignment_inventory;
-                    $journalReferences[$coaId]['debet_kredit'] = 'K';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaIdTransit = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaIdTransit]['debet_kredit'] = 'D';
+                    $journalReferences[$coaIdTransit]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdTransit]['values'][] = $value;
+                    $coaIdInventory = $detail->product->productSubMasterCategory->coa_consignment_inventory;
+                    $journalReferences[$coaIdInventory]['debet_kredit'] = 'K';
+                    $journalReferences[$coaIdInventory]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdInventory]['values'][] = $value;
                 }
             }
 
             if ($this->header->request_type == 'Purchase Order') {
-//                $criteria = new CDbCriteria;
-//                $criteria->together = 'true';
-//                $criteria->with = array('receiveItem');
-//                $criteria->condition = "receiveItem.purchase_order_id =" . $this->header->purchase_order_id . " AND receive_item_id != " . $this->header->id;
-//                $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
-
                 $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id, 'purchase_order_id' => $this->header->purchase_order_id));
                 $totalQuantityReceived = $purchaseOrderDetail->getTotalQuantityReceived();
                 $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->quantity - $totalQuantityReceived;
@@ -266,11 +255,6 @@ class ReceiveItems extends CComponent {
                 $purchaseOrderDetail->save(false);
 
             } else if ($this->header->request_type == 'Internal Delivery Order') {
-//                    $criteria = new CDbCriteria;
-//                    $criteria->together = 'true';
-//                    $criteria->with = array('receiveItem');
-//                    $criteria->condition = "receiveItem.delivery_order_id =" . $this->header->delivery_order_id . " AND receive_item_id != " . $this->header->id;
-//                    $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
                 $branch = Branch::Model()->findByPk($this->header->recipient_branch_id);
 
                 $deliveryOrderDetail = $detail->deliveryOrderDetail; //TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
@@ -279,12 +263,6 @@ class ReceiveItems extends CComponent {
                 $deliveryOrderDetail->save(false);
 
             } else if ($this->header->request_type == 'Consignment In') {
-//                $criteria = new CDbCriteria;
-//                $criteria->together = 'true';
-//                $criteria->with = array('receiveItem');
-//                $criteria->condition = "receiveItem.consignment_in_id =" . $this->header->consignment_in_id . " AND receive_item_id != " . $this->header->id;
-//                $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
-
                 $consignmentDetail = ConsignmentInDetail::model()->findByAttributes(array('id' => $detail->consignment_in_detail_id, 'consignment_in_id' => $this->header->consignment_in_id));
                 $consignmentDetail->qty_request_left = $detail->qty_request - $detail->qty_received - $consignmentDetail->getTotalQuantityReceived();
                 $consignmentDetail->qty_received = $detail->qty_received + $consignmentDetail->getTotalQuantityReceived();
