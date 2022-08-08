@@ -333,10 +333,10 @@
                 </div>
             </div>
             
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($model, 'is_tax_service'); ?>
+                        <?php /*echo $form->labelEx($model, 'is_tax_service'); ?>
                     </div>
                     <div class="small-2 columns">
                         <?php echo $form->checkBox($model, 'is_tax_service', array(
@@ -358,10 +358,10 @@
                         <span id="tax_service_amount">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($model, 'tax_service_amount'))); ?>
                         </span>
-                        <?php echo $form->error($model, 'tax_service_amount'); ?>
+                        <?php echo $form->error($model, 'tax_service_amount');*/ ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
             
             <div class="field">
                 <div class="row collapse">
