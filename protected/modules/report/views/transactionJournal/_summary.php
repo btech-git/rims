@@ -58,6 +58,14 @@
                         
                     <tr>
                         <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
+            <?php if ($totalDebit != $totalCredit): ?>
+            <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+            </td>
+            <td class="width1-5" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+            </td>
+            <?php else: ?>
                         <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
                         </td>
@@ -65,6 +73,7 @@
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
                         </td>
                     </tr>
+                <?php endif; ?>
                 <?php endif; ?>
                     
                 <?php $journalRefs = array(); ?>
@@ -107,7 +116,7 @@
         <?php endforeach; ?>
             
         <tr>
-            <td colspan="3" style="text-align: right; font-weight: bold">TOTALss</td>
+            <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
             <?php if ($totalDebit != $totalCredit): ?>
             <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
