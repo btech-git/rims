@@ -811,7 +811,7 @@ class GeneralRepairRegistration extends CComponent {
 
         if (count($this->serviceDetails) > 0) {
             foreach ($this->serviceDetails as $key => $rService) {
-                $price = $rService->is_quick_service == 1 ? $rService->price : $rService->total_price;
+                $price = $rService->is_quick_service == 1 ? $rService->price : $rService->price;
 
                 $jurnalUmumPendapatanJasa = $rService->service->serviceCategory->coa_id;
                 $journalReferences[$jurnalUmumPendapatanJasa]['debet_kredit'] = 'K';

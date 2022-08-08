@@ -726,7 +726,7 @@ class BodyRepairRegistration extends CComponent {
                 $jurnalUmumPenjualan = $rProduct->product->productSubMasterCategory->coa_penjualan_barang_dagang;
                 $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
                 $journalReferences[$jurnalUmumPenjualan]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumPenjualan]['values'][] = $rProduct->total_price;
+                $journalReferences[$jurnalUmumPenjualan]['values'][] = $rProduct->sale_price * $rProduct->quantity;
 
                 $jurnalUmumOutstandingPart = $rProduct->product->productSubMasterCategory->coa_outstanding_part_id;
                 $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
@@ -744,7 +744,7 @@ class BodyRepairRegistration extends CComponent {
 
         if (count($this->serviceDetails) > 0) {
             foreach ($this->serviceDetails as $key => $rService) {
-                $price = $rService->is_quick_service == 1 ? $rService->price : $rService->total_price;
+                $price = $rService->is_quick_service == 1 ? $rService->price : $rService->price;
 
                 $jurnalUmumPendapatanJasa = $rService->service->serviceCategory->coa_id;
                 $journalReferences[$jurnalUmumPendapatanJasa]['debet_kredit'] = 'K';
