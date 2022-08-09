@@ -58,7 +58,7 @@
                         
                     <tr>
                         <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
-            <?php if ($totalDebit != $totalCredit): ?>
+            <?php if (floor($totalDebit) != floor($totalCredit)): ?>
             <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
             </td>
@@ -117,7 +117,7 @@
             
         <tr>
             <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
-            <?php if ($totalDebit != $totalCredit): ?>
+            <?php if (floor($totalDebit) != floor($totalCredit)): ?>
             <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
             </td>
