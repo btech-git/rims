@@ -215,7 +215,7 @@ $this->menu = array(
 
                 <?php if ($model->reference_type == 2): ?>
                     <tr>
-                        <td class="title">PPH (2.5%) </td>
+                        <td class="title">PPH (2%) </td>
                         <td>Rp. <?php echo number_format($model->pph_total, 2) ?></td>
                     </tr>
                 <?php endif ?>
