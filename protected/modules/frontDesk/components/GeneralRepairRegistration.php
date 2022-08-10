@@ -934,7 +934,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTaxServiceAmount() {
-        return ((int)$this->header->pph == 1) ? ($this->subTotalQuickService + $this->grandTotalService) * .025 : 0;
+        return ((int)$this->header->pph == 1) ? ($this->subTotalQuickService + $this->grandTotalService) * .02 : 0;
     }
 
     public function getGrandTotalTransaction() {

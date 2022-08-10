@@ -855,7 +855,7 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getTaxServiceAmount() {
-        return ($this->header->pph == 1) ? ($this->grandTotalService) * .025 : 0;
+        return ($this->header->pph == 1) ? ($this->grandTotalService) * .02 : 0;
     }
 
     public function getGrandTotalTransaction() {
