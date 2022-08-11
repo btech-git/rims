@@ -308,6 +308,15 @@ class GeneralRepairRegistrationController extends Controller {
                 'kode_transaksi' => $model->transaction_number,
             ));
             
+        $transactionType = 'RG GR';
+        $postingDate = date('Y-m-d');
+        $transactionCode = $model->transaction_number;
+        $transactionDate = $model->transaction_date;
+        $branchId = $model->branch_id;
+        $transactionSubject = $model->customer->name;
+        
+        $journalReferences = array();
+        
         $jurnalUmumReceivable = new JurnalUmum;
         $jurnalUmumReceivable->kode_transaksi = $model->transaction_number;
         $jurnalUmumReceivable->tanggal_transaksi = $model->transaction_date;
@@ -381,15 +390,6 @@ class GeneralRepairRegistrationController extends Controller {
             }
         }
 
-        $transactionType = 'RG GR';
-        $postingDate = date('Y-m-d');
-        $transactionCode = $model->transaction_number;
-        $transactionDate = $model->transaction_date;
-        $branchId = $model->branch_id;
-        $transactionSubject = $model->customer->name;
-        
-        $journalReferences = array();
-        
         foreach ($journalReferences as $coaId => $journalReference) {
             $jurnalUmumPersediaan = new JurnalUmum();
             $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
