@@ -124,7 +124,7 @@ class PaymentOutComponent extends CComponent {
 
     public function validatePaymentAmount() {
         $valid = true;
-        if ($this->header->payment_amount > $this->totalInvoice) {
+        if ($this->header->payment_amount > round($this->totalInvoice)) {
             $valid = false;
             $this->header->addError('error', 'Pelunasan tidak dapat melebihi total invoice.');
         }
@@ -187,10 +187,10 @@ class PaymentOutComponent extends CComponent {
             $valid = $detail->save(false) && $valid;
             $new_invoice[] = $detail->id;
 
-//            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
-//            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
-//            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-//            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($this->header->purchase_order_id);
+            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
+            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
         }
 
         //delete 
