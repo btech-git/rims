@@ -14,13 +14,14 @@
         </thead>
         <tbody>
             <?php foreach ($sentDetails as $key => $sentDetail): ?>
+                <?php $product = $sentDetail->product; ?>
                 <tr>
-                    <td><?php echo $sentDetail->product ? $sentDetail->product->name : '-'; ?></td>
-                    <td><?php echo $sentDetail->product ? $sentDetail->product->manufacturer_code : '-'; ?></td>
-                    <td><?php echo $sentDetail->product ? $sentDetail->product->masterSubCategoryCode : '-'; ?></td>
-                    <td><?php echo $sentDetail->product ? $sentDetail->product->brand->name : '-'; ?></td>
-                    <td><?php echo $sentDetail->product ? $sentDetail->product->subBrand->name : '-'; ?></td>
-                    <td><?php echo $sentDetail->product ? $sentDetail->product->subBrandSeries->name : '-'; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
                     <td><?php echo $sentDetail->quantity; ?></td>
                     <td><?php echo $sentDetail->unit->name; ?></td>
 
