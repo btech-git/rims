@@ -337,8 +337,8 @@ class GeneralRepairRegistrationController extends Controller {
             $jurnalUmumPpn->save();
         }
 
-        if (count($model->registrationProductDetails) > 0) {
-            foreach ($model->registrationProductDetails as $key => $rProduct) {
+        if (count($model->registrationProducts) > 0) {
+            foreach ($model->registrationProducts as $key => $rProduct) {
                 $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
                 $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
                 $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
@@ -363,8 +363,8 @@ class GeneralRepairRegistrationController extends Controller {
             }
         }
 
-        if (count($model->registrationServiceDetails) > 0) {
-            foreach ($model->registrationServiceDetails as $key => $rService) {
+        if (count($model->registrationServices) > 0) {
+            foreach ($model->registrationServices as $key => $rService) {
                 $price = $rService->is_quick_service == 1 ? $rService->price : $rService->price;
 
                 $jurnalUmumPendapatanJasa = $rService->service->serviceCategory->coa_id;
