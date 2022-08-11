@@ -72,10 +72,6 @@ $this->menu = array(
                     'value' => $model->destinationBranch ? $model->destinationBranch->name : ""
                 ),
                 'total_quantity',
-                array(
-                    'name' => 'total_price',
-                    'value' => $this->format_money($model->total_price)
-                ),
             ),
         )); ?>
     </div>
