@@ -81,6 +81,8 @@ $this->menu = array(
     </div>
 </div>
 
+<br />
+
 <div class="detail">
     <?php 
     $tabsArray = array(); 
