@@ -445,6 +445,13 @@ class BodyRepairRegistrationController extends Controller {
                     $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
                 }
             }
+            
+            if ($model->pph_price > 0.00) {
+                $jurnalUmumPajakPendapatanJasa = Coa::model()->findByAttributes(array('code' => '224.00.004'));
+                $journalReferences[$jurnalUmumPajakPendapatanJasa]['debet_kredit'] = 'D';
+                $journalReferences[$jurnalUmumPajakPendapatanJasa]['is_coa_category'] = 0;
+                $journalReferences[$jurnalUmumPajakPendapatanJasa]['values'][] = $model->pph_price;
+            }
         }
 
         foreach ($journalReferences as $coaId => $journalReference) {
