@@ -253,6 +253,8 @@ $this->breadcrumbs = array(
         <?php if ($model->status !== 'Finished'): ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Estimasi', Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.bodyRepairRegistration.admin"), 'target' =>'_blank')) ?>
         <?php endif; ?>
+        
+        <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
     </div>
 </div>
 <?php echo CHtml::endForm(); ?>

@@ -678,7 +678,7 @@ class BodyRepairRegistration extends CComponent {
             'branch_id' => $this->header->branch_id,
         ));
         
-        $transactionType = 'RG';
+        $transactionType = 'RG BR';
         $postingDate = date('Y-m-d');
         $transactionCode = $this->header->transaction_number;
         $transactionDate = $this->header->transaction_date;
@@ -697,7 +697,7 @@ class BodyRepairRegistration extends CComponent {
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
         $jurnalUmumReceivable->is_coa_category = 0;
-        $jurnalUmumReceivable->transaction_type = 'RG';
+        $jurnalUmumReceivable->transaction_type = 'RG BR';
         $jurnalUmumReceivable->save();
 
         if ($this->header->ppn_price > 0.00) {
@@ -712,7 +712,7 @@ class BodyRepairRegistration extends CComponent {
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
             $jurnalUmumPpn->transaction_subject = $this->header->customer->name;
             $jurnalUmumPpn->is_coa_category = 0;
-            $jurnalUmumPpn->transaction_type = 'RG';
+            $jurnalUmumPpn->transaction_type = 'RG BR';
             $jurnalUmumPpn->save();
         }
 
