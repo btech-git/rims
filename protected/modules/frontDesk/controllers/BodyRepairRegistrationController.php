@@ -394,8 +394,8 @@ class BodyRepairRegistrationController extends Controller {
             $jurnalUmumPpn->save();
         }
 
-        if (count($model->productDetails) > 0) {
-            foreach ($model->productDetails as $key => $rProduct) {
+        if (count($model->registrationProductDetails) > 0) {
+            foreach ($model->registrationProductDetails as $key => $rProduct) {
                 $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
                 $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
                 $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
@@ -420,8 +420,8 @@ class BodyRepairRegistrationController extends Controller {
             }
         }
 
-        if (count($model->serviceDetails) > 0) {
-            foreach ($model->serviceDetails as $key => $rService) {
+        if (count($model->registrationServiceDetails) > 0) {
+            foreach ($model->registrationServiceDetails as $key => $rService) {
                 $price = $rService->is_quick_service == 1 ? $rService->price : $rService->price;
 
                 $jurnalUmumPendapatanJasa = $rService->service->serviceCategory->coa_id;
