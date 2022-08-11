@@ -365,7 +365,7 @@ class BodyRepairRegistrationController extends Controller {
                 'kode_transaksi' => $model->transaction_number,
             ));
             
-        $transactionType = 'RG';
+        $transactionType = 'RG BR';
         $postingDate = date('Y-m-d');
         $transactionCode = $model->transaction_number;
         $transactionDate = $model->transaction_date;
@@ -384,7 +384,7 @@ class BodyRepairRegistrationController extends Controller {
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $model->customer->name;
         $jurnalUmumReceivable->is_coa_category = 0;
-        $jurnalUmumReceivable->transaction_type = 'RG';
+        $jurnalUmumReceivable->transaction_type = 'RG BR';
         $jurnalUmumReceivable->save();
 
         if ($model->ppn_price > 0.00) {
@@ -399,7 +399,23 @@ class BodyRepairRegistrationController extends Controller {
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
             $jurnalUmumPpn->transaction_subject = $model->customer->name;
             $jurnalUmumPpn->is_coa_category = 0;
-            $jurnalUmumPpn->transaction_type = 'RG';
+            $jurnalUmumPpn->transaction_type = 'RG BR';
+            $jurnalUmumPpn->save();
+        }
+
+        if ($model->pph_price > 0.00) {
+            $coaPph = Coa::model()->findByAttributes(array('code' => '224.00.004'));
+            $jurnalUmumPpn = new JurnalUmum;
+            $jurnalUmumPpn->kode_transaksi = $model->transaction_number;
+            $jurnalUmumPpn->tanggal_transaksi = $model->transaction_date;
+            $jurnalUmumPpn->coa_id = $coaPph->id;
+            $jurnalUmumPpn->branch_id = $model->branch_id;
+            $jurnalUmumPpn->total = $model->pph_price;
+            $jurnalUmumPpn->debet_kredit = 'D';
+            $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+            $jurnalUmumPpn->transaction_subject = $model->customer->name;
+            $jurnalUmumPpn->is_coa_category = 0;
+            $jurnalUmumPpn->transaction_type = 'RG BR';
             $jurnalUmumPpn->save();
         }
 
@@ -444,13 +460,6 @@ class BodyRepairRegistrationController extends Controller {
                     $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
                     $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
                 }
-            }
-            
-            if ($model->pph_price > 0.00) {
-                $jurnalUmumPajakPendapatanJasa = Coa::model()->findByAttributes(array('code' => '224.00.004'));
-                $journalReferences[$jurnalUmumPajakPendapatanJasa]['debet_kredit'] = 'D';
-                $journalReferences[$jurnalUmumPajakPendapatanJasa]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumPajakPendapatanJasa]['values'][] = $model->pph_price;
             }
         }
 

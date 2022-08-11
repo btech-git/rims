@@ -346,6 +346,22 @@ class GeneralRepairRegistrationController extends Controller {
             $jurnalUmumPpn->save();
         }
 
+        if ($model->pph_price > 0.00) {
+            $coaPph = Coa::model()->findByAttributes(array('code' => '224.00.004'));
+            $jurnalUmumPpn = new JurnalUmum;
+            $jurnalUmumPpn->kode_transaksi = $model->transaction_number;
+            $jurnalUmumPpn->tanggal_transaksi = $model->transaction_date;
+            $jurnalUmumPpn->coa_id = $coaPph->id;
+            $jurnalUmumPpn->branch_id = $model->branch_id;
+            $jurnalUmumPpn->total = $model->pph_price;
+            $jurnalUmumPpn->debet_kredit = 'D';
+            $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+            $jurnalUmumPpn->transaction_subject = $model->customer->name;
+            $jurnalUmumPpn->is_coa_category = 0;
+            $jurnalUmumPpn->transaction_type = 'RG GR';
+            $jurnalUmumPpn->save();
+        }
+
         if (count($model->registrationProducts) > 0) {
             foreach ($model->registrationProducts as $key => $rProduct) {
                 $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
@@ -387,13 +403,6 @@ class GeneralRepairRegistrationController extends Controller {
                     $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
                     $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
                 }
-            }
-            
-            if ($model->pph_price > 0.00) {
-                $jurnalUmumPajakPendapatanJasa = Coa::model()->findByAttributes(array('code' => '224.00.004'));
-                $journalReferences[$jurnalUmumPajakPendapatanJasa]['debet_kredit'] = 'D';
-                $journalReferences[$jurnalUmumPajakPendapatanJasa]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumPajakPendapatanJasa]['values'][] = $model->pph_price;
             }
         }
 
