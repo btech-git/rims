@@ -60,7 +60,7 @@
 	<tr style="background-color: aquamarine">
             <td colspan="5" style="text-align: right; font-weight: bold">Total Hutang:</td>
             <td style="text-align: right; font-weight: bold">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentOut, 'totalInvoice'))); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>
             <td></td>
 	</tr>
