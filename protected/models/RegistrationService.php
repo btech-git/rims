@@ -21,6 +21,7 @@
  * @property integer $total_time
  * @property string $note
  * @property integer $is_body_repair
+ * @property integer $is_paused
  * @property string $status
  * @property integer $assign_mechanic_id
  * @property integer $start_mechanic_id
@@ -66,7 +67,7 @@ class RegistrationService extends CActiveRecord {
         // will receive user inputs.
         return array(
             //array('note', 'required'),
-            array('registration_transaction_id, service_id, is_quick_service, is_body_repair, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, pause_time, total_time, service_type_id', 'numerical', 'integerOnly' => true),
+            array('registration_transaction_id, service_id, is_quick_service, is_body_repair, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, pause_time, total_time, service_type_id, is_paused', 'numerical', 'integerOnly' => true),
             array('claim, price,hour', 'length', 'max' => 10),
             array('total_price, discount_price', 'length', 'max' => 18),
             array('discount_type', 'length', 'max' => 50),
@@ -74,7 +75,7 @@ class RegistrationService extends CActiveRecord {
             array('start, end, pause, resume, note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, registration_transaction_id, service_id, claim, price, total_price, discount_price, discount_type, is_quick_service, start, end, pause, resume, pause_time, total_time, note, is_body_repair, status, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, service_name, listemployee, platnumber,hour, service_activity, service_type_id', 'safe', 'on' => 'search'),
+            array('id, registration_transaction_id, service_id, claim, price, total_price, discount_price, discount_type, is_quick_service, start, end, pause, resume, pause_time, total_time, note, is_body_repair, status, start_mechanic_id, finish_mechanic_id, pause_mechanic_id, resume_mechanic_id, assign_mechanic_id, supervisor_id, service_name, listemployee, platnumber,hour, service_activity, service_type_id, is_paused', 'safe', 'on' => 'search'),
         );
     }
 
@@ -129,6 +130,7 @@ class RegistrationService extends CActiveRecord {
             'resume_mechanic_id' => 'Resume Mechanic',
             'supervisor_id' => 'Supervisor',
             'hour' => 'Hour',
+            'is_paused' => 'Paused',
         );
     }
 
@@ -176,6 +178,7 @@ class RegistrationService extends CActiveRecord {
         $criteria->compare('resume_mechanic_id', $this->resume_mechanic_id);
         $criteria->compare('supervisor_id', $this->supervisor_id);
         $criteria->compare('hour', $this->hour, true);
+        $criteria->compare('is_paused', $this->is_paused, true);
 
         $criteria->together = 'true';
         $criteria->with = array('service', 'registrationTransaction' => array('with' => array('vehicle')));
