@@ -455,7 +455,7 @@
         <?php $this->endWidget(); ?>
 
     </div><!-- form -->
-    <?php if ($purchaseOrder->header->isNewRecord): ?>
+    <?php //if ($purchaseOrder->header->isNewRecord): ?>
         <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
             'id' => 'supplier-dialog',
             // additional javascript options for the dialog plugin
@@ -531,7 +531,7 @@
             )
         )); ?>
         <?php $this->endWidget(); ?>
-    <?php endif; ?>
+    <?php //endif; ?>
     
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'product-dialog',
