@@ -217,6 +217,21 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder = $this->instantiate($id);
         $this->performAjaxValidation($purchaseOrder->header);
 
+        $supplier = new Supplier('search');
+        $supplier->unsetAttributes();  // clear any default values
+        if (isset($_GET['Supplier'])) {
+            $supplier->attributes = $_GET['Supplier'];
+        }
+        $supplierCriteria = new CDbCriteria;
+        $supplierCriteria->compare('t.name', $supplier->name, true);
+        $supplierCriteria->compare('t.company', $supplier->company, true);
+        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
+            'criteria' => $supplierCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
+        ));
+
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -268,6 +283,8 @@ class TransactionPurchaseOrderController extends Controller {
 
         $this->render('update', array(
             'purchaseOrder' => $purchaseOrder,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
             'price' => $price,
