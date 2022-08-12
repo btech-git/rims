@@ -187,7 +187,7 @@
                                 <?php echo $form->labelEx($purchaseOrder->header, 'supplier_id'); ?>
                             </label>
                         </div>
-                        <?php if ($purchaseOrder->header->isNewRecord): ?>
+                        <?php //if ($purchaseOrder->header->isNewRecord): ?>
                             <div class="small-2 columns">
                                 <a class="button expand" href="<?php echo Yii::app()->baseUrl . '/master/supplier/create'; ?>">
                                     <span class="fa fa-plus"></span>Add
@@ -205,11 +205,11 @@
 
                                 <?php echo $form->error($purchaseOrder->header, 'supplier_id'); ?>
                             </div>
-                        <?php else: ?>
+                        <?php /*else: ?>
                             <div class="small-8 columns">
                                 <?php echo CHtml::encode(CHtml::value($purchaseOrder->header, 'supplier.name')); ?>
                             </div>
-                        <?php endif; ?>
+                        <?php endif;*/ ?>
                     </div>
                 </div>
 
