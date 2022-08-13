@@ -615,6 +615,18 @@ class MovementOutHeaderController extends Controller {
             foreach ($movementOut->details as $movementDetail) {
                 $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementDetail->product_id, 'warehouse_id' => $movementDetail->warehouse_id));
                 if (!empty($inventory)) {
+                    $totalStockOut = InventoryDetail::getTotalStockOut($movementDetail->product_id);
+                    $remaining = $totalStockOut;
+                    $inventoryDetailStockIn = InventoryDetail::model()->findAll(array(
+                        'condition' => 'product_id = :product_id AND stock_in > 0 AND stock_out = 0',
+                        'params' => array(':product_id' => $movementDetail->product_id),
+                    ));
+                    $index = 0;
+                    while ($remaining >= $inventoryDetailStockIn[$index]->stock_in) {
+                        $remaining -= $inventoryDetailStockIn[$index]->stock_in;
+                        $index++;
+                    }
+                    $initialQuantity = $inventoryDetailStockIn[$index]->stock_in - $remaining;
                     $inventoryDetail = new InventoryDetail();
                     $inventoryDetail->inventory_id = $inventory->id;
                     $inventoryDetail->product_id = $movementDetail->product_id;
@@ -622,9 +634,27 @@ class MovementOutHeaderController extends Controller {
                     $inventoryDetail->transaction_type = 'Movement';
                     $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
                     $inventoryDetail->transaction_date = $movementOut->header->date_posting;
-                    $inventoryDetail->stock_out = '-' . $movementDetail->quantity;
+                    $inventoryDetail->stock_out = '-' . ($initialQuantity > $movementDetail->quantity ? $movementDetail->quantity : $initialQuantity);
                     $inventoryDetail->notes = "Data from Movement Out";
+                    $inventoryDetail->purchase_price = $inventoryDetailStockIn[$index]->purchase_price;
                     $inventoryDetail->save(false);
+                    $remaining = $movementDetail->quantity - $initialQuantity;
+                    $index++;
+                    while ($remaining <= 0) {
+                        $inventoryDetail = new InventoryDetail();
+                        $inventoryDetail->inventory_id = $inventory->id;
+                        $inventoryDetail->product_id = $movementDetail->product_id;
+                        $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
+                        $inventoryDetail->transaction_type = 'Movement';
+                        $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
+                        $inventoryDetail->transaction_date = $movementOut->header->date_posting;
+                        $inventoryDetail->stock_out = '-' . ($remaining > $movementDetail->quantity ? $movementDetail->quantity : $remaining);
+                        $inventoryDetail->notes = "Data from Movement Out";
+                        $inventoryDetail->purchase_price = $inventoryDetailStockIn[$index]->purchase_price;
+                        $inventoryDetail->save(false);
+                        $remaining -= $inventoryDetailStockIn[$index]->stock_in;
+                        $index++;
+                    }
                 }
 
                 $value = $movementDetail->quantity * $movementDetail->product->hpp;
