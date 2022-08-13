@@ -60,7 +60,7 @@ class TransactionReceiveItemController extends Controller {
         $transactionCode = $model->receive_item_no;
         $transactionDate = $model->receive_item_date;
         $branchId = $model->recipient_branch_id;
-        $transactionSubject = $model->customer->name;
+        $transactionSubject = $model->supplier->name;
         
         $journalReferences = array();
         
