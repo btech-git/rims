@@ -305,6 +305,12 @@ class PaymentInController extends Controller {
             try {
                 $valid = true; 
                 $model->attributes = $_POST['PaymentIn'];
+                
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $model->payment_number,
+                    'branch_id' => $model->branch_id,
+                ));
+
                 $model->setCodeNumberByRevision('payment_number');
 
                 if ((int)$model->payment_type_id !== 1 && (int)$model->company_bank_id == null) {
