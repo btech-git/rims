@@ -81,7 +81,7 @@ class PaymentInController extends Controller {
             $jurnalPiutang->tanggal_transaksi = $model->payment_date;
             $jurnalPiutang->coa_id = $model->customer->coa_id;
             $jurnalPiutang->branch_id = $model->branch_id;
-            $jurnalPiutang->total = $model->payment_amount;
+            $jurnalPiutang->total = $model->payment_amount + $model->tax_service_amount;
             $jurnalPiutang->debet_kredit = 'K';
             $jurnalPiutang->tanggal_posting = date('Y-m-d');
             $jurnalPiutang->transaction_subject = $model->customer->name;
