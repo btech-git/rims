@@ -68,6 +68,7 @@ class MovementInDetail extends CActiveRecord
 			'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
 			'warehouse' => array(self::BELONGS_TO, 'Warehouse', 'warehouse_id'),
 			'returnItemDetail' => array(self::BELONGS_TO, 'TransactionReturnItemDetail', 'return_item_detail_id'),
+			'receiveItemDetail' => array(self::BELONGS_TO, 'TransactionReceiveItemDetail', 'receive_item_detail_id'),
 	
 		);
 	}

@@ -789,4 +789,25 @@ class Coa extends CActiveRecord {
     public function getApprovedDatetime() {
         return $this->date_approval . " " . $this->time_approval;
     }
+    
+    public function getGeneralLedgerReport($coaId, $pageNumber) {
+        $coaConditionSql = '';
+        
+        $params = array();
+        
+        if (!empty($coaId)) {
+            $coaConditionSql = ' WHERE id = :coa_id';
+            $params[':coa_id'] = $coaId;
+        }
+        
+        $pageSize = 50;
+        $pageOffset = ($pageNumber - 1) * $pageSize;
+        
+        $sql = "SELECT * FROM " . Coa::model()->tableName() . "{$coaConditionSql} LIMIT {$pageSize} OFFSET {$pageOffset}";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
 }

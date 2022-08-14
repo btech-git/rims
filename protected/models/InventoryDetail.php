@@ -14,6 +14,7 @@
  * @property integer $stock_in
  * @property integer $stock_out
  * @property string $notes
+ * @property string $purchase_price
  *
  * The followings are the available model relations:
  * @property Inventory $inventory
@@ -42,7 +43,7 @@ class InventoryDetail extends CActiveRecord {
             array('transaction_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes', 'safe', 'on' => 'search'),
+            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price', 'safe', 'on' => 'search'),
         );
     }
 
@@ -74,6 +75,7 @@ class InventoryDetail extends CActiveRecord {
             'stock_in' => 'Stock In',
             'stock_out' => 'Stock Out',
             'notes' => 'Notes',
+            'purchase_price' => 'Purchase Price',
         );
     }
 
@@ -104,6 +106,7 @@ class InventoryDetail extends CActiveRecord {
         $criteria->compare('stock_in', $this->stock_in);
         $criteria->compare('stock_out', $this->stock_out);
         $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('purchase_price', $this->purchase_price, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -271,5 +274,19 @@ class InventoryDetail extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
+    }
+    
+    public static function getTotalStockOut($productId) {
+        
+        $sql = "SELECT SUM(stock_out * -1)
+                FROM " . InventoryDetail::model()->tableName() . " 
+                WHERE product_id = :product_id
+                GROUP BY product_id";
+        
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $productId,
+        ));
+
+        return $value;
     }
 }
