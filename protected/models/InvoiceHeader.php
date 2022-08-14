@@ -304,7 +304,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $total = 0.00;
         
         foreach ($this->paymentIns as $detail) {
-            $total += $detail->payment_amount;
+            $total += $detail->payment_amount + $detail->tax_service_amount;
         }
         
         return $total;
