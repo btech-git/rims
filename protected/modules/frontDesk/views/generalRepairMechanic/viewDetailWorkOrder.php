@@ -16,17 +16,19 @@ $str = '';
 $currentTime = strtotime(date(DATE_ATOM));
 foreach ($registration->registrationServices as $registrationService) {
     if ($registrationService->start !== null && $registrationService->end === null) {
-        $str .= "setInterval(function() {
+        $fn = 'set' . ((int) $registrationService->is_paused === 0 ? 'Interval' : 'Timeout');
+        $str .= "{$fn}(function() {
             var timeDiffSelector = $('table div#time_diff_" . $registrationService->id . "');
             var now = parseInt(Date.now() / 1000);
             var expected = " . (strtotime($registrationService->start) + $registrationService->hour * 3600) . ";
             var diff = timeDiffSelector.html();
+            var totalPaused = " . $registrationService->pause_time . ";
             if (diff == '') {
                 diff = " . $currentTime . " - now;
                 timeDiffSelector.html(diff);
             }
             diff = parseInt(diff);
-            var distance = expected - now + diff;
+            var distance = expected - now + diff + totalPaused;
             if (distance < 0) {
                 distance = 0;
             }

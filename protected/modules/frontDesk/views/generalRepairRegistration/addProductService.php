@@ -83,7 +83,7 @@ $this->breadcrumbs=array(
                                         <th>Branch</th>
                                         <th>User</th>
                                         <th>PPn</th>
-                                        <th>PPh</th>
+                                        <!--<th>PPh</th>-->
                                         <?php if($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <th>WO #</th>
                                         <?php endif; ?>
@@ -98,7 +98,25 @@ $this->breadcrumbs=array(
                                         <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'branch.name')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'user.username')); ?></td>
                                         <td>
-                                            <?php echo CHtml::activeCheckBox($generalRepairRegistration->header,'ppn', array(
+                                            <?php echo $form->dropDownList($generalRepairRegistration->header, 'ppn', array(
+                                                '3' => 'Include PPN',
+                                                '1' => 'Add PPN', 
+                                                '2' => 'Non PPN',
+                                            ), array(
+                                                'empty' => '-- Pilih PPN --',
+                                                'onchange' => CHtml::ajax(array(
+                                                    'type' => 'POST',
+                                                    'dataType' => 'JSON',
+                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)),
+                                                    'success' => 'function(data) {
+                                                        $("#grand_total_transaction").html(data.grandTotal);
+                                                        $("#tax_item_amount").html(data.taxItemAmount);
+                                                        $("#grand_total_product").html(data.grandTotalProduct);
+                                                        $("#sub_total_transaction").html(data.subTotalTransaction);
+                                                    }',
+                                                )),
+                                            )); ?>
+                                            <?php /*echo CHtml::activeCheckBox($generalRepairRegistration->header,'ppn', array(
                                                 'onchange' => CHtml::ajax(array(
                                                     'type' => 'POST',
                                                     'dataType' => 'JSON',
@@ -108,7 +126,7 @@ $this->breadcrumbs=array(
                                                         $("#tax_item_amount").html(data.taxItemAmount);
                                                     }',
                                                 )),
-                                            )); ?>
+                                            ));*/ ?>
                                             <?php echo CHtml::activeDropDownList($generalRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
@@ -121,12 +139,14 @@ $this->breadcrumbs=array(
                                                     'success' => 'function(data) {
                                                         $("#grand_total_transaction").html(data.grandTotal);
                                                         $("#tax_item_amount").html(data.taxItemAmount);
+                                                        $("#grand_total_product").html(data.grandTotalProduct);
+                                                        $("#sub_total_transaction").html(data.subTotalTransaction);
                                                     }',
                                                 )),
                                             )); ?>
                                         </td>
-                                        <td>
-                                            <?php echo CHtml::activeCheckBox($generalRepairRegistration->header,'pph', array(
+<!--                                        <td>
+                                            <?php /*echo CHtml::activeCheckBox($generalRepairRegistration->header,'pph', array(
                                                 'onchange' => CHtml::ajax(array(
                                                     'type' => 'POST',
                                                     'dataType' => 'JSON',
@@ -138,8 +158,8 @@ $this->breadcrumbs=array(
                                                         $("#sub_total_quick_service").html(data.subTotalQuickService);
                                                     }',
                                                 )),
-                                            )); ?>
-                                        </td>
+                                            ));*/ ?>
+                                        </td>-->
                                         <?php if ($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'work_order_number')); ?></td>
                                         <?php endif; ?>
@@ -348,7 +368,7 @@ $this->breadcrumbs=array(
                                             <td style="text-align: right">
                                                 <?php echo $form->hiddenField($generalRepairRegistration->header,'total_quickservice',array('readonly'=>true)); ?>
                                                 <span id="total_quick_service_quantity">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'total_quickservice'))); ?>                                                
+                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($generalRepairRegistration->header,'total_quickservice'))); ?>                                                
                                                 </span>
                                                 <?php echo $form->error($generalRepairRegistration->header,'total_quickservice'); ?>
                                             </td>
@@ -367,7 +387,7 @@ $this->breadcrumbs=array(
                                             <td style="text-align: right">
                                                 <?php echo $form->hiddenField($generalRepairRegistration->header,'total_service', array('readonly'=>true)); ?>
                                                 <span id="total_quantity_service">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'total_service'))); ?>
+                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($generalRepairRegistration->header,'total_service'))); ?>
                                                 </span>
                                                 <?php echo $form->error($generalRepairRegistration->header,'total_service'); ?>
                                             </td>
@@ -401,7 +421,7 @@ $this->breadcrumbs=array(
                                             <td style="text-align: right">
                                                 <?php echo $form->hiddenField($generalRepairRegistration->header,'total_product',array('size'=>10,'maxlength'=>10,'readonly'=>true)); ?>
                                                 <span id="total_quantity_product">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'total_product'))); ?>
+                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($generalRepairRegistration->header,'total_product'))); ?>
                                                 </span>
                                                 <?php echo $form->error($generalRepairRegistration->header,'total_product'); ?>
                                             </td>
@@ -447,13 +467,13 @@ $this->breadcrumbs=array(
                                                 </span>
                                                 <?php echo $form->error($generalRepairRegistration->header,'ppn_price'); ?>
                                             </td>
-                                            <td style="font-weight: bold"><?php echo $form->labelEx($generalRepairRegistration->header,'pph_price'); ?></td>
+                                            <td style="font-weight: bold"><?php //echo $form->labelEx($generalRepairRegistration->header,'pph_price'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
-                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'pph_price',array('size'=>18,'maxlength'=>18,'readonly'=>true,)); ?>
+                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'pph_price',array('readonly'=>true,)); ?>
                                                 <span id="tax_service_amount">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'pph_price'))); ?>
+                                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'pph_price'))); ?>
                                                 </span>
-                                                <?php echo $form->error($generalRepairRegistration->header,'pph_price'); ?>
+                                                <?php //echo $form->error($generalRepairRegistration->header,'pph_price'); ?>
                                             </td>
                                             <td style="font-weight: bold"><?php echo $form->labelEx($generalRepairRegistration->header,'grand_total'); ?></td>
                                             <td style="text-align: right; font-weight: bold">

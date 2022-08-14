@@ -73,7 +73,7 @@ class BodyRepairRegistration extends CComponent {
 
         $this->header->setCodeNumberByNext('sales_order_number', $branchCode, RegistrationTransaction::CONSTANT_SALE_ORDER, $currentMonth, $currentYear);
     }
-    
+
     public function addDamageDetail($serviceId) {
         $damageDetail = new RegistrationDamage();
         $service = Service::model()->findByPk($serviceId);
@@ -163,7 +163,7 @@ class BodyRepairRegistration extends CComponent {
         foreach ($serviceArrays as $serviceArray) {
             $checkService[] = $serviceArray->service_id;
         }
-        
+
         if (in_array($serviceId, $checkService)) {
             echo "Please select other Service, this is already added";
         } else {
@@ -245,14 +245,14 @@ class BodyRepairRegistration extends CComponent {
                             $lux = $service->luxury_value;
                             $hour = $service->flat_rate_hour;
                         }
-                        
+
                         if ($customerData->flat_rate != null) {
                             $priceTotal = $diff * $lux * $hour * $customerData->flat_rate;
                         } else {
                             $bodyFR = BodyStandardFr::model()->findByPk(1);
                             $priceTotal = $diff * $lux * $hour * $bodyFR->flat_rate;
                         }
-                        
+
                         $serviceDetail->price = $priceTotal;
                         $serviceDetail->total_price = $priceTotal;
                     }//else servicecarMake
@@ -279,7 +279,7 @@ class BodyRepairRegistration extends CComponent {
 //        $productArrays = array();
         $productArrays = $this->productDetails;
         $checkProduct = array();
-        
+
         foreach ($productArrays as $productArray) {
             $checkProduct[] = $productArray->product_id;
         }
@@ -303,7 +303,7 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function validate() {
-        
+
         $valid = $this->header->validate(array('car_mileage', 'problem', 'insurance_company_id'));
         $valid = $valid && $this->validateExistingCustomer();
 
@@ -312,7 +312,7 @@ class BodyRepairRegistration extends CComponent {
 
     public function validateExistingCustomer() {
         $valid = true;
-        
+
         $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('transaction_date' => $this->header->transaction_date, 'vehicle_id' => $this->header->vehicle_id));
 
         if (!empty($registrationTransaction)) {
@@ -344,8 +344,7 @@ class BodyRepairRegistration extends CComponent {
         $isNewRecord = $this->header->isNewRecord;
         if ($isNewRecord) {
             $this->header->status = 'Registration';
-        }
-        else
+        } else
             $this->header->status = 'Update Registration';
 
         $this->header->total_quickservice = 0;
@@ -354,29 +353,29 @@ class BodyRepairRegistration extends CComponent {
         $this->header->repair_type = 'BR';
         $this->header->service_status = 'Bongkar - Pending';
         $this->header->priority_level = 2;
-        
+
         $valid = $this->header->save();
-        
+
         if ($isNewRecord && $valid) {
             $serviceNames = array('Bongkar', 'Sparepart', 'KetokLas', 'Dempul', 'Epoxy', 'Cat', 'Pasang', 'Cuci', 'Poles');
             foreach ($serviceNames as $serviceName) {
                 $registrationBodyRepairDetail = new RegistrationBodyRepairDetail();
                 $registrationBodyRepairDetail->service_name = $serviceName;
                 $registrationBodyRepairDetail->registration_transaction_id = $this->header->id;
-                
+
                 $valid = $valid && $registrationBodyRepairDetail->save();
                 if (!$valid) {
                     break;
                 }
             }
-            
+
             $registrationRealization = new RegistrationRealizationProcess();
             $registrationRealization->registration_transaction_id = $this->header->id;
             $registrationRealization->name = 'Vehicle Inspection';
             $registrationRealization->detail = 'No';
             $registrationRealization->save();
         }
-        
+
         return $valid;
     }
 
@@ -460,7 +459,7 @@ class BodyRepairRegistration extends CComponent {
             $valid = $damageDetail->save(false) && $valid;
             $new_detail[] = $damageDetail->id;
         }
-        
+
         //save Service
         $criteria = new CDbCriteria;
         $criteria->condition = "registration_transaction_id =" . $this->header->id . " AND is_body_repair = 0";
@@ -483,17 +482,17 @@ class BodyRepairRegistration extends CComponent {
 
             $new_service[] = $serviceDetail->id;
 //            if ($isNewRecord) {
-                if ($this->header->repair_type == 'BR') {
-                    $serviceDetail->status = 'Finished';
-                } else {
-                    $registrationRealization = new RegistrationRealizationProcess();
-                    $registrationRealization->registration_transaction_id = $this->header->id;
-                    $registrationRealization->name = $serviceDetail->service->name;
-                    $registrationRealization->service_id = $serviceDetail->service_id;
+            if ($this->header->repair_type == 'BR') {
+                $serviceDetail->status = 'Finished';
+            } else {
+                $registrationRealization = new RegistrationRealizationProcess();
+                $registrationRealization->registration_transaction_id = $this->header->id;
+                $registrationRealization->name = $serviceDetail->service->name;
+                $registrationRealization->service_id = $serviceDetail->service_id;
 
-                    $registrationRealization->detail = 'Pending';
-                    $registrationRealization->save();
-                }
+                $registrationRealization->detail = 'Pending';
+                $registrationRealization->save();
+            }
 //            }
         }
 
@@ -538,7 +537,7 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function validateInvoice() {
-        
+
         $valid = $this->header->validate(array('payment_status'));
 
         return $valid;
@@ -548,7 +547,7 @@ class BodyRepairRegistration extends CComponent {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
             $valid = $this->validateInvoice() && $this->flushInvoice();
-            
+
             if ($valid) {
                 $dbTransaction->commit();
             } else {
@@ -564,10 +563,10 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function flushInvoice() {
-        
+
         $this->header->payment_status = 'INVOICING';
         $valid = $this->header->update(array('payment_status'));
-        
+
         $model = new InvoiceHeader();
         $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($this->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($this->header->transaction_date)), $this->header->branch_id);
         $model->invoice_date = date('Y-m-d');
@@ -608,7 +607,7 @@ class BodyRepairRegistration extends CComponent {
                 $modelDetail->save(false);
             }//end foreach
         } // end if count
-        
+
         $registrationServices = RegistrationService::model()->findAllByAttributes(array(
             'registration_transaction_id' => $this->header->id,
             'is_quick_service' => 0
@@ -623,7 +622,7 @@ class BodyRepairRegistration extends CComponent {
                 $modelDetail->save(false);
             }
         }
-        
+
         $registrationQuickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
         if (count($registrationQuickServices) != 0) {
             foreach ($registrationQuickServices as $registrationQuickService) {
@@ -661,7 +660,6 @@ class BodyRepairRegistration extends CComponent {
                 $real->detail = 'Generate Invoice with number #' . $model->invoice_number;
                 $real->save();
             }
-
         } else {
             $real = new RegistrationRealizationProcess();
             $real->registration_transaction_id = $this->header->id;
@@ -677,16 +675,16 @@ class BodyRepairRegistration extends CComponent {
             'kode_transaksi' => $this->header->transaction_number,
             'branch_id' => $this->header->branch_id,
         ));
-        
+
         $transactionType = 'RG BR';
         $postingDate = date('Y-m-d');
         $transactionCode = $this->header->transaction_number;
         $transactionDate = $this->header->transaction_date;
         $branchId = $this->header->branch_id;
         $transactionSubject = $this->header->customer->name;
-        
+
         $journalReferences = array();
-        
+
         $jurnalUmumReceivable = new JurnalUmum;
         $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
         $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
@@ -774,7 +772,7 @@ class BodyRepairRegistration extends CComponent {
             $jurnalUmumPersediaan->transaction_type = $transactionType;
             $jurnalUmumPersediaan->save();
         }
-            
+
         return $valid;
     }
 
@@ -829,6 +827,11 @@ class BodyRepairRegistration extends CComponent {
             $total += $detail->totalAmountProduct;
         }
 
+        switch ($this->header->ppn) {
+            case 3: return $total / (1 + $this->header->tax_percentage / 100);
+            default: return $total;
+        }
+
         return $total;
     }
 
@@ -851,15 +854,15 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ($this->header->ppn == 1) ? $this->subTotalProduct * $this->header->tax_percentage / 100 : 0;
+        return ($this->header->ppn == 2) ? 0 : $this->subTotalProduct * $this->header->tax_percentage / 100;
     }
 
-    public function getTaxServiceAmount() {
-        return ($this->header->pph == 1) ? ($this->grandTotalService) * .02 : 0;
-    }
+//    public function getTaxServiceAmount() {
+//        return ($this->header->pph == 1) ? ($this->grandTotalService) * .02 : 0;
+//    }
 
     public function getGrandTotalTransaction() {
-        return $this->subTotalTransaction + $this->taxItemAmount - $this->taxServiceAmount;
+        return $this->subTotalTransaction + $this->taxItemAmount; // - $this->taxServiceAmount;
     }
 
 }

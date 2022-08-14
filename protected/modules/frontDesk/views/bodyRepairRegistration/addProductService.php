@@ -83,7 +83,7 @@ $this->breadcrumbs=array(
                                         <th>Branch</th>
                                         <th>User</th>
                                         <th>PPn</th>
-                                        <th>PPh</th>
+                                        <!--<th>PPh</th>-->
                                         <?php if ($bodyRepairRegistration->header->work_order_number != ""): ?>
                                             <th>WO #</th>
                                         <?php endif; ?>
@@ -98,7 +98,25 @@ $this->breadcrumbs=array(
                                         <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'branch.name')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'user.username')); ?></td>
                                         <td>
-                                            <?php echo CHtml::activeCheckBox($bodyRepairRegistration->header,'ppn', array(
+                                            <?php echo $form->dropDownList($bodyRepairRegistration->header, 'ppn', array(
+                                                '3' => 'Include PPN',
+                                                '1' => 'Add PPN', 
+                                                '2' => 'Non PPN',
+                                            ), array(
+                                                'empty' => '-- Pilih PPN --',
+                                                'onchange' => CHtml::ajax(array(
+                                                    'type' => 'POST',
+                                                    'dataType' => 'JSON',
+                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $bodyRepairRegistration->header->id)),
+                                                    'success' => 'function(data) {
+                                                        $("#grand_total_transaction").html(data.grandTotal);
+                                                        $("#tax_item_amount").html(data.taxItemAmount);
+                                                        $("#grand_total_product").html(data.grandTotalProduct);
+                                                        $("#sub_total_transaction").html(data.subTotalTransaction);
+                                                    }',
+                                                )),
+                                            )); ?>
+                                            <?php /*echo CHtml::activeCheckBox($bodyRepairRegistration->header,'ppn', array(
                                                 'onchange' => CHtml::ajax(array(
                                                     'type' => 'POST',
                                                     'dataType' => 'JSON',
@@ -108,7 +126,7 @@ $this->breadcrumbs=array(
                                                         $("#tax_item_amount").html(data.taxItemAmount);
                                                     }',
                                                 )),
-                                            )); ?>
+                                            ));*/ ?>
                                             <?php echo CHtml::activeDropDownList($bodyRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
@@ -121,12 +139,14 @@ $this->breadcrumbs=array(
                                                     'success' => 'function(data) {
                                                         $("#grand_total_transaction").html(data.grandTotal);
                                                         $("#tax_item_amount").html(data.taxItemAmount);
+                                                        $("#grand_total_product").html(data.grandTotalProduct);
+                                                        $("#sub_total_transaction").html(data.subTotalTransaction);
                                                     }',
                                                 )),
                                             )); ?>
                                         </td>
-                                        <td>
-                                            <?php echo CHtml::activeCheckBox($bodyRepairRegistration->header,'pph', array(
+<!--                                        <td>
+                                            <?php /*echo CHtml::activeCheckBox($bodyRepairRegistration->header,'pph', array(
                                                 'onchange' => CHtml::ajax(array(
                                                     'type' => 'POST',
                                                     'dataType' => 'JSON',
@@ -138,8 +158,8 @@ $this->breadcrumbs=array(
                                                         $("#sub_total_quick_service").html(data.subTotalQuickService);
                                                     }',
                                                 )),
-                                            )); ?>
-                                        </td>
+                                            ));*/ ?>
+                                        </td>-->
                                         <?php if($bodyRepairRegistration->header->work_order_number != ""): ?>
                                             <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'work_order_number')); ?></td>
                                         <?php endif; ?>
@@ -333,13 +353,13 @@ $this->breadcrumbs=array(
                                                 </span>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'subtotal'); ?>
                                             </td>
-                                            <td style="font-weight: bold"><?php echo $form->labelEx($bodyRepairRegistration->header,'ppn_price'); ?></td>
+                                            <td style="font-weight: bold"><?php //echo $form->labelEx($bodyRepairRegistration->header,'ppn_price'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
-                                                <?php echo $form->hiddenField($bodyRepairRegistration->header,'ppn_price',array('size'=>18,'maxlength'=>18,'readonly'=>true,)); ?>
+                                                <?php echo $form->hiddenField($bodyRepairRegistration->header,'ppn_price',array('readonly'=>true,)); ?>
                                                 <span id="tax_item_amount">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($bodyRepairRegistration->header,'ppn_price'))); ?>
+                                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($bodyRepairRegistration->header,'ppn_price'))); ?>
                                                 </span>
-                                                <?php echo $form->error($bodyRepairRegistration->header,'ppn_price'); ?>
+                                                <?php //echo $form->error($bodyRepairRegistration->header,'ppn_price'); ?>
                                             </td>
                                             <td style="font-weight: bold"><?php echo $form->labelEx($bodyRepairRegistration->header,'pph_price'); ?></td>
                                             <td style="text-align: right; font-weight: bold">

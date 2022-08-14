@@ -906,8 +906,14 @@ class GeneralRepairRegistration extends CComponent {
     public function getSubTotalProduct() {
         $total = 0.00;
 
-        foreach ($this->productDetails as $detail)
+        foreach ($this->productDetails as $detail) {
             $total += $detail->totalAmountProduct;
+        }
+        
+        switch($this->header->ppn) {
+            case 3: return $total / (1 + $this->header->tax_percentage / 100);
+            default: return $total;
+        }
 
         return $total;
     }
@@ -930,14 +936,14 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ((int)$this->header->ppn == 1) ? $this->subTotalProduct * $this->header->tax_percentage / 100 : 0;
+        return ((int)$this->header->ppn == 2) ? 0 : $this->subTotalProduct * $this->header->tax_percentage / 100;
     }
 
-    public function getTaxServiceAmount() {
-        return ((int)$this->header->pph == 1) ? ($this->subTotalQuickService + $this->grandTotalService) * .02 : 0;
-    }
+//    public function getTaxServiceAmount() {
+//        return ((int)$this->header->pph == 1) ? ($this->subTotalQuickService + $this->grandTotalService) * .02 : 0;
+//    }
 
     public function getGrandTotalTransaction() {
-        return $this->subTotalTransaction + $this->taxItemAmount - $this->taxServiceAmount;
+        return $this->subTotalTransaction + $this->taxItemAmount; // - $this->taxServiceAmount;
     }
 }

@@ -199,11 +199,13 @@ class GeneralRepairMechanicController extends Controller {
         } else if (isset($_POST['DetailId']) && isset($_POST['ResumeService'])) {
             $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
             $registrationService->service_activity = 'ResumeService';
+            $registrationService->is_paused = 0;
             $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
             $generalRepairMechanic->save(Yii::app()->db);
         } else if (isset($_POST['DetailId']) && isset($_POST['PauseService'])) {
             $registrationService = RegistrationService::model()->findByPk($_POST['DetailId']);
             $registrationService->service_activity = 'PauseService';
+            $registrationService->is_paused = 1;
             $generalRepairMechanic = new GeneralRepairMechanic($registrationService);
             $generalRepairMechanic->save(Yii::app()->db);
         } else if (isset($_POST['DetailId']) && isset($_POST['FinishService'])) {

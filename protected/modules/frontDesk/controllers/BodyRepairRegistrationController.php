@@ -1061,7 +1061,7 @@ class BodyRepairRegistrationController extends Controller {
             $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalService));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
-            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
+//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
             $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
@@ -1072,7 +1072,7 @@ class BodyRepairRegistrationController extends Controller {
                 'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
+//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
             ));
         }
@@ -1090,7 +1090,7 @@ class BodyRepairRegistrationController extends Controller {
             $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalProduct));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
-            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
+//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
             $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
@@ -1101,13 +1101,13 @@ class BodyRepairRegistrationController extends Controller {
                 'grandTotalProduct' => $grandTotalProduct,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
+//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
             ));
         }
     }
 
-    public function FactionAjaxJsonGrandTotal($id) {
+    public function actionAjaxJsonGrandTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
@@ -1120,7 +1120,8 @@ class BodyRepairRegistrationController extends Controller {
             $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalService));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
-            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
+//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
+            $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalProduct));
             $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
@@ -1132,7 +1133,8 @@ class BodyRepairRegistrationController extends Controller {
                 'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotalProduct' => $grandTotalProduct,
+//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotal' => $grandTotal,
             ));
         }

@@ -971,7 +971,7 @@ class GeneralRepairRegistrationController extends Controller {
             $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalService));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
-            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
+//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
             $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
@@ -982,7 +982,7 @@ class GeneralRepairRegistrationController extends Controller {
                 'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
+//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
             ));
         }
@@ -1000,7 +1000,7 @@ class GeneralRepairRegistrationController extends Controller {
             $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalProduct));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
-            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
+//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
             $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
@@ -1011,7 +1011,7 @@ class GeneralRepairRegistrationController extends Controller {
                 'grandTotalProduct' => $grandTotalProduct,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
+//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
             ));
         }
@@ -1030,7 +1030,8 @@ class GeneralRepairRegistrationController extends Controller {
             $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalService));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
-            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
+            $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalProduct));
+//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
             $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
@@ -1042,7 +1043,8 @@ class GeneralRepairRegistrationController extends Controller {
                 'grandTotalService' => $grandTotalService,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
-                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotalProduct' => $grandTotalProduct,
+//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotal' => $grandTotal,
             ));
         }
