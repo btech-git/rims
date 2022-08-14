@@ -684,7 +684,22 @@ class PaymentInController extends Controller {
         }
     }
 
-    public function actionAjaxJsonTaxService($id, $invoiceId) {
+//    public function actionAjaxJsonTaxService($id, $invoiceId) {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $model = new PaymentIn;
+//            $model->attributes = $_POST['PaymentIn'];
+//
+//            $taxServiceAmount = $model->taxServiceAmount;
+//
+//            $object = array(
+//                'taxServiceAmount' => $taxServiceAmount,
+//                'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
+//            );
+//            echo CJSON::encode($object);
+//        }
+//    }
+    
+    public function actionAjaxJsonAmount($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $model = new PaymentIn;
             $model->attributes = $_POST['PaymentIn'];
@@ -692,20 +707,9 @@ class PaymentInController extends Controller {
             $taxServiceAmount = $model->taxServiceAmount;
 
             $object = array(
+                'amount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))),
                 'taxServiceAmount' => $taxServiceAmount,
                 'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
-            );
-            echo CJSON::encode($object);
-        }
-    }
-    
-    public function actionAjaxJsonAmount($id) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $model = new PaymentIn;
-            $model->attributes = $_POST['PaymentIn'];
-
-            $object = array(
-                'amount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))),
             );
 
             echo CJSON::encode($object);

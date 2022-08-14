@@ -322,6 +322,8 @@
                                 'url'=>CController::createUrl('ajaxJsonAmount', array('id' => $model->id)),
                                 'success'=>'function(data) {
                                     $("#amount").html(data.amount);
+                                    $("#tax_service_amount").html(data.taxServiceAmountFormatted);
+                                    $("#' . CHtml::activeId($model, 'tax_service_amount') . '").val(data.taxServiceAmount);
                                 }',
                             )),
                         )); ?>
@@ -343,7 +345,7 @@
                             'onchange' => '$.ajax({
                                 type: "POST",
                                 dataType: "JSON",
-                                url: "' . CController::createUrl('ajaxJsonTaxService', array('id' => $model->id, 'invoiceId' => $invoice->id)) . '",
+                                url: "' . CController::createUrl('ajaxJsonAmount', array('id' => $model->id, 'invoiceId' => $invoice->id)) . '",
                                 data: $("form").serialize(),
                                 success: function(data) {
                                     $("#tax_service_amount").html(data.taxServiceAmountFormatted);
