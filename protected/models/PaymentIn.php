@@ -282,7 +282,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
     
     public function getTaxServiceAmount() {
         
-        return empty($this->is_tax_service == 0) ? 0 : ($this->payment_amount) * .02;
+        return ($this->is_tax_service == 0) ? 0 : ($this->payment_amount) * .02;
     }
 
 //    public function getTotalAmountWholesale($branchId, $transactionDate) {
