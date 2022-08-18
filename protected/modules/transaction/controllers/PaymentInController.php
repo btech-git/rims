@@ -81,7 +81,7 @@ class PaymentInController extends Controller {
             $jurnalPiutang->tanggal_transaksi = $model->payment_date;
             $jurnalPiutang->coa_id = $model->customer->coa_id;
             $jurnalPiutang->branch_id = $model->branch_id;
-            $jurnalPiutang->total = $model->payment_amount + $model->tax_service_amount;
+            $jurnalPiutang->total = $model->invoice->total_price;
             $jurnalPiutang->debet_kredit = 'K';
             $jurnalPiutang->tanggal_posting = date('Y-m-d');
             $jurnalPiutang->transaction_subject = $model->customer->name;
@@ -94,13 +94,15 @@ class PaymentInController extends Controller {
             } else {
                 $coaId = $model->companyBank->coa_id;
             }
+            
+            $totalKas = ($model->is_tax_service == 3) ? $model->payment_amount - $model->tax_service_amount : $model->payment_amount;
 
             $jurnalUmumKas = new JurnalUmum;
             $jurnalUmumKas->kode_transaksi = $model->payment_number;
             $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
             $jurnalUmumKas->coa_id = $coaId;
             $jurnalUmumKas->branch_id = $model->branch_id;
-            $jurnalUmumKas->total = $model->payment_amount;
+            $jurnalUmumKas->total = $totalKas;
             $jurnalUmumKas->debet_kredit = 'D';
             $jurnalUmumKas->tanggal_posting = date('Y-m-d');
             $jurnalUmumKas->transaction_subject = $model->customer->name;
@@ -704,7 +706,7 @@ class PaymentInController extends Controller {
             $model = new PaymentIn;
             $model->attributes = $_POST['PaymentIn'];
 
-            $taxServiceAmount = $model->taxServiceAmount;
+            $taxServiceAmount = empty($model->is_tax_service) ? 0.00 : $model->getTaxServiceAmount($model->is_tax_service);
 
             $object = array(
                 'amount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))),

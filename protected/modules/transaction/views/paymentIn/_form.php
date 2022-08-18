@@ -341,7 +341,12 @@
                         <?php echo $form->labelEx($model, 'is_tax_service'); ?>
                     </div>
                     <div class="small-2 columns">
-                        <?php echo $form->checkBox($model, 'is_tax_service', array(
+                        <?php echo $form->dropDownList($model, 'is_tax_service', array(
+                            '3' => 'Include Pph',
+                            '1' => 'Add Pph', 
+                            '2' => 'Non Pph',
+                        ), array(
+                            'empty' => '-- Pilih Pph --',
                             'onchange' => '$.ajax({
                                 type: "POST",
                                 dataType: "JSON",
@@ -353,6 +358,18 @@
                                 },
                             });'
                         )); ?>
+                        <?php /*echo $form->checkBox($model, 'is_tax_service', array(
+                            'onchange' => '$.ajax({
+                                type: "POST",
+                                dataType: "JSON",
+                                url: "' . CController::createUrl('ajaxJsonAmount', array('id' => $model->id, 'invoiceId' => $invoice->id)) . '",
+                                data: $("form").serialize(),
+                                success: function(data) {
+                                    $("#tax_service_amount").html(data.taxServiceAmountFormatted);
+                                    $("#' . CHtml::activeId($model, 'tax_service_amount') . '").val(data.taxServiceAmount);
+                                },
+                            });'
+                        ));*/ ?>
                         <?php echo $form->error($model, 'is_tax_service'); ?>
                     </div>
                     <div class="small-6 columns">

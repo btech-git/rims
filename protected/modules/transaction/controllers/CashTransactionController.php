@@ -64,7 +64,6 @@ class CashTransactionController extends Controller {
         if (isset($_POST['Process'])) {
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $cashTransaction->transaction_number,
-                'tanggal_transaksi' => $cashTransaction->transaction_date,
                 'branch_id' => $cashTransaction->branch_id,
             ));
 
