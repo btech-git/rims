@@ -44,6 +44,14 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
     const STATUS_ACTIVE = 0;
     const STATUS_INACTIVE = 1;
 
+    const ADD_SERVICE_TAX = 1;
+    const NON_SERVICE_TAX = 2;
+    const INCLUDE_SERVICE_TAX = 3;
+
+    const ADD_SERVICE_TAX_LITERAL = 'Add Pph';
+    const NON_SERVICE_TAX_LITERAL = 'Non Pph';
+    const INCLUDE_SERVICE_TAX_LITERAL = 'Include Pph';
+
     public $images;
     public $invoice_number;
     public $invoice_status;
@@ -280,9 +288,14 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         ));
     }
     
-    public function getTaxServiceAmount() {
+    public function getTaxServiceAmount($serviceTax) {
         
-        return ($this->is_tax_service == 0) ? 0 : ($this->payment_amount) * .02;
+        switch ($serviceTax) {
+            case self::ADD_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
+            case self::NON_SERVICE_TAX: return 0;
+            case self::INCLUDE_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
+            default: return '';
+        }
     }
 
 //    public function getTotalAmountWholesale($branchId, $transactionDate) {
