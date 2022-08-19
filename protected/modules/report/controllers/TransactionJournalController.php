@@ -57,6 +57,8 @@ class TransactionJournalController extends Controller {
             'account' => $account,
             'accountDataProvider' => $accountDataProvider,
             'currentSort' => $currentSort,
+            'pageSize' => $pageSize,
+            'currentPage' => $currentPage,
         ));
     }
 
