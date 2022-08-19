@@ -2,6 +2,10 @@
 Yii::app()->clientScript->registerScript('report', '
 	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
+            
+	$("#PageSize").val("' . $jurnalUmumSummary->dataProvider->pagination->pageSize . '");
+	$("#CurrentPage").val("' . ($jurnalUmumSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+	$("#CurrentSort").val("' . $currentSort . '");
 ');
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
@@ -92,6 +96,30 @@ Yii::app()->clientScript->registerScript('report', '
                     </div>
                     
                     <div class="medium-6 columns">
+<!--                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Jumlah per Halaman </span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::hiddenField('PageSize', $pageSize, array('size' => 3)); ?>
+                                </div>
+                            </div>
+                        </div>-->
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Halaman saat ini</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                </div>
+                            </div>
+                        </div>
+
                         <div id="branch">
                             <?php $this->renderPartial('_branchSelect', array(
                                 'companyId' => $companyId,
