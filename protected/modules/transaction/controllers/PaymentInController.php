@@ -76,12 +76,14 @@ class PaymentInController extends Controller {
                 'branch_id' => $model->branch_id,
             ));
 
+            $totalKas = ($model->is_tax_service == 3) ? $model->payment_amount + $model->tax_service_amount : $model->payment_amount;
+
             $jurnalPiutang = new JurnalUmum;
             $jurnalPiutang->kode_transaksi = $model->payment_number;
             $jurnalPiutang->tanggal_transaksi = $model->payment_date;
             $jurnalPiutang->coa_id = $model->customer->coa_id;
             $jurnalPiutang->branch_id = $model->branch_id;
-            $jurnalPiutang->total = $model->invoice->total_price;
+            $jurnalPiutang->total = $totalKas;
             $jurnalPiutang->debet_kredit = 'K';
             $jurnalPiutang->tanggal_posting = date('Y-m-d');
             $jurnalPiutang->transaction_subject = $model->customer->name;
@@ -95,14 +97,12 @@ class PaymentInController extends Controller {
                 $coaId = $model->companyBank->coa_id;
             }
             
-            $totalKas = ($model->is_tax_service == 3) ? $model->payment_amount - $model->tax_service_amount : $model->payment_amount;
-
             $jurnalUmumKas = new JurnalUmum;
             $jurnalUmumKas->kode_transaksi = $model->payment_number;
             $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
             $jurnalUmumKas->coa_id = $coaId;
             $jurnalUmumKas->branch_id = $model->branch_id;
-            $jurnalUmumKas->total = $totalKas;
+            $jurnalUmumKas->total = $model->payment_amount;
             $jurnalUmumKas->debet_kredit = 'D';
             $jurnalUmumKas->tanggal_posting = date('Y-m-d');
             $jurnalUmumKas->transaction_subject = $model->customer->name;

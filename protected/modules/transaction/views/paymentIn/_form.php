@@ -373,7 +373,7 @@
                         <?php echo $form->error($model, 'is_tax_service'); ?>
                     </div>
                     <div class="small-6 columns">
-                        <?php echo $form->hiddenField($model, 'tax_service_amount'); ?>
+                        <?php echo $form->textField($model, 'tax_service_amount'); ?>
                         <span id="tax_service_amount">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($model, 'tax_service_amount'))); ?>
                         </span>
