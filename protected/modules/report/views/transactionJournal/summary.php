@@ -166,7 +166,7 @@ Yii::app()->clientScript->registerScript('report', '
 
             <div class="relative">
                 <div class="reportDisplay">
-                    <?php echo ReportHelper::summaryText($saleSummary->dataProvider); ?>
+                    <?php echo ReportHelper::summaryText($jurnalUmumSummary->dataProvider); ?>
                     <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                 </div>
 
