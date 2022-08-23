@@ -515,7 +515,7 @@ class Product extends CActiveRecord {
             $quantity += $detail->quantity;
         }
         
-        return $unitPrice / $quantity;
+        return empty ($this->transactionPurchaseOrderDetails ) ? 0.00 : $unitPrice / $quantity;
     }
     
     public function getFifoCogs() {
