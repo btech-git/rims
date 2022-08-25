@@ -199,7 +199,7 @@ class PurchaseOrders extends CComponent {
         }
         
         if (!$isNewRecord) {
-            $subTotal = $this->header->subtotal;
+            $subTotal = $this->header->total_price;
             
             $jurnalUmumPayable = new JurnalUmum;
             $jurnalUmumPayable->kode_transaksi = $this->header->purchase_order_no;
