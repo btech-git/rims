@@ -76,7 +76,7 @@ class PaymentInController extends Controller {
                 'branch_id' => $model->branch_id,
             ));
 
-            $totalKas = ($model->is_tax_service == 3) ? $model->payment_amount + $model->tax_service_amount : $model->payment_amount;
+            $totalKas = ($model->is_tax_service == 2) ? $model->payment_amount + $model->tax_service_amount : $model->payment_amount;
 
             $jurnalPiutang = new JurnalUmum;
             $jurnalPiutang->kode_transaksi = $model->payment_number;
