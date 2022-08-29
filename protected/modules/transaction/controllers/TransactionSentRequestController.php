@@ -186,18 +186,18 @@ class TransactionSentRequestController extends Controller {
                 }
                 $sentRequest->save(false);
 
-                $jurnalUmumMasterInterbranchRequester = new JurnalUmum;
-                $jurnalUmumMasterInterbranchRequester->kode_transaksi = $sentRequest->sent_request_no;
-                $jurnalUmumMasterInterbranchRequester->tanggal_transaksi = $sentRequest->sent_request_date;
-                $jurnalUmumMasterInterbranchRequester->coa_id = $sentRequest->requesterBranch->coa_interbranch_inventory;
-                $jurnalUmumMasterInterbranchRequester->branch_id = $sentRequest->requester_branch_id;
-                $jurnalUmumMasterInterbranchRequester->total = $sentRequest->total_price;
-                $jurnalUmumMasterInterbranchRequester->debet_kredit = 'D';
-                $jurnalUmumMasterInterbranchRequester->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterInterbranchRequester->transaction_subject = 'Sent Request Main';
-                $jurnalUmumMasterInterbranchRequester->is_coa_category = 1;
-                $jurnalUmumMasterInterbranchRequester->transaction_type = 'SR';
-                $jurnalUmumMasterInterbranchRequester->save();
+//                $jurnalUmumMasterInterbranchRequester = new JurnalUmum;
+//                $jurnalUmumMasterInterbranchRequester->kode_transaksi = $sentRequest->sent_request_no;
+//                $jurnalUmumMasterInterbranchRequester->tanggal_transaksi = $sentRequest->sent_request_date;
+//                $jurnalUmumMasterInterbranchRequester->coa_id = $sentRequest->requesterBranch->coa_interbranch_inventory;
+//                $jurnalUmumMasterInterbranchRequester->branch_id = $sentRequest->requester_branch_id;
+//                $jurnalUmumMasterInterbranchRequester->total = $sentRequest->total_price;
+//                $jurnalUmumMasterInterbranchRequester->debet_kredit = 'D';
+//                $jurnalUmumMasterInterbranchRequester->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumMasterInterbranchRequester->transaction_subject = 'Sent Request Main';
+//                $jurnalUmumMasterInterbranchRequester->is_coa_category = 1;
+//                $jurnalUmumMasterInterbranchRequester->transaction_type = 'SR';
+//                $jurnalUmumMasterInterbranchRequester->save();
 
                 $jurnalUmumInterbranchRequester = new JurnalUmum;
                 $jurnalUmumInterbranchRequester->kode_transaksi = $sentRequest->sent_request_no;
@@ -268,18 +268,18 @@ class TransactionSentRequestController extends Controller {
 //            'branch_id_to' => $sentRequest->requester_branch_id,
 //        ));
 
-        $jurnalUmumMasterInterbranchDestination = new JurnalUmum;
-        $jurnalUmumMasterInterbranchDestination->kode_transaksi = $sentRequest->sent_request_no;
-        $jurnalUmumMasterInterbranchDestination->tanggal_transaksi = $sentRequest->sent_request_date;
-        $jurnalUmumMasterInterbranchDestination->coa_id = $sentRequest->destinationBranch->coa_interbranch_inventory;
-        $jurnalUmumMasterInterbranchDestination->branch_id = $sentRequest->destination_branch_id;
-        $jurnalUmumMasterInterbranchDestination->total = $sentRequest->total_price;
-        $jurnalUmumMasterInterbranchDestination->debet_kredit = 'K';
-        $jurnalUmumMasterInterbranchDestination->tanggal_posting = date('Y-m-d');
-        $jurnalUmumMasterInterbranchDestination->transaction_subject = 'Sent Request Destination';
-        $jurnalUmumMasterInterbranchDestination->is_coa_category = 1;
-        $jurnalUmumMasterInterbranchDestination->transaction_type = 'SR';
-        $jurnalUmumMasterInterbranchDestination->save();
+//        $jurnalUmumMasterInterbranchDestination = new JurnalUmum;
+//        $jurnalUmumMasterInterbranchDestination->kode_transaksi = $sentRequest->sent_request_no;
+//        $jurnalUmumMasterInterbranchDestination->tanggal_transaksi = $sentRequest->sent_request_date;
+//        $jurnalUmumMasterInterbranchDestination->coa_id = $sentRequest->destinationBranch->coa_interbranch_inventory;
+//        $jurnalUmumMasterInterbranchDestination->branch_id = $sentRequest->destination_branch_id;
+//        $jurnalUmumMasterInterbranchDestination->total = $sentRequest->total_price;
+//        $jurnalUmumMasterInterbranchDestination->debet_kredit = 'K';
+//        $jurnalUmumMasterInterbranchDestination->tanggal_posting = date('Y-m-d');
+//        $jurnalUmumMasterInterbranchDestination->transaction_subject = 'Sent Request Destination';
+//        $jurnalUmumMasterInterbranchDestination->is_coa_category = 1;
+//        $jurnalUmumMasterInterbranchDestination->transaction_type = 'SR';
+//        $jurnalUmumMasterInterbranchDestination->save();
 
         $jurnalUmumInterbranchDestination = new JurnalUmum;
         $jurnalUmumInterbranchDestination->kode_transaksi = $sentRequest->sent_request_no;
