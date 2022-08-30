@@ -103,6 +103,7 @@ $('.search-form form').submit(function(){
                         'content' => $this->renderPartial(
                             '_viewServiceHistory',
                             array(
+            'registration' => $registration,
                                 'vehicle' => $vehicle,
                             ), true
                         ),
