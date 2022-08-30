@@ -330,7 +330,7 @@ class MovementOutHeaderController extends Controller {
             $returnOrder->attributes = $_GET['TransactionReturnOrder'];
         }
         
-        $returnOrderDataProvider = $returnOrder->searchByMovementOut();
+        $returnOrderDataProvider = $returnOrder->search();
 //        $returnOrderDataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
 
         /* Registration Transaction */
