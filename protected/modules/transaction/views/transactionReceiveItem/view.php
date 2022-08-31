@@ -391,7 +391,7 @@ $this->menu = array(
                     <?php $movementInDetails = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $movementIn->id)); ?>
                     <?php foreach ($movementInDetails as $movementInDetail): ?>
                         <tr>
-                            <td><?php echo CHTml::link($movementIn->movement_in_number, array("/transaction/movementIN/view", "id"=>$movementIn->id)); ?></td>
+                            <td><?php echo CHTml::link($movementIn->movement_in_number, array("/transaction/movementInHeader/view", "id"=>$movementIn->id)); ?></td>
                             <td><?php echo $movementIn->date_posting; ?></td>
                             <td><?php echo $movementIn->branch->name; ?></td>
                             <td><?php echo $movementInDetail->product->name; ?></td>
