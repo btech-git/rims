@@ -56,7 +56,6 @@ class MovementInHeaderController extends Controller {
         $details = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $id));
         $historis = MovementInApproval::model()->findAllByAttributes(array('movement_in_id' => $id));
         $shippings = MovementInShipping::model()->findAllByAttributes(array('movement_in_id' => $id));
-        $receive = TransactionReceiveItem::model()->findByPk($model->receive_item_id);
         
         if (isset($_POST['Process'])) {
         JurnalUmum::model()->deleteAllByAttributes(array(
@@ -73,8 +72,8 @@ class MovementInHeaderController extends Controller {
         
         $journalReferences = array();
         
-            foreach ($model as $movementDetail) {
-                    $unitPrice = $receive->request_type == "Purchase Order" ? $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price : $movementDetail->product->hpp;
+            foreach ($details as $movementDetail) {
+                    $unitPrice = empty($movementDetail->receiveItemDetail->purchaseOrderDetail) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
                     $jumlah = $movementDetail->quantity * $unitPrice;
 
                     $value = $jumlah;
