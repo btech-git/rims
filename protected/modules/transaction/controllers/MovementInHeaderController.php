@@ -65,9 +65,9 @@ class MovementInHeaderController extends Controller {
 
         $transactionType = 'MI';
         $postingDate = date('Y-m-d');
-        $transactionCode = $movementIn->header->movement_in_number;
-        $transactionDate = $movementIn->header->date_posting;
-        $branchId = $movementIn->header->branch_id;
+        $transactionCode = $model->movement_in_number;
+        $transactionDate = $model->date_posting;
+        $branchId = $model->branch_id;
         $transactionSubject = 'Movement In';
         
         $journalReferences = array();
