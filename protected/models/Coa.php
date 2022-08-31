@@ -372,11 +372,11 @@ class Coa extends CActiveRecord {
             FROM (
                 SELECT coa_id, tanggal_transaksi, total AS amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'D' AND is_coa_category = 0 
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2021-12-31'
                 UNION ALL
                 SELECT coa_id, tanggal_transaksi, total * -1 AS amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'K' AND is_coa_category = 0 
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2021-12-31'
             ) j
             INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
             WHERE j.coa_id = :account_id AND j.tanggal_transaksi < :start_date
