@@ -115,29 +115,6 @@ $this->menu = array(
         </div>
     </div>
     
-    <div class="row">
-        <div class="small-8">
-            <div class="row">
-                <div class="small-3 columns">
-                    <label for="right-label" class="right" style="font-weight:bold;">Movement Type #</label>
-                </div>
-                <div class="small-9 columns">
-                    <?php
-                    if ($model->movement_type == 1) {
-                        $receiveItem = TransactionReceiveItem::model()->findByPk($model->receive_item_id);
-                    } elseif ($model->movement_type == 2) {
-                        $returnItem = TransactionReturnItem::model()->findByPk($model->return_item_id);
-                    } else {
-                        $movementType = "";
-                    }
-                    ?>
-
-                    <label for=""><?php echo CHtml::link($receiveItem->receive_item_no, array("/transaction/transactionReceiveItem/view", "id"=>$model->receive_item_id)); ?></label>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <?php if ($model->movement_type == 1): ?>
         <?php
         $receive = TransactionReceiveItem::model()->findByPk($model->receive_item_id);
@@ -163,6 +140,7 @@ $this->menu = array(
                     </div>
                     <div class="small-9 columns">
                         <label for=""><?php echo $type; ?></label>
+                 <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>
             </div>
@@ -177,6 +155,7 @@ $this->menu = array(
                     
                     <div class="small-9 columns">
                         <label for=""><?php echo $requestNumber; ?></label>
+                 <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>
             </div>
