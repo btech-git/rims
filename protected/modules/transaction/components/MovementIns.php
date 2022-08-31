@@ -109,7 +109,9 @@ class MovementIns extends CComponent {
     }
 
     public function flush() {
-
+        
+        $this->header->created_datetime = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($this->header->created_datetime)) . ' ' . date('H:i:s');
+        $this->header->date_posting = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($this->header->date_posting)) . ' ' . date('H:i:s');
         $valid = $this->header->save();
 
         $movementInDetails = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $this->header->id));
