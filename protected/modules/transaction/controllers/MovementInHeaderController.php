@@ -531,7 +531,7 @@ class MovementInHeaderController extends Controller {
                     $inventoryDetail->stock_in = $movementDetail->quantity;
                     $inventoryDetail->stock_out = 0;
                     $inventoryDetail->notes = "Data from Movement In";
-                    $inventoryDetail->purchase_price = $movementDetail->receiveItemDetail->purchaseOrderDetail->total_price;
+                    $inventoryDetail->purchase_price = empty($movementDetail->receiveItemDetail) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->total_price;
 
                     $inventoryDetail->save(false);
 

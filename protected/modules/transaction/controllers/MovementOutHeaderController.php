@@ -331,8 +331,8 @@ class MovementOutHeaderController extends Controller {
         }
         
         $returnOrderDataProvider = $returnOrder->search(); //ByMovementOut();
-        $returnOrderDataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
-        $returnOrderDataProvider->criteria->addInCondition('status', 'Approved');
+        $returnOrderDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
+        $returnOrderDataProvider->criteria->compare('t.status', 'Approved');
 
         /* Registration Transaction */
         $registrationTransaction = new RegistrationTransaction('search');
