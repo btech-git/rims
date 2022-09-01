@@ -412,6 +412,25 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('customer_work_order_number', $this->customer_work_order_number);
         $criteria->compare('t.branch_id', $this->branch_id);
 
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'vehicle' => array(
+                'with' => array(
+                    'carMake', 'carModel', 'color'
+                ),
+            ), 
+            'customer', 
+            'pic',
+        );
+
+        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+        $criteria->compare('customer.name', $this->customer_name, true);
+        $criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
+        $criteria->addSearchCondition('pic.name', $this->pic_name, true);
+        $criteria->compare('carMake.name', $this->car_make_code, true);
+        $criteria->compare('carModel.name', $this->car_model_code, true);
+        $criteria->compare('vehicle.color_id', $this->car_color, true);
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
