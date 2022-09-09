@@ -19,12 +19,12 @@
  * @property integer $user_id
  * @property string $description
  * @property string $current_value
- * @property integer $company_bank_id
+ * @property integer $bank_id
  *
  * The followings are the available model relations:
  * @property AssetDepreciationDetail[] $assetDepreciationDetails
  * @property AssetCategory $assetCategory
- * @property CompanyBank $companyBank
+ * @property Bank $bank
  * @property Users $user
  */
 class AssetPurchase extends MonthlyTransactionActiveRecord {
@@ -54,8 +54,8 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, depreciation_start_date, depreciation_end_date, status, asset_category_id, user_id, description, company_bank_id', 'required'),
-            array('monthly_useful_life, asset_category_id, user_id, company_bank_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, depreciation_start_date, depreciation_end_date, status, asset_category_id, user_id, description, bank_id', 'required'),
+            array('monthly_useful_life, asset_category_id, user_id, bank_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('purchase_value, accumulated_depreciation_value, current_value', 'length', 'max' => 18),
             array('status', 'length', 'max' => 20),
@@ -63,7 +63,7 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
             array('note', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, purchase_value, monthly_useful_life, accumulated_depreciation_value, depreciation_start_date, depreciation_end_date, status, note, asset_category_id, user_id, description, current_value, company_bank_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, purchase_value, monthly_useful_life, accumulated_depreciation_value, depreciation_start_date, depreciation_end_date, status, note, asset_category_id, user_id, description, current_value, bank_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -76,7 +76,7 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         return array(
             'assetDepreciationDetails' => array(self::HAS_MANY, 'AssetDepreciationDetail', 'asset_purchase_id'),
             'assetCategory' => array(self::BELONGS_TO, 'AssetCategory', 'asset_category_id'),
-            'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
+            'bank' => array(self::BELONGS_TO, 'Bank', 'bank_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
@@ -101,7 +101,7 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
             'user_id' => 'User',
             'description' => 'Description',
             'current_value' => 'Current Value',
-            'company_bank_id' => 'Company Bank',
+            'bank_id' => 'Company Bank',
         );
     }
 
@@ -130,7 +130,7 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('description', $this->description, true);
         $criteria->compare('current_value', $this->current_value, true);
-        $criteria->compare('company_bank_id', $this->company_bank_id);
+        $criteria->compare('bank_id', $this->bank_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
