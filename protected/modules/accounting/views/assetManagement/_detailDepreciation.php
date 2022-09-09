@@ -25,21 +25,22 @@
                     <?php echo CHtml::encode(CHtml::value($detail, 'assetPurchase.assetCategory.description')); ?>
                 </td>
                 
-                <td>
+                <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($assetPurchase, 'accumulated_depreciation_value'))); ?>
                 </td>
                 
-                <td>
+                <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($assetPurchase, 'current_value'))); ?>
                 </td>
                 
-                <td>
+                <td style="text-align: right">
                     <?php echo CHtml::activeTextField($detail, "[$i]amount"); ?>
                     <?php echo CHtml::error($detail, 'amount'); ?>
                 </td>
                 
-                <td>
-                    <?php echo CHtml::activeTextField($detail, "[$i]number_of_month"); ?>
+                <td style="text-align: center">
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]number_of_month"); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'number_of_month')); ?>
                     <?php echo CHtml::error($detail, 'number_of_month'); ?>
                 </td>
                 

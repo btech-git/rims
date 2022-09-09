@@ -44,7 +44,7 @@ $this->menu=array(
         ),
         array(
             'label' => 'Bank',
-            'value' => $model->companyBank->bank->name,
+            'value' => $model->bank->name,
         ),
         array(
             'label' => 'Harga Beli',

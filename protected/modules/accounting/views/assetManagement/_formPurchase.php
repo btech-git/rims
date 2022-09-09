@@ -107,10 +107,10 @@
                 </div>
             </div>
             
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Tanggal Akhir Depresiasi', false); ?>
+                        <?php /*echo CHtml::label('Tanggal Akhir Depresiasi', false); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
@@ -126,10 +126,10 @@
                                 'readonly' => true,
                             ),
                         )); ?>
-                        <?php echo $form->error($model,'depreciation_end_date'); ?>
+                        <?php echo $form->error($model,'depreciation_end_date');*/ ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
             
 <!--            <div class="field">
                 <div class="row collapse">
@@ -149,8 +149,8 @@
                         <?php echo CHtml::label('Payment Bank', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => 1)),'id','bank.name'), array('empty' => '-- Pilih Bank --')); ?>
-                        <?php echo $form->error($model,'company_bank_id'); ?>
+                        <?php echo $form->dropDownlist($model, 'bank_id', CHtml::listData(Bank::model()->findAll(array('order' => 't.name')),'id','name'), array('empty' => '-- Pilih Bank --')); ?>
+                        <?php echo $form->error($model,'bank_id'); ?>
                     </div>
                 </div>
             </div>
@@ -161,7 +161,7 @@
                         <?php echo CHtml::label('Note', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textArea($model,'note'); ?>
+                        <?php echo $form->textArea($model,'note', array('rows' => 5, 'column' => 20)); ?>
                         <?php echo $form->error($model,'note'); ?>
                     </div>
                 </div>

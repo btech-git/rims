@@ -25,10 +25,11 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Transaction Date', false); ?>
+                        <?php echo CHtml::label('Depreciation Period', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', date('Y-m-d'))); ?>
+                        <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker',array(
                             'model' => $assetDepreciation->header,
                             'attribute' => "transaction_date",
                             'options'=>array(
@@ -39,8 +40,8 @@
                             'htmlOptions'=>array(
                                 'readonly' => true,
                             ),
-                        )); ?>
-                        <?php echo $form->error($assetDepreciation->header,'transaction_date'); ?>
+                        ));*/ ?>
+                        <?php //echo $form->error($assetDepreciation->header,'transaction_date'); ?>
                     </div>
                 </div>
             </div>
