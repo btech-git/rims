@@ -435,6 +435,7 @@ class BodyRepairRegistration extends CComponent {
     public function flushDetails() {
         $valid = true;
 
+        $this->header->setCodeNumberByRevision('transaction_number');
         $this->header->is_insurance = empty($this->header->insurance_company_id) ? 0 : 1;
         $this->header->total_service = $this->totalQuantityService;
         $this->header->subtotal_service = $this->subTotalService;

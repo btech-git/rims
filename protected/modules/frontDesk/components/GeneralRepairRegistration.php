@@ -437,6 +437,7 @@ class GeneralRepairRegistration extends CComponent {
     public function flushDetails() {
         $valid = true;
 
+        $this->header->setCodeNumberByRevision('transaction_number');
         $this->header->total_quickservice = $this->totalQuickServiceQuantity;
         $this->header->total_quickservice_price = $this->subTotalQuickService;
         $this->header->total_service = $this->totalQuantityService;

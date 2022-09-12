@@ -353,21 +353,21 @@ $this->breadcrumbs=array(
                                                 </span>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'subtotal'); ?>
                                             </td>
-                                            <td style="font-weight: bold"><?php //echo $form->labelEx($bodyRepairRegistration->header,'ppn_price'); ?></td>
+                                            <td style="font-weight: bold"><?php echo $form->labelEx($bodyRepairRegistration->header,'ppn_price'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
                                                 <?php echo $form->hiddenField($bodyRepairRegistration->header,'ppn_price',array('readonly'=>true,)); ?>
                                                 <span id="tax_item_amount">
-                                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($bodyRepairRegistration->header,'ppn_price'))); ?>
+                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($bodyRepairRegistration->header,'ppn_price'))); ?>
                                                 </span>
-                                                <?php //echo $form->error($bodyRepairRegistration->header,'ppn_price'); ?>
+                                                <?php echo $form->error($bodyRepairRegistration->header,'ppn_price'); ?>
                                             </td>
-                                            <td style="font-weight: bold"><?php echo $form->labelEx($bodyRepairRegistration->header,'pph_price'); ?></td>
+                                            <td style="font-weight: bold"><?php //echo $form->labelEx($bodyRepairRegistration->header,'pph_price'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
-                                                <?php echo $form->hiddenField($bodyRepairRegistration->header,'pph_price',array('size'=>18,'maxlength'=>18,'readonly'=>true,)); ?>
+                                                <?php //echo $form->hiddenField($bodyRepairRegistration->header,'pph_price',array('size'=>18,'maxlength'=>18,'readonly'=>true,)); ?>
                                                 <span id="tax_service_amount">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($bodyRepairRegistration->header,'pph_price'))); ?>
+                                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($bodyRepairRegistration->header,'pph_price'))); ?>
                                                 </span>
-                                                <?php echo $form->error($bodyRepairRegistration->header,'pph_price'); ?>
+                                                <?php //echo $form->error($bodyRepairRegistration->header,'pph_price'); ?>
                                             </td>
                                             <td style="font-weight: bold"><?php echo $form->labelEx($bodyRepairRegistration->header,'grand_total'); ?></td>
                                             <td style="text-align: right; font-weight: bold">
