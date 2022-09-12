@@ -254,6 +254,9 @@ class PurchaseOrders extends CComponent {
                     ));
                     
                     foreach($receiveItem->transactionReceiveItemDetails as $detail) {
+                        $detail->qty_request = $detail->purchaseOrderDetail->quantity;
+                        $detail->update(array('qty_request'));
+                        
                         $jumlah = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
 
                         //save coa product sub master category
