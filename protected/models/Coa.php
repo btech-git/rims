@@ -422,7 +422,7 @@ class Coa extends CActiveRecord {
         }
 
         $accountingJournals = $this->getRelated('jurnalUmums', false, array(
-            'condition' => "tanggal_transaksi BETWEEN :startDate AND :endDate AND is_coa_category = 0 AND coa_id = :coa_id" . $branchConditionSql,
+            'condition' => "is_coa_category = 0 AND coa_id = :coa_id AND tanggal_transaksi BETWEEN :startDate AND :endDate" . $branchConditionSql,
             'params' => $params,
         ));
 
