@@ -325,7 +325,7 @@
                                 <?php $accountCategoryBalance = 0.00; ?>
                                 <tr>
                                     <td style="padding-left: 75px; font-weight: bold; text-transform: capitalize">
-                                        <?php //echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
+                                        <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
                                         <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                                     </td>
                                     <td></td>
