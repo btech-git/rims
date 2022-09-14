@@ -337,7 +337,7 @@
                                     <?php if ((int)$accountBalance !== 0): ?>
                                         <tr>
                                             <td style="padding-left: 95px">
-                                                <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                                <?php //echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
                                                 <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array(
                                                     "coaId" => $account->id, 
                                                     "startDate" => $startDate, 
