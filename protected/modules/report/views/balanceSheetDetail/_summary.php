@@ -205,7 +205,7 @@
                             </td>
                             <td></td>
                         </tr>
-                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
+                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1)); ?> 
                         <?php foreach ($coas as $account): ?>
                             <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                 <?php if ((int)$accountBalance !== 0): ?>
@@ -268,7 +268,7 @@
                                         <td></td>
                                     </tr>
 
-                                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
+                                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1)); ?> 
                                         <?php foreach ($coas as $account): ?>
                                             <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                             <?php if ((int)$accountBalance !== 0): ?>
@@ -316,7 +316,6 @@
                                     </td>
                                 </tr>
                                 <?php $accountCategorySubBalance += $accountCategorySecondaryBalance; ?>
-
                             <?php endforeach; ?>
 
                         <?php else: ?>
@@ -326,13 +325,13 @@
                                 <?php $accountCategoryBalance = 0.00; ?>
                                 <tr>
                                     <td style="padding-left: 75px; font-weight: bold; text-transform: capitalize">
-                                        <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
+                                        <?php //echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
                                         <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                                     </td>
                                     <td></td>
                                 </tr>
                                 
-                                <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
+                                <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1)); ?> 
                                 <?php foreach ($coas as $account): ?>
                                     <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                     <?php if ((int)$accountBalance !== 0): ?>
