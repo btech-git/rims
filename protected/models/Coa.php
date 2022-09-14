@@ -485,7 +485,7 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) AS balance_debit, 0 AS balance_credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND is_coa_category = 0 debet_kredit = 'D' AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql .
+                    WHERE coa_id = :coa_id AND is_coa_category = 0 AND debet_kredit = 'D' AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql .
                     " GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 AS balance_debit, SUM(total) AS balance_credit
