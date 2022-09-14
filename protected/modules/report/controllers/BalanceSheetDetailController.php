@@ -103,7 +103,7 @@ class BalanceSheetDetailController extends Controller {
 
         $counter = 5;
 
-        $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id IN (12)'));
+        $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id IN (12)'), array('order' => 'code'));
         $accountCategoryAssetBalance = 0.00;
         foreach ($accountCategoryAssets as $accountCategoryAsset) {
             $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
@@ -132,7 +132,11 @@ class BalanceSheetDetailController extends Controller {
 
                         $counter++;
 
-                        $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null));
+                        $coas = Coa::model()->findAllByAttributes(array(
+                            'coa_sub_category_id' => $accountCategory->id, 
+                            'is_approved' => 1, 
+                            'coa_id' => null
+                        ), array('order' => 'code'));
                         foreach ($coas as $coa) {
                             $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId);
                             if ((int) $accountGroupBalance !== 0) {
