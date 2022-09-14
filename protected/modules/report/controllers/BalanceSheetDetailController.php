@@ -87,10 +87,10 @@ class BalanceSheetDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Balance Sheet Detail');
+        $documentProperties->setTitle('Laporan Balance Sheet Standar');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Balance Sheet Detail');
+        $worksheet->setTitle('Laporan Balance Sheet Standar');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -98,7 +98,7 @@ class BalanceSheetDetailController extends Controller {
         $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Laporan Balance Sheet Detail');
+        $worksheet->setCellValue('A1', 'Laporan Balance Sheet Standar');
         $worksheet->setCellValue('A2', $startDateString . ' - ' . $endDateString);
 
         $counter = 5;
@@ -138,11 +138,13 @@ class BalanceSheetDetailController extends Controller {
                             'coa_id' => null
                         ), array('order' => 'code'));
                         foreach ($coas as $coa) {
-                            $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId);
+                            $accountGroupBalance = (empty($coa->coaIds)) ? $coa->getBalanceSheetBalance($startDate, $endDate, $branchId) : 10;
                             if ((int) $accountGroupBalance !== 0) {
                                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($coa, 'code')) . ' - ' . CHtml::encode(CHtml::value($coa, 'name')));
                                 $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountGroupBalance));
+                                if (empty($coa->coaIds)) {
+                                    $worksheet->setCellValue("B{$counter}", CHtml::encode($accountGroupBalance));
+                                }
 
                                 $counter++;
 
@@ -161,12 +163,19 @@ class BalanceSheetDetailController extends Controller {
 
                                         }
                                     }
+                                    
+                                $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+                                $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($coa, 'name')));
+                                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountGroupBalance));
+
+                                $counter++;
                                 }
                                 $accountCategoryBalance += $accountGroupBalance;
                             }
                         }
                         
-                        $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                        $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
                         $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                         $worksheet->setCellValue("A{$counter}", 'Total ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
                         $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryBalance));
@@ -200,6 +209,168 @@ class BalanceSheetDetailController extends Controller {
 
             $counter++;
         }
+        
+        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id IN (13)'), array('order' => 'code'));
+        $accountCategoryLiabilityEquityBalance = 0.00;
+        foreach ($accountCategoryLiabilitiesEquities as $accountCategoryLiabilitiesEquity) {
+            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')));
+
+            $counter++;
+
+            $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryLiabilitiesEquity->id), array('order' => 'code'));
+            foreach ($accountCategoryPrimarys as $accountCategoryPrimary) {
+                $accountCategoryPrimaryBalance = 0.00;
+                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
+                
+                $counter++;
+
+                if ($accountCategoryPrimary->id == 5) {
+                    $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
+                    foreach ($coaSubCategoryCodes as $accountCategory) {
+                        $accountCategoryBalance = 0.00;
+                        $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')) . ' - ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
+
+                        $counter++;
+
+                        $coas = Coa::model()->findAllByAttributes(array(
+                            'coa_sub_category_id' => $accountCategory->id, 
+                            'is_approved' => 1, 
+                            'coa_id' => null
+                        ), array('order' => 'code'));
+                        foreach ($coas as $account) {
+                            $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
+                            if ((int) $accountBalance !== 0) {
+                                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')) . ' - ' . CHtml::encode(CHtml::value($account, 'name')));
+                                $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountBalance));
+
+                                $counter++;
+
+                            }
+                            
+                            $accountCategoryBalance += $accountBalance;
+                        }
+                        
+                        $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+                        $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        $worksheet->setCellValue("A{$counter}", 'Total ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
+                        $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryBalance));
+                        $counter++;
+
+                        $accountCategoryPrimaryBalance += $accountCategoryBalance;
+                    }
+
+                } else {
+                    $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
+                    foreach ($accountCategorySubs as $accountCategorySub) {
+                        $accountCategorySubBalance = 0.00;
+                        $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategorySub, 'name')));
+
+                        $counter++;
+
+                        if ($accountCategorySub->id == 3) {
+                            $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
+                            foreach ($coaCategorySecondaries as $coaCategorySecondary) {
+                                $accountCategorySecondaryBalance = 0.00;
+                                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($coaCategorySecondary, 'code')) . ' - ' . CHtml::encode(CHtml::value($coaCategorySecondary, 'name')));
+
+                                $counter++;
+
+                                $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $coaCategorySecondary->id), array('order' => 'code'));
+
+                                foreach ($coaSubCategoryCodes as $accountCategory) {
+                                    $accountCategoryBalance = 0.00;
+                                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')) . ' - ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
+                                    $counter++;
+
+                                    $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1));
+                                    foreach ($coas as $account) {
+                                        $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
+                                        if ((int)$accountBalance !== 0) {
+                                            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')) . ' - ' . CHtml::encode(CHtml::value($account, 'name')));
+                                            $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                            $worksheet->setCellValue("B{$counter}", CHtml::encode($accountBalance));
+
+                                            $counter++;
+                                        }
+                                        $accountCategoryBalance += $accountBalance;
+                                    }
+
+                                    $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+                                    $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                    $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
+                                    $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryBalance));
+
+                                    $counter++;
+                                    $accountCategorySecondaryBalance += $accountCategoryBalance;
+                                }
+
+                                $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+                                $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                $worksheet->setCellValue("A{$counter}", 'Total ' . CHtml::encode(CHtml::value($coaCategorySecondary, 'name')));
+                                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategorySecondaryBalance));
+                                $counter++;
+
+                                $accountCategorySubBalance += $accountCategorySecondaryBalance;
+                            }
+                        } else {
+                            $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
+                            foreach ($coaSubCategoryCodes as $accountCategory) {
+                                $accountCategoryBalance = 0.00;
+                                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')) . ' - ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
+
+                                $counter++;
+
+                                $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1));
+                                foreach ($coas as $account) {
+                                    $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
+                                    if ((int)$accountBalance !== 0) {
+                                        $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')) . ' - ' . CHtml::encode(CHtml::value($account, 'name')));
+                                        $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                        $worksheet->setCellValue("B{$counter}", CHtml::encode($accountBalance));
+
+                                        $counter++;
+                                    }
+                                    $accountCategoryBalance += $accountBalance;
+                                }
+
+                                $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+                                $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
+                                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryBalance));
+                                $counter++;
+
+                                $accountCategorySubBalance += $accountCategoryBalance;
+                            }
+                        }
+
+                        $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                        $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategorySub, 'name')));
+                        $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategorySubBalance));
+
+                        $accountCategoryPrimaryBalance += $accountCategorySubBalance;
+                        $counter++;
+                    }
+                }
+                
+                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryPrimaryBalance));
+
+                $accountCategoryLiabilityEquityBalance += $accountCategoryPrimaryBalance;
+                $counter++;
+            }
+
+            $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryLiabilityEquityBalance));
+
+            $counter++;
+        }
 
         for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -211,7 +382,7 @@ class BalanceSheetDetailController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Detail.xlsx"');
+        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Standar.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter->save('php://output');
 
