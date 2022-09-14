@@ -325,13 +325,13 @@ class BalanceSheetDetailController extends Controller {
                                 $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1));
                                 foreach ($coas as $account) {
                                     $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
-                                    if ((int)$accountBalance !== 0) {
+                                    //if ((int)$accountBalance !== 0) {
                                         $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')) . ' - ' . CHtml::encode(CHtml::value($account, 'name')));
                                         $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                                         $worksheet->setCellValue("B{$counter}", CHtml::encode($accountBalance));
 
                                         $counter++;
-                                    }
+                                    //}
                                     $accountCategoryBalance += $accountBalance;
                                 }
 
