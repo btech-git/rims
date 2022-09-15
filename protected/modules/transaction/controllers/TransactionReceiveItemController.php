@@ -65,11 +65,13 @@ class TransactionReceiveItemController extends Controller {
         $journalReferences = array();
         
         foreach($recieveDetails as $detail) {
-                    $value = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
-                    $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
+            if ($detail->qty_received > 0) {
+                $value = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
+                $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                $journalReferences[$coaId]['debet_kredit'] = 'D';
+                $journalReferences[$coaId]['is_coa_category'] = 0;
+                $journalReferences[$coaId]['values'][] = $value;
+            }
         }
                     
         $totalJournal = 0;
@@ -90,7 +92,7 @@ class TransactionReceiveItemController extends Controller {
             $totalJournal += array_sum($journalReference['values']);
         }
 
-        if ($model->request_type == 'Purchase Order') {
+        if ($model->request_type == 'Purchase Order' && $totalJournal > 0) {
             $coaOutstanding = Coa::model()->findByPk($model->supplier->coaOutstandingOrder->id);
             $jurnalUmumOutstanding = new JurnalUmum();
             $jurnalUmumOutstanding->kode_transaksi = $model->receive_item_no;
