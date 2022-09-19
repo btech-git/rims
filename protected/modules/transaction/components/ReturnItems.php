@@ -130,6 +130,9 @@ class ReturnItems extends CComponent {
         //save request detail
         foreach ($this->details as $detail) {
             $detail->return_item_id = $this->header->id;
+            $detail->price = $detail->product->hpp;
+            $detail->quantity_movement = 0;
+            $detail->quantity_movement_left = $detail->quantity;
 
             $valid = $detail->save(false) && $valid;
             $new_detail[] = $detail->id;

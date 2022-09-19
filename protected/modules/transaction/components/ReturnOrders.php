@@ -1,23 +1,21 @@
 <?php
 
-class ReturnOrders extends CComponent
-{
-	public $header;
-	public $details;
-	
-	// /public $detailApprovals;
-	
-	// public $picPhoneDetails;
-	// public $picMobileDetails;
+class ReturnOrders extends CComponent {
 
-	public function __construct($header, array $details)
-	{
-		$this->header = $header;
-		$this->details = $details;
-		
-		//$this->detailApprovals = $detailApprovals;
-	}
-	
+    public $header;
+    public $details;
+
+    // /public $detailApprovals;
+    // public $picPhoneDetails;
+    // public $picMobileDetails;
+
+    public function __construct($header, array $details) {
+        $this->header = $header;
+        $this->details = $details;
+
+        //$this->detailApprovals = $detailApprovals;
+    }
+
     public function generateCodeNumber($currentMonth, $currentYear, $requesterBranchId) {
         $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
         $cnYearCondition = "substring_index(substring_index(substring_index(return_order_no, '/', 2), '/', -1), '.', 1)";
@@ -27,7 +25,7 @@ class ReturnOrders extends CComponent
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND recipient_branch_id = :recipient_branch_id",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':recipient_branch_id' => $requesterBranchId),
         ));
-        
+
         if ($transactionReturnOrder == null) {
             $branchCode = Branch::model()->findByPk($requesterBranchId)->code;
         } else {
@@ -37,191 +35,131 @@ class ReturnOrders extends CComponent
 
         $this->header->setCodeNumberByNext('return_order_no', $branchCode, TransactionReturnOrder::CONSTANT, $currentMonth, $currentYear);
     }
-	
-	public function addDetail($requestType,$requestId)
-	{
-		$this->details = array();
-		if($requestType	== 1){
-			//$purchaseOrder = TransactionPurchaseOrder::model()->findByPk($requestId);
-			$purchases = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id'=>$requestId));
-			foreach ($purchases as $key => $purchase) {
-				$detail = new TransactionReturnOrderDetail();
-				$detail->product_id = $purchase->product_id;
-				$detail->qty_request = $purchase->quantity;
-				$detail->price = $purchase->unit_price;
-				//$detail->qty_request_left = $purchase->quantity;
-				$this->details[] = $detail;
-			} //endforeach
 
-		}//end if
-		elseif($requestType == 2){
-			$sents = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id'=>$requestId));
-			foreach ($sents as $key => $sent) {
-				$detail = new TransactionReturnOrderDetail();
-				$detail->product_id = $sent->product_id;
-				$detail->qty_request = $sent->quantity_delivery;
-				//$detail->qty_request_left = $sent->quantity;
-				$this->details[] = $detail;
-			}
-		}
-		elseif($requestType == 3){
-			$consignments = ConsignmentInDetail::model()->findAllByAttributes(array('consignment_in_id'=>$requestId));
-			foreach ($consignments as $key => $consignment) {
-				$detail = new TransactionReturnOrderDetail();
-				$detail->product_id = $consignment->product_id;
-				$detail->qty_request = $consignment->quantity;
-				//$detail->qty_request_left = $sent->quantity;
-				$this->details[] = $detail;
-			}
-		}
-		
-
-		//echo "5";
-	}
-	
-
-	public function removeDetailAt()
-	{	
-		//array_splice($this->details, $index, 1);
-		//var_dump(CJSON::encode($this->details));
-		$this->details = array();
-	}
-
-	public function removeDetail($index)
-	{	
-		array_splice($this->details, $index, 1);
-		//var_dump(CJSON::encode($this->details));
-		//$this->details = array();
-	}
+    public function addDetail($requestType, $requestId) {
+        $this->details = array();
+        if ($requestType == 1) {
+            //$purchaseOrder = TransactionPurchaseOrder::model()->findByPk($requestId);
+            $purchases = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $requestId));
+            foreach ($purchases as $key => $purchase) {
+                $detail = new TransactionReturnOrderDetail();
+                $detail->product_id = $purchase->product_id;
+                $detail->qty_request = $purchase->quantity;
+                $detail->price = $purchase->unit_price;
+                //$detail->qty_request_left = $purchase->quantity;
+                $this->details[] = $detail;
+            } //endforeach
+        }//end if
+        elseif ($requestType == 2) {
+            $sents = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $requestId));
+            foreach ($sents as $key => $sent) {
+                $detail = new TransactionReturnOrderDetail();
+                $detail->product_id = $sent->product_id;
+                $detail->qty_request = $sent->quantity_delivery;
+                //$detail->qty_request_left = $sent->quantity;
+                $this->details[] = $detail;
+            }
+        } elseif ($requestType == 3) {
+            $consignments = ConsignmentInDetail::model()->findAllByAttributes(array('consignment_in_id' => $requestId));
+            foreach ($consignments as $key => $consignment) {
+                $detail = new TransactionReturnOrderDetail();
+                $detail->product_id = $consignment->product_id;
+                $detail->qty_request = $consignment->quantity;
+                //$detail->qty_request_left = $sent->quantity;
+                $this->details[] = $detail;
+            }
+        }
 
 
-	
+        //echo "5";
+    }
 
-	public function save($dbConnection)
-	{
-		$dbTransaction = $dbConnection->beginTransaction();
-		try
-		{
-			$valid = $this->validate() && $this->flush();
-			if ($valid){
-				$dbTransaction->commit();
-				//print_r('1');
-			} else {
-				$dbTransaction->rollback();
-				//print_r('2');
-			}
+    public function removeDetailAt() {
+        //array_splice($this->details, $index, 1);
+        //var_dump(CJSON::encode($this->details));
+        $this->details = array();
+    }
 
-		}
-		catch (Exception $e)
-		{
-			$dbTransaction->rollback();
-			$valid = false;
-			//print_r($e);
-		}
+    public function removeDetail($index) {
+        array_splice($this->details, $index, 1);
+        //var_dump(CJSON::encode($this->details));
+        //$this->details = array();
+    }
 
-		return $valid;
-		//print_r('success');
-	}
+    public function save($dbConnection) {
+        $dbTransaction = $dbConnection->beginTransaction();
+        try {
+            $valid = $this->validate() && $this->flush();
+            if ($valid) {
+                $dbTransaction->commit();
+            } else {
+                $dbTransaction->rollback();
+            }
+        } catch (Exception $e) {
+            $dbTransaction->rollback();
+            $valid = false;
+        }
 
-	public function validate()
-	{
-		$valid = $this->header->validate();
+        return $valid;
+    }
 
-		
-		if (count($this->details) > 0)
-		{
-			foreach ($this->details as $detail)
-			{
-
-				$fields = array('quantity');
-				$valid = $detail->validate($fields) && $valid;
-			}
-		}
-		else {
-			$valid = true;
-		}
-		
-
-		
-
-		//print_r($valid);
-		return $valid;
-	}
-
-	public function validateDetailsCount()
-	{
-		$valid = true;
-		if (count($this->details	) === 0)
-		{
-			$valid = false;
-			$this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
-		}
-
-		return $valid;
-	}
+    public function validate() {
+        $valid = $this->header->validate();
 
 
-	public function flush()
-	{
-		$isNewRecord = $this->header->isNewRecord;
-		$valid = $this->header->save();
-		//echo "valid";
+        if (count($this->details) > 0) {
+            foreach ($this->details as $detail) {
 
-		$requestDetails  = TransactionReturnOrderDetail::model()->findAllByAttributes(array('return_order_id'=>$this->header->id));
-		$detail_id = array();
-		foreach($requestDetails as $requestDetail)
-		{
-			$detail_id[]=$requestDetail->id;
-		}
-		$new_detail= array();
+                $fields = array('quantity');
+                $valid = $detail->validate($fields) && $valid;
+            }
+        } else {
+            $valid = true;
+        }
 
-		//save request detail
-		foreach ($this->details as $detail)
-		{
-			$detail->return_order_id = $this->header->id;
+        return $valid;
+    }
 
-				
-				
-			// $criteria = new CDbCriteria;
-			// $criteria->together = 'true';
-			// $criteria->with = array('returnOrder');
-			// $criteria->condition="returnOrder.receive_item_id =".$this->header->receive_item_id ." AND return_order_id != ".$this->header->id;
-			// $returnOrderDetails = TransactionReturnOrderDetail::model()->findAll($criteria);
-			
-			// $quantity = 0;
-			// //print_r($returnOrderDetails);
-			// foreach($returnOrderDetails as $returnOrderDetail)
-			// {
-			// 	$quantity += $returnOrderDetail->qty_reject;
-			
-			// }
+    public function validateDetailsCount() {
+        $valid = true;
+        if (count($this->details) === 0) {
+            $valid = false;
+            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+        }
 
-			// $leftquantity = $detail->qty_request - ($quantity + $detail->qty_reject);
-			// //echo $leftquantity;
-			// $receiveItemDetail = TransactionReceiveItemDetail::model()->findByAttributes(array('id'=>$detail->receive_item_detail_id,'receive_item_id'=>$this->header->receive_item_id));
-			// $receiveItemDetail->quantity_return = $leftquantity;
-			// $receiveItemDetail->save(false);
-			// print_r($receiveItemDetail);
-			
-			
-			$valid = $detail->save(false) && $valid;
-			$new_detail[] = $detail->id;
-			//echo 'test';
-		}
+        return $valid;
+    }
 
+    public function flush() {
+        $valid = $this->header->save();
 
-		//delete pricelist
-		$delete_array= array_diff($detail_id, $new_detail);
-		if($delete_array != NULL)
-		{
-			$criteria = new CDbCriteria;
-			$criteria->addInCondition('id',$delete_array);
-			TransactionReturnOrderDetail::model()->deleteAll($criteria);
-		}
+        $requestDetails = TransactionReturnOrderDetail::model()->findAllByAttributes(array('return_order_id' => $this->header->id));
+        $detail_id = array();
+        foreach ($requestDetails as $requestDetail) {
+            $detail_id[] = $requestDetail->id;
+        }
+        $new_detail = array();
 
-		
-		return $valid;
+        //save request detail
+        foreach ($this->details as $detail) {
+            $detail->return_order_id = $this->header->id;
+            $detail->price = $detail->product->hpp;
+            $detail->quantity_movement = 0;
+            $detail->quantity_movement_left = $detail->qty_reject;
 
-	
-}
+            $valid = $detail->save(false) && $valid;
+            $new_detail[] = $detail->id;
+        }
+
+        //delete pricelist
+        $delete_array = array_diff($detail_id, $new_detail);
+        if ($delete_array != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_array);
+            TransactionReturnOrderDetail::model()->deleteAll($criteria);
+        }
+
+        return $valid;
+    }
+
 }
