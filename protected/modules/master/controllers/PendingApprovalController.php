@@ -199,6 +199,20 @@ class PendingApprovalController extends Controller {
         $product->is_approved = 1;
 
         if ($product->update(array('is_approved', 'status'))) {
+            $warehouses = Warehouse::model()->findAllByAttributes(array('status' => 'Active', 'is_approved' => 1)); 
+            foreach ($warehouses as $warehouse) {
+                $inventory = new Inventory();
+                $inventory->product_id = $productId;
+                $inventory->warehouse_id = $warehouse->id;
+                $inventory->total_stock = 0;
+                $inventory->minimal_stock = 0;
+                $inventory->status = 'Active';
+                $inventory->category = NULL;
+                $inventory->inventory_result = NULL;
+                
+                $inventory->save();
+            }
+            
             $this->redirect(array('index'));
         }
     }
