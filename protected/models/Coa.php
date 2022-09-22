@@ -796,7 +796,7 @@ class Coa extends CActiveRecord {
         $params = array();
         
         if (!empty($coaId)) {
-            $coaConditionSql = ' WHERE id = :coa_id';
+            $coaConditionSql = ' WHERE id = :coa_id AND is_approved = 1';
             $params[':coa_id'] = $coaId;
         }
         
