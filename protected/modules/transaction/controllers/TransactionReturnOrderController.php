@@ -58,34 +58,51 @@ class TransactionReturnOrderController extends Controller {
                 'kode_transaksi' => $model->return_order_no,
             ));
 
-            foreach ($returnOrder->transactionReturnOrderDetails as $key => $returnDetail) {
+            if (!empty($model->supplier_id)) {
+                $jurnalUmumHutang = new JurnalUmum;
+                $jurnalUmumHutang->kode_transaksi = $model->return_order_no;
+                $jurnalUmumHutang->tanggal_transaksi = $model->return_order_date;
+                $jurnalUmumHutang->coa_id = $model->supplier->coa_id;
+                $jurnalUmumHutang->branch_id = $model->recipient_branch_id;
+                $jurnalUmumHutang->total = $model->totalDetail * 1.1;
+                $jurnalUmumHutang->debet_kredit = 'D';
+                $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
+                $jurnalUmumHutang->transaction_subject = $model->supplier->name;
+                $jurnalUmumHutang->is_coa_category = 0;
+                $jurnalUmumHutang->transaction_type = 'RTO';
+                $jurnalUmumHutang->save();
+            }
+
+            foreach ($model->transactionReturnOrderDetails as $key => $returnDetail) {
                 $jumlah = $returnDetail->price * $returnDetail->qty_reject;
 
                 $jurnalUmumRetur = new JurnalUmum;
-                $jurnalUmumRetur->kode_transaksi = $returnOrder->return_order_no;
-                $jurnalUmumRetur->tanggal_transaksi = $returnOrder->return_order_date;
+                $jurnalUmumRetur->kode_transaksi = $model->return_order_no;
+                $jurnalUmumRetur->tanggal_transaksi = $model->return_order_date;
                 $jurnalUmumRetur->coa_id = $returnDetail->product->productSubMasterCategory->coa_outstanding_part_id;
-                $jurnalUmumRetur->branch_id = $returnOrder->recipient_branch_id;
+                $jurnalUmumRetur->branch_id = $model->recipient_branch_id;
                 $jurnalUmumRetur->total = $jumlah;
                 $jurnalUmumRetur->debet_kredit = 'K';
                 $jurnalUmumRetur->tanggal_posting = date('Y-m-d');
-                $jurnalUmumRetur->transaction_subject = $returnOrder->supplier->name;
+                $jurnalUmumRetur->transaction_subject = 'Retur Pembelian';
                 $jurnalUmumRetur->is_coa_category = 0;
                 $jurnalUmumRetur->transaction_type = 'RTO';
                 $jurnalUmumRetur->save();
                 
-                $jurnalUmumPersediaan = new JurnalUmum;
-                $jurnalUmumPersediaan->kode_transaksi = $returnOrder->return_order_no;
-                $jurnalUmumPersediaan->tanggal_transaksi = $returnOrder->return_order_date;
-                $jurnalUmumPersediaan->coa_id = $coaInventoryWithCode->id;
-                $jurnalUmumPersediaan->branch_id = $returnOrder->recipient_branch_id;
-                $jurnalUmumPersediaan->total = $jumlah;
-                $jurnalUmumPersediaan->debet_kredit = 'D';
-                $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                $jurnalUmumPersediaan->transaction_subject = $returnOrder->supplier->name;
-                $jurnalUmumPersediaan->is_coa_category = 0;
-                $jurnalUmumPersediaan->transaction_type = 'RTO';
-                $jurnalUmumPersediaan->save();
+                if (empty($model->supplier_id)) {
+                    $jurnalUmumPersediaan = new JurnalUmum;
+                    $jurnalUmumPersediaan->kode_transaksi = $model->return_order_no;
+                    $jurnalUmumPersediaan->tanggal_transaksi = $model->return_order_date;
+                    $jurnalUmumPersediaan->coa_id = $returnDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $jurnalUmumPersediaan->branch_id = $model->recipient_branch_id;
+                    $jurnalUmumPersediaan->total = $jumlah;
+                    $jurnalUmumPersediaan->debet_kredit = 'D';
+                    $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumPersediaan->transaction_subject = 'Retur Pembelian';
+                    $jurnalUmumPersediaan->is_coa_category = 0;
+                    $jurnalUmumPersediaan->transaction_type = 'RTO';
+                    $jurnalUmumPersediaan->save();
+                }
             }
         }
         $this->render('view', array(
