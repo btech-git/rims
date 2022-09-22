@@ -64,7 +64,7 @@ class TransactionReturnOrderController extends Controller {
                 $jurnalUmumHutang->tanggal_transaksi = $model->return_order_date;
                 $jurnalUmumHutang->coa_id = $model->supplier->coa_id;
                 $jurnalUmumHutang->branch_id = $model->recipient_branch_id;
-                $jurnalUmumHutang->total = $model->totalDetail * 1.1;
+                $jurnalUmumHutang->total = $model->totalDetail;
                 $jurnalUmumHutang->debet_kredit = 'D';
                 $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
                 $jurnalUmumHutang->transaction_subject = $model->supplier->name;
@@ -471,7 +471,7 @@ class TransactionReturnOrderController extends Controller {
                         $jurnalUmumHutang->tanggal_transaksi = $returnOrder->return_order_date;
                         $jurnalUmumHutang->coa_id = $returnOrder->supplier->coa_id;
                         $jurnalUmumHutang->branch_id = $returnOrder->recipient_branch_id;
-                        $jurnalUmumHutang->total = $returnOrder->totalDetail * 1.1;
+                        $jurnalUmumHutang->total = $returnOrder->totalDetail;
                         $jurnalUmumHutang->debet_kredit = 'D';
                         $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
                         $jurnalUmumHutang->transaction_subject = $returnOrder->supplier->name;
