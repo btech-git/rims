@@ -517,27 +517,13 @@ class TransactionReturnItemController extends Controller {
                 $branch = Branch::model()->findByPk($returnItem->recipient_branch_id);
                 if ($model->approval_type == 'Approved') {
 
-                    if (!empty($returnItem->customer_id)) {
-                        $jurnalUmumReceivable = new JurnalUmum;
-                        $jurnalUmumReceivable->kode_transaksi = $returnItem->return_item_no;
-                        $jurnalUmumReceivable->tanggal_transaksi = $returnItem->return_item_date;
-                        $jurnalUmumReceivable->coa_id = $returnItem->customer->coa_id;
-                        $jurnalUmumReceivable->branch_id = $returnItem->recipient_branch_id;
-                        $jurnalUmumReceivable->total = $returnItem->totalDetail * 1.1;
-                        $jurnalUmumReceivable->debet_kredit = 'K';
-                        $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumReceivable->is_coa_category = 0;
-                        $jurnalUmumReceivable->transaction_type = 'RTI';
-                        $jurnalUmumReceivable->save();
-                    }
-
                     foreach ($returnItem->transactionReturnItemDetails as $key => $deliveryDetail) {
                         $jumlah = $deliveryDetail->price * $deliveryDetail->quantity;
 
                         $jurnalUmumMasterRetur = new JurnalUmum;
                         $jurnalUmumMasterRetur->kode_transaksi = $returnItem->return_item_no;
                         $jurnalUmumMasterRetur->tanggal_transaksi = $returnItem->return_item_date;
-                        $jurnalUmumMasterRetur->coa_id = $deliveryDetail->product->productMasterCategory->coa_retur_pembelian;
+                        $jurnalUmumMasterRetur->coa_id = $deliveryDetail->product->productMasterCategory->coa_retur_penjualan;
                         $jurnalUmumMasterRetur->branch_id = $returnItem->recipient_branch_id;
                         $jurnalUmumMasterRetur->total = $jumlah;
                         $jurnalUmumMasterRetur->debet_kredit = 'D';
@@ -550,7 +536,7 @@ class TransactionReturnItemController extends Controller {
                         $jurnalUmumRetur = new JurnalUmum;
                         $jurnalUmumRetur->kode_transaksi = $returnItem->return_item_no;
                         $jurnalUmumRetur->tanggal_transaksi = $returnItem->return_item_date;
-                        $jurnalUmumRetur->coa_id = $deliveryDetail->product->productSubMasterCategory->coa_retur_pembelian;
+                        $jurnalUmumRetur->coa_id = $deliveryDetail->product->productSubMasterCategory->coa_retur_penjualan;
                         $jurnalUmumRetur->branch_id = $returnItem->recipient_branch_id;
                         $jurnalUmumRetur->total = $jumlah;
                         $jurnalUmumRetur->debet_kredit = 'D';
@@ -560,83 +546,25 @@ class TransactionReturnItemController extends Controller {
                         $jurnalUmumRetur->transaction_type = 'RTI';
                         $jurnalUmumRetur->save();
 
-                        $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => '143.00.001'));
-                        $jurnalPpn = new JurnalUmum;
-                        $jurnalPpn->kode_transaksi = $returnItem->return_item_no;
-                        $jurnalPpn->tanggal_transaksi = $returnItem->return_item_date;
-                        $jurnalPpn->coa_id = $coaPpnWithCode->id;
-                        $jurnalPpn->branch_id = $returnItem->recipient_branch_id;
-                        $jurnalPpn->total = $jumlah * 0.1;
-                        $jurnalPpn->debet_kredit = 'D';
-                        $jurnalPpn->tanggal_posting = date('Y-m-d');
-                        $jurnalPpn->is_coa_category = 0;
-                        $jurnalPpn->transaction_subject = 'Retur Penjualan';
-                        $jurnalPpn->transaction_type = 'RTI';
-                        $jurnalPpn->save();
-                        
-//                        $coaMasterGroupReturWithCode = Coa::model()->findByAttributes(array('code' => '413.00.000'));
-//                        $jurnalUmumMasterGroupPersediaan = new JurnalUmum;
-//                        $jurnalUmumMasterGroupPersediaan->kode_transaksi = $returnItem->return_item_no;
-//                        $jurnalUmumMasterGroupPersediaan->tanggal_transaksi = $returnItem->return_item_date;
-//                        $jurnalUmumMasterGroupPersediaan->coa_id = $coaMasterGroupReturWithCode->id;
-//                        $jurnalUmumMasterGroupPersediaan->branch_id = $returnItem->recipient_branch_id;
-//                        $jurnalUmumMasterGroupPersediaan->total = $jumlah;
-//                        $jurnalUmumMasterGroupPersediaan->debet_kredit = 'D';
-//                        $jurnalUmumMasterGroupPersediaan->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumMasterGroupPersediaan->is_coa_category = 1;
-//                        $jurnalUmumMasterGroupPersediaan->transaction_type = 'RTI';
-//                        $jurnalUmumMasterGroupPersediaan->save();
-                        
                         // save product master coa retur
-//                        $jurnalUmumMasterOutstandingPart = new JurnalUmum;
-//                        $jurnalUmumMasterOutstandingPart->kode_transaksi = $returnItem->return_item_no;
-//                        $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $returnItem->return_item_date;
-//                        $jurnalUmumMasterOutstandingPart->coa_id = $deliveryDetail->product->productMasterCategory->coa_outstanding_part_id;
-//                        $jurnalUmumMasterOutstandingPart->branch_id = $returnItem->recipient_branch_id;
-//                        $jurnalUmumMasterOutstandingPart->total = $jumlah;
-//                        $jurnalUmumMasterOutstandingPart->debet_kredit = 'K';
-//                        $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
-//                        $jurnalUmumMasterOutstandingPart->transaction_subject = $returnItem->customer->name;
-//                        $jurnalUmumMasterOutstandingPart->transaction_type = 'RTI';
-//                        $jurnalUmumMasterOutstandingPart->save();
-
-                        // save product sub master coa retur
-//                        $jurnalUmumPersediaan = new JurnalUmum;
-//                        $jurnalUmumPersediaan->kode_transaksi = $returnItem->return_item_no;
-//                        $jurnalUmumPersediaan->tanggal_transaksi = $returnItem->return_item_date;
-//                        $jurnalUmumPersediaan->coa_id = $deliveryDetail->product->productSubMasterCategory->coa_outstanding_part_id;
-//                        $jurnalUmumPersediaan->branch_id = $returnItem->recipient_branch_id;
-//                        $jurnalUmumPersediaan->total = $jumlah;
-//                        $jurnalUmumPersediaan->debet_kredit = 'K';
-//                        $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumPersediaan->is_coa_category = 0;
-//                        $jurnalUmumPersediaan->transaction_subject = $returnItem->customer->name;
-//                        $jurnalUmumPersediaan->transaction_type = 'RTI';
-//                        $jurnalUmumPersediaan->save();
-
-//                        if () {
-//                            $getCoaPpn = $branch->coa_prefix . '.108.00.000';
-//                        }
-                        
-//                        $coaMasterGroupHpp = Coa::model()->findByAttributes(array('code' => '520.00.000'));
-//                        $jurnalUmumMasterGroupHpp = new JurnalUmum;
-//                        $jurnalUmumMasterGroupHpp->kode_transaksi = $returnItem->return_item_no;
-//                        $jurnalUmumMasterGroupHpp->tanggal_transaksi = $returnItem->return_item_date;
-//                        $jurnalUmumMasterGroupHpp->coa_id = $coaMasterGroupHpp->id;
-//                        $jurnalUmumMasterGroupHpp->branch_id = $returnItem->recipient_branch_id;
-//                        $jurnalUmumMasterGroupHpp->total = $jumlah;
-//                        $jurnalUmumMasterGroupHpp->debet_kredit = 'K';
-//                        $jurnalUmumMasterGroupHpp->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumMasterGroupHpp->is_coa_category = 1;
-//                        $jurnalUmumMasterGroupHpp->transaction_type = 'RTI';
-//                        $jurnalUmumMasterGroupHpp->save();
+                        $jurnalUmumMasterOutstandingPart = new JurnalUmum;
+                        $jurnalUmumMasterOutstandingPart->kode_transaksi = $returnItem->return_item_no;
+                        $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $returnItem->return_item_date;
+                        $jurnalUmumMasterOutstandingPart->coa_id = $deliveryDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+                        $jurnalUmumMasterOutstandingPart->branch_id = $returnItem->recipient_branch_id;
+                        $jurnalUmumMasterOutstandingPart->total = $jumlah;
+                        $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
+                        $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
+                        $jurnalUmumMasterOutstandingPart->transaction_subject = 'Retur Penjualan';
+                        $jurnalUmumMasterOutstandingPart->transaction_type = 'RTI';
+                        $jurnalUmumMasterOutstandingPart->save();
 
 //                        // save product master category coa hpp
                         $jurnalMasterUmumHpp = new JurnalUmum;
                         $jurnalMasterUmumHpp->kode_transaksi = $returnItem->return_item_no;
                         $jurnalMasterUmumHpp->tanggal_transaksi = $returnItem->return_item_date;
-                        $jurnalMasterUmumHpp->coa_id = $deliveryDetail->product->productMasterCategory->coaHpp->id;
+                        $jurnalMasterUmumHpp->coa_id = $deliveryDetail->product->productMasterCategory->coa_hpp;
                         $jurnalMasterUmumHpp->branch_id = $returnItem->recipient_branch_id;
                         $jurnalMasterUmumHpp->total = $jumlah;
                         $jurnalMasterUmumHpp->debet_kredit = 'K';
@@ -650,7 +578,7 @@ class TransactionReturnItemController extends Controller {
                         $jurnalUmumHpp = new JurnalUmum;
                         $jurnalUmumHpp->kode_transaksi = $returnItem->return_item_no;
                         $jurnalUmumHpp->tanggal_transaksi = $returnItem->return_item_date;
-                        $jurnalUmumHpp->coa_id = $deliveryDetail->product->productSubMasterCategory->coaHpp->id;
+                        $jurnalUmumHpp->coa_id = $deliveryDetail->product->productSubMasterCategory->coa_hpp;
                         $jurnalUmumHpp->branch_id = $returnItem->recipient_branch_id;
                         $jurnalUmumHpp->total = $jumlah;
                         $jurnalUmumHpp->debet_kredit = 'K';
@@ -660,51 +588,37 @@ class TransactionReturnItemController extends Controller {
                         $jurnalUmumHpp->transaction_type = 'RTI';
                         $jurnalUmumHpp->save();
 
-//                        $coaMasterGroupInventory = Coa::model()->findByAttributes(array('code' => '105.00.000'));
-//                        $jurnalUmumMasterGroupInventory = new JurnalUmum;
-//                        $jurnalUmumMasterGroupInventory->kode_transaksi = $returnItem->return_item_no;
-//                        $jurnalUmumMasterGroupInventory->tanggal_transaksi = $returnItem->return_item_date;
-//                        $jurnalUmumMasterGroupInventory->coa_id = $coaMasterGroupInventory->id;
-//                        $jurnalUmumMasterGroupInventory->branch_id = $returnItem->recipient_branch_id;
-//                        $jurnalUmumMasterGroupInventory->total = $jumlah;
-//                        $jurnalUmumMasterGroupInventory->debet_kredit = 'K';
-//                        $jurnalUmumMasterGroupInventory->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumMasterGroupInventory->is_coa_category = 1;
-//                        $jurnalUmumMasterGroupInventory->transaction_type = 'RTI';
-//                        $jurnalUmumMasterGroupInventory->save();
-
-//                        //save product master coa inventory in transit
-//                        $coaMasterInventory = Coa::model()->findByPk($deliveryDetail->product->productMasterCategory->coaInventoryInTransit->id);
-//                        $getCoaMasterInventory = $coaMasterInventory->code;
-//                        $coaMasterInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterInventory));
-//                        $jurnalUmumMasterInventory = new JurnalUmum;
-//                        $jurnalUmumMasterInventory->kode_transaksi = $returnItem->return_item_no;
-//                        $jurnalUmumMasterInventory->tanggal_transaksi = $returnItem->return_item_date;
-//                        $jurnalUmumMasterInventory->coa_id = $coaMasterInventoryWithCode->id;
-//                        $jurnalUmumMasterInventory->branch_id = $returnItem->recipient_branch_id;
-//                        $jurnalUmumMasterInventory->total = $jumlah;
-//                        $jurnalUmumMasterInventory->debet_kredit = 'K';
-//                        $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumMasterInventory->is_coa_category = 1;
-//                        $jurnalUmumMasterInventory->transaction_type = 'RTI';
-//                        $jurnalUmumMasterInventory->save();
-
-//                        //save product sub master coa inventory in transit
-//                        $coaInventory = Coa::model()->findByPk($deliveryDetail->product->productSubMasterCategory->coaInventoryInTransit->id);
-//                        $getCoaInventory = $coaInventory->code;
-//                        $coaInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInventory));
-//                        $jurnalUmumInventory = new JurnalUmum;
-//                        $jurnalUmumInventory->kode_transaksi = $returnItem->return_item_no;
-//                        $jurnalUmumInventory->tanggal_transaksi = $returnItem->return_item_date;
-//                        $jurnalUmumInventory->coa_id = $coaInventoryWithCode->id;
-//                        $jurnalUmumInventory->branch_id = $returnItem->recipient_branch_id;
-//                        $jurnalUmumInventory->total = $jumlah;
-//                        $jurnalUmumInventory->debet_kredit = 'K';
-//                        $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumInventory->is_coa_category = 0;
-//                        $jurnalUmumInventory->transaction_type = 'RTI';
-//                        $jurnalUmumInventory->save();
                     }
+                    
+                    if (!empty($returnItem->customer_id)) {
+                        $jurnalUmumReceivable = new JurnalUmum;
+                        $jurnalUmumReceivable->kode_transaksi = $returnItem->return_item_no;
+                        $jurnalUmumReceivable->tanggal_transaksi = $returnItem->return_item_date;
+                        $jurnalUmumReceivable->coa_id = $returnItem->customer->coa_id;
+                        $jurnalUmumReceivable->branch_id = $returnItem->recipient_branch_id;
+                        $jurnalUmumReceivable->total = $returnItem->totalDetail * 1.11;
+                        $jurnalUmumReceivable->debet_kredit = 'K';
+                        $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumReceivable->is_coa_category = 0;
+                        $jurnalUmumReceivable->transaction_subject = 'Retur Penjualan';
+                        $jurnalUmumReceivable->transaction_type = 'RTI';
+                        $jurnalUmumReceivable->save();
+                    }
+
+                    $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => '143.00.001'));
+                    $jurnalPpn = new JurnalUmum;
+                    $jurnalPpn->kode_transaksi = $returnItem->return_item_no;
+                    $jurnalPpn->tanggal_transaksi = $returnItem->return_item_date;
+                    $jurnalPpn->coa_id = $coaPpnWithCode->id;
+                    $jurnalPpn->branch_id = $returnItem->recipient_branch_id;
+                    $jurnalPpn->total = $returnItem->totalDetail * 0.11;
+                    $jurnalPpn->debet_kredit = 'D';
+                    $jurnalPpn->tanggal_posting = date('Y-m-d');
+                    $jurnalPpn->is_coa_category = 0;
+                    $jurnalPpn->transaction_subject = 'Retur Penjualan';
+                    $jurnalPpn->transaction_type = 'RTI';
+                    $jurnalPpn->save();
+
                 }
 
                 $this->redirect(array('view', 'id' => $headerId));
