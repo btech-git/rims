@@ -38,7 +38,7 @@
                             <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?>
                         </td>
                         <td style="text-align: right">
-                            <?php $coaBalance = ($coa->coa_category_id > 7 AND $coa->coa_category_id < 11) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0; ?>
+                            <?php $coaBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0; ?>
                             <?php echo ($coaBalance == 0) ? '' : CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $coaBalance)); ?>
                         </td>
                     </tr>
@@ -47,7 +47,7 @@
                     <?php if (!empty($coa->coaIds)): ?> 
                         <?php foreach ($coa->coaIds as $account): ?>
                             <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
-                            <?php //if ((int) $accountBalance !== 0): ?>
+                            <?php if ((int) $accountBalance !== 0): ?>
                                 <tr>
                                     <td style="padding-left: 75px; font-size: 10px">
                                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
@@ -58,7 +58,7 @@
                                     </td>
                                 </tr>
                                 <?php $accountGroupBalance += $accountBalance; ?>
-                            <?php //endif; ?>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                         <tr>
                             <td style="text-align: right; font-size: 11px;">TOTAL <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></td>
