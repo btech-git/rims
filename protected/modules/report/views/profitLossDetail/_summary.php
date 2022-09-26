@@ -47,7 +47,7 @@
                     <?php if (!empty($coa->coaIds)): ?> 
                         <?php foreach ($coa->coaIds as $account): ?>
                             <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
-                            <?php if ((int) $accountBalance !== 0): ?>
+                            <?php //if ((int) $accountBalance !== 0): ?>
                                 <tr>
                                     <td style="padding-left: 75px; font-size: 10px">
                                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
@@ -58,7 +58,7 @@
                                     </td>
                                 </tr>
                                 <?php $accountGroupBalance += $accountBalance; ?>
-                            <?php endif; ?>
+                            <?php //endif; ?>
                         <?php endforeach; ?>
                         <tr>
                             <td style="text-align: right; font-size: 11px;">TOTAL <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></td>
