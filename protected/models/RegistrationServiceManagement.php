@@ -159,13 +159,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementQueue() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Queue' AND rt.service_status = 'Queue' AND rsm.assign_mechanic_id IS NULL";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -174,13 +175,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementAssigned() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Queue' AND rt.service_status = 'Queue' AND rsm.assign_mechanic_id IS NOT NULL";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -189,13 +191,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementProgress() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Start Service' AND rsm.start_mechanic_id IS NOT NULL AND rsm.start IS NOT NULL";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -204,13 +207,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementControl() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Ready to QC' AND rsm.finish_mechanic_id IS NOT NULL AND rsm.end IS NOT NULL AND rsm.is_passed = 0";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -219,13 +223,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementFinished() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Finished' AND rsm.finish_mechanic_id IS NOT NULL AND rsm.end IS NOT NULL AND rsm.is_passed = 1";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -234,13 +239,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
     
     public function getRegistrationServiceManagementMechanicAssignment() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Queue' AND rt.service_status = 'Queue' AND rsm.assign_mechanic_id = " . Yii::app()->user->id;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -249,13 +255,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementMechanicProgress() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Start Service' AND rsm.start IS NOT NULL AND rsm.start_mechanic_id = " . Yii::app()->user->id;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -264,13 +271,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementMechanicControl() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Ready to QC' AND rsm.end IS NOT NULL AND rsm.is_passed = 0 AND rsm.finish_mechanic_id = " . Yii::app()->user->id;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -279,13 +287,14 @@ class RegistrationServiceManagement extends CActiveRecord {
     }
 
     public function getRegistrationServiceManagementMechanicFinished() {
-        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level
+        $sql = "SELECT rsm.id AS service_management_id, rt.id AS registration_transaction_id, rsm.service_type_id, v.plate_number, vcm.name AS car_make, vmod.name AS car_model, rt.work_order_number, rt.work_order_date, rt.transaction_date, rt.status, b.code AS branch, rt.priority_level, c.name as customer_name
                 FROM " . RegistrationServiceManagement::model()->tableName() . " rsm
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " rt ON rt.id = rsm.registration_transaction_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = rt.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = rt.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " vcm ON vcm.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " vmod ON vmod.id = v.car_model_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = rt.customer_id
                 WHERE rt.work_order_number IS NOT NULL AND rt.repair_type = 'GR' AND rsm.status = 'Finished' AND rsm.end IS NOT NULL AND rsm.is_passed = 1 AND rsm.finish_mechanic_id = " . Yii::app()->user->id;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);

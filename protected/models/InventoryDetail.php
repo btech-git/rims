@@ -198,7 +198,7 @@ class InventoryDetail extends CActiveRecord {
             $params[':product_sub_category_id'] = $productSubCategoryId;
         }
         
-        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
+        $sql = "SELECT p.id AS id, p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " c ON c.id = p.product_master_category_id
@@ -258,7 +258,7 @@ class InventoryDetail extends CActiveRecord {
             $params[':product_sub_category_id'] = $productSubCategoryId;
         }
         
-        $sql = "SELECT p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
+        $sql = "SELECT p.id AS id, p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " c ON c.id = p.product_master_category_id

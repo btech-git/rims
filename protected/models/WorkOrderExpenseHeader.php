@@ -151,7 +151,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->condition = "t.payment_remaining > 0 AND t.status = 'Approved'";
+        $criteria->condition = "t.payment_remaining > 0 AND t.status = 'Approved' AND t.transaction_date > '2021-12-31'";
         
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
