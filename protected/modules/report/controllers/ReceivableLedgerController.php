@@ -24,31 +24,33 @@ class ReceivableLedgerController extends Controller {
 
 //        $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
 
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+
+//        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-//        $receivableLedgerSummary = new ReceivableLedgerSummary($jurnalUmum->search());
-//        $receivableLedgerSummary->setupLoading();
-//        $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
-//        $receivableLedgerSummary->setupSorting();
-//        $receivableLedgerSummary->setupFilter();
+        $receivableLedgerSummary = new ReceivableLedgerSummary($account->search());
+        $receivableLedgerSummary->setupLoading();
+        $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
+        $receivableLedgerSummary->setupSorting();
+        $receivableLedgerSummary->setupFilter();
 
-        if (!empty($coaId)) {
-            $accounts = Coa::model()->findAll(array(
-                'condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1 AND t.id = :coa_id', 
-                'params' => array(':coa_id' => $coaId),
-                'order' => 't.code ASC'
-            ));
-        } else {
-            $accounts = Coa::model()->findAll(array(
-                'condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1', 
-                'order' => 't.code ASC'
-            ));
-        }
+//        if (!empty($coaId)) {
+//            $accounts = Coa::model()->findAll(array(
+//                'condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1 AND t.id = :coa_id', 
+//                'params' => array(':coa_id' => $coaId),
+//                'order' => 't.code ASC'
+//            ));
+//        } else {
+//            $accounts = Coa::model()->findAll(array(
+//                'condition' => 't.coa_sub_category_id IN (8) AND t.is_approved = 1', 
+//                'order' => 't.code ASC'
+//            ));
+//        }
         
 //        if (isset($_GET['SaveExcel'])) {
 //            $this->saveToExcel($receivableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -56,24 +58,38 @@ class ReceivableLedgerController extends Controller {
         
         $this->render('summary', array(
 //            'jurnalUmum' => $jurnalUmum,
-            'coaId' => $coaId,
-            'accounts' => $accounts,
-//            'receivableLedgerSummary' => $receivableLedgerSummary,
+//            'coaId' => $coaId,
+            'account' => $account,
+            'receivableLedgerSummary' => $receivableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
         ));
     }
 
-    public function actionAjaxJsonCustomer() {
+//    public function actionAjaxJsonCustomer() {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $customer = Customer::model()->findByPk($_POST['Customer']['id']);
+//            
+//            $object = array(
+//                'customer_type' => $customer->customer_type,
+//                'customer_name' => $customer->name,
+//                'customer_address' => $customer->address,
+//            );
+//            echo CJSON::encode($object);
+//        }
+//    }
+
+    public function actionAjaxJsonCoa() {
         if (Yii::app()->request->isAjaxRequest) {
-            $customer = Customer::model()->findByPk($_POST['Customer']['id']);
-            
+            $coaId = (isset($_POST['Coa']['id'])) ? $_POST['Coa']['id'] : '';
+            $coa = Coa::model()->findByPk($coaId);
+
             $object = array(
-                'customer_type' => $customer->customer_type,
-                'customer_name' => $customer->name,
-                'customer_address' => $customer->address,
+                'coa_name' => CHtml::value($coa, 'combinationName'),
+                'coa_code' => CHtml::value($coa, 'code'),
             );
+            
             echo CJSON::encode($object);
         }
     }
