@@ -21,20 +21,49 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
-                                <div class="row collapse">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>Code</td>
+                                            <td>Name</td>
+                                            <td>Category</td>
+                                            <td>Sub Category</td>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td><?php echo CHtml::activeTextField($account, 'code'); ?></td>
+                                            <td><?php echo CHtml::activeTextField($account, 'name'); ?></td>
+
+                                            <td>
+                                                <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                                    'empty' => '-- All --',
+                                                )); ?>
+                                            </td>
+
+                                            <td>
+                                                <div id="sub_category">
+                                                    <?php echo CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                                        'empty' => '-- All --',
+                                                    )); ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+<!--                                <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">COA </span>
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('CoaId', $coaId, CHtml::listData(Coa::model()->findAllbyAttributes(array('is_approved' => 1, 'coa_sub_category_id' => 8), array('order' => 't.code ASC')), 'id', 'codeName'), array('empty' => '-- All COA --')); ?>
+                                        <?php //echo CHtml::dropDownList('CoaId', $coaId, CHtml::listData(Coa::model()->findAllbyAttributes(array('is_approved' => 1, 'coa_sub_category_id' => 8), array('order' => 't.code ASC')), 'id', 'codeName'), array('empty' => '-- All COA --')); ?>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
+                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -69,7 +98,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -89,9 +117,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-//                        'receivableLedgerSummary' => $receivableLedgerSummary,
+                        'receivableLedgerSummary' => $receivableLedgerSummary,
 //                        'jurnalUmum' => $jurnalUmum,
-                        'accounts' => $accounts,
+                        'account' => $account,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>

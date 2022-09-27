@@ -8,6 +8,7 @@
             <table>
                 <thead>
                     <tr>
+                        <td>ID</td>
                         <td>Code</td>
                         <td>Product Name</td>
                         <td>Category</td>
@@ -22,6 +23,7 @@
                     <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId); ?>
                     <?php foreach ($fastMovingItems as $fastMovingItem): ?>
                         <tr>
+                            <td><?php echo CHtml::encode($fastMovingItem['id']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['code']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['product_name']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['category']); ?></td>
@@ -45,6 +47,7 @@
             <table>
                 <thead>
                     <tr>
+                        <td>ID</td>
                         <td>Code</td>
                         <td>Product Name</td>
                         <td>Category</td>
@@ -59,6 +62,7 @@
                     <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId); ?>
                     <?php foreach ($slowMovingItems as $slowMovingItem): ?>
                         <tr>
+                            <td><?php echo CHtml::encode($slowMovingItem['id']); ?></td>
                             <td><?php echo CHtml::encode($slowMovingItem['code']); ?></td>
                             <td><?php echo CHtml::encode($slowMovingItem['product_name']); ?></td>
                             <td><?php echo CHtml::encode($slowMovingItem['category']); ?></td>

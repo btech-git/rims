@@ -40,21 +40,21 @@ Yii::app()->clientScript->registerCss('_report', '
         </thead>
         
         <tbody>
-            <?php foreach ($accounts as $account): ?>
-                <?php $receivableAmount = $account->getReceivableAmount(); ?>
+            <?php foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
+                <?php $receivableAmount = $header->getReceivableAmount(); ?>
                 <?php if ($receivableAmount !== 0): ?>
                     <tr>
                         <td colspan="5">
-                            <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                            <?php echo CHtml::encode(CHtml::value($account, 'name')); ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
                         </td>
                         <td style="text-align: right; font-weight: bold">
-                            <?php $saldo = $account->getBeginningBalanceReceivable($startDate); ?>
+                            <?php $saldo = $header->getBeginningBalanceReceivable($startDate); ?>
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
                         </td>
                     </tr>
 
-                    <?php $receivableData = $account->getReceivableLedgerReport($startDate, $endDate); ?>
+                    <?php $receivableData = $header->getReceivableLedgerReport($startDate, $endDate); ?>
                     <?php $positiveAmount = 0; ?>
                     <?php $negativeAmount = 0; ?>
                     <?php foreach ($receivableData as $receivableRow): ?>
