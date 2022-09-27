@@ -17,6 +17,7 @@
             <thead>
                 <tr>
                     <th style="text-align: center; font-weight: bold">No.</th>
+                    <th style="text-align: center; font-weight: bold">Customer</th>
                     <th style="text-align: center; font-weight: bold">Plate #</th>
                     <th style="text-align: center; font-weight: bold">Car Make</th>
                     <th style="text-align: center; font-weight: bold">Car Model</th>
@@ -36,6 +37,7 @@
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
                             <td><?php echo $numbering; ?></td>
+                            <td><?php echo $row['customer_name']; ?></td>
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
@@ -61,6 +63,7 @@
             <thead>
                 <tr>
                     <th style="text-align: center; font-weight: bold">No.</th>
+                    <th style="text-align: center; font-weight: bold">Customer</th>
                     <th style="text-align: center; font-weight: bold">Plate #</th>
                     <th style="text-align: center; font-weight: bold">Car Make</th>
                     <th style="text-align: center; font-weight: bold">Car Model</th>
@@ -80,6 +83,7 @@
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
                             <td><?php echo $numbering; ?></td>
+                            <td><?php echo $row['customer_name']; ?></td>
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
@@ -105,6 +109,7 @@
             <thead>
                 <tr>
                     <th style="text-align: center; font-weight: bold">No.</th>
+                    <th style="text-align: center; font-weight: bold">Customer</th>
                     <th style="text-align: center; font-weight: bold">Plate #</th>
                     <th style="text-align: center; font-weight: bold">Car Make</th>
                     <th style="text-align: center; font-weight: bold">Car Model</th>
@@ -124,6 +129,7 @@
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
                             <td><?php echo $numbering; ?></td>
+                            <td><?php echo $row['customer_name']; ?></td>
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
@@ -149,6 +155,7 @@
             <thead>
                 <tr>
                     <th style="text-align: center; font-weight: bold">No.</th>
+                    <th style="text-align: center; font-weight: bold">Customer</th>
                     <th style="text-align: center; font-weight: bold">Plate #</th>
                     <th style="text-align: center; font-weight: bold">Car Make</th>
                     <th style="text-align: center; font-weight: bold">Car Model</th>
@@ -168,6 +175,7 @@
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
                             <td><?php echo $numbering; ?></td>
+                            <td><?php echo $row['customer_name']; ?></td>
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>
@@ -193,6 +201,7 @@
             <thead>
                 <tr>
                     <th style="text-align: center; font-weight: bold">No.</th>
+                    <th style="text-align: center; font-weight: bold">Customer</th>
                     <th style="text-align: center; font-weight: bold">Plate #</th>
                     <th style="text-align: center; font-weight: bold">Car Make</th>
                     <th style="text-align: center; font-weight: bold">Car Model</th>
@@ -210,6 +219,7 @@
                     <?php if ($row['service_type_id'] === $serviceType->id): ?>
                         <tr>
                             <td><?php echo $numbering; ?></td>
+                            <td><?php echo $row['customer_name']; ?></td>
                             <td><?php echo $row['plate_number']; ?></td>
                             <td><?php echo $row['car_make']; ?></td>
                             <td><?php echo $row['car_model']; ?></td>

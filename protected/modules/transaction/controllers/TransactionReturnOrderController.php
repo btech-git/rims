@@ -132,6 +132,8 @@ class TransactionReturnOrderController extends Controller {
         $receiveDataProvider = new CActiveDataProvider('TransactionReceiveItem', array(
             'criteria' => $receiveCriteria,
         ));
+        
+        $receiveDataProvider->criteria->addCondition('t.receive_item_date > "2021-12-31"');
 
         $returnOrder = $this->instantiate(null);
         $returnOrder->header->recipient_branch_id = $returnOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnOrder->header->recipient_branch_id;

@@ -322,6 +322,7 @@ class TransactionReceiveItemController extends Controller {
             $delivery->attributes = $_GET['TransactionDeliveryOrder'];
         
         $deliveryDataProvider = $delivery->searchByReceive();
+        $deliveryDataProvider->criteria->addCondition("t.delivery_date > '2021-12-31'");
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values
@@ -329,6 +330,7 @@ class TransactionReceiveItemController extends Controller {
             $purchase->attributes = $_GET['TransactionPurchaseOrder'];
         
         $purchaseDataProvider = $purchase->searchByReceive();
+        $purchaseDataProvider->criteria->addCondition("t.purchase_order_date > '2021-12-31'");
 
         $consignment = new ConsignmentInHeader('search');
         $consignment->unsetAttributes();  // clear any default values
@@ -342,6 +344,7 @@ class TransactionReceiveItemController extends Controller {
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
             'criteria' => $consignmentCriteria,
         ));
+        $consignmentDataProvider->criteria->addCondition("t.date_posting > '2021-12-31'");
 
         $movement = new MovementOutHeader('search');
         $movement->unsetAttributes();  // clear any default values
@@ -355,6 +358,7 @@ class TransactionReceiveItemController extends Controller {
         $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
             'criteria' => $movementCriteria,
         ));
+        $movementDataProvider->criteria->addCondition("t.date_posting > '2021-12-31'");
 
         $this->render('admin', array(
             'model' => $model,

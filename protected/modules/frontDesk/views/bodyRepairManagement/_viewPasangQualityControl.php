@@ -3,6 +3,7 @@
     <table>
         <thead>
             <tr>
+                <th style="text-align: center; font-weight: bold">Customer</th>
                 <th style="text-align: center; font-weight: bold">Plate #</th>
                 <th style="text-align: center; font-weight: bold">Car Make</th>
                 <th style="text-align: center; font-weight: bold">Car Model</th>
@@ -20,6 +21,7 @@
             <?php foreach ($qualityControlPasangDataProvider->data as $model): ?>
                 <tr>
                     <?php $registrationTransaction = $model->registrationTransaction; $vehicle = $registrationTransaction->vehicle; ?>
+                    <td><?php echo $registrationTransaction->customer->name; ?></td>
                     <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
                     <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
                     <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>

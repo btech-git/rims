@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th style="text-align: center; font-weight: bold">Customer</th>
             <th style="text-align: center; font-weight: bold">Plate #</th>
             <th style="text-align: center; font-weight: bold">Car Make</th>
             <th style="text-align: center; font-weight: bold">Car Model</th>
@@ -18,6 +19,7 @@
         <?php foreach ($waitlistDataProvider->data as $model): ?>
             <tr>
                 <?php $vehicle = $model->vehicle; ?>
+                <td><?php echo $model->customer->name; ?></td>
                 <td><?php echo $vehicle != null ? $vehicle->plate_number : ' '; ?></td>
                 <td><?php echo $vehicle != null ? $vehicle->carMake->name : ' '; ?></td>
                 <td><?php echo $vehicle != null ? $vehicle->carModel->name : ' '; ?></td>

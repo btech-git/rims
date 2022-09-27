@@ -25,11 +25,11 @@
                         'registrationBodyRepairHistoryDataProvider' => $registrationBodyRepairHistoryDataProvider,
                     ), true ),
                 ),
-                'Assignments' => array(
-                    'content' => $this->renderPartial('_viewEmployeeAssignment', array(
-                        'registrationBodyRepairAssignmentDataProvider' => $registrationBodyRepairAssignmentDataProvider,
-                    ), true),
-                ),
+//                'Assignments' => array(
+//                    'content' => $this->renderPartial('_viewEmployeeAssignment', array(
+//                        'registrationBodyRepairAssignmentDataProvider' => $registrationBodyRepairAssignmentDataProvider,
+//                    ), true),
+//                ),
             ),
             // additional javascript options for the tabs plugin
             'options' => array(

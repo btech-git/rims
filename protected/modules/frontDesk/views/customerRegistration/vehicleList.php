@@ -262,22 +262,22 @@ $('.search-form form').submit(function(){
                         )),
                         'value' => 'CHtml::value($data, "carModel.name")',
                     ),
-                    array(
-                        'header' => 'Car Sub Model',
-                        'name' => 'car_sub_model_id',
-                        'filter' => CHtml::activeDropDownList($vehicle, 'car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
-                            'empty' => ''
-                        )),
-                        'value' => 'CHtml::value($data, "carSubModel.name")',
-                    ),
-                    array(
-                        'header' => 'Car Sub Model Detail',
-                        'name' => 'car_sub_model_detail_id',
-                        'filter' => CHtml::activeDropDownList($vehicle, 'car_sub_model_detail_id', CHtml::listData(VehicleCarSubModelDetail::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
-                            'empty' => ''
-                        )),
-                        'value' => 'CHtml::value($data, "carSubModelDetail.name")',
-                    ),
+//                    array(
+//                        'header' => 'Car Sub Model',
+//                        'name' => 'car_sub_model_id',
+//                        'filter' => CHtml::activeDropDownList($vehicle, 'car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
+//                            'empty' => ''
+//                        )),
+//                        'value' => 'CHtml::value($data, "carSubModel.name")',
+//                    ),
+//                    array(
+//                        'header' => 'Car Sub Model Detail',
+//                        'name' => 'car_sub_model_detail_id',
+//                        'filter' => CHtml::activeDropDownList($vehicle, 'car_sub_model_detail_id', CHtml::listData(VehicleCarSubModelDetail::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
+//                            'empty' => ''
+//                        )),
+//                        'value' => 'CHtml::value($data, "carSubModelDetail.name")',
+//                    ),
                     array(
                         'header' => 'Color',
                         'name' => 'color_id',
@@ -286,7 +286,7 @@ $('.search-form form').submit(function(){
                         )),
                         'value' => '$data->getColor($data, "color_id")',
                     ),
-                    'machine_number',
+//                    'machine_number',
                     array(
                         'header' => '',
                         'type' => 'raw',
@@ -299,6 +299,14 @@ $('.search-form form').submit(function(){
                         'header' => '',
                         'type' => 'raw',
                         'value' => 'CHtml::link("BR", array("/frontDesk/bodyRepairRegistration/create", "vehicleId"=>$data->id))',
+                        'htmlOptions' => array(
+                            'style' => 'text-align: center;'
+                        ),
+                    ),
+                    array(
+                        'header' => '',
+                        'type' => 'raw',
+                        'value' => 'CHtml::link("+ vehicle", array("/master/customer/addVehicle", "id"=>$data->customer_id))',
                         'htmlOptions' => array(
                             'style' => 'text-align: center;'
                         ),

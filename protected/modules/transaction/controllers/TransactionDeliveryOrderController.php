@@ -265,6 +265,7 @@ class TransactionDeliveryOrderController extends Controller {
 
         $transferDataProvider = $transfer->searchByPendingDelivery();
         $transferDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        $transferDataProvider->criteria->addCondition("t.transfer_request_date > '2021-12-31'");
 
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
@@ -274,6 +275,7 @@ class TransactionDeliveryOrderController extends Controller {
 
         $sentDataProvider = $sent->searchByPendingDelivery();
         $sentDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        $sentDataProvider->criteria->addCondition("t.sent_request_date > '2021-12-31'");
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
@@ -282,7 +284,7 @@ class TransactionDeliveryOrderController extends Controller {
             $sales->attributes = $_GET['TransactionSalesOrder'];
 
         $salesDataProvider = $sales->searchByPendingDelivery();
-        $salesDataProvider->criteria->addCondition("status_document = 'Approved'");
+        $salesDataProvider->criteria->addCondition("status_document = 'Approved' AND t.sale_order_date > '2021-12-31'");
         $salesDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
 
         $consignment = new ConsignmentOutHeader('search');
@@ -293,6 +295,7 @@ class TransactionDeliveryOrderController extends Controller {
 
         $consignmentDataProvider = $consignment->searchByPendingDelivery();
         $consignmentDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $consignmentDataProvider->criteria->addCondition("t.date_posting > '2021-12-31'");
 
         $this->render('admin', array(
             'model' => $model,

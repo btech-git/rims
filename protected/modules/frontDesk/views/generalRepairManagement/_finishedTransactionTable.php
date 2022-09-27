@@ -9,7 +9,11 @@
     ),
     'columns'=>array(
         array(
-            'header'=>'Plate Number', 
+            'header'=>'Customer', 
+            'value'=>'$data->customer->name'
+        ),
+        array(
+            'header'=>'Plate #', 
             'value'=>'$data->vehicle->plate_number'
         ),
         array(

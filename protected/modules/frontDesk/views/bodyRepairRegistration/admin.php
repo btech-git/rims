@@ -67,7 +67,6 @@ $('.search-form form').submit(function(){
                 'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1', //  row is zero based
             ),
             'transaction_number',
-            // 'transaction_date',
             array(
                 'name' => 'transaction_date',
                 'value' => "Yii::app()->dateFormatter->formatDateTime(\$data->transaction_date, 'medium', 'short')",
@@ -84,9 +83,6 @@ $('.search-form form').submit(function(){
                 'name'=>'car_model_code',
                 'value'=>'$data->vehicle->carModel->name'
             ),
-//            array('header'=>'Color','name'=>'car_color','value'=>'$data->vehicle->getColor($data->vehicle,"color_id")',
-//             	'filter'=>CHtml::dropDownList('RegistrationTransaction[car_color]', 'car_color', CHtml::listData(Colors::model()->findAll(),'id','name'), array('class'=>'form-control','empty'=>'--Select Color--')),),
-//            'work_order_number',
             array(
                 'header' => 'Repair Type',
                 'name' => 'repair_type',
@@ -97,7 +93,12 @@ $('.search-form form').submit(function(){
             array(
                 'header' => 'Customer Name',
                 'name' => 'customer_name',
-                'value' => '$data->customer->name',
+                'value' => 'empty($data->customer_id) ? "" : $data->customer->name',
+            ),
+            array(
+                'header' => 'Insurance',
+                'name' => 'insurance_company_id',
+                'value' => 'empty($data->insurance_company_id) ? "" : $data->insuranceCompany->name',
             ),
             'work_order_number',
             array(

@@ -242,7 +242,7 @@ class TransactionReturnItemController extends Controller {
         }
         $retailTransactionDataProvider = $retailTransaction->search();
         $retailTransactionDataProvider->criteria->compare('transaction_number', $retailTransaction->transaction_number . '%', true, 'AND', false);
-        $retailTransactionDataProvider->criteria->addCondition("total_product > 0");
+        $retailTransactionDataProvider->criteria->addCondition("total_product > 0 AND t.transaction_date > '2021-12-31'");
 
         $delivery = new TransactionDeliveryOrder('search');
         $delivery->unsetAttributes();  // clear any default values
@@ -259,6 +259,7 @@ class TransactionReturnItemController extends Controller {
                 'defaultOrder' => 'delivery_date DESC',
             ),
         ));
+        $deliveryDataProvider->criteria->addCondition("t.delivery_date > '2021-12-31'");
 
         $this->render('admin', array(
             'model' => $model,

@@ -61,6 +61,7 @@ class WorkOrderExpenseController extends Controller {
         }
 
         $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
+        $registrationTransactionDataProvider->criteria->addCondition('t.transaction_date > "2021-12-31"');
 
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));

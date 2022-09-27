@@ -108,25 +108,27 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                         <?php echo CHtml::encode(CHtml::value($detail, 'qty_request_left')); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::activeTextField($detail, "[$i]qty_received", array(
-                            'onchange' => '
-                                var quantity = +jQuery("#TransactionReceiveItemDetail_' . $i . '_quantity_delivered").val();
-                                var delivery = +jQuery("#TransactionReceiveItemDetail_' . $i . '_qty_received").val();
-                                var temp = +jQuery("#TransactionReceiveItemDetail_' . $i . '_qty_request_left").val();
-                                var count = temp - delivery;
+                        <?php if ($receiveItem->header->isNewRecord): ?>
+                            <?php echo CHtml::activeTextField($detail, "[$i]qty_received", array(
+                                'onchange' => '
+                                    var quantity = +jQuery("#TransactionReceiveItemDetail_' . $i . '_quantity_delivered").val();
+                                    var delivery = +jQuery("#TransactionReceiveItemDetail_' . $i . '_qty_received").val();
+                                    var temp = +jQuery("#TransactionReceiveItemDetail_' . $i . '_qty_request_left").val();
+                                    var count = temp - delivery;
 
-                            if (count < 0)
-                            {
-                                alert("QTY Received could not be less than QTY Remaining.");
-                                $( "#save" ).prop( "disabled", true );
-                            } else {
-                                $( "#save" ).prop( "disabled", false );
-
-                            }
-                            //jQuery("#TransactionReceiveItemDetail_' . $i . '_qty_request_left").val(count);
-                            console.log(count);
-                            '
-                        )); ?>
+                                    if (count < 0) {
+                                        alert("QTY Received could not be less than QTY Remaining.");
+                                        $( "#save" ).prop( "disabled", true );
+                                    } else {
+                                        $( "#save" ).prop( "disabled", false );
+                                    }
+                                    //jQuery("#TransactionReceiveItemDetail_' . $i . '_qty_request_left").val(count);
+//                                    console.log(count);
+                                '
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::activeTextField($detail, "[$i]qty_received"); ?> 
+                        <?php endif; ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'brand.name')); ?></td>
                     <td><?php echo CHtml::activeTextField($detail, "[$i]note"); ?></td>

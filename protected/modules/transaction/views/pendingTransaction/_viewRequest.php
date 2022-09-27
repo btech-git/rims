@@ -35,9 +35,9 @@
         ),
         array(
             'header' => 'Input',
-            'name' => 'input_date',
+            'name' => 'created_datetime',
             'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->input_date)'
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
         ),
     ),
 )); ?>

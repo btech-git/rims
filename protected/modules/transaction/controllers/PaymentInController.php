@@ -444,7 +444,7 @@ class PaymentInController extends Controller {
         }
 
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.payment_left > 0');
+        $invoiceCriteria->addCondition('t.payment_left > 0 AND t.invoice_date > "2021-12-31"');
         $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
         $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);

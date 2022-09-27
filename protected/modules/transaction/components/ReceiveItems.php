@@ -56,38 +56,44 @@ class ReceiveItems extends CComponent {
         elseif ($requestType == 2) {
             $deliveries = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $requestId));
             foreach ($deliveries as $key => $delivery) {
-                $detail = new TransactionReceiveItemDetail();
-                $detail->product_id = $delivery->product_id;
-                $detail->qty_request = $delivery->quantity_delivery;
-                $detail->qty_request_left = $delivery->quantity_receive_left;
-                $detail->quantity_delivered = $delivery->quantity_delivery;
-                $detail->quantity_delivered_left = $delivery->quantity_request_left;
-                $detail->delivery_order_detail_id = $delivery->id;
-                $this->details[] = $detail;
+                if ($delivery->quantity_receive_left > 0) {
+                    $detail = new TransactionReceiveItemDetail();
+                    $detail->product_id = $delivery->product_id;
+                    $detail->qty_request = $delivery->quantity_delivery;
+                    $detail->qty_request_left = $delivery->quantity_receive_left;
+                    $detail->quantity_delivered = $delivery->quantity_delivery;
+                    $detail->quantity_delivered_left = $delivery->quantity_request_left;
+                    $detail->delivery_order_detail_id = $delivery->id;
+                    $this->details[] = $detail;
+                }
             }
         } elseif ($requestType == 3) {
             $consignments = ConsignmentInDetail::model()->findAllByAttributes(array('consignment_in_id' => $requestId));
             foreach ($consignments as $key => $consignment) {
-                $detail = new TransactionReceiveItemDetail();
-                $detail->product_id = $consignment->product_id;
-                $detail->qty_request = $consignment->quantity;
-                $detail->qty_request_left = $consignment->qty_request_left;
-                $detail->consignment_in_detail_id = $consignment->id;
-                $detail->note = $consignment->note;
-                $detail->barcode_product = $consignment->barcode_product;
-                $this->details[] = $detail;
+                if ($consignment->qty_request_left > 0) {
+                    $detail = new TransactionReceiveItemDetail();
+                    $detail->product_id = $consignment->product_id;
+                    $detail->qty_request = $consignment->quantity;
+                    $detail->qty_request_left = $consignment->qty_request_left;
+                    $detail->consignment_in_detail_id = $consignment->id;
+                    $detail->note = $consignment->note;
+                    $detail->barcode_product = $consignment->barcode_product;
+                    $this->details[] = $detail;
+                }
             }
         } elseif ($requestType == 4) {
             $movementOuts = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $requestId));
             foreach ($movementOuts as $key => $movementOut) {
-                $detail = new TransactionReceiveItemDetail();
-                $detail->product_id = $movementOut->product_id;
-                $detail->qty_request = $movementOut->quantity;
-                $detail->qty_request_left = $movementOut->quantity_receive_left;
-                $detail->movement_out_detail_id = $movementOut->id;
-                $detail->note = 'Movement Out';
-                $detail->barcode_product = null;
-                $this->details[] = $detail;
+                if ($consignment->quantity_receive_left > 0) {
+                    $detail = new TransactionReceiveItemDetail();
+                    $detail->product_id = $movementOut->product_id;
+                    $detail->qty_request = $movementOut->quantity;
+                    $detail->qty_request_left = $movementOut->quantity_receive_left;
+                    $detail->movement_out_detail_id = $movementOut->id;
+                    $detail->note = 'Movement Out';
+                    $detail->barcode_product = null;
+                    $this->details[] = $detail;
+                }
             }
         }
     }

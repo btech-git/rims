@@ -39,7 +39,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Return Item', Yii::app()->baseUrl . '/transaction/transactionReturnItem/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("saleReturnCreate"))) ?>
+        <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Return Item', Yii::app()->baseUrl . '/transaction/transactionReturnItem/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("saleReturnCreate"))) ?>
 
         <h1>Manage Transaction Return Jual</h1>
         <div class="search-bar">

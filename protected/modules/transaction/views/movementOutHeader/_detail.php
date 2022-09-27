@@ -41,6 +41,7 @@
                         <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?>
                     </td>
                     <td>
+                        <?php if ($movementOut->header->isNewRecord): ?>
                         <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
                             'class' => 'qtyleft_input productID_' . $detail->product_id, 
                             'rel' => $detail->product_id,
@@ -57,6 +58,9 @@
                                 }
                             ',
                         )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::activeTextField($detail, "[$i]quantity"); ?> 
+                        <?php endif; ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::activeHiddenField($detail, "[$i]unit_id"); ?>
