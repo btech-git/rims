@@ -63,12 +63,11 @@
                         <tr>
                             <td style="text-align: right; font-size: 11px;">TOTAL <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></td>
                             <td style="text-align: right; font-size: 11px; border-top: 1px solid">
-                                <?php $totalGroupBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : $accountGroupBalance; ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalGroupBalance)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountGroupBalance)); ?>
                             </td>
                         </tr>
                     <?php endif; ?>
-                    <?php $accountCategoryBalance += ($coa->coa_category_id > 7 AND $coa->coa_category_id < 11) ? $coaBalance : $totalGroupBalance; ?>
+                    <?php $accountCategoryBalance += (empty($coa->coaIds)) ? $coaBalance : $accountGroupBalance; ?>
                 <?php //endif; ?>
             <?php endforeach; ?>
         
