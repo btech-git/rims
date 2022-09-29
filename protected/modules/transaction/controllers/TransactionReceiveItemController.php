@@ -318,11 +318,11 @@ class TransactionReceiveItemController extends Controller {
         $delivery = new TransactionDeliveryOrder('search');
         $delivery->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['TransactionDeliveryOrder']))
+        if (isset($_GET['TransactionDeliveryOrder'])) {
             $delivery->attributes = $_GET['TransactionDeliveryOrder'];
+        }
         
         $deliveryDataProvider = $delivery->searchByReceive();
-        $deliveryDataProvider->criteria->addCondition("t.delivery_date > '2021-12-31'");
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values
