@@ -8,8 +8,8 @@
  * @property integer $stock_adjustment_header_id
  * @property integer $product_id
  * @property integer $warehouse_id
- * @property integer $quantity_current
- * @property integer $quantity_adjustment
+ * @property string $quantity_current
+ * @property string $quantity_adjustment
  * @property string $memo
  */
 class StockAdjustmentDetail extends CActiveRecord {
@@ -30,8 +30,9 @@ class StockAdjustmentDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('stock_adjustment_header_id, product_id, quantity_current, quantity_adjustment', 'required'),
-            array('stock_adjustment_header_id, product_id, warehouse_id, quantity_current, quantity_adjustment', 'numerical', 'integerOnly' => true),
+            array('stock_adjustment_header_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
             array('memo', 'length', 'max'=>100),
+            array('quantity_current, quantity_adjustment', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, stock_adjustment_header_id, product_id, warehouse_id, quantity_current, quantity_adjustment, memo', 'safe', 'on' => 'search'),

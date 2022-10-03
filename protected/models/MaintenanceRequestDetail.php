@@ -7,7 +7,7 @@
  * @property integer $id
  * @property string $item_code
  * @property string $item_name
- * @property integer $quantity
+ * @property string $quantity
  * @property string $memo
  * @property integer $maintenance_request_header_id
  * @property integer $is_inactive
@@ -32,9 +32,10 @@ class MaintenanceRequestDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('item_name, maintenance_request_header_id', 'required'),
-            array('quantity, maintenance_request_header_id, is_inactive', 'numerical', 'integerOnly' => true),
+            array('maintenance_request_header_id, is_inactive', 'numerical', 'integerOnly' => true),
             array('item_code', 'length', 'max' => 60),
             array('item_name, memo', 'length', 'max' => 100),
+            array('quantity', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, item_code, item_name, quantity, memo, maintenance_request_header_id, is_inactive', 'safe', 'on' => 'search'),

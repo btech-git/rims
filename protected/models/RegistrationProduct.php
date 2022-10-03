@@ -7,7 +7,7 @@
  * @property integer $id
  * @property integer $registration_transaction_id
  * @property integer $product_id
- * @property integer $quantity
+ * @property string $quantity
  * @property string $retail_price
  * @property string $recommended_selling_price
  * @property string $hpp
@@ -15,11 +15,11 @@
  * @property string $discount
  * @property string $total_price
  * @property string $discount_type
- * @property integer $quantity_movement
- * @property integer $quantity_movement_left
+ * @property string $quantity_movement
+ * @property string $quantity_movement_left
  * @property integer $is_material
- * @property integer $quantity_receive
- * @property integer $quantity_receive_left
+ * @property string $quantity_receive
+ * @property string $quantity_receive_left
  * @property string $note
  *
  * The followings are the available model relations:
@@ -56,10 +56,11 @@ class RegistrationProduct extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('quantity, sale_price, total_price', 'required'),
-            array('registration_transaction_id, product_id, quantity, quantity_movement, quantity_movement_left, is_material, quantity_receive, quantity_receive_left', 'numerical', 'integerOnly' => true),
+            array('registration_transaction_id, product_id, is_material', 'numerical', 'integerOnly' => true),
             array('retail_price, hpp, sale_price, discount, total_price, recommended_selling_price', 'length', 'max' => 18),
             array('discount_type', 'length', 'max' => 30),
             array('note', 'length', 'max' => 100),
+            array('quantity, quantity_movement, quantity_movement_left, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, registration_transaction_id, product_id, quantity, retail_price, hpp, sale_price, discount, total_price, discount_type, transaction_number, quantity_movement, quantity_movement_left, is_material, quantity_receive, quantity_receive_left, recommended_selling_price, note', 'safe', 'on' => 'search'),

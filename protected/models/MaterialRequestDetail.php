@@ -5,9 +5,9 @@
  *
  * The followings are the available columns in table '{{material_request_detail}}':
  * @property integer $id
- * @property integer $quantity
- * @property integer $quantity_movement_out
- * @property integer $quantity_remaining
+ * @property string $quantity
+ * @property string $quantity_movement_out
+ * @property string $quantity_remaining
  * @property integer $product_id
  * @property integer $unit_id
  * @property integer $material_request_header_id
@@ -44,7 +44,8 @@ class MaterialRequestDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('product_id, unit_id, material_request_header_id', 'required'),
-            array('quantity, quantity_movement_out, quantity_remaining,  product_id, unit_id, material_request_header_id', 'numerical', 'integerOnly' => true),
+            array('product_id, unit_id, material_request_header_id', 'numerical', 'integerOnly' => true),
+            array('quantity, quantity_movement_out, quantity_remaining', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, quantity, quantity_movement_out, quantity_remaining, product_id, unit_id, material_request_header_id', 'safe', 'on' => 'search'),

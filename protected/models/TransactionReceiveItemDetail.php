@@ -10,16 +10,16 @@
  * @property integer $transfer_request_detail_id
  * @property integer $consignment_in_detail_id
  * @property integer $product_id
- * @property integer $qty_request
- * @property integer $qty_received
+ * @property string $qty_request
+ * @property string $qty_received
  * @property string $note
  * @property integer $qty_request_left
  * @property string $barcode_product
- * @property integer $quantity_movement
- * @property integer $quantity_movement_left
+ * @property string $quantity_movement
+ * @property string $quantity_movement_left
  * @property integer $delivery_order_detail_id
- * @property integer $quantity_delivered
- * @property integer $quantity_delivered_left
+ * @property string $quantity_delivered
+ * @property string $quantity_delivered_left
  *
  * The followings are the available model relations:
  * @property Product $product
@@ -59,8 +59,9 @@ class TransactionReceiveItemDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('receive_item_id, purchase_order_detail_id, transfer_request_detail_id, consignment_in_detail_id, product_id, qty_request, qty_received, qty_request_left, delivery_order_detail_id, quantity_delivered, quantity_delivered_left', 'numerical', 'integerOnly' => true),
+            array('receive_item_id, purchase_order_detail_id, transfer_request_detail_id, consignment_in_detail_id, product_id, delivery_order_detail_id', 'numerical', 'integerOnly' => true),
             array('barcode_product', 'length', 'max' => 30),
+            array('qty_request, qty_received, qty_request_left, quantity_delivered, quantity_delivered_left', 'length', 'max' => 10),
             array('note', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.

@@ -11,8 +11,8 @@
  * @property string $transaction_type
  * @property string $transaction_number
  * @property string $transaction_date
- * @property integer $stock_in
- * @property integer $stock_out
+ * @property string $stock_in
+ * @property string $stock_out
  * @property string $notes
  * @property string $purchase_price
  *
@@ -38,12 +38,12 @@ class InventoryDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array(' product_id, warehouse_id, transaction_type, transaction_number, transaction_date', 'required'),
-            array('inventory_id, product_id, warehouse_id, stock_in, stock_out', 'numerical', 'integerOnly' => true),
-            array('transaction_type', 'length', 'max' => 10),
+            array('inventory_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
+            array('transaction_type, stock_in, stock_out', 'length', 'max' => 10),
             array('transaction_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price', 'safe', 'on' => 'search'),
+            array('id, inventory_id, product_id, warehouse_id, unit_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price', 'safe', 'on' => 'search'),
         );
     }
 
@@ -127,7 +127,7 @@ class InventoryDetail extends CActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        
+
         $criteria->together = 'true';
         $criteria->with = array('warehouse');
 
@@ -162,12 +162,12 @@ class InventoryDetail extends CActiveRecord {
         $productMasterCategoryIdConditionSql = '';
         $productSubMasterCategoryIdConditionSql = '';
         $productSubCategoryIdConditionSql = '';
-        
+
         $params = array(
             ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
-        
+
         if (!empty($brandId)) {
             $brandIdConditionSql = " AND p.brand_id = :brand_id";
             $params[':brand_id'] = $brandId;
@@ -187,17 +187,17 @@ class InventoryDetail extends CActiveRecord {
             $productMasterCategoryIdConditionSql = " AND p.product_master_category_id = :product_master_category_id";
             $params[':product_master_category_id'] = $productMasterCategoryId;
         }
-        
+
         if (!empty($productSubMasterCategoryId)) {
             $productSubMasterCategoryIdConditionSql = " AND p.product_sub_master_category_id = :product_sub_master_category_id";
             $params[':product_sub_master_category_id'] = $productSubMasterCategoryId;
         }
-        
+
         if (!empty($productSubCategoryId)) {
             $productSubCategoryIdConditionSql = " AND p.product_sub_category_id = :product_sub_category_id";
             $params[':product_sub_category_id'] = $productSubCategoryId;
         }
-        
+
         $sql = "SELECT p.id AS id, p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
@@ -222,12 +222,12 @@ class InventoryDetail extends CActiveRecord {
         $productMasterCategoryIdConditionSql = '';
         $productSubMasterCategoryIdConditionSql = '';
         $productSubCategoryIdConditionSql = '';
-        
+
         $params = array(
             ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
-        
+
         if (!empty($brandId)) {
             $brandIdConditionSql = " AND p.brand_id = :brand_id";
             $params[':brand_id'] = $brandId;
@@ -247,17 +247,17 @@ class InventoryDetail extends CActiveRecord {
             $productMasterCategoryIdConditionSql = " AND p.product_master_category_id = :product_master_category_id";
             $params[':product_master_category_id'] = $productMasterCategoryId;
         }
-        
+
         if (!empty($productSubMasterCategoryId)) {
             $productSubMasterCategoryIdConditionSql = " AND p.product_sub_master_category_id = :product_sub_master_category_id";
             $params[':product_sub_master_category_id'] = $productSubMasterCategoryId;
         }
-        
+
         if (!empty($productSubCategoryId)) {
             $productSubCategoryIdConditionSql = " AND p.product_sub_category_id = :product_sub_category_id";
             $params[':product_sub_category_id'] = $productSubCategoryId;
         }
-        
+
         $sql = "SELECT p.id AS id, p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
@@ -275,14 +275,14 @@ class InventoryDetail extends CActiveRecord {
 
         return $resultSet;
     }
-    
+
     public static function getTotalStockOut($productId) {
-        
+
         $sql = "SELECT SUM(stock_out * -1)
                 FROM " . InventoryDetail::model()->tableName() . " 
                 WHERE product_id = :product_id
                 GROUP BY product_id";
-        
+
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
             ':product_id' => $productId,
         ));

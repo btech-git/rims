@@ -12,11 +12,11 @@
  * @property integer $registration_product_id
  * @property integer $registration_service_id
  * @property integer $product_id
- * @property integer $quantity_transaction
+ * @property string $quantity_transaction
  * @property integer $warehouse_id
- * @property integer $quantity
- * @property integer $quantity_receive
- * @property integer $quantity_receive_left
+ * @property string $quantity
+ * @property string $quantity_receive
+ * @property string $quantity_receive_left
  * @property integer $unit_id
  *
  * The followings are the available model relations:
@@ -51,7 +51,8 @@ class MovementOutDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('movement_out_header_id, product_id, unit_id, quantity_transaction, warehouse_id, quantity', 'required'),
-            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left', 'numerical', 'integerOnly' => true),
+            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
+            array('quantity_transaction, quantity, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left', 'safe', 'on' => 'search'),

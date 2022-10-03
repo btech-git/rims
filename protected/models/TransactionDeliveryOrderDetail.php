@@ -10,17 +10,17 @@
  * @property integer $sent_request_detail_id
  * @property integer $consignment_out_detail_id
  * @property integer $product_id
- * @property integer $quantity_request
- * @property integer $quantity_delivery
- * @property integer $quantity_request_left
+ * @property string $quantity_request
+ * @property string $quantity_delivery
+ * @property string $quantity_request_left
  * @property string $note
  * @property string $barcode_product
  * @property integer $temp_quantity
- * @property integer $quantity_movement
- * @property integer $quantity_movement_left
+ * @property string $quantity_movement
+ * @property string $quantity_movement_left
  * @property integer $transfer_request_detail_id
- * @property integer $quantity_receive
- * @property integer $quantity_receive_left
+ * @property string $quantity_receive
+ * @property string $quantity_receive_left
  *
  * The followings are the available model relations:
  * @property MovementOutDetail[] $movementOutDetails
@@ -62,8 +62,9 @@ class TransactionDeliveryOrderDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('product_id, quantity_request, quantity_delivery', 'required'),
-            array('delivery_order_id, sales_order_detail_id, sent_request_detail_id, consignment_out_detail_id, product_id, quantity_request, quantity_delivery, quantity_request_left, temp_quantity,transfer_request_detail_id, quantity_receive, quantity_receive_left', 'numerical', 'integerOnly' => true),
+            array('delivery_order_id, sales_order_detail_id, sent_request_detail_id, consignment_out_detail_id, product_id, temp_quantity, transfer_request_detail_id', 'numerical', 'integerOnly' => true),
             array('barcode_product', 'length', 'max' => 50),
+            array('quantity_request, quantity_delivery, quantity_request_left, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
             array('note', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
