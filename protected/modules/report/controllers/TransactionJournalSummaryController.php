@@ -30,21 +30,21 @@ class TransactionJournalSummaryController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 
-        $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id = 12'));
-        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
-        $accountProfitLossPrevious = Coa::model()->findByPk(1475);
-        $accountProfitLoss = Coa::model()->findByPk(1476);
-        $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
+        $coas = Coa::model()->findAllByAttributes(array('is_approved' => 1));
+//        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
+//        $accountProfitLossPrevious = Coa::model()->findByPk(1475);
+//        $accountProfitLoss = Coa::model()->findByPk(1476);
+//        $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
 //        if (isset($_GET['SaveExcel']))
 //            $this->saveToExcel($accountCategoryTypes, $endDate, $branchId);
 
         $this->render('summary', array(
-            'accountCategoryAssets' => $accountCategoryAssets,
-            'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
-            'accountProfitLoss' => $accountProfitLoss,
-            'accountProfitLossPrevious' => $accountProfitLossPrevious,
-            'accountCategoryTypes' => $accountCategoryTypes,
+            'coas' => $coas,
+//            'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
+//            'accountProfitLoss' => $accountProfitLoss,
+//            'accountProfitLossPrevious' => $accountProfitLossPrevious,
+//            'accountCategoryTypes' => $accountCategoryTypes,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
