@@ -15,28 +15,28 @@ class EmployeeController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create' ) {
+        if ($filterChain->action->id === 'create') {
             if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')))
                 $this->redirect(array('/site/login'));
         }
 
         if (
-            $filterChain->action->id === 'restore' || 
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
+                $filterChain->action->id === 'restore' ||
+                $filterChain->action->id === 'edit' ||
+                $filterChain->action->id === 'update' ||
+                $filterChain->action->id === 'delete'
         ) {
             if (!(Yii::app()->user->checkAccess('masterEmployeeEdit')))
                 $this->redirect(array('/site/login'));
         }
 
         if (
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'updateBank' || 
-            $filterChain->action->id === 'updateDeduction' || 
-            $filterChain->action->id === 'updateIncentive'
+                $filterChain->action->id === 'view' ||
+                $filterChain->action->id === 'admin' ||
+                $filterChain->action->id === 'index' ||
+                $filterChain->action->id === 'updateBank' ||
+                $filterChain->action->id === 'updateDeduction' ||
+                $filterChain->action->id === 'updateIncentive'
         ) {
             if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit')))
                 $this->redirect(array('/site/login'));
@@ -189,62 +189,9 @@ class EmployeeController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        /* $model=$this->loadModel($id);
-
-          // Uncomment the following line if AJAX validation is needed
-          // $this->performAjaxValidation($model);
-
-          if(isset($_POST['Employee']))
-          {
-          $model->attributes=$_POST['Employee'];
-          if($model->save())
-          $this->redirect(array('admin'));
-          //$this->redirect(array('view','id'=>$model->id));
-          }
-
-          $this->render('update',array(
-          'model'=>$model,
-          )); */
-
-        $bank = new Bank('search');
-        $bank->unsetAttributes();  // clear any default values
-        if (isset($_GET['Bank']))
-            $bank->attributes = $_GET['Bank'];
-
-        $bankCriteria = new CDbCriteria;
-        $bankCriteria->compare('code', $bank->code . '%', true, 'AND', false);
-        $bankCriteria->compare('name', $bank->name, true);
-
-        $bankDataProvider = new CActiveDataProvider('Bank', array(
-            'criteria' => $bankCriteria,
-        ));
-
-        $incentive = new Incentive('search');
-        $incentive->unsetAttributes();  // clear any default values
-        if (isset($_GET['Incentive']))
-            $incentive->attributes = $_GET['Incentive'];
-
-        $incentiveCriteria = new CDbCriteria;
-        $incentiveCriteria->compare('id', $incentive->id . '%', true, 'AND', false);
-        $incentiveCriteria->compare('name', $incentive->name, true);
-
-        $incentiveDataProvider = new CActiveDataProvider('Incentive', array(
-            'criteria' => $incentiveCriteria,
-        ));
-
-
-        $deduction = new Deduction('search');
-        $deduction->unsetAttributes();  // clear any default values
-        if (isset($_GET['Deduction']))
-            $deduction->attributes = $_GET['Deduction'];
-
-        $deductionCriteria = new CDbCriteria;
-        $deductionCriteria->compare('id', $deduction->id . '%', true, 'AND', false);
-        $deductionCriteria->compare('name', $deduction->name, true);
-
-        $deductionDataProvider = new CActiveDataProvider('Deduction', array(
-            'criteria' => $deductionCriteria,
-        ));
+        
+        $employee = $this->instantiate($id);
+        $this->performAjaxValidation($employee->header);
 
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values
@@ -252,35 +199,20 @@ class EmployeeController extends Controller {
             $branch->attributes = $_GET['Division'];
 
         $branchCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $branchCriteria->compare('name', $branch->name, true);
 
         $branchDataProvider = new CActiveDataProvider('Branch', array(
             'criteria' => $branchCriteria,
         ));
 
-        $employee = $this->instantiate($id);
-
-        $this->performAjaxValidation($employee->header);
-
         if (isset($_POST['Employee'])) {
             $this->loadState($employee);
             if ($employee->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $employee->header->id));
-            } else {
-                foreach ($employee->phoneDetails as $key => $detail) {
-                    
-                }
             }
         }
         $this->render('update', array(
             'employee' => $employee,
-            'bank' => $bank,
-            'bankDataProvider' => $bankDataProvider,
-            'incentive' => $incentive,
-            'incentiveDataProvider' => $incentiveDataProvider,
-            'deduction' => $deduction,
-            'deductionDataProvider' => $deductionDataProvider,
             'branch' => $branch,
             'branchDataProvider' => $branchDataProvider,
         ));

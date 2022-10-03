@@ -43,7 +43,7 @@
                 ?>
                 <td><?php echo $duration; ?></td>
                 <td><?php echo $model->repair_type; ?></td>
-                <td>
+                <td><?php echo $model->service_status; ?>
                     <?php /*echo CHtml::tag('button', array(
                         'disabled' => count($regServices) == 0 ? true : false,
                         'type' => 'button',

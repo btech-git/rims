@@ -434,6 +434,14 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionPendingOrder($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'Pending';
+        $model->update(array('status'));
+        $this->redirect(array('view', 'id' => $id));
+        
+    }
+        
     public function actionAdmin() {
 //        $model = new RegistrationTransaction('search');
 //        $model->unsetAttributes();  // clear any default values

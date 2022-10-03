@@ -42,13 +42,77 @@ $this->menu = array(
                 'email',
                 'driving_license',
                 'status',
+                'salary_type',
+                'basic_salary',
+                'payment_type',
             ),
-        ));
-        ?>
+        )); ?>
     </div>
 </div>
 
-<br /><hr />
+
+<div class="row">
+    <div class="small-12 columns">
+        <h3>Employee Bank Accounts</h3>
+        <table>
+            <thead>
+                <tr>
+                    <td>Bank Name</td>
+                    <td>Account Name</td>
+                    <td>Account No</td>
+                </tr>
+            </thead>
+            <?php foreach ($employeeBanks as $key => $employeeBank): ?>
+                <tr>
+                    <?php $bank = Bank::model()->findByPk($employeeBank->bank_id); ?>
+                    <td><?php echo $bank->name; ?></td>
+                    <td><?php echo $employeeBank->account_name; ?></td>	
+                    <td><?php echo $employeeBank->account_no; ?></td>	
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="small-12 columns">
+        <h3>Employee Incentives</h3>
+        <table >
+            <thead>
+                <tr>
+                    <td>Description</td>
+                    <td>Amount</td>
+                </tr>
+            </thead>
+            <?php foreach ($employeeIncentives as $key => $employeeIncentive): ?>
+                <tr>
+                    <td><?php echo $employeeIncentive->incentive->name; ?></td>	
+                    <td><?php echo number_format($employeeIncentive->amount, 0); ?></td>	
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="small-12 columns">
+        <h3>Employee Deductions</h3>
+        <table >
+            <thead>
+                <tr>
+                    <td>Description</td>
+                    <td>Amount</td>
+                </tr>
+            </thead>
+            <?php foreach ($employeeDeductions as $key => $employeeDeduction): ?>
+                <tr>
+                    <td><?php echo $employeeDeduction->deduction->name; ?></td>	
+                    <td><?php echo number_format($employeeDeduction->amount, 0); ?></td>	
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</div>
 
 <div class="row">
     <div class="small-12 columns">
@@ -79,12 +143,10 @@ $this->menu = array(
     </div>
 </div>
 
-<!--<br /><hr />
-
 <div class="row">
     <div class="small-12 columns">
         <div class="grid-view">
-            <?php /*$this->widget('zii.widgets.grid.CGridView', array(
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'attendance-grid',
                 'dataProvider' => $dataProvider,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
@@ -92,6 +154,7 @@ $this->menu = array(
                     'cssFile' => false,
                     'header' => '',
                 ),
+                // 'filter'=>$model,
                 'columns' => array(
                     'date',
                     'login_time',
@@ -109,7 +172,7 @@ $this->menu = array(
                         'type' => 'raw'
                     ],
                     [
-                        'value' => 'CHtml::button("SAVE", array('
+                        'value' => 'CHtml::button("SAVE",array('
                         . '"id"=>"btnsave",'
                         . '"rel"=>"$data->id", '
                         . '"class"=>"button cbutton secondary", '
@@ -118,14 +181,16 @@ $this->menu = array(
                         'type' => "raw"
                     ],
                 ),
-            ));*/ ?>
+            ));
+            ?>
         </div>
     </div>
-</div>-->
+</div>
 
-<?php /*Yii::app()->clientScript->registerScript('myforecastingProduct', '
+<?php Yii::app()->clientScript->registerScript('myforecastingProduct', '
     $("body").on("click","#btnsave",function(){
         var id = $(this).attr("rel");
+        var data={};
 
         var sibs=$(this).parent().siblings();
         data.model_id=id;
@@ -143,4 +208,5 @@ $this->menu = array(
 
         return false;
     });
-', CClientScript::POS_END); ?>
+    ', CClientScript::POS_END);
+?>
