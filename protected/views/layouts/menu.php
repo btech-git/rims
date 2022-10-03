@@ -327,6 +327,11 @@
                         'url' => array('/master/employeeDayoff/admin'), 
 //                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
                     ),
+                    array(
+                        'label' => 'Mechanic Report', 
+                        'url' => array('/frontDesk/mechanicPerformance/index'), 
+//                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
+                    ),
                 ),
             )); ?>
         </li>
