@@ -45,8 +45,19 @@
                             <label class="prefix"><?php echo $form->labelEx($employee->header, 'name'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::activeTextField($employee->header, 'id'); ?>
+                            <?php echo CHtml::activeHiddenField($employee->header, 'id'); ?>
                             <?php echo CHtml::encode(CHtml::value($employee->header, 'name')); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($employee->header, 'id_card'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($employee->header, 'id_card')); ?>
                         </div>
                     </div>
                 </div>
@@ -142,17 +153,6 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($employee->header, 'id_card'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($employee->header, 'id_card')); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
                             <label class="prefix"><?php echo $form->labelEx($employee->header, 'driving_license'); ?></label>
                         </div>
                         <div class="small-8 columns">
@@ -160,37 +160,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($employee->header, 'salary_type'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($employee->header, 'salary_type')); ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><p style="color:#c00;"><?php echo "Basic Salary* Rp"; ?></p></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($employee->header, 'basic_salary')); ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($employee->header, 'payment_type'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($employee->header, 'payment_type')); ?>
-                        </div>
-                    </div>
-                </div> 
 
                 <div class="field">
                     <div class="row collapse">
@@ -207,6 +176,38 @@
 
             <div class="small-12 medium-6 columns">
                 <div class="row">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($employee->header, 'salary_type'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeTextField($employee->header, 'salary_type'); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><p style="color:#c00;"><?php echo "Basic Salary* Rp"; ?></p></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeTextField($employee->header, 'basic_salary'); ?>
+                        </div>
+                    </div>
+                </div>
+                    
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($employee->header, 'payment_type'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeTextField($employee->header, 'payment_type'); ?>
+                        </div>
+                    </div>
+                </div> 
+
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
