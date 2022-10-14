@@ -86,7 +86,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'coas' => $coas,
+                        'coaSubCategories' => $coaSubCategories,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
