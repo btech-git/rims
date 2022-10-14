@@ -30,7 +30,7 @@ class TransactionJournalSummaryController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 
-        $coas = Coa::model()->findAllByAttributes(array('is_approved' => 1));
+        $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11)', 'order' => 't.code ASC'));
 //        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
 //        $accountProfitLossPrevious = Coa::model()->findByPk(1475);
 //        $accountProfitLoss = Coa::model()->findByPk(1476);
@@ -40,7 +40,7 @@ class TransactionJournalSummaryController extends Controller {
 //            $this->saveToExcel($accountCategoryTypes, $endDate, $branchId);
 
         $this->render('summary', array(
-            'coas' => $coas,
+            'coaSubCategories' => $coaSubCategories,
 //            'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
 //            'accountProfitLoss' => $accountProfitLoss,
 //            'accountProfitLossPrevious' => $accountProfitLossPrevious,
