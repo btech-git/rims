@@ -44,7 +44,7 @@ $this->menu=array(
         ),
         array(
             'label' => 'Bank',
-            'value' => $model->bank->name,
+            'value' => $model->companyBank->bank->name,
         ),
         array(
             'label' => 'Harga Beli',
@@ -101,7 +101,7 @@ $this->menu=array(
                         <td style="text-align: center"><?php echo $count + 1; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($header, 'tanggal_transaksi'))); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($header, 'tanggal_transaksi'))); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
                     </tr>
@@ -125,6 +125,7 @@ $this->menu=array(
                                 <td style="text-align: center"><?php echo $count + 1; ?></td>
                                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($depreciationJournal, 'branchAccountCode')); ?></td>
                                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($depreciationJournal, 'branchAccountName')); ?></td>
+                                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciationJournal, 'tanggal_transaksi'))); ?></td>
                                 <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
                                 <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
                             </tr>
@@ -150,6 +151,7 @@ $this->menu=array(
                                 <td style="text-align: center"><?php echo $count + 1; ?></td>
                                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($saleJournal, 'branchAccountCode')); ?></td>
                                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($saleJournal, 'branchAccountName')); ?></td>
+                                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($saleJournal, 'tanggal_transaksi'))); ?></td>
                                 <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
                                 <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
                             </tr>
@@ -174,9 +176,9 @@ $this->menu=array(
     </fieldset>
 <?php endif; ?>
 
-<br /> <hr />
+<?php //if (!empty($model->assetDepreciationDetails)): ?>
+    <br /> <hr />
 
-<?php if (!empty($model->assetDepreciations)): ?>
     <div>
         <table>
             <thead>
@@ -187,29 +189,30 @@ $this->menu=array(
                     <td>Nilai Depresiasi</td>
                 </tr>
             </thead>
-            <?php foreach($model->assetDepreciations as $depreciation): ?>
+            <?php foreach($model->assetDepreciationDetails as $depreciation): ?>
                 <tbody>
                     <tr>
-                        <td><?php echo CHtml::encode(CHtml::value($depreciation, 'transaction_number')); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($depreciation, 'transaction_date'))); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetDepreciationHeader.transaction_number')); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciation, 'assetDepreciationHeader.transaction_date'))); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($depreciation, 'number_of_month')); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
                     </tr>
                 </tbody>
             <?php endforeach; ?>
             <tfoot>
                 <tr>
-                    <td colspan="3">Total</td>
-                    <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'totalDepreciationValue'))); ?></td>
+                    <td colspan="3" style="text-align: right">Total</td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'totalDepreciationValue'))); ?></td>
                 </tr>
             </tfoot>
         </table>
     </div>
-<?php endif; ?>
-
-<br /> <hr />
+<?php //endif; ?>
 
 <?php if (!empty($model->assetSales)): ?>
+
+    <br /> <hr />
+
     <div>
         <table>
             <thead>
@@ -224,9 +227,9 @@ $this->menu=array(
                 <tbody>
                     <tr>
                         <td><?php echo CHtml::encode(CHtml::value($sale, 'transaction_number')); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($sale, 'transaction_date'))); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($sale, 'transaction_date'))); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($sale, 'note')); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($sale, 'sale_price'))); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($sale, 'sale_price'))); ?></td>
                     </tr>
                 </tbody>
             <?php endforeach; ?>
