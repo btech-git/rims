@@ -76,11 +76,11 @@ class AssetManagementController extends Controller {
                 $jurnalInventory->transaction_type = 'PFA';
                 $jurnalInventory->save();
 
-                $companyBank = CompanyBank::model()->findByAttributes(array('company_id' => 1, 'bank_id' => $model->bank_id));
+//                $companyBank = CompanyBank::model()->findByAttributes(array('company_id' => 1, 'bank_id' => $model->bank_id));
                 $jurnalBanking = new JurnalUmum;
                 $jurnalBanking->kode_transaksi = $model->transaction_number;
                 $jurnalBanking->tanggal_transaksi = $model->transaction_date;
-                $jurnalBanking->coa_id = empty($companyBank) ? 7 : $companyBank->coa_id;
+                $jurnalBanking->coa_id = empty($model->bank->coa_id) ? 7 : $model->bank->coa_id;
                 $jurnalBanking->branch_id = 6;
                 $jurnalBanking->total = $model->purchase_value;
                 $jurnalBanking->debet_kredit = 'K';
