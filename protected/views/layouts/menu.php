@@ -378,6 +378,7 @@
                     array('label' => 'Transaksi Dashboard', 'url' => array('/report/analyticsTransaction/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
                     array('label' => 'Financial Forecast', 'url' => array('/accounting/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
                     array('label' => 'Aset Management', 'url' => array('/accounting/assetManagement/admin')),
+                    array('label' => 'Laporan Aset Tetap', 'url' => array('/report/fixedAsset/summary')),
                     array(
                         'label' => 'Nilai Persediaan Barang', 
                         'url' => array('/report/inventoryValue/summary'), 
