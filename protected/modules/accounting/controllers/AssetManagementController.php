@@ -80,7 +80,7 @@ class AssetManagementController extends Controller {
                 $jurnalBanking = new JurnalUmum;
                 $jurnalBanking->kode_transaksi = $model->transaction_number;
                 $jurnalBanking->tanggal_transaksi = $model->transaction_date;
-                $jurnalBanking->coa_id = empty($model->bank->coa_id) ? 7 : $model->bank->coa_id;
+                $jurnalBanking->coa_id = empty($model->companyBank->coa_id) ? 7 : $model->companyBank->coa_id;
                 $jurnalBanking->branch_id = 6;
                 $jurnalBanking->total = $model->purchase_value;
                 $jurnalBanking->debet_kredit = 'K';
