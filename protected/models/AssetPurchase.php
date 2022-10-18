@@ -175,6 +175,6 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
             $this->transaction_number = $assetPurchase->transaction_number;
         }
 
-        $this->setCodeNumberByNext('transaction_number', $branchCode, AssetSale::CONSTANT, $currentMonth, $currentYear);
+        $this->setCodeNumberByNext('transaction_number', $branchCode, AssetPurchase::CONSTANT, $currentMonth, $currentYear);
     }
 }
