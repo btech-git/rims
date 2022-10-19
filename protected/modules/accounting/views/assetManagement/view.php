@@ -44,7 +44,7 @@ $this->menu=array(
         ),
         array(
             'label' => 'Bank',
-            'value' => $model->companyBank->bank->name,
+            'value' => $model->companyBank->account_name,
         ),
         array(
             'label' => 'Harga Beli',
@@ -176,7 +176,7 @@ $this->menu=array(
     </fieldset>
 <?php endif; ?>
 
-<?php //if (!empty($model->assetDepreciationDetails)): ?>
+<?php if (!empty($model->assetDepreciationDetails)): ?>
     <br /> <hr />
 
     <div>
@@ -207,7 +207,7 @@ $this->menu=array(
             </tfoot>
         </table>
     </div>
-<?php //endif; ?>
+<?php endif; ?>
 
 <?php if (!empty($model->assetSales)): ?>
 

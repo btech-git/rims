@@ -154,7 +154,7 @@
                         <?php echo CHtml::label('Payment Bank', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => 7)), 'id', 'bank.name'), array('empty' => '-- Pilih Bank --')); ?>
+                        <?php echo $form->dropDownlist($model, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => 7)), 'id', 'account_name'), array('empty' => '-- Pilih Bank --')); ?>
                         <?php echo $form->error($model,'company_bank_id'); ?>
                     </div>
                 </div>
