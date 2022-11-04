@@ -136,6 +136,9 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transaction_date DESC',
+            ),
         ));
     }
 
