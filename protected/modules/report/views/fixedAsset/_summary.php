@@ -65,7 +65,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $totalPurchaseValue += $purchaseValue; ?>
             <?php $totalAccumulatedValue += $accumulatedValue; ?>
             <?php $totalCurrentValue += $currentValue; ?>
-            <?php $totalAdjustedValue += $adjustedValue; ?>
+            <?php $totalAdjustedValue += 0.00; //$adjustedValue; ?>
             <?php $totalYearlyValue += 0.00; ?>
 
         <?php endforeach; ?>

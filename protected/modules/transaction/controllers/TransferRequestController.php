@@ -107,6 +107,65 @@ class TransferRequestController extends Controller {
         $transferRequest = $this->loadModel($id);
         $transferDetails = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $id));
 
+        if (isset($_POST['Process'])) {
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $transferRequest->transfer_request_no,
+            ));
+
+            $coaInterbranchRequester = BranchCoaInterbranch::model()->findByAttributes(array(
+                'branch_id_from' => $transferRequest->requester_branch_id, 
+                'branch_id_to' => $transferRequest->destination_branch_id,
+            ));
+
+            $jurnalUmumInterbranchRequester = new JurnalUmum;
+            $jurnalUmumInterbranchRequester->kode_transaksi = $transferRequest->transfer_request_no;
+            $jurnalUmumInterbranchRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
+            $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
+            $jurnalUmumInterbranchRequester->branch_id = $transferRequest->requester_branch_id;
+            $jurnalUmumInterbranchRequester->total = $transferRequest->total_price;
+            $jurnalUmumInterbranchRequester->debet_kredit = 'D';
+            $jurnalUmumInterbranchRequester->tanggal_posting = date('Y-m-d');
+            $jurnalUmumInterbranchRequester->transaction_subject = 'Transfer Request Main';
+            $jurnalUmumInterbranchRequester->is_coa_category = 0;
+            $jurnalUmumInterbranchRequester->transaction_type = 'TR';
+            $jurnalUmumInterbranchRequester->save();
+
+            foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
+                $hppPrice = $detail->product->hpp * $detail->quantity;
+
+                //save coa persediaan product master
+                $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
+                $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $transferRequest->transfer_request_no;
+                $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
+                $jurnalUmumMasterOutstandingPartRequester->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
+                $jurnalUmumMasterOutstandingPartRequester->branch_id = $transferRequest->requester_branch_id;
+                $jurnalUmumMasterOutstandingPartRequester->total = $hppPrice;
+                $jurnalUmumMasterOutstandingPartRequester->debet_kredit = 'K';
+                $jurnalUmumMasterOutstandingPartRequester->tanggal_posting = date('Y-m-d');
+                $jurnalUmumMasterOutstandingPartRequester->transaction_subject = 'Transfer Request Main';
+                $jurnalUmumMasterOutstandingPartRequester->is_coa_category = 1;
+                $jurnalUmumMasterOutstandingPartRequester->transaction_type = 'TR';
+                $jurnalUmumMasterOutstandingPartRequester->save();
+
+                //save coa persedian product sub master
+                $jurnalUmumOutstandingPartRequester = new JurnalUmum;
+                $jurnalUmumOutstandingPartRequester->kode_transaksi = $transferRequest->transfer_request_no;
+                $jurnalUmumOutstandingPartRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
+                $jurnalUmumOutstandingPartRequester->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+                $jurnalUmumOutstandingPartRequester->branch_id = $transferRequest->requester_branch_id;
+                $jurnalUmumOutstandingPartRequester->total = $hppPrice;
+                $jurnalUmumOutstandingPartRequester->debet_kredit = 'K';
+                $jurnalUmumOutstandingPartRequester->tanggal_posting = date('Y-m-d');
+                $jurnalUmumOutstandingPartRequester->transaction_subject = 'Transfer Request Main';
+                $jurnalUmumOutstandingPartRequester->is_coa_category = 0;
+                $jurnalUmumOutstandingPartRequester->transaction_type = 'TR';
+                $jurnalUmumOutstandingPartRequester->save();
+
+            }
+
+            $this->redirect(array('view', 'id' => $id));
+        }
+
         $this->render('view', array(
             'transferRequest' => $transferRequest,
             'transferDetails' => $transferDetails,

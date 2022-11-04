@@ -34,7 +34,8 @@
                 </td>
                 
                 <td style="text-align: right">
-                    <?php echo CHtml::activeTextField($detail, "[$i]amount"); ?>
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]amount"); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
                     <?php echo CHtml::error($detail, 'amount'); ?>
                 </td>
                 

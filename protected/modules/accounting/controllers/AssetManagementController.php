@@ -209,6 +209,8 @@ class AssetManagementController extends Controller {
         $assetDepreciation = $this->instantiate(null);
         $assetDepreciation->header->transaction_date = date('Y-m-d');
         $assetDepreciation->header->transaction_time = date('H:i:s');
+        $assetDepreciation->header->depreciation_period_month = date('m');
+        $assetDepreciation->header->depreciation_period_year = date('Y');
         $assetDepreciation->header->user_id = Yii::app()->user->id;
         
         $assetDepreciation->addAsset();

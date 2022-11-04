@@ -50,10 +50,70 @@ class TransactionSentRequestController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
         $sentDetails = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $id));
 
+        if (isset($_POST['Process'])) {
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->sent_request_no,
+            ));
+            
+            $coaInterbranchRequester = BranchCoaInterbranch::model()->findByAttributes(array(
+                'branch_id_from' => $model->requester_branch_id, 
+                'branch_id_to' => $model->destination_branch_id,
+            ));
+
+            $jurnalUmumInterbranchRequester = new JurnalUmum;
+            $jurnalUmumInterbranchRequester->kode_transaksi = $model->sent_request_no;
+            $jurnalUmumInterbranchRequester->tanggal_transaksi = $model->sent_request_date;
+            $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
+            $jurnalUmumInterbranchRequester->branch_id = $model->requester_branch_id;
+            $jurnalUmumInterbranchRequester->total = $model->total_price;
+            $jurnalUmumInterbranchRequester->debet_kredit = 'D';
+            $jurnalUmumInterbranchRequester->tanggal_posting = date('Y-m-d');
+            $jurnalUmumInterbranchRequester->transaction_subject = 'Sent Request Main';
+            $jurnalUmumInterbranchRequester->is_coa_category = 0;
+            $jurnalUmumInterbranchRequester->transaction_type = 'SR';
+            $jurnalUmumInterbranchRequester->save();
+
+            foreach ($model->transactionSentRequestDetails as $detail) {
+
+                //save coa persediaan product master
+                $hppPrice = $detail->unit_price * $detail->quantity;
+
+                $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
+                $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $model->sent_request_no;
+                $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $model->sent_request_date;
+                $jurnalUmumMasterOutstandingPartRequester->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
+                $jurnalUmumMasterOutstandingPartRequester->branch_id = $model->requester_branch_id;
+                $jurnalUmumMasterOutstandingPartRequester->total = $hppPrice;
+                $jurnalUmumMasterOutstandingPartRequester->debet_kredit = 'K';
+                $jurnalUmumMasterOutstandingPartRequester->tanggal_posting = date('Y-m-d');
+                $jurnalUmumMasterOutstandingPartRequester->transaction_subject = 'Sent Request Main';
+                $jurnalUmumMasterOutstandingPartRequester->is_coa_category = 1;
+                $jurnalUmumMasterOutstandingPartRequester->transaction_type = 'SR';
+                $jurnalUmumMasterOutstandingPartRequester->save();
+//
+//                    //save coa persedian product sub master
+                $jurnalUmumOutstandingPartRequester = new JurnalUmum;
+                $jurnalUmumOutstandingPartRequester->kode_transaksi = $model->sent_request_no;
+                $jurnalUmumOutstandingPartRequester->tanggal_transaksi = $model->sent_request_date;
+                $jurnalUmumOutstandingPartRequester->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+                $jurnalUmumOutstandingPartRequester->branch_id = $model->requester_branch_id;
+                $jurnalUmumOutstandingPartRequester->total = $hppPrice;
+                $jurnalUmumOutstandingPartRequester->debet_kredit = 'K';
+                $jurnalUmumOutstandingPartRequester->tanggal_posting = date('Y-m-d');
+                $jurnalUmumOutstandingPartRequester->transaction_subject = 'Sent Request Main';
+                $jurnalUmumOutstandingPartRequester->is_coa_category = 0;
+                $jurnalUmumOutstandingPartRequester->transaction_type = 'SR';
+                $jurnalUmumOutstandingPartRequester->save();
+            }
+
+            $this->redirect(array('view', 'id' => $id));
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
             'sentDetails' => $sentDetails,
         ));
     }
@@ -186,23 +246,15 @@ class TransactionSentRequestController extends Controller {
                 }
                 $sentRequest->save(false);
 
-//                $jurnalUmumMasterInterbranchRequester = new JurnalUmum;
-//                $jurnalUmumMasterInterbranchRequester->kode_transaksi = $sentRequest->sent_request_no;
-//                $jurnalUmumMasterInterbranchRequester->tanggal_transaksi = $sentRequest->sent_request_date;
-//                $jurnalUmumMasterInterbranchRequester->coa_id = $sentRequest->requesterBranch->coa_interbranch_inventory;
-//                $jurnalUmumMasterInterbranchRequester->branch_id = $sentRequest->requester_branch_id;
-//                $jurnalUmumMasterInterbranchRequester->total = $sentRequest->total_price;
-//                $jurnalUmumMasterInterbranchRequester->debet_kredit = 'D';
-//                $jurnalUmumMasterInterbranchRequester->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumMasterInterbranchRequester->transaction_subject = 'Sent Request Main';
-//                $jurnalUmumMasterInterbranchRequester->is_coa_category = 1;
-//                $jurnalUmumMasterInterbranchRequester->transaction_type = 'SR';
-//                $jurnalUmumMasterInterbranchRequester->save();
+                $coaInterbranchRequester = BranchCoaInterbranch::model()->findByAttributes(array(
+                    'branch_id_from' => $sentRequest->requester_branch_id, 
+                    'branch_id_to' => $sentRequest->destination_branch_id,
+                ));
 
                 $jurnalUmumInterbranchRequester = new JurnalUmum;
                 $jurnalUmumInterbranchRequester->kode_transaksi = $sentRequest->sent_request_no;
                 $jurnalUmumInterbranchRequester->tanggal_transaksi = $sentRequest->sent_request_date;
-                $jurnalUmumInterbranchRequester->coa_id = $sentRequest->requesterBranch->coa_interbranch_inventory;
+                $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
                 $jurnalUmumInterbranchRequester->branch_id = $sentRequest->requester_branch_id;
                 $jurnalUmumInterbranchRequester->total = $sentRequest->total_price;
                 $jurnalUmumInterbranchRequester->debet_kredit = 'D';
@@ -263,10 +315,10 @@ class TransactionSentRequestController extends Controller {
         $sentRequest->status_document = 'Approved by Destination Branch';
         $sentRequest->update(array('destination_approval_status', 'destination_approved_by', 'status_document'));
 
-//        $coaInterbranchDestination = BranchCoaInterbranch::model()->findByAttributes(array(
-//            'branch_id_from' => $sentRequest->destination_branch_id, 
-//            'branch_id_to' => $sentRequest->requester_branch_id,
-//        ));
+        $coaInterbranchDestination = BranchCoaInterbranch::model()->findByAttributes(array(
+            'branch_id_from' => $sentRequest->destination_branch_id, 
+            'branch_id_to' => $sentRequest->requester_branch_id,
+        ));
 
 //        $jurnalUmumMasterInterbranchDestination = new JurnalUmum;
 //        $jurnalUmumMasterInterbranchDestination->kode_transaksi = $sentRequest->sent_request_no;
@@ -284,7 +336,7 @@ class TransactionSentRequestController extends Controller {
         $jurnalUmumInterbranchDestination = new JurnalUmum;
         $jurnalUmumInterbranchDestination->kode_transaksi = $sentRequest->sent_request_no;
         $jurnalUmumInterbranchDestination->tanggal_transaksi = $sentRequest->sent_request_date;
-        $jurnalUmumInterbranchDestination->coa_id = $sentRequest->destinationBranch->coa_interbranch_inventory;
+        $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
         $jurnalUmumInterbranchDestination->branch_id = $sentRequest->destination_branch_id;
         $jurnalUmumInterbranchDestination->total = $sentRequest->total_price;
         $jurnalUmumInterbranchDestination->debet_kredit = 'K';

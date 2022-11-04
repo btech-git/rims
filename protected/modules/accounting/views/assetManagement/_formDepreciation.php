@@ -27,21 +27,26 @@
                     <div class="small-4 columns">
                         <?php echo CHtml::label('Depreciation Period', false); ?>
                     </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', date('Y-m-d'))); ?>
-                        <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                            'model' => $assetDepreciation->header,
-                            'attribute' => "transaction_date",
-                            'options'=>array(
-                                'dateFormat' => 'yy-mm-dd',
-                                'changeMonth'=>true,
-                                'changeYear'=>true,
-                            ),
-                            'htmlOptions'=>array(
-                                'readonly' => true,
-                            ),
-                        ));*/ ?>
-                        <?php //echo $form->error($assetDepreciation->header,'transaction_date'); ?>
+                    <div class="small-4 columns">
+                        <?php echo CHtml::activeDropDownList($assetDepreciation->header, 'depreciation_period_month', array(
+                            '1' => 'Jan',
+                            '2' => 'Feb',
+                            '3' => 'Mar',
+                            '4' => 'Apr',
+                            '5' => 'May',
+                            '6' => 'Jun',
+                            '7' => 'Jul',
+                            '8' => 'Aug',
+                            '9' => 'Sep',
+                            '10' => 'Oct',
+                            '11' => 'Nov',
+                            '12' => 'Dec',
+                        )); ?>
+                        <?php echo $form->error($assetDepreciation->header,'depreciation_period_month'); ?>
+                    </div>
+                    <div class="small-4 columns">
+                        <?php echo CHtml::activeDropDownList($assetDepreciation->header, 'depreciation_period_year', $assetDepreciation->header->yearsRange); ?>
+                        <?php echo $form->error($assetDepreciation->header,'depreciation_period_year'); ?>
                     </div>
                 </div>
             </div>
