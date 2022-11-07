@@ -214,6 +214,8 @@ class MovementOuts extends CComponent {
                 $deliveryDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
                 $deliveryDetail->quantity_movement_left = $detail->quantity_transaction - $quantity;
                 $deliveryDetail->quantity_movement = $quantity;
+                $deliveryDetail->quantity_receive = 0;
+                $deliveryDetail->quantity_receive_left = $quantity;
                 $deliveryDetail->save(false);
             } elseif ($movementType == 2) {
                 $criteria = new CDbCriteria;

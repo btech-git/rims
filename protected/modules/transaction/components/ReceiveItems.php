@@ -84,7 +84,7 @@ class ReceiveItems extends CComponent {
         } elseif ($requestType == 4) {
             $movementOuts = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $requestId));
             foreach ($movementOuts as $key => $movementOut) {
-                if ($movementOut->quantity_receive_left > 0) {
+//                if ($movementOut->quantity_receive_left > 0) {
                     $detail = new TransactionReceiveItemDetail();
                     $detail->product_id = $movementOut->product_id;
                     $detail->qty_request = $movementOut->quantity;
@@ -93,7 +93,7 @@ class ReceiveItems extends CComponent {
                     $detail->note = 'Movement Out';
                     $detail->barcode_product = null;
                     $this->details[] = $detail;
-                }
+//                }
             }
         }
     }
