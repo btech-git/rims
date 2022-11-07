@@ -352,7 +352,7 @@ class TransactionReceiveItemController extends Controller {
             $movement->attributes = $_GET['MovementOutHeader'];
 
         $movementCriteria = new CDbCriteria;
-        $movementCriteria->compare('movement_out_no', $movement->movement_out_no . '%', true, 'AND', false);
+        $movementCriteria->compare('movement_out_no', $movement->movement_out_no, true);
         $movementCriteria->addCondition("status != 'Draft' AND status != 'Rejected' AND status != 'Revised'");
         $movementCriteria->order = 't.date_posting DESC';
         $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(

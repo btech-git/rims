@@ -96,16 +96,21 @@ class TransferRequest extends CComponent {
 
     public function validate() {
         $valid = $this->header->validate();
-        if (!$valid)
+        
+        if (!$valid) {
             $this->header->addError('error', 'Header Error');
-        else {
+        } elseif ($this->header->requester_branch_id === $this->header->destination_branch_id) {
+            $valid = false;
+            $this->header->addError('error', 'Requester and destination branch must be different!!');
+        } else {
             $valid = $valid && $this->validateDetailsCount();
-            if (!$valid)
+            if (!$valid) {
                 $this->header->addError('error', 'Validate Details Error');
-            else {
+            } else {
                 $valid = $valid && $this->validateDetailsUnique();
-                if (!$valid)
+                if (!$valid) {
                     $this->header->addError('error', 'Validate Unique Error');
+                }
             }
         }
         if (count($this->details) > 0) {

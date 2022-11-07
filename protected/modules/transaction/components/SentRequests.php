@@ -80,6 +80,15 @@ class SentRequests extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
+        if (!$valid) {
+            $this->header->addError('error', 'Header Error');
+        } 
+        
+        if ($this->header->requester_branch_id === $this->header->destination_branch_id) {
+            $valid = false;
+            $this->header->addError('error', 'Requester and destination branch must be different!!');
+        } 
+        
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
 
@@ -87,7 +96,7 @@ class SentRequests extends CComponent {
                 $valid = $detail->validate($fields) && $valid;
             }
         } else {
-            $valid = true;
+            $valid = false;
         }
 
         return $valid;

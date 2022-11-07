@@ -14,7 +14,7 @@
 <div class="form">
 
     <?php echo CHtml::beginForm(); ?>
-    <?php echo CHtml::errorSummary($transferRequest->header); ?>
+    <span style="color: red; font-weight: bold"><?php echo CHtml::errorSummary($transferRequest->header); ?></span>
     <div class="row">
         <div class="small-12 medium-6 columns">
 <!--            <div class="field">

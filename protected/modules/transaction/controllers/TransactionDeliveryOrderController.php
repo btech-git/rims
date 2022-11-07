@@ -264,7 +264,7 @@ class TransactionDeliveryOrderController extends Controller {
             $transfer->attributes = $_GET['TransactionTransferRequest'];
 
         $transferDataProvider = $transfer->searchByPendingDelivery();
-        $transferDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        $transferDataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
         $transferDataProvider->criteria->addCondition("t.transfer_request_date > '2021-12-31'");
 
         $sent = new TransactionSentRequest('search');

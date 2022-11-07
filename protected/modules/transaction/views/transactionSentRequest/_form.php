@@ -24,7 +24,7 @@
 
         <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-        <?php echo $form->errorSummary($sentRequest->header); ?>
+        <span style="color: red; font-weight: bold"><?php echo $form->errorSummary($sentRequest->header); ?></span>
 
         <div class="row">
             <div class="small-12 medium-6 columns">
