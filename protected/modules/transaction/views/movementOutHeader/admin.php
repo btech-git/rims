@@ -133,7 +133,7 @@ $('.search-form form').submit(function(){
                                     'registrationTransaction' => $registrationTransaction,
                                 ), true)
                             ),
-                            'Materail Request' => array(
+                            'Material Request' => array(
                                 'content' => $this->renderPartial('_viewRequest', array(
                                     'materialRequestDataProvider' => $materialRequestDataProvider,
                                     'materialRequest' => $materialRequest,
