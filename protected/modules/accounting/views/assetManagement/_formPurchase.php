@@ -83,10 +83,10 @@
         </div>
         
         <div class="small-12 medium-6 columns">
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Tanggal Mulai Depresiasi', false); ?>
+                        <?php /*echo CHtml::label('Tanggal Mulai Depresiasi', false); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
@@ -102,10 +102,10 @@
                                 'readonly' => true,
                             ),
                         )); ?>
-                        <?php echo $form->error($model,'depreciation_start_date'); ?>
+                        <?php echo $form->error($model,'depreciation_start_date');*/ ?>
                     </div>
                 </div>
-            </div>
+            </div>-->
             
 <!--            <div class="field">
                 <div class="row collapse">

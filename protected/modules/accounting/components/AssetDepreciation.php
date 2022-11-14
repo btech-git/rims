@@ -22,6 +22,8 @@ class AssetDepreciation extends CComponent {
                 $detail->asset_purchase_id = $assetPurchase->id;
                 $detail->amount = $assetPurchase->monthlyDepreciationAmount;
                 $detail->number_of_month = $assetPurchase->depreciationMonthlyNumber;
+                $detail->depreciation_period_month = date('m');
+                $detail->depreciation_period_year = date('Y');
                 $this->details[] = $detail;
             }
 

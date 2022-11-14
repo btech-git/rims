@@ -183,11 +183,11 @@
                     </div>
                     <div class="small-8 columns">
                         <?php
-                            $branchId = $paymentOut->header->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $paymentOut->header->branch_id;
-                            $branch = Branch::model()->findByPk($branchId);
-                            $company = Company::model()->findByPk($branch->company_id);
+//                            $branchId = $paymentOut->header->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $paymentOut->header->branch_id;
+                            $userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
+                            $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => $userBranch->branch_id));
                         ?>
-                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
+                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyBranch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
                             'empty' => '-- Select Company Bank --'
                         )); ?>
                         <?php echo CHtml::error($paymentOut->header, 'company_bank_id'); ?>

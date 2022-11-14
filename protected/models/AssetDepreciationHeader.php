@@ -8,8 +8,6 @@
  * @property string $transaction_number
  * @property string $transaction_date
  * @property string $transaction_time
- * @property integer $depreciation_period_month
- * @property integer $depreciation_period_year
  * @property integer $user_id
  *
  * The followings are the available model relations:
@@ -43,12 +41,12 @@ class AssetDepreciationHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, depreciation_period_month, depreciation_period_year, user_id', 'required'),
-            array('user_id, depreciation_period_month, depreciation_period_year', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, user_id', 'required'),
+            array('user_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, depreciation_period_month, depreciation_period_year, user_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -74,8 +72,6 @@ class AssetDepreciationHeader extends MonthlyTransactionActiveRecord {
             'transaction_date' => 'Transaction Date',
             'transaction_time' => 'Transaction Time',
             'user_id' => 'User',
-            'depreciation_period_month' => 'Period Month',
-            'depreciation_period_year' => 'Period Year',
         );
     }
 
@@ -93,8 +89,6 @@ class AssetDepreciationHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('transaction_number', $this->transaction_number, true);
         $criteria->compare('transaction_date', $this->transaction_date, true);
         $criteria->compare('transaction_time', $this->transaction_time, true);
-        $criteria->compare('depreciation_period_month', $this->depreciation_period_month);
-        $criteria->compare('depreciation_period_year', $this->depreciation_period_year);
         $criteria->compare('user_id', $this->user_id);
 
         return new CActiveDataProvider($this, array(
@@ -118,32 +112,5 @@ class AssetDepreciationHeader extends MonthlyTransactionActiveRecord {
         }
 
         $this->setCodeNumberByNext('transaction_number', $branchCode, AssetDepreciationHeader::CONSTANT, $currentMonth, $currentYear);
-    }
-    
-    public function getYearsRange() {
-        $currentYear = date('Y');
-        $yearFrom = $currentYear - 2;
-        $yearTo = $currentYear + 2;
-        $yearsRange = range($yearFrom, $yearTo);
-        return array_combine($yearsRange, $yearsRange);
-    }
-    
-    public function getDepreciationPeriodMonth($month) {
-        
-        switch($month) {
-            case 1: return 'Jan';
-            case 2: return 'Feb';
-            case 3: return 'Mar';
-            case 4: return 'Apr';
-            case 5: return 'May';
-            case 6: return 'Jun';
-            case 7: return 'Jul';
-            case 8: return 'Aug';
-            case 9: return 'Sep';
-            case 10: return 'Oct';
-            case 11: return 'Nov';
-            case 12: return 'Dec';
-            default: return '';
-        }
     }
 }

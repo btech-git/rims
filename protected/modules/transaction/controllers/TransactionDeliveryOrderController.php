@@ -109,7 +109,7 @@ class TransactionDeliveryOrderController extends Controller {
             $deliveryOrder->header->transfer_request_id = $transactionId;
             $deliveryOrder->header->customer_id = null;
             $deliveryOrder->header->request_type = 'Transfer Request';
-            $deliveryOrder->header->destination_branch = $transferRequest->destination_branch_id;
+            $deliveryOrder->header->destination_branch = $transferRequest->requester_branch_id;
             $deliveryOrder->header->estimate_arrival_date = $transferRequest->estimate_arrival_date;
             $deliveryOrder->header->request_date = $transferRequest->transfer_request_date;
             

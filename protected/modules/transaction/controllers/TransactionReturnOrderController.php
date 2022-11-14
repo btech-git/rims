@@ -136,16 +136,20 @@ class TransactionReturnOrderController extends Controller {
         $receiveDataProvider->criteria->addCondition('t.receive_item_date > "2021-12-31"');
 
         $returnOrder = $this->instantiate(null);
-        $returnOrder->header->recipient_branch_id = $returnOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $returnOrder->header->recipient_branch_id;
+//        $returnOrder->header->recipient_branch_id = $returnOrder->header->isNewRecord ? UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()))->branch_id : $returnOrder->header->recipient_branch_id;
         $returnOrder->header->created_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($returnOrder->header);
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionReturnOrder'])) {
             $this->loadState($returnOrder);
-            $returnOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnOrder->header->return_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnOrder->header->return_order_date)), $returnOrder->header->recipient_branch_id);
+            
+            if (!empty(recipient_branch_id)) {
+                $returnOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnOrder->header->return_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnOrder->header->return_order_date)), $returnOrder->header->recipient_branch_id);
+            }
 
             if ($returnOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $returnOrder->header->id));

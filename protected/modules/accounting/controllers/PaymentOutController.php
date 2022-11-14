@@ -47,7 +47,7 @@ class PaymentOutController extends Controller {
         $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->supplier_id = $supplierId;
         $paymentOut->header->status = 'Draft';
-        $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+//        $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
 
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();

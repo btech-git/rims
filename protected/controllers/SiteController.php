@@ -35,44 +35,53 @@ class SiteController extends Controller {
             $date = date_create(date('d-m-Y'));
             date_sub($date, date_interval_create_from_date_string("7 days"));
 
-            if (!empty($branchId)) {
+//            if (!empty($branchId)) {
                 $requestCriteria = new CDbCriteria;
-                $requestCriteria->addCondition(" main_branch_id = " . $branchId . " AND DATE(request_order_date) >= (NOW() - INTERVAL 7 DAY)");
+                $requestCriteria->addCondition(" DATE(request_order_date) >= (NOW() - INTERVAL 7 DAY)");
+                $requestCriteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
                 $requestOrder = TransactionRequestOrder::model()->findAll($requestCriteria);
+                
                 $purchaseCriteria = new CDbCriteria;
-                $purchaseCriteria->addCondition(" main_branch_id = " . $branchId . " AND DATE(purchase_order_date) >= (NOW() - INTERVAL 7 DAY)");
+                $purchaseCriteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
+                $purchaseCriteria->addCondition(" DATE(purchase_order_date) >= (NOW() - INTERVAL 7 DAY)");
                 $purchase = TransactionPurchaseOrder::model()->findAll($purchaseCriteria);
 
                 $salesCriteria = new CDbCriteria;
-                $salesCriteria->addCondition(" requester_branch_id = " . $branchId . " AND DATE(sale_order_date) >= (NOW() - INTERVAL 7 DAY)");
+                $salesCriteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+                $salesCriteria->addCondition(" DATE(sale_order_date) >= (NOW() - INTERVAL 7 DAY)");
                 $sales = TransactionSalesOrder::model()->findAll($salesCriteria);
 
                 $transferCriteria = new CDbCriteria;
-                $transferCriteria->addCondition(" destination_branch_id = " . $branchId . " AND DATE(transfer_request_date) >= (NOW() - INTERVAL 7 DAY)");
+                $transferCriteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
+                $transferCriteria->addCondition(" DATE(transfer_request_date) >= (NOW() - INTERVAL 7 DAY)");
                 $transfer = TransactionTransferRequest::model()->findAll($transferCriteria);
 
                 $sentCriteria = new CDbCriteria;
-                $sentCriteria->addCondition(" destination_branch_id = " . $branchId . " AND DATE(sent_request_date) >= (NOW() - INTERVAL 7 DAY)");
+                $sentCriteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
+                $sentCriteria->addCondition(" DATE(sent_request_date) >= (NOW() - INTERVAL 7 DAY)");
                 $sent = TransactionSentRequest::model()->findAll($sentCriteria);
 
                 $consignmentCriteria = new CDbCriteria;
-                $consignmentCriteria->addCondition(" branch_id = " . $branchId . " AND DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
+                $consignmentCriteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+                $consignmentCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
                 $consignment = ConsignmentOutHeader::model()->findAll($consignmentCriteria);
 
                 $consignmentInCriteria = new CDbCriteria;
-                $consignmentInCriteria->addCondition(" receive_branch = " . $branchId . " AND DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
+                $consignmentInCriteria->addInCondition('receive_branch', Yii::app()->user->branch_ids);
+                $consignmentInCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
                 $consignmentIn = ConsignmentInHeader::model()->findAll($consignmentInCriteria);
 
                 $movementCriteria = new CDbCriteria;
-                $movementCriteria->addCondition(" branch_id = " . $branchId . " AND DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
+                $movementCriteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+                $movementCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
                 $movement = MovementOutHeader::model()->findAll($movementCriteria);
 
                 $movementInCriteria = new CDbCriteria;
-                $movementInCriteria->addCondition(" branch_id = " . $branchId . " AND DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
+                $movementInCriteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+                $movementInCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
                 $movementIn = MovementInHeader::model()->findAll($movementInCriteria);
 
-//                $count = count($requestOrder) + count($purchase) + count($sales) + count($transfer) + count($sent) + count($consignment) + count($consignmentIn) + count($movement) + count($movementIn);
-            }
+//            }
         }
         
         $totalReceivables = InvoiceHeader::totalReceivables();

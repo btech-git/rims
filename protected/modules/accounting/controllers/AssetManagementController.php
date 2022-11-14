@@ -53,6 +53,7 @@ class AssetManagementController extends Controller {
         if (isset($_POST['Submit'])) {
             $model->attributes = $_POST['AssetPurchase'];
             $model->accumulated_depreciation_value = 0.00;
+            $model->depreciation_start_date = date('Y-m-d');
             $model->depreciation_end_date = date('Y-m-d', strtotime($model->depreciation_start_date . ' + ' . $model->assetCategory->number_of_years . ' years'));
             $model->current_value = $model->purchase_value;
             $model->monthly_useful_life = empty($model->assetCategory) ? 0 : $model->assetCategory->number_of_years * 12;
@@ -209,8 +210,6 @@ class AssetManagementController extends Controller {
         $assetDepreciation = $this->instantiate(null);
         $assetDepreciation->header->transaction_date = date('Y-m-d');
         $assetDepreciation->header->transaction_time = date('H:i:s');
-        $assetDepreciation->header->depreciation_period_month = date('m');
-        $assetDepreciation->header->depreciation_period_year = date('Y');
         $assetDepreciation->header->user_id = Yii::app()->user->id;
         
         $assetDepreciation->addAsset();
