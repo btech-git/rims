@@ -324,13 +324,7 @@ class MovementOutHeaderController extends Controller {
         $deliveryOrderDataProvider->criteria->addCondition("t.delivery_date > '2021-12-31'");
         $deliveryOrderDataProvider->criteria->addInCondition('sender_branch_id', Yii::app()->user->branch_ids);
 
-        /* Return Order */
-        $returnOrder = new TransactionReturnOrder('search');
-        $returnOrder->unsetAttributes();
-//        if (isset($_GET['TransactionReturnOrder'])) {
-//            $returnOrder->attributes = $_GET['TransactionReturnOrder'];
-//        }
-        
+        $returnOrder = Search::bind(new TransactionReturnOrder('search'), isset($_GET['TransactionReturnOrder']) ? $_GET['TransactionReturnOrder'] : array());
         $returnOrderDataProvider = $returnOrder->searchByMovementOut();
 
         /* Registration Transaction */
