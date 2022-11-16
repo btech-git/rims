@@ -197,7 +197,6 @@ class TransactionReturnOrder extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('return_order_no', $this->return_order_no, true);
-        $criteria->compare('return_order_date', $this->return_order_date, true);
         $criteria->compare('receive_item_id', $this->receive_item_id);
         $criteria->compare('recipient_id', $this->recipient_id);
         $criteria->compare('recipient_branch_id', $this->recipient_branch_id);
@@ -210,7 +209,9 @@ class TransactionReturnOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
         $criteria->compare('delivery_order_id', $this->delivery_order_id);
         $criteria->compare('consignment_in_id', $this->consignment_in_id);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('status', 'Approved');
+        $criteria->addCondition("t.return_order_date > '2021-12-31'");
+//        $criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
