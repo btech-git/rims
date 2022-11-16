@@ -155,8 +155,8 @@ class TransactionReturnOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.branch_destination_id', $this->branch_destination_id);
         $criteria->compare('t.request_date', $this->request_date, true);
         $criteria->compare('t.estimate_arrival_date', $this->estimate_arrival_date, true);
-        $criteria->compare('.delivery_order_id', $this->delivery_order_id);
-        $criteria->compare('.consignment_in_id', $this->consignment_in_id);
+        $criteria->compare('t.delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('t.consignment_in_id', $this->consignment_in_id);
         $criteria->compare('t.status', $this->status, true);
 
         $criteria->together = 'true';
@@ -192,24 +192,28 @@ class TransactionReturnOrder extends MonthlyTransactionActiveRecord {
             t.id NOT IN (
                 SELECT return_order_id
                 FROM " . MovementOutHeader::model()->tableName() . " 
+                WHERE return_order_id IS NOT NULL
             )
         ";
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('return_order_no', $this->return_order_no, true);
-        $criteria->compare('receive_item_id', $this->receive_item_id);
-        $criteria->compare('recipient_id', $this->recipient_id);
-        $criteria->compare('recipient_branch_id', $this->recipient_branch_id);
-        $criteria->compare('request_type', $this->request_type, true);
-        $criteria->compare('purchase_order_id', $this->purchase_order_id);
-        $criteria->compare('supplier_id', $this->supplier_id);
-        $criteria->compare('transfer_request_id', $this->transfer_request_id);
-        $criteria->compare('branch_destination_id', $this->branch_destination_id);
-        $criteria->compare('request_date', $this->request_date, true);
-        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
-        $criteria->compare('delivery_order_id', $this->delivery_order_id);
-        $criteria->compare('consignment_in_id', $this->consignment_in_id);
-        $criteria->compare('status', 'Approved');
+        $criteria->compare('t.return_order_no', $this->return_order_no, true);
+        $criteria->compare('t.return_order_date', $this->return_order_date, true);
+        $criteria->compare('t.receive_item_id', $this->receive_item_id);
+        $criteria->compare('t.recipient_id', $this->recipient_id);
+        $criteria->compare('t.recipient_branch_id', $this->recipient_branch_id);
+        $criteria->compare('t.request_type', $this->request_type, true);
+        $criteria->compare('t.purchase_order_id', $this->purchase_order_id);
+        $criteria->compare('t.supplier_id', $this->supplier_id);
+        $criteria->compare('t.transfer_request_id', $this->transfer_request_id);
+        $criteria->compare('t.branch_destination_id', $this->branch_destination_id);
+        $criteria->compare('t.request_date', $this->request_date, true);
+        $criteria->compare('t.estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('t.delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('t.consignment_in_id', $this->consignment_in_id);
+        $criteria->compare('t.status', $this->status, true);
+
+//        $criteria->compare('status', 'Approved');
 //        $criteria->addCondition("t.return_order_date > '2021-12-31'");
 //        $criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
 
