@@ -512,7 +512,7 @@ class Product extends CActiveRecord {
         
         foreach ($this->transactionPurchaseOrderDetails as $detail) {
             $unitPrice += $detail->getTotalPriceBeforeTax(0, 0);
-            $quantity += $detail->quantity;
+            $quantity += ($detail->quantity == 0) ? 1 : $detail->quantity;
         }
         
         return empty ($this->transactionPurchaseOrderDetails ) ? 0.00 : $unitPrice / $quantity;
