@@ -605,71 +605,43 @@ class MovementOutHeaderController extends Controller {
         $journalReferences = array();
         
         if ($delivered->save()) {
-//            $movement = MovementOutHeader::model()->findByPk($id);
-//            $movementDetails = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $id));
             
             foreach ($movementOut->details as $movementDetail) {
                 $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementDetail->product_id, 'warehouse_id' => $movementDetail->warehouse_id));
-                if (!empty($inventory)) {
-//                    $totalStockOut = (int) InventoryDetail::getTotalStockOut($movementDetail->product_id);
-//                    $remaining = $totalStockOut;
-//                    $inventoryDetailStockIn = InventoryDetail::model()->findAll(array(
-//                        'condition' => 'product_id = :product_id AND stock_in > 0 AND stock_out = 0',
-//                        'params' => array(':product_id' => $movementDetail->product_id),
-//                    ));
-//                    $index = 0;
-//                    while ($remaining >= $inventoryDetailStockIn[$index]->stock_in) {
-//                        $remaining -= $inventoryDetailStockIn[$index]->stock_in;
-//                        $index++;
-//                    }
-//                    $initialQuantity = $inventoryDetailStockIn[$index]->stock_in - $remaining;
-                    $inventoryDetail = new InventoryDetail();
-                    $inventoryDetail->inventory_id = $inventory->id;
-                    $inventoryDetail->product_id = $movementDetail->product_id;
-                    $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
-                    $inventoryDetail->transaction_type = 'Movement';
-                    $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
-                    $inventoryDetail->transaction_date = $movementOut->header->date_posting;
-                    $inventoryDetail->stock_out = '-' . $movementDetail->quantity; //($initialQuantity > $movementDetail->quantity ? $movementDetail->quantity : $initialQuantity);
-                    $inventoryDetail->notes = "Data from Movement Out";
-//                    $inventoryDetail->purchase_price = $inventoryDetailStockIn[$index]->purchase_price;
-                    $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
-                    $inventoryDetail->save(false);
-//                    $remaining = $movementDetail->quantity - $initialQuantity;
-//                    $index++;
-//                    while ($remaining > 0) {
-//                        $stockOut = $remaining > $movementDetail->quantity ? $movementDetail->quantity : ($remaining > $inventoryDetailStockIn[$index]->stock_in ? $inventoryDetailStockIn[$index]->stock_in : $remaining);
-//                        $inventoryDetail = new InventoryDetail();
-//                        $inventoryDetail->inventory_id = $inventory->id;
-//                        $inventoryDetail->product_id = $movementDetail->product_id;
-//                        $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
-//                        $inventoryDetail->transaction_type = 'Movement';
-//                        $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
-//                        $inventoryDetail->transaction_date = $movementOut->header->date_posting;
-//                        $inventoryDetail->stock_out = '-' . $stockOut;
-//                        $inventoryDetail->notes = "Data from Movement Out";
-//                        $inventoryDetail->purchase_price = $inventoryDetailStockIn[$index]->purchase_price;
-//                        $inventoryDetail->save(false);
-//                        $remaining -= $inventoryDetailStockIn[$index]->stock_in;
-//                        $index++;
-//                    }
+                
+                if (empty($inventory)) {
+                    $insertInventory = new Inventory();
+                    $insertInventory->product_id = $movementDetail->product_id;
+                    $insertInventory->warehouse_id = $movementDetail->warehouse_id;
+                    $insertInventory->minimal_stock = 0;
+                    $insertInventory->total_stock = $movementDetail->quantity * -1;
+                    $insertInventory->status = 'Active';
+                    $insertInventory->save();
+                    
+                    $inventoryId = $insertInventory->id;
+                } else {
+                    $inventory->total_stock -= $movementDetail->quantity;
+                    $inventory->update(array('total_stock'));
+                    
+                    $inventoryId = $inventory->id;
+                    
                 }
 
-                $value = $movementDetail->quantity * $movementDetail->product->hpp;
+//                if (!empty($inventory)) {
+//                    $inventoryDetail = new InventoryDetail();
+//                    $inventoryDetail->inventory_id = $inventoryId;
+//                    $inventoryDetail->product_id = $movementDetail->product_id;
+//                    $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
+//                    $inventoryDetail->transaction_type = 'Movement Out';
+//                    $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
+//                    $inventoryDetail->transaction_date = $movementOut->header->date_posting;
+//                    $inventoryDetail->stock_out = $movementDetail->quantity * -1;
+//                    $inventoryDetail->notes = "Data from Movement Out";
+//                    $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
+//                    $inventoryDetail->save(false);
+//                }
 
-//                $coaMasterGroupInventory = Coa::model()->findByAttributes(array('code' => '105.00.000'));
-//                $jurnalUmumMasterGroupInventory = new JurnalUmum;
-//                $jurnalUmumMasterGroupInventory->kode_transaksi = $movement->movement_out_no;
-//                $jurnalUmumMasterGroupInventory->tanggal_transaksi = $movement->date_posting;
-//                $jurnalUmumMasterGroupInventory->coa_id = $coaMasterGroupInventory->id;
-//                $jurnalUmumMasterGroupInventory->branch_id = $movement->branch_id;
-//                $jurnalUmumMasterGroupInventory->total = $jumlah;
-//                $jurnalUmumMasterGroupInventory->debet_kredit = 'D';
-//                $jurnalUmumMasterGroupInventory->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumMasterGroupInventory->transaction_subject = 'Movement Out';
-//                $jurnalUmumMasterGroupInventory->is_coa_category = 1;
-//                $jurnalUmumMasterGroupInventory->transaction_type = 'MO';
-//                $jurnalUmumMasterGroupInventory->save();
+                $value = $movementDetail->quantity * $movementDetail->product->hpp;
 
                 if ((int)$movementOut->header->movement_type == 3) {
                     $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
@@ -681,33 +653,6 @@ class MovementOutHeaderController extends Controller {
                     $journalReferences[$coaId]['is_coa_category'] = 0;
                     $journalReferences[$coaId]['values'][] = $value;
                     
-                    //save product master category coa outstanding_part
-//                    $jurnalUmumMasterOutstandingPart = new JurnalUmum;
-//                    $jurnalUmumMasterOutstandingPart->kode_transaksi = $movement->movement_out_no;
-//                    $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $movement->date_posting;
-//                    $jurnalUmumMasterOutstandingPart->coa_id = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
-//                    $jurnalUmumMasterOutstandingPart->branch_id = $movement->branch_id;
-//                    $jurnalUmumMasterOutstandingPart->total = $jumlah;
-//                    $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
-//                    $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumMasterOutstandingPart->transaction_subject = 'Movement Out';
-//                    $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
-//                    $jurnalUmumMasterOutstandingPart->transaction_type = 'MO';
-//                    $jurnalUmumMasterOutstandingPart->save();
-
-                    //save product sub master category coa outstanding_part
-//                    $jurnalUmumOutstandingPart = new JurnalUmum;
-//                    $jurnalUmumOutstandingPart->kode_transaksi = $movement->movement_out_no;
-//                    $jurnalUmumOutstandingPart->tanggal_transaksi = $movement->date_posting;
-//                    $jurnalUmumOutstandingPart->coa_id = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
-//                    $jurnalUmumOutstandingPart->branch_id = $movement->branch_id;
-//                    $jurnalUmumOutstandingPart->total = $jumlah;
-//                    $jurnalUmumOutstandingPart->debet_kredit = 'D';
-//                    $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumOutstandingPart->transaction_subject = 'Movement Out';
-//                    $jurnalUmumOutstandingPart->is_coa_category = 0;
-//                    $jurnalUmumOutstandingPart->transaction_type = 'MO';
-//                    $jurnalUmumOutstandingPart->save();
                 } else {
                     $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
                     $journalReferences[$coaId]['debet_kredit'] = 'D';
@@ -718,54 +663,7 @@ class MovementOutHeaderController extends Controller {
                     $journalReferences[$coaId]['is_coa_category'] = 0;
                     $journalReferences[$coaId]['values'][] = $value;
                     
-                    //save product master category coa inventory in transit
-//                    $coaMasterInventory = Coa::model()->findByPk($movementDetail->product->productMasterCategory->coaInventoryInTransit->id);
-//                    $getCoaMasterInventory = $coaMasterInventory->code;
-//                    $coaMasterInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterInventory));
-//                    $jurnalUmumMasterInventory = new JurnalUmum;
-//                    $jurnalUmumMasterInventory->kode_transaksi = $movement->movement_out_no;
-//                    $jurnalUmumMasterInventory->tanggal_transaksi = $movement->date_posting;
-//                    $jurnalUmumMasterInventory->coa_id = $coaMasterInventoryWithCode->id;
-//                    $jurnalUmumMasterInventory->branch_id = $movement->branch_id;
-//                    $jurnalUmumMasterInventory->total = $jumlah;
-//                    $jurnalUmumMasterInventory->debet_kredit = 'D';
-//                    $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumMasterInventory->transaction_subject = 'Movement Out';
-//                    $jurnalUmumMasterInventory->is_coa_category = 1;
-//                    $jurnalUmumMasterInventory->transaction_type = 'MO';
-//                    $jurnalUmumMasterInventory->save();
-
-                    //save product sub master category coa inventory in transit
-//                    $coaInventory = Coa::model()->findByPk($movementDetail->product->productSubMasterCategory->coaInventoryInTransit->id);
-//                    $getCoaInventory = $coaInventory->code;
-//                    $coaInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaInventory));
-//                    $jurnalUmumInventory = new JurnalUmum;
-//                    $jurnalUmumInventory->kode_transaksi = $movement->movement_out_no;
-//                    $jurnalUmumInventory->tanggal_transaksi = $movement->date_posting;
-//                    $jurnalUmumInventory->coa_id = $coaInventoryWithCode->id;
-//                    $jurnalUmumInventory->branch_id = $movement->branch_id;
-//                    $jurnalUmumInventory->total = $jumlah;
-//                    $jurnalUmumInventory->debet_kredit = 'D';
-//                    $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-//                    $jurnalUmumInventory->transaction_subject = 'Movement Out';
-//                    $jurnalUmumInventory->is_coa_category = 0;
-//                    $jurnalUmumInventory->transaction_type = 'MO';
-//                    $jurnalUmumInventory->save();
                 }
-
-//                $coaMasterGroupPersediaan = Coa::model()->findByAttributes(array('code' => '104.00.000'));
-//                $jurnalUmumMasterGroupPersediaan = new JurnalUmum;
-//                $jurnalUmumMasterGroupPersediaan->kode_transaksi = $movement->movement_out_no;
-//                $jurnalUmumMasterGroupPersediaan->tanggal_transaksi = $movement->date_posting;
-//                $jurnalUmumMasterGroupPersediaan->coa_id = $coaMasterGroupPersediaan->id;
-//                $jurnalUmumMasterGroupPersediaan->branch_id = $movement->branch_id;
-//                $jurnalUmumMasterGroupPersediaan->total = $jumlah;
-//                $jurnalUmumMasterGroupPersediaan->debet_kredit = 'K';
-//                $jurnalUmumMasterGroupPersediaan->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumMasterGroupPersediaan->transaction_subject = 'Movement Out';
-//                $jurnalUmumMasterGroupPersediaan->is_coa_category = 1;
-//                $jurnalUmumMasterGroupPersediaan->transaction_type = 'MO';
-//                $jurnalUmumMasterGroupPersediaan->save();
 
                 $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
                 $journalReferences[$coaId]['debet_kredit'] = 'K';
@@ -776,40 +674,6 @@ class MovementOutHeaderController extends Controller {
                 $journalReferences[$coaId]['is_coa_category'] = 0;
                 $journalReferences[$coaId]['values'][] = $value;
 
-                //save product master coa persediaan 
-//                $coaMasterPersediaan = Coa::model()->findByPk($movementDetail->product->productMasterCategory->coaPersediaanBarangDagang->id);
-//                $getCoaMasterPersediaan = $coaMasterPersediaan->code;
-//                $coaMasterPersediaanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterPersediaan));
-//                $jurnalUmumMasterPersediaan = new JurnalUmum;
-//                $jurnalUmumMasterPersediaan->kode_transaksi = $movement->movement_out_no;
-//                $jurnalUmumMasterPersediaan->tanggal_transaksi = $movement->date_posting;
-//                $jurnalUmumMasterPersediaan->coa_id = $coaMasterPersediaanWithCode->id;
-//                $jurnalUmumMasterPersediaan->branch_id = $movement->branch_id;
-//                $jurnalUmumMasterPersediaan->total = $jumlah;
-//                $jurnalUmumMasterPersediaan->debet_kredit = 'K';
-//                $jurnalUmumMasterPersediaan->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumMasterPersediaan->transaction_subject = 'Movement Out';
-//                $jurnalUmumMasterPersediaan->is_coa_category = 1;
-//                $jurnalUmumMasterPersediaan->transaction_type = 'MO';
-//                $jurnalUmumMasterPersediaan->save();
-
-                //save product sub master coa persediaan 
-//                $coaPersediaan = Coa::model()->findByPk($movementDetail->product->productSubMasterCategory->coaPersediaanBarangDagang->id);
-//                $getCoaPersediaan = $coaPersediaan->code;
-//                $coaPersediaanWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPersediaan));
-//
-//                $jurnalUmumPersediaan = new JurnalUmum;
-//                $jurnalUmumPersediaan->kode_transaksi = $movement->movement_out_no;
-//                $jurnalUmumPersediaan->tanggal_transaksi = $movement->date_posting;
-//                $jurnalUmumPersediaan->coa_id = $coaPersediaanWithCode->id;
-//                $jurnalUmumPersediaan->branch_id = $movement->branch_id;
-//                $jurnalUmumPersediaan->total = $jumlah;
-//                $jurnalUmumPersediaan->debet_kredit = 'K';
-//                $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumPersediaan->transaction_subject = 'Movement Out';
-//                $jurnalUmumPersediaan->is_coa_category = 0;
-//                $jurnalUmumPersediaan->transaction_type = 'MO';
-//                $jurnalUmumPersediaan->save();
             }
 
             $movementOut->header->status = "Finished";

@@ -58,44 +58,44 @@ class MovementInHeaderController extends Controller {
         $shippings = MovementInShipping::model()->findAllByAttributes(array('movement_in_id' => $id));
         
         if (isset($_POST['Process'])) {
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->movement_in_number,
-            'branch_id' => $model->branch_id,
-        ));
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->movement_in_number,
+                'branch_id' => $model->branch_id,
+            ));
 
-        $transactionType = 'MI';
-        $postingDate = date('Y-m-d');
-        $transactionCode = $model->movement_in_number;
-        $transactionDate = $model->date_posting;
-        $branchId = $model->branch_id;
-        $transactionSubject = 'Movement In';
-        
-        $journalReferences = array();
+            $transactionType = 'MI';
+            $postingDate = date('Y-m-d');
+            $transactionCode = $model->movement_in_number;
+            $transactionDate = $model->date_posting;
+            $branchId = $model->branch_id;
+            $transactionSubject = 'Movement In';
+
+            $journalReferences = array();
         
             foreach ($details as $movementDetail) {
-                    $unitPrice = empty($movementDetail->receiveItemDetail->purchaseOrderDetail) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
-                    $jumlah = $movementDetail->quantity * $unitPrice;
+                $unitPrice = empty($movementDetail->receiveItemDetail->purchaseOrderDetail) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
+                $jumlah = $movementDetail->quantity * $unitPrice;
 
-                    $value = $jumlah;
-                    $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
-                    $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
-                    $journalReferences[$coaMasterTransitId]['values'][] = $value;
-                    
-                    $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
-                    $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
-                    $journalReferences[$coaSubTransitId]['values'][] = $value;
-                    
-                    $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-                    $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
-                    $journalReferences[$coaMasterInventoryId]['values'][] = $value;
-                    
-                    $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
-                    $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaSubInventoryId]['is_coa_category'] = 0;
-                    $journalReferences[$coaSubInventoryId]['values'][] = $value;
+                $value = $jumlah;
+                $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+                $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
+                $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
+                $journalReferences[$coaMasterTransitId]['values'][] = $value;
+
+                $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+                $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
+                $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
+                $journalReferences[$coaSubTransitId]['values'][] = $value;
+
+                $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+                $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
+                $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
+                $journalReferences[$coaMasterInventoryId]['values'][] = $value;
+
+                $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';
+                $journalReferences[$coaSubInventoryId]['is_coa_category'] = 0;
+                $journalReferences[$coaSubInventoryId]['values'][] = $value;
             }
                    
             foreach ($journalReferences as $coaId => $journalReference) {
@@ -566,22 +566,24 @@ class MovementInHeaderController extends Controller {
         if ($received->save()) {
 
             foreach ($movementIn->details as $movementDetail) {
-                $inventoryId = null;
                 $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementDetail->product_id, 'warehouse_id' => $movementDetail->warehouse_id));
 
-                if ($inventory !== NULL) {
-                    $inventoryId = $inventory->id;
-                } else {
+                if (empty($inventory)) {
                     $insertInventory = new Inventory();
                     $insertInventory->product_id = $movementDetail->product_id;
                     $insertInventory->warehouse_id = $movementDetail->warehouse_id;
+                    $insertInventory->minimal_stock = 0;
+                    $insertInventory->total_stock = $movementDetail->quantity;
                     $insertInventory->status = 'Active';
-
-                    if ($insertInventory->save()) {
-                        $inventoryId = $insertInventory->id;
-                    } else {
-                        $inventoryId = '';
-                    }
+                    $insertInventory->save();
+                    
+                    $inventoryId = $insertInventory->id;
+                } else {
+                    $inventory->total_stock += $movementDetail->quantity;
+                    $inventory->update(array('total_stock'));
+                    
+                    $inventoryId = $inventory->id;
+                    
                 }
 
                 if ($movementDetail->quantity > 0) {

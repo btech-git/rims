@@ -94,7 +94,7 @@ class ConsignmentIns extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $this->header->total_price = $this->totalPrice;
         $this->header->total_quantity = $this->totalQuantity;
         $valid = $this->header->save();
