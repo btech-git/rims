@@ -331,7 +331,7 @@ class MovementOutHeaderController extends Controller {
             $returnOrder->attributes = $_GET['TransactionReturnOrder'];
         }
         
-        $returnOrderDataProvider = $returnOrder->search();
+        $returnOrderDataProvider = $returnOrder->searchByMovementOut();
 
         /* Registration Transaction */
         $registrationTransaction = new RegistrationTransaction('search');
