@@ -519,12 +519,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.service_status', $this->service_status);
         $criteria->compare('note', $this->note, true);
 
-        if (!empty($this->transaction_date_from) || !empty($this->transaction_date_to)) {
+        if (!empty($this->transaction_date_from) && !empty($this->transaction_date_to)) {
             $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
         }
         
-        $criteria->addCondition("t.work_order_number IS NOT NULL AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+        $criteria->addCondition("t.work_order_number IS NOT NULL");
 
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);
