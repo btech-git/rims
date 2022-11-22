@@ -21,11 +21,12 @@
         </tr>
 	<?php $coaSubCategories = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code ASC')); ?> 
         <?php foreach ($coaSubCategories as $accountCategory): ?>
-            <?php $coaBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0; ?>
             <?php $accountCategoryBalance = 0.00; ?>
             <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $coa): ?>
+                <?php $coaBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0; ?>
                 <?php $accountGroupBalance = 0.00; ?>
+        
                 <?php foreach ($coa->coaIds as $account): ?>
                     <?php $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId); ?>
                     <?php $accountGroupBalance += $accountBalance; ?>
