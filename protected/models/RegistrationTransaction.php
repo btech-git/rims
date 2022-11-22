@@ -506,60 +506,24 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
         $criteria->compare('repair_type', $this->repair_type, true);
         $criteria->compare('problem', $this->problem, true);
         $criteria->compare('t.customer_id', $this->customer_id);
-        $criteria->compare('pic_id', $this->pic_id);
-        $criteria->compare('vehicle_id', $this->vehicle_id);
-        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('total_quickservice', $this->total_quickservice);
-        $criteria->compare('total_quickservice_price', $this->total_quickservice_price, true);
-        $criteria->compare('total_service', $this->total_service);
-        $criteria->compare('subtotal_service', $this->subtotal_service, true);
-        $criteria->compare('discount_service', $this->discount_service, true);
-        $criteria->compare('total_service_price', $this->total_service_price, true);
-        $criteria->compare('total_product', $this->total_product, true);
-        $criteria->compare('subtotal_product', $this->subtotal_product, true);
-        $criteria->compare('discount_product', $this->discount_product, true);
-        $criteria->compare('total_product_price', $this->total_product_price, true);
         $criteria->compare('is_quick_service', $this->is_quick_service);
-        $criteria->compare('is_insurance', $this->is_insurance);
-        $criteria->compare('insurance_company_id', $this->insurance_company_id);
-        $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('t.work_order_number', $this->work_order_number, true);
         $criteria->compare('t.work_order_date', $this->work_order_date, true);
-        $criteria->compare('t.work_order_time', $this->work_order_time, true);
-        $criteria->compare('t.status', $this->status, true);
-        $criteria->compare('payment_status', $this->payment_status, true);
-        $criteria->compare('payment_type', $this->payment_type, true);
-        $criteria->compare('down_payment_amount', $this->down_payment_amount, true);
-        $criteria->compare('laststatusupdate_by', $this->laststatusupdate_by);
-        $criteria->compare('sales_order_number', $this->sales_order_number, true);
-        $criteria->compare('sales_order_date', $this->sales_order_date, true);
-        $criteria->compare('ppn', $this->ppn);
-        $criteria->compare('pph', $this->pph);
-        $criteria->compare('subtotal', $this->subtotal, true);
-        $criteria->compare('ppn_price', $this->ppn_price, true);
-        $criteria->compare('pph_price', $this->pph_price, true);
-        $criteria->compare('vehicle_mileage', $this->vehicle_mileage, true);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.service_status', $this->service_status);
         $criteria->compare('note', $this->note, true);
-        $criteria->compare('is_passed', $this->is_passed);
-        $criteria->compare('total_time', $this->total_time);
-        $criteria->compare('vehicle_status', $this->vehicle_status);
-        $criteria->compare('priority_level', $this->priority_level);
-        $criteria->compare('customer_work_order_number', $this->customer_work_order_number);
-        $criteria->compare('transaction_date_out', $this->transaction_date_out, true);
-        $criteria->compare('transaction_time_out', $this->transaction_time_out, true);
-        $criteria->compare('user_id_assign_mechanic', $this->user_id_assign_mechanic);
-        $criteria->compare('t.tax_percentage', $this->tax_percentage);
 
-        $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
-        $criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate));
-
-        $criteria->addCondition("t.work_order_number IS NOT NULL AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+        if (!empty($this->transaction_date_from) && !empty($this->transaction_date_to)) {
+            $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
+        }
+        
+        $criteria->addCondition("t.work_order_number IS NOT NULL");
 
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);
