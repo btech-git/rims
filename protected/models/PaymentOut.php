@@ -279,8 +279,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
                 WHERE p.status = 'Approved'
-                ORDER BY p.payment_date DESC
-                LIMIT 50";
+                ORDER BY p.payment_date DESC";
 
         return $sql;
     }

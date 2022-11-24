@@ -186,8 +186,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.movement_out_no = j.kode_transaksi AND j.id IS NULL  
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
                 WHERE p.status  IN ('Approved', 'Finished')
-                ORDER BY p.date_posting DESC
-                LIMIT 50";
+                ORDER BY p.date_posting DESC";
 
         return $sql;
     }
