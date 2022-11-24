@@ -404,8 +404,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
                 WHERE p.status_document = 'Approved'
-                ORDER BY p.purchase_order_date DESC
-                LIMIT 50";
+                ORDER BY p.purchase_order_date DESC";
 
         return $sql;
     }
