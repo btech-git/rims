@@ -392,7 +392,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.receive_item_no = j.kode_transaksi AND j.id IS NULL
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.recipient_branch_id
-                ORDER BY p.receive_item_date DESC";
+                ORDER BY p.receive_item_date DESC
+                LIMIT 50";
 
         return $sql;
     }

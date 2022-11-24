@@ -268,7 +268,8 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.transaction_number = j.kode_transaksi AND j.id IS NULL 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
                 WHERE p.status IN ('Approved')
-                ORDER BY p.transaction_date DESC";
+                ORDER BY p.transaction_date DESC
+                LIMIT 50";
 
         return $sql;
     }

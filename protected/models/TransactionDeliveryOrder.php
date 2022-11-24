@@ -266,7 +266,8 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
                 FROM " . TransactionDeliveryOrder::model()->tableName() . " p
                 LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.delivery_order_no = j.kode_transaksi AND j.id IS NULL
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.sender_branch_id
-                ORDER BY p.delivery_date DESC";
+                ORDER BY p.delivery_date DESC
+                LIMIT 50";
 
         return $sql;
     }
