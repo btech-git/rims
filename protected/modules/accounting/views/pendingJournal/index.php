@@ -34,26 +34,26 @@ $this->breadcrumbs=array(
                                 'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
                             ), true)
                         ),
-//                        'Payment In' => array(
-//                            'content' => $this->renderPartial('_viewPaymentIn', array(
-//                                'paymentInDataProvider' => $paymentInDataProvider,
-//                            ), true)
-//                        ),
-//                        'Payment Out' => array(
-//                            'content' => $this->renderPartial('_viewPaymentOut', array(
-//                                'paymentOutDataProvider' => $paymentOutDataProvider,
-//                            ), true)
-//                        ),
-//                        'Movement In' => array(
-//                            'content' => $this->renderPartial('_viewMovementIn', array(
-//                                'movementInDataProvider' => $movementInDataProvider,
-//                            ), true)
-//                        ),
-//                        'Movement Out' => array(
-//                            'content' => $this->renderPartial('_viewMovementOut', array(
-//                                'movementOutDataProvider' => $movementOutDataProvider,
-//                            ), true)
-//                        ),
+                        'Payment In' => array(
+                            'content' => $this->renderPartial('_viewPaymentIn', array(
+                                'paymentInDataProvider' => $paymentInDataProvider,
+                            ), true)
+                        ),
+                        'Payment Out' => array(
+                            'content' => $this->renderPartial('_viewPaymentOut', array(
+                                'paymentOutDataProvider' => $paymentOutDataProvider,
+                            ), true)
+                        ),
+                        'Movement In' => array(
+                            'content' => $this->renderPartial('_viewMovementIn', array(
+                                'movementInDataProvider' => $movementInDataProvider,
+                            ), true)
+                        ),
+                        'Movement Out' => array(
+                            'content' => $this->renderPartial('_viewMovementOut', array(
+                                'movementOutDataProvider' => $movementOutDataProvider,
+                            ), true)
+                        ),
 //                        'Sales Order' => array(
 //                            'content' => $this->renderPartial('_viewSale', array(
 //                                'saleOrderDataProvider' => $saleOrderDataProvider, 
