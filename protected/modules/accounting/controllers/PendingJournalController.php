@@ -146,8 +146,8 @@ class PendingJournalController extends Controller {
 //            ),
 //        ));
         
-        $transferRequest = Search::bind(new TransactionTransferRequest('search'), isset($_GET['TransactionTransferRequest']) ? $_GET['TransactionTransferRequest'] : '');
-        $transferRequestDataProvider = $transferRequest->search();
+//        $transferRequest = Search::bind(new TransactionTransferRequest('search'), isset($_GET['TransactionTransferRequest']) ? $_GET['TransactionTransferRequest'] : '');
+//        $transferRequestDataProvider = $transferRequest->search();
         
         $this->render('index', array(
             'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
@@ -160,8 +160,8 @@ class PendingJournalController extends Controller {
 //            'saleOrderDataProvider' => $saleOrderDataProvider,
 //            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
 //            'cashTransactionDataProvider' => $cashTransactionDataProvider,
-            'transferRequest' => $transferRequest,
-            'transferRequestDataProvider' => $transferRequestDataProvider,
+//            'transferRequest' => $transferRequest,
+//            'transferRequestDataProvider' => $transferRequestDataProvider,
         ));
     }
 
