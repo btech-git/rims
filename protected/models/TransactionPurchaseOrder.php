@@ -402,8 +402,8 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
                 FROM " . TransactionPurchaseOrder::model()->tableName() . " p
                 LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.purchase_order_no = j.kode_transaksi
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
-                WHERE p.status_document = 'Approved' AND j.id IS NULL
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id AND j.id IS NULL
+                WHERE p.status_document = 'Approved'
                 ORDER BY p.purchase_order_date DESC
                 LIMIT 50";
 

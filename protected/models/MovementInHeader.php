@@ -164,9 +164,9 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.movement_in_number, p.date_posting, b.name as branch_name, p.status
                 FROM " . MovementInHeader::model()->tableName() . " p
-                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.movement_in_number = j.kode_transaksi
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.movement_in_number = j.kode_transaksi AND j.id IS NULL 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE j.id IS NULL AND p.status  IN ('Approved', 'Finished')
+                WHERE p.status  IN ('Approved', 'Finished')
                 ORDER BY p.date_posting DESC";
 
         return $sql;

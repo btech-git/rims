@@ -265,9 +265,9 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.transaction_number, p.transaction_date, p.transaction_type, b.name as branch_name, p.status
                 FROM " . CashTransaction::model()->tableName() . " p
-                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.transaction_number = j.kode_transaksi
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.transaction_number = j.kode_transaksi AND j.id IS NULL 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE j.id IS NULL AND p.status IN ('Approved')
+                WHERE p.status IN ('Approved')
                 ORDER BY p.transaction_date DESC";
 
         return $sql;
