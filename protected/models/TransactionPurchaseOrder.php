@@ -403,7 +403,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.purchase_order_no = j.kode_transaksi
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
-                WHERE p.status_document = 'Approved' AND j.id <=> NULL AND p.purchase_order_date > '2021-12-31'";
+                WHERE p.status_document = 'Approved' AND p.purchase_order_date > '2021-12-31'";
 
         return $sql;
     }
