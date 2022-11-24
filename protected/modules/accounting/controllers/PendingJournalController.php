@@ -30,6 +30,8 @@ class PendingJournalController extends Controller {
     }
 
     public function actionIndex() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
         
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 50;
         $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
