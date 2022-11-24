@@ -998,4 +998,16 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         
         return $resultSet;
     }
+
+    public static function pendingJournal() {
+        $sql = "SELECT p.id, p.transaction_number, p.transaction_date, s.name as customer_name, b.name as branch_name, p.repair_type, p.status
+                FROM " . RegistrationTransaction::model()->tableName() . " p
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.transaction_number = j.kode_transaksi
+                INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
+                WHERE j.id IS NULL
+                ORDER BY p.transaction_date DESC";
+
+        return $sql;
+    }
 }

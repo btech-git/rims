@@ -260,4 +260,15 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+
+    public static function pendingJournal() {
+        $sql = "SELECT p.id, p.delivery_order_no, p.delivery_date, b.name as branch_name, p.request_type
+                FROM " . TransactionDeliveryOrder::model()->tableName() . " p
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.delivery_order_no = j.kode_transaksi
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.sender_branch_id
+                WHERE j.id IS NULL
+                ORDER BY p.delivery_date DESC";
+
+        return $sql;
+    }
 }

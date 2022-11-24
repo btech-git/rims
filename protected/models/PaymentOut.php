@@ -271,4 +271,16 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         
         return $this->id . '.' . $this->extension;
     }
+    
+    public static function pendingJournal() {
+        $sql = "SELECT p.id, p.payment_number, p.payment_date, s.name as supplier_name, b.name as branch_name, p.status
+                FROM " . PaymentOut::model()->tableName() . " p
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.payment_number = j.kode_transaksi
+                INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
+                WHERE j.id IS NULL AND p.status = 'Approved'
+                ORDER BY p.payment_date DESC";
+
+        return $sql;
+    }
 }

@@ -298,6 +298,18 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         }
     }
 
+    public static function pendingJournal() {
+        $sql = "SELECT p.id, p.payment_number, p.payment_date, s.name as customer_name, b.name as branch_name, p.status
+                FROM " . PaymentIn::model()->tableName() . " p
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.payment_number = j.kode_transaksi
+                INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
+                WHERE j.id IS NULL AND p.status = 'Approved'
+                ORDER BY p.payment_date DESC";
+
+        return $sql;
+    }
+
 //    public function getTotalAmountWholesale($branchId, $transactionDate) {
 //        $sql = "SELECT payment_date, branch_id, customer_id, COALESCE(SUM(payment_amount), 0) AS total_amount
 //                FROM " . PaymentIn::model()->tableName() . "

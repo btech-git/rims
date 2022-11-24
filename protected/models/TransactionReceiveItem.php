@@ -385,4 +385,16 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
+
+    public static function pendingJournal() {
+        $sql = "SELECT p.id, p.receive_item_no, p.receive_item_date, s.name as supplier_name, b.name as branch_name, p.request_type
+                FROM " . TransactionReceiveItem::model()->tableName() . " p
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.receive_item_no = j.kode_transaksi
+                INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.recipient_branch_id
+                WHERE j.id IS NULL
+                ORDER BY p.receive_item_date DESC";
+
+        return $sql;
+    }
 }

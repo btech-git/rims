@@ -53,12 +53,82 @@ class MovementOutHeaderController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
         $details = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $id));
         $historis = MovementOutApproval::model()->findAllByAttributes(array('movement_out_id' => $id));
         $shippings = MovementOutShipping::model()->findAllByAttributes(array('movement_out_id' => $id));
         
+        if (isset($_POST['Process'])) {
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->movement_out_no,
+                'branch_id' => $model->branch_id,
+            ));
+
+            $transactionType = 'MI';
+            $postingDate = date('Y-m-d');
+            $transactionCode = $model->movement_out_no;
+            $transactionDate = $model->date_posting;
+            $branchId = $model->branch_id;
+            $transactionSubject = 'Movement In';
+
+            $journalReferences = array();
+        
+            foreach ($details as $movementDetail) {
+                $value = $movementDetail->quantity * $movementDetail->product->hpp;
+
+                if ((int)$model->movement_type == 3) {
+                    $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 1;
+                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $value;
+                    
+                } else {
+                    $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 1;
+                    $journalReferences[$coaId]['values'][] = $value;
+                    $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+                    $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['values'][] = $value;
+                    
+                }
+
+                $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+                $journalReferences[$coaId]['debet_kredit'] = 'K';
+                $journalReferences[$coaId]['is_coa_category'] = 1;
+                $journalReferences[$coaId]['values'][] = $value;
+                $coaId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                $journalReferences[$coaId]['debet_kredit'] = 'K';
+                $journalReferences[$coaId]['is_coa_category'] = 0;
+                $journalReferences[$coaId]['values'][] = $value;
+
+            }
+                
+            foreach ($journalReferences as $coaId => $journalReference) {
+                $jurnalUmumPersediaan = new JurnalUmum();
+                $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                $jurnalUmumPersediaan->coa_id = $coaId;
+                $jurnalUmumPersediaan->branch_id = $branchId;
+                $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+                $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+                $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+                $jurnalUmumPersediaan->transaction_type = $transactionType;
+                $jurnalUmumPersediaan->save();
+            }
+            
+            $this->redirect(array('view', 'id' => $id));
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
             'details' => $details,
             'historis' => $historis,
             'shippings' => $shippings,
@@ -525,7 +595,7 @@ class MovementOutHeaderController extends Controller {
         $historis = MovementOutApproval::model()->findAllByAttributes(array('movement_out_id' => $headerId));
         $model = new MovementOutApproval;
         $model->date = date('Y-m-d H:i:s');
-        $branch = Branch::model()->findByPk($movement->branch_id);
+//        $branch = Branch::model()->findByPk($movement->branch_id);
 
         if (isset($_POST['MovementOutApproval'])) {
             $model->attributes = $_POST['MovementOutApproval'];

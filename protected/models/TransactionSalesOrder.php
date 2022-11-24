@@ -374,10 +374,22 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
     public function getTotalRemainingQuantityDelivered() {
         $totalRemaining = 0;
 
-        foreach ($this->transactionSalesOrderDetails as $detail)
+        foreach ($this->transactionSalesOrderDetails as $detail) {
             $totalRemaining += $detail->remainingQuantityDelivery;
+        }
 
-        return ($totalRemaining = 0) ? 'Completed' : 'Pending';
+        return ($totalRemaining == 0) ? 'Completed' : 'Pending';
     }
 
+    public static function pendingJournal() {
+        $sql = "SELECT p.id, p.sale_order_no, p.sale_order_date, s.name as customer_name, b.name as branch_name, p.status_document
+                FROM " . TransactionSalesOrder::model()->tableName() . " p
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.sale_order_no = j.kode_transaksi
+                INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.requester_branch_id
+                WHERE j.id IS NULL AND p.status_document IN ('Approved')
+                ORDER BY p.sale_order_date DESC";
+
+        return $sql;
+    }
 }

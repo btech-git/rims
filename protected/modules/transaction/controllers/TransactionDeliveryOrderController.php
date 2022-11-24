@@ -45,9 +45,266 @@ class TransactionDeliveryOrderController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
         $deliveryDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $id));
+        
+        if (isset($_POST['Process'])) {
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->delivery_order_no,
+                'branch_id' => $model->sender_branch_id,
+            ));
+
+            foreach ($deliveryDetails as $detail) {
+                if ($model->request_type == 'Sales Order') {
+                    $jumlah = $detail->quantity_delivery * $detail->salesOrderDetail->unit_price;
+
+                    //save coa product master
+                    $coaMasterInventory = Coa::model()->findByPk($detail->salesOrderDetail->product->productMasterCategory->coa_inventory_in_transit);
+                    $jurnalUmumMasterInventory = new JurnalUmum;
+                    $jurnalUmumMasterInventory->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumMasterInventory->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumMasterInventory->coa_id = $coaMasterInventory->id;
+                    $jurnalUmumMasterInventory->branch_id = $model->sender_branch_id;
+                    $jurnalUmumMasterInventory->total = $jumlah;
+                    $jurnalUmumMasterInventory->debet_kredit = 'K';
+                    $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterInventory->is_coa_category = 1;
+                    $jurnalUmumMasterInventory->transaction_type = 'DO';
+                    $jurnalUmumMasterInventory->save();
+
+                    //save coa product sub master
+                    $coaInventory = Coa::model()->findByPk($detail->salesOrderDetail->product->productSubMasterCategory->coa_inventory_in_transit);
+                    $jurnalUmumInventory = new JurnalUmum;
+                    $jurnalUmumInventory->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumInventory->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumInventory->coa_id = $coaInventory->id;
+                    $jurnalUmumInventory->branch_id = $model->sender_branch_id;
+                    $jurnalUmumInventory->total = $jumlah;
+                    $jurnalUmumInventory->debet_kredit = 'K';
+                    $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventory->is_coa_category = 0;
+                    $jurnalUmumInventory->transaction_type = 'DO';
+                    $jurnalUmumInventory->save();
+
+                    //save coa persediaan master
+                    $jurnalUmumMasterOutstandingPart = new JurnalUmum;
+                    $jurnalUmumMasterOutstandingPart->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumMasterOutstandingPart->coa_id = $detail->salesOrderDetail->product->productMasterCategory->coa_outstanding_part_id;
+                    $jurnalUmumMasterOutstandingPart->branch_id = $model->sender_branch_id;
+                    $jurnalUmumMasterOutstandingPart->total = $jumlah;
+                    $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
+                    $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
+                    $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
+                    $jurnalUmumMasterOutstandingPart->save();
+
+                    //save coa persediaan sub master
+                    $jurnalUmumOutstandingPart = new JurnalUmum;
+                    $jurnalUmumOutstandingPart->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumOutstandingPart->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumOutstandingPart->coa_id = $detail->salesOrderDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+                    $jurnalUmumOutstandingPart->branch_id = $model->sender_branch_id;
+                    $jurnalUmumOutstandingPart->total = $jumlah;
+                    $jurnalUmumOutstandingPart->debet_kredit = 'D';
+                    $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumOutstandingPart->is_coa_category = 0;
+                    $jurnalUmumOutstandingPart->transaction_type = 'DO';
+                    $jurnalUmumOutstandingPart->save();
+
+                } else if ($model->request_type == 'Sent Request') {
+                    $hppPrice = $detail->product->hpp * $detail->quantity_delivery;
+
+                    //save coa persediaan product master
+                    $jurnalUmumMasterOutstandingPart = new JurnalUmum;
+                    $jurnalUmumMasterOutstandingPart->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumMasterOutstandingPart->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
+                    $jurnalUmumMasterOutstandingPart->branch_id = $model->sender_branch_id;
+                    $jurnalUmumMasterOutstandingPart->total = $hppPrice;
+                    $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
+                    $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
+                    $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
+                    $jurnalUmumMasterOutstandingPart->save();
+
+                    //save coa persedian product sub master
+                    $jurnalUmumOutstandingPart = new JurnalUmum;
+                    $jurnalUmumOutstandingPart->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumOutstandingPart->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumOutstandingPart->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+                    $jurnalUmumOutstandingPart->branch_id = $model->sender_branch_id;
+                    $jurnalUmumOutstandingPart->total = $hppPrice;
+                    $jurnalUmumOutstandingPart->debet_kredit = 'D';
+                    $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumOutstandingPart->is_coa_category = 0;
+                    $jurnalUmumOutstandingPart->transaction_type = 'DO';
+                    $jurnalUmumOutstandingPart->save();
+
+                    //save product master category coa inventory in transit
+                    $coaMasterInventory = Coa::model()->findByPk($detail->product->productMasterCategory->coaInventoryInTransit->id);
+                    $jurnalUmumMasterInventory = new JurnalUmum;
+                    $jurnalUmumMasterInventory->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumMasterInventory->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumMasterInventory->coa_id = $coaMasterInventory->id;
+                    $jurnalUmumMasterInventory->branch_id = $model->sender_branch_id;
+                    $jurnalUmumMasterInventory->total = $hppPrice;
+                    $jurnalUmumMasterInventory->debet_kredit = 'K';
+                    $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterInventory->is_coa_category = 1;
+                    $jurnalUmumMasterInventory->transaction_type = 'DO';
+                    $jurnalUmumMasterInventory->save();
+
+                    //save product sub master category coa inventory in transit
+                    $coaInventory = Coa::model()->findByPk($detail->product->productSubMasterCategory->coaInventoryInTransit->id);
+                    $jurnalUmumInventory = new JurnalUmum;
+                    $jurnalUmumInventory->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumInventory->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumInventory->coa_id = $coaInventory->id;
+                    $jurnalUmumInventory->branch_id = $model->sender_branch_id;
+                    $jurnalUmumInventory->total = $hppPrice;
+                    $jurnalUmumInventory->debet_kredit = 'K';
+                    $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventory->is_coa_category = 0;
+                    $jurnalUmumInventory->transaction_type = 'DO';
+                    $jurnalUmumInventory->save();
+
+                } else if ($model->request_type == 'Consignment Out') {
+                    //coa piutang ganti dengan consignment Inventory
+                    $salePrice = $detail->consignmentOutDetail->sale_price * $detail->quantity_delivery;
+//                    $hppPrice = $detail->product->hpp * $detail->quantity_delivery;
+
+                    //save consignment product master category
+                    $coaMasterConsignment = Coa::model()->findByPk($detail->product->productMasterCategory->coa_consignment_inventory);
+                    $jurnalMasterUmumConsignment = new JurnalUmum;
+                    $jurnalMasterUmumConsignment->kode_transaksi = $model->delivery_order_no;
+                    $jurnalMasterUmumConsignment->tanggal_transaksi = $model->delivery_date;
+                    $jurnalMasterUmumConsignment->coa_id = $coaMasterConsignment->id;
+                    $jurnalMasterUmumConsignment->branch_id = $model->sender_branch_id;
+                    $jurnalMasterUmumConsignment->total = $salePrice;
+                    $jurnalMasterUmumConsignment->debet_kredit = 'D';
+                    $jurnalMasterUmumConsignment->tanggal_posting = date('Y-m-d');
+                    $jurnalMasterUmumConsignment->transaction_subject = 'Delivery Order';
+                    $jurnalMasterUmumConsignment->is_coa_category = 1;
+                    $jurnalMasterUmumConsignment->transaction_type = 'DO';
+                    $jurnalMasterUmumConsignment->save();
+
+                    //save consignment product sub master category
+                    $coaConsignment = Coa::model()->findByPk($detail->product->productSubMasterCategory->coa_consignment_inventory);
+                    $jurnalUmumConsignment = new JurnalUmum;
+                    $jurnalUmumConsignment->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumConsignment->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumConsignment->coa_id = $coaConsignment->id;
+                    $jurnalUmumConsignment->branch_id = $model->sender_branch_id;
+                    $jurnalUmumConsignment->total = $salePrice;
+                    $jurnalUmumConsignment->debet_kredit = 'D';
+                    $jurnalUmumConsignment->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumConsignment->transaction_subject = 'Delivery Order';
+                    $jurnalUmumConsignment->is_coa_category = 0;
+                    $jurnalUmumConsignment->transaction_type = 'DO';
+                    $jurnalUmumConsignment->save();
+
+                    $jurnalMasterUmumInventoryInTransit = new JurnalUmum;
+                    $jurnalMasterUmumInventoryInTransit->kode_transaksi = $model->delivery_order_no;
+                    $jurnalMasterUmumInventoryInTransit->tanggal_transaksi = $model->delivery_date;
+                    $jurnalMasterUmumInventoryInTransit->coa_id = $detail->product->productMasterCategory->coa_inventory_in_transit;
+                    $jurnalMasterUmumInventoryInTransit->branch_id = $model->sender_branch_id;
+                    $jurnalMasterUmumInventoryInTransit->total = $salePrice;
+                    $jurnalMasterUmumInventoryInTransit->debet_kredit = 'D';
+                    $jurnalMasterUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
+                    $jurnalMasterUmumInventoryInTransit->transaction_subject = 'Delivery Order';
+                    $jurnalMasterUmumInventoryInTransit->is_coa_category = 1;
+                    $jurnalMasterUmumInventoryInTransit->transaction_type = 'DO';
+                    $jurnalMasterUmumInventoryInTransit->save();
+
+                    //save consignment product sub master category
+                    $jurnalUmumInventoryInTransit = new JurnalUmum;
+                    $jurnalUmumInventoryInTransit->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumInventoryInTransit->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumInventoryInTransit->coa_id = $detail->product->productSubMasterCategory->coa_consignment_inventory;
+                    $jurnalUmumInventoryInTransit->branch_id = $model->sender_branch_id;
+                    $jurnalUmumInventoryInTransit->total = $salePrice;
+                    $jurnalUmumInventoryInTransit->debet_kredit = 'K';
+                    $jurnalUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumInventoryInTransit->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventoryInTransit->is_coa_category = 0;
+                    $jurnalUmumInventoryInTransit->transaction_type = 'DO';
+                    $jurnalUmumInventoryInTransit->save();
+
+                } else if ($model->request_type == 'Transfer Request') {
+                    $hppPrice = $detail->product->hpp * $detail->quantity_delivery;
+
+                    //save coa persediaan product master
+                    $jurnalUmumMasterOutstandingPart = new JurnalUmum;
+                    $jurnalUmumMasterOutstandingPart->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumMasterOutstandingPart->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumMasterOutstandingPart->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
+                    $jurnalUmumMasterOutstandingPart->branch_id = $model->sender_branch_id;
+                    $jurnalUmumMasterOutstandingPart->total = $hppPrice;
+                    $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
+                    $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
+                    $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
+                    $jurnalUmumMasterOutstandingPart->save();
+
+                    //save coa persedian product sub master
+                    $jurnalUmumOutstandingPart = new JurnalUmum;
+                    $jurnalUmumOutstandingPart->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumOutstandingPart->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumOutstandingPart->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+                    $jurnalUmumOutstandingPart->branch_id = $model->sender_branch_id;
+                    $jurnalUmumOutstandingPart->total = $hppPrice;
+                    $jurnalUmumOutstandingPart->debet_kredit = 'D';
+                    $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumOutstandingPart->is_coa_category = 0;
+                    $jurnalUmumOutstandingPart->transaction_type = 'DO';
+                    $jurnalUmumOutstandingPart->save();
+
+                    //save product master category coa inventory in transit
+                    $coaMasterInventory = Coa::model()->findByPk($detail->product->productMasterCategory->coaInventoryInTransit->id);
+                    $jurnalUmumMasterInventory = new JurnalUmum;
+                    $jurnalUmumMasterInventory->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumMasterInventory->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumMasterInventory->coa_id = $coaMasterInventory->id;
+                    $jurnalUmumMasterInventory->branch_id = $model->sender_branch_id;
+                    $jurnalUmumMasterInventory->total = $hppPrice;
+                    $jurnalUmumMasterInventory->debet_kredit = 'K';
+                    $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterInventory->is_coa_category = 1;
+                    $jurnalUmumMasterInventory->transaction_type = 'DO';
+                    $jurnalUmumMasterInventory->save();
+
+                    //save product sub master category coa inventory in transit
+                    $coaInventory = Coa::model()->findByPk($detail->product->productSubMasterCategory->coaInventoryInTransit->id);
+                    $jurnalUmumInventory = new JurnalUmum;
+                    $jurnalUmumInventory->kode_transaksi = $model->delivery_order_no;
+                    $jurnalUmumInventory->tanggal_transaksi = $model->delivery_date;
+                    $jurnalUmumInventory->coa_id = $coaInventory->id;
+                    $jurnalUmumInventory->branch_id = $model->sender_branch_id;
+                    $jurnalUmumInventory->total = $hppPrice;
+                    $jurnalUmumInventory->debet_kredit = 'K';
+                    $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventory->is_coa_category = 0;
+                    $jurnalUmumInventory->transaction_type = 'DO';
+                    $jurnalUmumInventory->save();
+                }
+            }
+        }
+        
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
             'deliveryDetails' => $deliveryDetails,
         ));
     }

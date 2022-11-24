@@ -28,6 +28,11 @@
                         'url' => array('/master/pendingApproval/index'), 
                         'visible' => Yii::app()->user->checkAccess('masterApprovalView')
                     ),
+                    array(
+                        'label' => 'Pending Journal', 
+                        'url' => array('/accounting/pendingJournal/index'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
                 ),
             )); ?>
         </li>
