@@ -400,9 +400,9 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.purchase_order_no, p.purchase_order_date, s.name as supplier_name, b.name as branch_name, p.payment_status
                 FROM " . TransactionPurchaseOrder::model()->tableName() . " p
-                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.purchase_order_no = j.kode_transaksi
+                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.purchase_order_no = j.kode_transaksi AND j.id IS NULL
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id AND j.id IS NULL
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
                 WHERE p.status_document = 'Approved'
                 ORDER BY p.purchase_order_date DESC
                 LIMIT 50";
