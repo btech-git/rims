@@ -69,82 +69,82 @@ class PendingJournalController extends Controller {
             ),
         ));
 
-        $paymentInSql = PaymentIn::pendingJournal();
-        $paymentInDataProvider = new CSqlDataProvider($paymentInSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($paymentInSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
-
-        $paymentOutSql = PaymentOut::pendingJournal();
-        $paymentOutDataProvider = new CSqlDataProvider($paymentOutSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($paymentOutSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
-
-        $movementInSql = MovementInHeader::pendingJournal();
-        $movementInDataProvider = new CSqlDataProvider($movementInSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($movementInSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
-
-        $movementOutSql = MovementOutHeader::pendingJournal();
-        $movementOutDataProvider = new CSqlDataProvider($movementOutSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($movementOutSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
-
-        $saleOrderSql = TransactionSalesOrder::pendingJournal();
-        $saleOrderDataProvider = new CSqlDataProvider($saleOrderSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($saleOrderSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
-        
-        $deliveryOrderSql = TransactionDeliveryOrder::pendingJournal();
-        $deliveryOrderDataProvider = new CSqlDataProvider($deliveryOrderSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($deliveryOrderSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
-        
-        $cashTransactionSql = CashTransaction::pendingJournal();
-        $cashTransactionDataProvider = new CSqlDataProvider($cashTransactionSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($cashTransactionSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+//        $paymentInSql = PaymentIn::pendingJournal();
+//        $paymentInDataProvider = new CSqlDataProvider($paymentInSql, array(
+//            'db' => CActiveRecord::$db,
+//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($paymentInSql))->queryScalar(),
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
+//
+//        $paymentOutSql = PaymentOut::pendingJournal();
+//        $paymentOutDataProvider = new CSqlDataProvider($paymentOutSql, array(
+//            'db' => CActiveRecord::$db,
+//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($paymentOutSql))->queryScalar(),
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
+//
+//        $movementInSql = MovementInHeader::pendingJournal();
+//        $movementInDataProvider = new CSqlDataProvider($movementInSql, array(
+//            'db' => CActiveRecord::$db,
+//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($movementInSql))->queryScalar(),
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
+//
+//        $movementOutSql = MovementOutHeader::pendingJournal();
+//        $movementOutDataProvider = new CSqlDataProvider($movementOutSql, array(
+//            'db' => CActiveRecord::$db,
+//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($movementOutSql))->queryScalar(),
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
+//
+//        $saleOrderSql = TransactionSalesOrder::pendingJournal();
+//        $saleOrderDataProvider = new CSqlDataProvider($saleOrderSql, array(
+//            'db' => CActiveRecord::$db,
+//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($saleOrderSql))->queryScalar(),
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
+//        
+//        $deliveryOrderSql = TransactionDeliveryOrder::pendingJournal();
+//        $deliveryOrderDataProvider = new CSqlDataProvider($deliveryOrderSql, array(
+//            'db' => CActiveRecord::$db,
+//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($deliveryOrderSql))->queryScalar(),
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
+//        
+//        $cashTransactionSql = CashTransaction::pendingJournal();
+//        $cashTransactionDataProvider = new CSqlDataProvider($cashTransactionSql, array(
+//            'db' => CActiveRecord::$db,
+//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($cashTransactionSql))->queryScalar(),
+//            'pagination' => array(
+//                'pageVar' => 'CurrentPage',
+//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+//                'currentPage' => $currentPage,
+//            ),
+//        ));
         
         $transferRequest = Search::bind(new TransactionTransferRequest('search'), isset($_GET['TransactionTransferRequest']) ? $_GET['TransactionTransferRequest'] : '');
         $transferRequestDataProvider = $transferRequest->search();
@@ -153,13 +153,13 @@ class PendingJournalController extends Controller {
             'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-            'paymentInDataProvider' => $paymentInDataProvider,
-            'paymentOutDataProvider' => $paymentOutDataProvider,
-            'movementInDataProvider' => $movementInDataProvider,
-            'movementOutDataProvider' => $movementOutDataProvider,
-            'saleOrderDataProvider' => $saleOrderDataProvider,
-            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
-            'cashTransactionDataProvider' => $cashTransactionDataProvider,
+//            'paymentInDataProvider' => $paymentInDataProvider,
+//            'paymentOutDataProvider' => $paymentOutDataProvider,
+//            'movementInDataProvider' => $movementInDataProvider,
+//            'movementOutDataProvider' => $movementOutDataProvider,
+//            'saleOrderDataProvider' => $saleOrderDataProvider,
+//            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
+//            'cashTransactionDataProvider' => $cashTransactionDataProvider,
             'transferRequest' => $transferRequest,
             'transferRequestDataProvider' => $transferRequestDataProvider,
         ));
