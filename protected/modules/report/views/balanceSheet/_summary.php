@@ -3,7 +3,7 @@
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
         <div style="font-size: larger">Laporan Balance Sheet Induk</div>
-        <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+        <div><?php echo ' YTD: &nbsp;&nbsp; '. CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
     </div>
 
     <br />

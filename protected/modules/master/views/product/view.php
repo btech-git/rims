@@ -119,6 +119,36 @@ $this->menu=array(
     </div>
 </div>
 
+<br />
+
+<div class="row">
+    <div class="large-12 columns">
+        <fieldset>
+            <legend>Product Sales</legend>
+            <table>
+                <thead>
+                    <th>Transaction #</th>
+                    <th>Date</th>
+                    <th>Quantity</th>
+                    <th>Price </th>
+                    <th>Total</th>
+                </thead>
+                <tbody>
+                    <?php foreach ($productSales as $productSale): ?>
+                        <tr>
+                            <td><?php echo CHtml::encode(CHtml::value($productSale, 'registrationTransaction.transaction_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($productSale, 'registrationTransaction.transaction_date')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($productSale, 'quantity')); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($productSale, 'sale_price'))); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($productSale, 'total_price'))); ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+
 <br/>
 
 <div>

@@ -187,7 +187,7 @@ $('form').submit(function(){
                                     '' => '-- All --',
                                     'INVOICING' => 'INVOICING',
                                     'PARTIAL PAYMENT' => 'PARTIAL PAYMENT',
-                                    'NOT PAID' => 'NOT PAID',
+//                                    'NOT PAID' => 'NOT PAID',
                                     'PAID' => 'PAID',
                                 ), array(
                                     'onchange' => '

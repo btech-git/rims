@@ -119,6 +119,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'header' => 'Status Receive',
                         'value' => '$data->totalRemainingQuantityReceived',
                     ),
+                    'payment_status',
                     array(
                         'header' => 'Input',
                         'name' => 'created_datetime',

@@ -61,6 +61,8 @@ $this->menu=array(
                     'label' => 'Akun Bank Estimasi',
                     'value'=>empty($model->coa_bank_id_stimate) ? '' : $model->coaBankIdEstimate->name,
                 ),
+                array('label' =>'Status Receive','value'=>$model->totalRemainingQuantityReceived),
+                'payment_status',
             ),
         )); ?>
     </div>

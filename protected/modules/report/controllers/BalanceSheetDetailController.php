@@ -22,9 +22,10 @@ class BalanceSheetDetailController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $dateNow = date('Y-m-d');
-        list($yearNow, , ) = explode('-', $dateNow);
-        $dateStart = $yearNow . '-01-01';
+//        $dateNow = date('Y-m-d');
+//        list($yearNow, , ) = explode('-', $dateNow);
+//        $dateStart = $yearNow . '-01-01';
+        $dateStart = '2022-01-01';
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
