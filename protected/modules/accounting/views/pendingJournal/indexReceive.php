@@ -1,3 +1,7 @@
+<div style="text-align: center; text-decoration: underline">
+    <h2><?php echo 'Pending Journal Receive Item'; ?></h2>
+</div>
+
 <div style="text-align: right">
     <?php echo ReportHelper::summaryText($receiveItemDataProvider); ?>
 </div>

@@ -29,8 +29,53 @@
                         'visible' => Yii::app()->user->checkAccess('masterApprovalView')
                     ),
                     array(
-                        'label' => 'Pending Journal', 
-                        'url' => array('/accounting/pendingJournal/index'), 
+                        'label' => 'Pending Journal Purchase', 
+                        'url' => array('/accounting/pendingJournal/indexPurchase'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Cash Transaction', 
+                        'url' => array('/accounting/pendingJournal/indexCash'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Delivery', 
+                        'url' => array('/accounting/pendingJournal/indexDelivery'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Movement In', 
+                        'url' => array('/accounting/pendingJournal/indexMovementIn'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Movement Out', 
+                        'url' => array('/accounting/pendingJournal/indexMovementOut'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Payment In', 
+                        'url' => array('/accounting/pendingJournal/indexPaymentIn'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Payment Out', 
+                        'url' => array('/accounting/pendingJournal/indexPaymentOut'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Receive Item', 
+                        'url' => array('/accounting/pendingJournal/indexReceive'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Registration Transaction', 
+                        'url' => array('/accounting/pendingJournal/indexRegistration'), 
+//                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
+                    ),
+                    array(
+                        'label' => 'Pending Journal Sale Order', 
+                        'url' => array('/accounting/pendingJournal/indexSale'), 
 //                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
                     ),
                 ),

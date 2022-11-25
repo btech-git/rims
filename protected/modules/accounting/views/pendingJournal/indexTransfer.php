@@ -1,3 +1,7 @@
+<div style="text-align: center; text-decoration: underline">
+    <h2><?php echo 'Pending Journal Transfer Request'; ?></h2>
+</div>
+
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'transfer-grid',
     'dataProvider' => $transferRequestDataProvider,
