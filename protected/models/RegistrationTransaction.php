@@ -1002,9 +1002,12 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.transaction_number, p.transaction_date, s.name as customer_name, b.name as branch_name, p.repair_type, p.status
                 FROM " . RegistrationTransaction::model()->tableName() . " p
-                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.transaction_number = j.kode_transaksi AND j.id IS NULL
                 INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
+                WHERE p.status = 'Approved' AND p.transaction_date > '2021-12-31' AND p.transaction_number NOT IN (
+                    SELECT kode_transaksi 
+                    FROM " . JurnalUmum::model()->tableName() . "
+                )
                 ORDER BY p.transaction_date DESC";
 
         return $sql;

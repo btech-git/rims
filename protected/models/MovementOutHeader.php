@@ -183,9 +183,11 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.movement_out_no, p.date_posting, b.name as branch_name, p.status
                 FROM " . MovementOutHeader::model()->tableName() . " p
-                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.movement_out_no = j.kode_transaksi AND j.id IS NULL  
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE p.status  IN ('Approved', 'Finished')
+                WHERE p.status  IN ('Approved', 'Finished') AND p.date_posting > '2021-12-31' AND p.movement_out_no NOT IN (
+                    SELECT kode_transaksi 
+                    FROM " . JurnalUmum::model()->tableName() . "
+                )
                 ORDER BY p.date_posting DESC";
 
         return $sql;

@@ -264,8 +264,11 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.delivery_order_no, p.delivery_date, b.name as branch_name, p.request_type
                 FROM " . TransactionDeliveryOrder::model()->tableName() . " p
-                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.delivery_order_no = j.kode_transaksi AND j.id IS NULL
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.sender_branch_id
+                WHERE p.delivery_date > '2021-12-31' AND p.delivery_order_no NOT IN (
+                    SELECT kode_transaksi 
+                    FROM " . JurnalUmum::model()->tableName() . "
+                )
                 ORDER BY p.delivery_date DESC";
 
         return $sql;

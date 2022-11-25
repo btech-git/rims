@@ -301,10 +301,12 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.payment_number, p.payment_date, s.name as customer_name, b.name as branch_name, p.status
                 FROM " . PaymentIn::model()->tableName() . " p
-                LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.payment_number = j.kode_transaksi AND j.id IS NULL 
                 INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE p.status = 'Approved'
+                WHERE p.status = 'Approved' AND p.payment_date > '2021-12-31' AND p.payment_number NOT IN (
+                    SELECT kode_transaksi 
+                    FROM " . JurnalUmum::model()->tableName() . "
+                )
                 ORDER BY p.payment_date DESC";
 
         return $sql;
