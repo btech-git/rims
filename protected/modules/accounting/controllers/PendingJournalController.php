@@ -236,7 +236,7 @@ class PendingJournalController extends Controller {
         ));
     }
     
-    public function actionIndexSaleOrder() {
+    public function actionIndexSale() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -254,7 +254,7 @@ class PendingJournalController extends Controller {
             ),
         ));
         
-        $this->render('indexSaleOrder', array(
+        $this->render('indexSale', array(
             'saleOrderDataProvider' => $saleOrderDataProvider,
         ));
     }
