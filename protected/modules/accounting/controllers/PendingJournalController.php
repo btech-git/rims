@@ -47,28 +47,28 @@ class PendingJournalController extends Controller {
             ),
         ));
 
-//        $receiveItemSql = TransactionReceiveItem::pendingJournal();
-//        $receiveItemDataProvider = new CSqlDataProvider($receiveItemSql, array(
-//            'db' => CActiveRecord::$db,
-//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($receiveItemSql))->queryScalar(),
-//            'pagination' => array(
-//                'pageVar' => 'CurrentPage',
-//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-//                'currentPage' => $currentPage,
-//            ),
-//        ));
-//
-//        $registrationTransactionSql = RegistrationTransaction::pendingJournal();
-//        $registrationTransactionDataProvider = new CSqlDataProvider($registrationTransactionSql, array(
-//            'db' => CActiveRecord::$db,
-//            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($registrationTransactionSql))->queryScalar(),
-//            'pagination' => array(
-//                'pageVar' => 'CurrentPage',
-//                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-//                'currentPage' => $currentPage,
-//            ),
-//        ));
-//
+        $receiveItemSql = TransactionReceiveItem::pendingJournal();
+        $receiveItemDataProvider = new CSqlDataProvider($receiveItemSql, array(
+            'db' => CActiveRecord::$db,
+            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($receiveItemSql))->queryScalar(),
+            'pagination' => array(
+                'pageVar' => 'CurrentPage',
+                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+                'currentPage' => $currentPage,
+            ),
+        ));
+
+        $registrationTransactionSql = RegistrationTransaction::pendingJournal();
+        $registrationTransactionDataProvider = new CSqlDataProvider($registrationTransactionSql, array(
+            'db' => CActiveRecord::$db,
+            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($registrationTransactionSql))->queryScalar(),
+            'pagination' => array(
+                'pageVar' => 'CurrentPage',
+                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
+                'currentPage' => $currentPage,
+            ),
+        ));
+
 //        $paymentInSql = PaymentIn::pendingJournal();
 //        $paymentInDataProvider = new CSqlDataProvider($paymentInSql, array(
 //            'db' => CActiveRecord::$db,
@@ -151,8 +151,8 @@ class PendingJournalController extends Controller {
         
         $this->render('index', array(
             'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
-//            'receiveItemDataProvider' => $receiveItemDataProvider,
-//            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'receiveItemDataProvider' => $receiveItemDataProvider,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
 //            'paymentInDataProvider' => $paymentInDataProvider,
 //            'paymentOutDataProvider' => $paymentOutDataProvider,
 //            'movementInDataProvider' => $movementInDataProvider,

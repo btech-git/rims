@@ -24,16 +24,16 @@ $this->breadcrumbs=array(
                                 'purchaseOrderDataProvider' => $purchaseOrderDataProvider, 
                             ), true),
                         ),
-//                        'Receive Item' => array(
-//                            'content' => $this->renderPartial('_viewReceive', array(
-//                                'receiveItemDataProvider' => $receiveItemDataProvider,
-//                            ), true)
-//                        ),
-//                        'Retail Sales' => array(
-//                            'content' => $this->renderPartial('_viewRegistration', array(
-//                                'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-//                            ), true)
-//                        ),
+                        'Receive Item' => array(
+                            'content' => $this->renderPartial('_viewReceive', array(
+                                'receiveItemDataProvider' => $receiveItemDataProvider,
+                            ), true)
+                        ),
+                        'Retail Sales' => array(
+                            'content' => $this->renderPartial('_viewRegistration', array(
+                                'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+                            ), true)
+                        ),
 //                        'Payment In' => array(
 //                            'content' => $this->renderPartial('_viewPaymentIn', array(
 //                                'paymentInDataProvider' => $paymentInDataProvider,
