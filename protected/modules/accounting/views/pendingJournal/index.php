@@ -24,46 +24,46 @@ $this->breadcrumbs=array(
                                 'purchaseOrderDataProvider' => $purchaseOrderDataProvider, 
                             ), true),
                         ),
-                        'Receive Item' => array(
-                            'content' => $this->renderPartial('_viewReceive', array(
-                                'receiveItemDataProvider' => $receiveItemDataProvider,
-                            ), true)
-                        ),
-                        'Retail Sales' => array(
-                            'content' => $this->renderPartial('_viewRegistration', array(
-                                'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-                            ), true)
-                        ),
-                        'Payment In' => array(
-                            'content' => $this->renderPartial('_viewPaymentIn', array(
-                                'paymentInDataProvider' => $paymentInDataProvider,
-                            ), true)
-                        ),
-                        'Payment Out' => array(
-                            'content' => $this->renderPartial('_viewPaymentOut', array(
-                                'paymentOutDataProvider' => $paymentOutDataProvider,
-                            ), true)
-                        ),
-                        'Movement In' => array(
-                            'content' => $this->renderPartial('_viewMovementIn', array(
-                                'movementInDataProvider' => $movementInDataProvider,
-                            ), true)
-                        ),
-                        'Movement Out' => array(
-                            'content' => $this->renderPartial('_viewMovementOut', array(
-                                'movementOutDataProvider' => $movementOutDataProvider,
-                            ), true)
-                        ),
-                        'Delivery Order' => array(
-                            'content' => $this->renderPartial('_viewDelivery', array(
-                                'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
-                            ), true)
-                        ),
-                        'Cash Transaction' => array(
-                            'content' => $this->renderPartial('_viewCash', array(
-                                'cashTransactionDataProvider' => $cashTransactionDataProvider,
-                            ), true)
-                        ),
+//                        'Receive Item' => array(
+//                            'content' => $this->renderPartial('_viewReceive', array(
+//                                'receiveItemDataProvider' => $receiveItemDataProvider,
+//                            ), true)
+//                        ),
+//                        'Retail Sales' => array(
+//                            'content' => $this->renderPartial('_viewRegistration', array(
+//                                'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+//                            ), true)
+//                        ),
+//                        'Payment In' => array(
+//                            'content' => $this->renderPartial('_viewPaymentIn', array(
+//                                'paymentInDataProvider' => $paymentInDataProvider,
+//                            ), true)
+//                        ),
+//                        'Payment Out' => array(
+//                            'content' => $this->renderPartial('_viewPaymentOut', array(
+//                                'paymentOutDataProvider' => $paymentOutDataProvider,
+//                            ), true)
+//                        ),
+//                        'Movement In' => array(
+//                            'content' => $this->renderPartial('_viewMovementIn', array(
+//                                'movementInDataProvider' => $movementInDataProvider,
+//                            ), true)
+//                        ),
+//                        'Movement Out' => array(
+//                            'content' => $this->renderPartial('_viewMovementOut', array(
+//                                'movementOutDataProvider' => $movementOutDataProvider,
+//                            ), true)
+//                        ),
+//                        'Delivery Order' => array(
+//                            'content' => $this->renderPartial('_viewDelivery', array(
+//                                'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
+//                            ), true)
+//                        ),
+//                        'Cash Transaction' => array(
+//                            'content' => $this->renderPartial('_viewCash', array(
+//                                'cashTransactionDataProvider' => $cashTransactionDataProvider,
+//                            ), true)
+//                        ),
 //                        'Sales Order' => array(
 //                            'content' => $this->renderPartial('_viewSale', array(
 //                                'saleOrderDataProvider' => $saleOrderDataProvider, 
