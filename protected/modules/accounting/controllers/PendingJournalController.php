@@ -231,7 +231,7 @@ class PendingJournalController extends Controller {
             ),
         ));
         
-        $this->render('indexCashTransaction', array(
+        $this->render('indexCash', array(
             'cashTransactionDataProvider' => $cashTransactionDataProvider,
         ));
     }
