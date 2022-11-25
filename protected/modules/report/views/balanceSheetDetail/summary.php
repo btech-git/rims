@@ -40,7 +40,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Periode:</span>
                                     </div>
 
-                                <div class="small-4 columns">
+<!--                                <div class="small-4 columns">
                                     <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
@@ -52,9 +52,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         ),
                                     ));*/ ?>
                                     <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
-                                </div>
+                                </div>-->
 
-                                    <div class="small-4 columns">
+                                    <div class="small-8 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
