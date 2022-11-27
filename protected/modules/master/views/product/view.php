@@ -134,7 +134,7 @@ $this->menu=array(
                     <th>Total</th>
                 </thead>
                 <tbody>
-                    <?php foreach ($productSales as $productSale): ?>
+                    <?php foreach (array_reverse($productSales) as $productSale): ?>
                         <tr>
                             <td><?php echo CHtml::encode(CHtml::value($productSale, 'registrationTransaction.transaction_number')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($productSale, 'registrationTransaction.transaction_date')); ?></td>
