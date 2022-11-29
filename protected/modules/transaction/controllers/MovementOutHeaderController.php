@@ -770,7 +770,7 @@ class MovementOutHeaderController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $movementOutHeaders = MovementOutHeader::model()->findAll(array('condition' => 'date_posting > "2022-06-22"'));
+        $movementOutHeaders = MovementOutHeader::model()->findAll(array('condition' => 'date_posting > "2022-07-13"'));
         
         foreach ($movementOutHeaders as $movementOutHeader) {
             $inventoryDetails = InventoryDetail::model()->findAllByAttributes(array('transaction_number' => $movementOutHeader->movement_out_no));
