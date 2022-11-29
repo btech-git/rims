@@ -767,6 +767,9 @@ class MovementOutHeaderController extends Controller {
     } 
     
     public function actionInsertInventoryDetail() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
         $movementOutHeaders = MovementOutHeader::model()->findAll(array('condition' => 'date_posting > "2021-12-31"'));
         
         foreach ($movementOutHeaders as $movementOutHeader) {
