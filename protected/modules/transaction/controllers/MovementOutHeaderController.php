@@ -774,17 +774,6 @@ class MovementOutHeaderController extends Controller {
             if (empty($inventoryDetails)) {
                 foreach ($movementOutHeader->movementOutDetails as $movementOutDetail) {
                     $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementOutDetail->product_id, 'warehouse_id' => $movementOutDetail->warehouse_id));
-                    $inventoryDetail = new InventoryDetail();
-                    $inventoryDetail->inventory_id = $inventory->id;
-                    $inventoryDetail->product_id = $movementOutDetail->product_id;
-                    $inventoryDetail->warehouse_id = $movementOutDetail->warehouse_id;
-                    $inventoryDetail->transaction_type = 'MVO';
-                    $inventoryDetail->transaction_number = $movementOutHeader->movement_out_no;
-                    $inventoryDetail->transaction_date = $movementOutHeader->date_posting;
-                    $inventoryDetail->stock_out = $movementOutDetail->quantity * -1;
-                    $inventoryDetail->notes = "Data from Movement Out";
-                    $inventoryDetail->purchase_price = $movementOutDetail->product->averageCogs;
-                    $inventoryDetail->save();
                     
                     if (empty($inventory)) {
                         $insertInventory = new Inventory();
@@ -804,6 +793,17 @@ class MovementOutHeaderController extends Controller {
 
                     }
 
+                    $inventoryDetail = new InventoryDetail();
+                    $inventoryDetail->inventory_id = $inventoryId;
+                    $inventoryDetail->product_id = $movementOutDetail->product_id;
+                    $inventoryDetail->warehouse_id = $movementOutDetail->warehouse_id;
+                    $inventoryDetail->transaction_type = 'MVO';
+                    $inventoryDetail->transaction_number = $movementOutHeader->movement_out_no;
+                    $inventoryDetail->transaction_date = $movementOutHeader->date_posting;
+                    $inventoryDetail->stock_out = $movementOutDetail->quantity * -1;
+                    $inventoryDetail->notes = "Data from Movement Out";
+                    $inventoryDetail->purchase_price = $movementOutDetail->product->averageCogs;
+                    $inventoryDetail->save();
                 }
             }
         }
