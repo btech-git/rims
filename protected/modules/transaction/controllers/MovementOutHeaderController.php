@@ -64,12 +64,12 @@ class MovementOutHeaderController extends Controller {
                 'branch_id' => $model->branch_id,
             ));
 
-            $transactionType = 'MI';
+            $transactionType = 'MO';
             $postingDate = date('Y-m-d');
             $transactionCode = $model->movement_out_no;
             $transactionDate = $model->date_posting;
             $branchId = $model->branch_id;
-            $transactionSubject = 'Movement In';
+            $transactionSubject = 'Movement Out';
 
             $journalReferences = array();
         
@@ -697,19 +697,19 @@ class MovementOutHeaderController extends Controller {
                     
                 }
 
-//                if (!empty($inventory)) {
-//                    $inventoryDetail = new InventoryDetail();
-//                    $inventoryDetail->inventory_id = $inventoryId;
-//                    $inventoryDetail->product_id = $movementDetail->product_id;
-//                    $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
-//                    $inventoryDetail->transaction_type = 'Movement Out';
-//                    $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
-//                    $inventoryDetail->transaction_date = $movementOut->header->date_posting;
-//                    $inventoryDetail->stock_out = $movementDetail->quantity * -1;
-//                    $inventoryDetail->notes = "Data from Movement Out";
-//                    $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
-//                    $inventoryDetail->save(false);
-//                }
+                if (!empty($inventoryId)) {
+                    $inventoryDetail = new InventoryDetail();
+                    $inventoryDetail->inventory_id = $inventoryId;
+                    $inventoryDetail->product_id = $movementDetail->product_id;
+                    $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
+                    $inventoryDetail->transaction_type = 'MVO';
+                    $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
+                    $inventoryDetail->transaction_date = $movementOut->header->date_posting;
+                    $inventoryDetail->stock_out = $movementDetail->quantity * -1;
+                    $inventoryDetail->notes = "Data from Movement Out";
+                    $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
+                    $inventoryDetail->save(false);
+                }
 
                 $value = $movementDetail->quantity * $movementDetail->product->hpp;
 
@@ -765,4 +765,47 @@ class MovementOutHeaderController extends Controller {
             }
         }
     } 
+    
+    public function actionInsertInventoryDetail() {
+        $movementOutHeaders = MovementOutHeader::model()->findAll(array('condition' => 'date_posting > "2021-12-31"'));
+        
+        foreach ($movementOutHeaders as $movementOutHeader) {
+            $inventoryDetails = InventoryDetail::model()->findAllByAttributes(array('transaction_number' => $movementOutHeader->movement_out_no));
+            if (empty($inventoryDetails)) {
+                foreach ($movementOutHeader->movementOutDetails as $movementOutDetail) {
+                    $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementOutDetail->product_id, 'warehouse_id' => $movementOutDetail->warehouse_id));
+                    $inventoryDetail = new InventoryDetail();
+                    $inventoryDetail->inventory_id = $inventory->id;
+                    $inventoryDetail->product_id = $movementOutDetail->product_id;
+                    $inventoryDetail->warehouse_id = $movementOutDetail->warehouse_id;
+                    $inventoryDetail->transaction_type = 'MVO';
+                    $inventoryDetail->transaction_number = $movementOutHeader->movement_out_no;
+                    $inventoryDetail->transaction_date = $movementOutHeader->date_posting;
+                    $inventoryDetail->stock_out = $movementOutDetail->quantity * -1;
+                    $inventoryDetail->notes = "Data from Movement Out";
+                    $inventoryDetail->purchase_price = $movementOutDetail->product->averageCogs;
+                    $inventoryDetail->save();
+                    
+                    if (empty($inventory)) {
+                        $insertInventory = new Inventory();
+                        $insertInventory->product_id = $movementOutDetail->product_id;
+                        $insertInventory->warehouse_id = $movementOutDetail->warehouse_id;
+                        $insertInventory->minimal_stock = 0;
+                        $insertInventory->total_stock = $movementOutDetail->quantity * -1;
+                        $insertInventory->status = 'Active';
+                        $insertInventory->save();
+
+                        $inventoryId = $insertInventory->id;
+                    } else {
+                        $inventory->total_stock -= $movementOutDetail->quantity;
+                        $inventory->update(array('total_stock'));
+
+                        $inventoryId = $inventory->id;
+
+                    }
+
+                }
+            }
+        }
+    }
 }
