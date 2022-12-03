@@ -789,8 +789,8 @@ class MovementOutHeaderController extends Controller {
 
                         $inventoryId = $insertInventory->id;
                     } else {
-                        $inventory->total_stock -= $movementOutDetail->quantity;
-                        $inventory->update(array('total_stock'));
+//                        $inventory->total_stock -= $movementOutDetail->quantity;
+//                        $inventory->update(array('total_stock'));
 
                         $inventoryId = $inventory->id;
 
