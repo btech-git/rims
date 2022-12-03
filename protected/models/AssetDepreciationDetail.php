@@ -6,9 +6,7 @@
  * The followings are the available columns in table '{{asset_depreciation_detail}}':
  * @property integer $id
  * @property string $amount
- * @property integer $number_of_month
- * @property integer $depreciation_period_month
- * @property integer $depreciation_period_year
+ * @property string $depreciation_date
  * @property integer $asset_purchase_id
  * @property integer $asset_depreciation_header_id
  *
@@ -41,12 +39,12 @@ class AssetDepreciationDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('asset_purchase_id, asset_depreciation_header_id, depreciation_period_month, depreciation_period_year', 'required'),
-            array('number_of_month, asset_purchase_id, asset_depreciation_header_id, depreciation_period_month, depreciation_period_year', 'numerical', 'integerOnly' => true),
+            array('asset_purchase_id, asset_depreciation_header_id, depreciation_date', 'required'),
+            array(' asset_purchase_id, asset_depreciation_header_id', 'numerical', 'integerOnly' => true),
             array('amount', 'length', 'max' => 18),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, amount, number_of_month, asset_purchase_id, asset_depreciation_header_id, depreciation_period_month, depreciation_period_year', 'safe', 'on' => 'search'),
+            array('id, amount, asset_purchase_id, asset_depreciation_header_id, depreciation_date', 'safe', 'on' => 'search'),
         );
     }
 
@@ -69,11 +67,9 @@ class AssetDepreciationDetail extends CActiveRecord {
         return array(
             'id' => 'ID',
             'amount' => 'Amount',
-            'number_of_month' => 'Number Of Month',
             'asset_purchase_id' => 'Asset Purchase',
             'asset_depreciation_header_id' => 'Asset Depreciation Header',
-            'depreciation_period_month' => 'Depreciation Month',
-            'depreciation_period_year' => 'Depreciation Year',
+            'depreciation_date' => 'Depreciation Date',
         );
     }
 
@@ -89,11 +85,9 @@ class AssetDepreciationDetail extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('amount', $this->amount, true);
-        $criteria->compare('number_of_month', $this->number_of_month);
         $criteria->compare('asset_purchase_id', $this->asset_purchase_id);
         $criteria->compare('asset_depreciation_header_id', $this->asset_depreciation_header_id);
-        $criteria->compare('depreciation_period_month', $this->depreciation_period_month);
-        $criteria->compare('depreciation_period_year', $this->depreciation_period_year);
+        $criteria->compare('depreciation_date', $this->depreciation_date);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -127,8 +121,8 @@ class AssetDepreciationDetail extends CActiveRecord {
         }
     }
 
-    public function getPeriodMonthYear() {
-        
-        return $this->getDepreciationPeriodMonth($this->depreciation_period_month) . ' ' . $this->depreciation_period_year;
-    }
+//    public function getPeriodMonthYear() {
+//        
+//        return $this->getDepreciationPeriodMonth($this->depreciation_period_month) . ' ' . $this->depreciation_period_year;
+//    }
 }

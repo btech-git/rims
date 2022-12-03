@@ -518,16 +518,16 @@ class Product extends CActiveRecord {
         return empty ($this->transactionPurchaseOrderDetails ) ? 0.00 : $unitPrice / $quantity;
     }
     
-    public function getFifoCogs() {
-        $unitPrice = 0;
-        $quantity = 0;
-        
-        foreach ($this->transactionPurchaseOrderDetails as $detail) {
-            $unitPrice += $detail->getTotalPriceBeforeTax(0, 0);
-            $quantity += $detail->quantity;
-        }
-        
-        return $unitPrice / $quantity;
-    }
+//    public function getFifoCogs() {
+//        $unitPrice = 0;
+//        $quantity = 0;
+//        
+//        foreach ($this->transactionPurchaseOrderDetails as $detail) {
+//            $unitPrice += $detail->getTotalPriceBeforeTax(0, 0);
+//            $quantity += $detail->quantity;
+//        }
+//        
+//        return $unitPrice / $quantity;
+//    }
     
 }

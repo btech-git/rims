@@ -96,6 +96,14 @@ class AssetDepreciationHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function getYearsRange() {
+        $currentYear = date('Y');
+        $yearFrom = $currentYear - 2;
+        $yearTo = $currentYear + 2;
+        $yearsRange = range($yearFrom, $yearTo);
+        return array_combine($yearsRange, $yearsRange);
+    }
+    
     public function generateCodeNumber($currentMonth, $currentYear, $branchId) {
         $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
         $cnYearCondition = "substring_index(substring_index(substring_index(transaction_number, '/', 2), '/', -1), '.', 1)";
