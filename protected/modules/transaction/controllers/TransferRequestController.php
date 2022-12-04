@@ -344,7 +344,7 @@ class TransferRequestController extends Controller {
         }
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
         
         $this->render('admin', array(
             'model' => $model,
@@ -361,7 +361,7 @@ class TransferRequestController extends Controller {
         }
 
         $destinationBranchDataProvider = $model->search();
-        $destinationBranchDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        $destinationBranchDataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
         $destinationBranchDataProvider->criteria->compare('t.status_document', "Approved");
         $destinationBranchDataProvider->criteria->compare('t.destination_approved_by', null);
         
