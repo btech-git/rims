@@ -356,6 +356,10 @@ class TransferRequestController extends Controller {
         $model = new TransactionTransferRequest('search');
         $model->unsetAttributes();  // clear any default values
         
+        if (isset($_GET['TransactionTransferRequest'])) {
+            $model->attributes = $_GET['TransactionTransferRequest'];
+        }
+
         $destinationBranchDataProvider = $model->search();
         $destinationBranchDataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
         $destinationBranchDataProvider->criteria->compare('t.status_document', "Approved");
