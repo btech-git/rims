@@ -50,7 +50,7 @@ Yii::app()->clientScript->registerScript('search', "
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
         )); ?>
-        <h1>Manage Transaction Sent Request</h1>
+        <h1>Approval Request Branch Tujuan</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
             <!--<div class="left clearfix bulk-action">
@@ -68,8 +68,7 @@ Yii::app()->clientScript->registerScript('search', "
             </div>
         </div>
 
-        <h3>Request Branch Tujuan</h3>
-         <div class="grid-view">
+        <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-transfer-request-grid',
                 'dataProvider'=>$destinationBranchDataProvider,
