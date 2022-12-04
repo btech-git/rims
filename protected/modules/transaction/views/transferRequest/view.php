@@ -26,11 +26,10 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Transfer Request',
-            Yii::app()->baseUrl . '/transaction/transferRequest/admin', array(
-                'class' => 'button cbutton right',
-                'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
-            ));  ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Transfer Request', Yii::app()->baseUrl . '/transaction/transferRequest/admin', array(
+            'class' => 'button cbutton right',
+            'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
+        )); ?>
 
         <?php if ($transferRequest->status_document == 'Draft'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit',

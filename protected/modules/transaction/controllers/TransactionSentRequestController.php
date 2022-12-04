@@ -425,6 +425,19 @@ class TransactionSentRequestController extends Controller {
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
 
+        $this->render('admin', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    public function actionAdminDestination() {
+        $model = new TransactionSentRequest('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['TransactionSentRequest'])) {
+            $model->attributes = $_GET['TransactionSentRequest'];
+        }
+
         $destinationBranchDataProvider = $model->search();
         $destinationBranchDataProvider->criteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
         $destinationBranchDataProvider->criteria->compare('t.status_document', "Approved");
@@ -432,7 +445,6 @@ class TransactionSentRequestController extends Controller {
 
         $this->render('admin', array(
             'model' => $model,
-            'dataProvider' => $dataProvider,
             'destinationBranchDataProvider' => $destinationBranchDataProvider,
         ));
     }

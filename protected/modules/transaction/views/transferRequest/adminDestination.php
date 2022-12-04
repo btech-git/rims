@@ -46,7 +46,10 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Transfer Request', Yii::app()->baseUrl.'/transaction/transferRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionTransferRequest.create"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Transfer Request', Yii::app()->baseUrl . '/transaction/transferRequest/admin', array(
+            'class' => 'button cbutton right',
+            'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
+        )); ?>
         <h1>Manage Transfer Request</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
