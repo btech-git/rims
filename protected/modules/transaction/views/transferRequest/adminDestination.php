@@ -60,11 +60,11 @@ Yii::app()->clientScript->registerScript('search', "
             </div>
          </div>
 
-        <h3>Request Branch Asal</h3>
+        <h3>Request Branch Tujuan</h3>
          <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-transfer-request-grid',
-                'dataProvider'=>$dataProvider,
+                'dataProvider'=>$destinationBranchDataProvider,
                 'filter'=> null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
@@ -74,7 +74,7 @@ Yii::app()->clientScript->registerScript('search', "
                 'columns'=>array(
                     array(
                         'name'=>'transfer_request_no', 
-                        'value'=>'CHTml::link($data->transfer_request_no, array("view", "id"=>$data->id))', 
+                        'value'=>'CHtml::link($data->transfer_request_no, array("view", "id"=>$data->id))', 
                         'type'=>'raw'
                     ),
                     'transfer_request_date',
@@ -104,12 +104,12 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     array(
                         'class'=>'CButtonColumn',
-                        'template'=>'{edit}',
+                        'template'=>'{approve}',
                         'buttons'=>array (
-                            'edit' => array (
-                                'label'=>'edit',
-                                'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestEdit")',
+                            'approve' => array (
+                                'label'=>'approve',
+                                'url'=>'Yii::app()->createUrl("transaction/transferRequest/updateApprovalDestination", array("id"=>$data->id))',
+                                'visible'=> 'Yii::app()->user->checkAccess("transferRequestEdit")',
                             ),
                         ),
                     ),
