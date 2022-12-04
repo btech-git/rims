@@ -49,7 +49,7 @@ Yii::app()->clientScript->registerScript('search', "
         <?php echo CHtml::link('<span class="fa fa-list"></span>Approval Transfer Request', Yii::app()->baseUrl . '/transaction/transferRequest/adminDestination', array(
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
-        )); ?>
+                )); ?> &nbsp;&nbsp;&nbsp;
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Transfer Request', Yii::app()->baseUrl.'/transaction/transferRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionTransferRequest.create"))) ?>
         <h1>Manage Transfer Request</h1>
         <div class="search-bar">

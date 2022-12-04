@@ -37,7 +37,7 @@ Yii::app()->clientScript->registerScript('search', "
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Sent Request', Yii::app()->baseUrl . '/transaction/transactionSentRequest/adminDestination', array(
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
-        )); ?>
+        )); ?> &nbsp;&nbsp;&nbsp;
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Sent Request', Yii::app()->baseUrl.'/transaction/transactionSentRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionSentRequest.create"))) ?>
         <h1>Manage Transaction Sent Request</h1>
         <div class="search-bar">
