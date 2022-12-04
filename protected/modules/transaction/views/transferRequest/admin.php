@@ -79,7 +79,7 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     'transfer_request_date',
                     'status_document',
-                    'estimate_arrival_date',
+//                    'estimate_arrival_date',
                     array(
                         'name'=>'requester_branch_id',
                         'header' => 'Requester',

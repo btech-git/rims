@@ -65,7 +65,7 @@ Yii::app()->clientScript->registerScript('search', "
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'transaction-transfer-request-grid',
                 'dataProvider'=>$destinationBranchDataProvider,
-                'filter'=> null,
+                'filter'=> $model,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
                     'cssFile'=>false,
@@ -79,7 +79,7 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     'transfer_request_date',
                     'status_document',
-                    'estimate_arrival_date',
+//                    'estimate_arrival_date',
                     array(
                         'name'=>'requester_branch_id',
                         'header' => 'Requester',
