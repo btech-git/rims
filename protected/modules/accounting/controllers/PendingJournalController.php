@@ -33,7 +33,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new TransactionPurchaseOrder('search');
@@ -103,7 +103,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new PaymentIn('search');
@@ -127,7 +127,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new PaymentOut('search');
@@ -151,7 +151,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new MovementInHeader('search');
@@ -175,7 +175,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new MovementOutHeader('search');
@@ -222,7 +222,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new CashTransaction('search');
