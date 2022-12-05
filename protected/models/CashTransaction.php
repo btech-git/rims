@@ -262,6 +262,39 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         return $total;
     }
 
+    public function searchByPendingJournal() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('transaction_time', $this->transaction_time, true);
+        $criteria->compare('transaction_type', $this->transaction_type, true);
+        $criteria->compare('coa_id', $this->coa_id);
+        $criteria->compare('debit_amount', $this->debit_amount, true);
+        $criteria->compare('credit_amount', $this->credit_amount, true);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('status', 'Approved');
+
+        $criteria->addCondition("substring(t.transaction_number, 1, (length(t.transaction_number) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+
     public static function pendingJournal() {
         $sql = "SELECT p.id, p.transaction_number, p.transaction_date, p.transaction_type, b.name as branch_name, p.status
                 FROM " . CashTransaction::model()->tableName() . " p

@@ -301,10 +301,11 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
     public function getTotalRemainingQuantityDelivered() {
         $totalRemaining = 0;
 
-        foreach ($this->transactionTransferRequestDetails as $detail)
+        foreach ($this->transactionTransferRequestDetails as $detail) {
             $totalRemaining += $detail->quantity_delivery_left;
+        }
 
-        return ($totalRemaining = 0) ? 'Completed' : 'Partial';
+        return ($totalRemaining == 0) ? 'Completed' : 'Partial';
     }
 
 }

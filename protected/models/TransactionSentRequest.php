@@ -246,10 +246,11 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
     public function getTotalRemainingQuantityDelivered() {
         $totalRemaining = 0;
 
-        foreach ($this->transactionSentRequestDetails as $detail)
+        foreach ($this->transactionSentRequestDetails as $detail) {
             $totalRemaining += $detail->sent_request_quantity_left;
+        }
 
-        return ($totalRemaining = 0) ? 'Completed' : 'Partial';
+        return ($totalRemaining == 0) ? 'Completed' : 'Partial';
     }
 
 }

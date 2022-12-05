@@ -330,7 +330,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.purchase_type', $this->purchase_type, true);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
 
-        $criteria->addCondition("t.approved_id IS NOT NULL AND t.main_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->addCondition("t.approved_id IS NOT NULL");
         $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
@@ -397,17 +397,68 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         return $this->total_price - $this->getTotalPayment();
     }
 
-    public static function pendingJournal() {
-        $sql = "SELECT p.id, p.purchase_order_no, p.purchase_order_date, s.name as supplier_name, b.name as branch_name, p.payment_status
-                FROM " . TransactionPurchaseOrder::model()->tableName() . " p
-                INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
-                WHERE p.status_document = 'Approved' AND p.purchase_order_date > '2021-12-31' AND p.purchase_order_no NOT IN (
-                    SELECT kode_transaksi 
-                    FROM " . JurnalUmum::model()->tableName() . "
-                )
-                ORDER BY p.purchase_order_date DESC";
+    public function searchByPendingJournal() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
 
-        return $sql;
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.purchase_order_no', $this->purchase_order_no, true);
+        $criteria->compare('t.purchase_order_date', $this->purchase_order_date, true);
+        $criteria->compare('t.status_document', 'Approved');
+        $criteria->compare('t.supplier_id', $this->supplier_id);
+        $criteria->compare('t.payment_type', $this->payment_type, true);
+        $criteria->compare('t.estimate_date_arrival', $this->estimate_date_arrival, true);
+        $criteria->compare('t.requester_id', $this->requester_id);
+        $criteria->compare('t.main_branch_id', $this->main_branch_id);
+        $criteria->compare('t.approved_id', $this->approved_id);
+        $criteria->compare('t.total_quantity', $this->total_quantity);
+        $criteria->compare('t.price_before_discount', $this->price_before_discount, true);
+        $criteria->compare('t.discount', $this->discount, true);
+        $criteria->compare('t.subtotal', $this->subtotal, true);
+        $criteria->compare('t.ppn', $this->ppn);
+        $criteria->compare('t.ppn_price', $this->ppn_price, true);
+        $criteria->compare('t.total_price', $this->total_price, true);
+        $criteria->compare('t.payment_amount', $this->payment_amount, true);
+        $criteria->compare('t.payment_left', $this->payment_left, true);
+        $criteria->compare('t.company_bank_id', $this->company_bank_id);
+        $criteria->compare('t.payment_status', $this->payment_status, true);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('t.purchase_type', $this->purchase_type, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
+
+        $criteria->together = 'true';
+        $criteria->with = array('supplier');
+        $criteria->compare('supplier.name', $this->supplier_name, true);
+
+        $criteria->addCondition("substring(t.purchase_order_no, 1, (length(t.purchase_order_no) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'purchase_order_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
     }
+
+//    public static function pendingJournal() {
+//        $sql = "SELECT p.id, p.purchase_order_no, p.purchase_order_date, s.name as supplier_name, b.name as branch_name, p.payment_status
+//                FROM " . TransactionPurchaseOrder::model()->tableName() . " p
+//                INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
+//                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
+//                WHERE p.status_document = 'Approved' AND p.purchase_order_date > '2021-12-31' AND p.purchase_order_no NOT IN (
+//                    SELECT kode_transaksi 
+//                    FROM " . JurnalUmum::model()->tableName() . "
+//                )
+//                ORDER BY p.purchase_order_date DESC";
+//
+//        return $sql;
+//    }
 }

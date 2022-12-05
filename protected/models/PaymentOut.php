@@ -272,17 +272,45 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         return $this->id . '.' . $this->extension;
     }
     
-    public static function pendingJournal() {
-        $sql = "SELECT p.id, p.payment_number, p.payment_date, s.name as supplier_name, b.name as branch_name, p.status
-                FROM " . PaymentOut::model()->tableName() . " p
-                INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE p.status = 'Approved' AND p.payment_date > '2021-12-31' AND p.payment_number NOT IN (
-                    SELECT kode_transaksi 
-                    FROM " . JurnalUmum::model()->tableName() . "
-                )
-                ORDER BY p.payment_date DESC";
+    public function searchByPendingJournal() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
 
-        return $sql;
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.purchase_order_id', $this->purchase_order_id);
+        $criteria->compare('t.payment_number', $this->payment_number, true);
+        $criteria->compare('t.payment_date', $this->payment_date, true);
+        $criteria->compare('t.supplier_id', $this->supplier_id);
+        $criteria->compare('t.payment_amount', $this->payment_amount, true);
+        $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('t.payment_type', $this->payment_type, true);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.status', 'Approved');
+        $criteria->compare('t.company_bank_id', $this->company_bank_id);
+        $criteria->compare('t.nomor_giro', $this->nomor_giro, true);
+        $criteria->compare('t.cash_payment_type', $this->cash_payment_type);
+        $criteria->compare('t.bank_id', $this->bank_id);
+        $criteria->compare('t.payment_type_id', $this->payment_type_id);
+
+        $criteria->addCondition("substring(t.payment_number, 1, (length(t.payment_number) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        $criteria->together = true;
+        $criteria->with = array('supplier');
+        $criteria->compare('supplier.name', $this->supplier_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'payment_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
     }
 }

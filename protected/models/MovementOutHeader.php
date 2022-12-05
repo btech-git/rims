@@ -180,16 +180,42 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         }
     }
     
-    public static function pendingJournal() {
-        $sql = "SELECT p.id, p.movement_out_no, p.date_posting, b.name as branch_name, p.status
-                FROM " . MovementOutHeader::model()->tableName() . " p
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE p.status  IN ('Approved', 'Finished') AND p.date_posting > '2021-12-31' AND p.movement_out_no NOT IN (
-                    SELECT kode_transaksi 
-                    FROM " . JurnalUmum::model()->tableName() . "
-                )
-                ORDER BY p.date_posting DESC";
+    public function searchByPendingJournal() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
-        return $sql;
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.movement_out_no', $this->movement_out_no, true);
+        $criteria->compare('t.date_posting', $this->date_posting, true);
+        $criteria->compare('t.delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('t.return_order_id', $this->return_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.registration_service_id', $this->registration_service_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', 'Approved');
+        $criteria->compare('t.material_request_header_id', $this->material_request_header_id);
+
+        $criteria->addCondition("substring(t.movement_out_no, 1, (length(t.movement_out_no) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        $criteria->together = 'true';
+        $criteria->with = array('branch');
+        $criteria->addSearchCondition('branch.name', $this->branch_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'date_posting DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
     }
 }

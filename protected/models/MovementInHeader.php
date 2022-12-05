@@ -161,16 +161,40 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         }
     }
     
-    public static function pendingJournal() {
-        $sql = "SELECT p.id, p.movement_in_number, p.date_posting, b.name as branch_name, p.status
-                FROM " . MovementInHeader::model()->tableName() . " p
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE p.status  IN ('Approved', 'Finished') AND p.date_posting > '2021-12-31' AND p.movement_in_number NOT IN (
-                    SELECT kode_transaksi 
-                    FROM " . JurnalUmum::model()->tableName() . "
-                )
-                ORDER BY p.date_posting DESC";
+    public function searchByPendingJournal() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
-        return $sql;
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.movement_in_number', $this->movement_in_number, true);
+        $criteria->compare('t.date_posting', $this->date_posting, true);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('movement_type', $this->movement_type);
+        $criteria->compare('return_item_id', $this->return_item_id);
+        $criteria->compare('t.receive_item_id', $this->receive_item_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', 'Approved');
+
+        $criteria->addCondition("substring(t.movement_in_number, 1, (length(t.movement_in_number) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        $criteria->together = 'true';
+        $criteria->with = array('branch');
+        $criteria->addSearchCondition('branch.name', $this->branch_name, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'date_posting DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
     }
 }

@@ -298,44 +298,45 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         }
     }
 
-    public static function pendingJournal() {
-        $sql = "SELECT p.id, p.payment_number, p.payment_date, s.name as customer_name, b.name as branch_name, p.status
-                FROM " . PaymentIn::model()->tableName() . " p
-                INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE p.status = 'Approved' AND p.payment_date > '2021-12-31' AND p.payment_number NOT IN (
-                    SELECT kode_transaksi 
-                    FROM " . JurnalUmum::model()->tableName() . "
-                )
-                ORDER BY p.payment_date DESC";
+    public function searchByPendingJournal() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
 
-        return $sql;
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_id', $this->invoice_id);
+        $criteria->compare('t.payment_number', $this->payment_number, true);
+        $criteria->compare('t.payment_date', $this->payment_date, true);
+        $criteria->compare('t.payment_time', $this->payment_time, true);
+        $criteria->compare('t.payment_amount', $this->payment_amount, true);
+        $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.payment_type', $this->payment_type, true);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.status', 'Approved');
+        $criteria->compare('t.company_bank_id', $this->company_bank_id);
+        $criteria->compare('nomor_giro', $this->nomor_giro, true);
+        $criteria->compare('cash_payment_type', $this->cash_payment_type);
+        $criteria->compare('t.bank_id', $this->bank_id);
+        $criteria->compare('t.payment_type_id', $this->payment_type_id);
+        $criteria->compare('is_tax_service', $this->is_tax_service);
+        $criteria->compare('tax_service_amount', $this->tax_service_amount);
+
+        $criteria->addCondition("substring(t.payment_number, 1, (length(t.payment_number) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'payment_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
     }
-
-//    public function getTotalAmountWholesale($branchId, $transactionDate) {
-//        $sql = "SELECT payment_date, branch_id, customer_id, COALESCE(SUM(payment_amount), 0) AS total_amount
-//                FROM " . PaymentIn::model()->tableName() . "
-//                WHERE branch_id = :branch_id AND payment_date = :payment_date
-//                GROUP BY payment_date, branch_id, customer_id";
-//
-//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-//            ':branch_id' => $branchId,
-//            ':payment_date' => $transactionDate,
-//        ));
-//
-//        return ($value === false) ? 0 : $value;
-//    }
-
-//    public function getTotalAmountRetail($transactionDate) {
-//        $sql = "SELECT payment_date, branch_id, payment_type_id, COALESCE(SUM(payment_amount), 0) AS total_amount
-//                FROM " . PaymentIn::model()->tableName() . "
-//                WHERE payment_date = :payment_date
-//                GROUP BY payment_date, branch_id, payment_type_id";
-//
-//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-//            ':payment_date' => $transactionDate,
-//        ));
-//
-//        return ($value === false) ? 0 : $value;
-//    }
 }

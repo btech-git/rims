@@ -153,12 +153,12 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         return $total;
     }
 
-    public function getDepreciationMonthlyNumber() {
-        
-        $assetDepreciationDetail = AssetDepreciationDetail::model()->findByAttributes(array('asset_purchase_id' => $this->id), array('order' => 't.id DESC'));
-        
-        return empty($assetDepreciationDetail) ? 1 : $assetDepreciationDetail->number_of_month + 1;
-    }
+//    public function getDepreciationMonthlyNumber() {
+//        
+//        $assetDepreciationDetail = AssetDepreciationDetail::model()->findByAttributes(array('asset_purchase_id' => $this->id), array('order' => 't.id DESC'));
+//        
+//        return empty($assetDepreciationDetail) ? 1 : $assetDepreciationDetail->number_of_month + 1;
+//    }
     
     public function getMonthlyDepreciationAmount() {
         

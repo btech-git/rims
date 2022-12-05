@@ -235,10 +235,11 @@ class ConsignmentOutHeader extends MonthlyTransactionActiveRecord {
     public function getTotalRemainingQuantityDelivered() {
         $totalRemaining = 0;
 
-        foreach ($this->consignmentOutDetails as $detail)
+        foreach ($this->consignmentOutDetails as $detail) {
             $totalRemaining += $detail->qty_request_left;
+        }
 
-        return ($totalRemaining = 0) ? 'Completed' : 'Partial';
+        return ($totalRemaining == 0) ? 'Completed' : 'Partial';
     }
 
 }
