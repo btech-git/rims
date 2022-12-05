@@ -44,6 +44,33 @@ class InventoryValueController extends Controller {
         ));
     }
 
+    public function actionDetail($id) {
+        $product = Product::model()->findByPk($id);
+        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
+        $detailTabs = array();
+        
+        foreach ($branches as $branch) {
+            $tabContent = $this->renderPartial('_viewStock', array(
+                'dataProvider' => $this->getInventoryDetailDataProvider($product->id, $branch->id, 0),
+                'productId' => $product->id,
+                'branchId' => $branch->id,
+            ), true);
+            $detailTabs[$branch->name] = array('content' => $tabContent);
+        }
+        $tabContent = $this->renderPartial('_viewStock', array(
+            'dataProvider' => $this->getInventoryDetailDataProvider($product->id, '', 0),
+            'productId' => $product->id,
+            'branchId' => '',
+        ), true);
+        $detailTabs['All'] = array('content' => $tabContent);
+
+        $this->render('detail', array(
+            'detailTabs' => $detailTabs,
+            'product' => $product,
+            'branches' => $branches,
+        ));
+    }
+
     public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
@@ -96,6 +123,14 @@ class InventoryValueController extends Controller {
                 'branches' => $branches,
             ));
         }
+    }
+    
+    public function getInventoryDetailDataProvider($productId, $branchId, $currentPage) {
+        $inventoryDetail = Search::bind(new InventoryDetail(), '');
+        $inventoryDetail->product_id = $productId;
+        $inventoryDetailDataProvider = $inventoryDetail->searchByStock($branchId, $currentPage);
+        
+        return $inventoryDetailDataProvider;
     }
 
     protected function saveToExcel($dataProvider, array $options = array()) {

@@ -166,7 +166,6 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionUpdate($id) {
         $generalRepairRegistration = $this->instantiate($id);
-        $generalRepairRegistration->header->setCodeNumberByRevision('transaction_number');
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $type = "";
@@ -247,6 +246,13 @@ class GeneralRepairRegistrationController extends Controller {
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($generalRepairRegistration);
+            
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $generalRepairRegistration->header->transaction_number,
+            ));
+            
+            $generalRepairRegistration->header->setCodeNumberByRevision('transaction_number');
+        
             if ($generalRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
             }

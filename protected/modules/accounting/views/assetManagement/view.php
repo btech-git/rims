@@ -196,9 +196,9 @@ $this->menu=array(
                     <tbody>
                         <tr>
                             <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetDepreciationHeader.transaction_number')); ?></td>
-                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciation, 'assetDepreciationHeader.transaction_date'))); ?></td>
-                            <td><?php echo CHtml::encode($depreciation->getDepreciationPeriodMonth($depreciation->depreciation_period_month)) . ' ' . CHtml::encode(CHtml::value($depreciation, 'depreciation_period_year')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($depreciation, 'number_of_month')); ?></td>
+                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciation, 'depreciation_date'))); ?></td>
+                            <td><?php //echo CHtml::encode($depreciation->getDepreciationPeriodMonth($depreciation->depreciation_period_month)) . ' ' . CHtml::encode(CHtml::value($depreciation, 'depreciation_period_year')); ?></td>
+                            <td><?php //echo CHtml::encode(CHtml::value($depreciation, 'number_of_month')); ?></td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
                         </tr>
                     </tbody>

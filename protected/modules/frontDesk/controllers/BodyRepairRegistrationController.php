@@ -208,7 +208,6 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionUpdate($id) {
         $bodyRepairRegistration = $this->instantiate($id);
-        $bodyRepairRegistration->header->setCodeNumberByRevision('transaction_number');
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $type = "";
@@ -314,6 +313,12 @@ class BodyRepairRegistrationController extends Controller {
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($bodyRepairRegistration);
+            
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $bodyRepairRegistration->header->transaction_number,
+            ));
+            
+            $bodyRepairRegistration->header->setCodeNumberByRevision('transaction_number');
 
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));

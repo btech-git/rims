@@ -51,10 +51,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'placeholder' => 'Mulai',
                                         ),
                                     ));*/ ?>
-                                    <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
                                 </div>-->
 
                                     <div class="small-8 columns">
+                                        <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(

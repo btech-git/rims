@@ -460,6 +460,11 @@ class TransactionDeliveryOrderController extends Controller {
 
         if (isset($_POST['TransactionDeliveryOrder'])) {
             $this->loadState($deliveryOrder);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $deliveryOrder->header->delivery_order_no,
+                'branch_id' => $deliveryOrder->header->sender_branch_id,
+            ));
+
             $deliveryOrder->header->setCodeNumberByRevision('delivery_order_no');
 
             if ($deliveryOrder->save(Yii::app()->db)) {

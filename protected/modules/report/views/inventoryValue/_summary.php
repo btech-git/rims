@@ -29,7 +29,7 @@
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
+                <td><?php echo CHtml::link(CHtml::value($product, 'name'), array('detail', 'id' => $product->id)); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>

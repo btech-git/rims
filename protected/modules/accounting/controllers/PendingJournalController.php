@@ -33,22 +33,23 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $purchaseOrderSql = TransactionPurchaseOrder::pendingJournal();
-        $purchaseOrderDataProvider = new CSqlDataProvider($purchaseOrderSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($purchaseOrderSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+        $model = new TransactionPurchaseOrder('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['TransactionPurchaseOrder'])) {
+            $model->attributes = $_GET['TransactionPurchaseOrder'];
+        }
+        
+        $purchaseOrderDataProvider = $model->searchByPendingJournal();
+        $purchaseOrderDataProvider->criteria->addBetweenCondition('SUBSTRING(t.purchase_order_date, 1, 10)', $startDate, $endDate);
 
         $this->render('indexPurchase', array(
+            'model'=> $model,
             'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     
@@ -102,22 +103,23 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $paymentInSql = PaymentIn::pendingJournal();
-        $paymentInDataProvider = new CSqlDataProvider($paymentInSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($paymentInSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+        $model = new PaymentIn('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['PaymentIn'])) {
+            $model->attributes = $_GET['PaymentIn'];
+        }
+        
+        $paymentInDataProvider = $model->searchByPendingJournal();
+        $paymentInDataProvider->criteria->addBetweenCondition('SUBSTRING(t.payment_date, 1, 10)', $startDate, $endDate);
 
         $this->render('indexPaymentIn', array(
+            'model'=> $model,
             'paymentInDataProvider' => $paymentInDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     
@@ -125,22 +127,23 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $paymentOutSql = PaymentOut::pendingJournal();
-        $paymentOutDataProvider = new CSqlDataProvider($paymentOutSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($paymentOutSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+        $model = new PaymentOut('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['PaymentOut'])) {
+            $model->attributes = $_GET['PaymentOut'];
+        }
+        
+        $paymentOutDataProvider = $model->searchByPendingJournal();
+        $paymentOutDataProvider->criteria->addBetweenCondition('SUBSTRING(t.payment_date, 1, 10)', $startDate, $endDate);
 
         $this->render('indexPaymentOut', array(
+            'model'=> $model,
             'paymentOutDataProvider' => $paymentOutDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     
@@ -148,22 +151,23 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $movementInSql = MovementInHeader::pendingJournal();
-        $movementInDataProvider = new CSqlDataProvider($movementInSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($movementInSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+        $model = new MovementInHeader('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['MovementInHeader'])) {
+            $model->attributes = $_GET['MovementInHeader'];
+        }
+        
+        $movementInDataProvider = $model->searchByPendingJournal();
+        $movementInDataProvider->criteria->addBetweenCondition('SUBSTRING(t.date_posting, 1, 10)', $startDate, $endDate);
 
         $this->render('indexMovementIn', array(
+            'model'=> $model,
             'movementInDataProvider' => $movementInDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     
@@ -171,22 +175,23 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $movementOutSql = MovementOutHeader::pendingJournal();
-        $movementOutDataProvider = new CSqlDataProvider($movementOutSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($movementOutSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+        $model = new MovementOutHeader('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['MovementOutHeader'])) {
+            $model->attributes = $_GET['MovementOutHeader'];
+        }
+        
+        $movementOutDataProvider = $model->searchByPendingJournal();
+        $movementOutDataProvider->criteria->addBetweenCondition('SUBSTRING(t.date_posting, 1, 10)', $startDate, $endDate);
 
         $this->render('indexMovementOut', array(
+            'model'=> $model,
             'movementOutDataProvider' => $movementOutDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     
@@ -217,22 +222,23 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $cashTransactionSql = CashTransaction::pendingJournal();
-        $cashTransactionDataProvider = new CSqlDataProvider($cashTransactionSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($cashTransactionSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+        $model = new CashTransaction('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['CashTransaction'])) {
+            $model->attributes = $_GET['CashTransaction'];
+        }
         
+        $cashTransactionDataProvider = $model->searchByPendingJournal();
+        $cashTransactionDataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+
         $this->render('indexCash', array(
+            'model'=> $model,
             'cashTransactionDataProvider' => $cashTransactionDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     

@@ -29,9 +29,37 @@
                     <div class="small-8 columns">
                         <?php $user = Users::model()->findByPk($assetDepreciation->header->user_id); ?>
                         <?php echo CHtml::encode(CHtml::value($user, 'username')); ?>
+                        <?php echo CHtml::encode($assetDepreciation->header->transaction_date); ?>
                     </div>
                 </div>
-            </div>    
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Periode', false); ?>
+                    </div>
+                    <div class="small-4 columns">
+                        <?php echo CHtml::dropDownList("DepreciationPeriodMonth", $periodMonth, array(
+                            '1' => 'Jan',
+                            '2' => 'Feb',
+                            '3' => 'Mar',
+                            '4' => 'Apr',
+                            '5' => 'May',
+                            '6' => 'Jun',
+                            '7' => 'Jul',
+                            '8' => 'Aug',
+                            '9' => 'Sep',
+                            '10' => 'Oct',
+                            '11' => 'Nov',
+                            '12' => 'Dec',
+                        )); ?>
+                    </div>
+                    <div class="small-4 columns">
+                        <?php echo CHtml::dropDownList("DepreciationPeriodYear", $periodYear, $assetDepreciation->header->yearsRange); ?>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <hr />

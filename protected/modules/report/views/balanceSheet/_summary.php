@@ -214,8 +214,7 @@
 
                                 <tr>
                                     <td style="text-align: right; font-weight: bold; border-top: 2px solid;">
-                                        Total
-                                        <?php echo CHtml::encode(CHtml::value($coaCategorySecondary, 'name')); ?>
+                                        Total <?php echo CHtml::encode(CHtml::value($coaCategorySecondary, 'name')); ?>
                                     </td>
 
                                     <td style="text-align: right; font-weight: bold; border-top: 2px solid">
@@ -258,8 +257,7 @@
 
                         <tr>
                             <td style="text-align: right; font-weight: bold; text-transform: uppercase; border-top: 1px solid">
-                                TOTAL
-                                <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
+                                TOTAL <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
                             </td>
 
                             <td style="text-align: right; font-weight: bold; border-top: 1px solid;">
@@ -277,8 +275,7 @@
 
                 <tr>
                     <td style="text-align: right; font-weight: bold; border-top: 1px solid; text-transform: uppercase">
-                        TOTAL 
-                        <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
+                        TOTAL <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
                     </td>
 
                     <td style="text-align: right; font-weight: bold; border-top: 1px solid">
@@ -295,8 +292,7 @@
 
             <tr>
                 <td style="text-align: right; font-weight: bold; border-top: 1px solid; text-transform: uppercase; font-size:  1em">
-                    TOTAL 
-                    <?php echo CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')); ?>
+                    TOTAL <?php echo CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')); ?>
                 </td>
 
                 <td style="text-align: right; font-weight: bold; border-top: 1px solid; font-size:  1em">
