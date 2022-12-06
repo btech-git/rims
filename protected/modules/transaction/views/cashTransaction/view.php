@@ -24,7 +24,7 @@ $this->menu = array(
 
         <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Cash Transaction', Yii::app()->baseUrl . '/transaction/cashTransaction/admin', array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.admin"))) ?>
 
-        <?php if ($model->status != "Approved" && $model->status != 'Rejected'): ?>
+        <?php if (($model->status != "Approved" && $model->status != 'Rejected') || Yii::app()->user->checkAccess('director')): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/cashTransaction/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.update"))) ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/cashTransaction/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.updateApproval"))) ?>
         <?php endif; ?>
