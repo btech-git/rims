@@ -40,7 +40,7 @@ class AssetDepreciationDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('asset_purchase_id, asset_depreciation_header_id, depreciation_date', 'required'),
-            array(' asset_purchase_id, asset_depreciation_header_id', 'numerical', 'integerOnly' => true),
+            array('asset_purchase_id, asset_depreciation_header_id', 'numerical', 'integerOnly' => true),
             array('amount', 'length', 'max' => 18),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.

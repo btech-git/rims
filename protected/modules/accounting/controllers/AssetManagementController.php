@@ -208,11 +208,11 @@ class AssetManagementController extends Controller {
      */
     public function actionCreateDepreciation() {
         $assetDepreciation = $this->instantiate(null);
-        $assetDepreciation->header->transaction_date = date('Y-m-t', strtotime($assetDepreciation->header->transaction_date . ' +1 months'));
+        $assetDepreciation->header->transaction_date = date('Y-m-t');
         $assetDepreciation->header->transaction_time = date('H:i:s');
         $assetDepreciation->header->user_id = Yii::app()->user->id;
-        $periodMonth = isset($_GET['DepreciationPeriodMonth']) ? $_GET['DepreciationPeriodMonth'] : date('m');
-        $periodYear = isset($_GET['DepreciationPeriodYear']) ? $_GET['DepreciationPeriodYear'] : date('Y');
+//        $periodMonth = isset($_GET['DepreciationPeriodMonth']) ? $_GET['DepreciationPeriodMonth'] : date('m');
+//        $periodYear = isset($_GET['DepreciationPeriodYear']) ? $_GET['DepreciationPeriodYear'] : date('Y');
         
         $assetDepreciation->addAsset();
         
@@ -230,8 +230,8 @@ class AssetManagementController extends Controller {
 
         $this->render('createDepreciation', array(
             'assetDepreciation' => $assetDepreciation,
-            'periodMonth' => $periodMonth,
-            'periodYear' => $periodYear,
+//            'periodMonth' => $periodMonth,
+//            'periodYear' => $periodYear,
         ));
     }
 
@@ -324,7 +324,7 @@ class AssetManagementController extends Controller {
             $assetDepreciation = new AssetDepreciation(new AssetDepreciationHeader(), array());
         } else {
             $assetDepreciationHeader = $this->loadModelDepreciation($id);
-            $assetDepreciation = new PaymentOutComponent($assetDepreciationHeader, $assetDepreciationHeader->assetDepreciationDetails);
+            $assetDepreciation = new AssetDepreciation($assetDepreciationHeader, $assetDepreciationHeader->assetDepreciationDetails);
         }
 
         return $assetDepreciation;

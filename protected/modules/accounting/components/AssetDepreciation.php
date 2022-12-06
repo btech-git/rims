@@ -12,23 +12,32 @@ class AssetDepreciation extends CComponent {
 
     public function addAsset() {
 
-        $exist = FALSE;
-        
         $assetPurchases = AssetPurchase::model()->findAll(array('condition' => 't.current_value > 0 AND t.status <> "Sold"'));
 
         if (!empty($assetPurchases)) {
             foreach ($assetPurchases as $assetPurchase) {
-                $detail = new AssetDepreciationDetail;
-                $detail->asset_purchase_id = $assetPurchase->id;
-                $detail->amount = $assetPurchase->monthlyDepreciationAmount;
-//                $detail->number_of_month = $assetPurchase->depreciationMonthlyNumber;
-//                $detail->depreciation_period_month = date('m');
-//                $detail->depreciation_period_year = date('Y');
-                $this->details[] = $detail;
+                $assetDepreciationDetail = AssetDepreciationDetail::model()->findByAttributes(array('asset_purchase_id' => $assetPurchase->id), array('order' => 'depreciation_date DESC'));
+                
+                if (empty($assetDepreciationDetail)) {
+                    $transactionDate = $assetPurchase->transaction_date;
+                } else {
+                    $depreciationDate = strtotime($assetDepreciationDetail->depreciation_date);
+                    $transactionDate = date('Y-m-d', strtotime('+ 1month', $depreciationDate));
+                }
+                
+                list($year, $month, ) = explode('-', $transactionDate);
+                $startDate = $year . '-' . $month . '-01';
+                $endDate = date_create(date('Y-m-t'));
+
+                for ($currentDate = date_create($startDate); $currentDate < $endDate; $currentDate->add(new DateInterval('P1M'))) {
+                    $detail = new AssetDepreciationDetail;
+                    $detail->asset_purchase_id = $assetPurchase->id;
+                    $detail->amount = $assetPurchase->monthlyDepreciationAmount;
+                    $detail->depreciation_date = $currentDate->format('Y-m-t');
+                    $this->details[] = $detail;
+                }
             }
 
-            if (!$exist) {
-            }
         } else {
             $this->header->addError('error', 'Invoice tidak ada di dalam detail');
         }
@@ -80,7 +89,7 @@ class AssetDepreciation extends CComponent {
         $valid = $this->header->validate();
 
         $valid = $this->validateDetailsCount() && $valid;
-        $valid = $this->validateDetailsUnique() && $valid;
+//        $valid = $this->validateDetailsUnique() && $valid;
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
@@ -133,11 +142,14 @@ class AssetDepreciation extends CComponent {
                 if ($detail->amount <= 0.00) {
                     continue;
                 }
-
+                
+                $detail->asset_depreciation_header_id = $this->header->id;
+                $detail->save();
+                
                 $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id);
                 $assetPurchase->accumulated_depreciation_value = $assetPurchase->totalDepreciationValue;
                 $assetPurchase->current_value = $assetPurchase->purchase_value - $assetPurchase->totalDepreciationValue;
-//                $assetPurchase->status = 'Depresiasi ke ' . $detail->number_of_month;
+                $assetPurchase->status = 'Depresiasi';
                 $assetPurchase->update(array('accumulated_depreciation_value', 'current_value', 'status'));
 
                 JurnalUmum::model()->deleteAllByAttributes(array(
@@ -146,7 +158,7 @@ class AssetDepreciation extends CComponent {
 
                 $jurnalExpense = new JurnalUmum;
                 $jurnalExpense->kode_transaksi = $this->header->transaction_number;
-                $jurnalExpense->tanggal_transaksi = $this->header->transaction_date;
+                $jurnalExpense->tanggal_transaksi = $detail->depreciation_date;
                 $jurnalExpense->coa_id = $detail->assetPurchase->assetCategory->coa_expense_id;
                 $jurnalExpense->branch_id = 6;
                 $jurnalExpense->total = $detail->amount;
@@ -159,7 +171,7 @@ class AssetDepreciation extends CComponent {
 
                 $jurnalAccumulation = new JurnalUmum;
                 $jurnalAccumulation->kode_transaksi = $this->header->transaction_number;
-                $jurnalAccumulation->tanggal_transaksi = $this->header->transaction_date;
+                $jurnalAccumulation->tanggal_transaksi = $detail->depreciation_date;
                 $jurnalAccumulation->coa_id = $detail->assetPurchase->assetCategory->coa_accumulation_id;
                 $jurnalAccumulation->branch_id = 6;
                 $jurnalAccumulation->total = $detail->amount;

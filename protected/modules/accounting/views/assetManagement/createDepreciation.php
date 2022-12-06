@@ -3,13 +3,13 @@
 /* @var $model AssetDepreciation */
 
 $this->breadcrumbs=array(
-	'Asset Depreciations'=>array('index'),
-	'Create',
+    'Asset Depreciations'=>array('index'),
+    'Create',
 );
 
 $this->menu=array(
-	array('label'=>'List AssetDepreciation', 'url'=>array('index')),
-	array('label'=>'Manage AssetDepreciation', 'url'=>array('admin')),
+    array('label'=>'List AssetDepreciation', 'url'=>array('index')),
+    array('label'=>'Manage AssetDepreciation', 'url'=>array('admin')),
 );
 ?>
 
@@ -17,6 +17,6 @@ $this->menu=array(
 
 <?php $this->renderPartial('_formDepreciation', array(
     'assetDepreciation' => $assetDepreciation,
-    'periodMonth' => $periodMonth,
-    'periodYear' => $periodYear,
+//    'periodMonth' => $periodMonth,
+//    'periodYear' => $periodYear,
 ));

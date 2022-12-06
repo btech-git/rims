@@ -112,10 +112,10 @@ $this->menu=array(
 
                 <?php endforeach; ?>
                     
-                <?php if (!empty($model->assetDepreciations)): ?>
-                    <?php $depreciationTransactions = AssetDepreciation::model()->findAllByAttributes(array('asset_purchase_id' => $model->id)); ?>
-                    <?php foreach ($depreciationTransactions as $depreciationTransaction): ?>
-                        <?php $depreciationJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $depreciationTransaction->transaction_number, 'is_coa_category' => 0)); ?>
+                <?php if (!empty($model->assetDepreciationDetails)): ?>
+                    <?php //$depreciationTransactions = AssetDepreciation::model()->findAllByAttributes(array('asset_purchase_id' => $model->id)); ?>
+                    <?php foreach ($model->assetDepreciationDetails as $assetDepreciationDetail): ?>
+                        <?php $depreciationJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $assetDepreciationDetail->assetDepreciationHeader->transaction_number, 'is_coa_category' => 0)); ?>
                         <?php foreach ($depreciationJournals as $i => $depreciationJournal): ?>
 
                             <?php $amountDebit = $depreciationJournal->debet_kredit == 'D' ? CHtml::value($depreciationJournal, 'total') : 0; ?>
@@ -185,27 +185,25 @@ $this->menu=array(
             <table>
                 <thead>
                     <tr>
+                        <td>No.</td>
                         <td>Transaction #</td>
                         <td>Date</td>
-                        <td>Periode</td>
-                        <td>Bulan ke</td>
                         <td>Nilai Depresiasi</td>
                     </tr>
                 </thead>
-                <?php foreach($model->assetDepreciationDetails as $depreciation): ?>
+                <?php foreach($model->assetDepreciationDetails as $i => $depreciation): ?>
                     <tbody>
                         <tr>
+                            <td style="width: 5%"><?php echo $i +1; ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetDepreciationHeader.transaction_number')); ?></td>
-                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciation, 'depreciation_date'))); ?></td>
-                            <td><?php //echo CHtml::encode($depreciation->getDepreciationPeriodMonth($depreciation->depreciation_period_month)) . ' ' . CHtml::encode(CHtml::value($depreciation, 'depreciation_period_year')); ?></td>
-                            <td><?php //echo CHtml::encode(CHtml::value($depreciation, 'number_of_month')); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
+                            <td style="width: 15%"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciation, 'depreciation_date'))); ?></td>
+                            <td style="width: 20%; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
                         </tr>
                     </tbody>
                 <?php endforeach; ?>
                 <tfoot>
                     <tr>
-                        <td colspan="4" style="text-align: right">Total</td>
+                        <td colspan="3" style="text-align: right">Total</td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'totalDepreciationValue'))); ?></td>
                     </tr>
                 </tfoot>

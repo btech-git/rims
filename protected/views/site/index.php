@@ -1,7 +1,7 @@
 <?php
 /* @var $this SiteController */
     $this->pageTitle=Yii::app()->name;
-    
+    /*
     Yii::app()->clientScript->registerScriptFile('https://www.gstatic.com/charts/loader.js');
     Yii::app()->clientScript->registerScript('chart', "
         google.charts.load('current', {'packages':['corechart']});
@@ -44,7 +44,7 @@
             
             
         }
-    ", 2);
+    ", 2); */
 ?>
 <style>
   
