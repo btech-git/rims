@@ -2,12 +2,12 @@
     <thead>
         <tr style="background-color: skyblue">
             <th style="text-align: center">Asset</th>
-            <th style="text-align: center; width: 10%">Category</th>
-            <th style="text-align: center; width: 15%">Tanggal Beli</th>
-            <th style="text-align: center; width: 10%">Nilai Akumulasi</th>
-            <th style="text-align: center; width: 10%">Nilai Sekarang</th>
-            <th style="text-align: center; width: 10%">Nilai Depresiasi</th>
-            <th style="text-align: center; width: 15%">Tanggal Depr</th>
+            <th style="text-align: center; width: 5%">Category</th>
+            <th style="text-align: center; width: 10%">Tanggal Beli</th>
+            <th style="text-align: center; width: 15%">Nilai Akumulasi</th>
+            <th style="text-align: center; width: 15%">Nilai Sekarang</th>
+            <th style="text-align: center; width: 15%">Nilai Depresiasi</th>
+            <th style="text-align: center; width: 10%">Tanggal Depr</th>
         </tr>
     </thead>
     
