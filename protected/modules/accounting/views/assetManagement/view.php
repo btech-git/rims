@@ -203,8 +203,16 @@ $this->menu=array(
                 <?php endforeach; ?>
                 <tfoot>
                     <tr>
-                        <td colspan="3" style="text-align: right">Total</td>
+                        <td colspan="3" style="text-align: right">Akumulasi Depresiasi</td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'totalDepreciationValue'))); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: right">Nilai Beli</td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'purchase_value'))); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: right">Nilai Sekarang</td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'current_value'))); ?></td>
                     </tr>
                 </tfoot>
             </table>
