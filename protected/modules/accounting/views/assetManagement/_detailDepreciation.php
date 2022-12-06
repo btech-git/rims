@@ -4,8 +4,8 @@
             <th style="text-align: center">Asset</th>
             <th style="text-align: center; width: 5%">Category</th>
             <th style="text-align: center; width: 10%">Tanggal Beli</th>
-            <th style="text-align: center; width: 15%">Nilai Akumulasi</th>
-            <th style="text-align: center; width: 15%">Nilai Sekarang</th>
+<!--            <th style="text-align: center; width: 15%">Nilai Akumulasi</th>
+            <th style="text-align: center; width: 15%">Nilai Sekarang</th>-->
             <th style="text-align: center; width: 15%">Nilai Depresiasi</th>
             <th style="text-align: center; width: 10%">Tanggal Depr</th>
         </tr>
@@ -29,13 +29,13 @@
                     <?php echo CHtml::encode(CHtml::value($detail, 'assetPurchase.transaction_date')); ?>
                 </td>
                 
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($assetPurchase, 'accumulated_depreciation_value'))); ?>
+<!--                <td style="text-align: right">
+                    <?php /*echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($assetPurchase, 'accumulated_depreciation_value'))); ?>
                 </td>
                 
                 <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($assetPurchase, 'current_value'))); ?>
-                </td>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($assetPurchase, 'current_value')));*/ ?>
+                </td>-->
                 
                 <td style="text-align: right">
                     <?php echo CHtml::activeHiddenField($detail, "[$i]amount"); ?>
