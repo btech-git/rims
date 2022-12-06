@@ -30,8 +30,8 @@ class PendingTransactionController extends Controller {
      */
     public function actionIndex() {
 
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
+        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? date('Y-m-d', strtotime($_GET['tanggal_mulai'])) : date('Y-m-d');
+        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? date('Y-m-d', strtotime($_GET['tanggal_sampai'])) : date('Y-m-d');
         $status_document = (isset($_GET['status_document'])) ? $_GET['status_document'] : 'Draft';
         $mainBranch = (isset($_GET['MainBranch'])) ? $_GET['MainBranch'] : '';
         $requesterBranch = (isset($_GET['RequesterBranch'])) ? $_GET['RequesterBranch'] : '';
