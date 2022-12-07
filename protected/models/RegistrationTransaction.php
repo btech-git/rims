@@ -976,7 +976,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 FROM " . RegistrationTransaction::model()->tableName() . " p
                 INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-                WHERE p.status = 'Approved' AND p.transaction_date > '2021-12-31' AND p.transaction_number NOT IN (
+                WHERE p.transaction_date > '2021-12-31' AND p.transaction_number NOT IN (
                     SELECT kode_transaksi 
                     FROM " . JurnalUmum::model()->tableName() . "
                 )
