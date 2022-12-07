@@ -325,34 +325,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'sort' => array(
                 'defaultOrder' => 'transaction_date DESC',
                 'attributes' => array(
-                    // 'plate_number' => array(
-                    //     'asc' => 'vehicle.plate_number ASC',
-                    //     'desc' => 'vehicle.plate_number DESC',
-                    // ),
-                    // 'customer_name' => array(
-                    //     'asc' => 'customer.name ASC',
-                    //     'desc' => 'customer.name DESC',
-                    // ),
-                    // 'car_make_code' => array(
-                    //     'asc' => 'carMake.name ASC',
-                    //     'desc' => 'carMake.name DESC',
-                    // ),
-                    // 'car_model_code' => array(
-                    //     'asc' => 'carModel.name ASC',
-                    //     'desc' => 'carModel.name DESC',
-                    // ),
-                    // 'car_color' => array(
-                    //     'asc' => 'color.name ASC',
-                    //     'desc' => 'color.name DESC',
-                    // ),
-                    // 'pic_name' => array(
-                    //     'asc' => 'pic.name ASC',
-                    //     'desc' => 'pic.name DESC',
-                    // ),
-                    // 'search_service' => array(
-                    //     'asc' => 'service.name ASC',
-                    //     'desc' => 'service.name DESC',
-                    // ),
                     '*',
                 ),
             ),
@@ -482,11 +454,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     }
 
     public function getPpnLiteral() {
-        return ($this->ppn == 0) ? '0%' : '10%';
+        return ($this->ppn == 0) ? '0%' : '11%';
     }
 
     public function getPphLiteral() {
-        return ($this->ppn == 0) ? '0%' : '2%';
+        return ($this->ppn == 0) ? '0%' : '2.5%';
     }
 
     public function searchByWorkOrder() {

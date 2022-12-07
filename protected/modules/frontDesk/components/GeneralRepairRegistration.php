@@ -706,10 +706,6 @@ class GeneralRepairRegistration extends CComponent {
 
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
         if (count($invoices) > 0) {
-//            foreach ($invoices as $invoice) {
-//                $invoice->status = "CANCELLED";
-//                $invoice->save(false);
-//            }
 
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $this->header->id,
@@ -937,7 +933,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ((int)$this->header->ppn == 2) ? 0 : $this->subTotalProduct * $this->header->tax_percentage / 100;
+        return ((int)$this->header->ppn == 2) ? 0 : $this->subTotalTransaction * $this->header->tax_percentage / 100;
     }
 
 //    public function getTaxServiceAmount() {
