@@ -13,10 +13,22 @@
         'columns'=>array(
             array(
                 'name'=>'delivery_order_no', 
-                'value'=>'CHTml::link($data->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id"=>$data->id))', 
+                'value'=>'CHtml::link($data->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             'delivery_date',
+            array(
+                'header'=>'Type', 
+                'value'=>'$data->request_type', 
+            ),
+            array(
+                'header'=>'Branch Asal', 
+                'value'=>'empty($data->sent_request_id) ? $data->transferRequest->requesterBranch->code : $data->sentRequest->requesterBranch->code', 
+            ),
+            array(
+                'header'=>'Branch Tujuan', 
+                'value'=>'empty($data->sent_request_id) ? $data->transferRequest->destinationBranch->code : $data->sentRequest->destinationBranch->code', 
+            ),
             array(
                 'header'=>'Receives',
                 'value'=> function($data){
