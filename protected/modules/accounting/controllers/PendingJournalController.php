@@ -80,22 +80,23 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $registrationTransactionSql = RegistrationTransaction::pendingJournal();
-        $registrationTransactionDataProvider = new CSqlDataProvider($registrationTransactionSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($registrationTransactionSql))->queryScalar(),
-            'pagination' => array(
-                'pageVar' => 'CurrentPage',
-                'pageSize' => ($pageSize > 0) ? $pageSize : 1,
-                'currentPage' => $currentPage,
-            ),
-        ));
+        $model = new RegistrationTransaction('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationTransaction'])) {
+            $model->attributes = $_GET['RegistrationTransaction'];
+        }
+        
+        $registrationTransactionDataProvider = $model->searchByPendingJournal();
+        $registrationTransactionDataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('indexRegistration', array(
+            'model'=> $model,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     
