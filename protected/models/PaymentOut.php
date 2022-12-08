@@ -243,7 +243,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $cnMonthCondition = "substring_index(substring_index(substring_index(payment_number, '/', 2), '/', -1), '.', -1)";
         $paymentOut = PaymentOut::model()->find(array(
             'order' => ' id DESC',
-            'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
+            'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id AND status <> 'Rejected'",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $requesterBranchId),
         ));
 

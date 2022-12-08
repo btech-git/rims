@@ -106,7 +106,7 @@ class PaymentOutController extends Controller {
         $paymentOut->header->payment_date = date('Y-m-d');
         $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->status = 'Draft';
-        $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+//        $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
 
         $paymentOut->addInvoice($transactionId, $movementType);
         

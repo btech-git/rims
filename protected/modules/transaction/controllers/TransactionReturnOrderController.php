@@ -147,7 +147,7 @@ class TransactionReturnOrderController extends Controller {
         if (isset($_POST['TransactionReturnOrder'])) {
             $this->loadState($returnOrder);
             
-            if (!empty(recipient_branch_id)) {
+            if (!empty($returnOrder->header->recipient_branch_id)) {
                 $returnOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnOrder->header->return_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnOrder->header->return_order_date)), $returnOrder->header->recipient_branch_id);
             }
 

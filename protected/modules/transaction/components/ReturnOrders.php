@@ -131,6 +131,7 @@ class ReturnOrders extends CComponent {
     }
 
     public function flush() {
+        $this->header->estimate_arrival_date = ($this->header->estimate_arrival_date == '0000-00-00') ? date('Y-m-d', strtotime('+ 1month', strtotime($this->header->return_order_date))) : $this->header->estimate_arrival_date;
         $valid = $this->header->save();
 
         $requestDetails = TransactionReturnOrderDetail::model()->findAllByAttributes(array('return_order_id' => $this->header->id));
