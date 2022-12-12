@@ -344,9 +344,6 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id_receive', $this->user_id_receive);
         $criteria->compare('user_id_invoice', $this->user_id_invoice);
 
-//        $criteria->addCondition("t.recipient_branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-//        $criteria->params = array(':userId' => Yii::app()->user->id);
-
         $criteria->together = 'true';
         $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'transferRequest', 'consignmentIn', 'deliveryOrder', 'movementOut');
         $criteria->compare('recipientBranch.name', $this->branch_name, true);
@@ -356,6 +353,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('consignmentIn.consignment_in_no', $this->consignment_in_no, true);
         $criteria->compare('deliveryOrder.delivery_order_no', $this->delivery_order_no, true);
         $criteria->compare('movementOut.movement_out_no', $this->movement_out_no, true);
+
+        $criteria->addCondition("purchaseOrder.payment_left > 0.00");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
