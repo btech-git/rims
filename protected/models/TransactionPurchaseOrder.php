@@ -331,7 +331,6 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
 
         $criteria->addCondition("t.approved_id IS NOT NULL");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
