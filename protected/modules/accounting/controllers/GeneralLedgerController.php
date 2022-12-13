@@ -66,30 +66,6 @@ class GeneralLedgerController extends Controller {
         return $grandTotal;
     }
 
-//    public function actionAjaxHtmlAccount() {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $startAccount = (isset($_GET['StartAccount'])) ? $_GET['StartAccount'] : '';
-//            $endAccount = (isset($_GET['EndAccount'])) ? $_GET['EndAccount'] : '';
-//
-//            $accounts = Account::model()->findAllByAttributes(
-//                array(
-//                    'branch_id' => $_POST['BranchId'],
-//                ), array(
-//                    'order' => 'code ASC',
-//                )
-//            );
-//
-//            $account = Search::bind(new Account('search'), isset($_GET['Account']) ? $_GET['Account'] : array());
-//
-//            $this->renderPartial('_account', array(
-//                'account' => $account,
-//                'accounts' => $accounts,
-//                'startAccount' => $startAccount,
-//                'endAccount' => $endAccount,
-//            ));
-//        }
-//    }
-
     protected function saveToExcel($generalLedgerSummary, $dataProvider, array $options = array()) {
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];

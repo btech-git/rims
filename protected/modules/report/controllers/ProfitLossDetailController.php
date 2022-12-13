@@ -43,26 +43,34 @@ class ProfitLossDetailController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-//
-////        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-////        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-////        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $jurnalUmum = new JurnalUmum('search');
+        $jurnalUmum->unsetAttributes();
+        
+        if (isset($_GET['JurnalUmum'])) {
+            $jurnalUmum->attributes = $_GET['JurnalUmum'];
+        }
 
-        $profitLossSummary = new ProfitLossSummary($coa->search());
-        $profitLossSummary->setupLoading();
-//        $profitLossSummary->setupPaging($pageSize, $currentPage);
-        $profitLossSummary->setupSorting();
-        $profitLossSummary->setupFilter($startDate, $endDate, $coaId, $branchId);
-        $profitLossSummary->getSaldo($startDate);
-
+        $jurnalUmumDataProvider = $jurnalUmum->search();
+        $jurnalUmumDataProvider->criteria->addCondition("t.coa_id = :coa_id AND t.tanggal_transaksi BETWEEN :start_date AND :end_date");
+        $jurnalUmumDataProvider->criteria->params = array(
+            ':coa_id' => $coaId, 
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $jurnalUmumDataProvider->criteria->compare('t.branch_id', $branchId);            
+        }
+        
+        $coa = Coa::model()->findByPk($coaId);
+        
         $this->render('jurnalTransaction', array(
-            'coa' => $coa,
-            'profitLossSummary' => $profitLossSummary,
+            'jurnalUmumDataProvider' => $jurnalUmumDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'coaId' => $coaId,
             'branchId' => $branchId,
+            'coa' => $coa,
         ));
     }
 
