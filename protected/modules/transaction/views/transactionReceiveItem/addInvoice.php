@@ -153,7 +153,7 @@ $this->breadcrumbs=array(
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020'
+                                    'yearRange' => '2015:2050'
                                 ),
                             )); ?>
                             <?php echo CHtml::error($receiveItem, 'invoice_date'); ?>
@@ -172,7 +172,7 @@ $this->breadcrumbs=array(
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2020'
+                                    'yearRange' => '2015:2050'
                                 ),
                             )); ?>
                             <?php echo CHtml::error($receiveItem, 'invoice_due_date'); ?>
