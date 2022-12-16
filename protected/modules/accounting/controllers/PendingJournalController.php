@@ -383,7 +383,7 @@ class PendingJournalController extends Controller {
                     }
                 }
 
-                $this->redirect(array('indexMovementIn'));
+                $this->redirect(array('indexPaymentIn'));
             }
 
         }
@@ -460,7 +460,7 @@ class PendingJournalController extends Controller {
                     $jurnalUmumKas->save();
                 }
 
-                $this->redirect(array('indexMovementIn'));
+                $this->redirect(array('indexPaymentOut'));
             }
 
         }
@@ -790,7 +790,7 @@ class PendingJournalController extends Controller {
 
                 }
 
-                $this->redirect(array('indexMovementOut'));
+                $this->redirect(array('indexCash'));
             }
 
         }
