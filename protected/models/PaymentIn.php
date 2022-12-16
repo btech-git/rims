@@ -335,7 +335,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'payment_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 200,
+                'pageSize' => 150,
             ),
         ));
     }
