@@ -1003,7 +1003,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.work_order_number', $this->work_order_number, true);
         $criteria->compare('t.work_order_date', $this->work_order_date, true);
         $criteria->compare('t.work_order_time', $this->work_order_time, true);
-        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('t.status', 'Finished');
         $criteria->compare('payment_status', $this->payment_status, true);
         $criteria->compare('payment_type', $this->payment_type, true);
         $criteria->compare('down_payment_amount', $this->down_payment_amount, true);
