@@ -124,7 +124,7 @@ class CashTransactionController extends Controller {
                     $jurnalUmum->transaction_type = 'CASH';
                     $jurnalUmum->save(false);
                 }
-            }            
+            }
         }
         
         $this->render('view', array(

@@ -214,7 +214,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'date_posting DESC',
             ),
             'pagination' => array(
-                'pageSize' => 100,
+                'pageSize' => 10,
             ),
         ));
     }

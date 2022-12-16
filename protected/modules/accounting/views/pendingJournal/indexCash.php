@@ -99,6 +99,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 </div>
 
 <div>
+    <?php echo CHtml::beginForm('', 'post'); ?>
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'cash-transaction-grid',
         'dataProvider' => $cashTransactionDataProvider,
@@ -110,6 +111,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'header' => '',
         ),
         'columns' => array(
+            array(
+                'id' => 'selectedIds',
+                'class' => 'CCheckBoxColumn',
+                'selectableRows' => '50',
+            ),
             array( 
                 'name' => 'transaction_number', 
                 'value' => 'CHtml::link($data->transaction_number, array("/transaction/cashTransaction/view", "id"=>$data->id), array("target" => "blank"))', 
@@ -129,4 +135,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'status', 
         )
     )); ?>
+    
+    <?php echo CHtml::ajaxSubmitButton('Posting All', CController::createUrl('ajaxHtmlPostingJournalCash'), array(
+        'type' => 'POST',
+        'data' => 'js:$("form").serialize()',
+    )); ?>
+
+    <?php echo CHtml::endForm(); ?>
+
 </div>
