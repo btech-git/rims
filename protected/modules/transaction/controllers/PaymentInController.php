@@ -641,6 +641,60 @@ class PaymentInController extends Controller {
                         }
 
                         $invoiceHeader->update(array('status'));
+                        
+                        JurnalUmum::model()->deleteAllByAttributes(array(
+                            'kode_transaksi' => $paymentIn->payment_number,
+                            'branch_id' => $paymentIn->branch_id,
+                        ));
+
+                        $totalKas = ($paymentIn->is_tax_service == 2) ? $paymentIn->payment_amount : $paymentIn->payment_amount + $paymentIn->tax_service_amount;
+
+                        $jurnalPiutang = new JurnalUmum;
+                        $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
+                        $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
+                        $jurnalPiutang->coa_id = $paymentIn->customer->coa_id;
+                        $jurnalPiutang->branch_id = $paymentIn->branch_id;
+                        $jurnalPiutang->total = $totalKas;
+                        $jurnalPiutang->debet_kredit = 'K';
+                        $jurnalPiutang->tanggal_posting = date('Y-m-d');
+                        $jurnalPiutang->transaction_subject = $paymentIn->customer->name;
+                        $jurnalPiutang->is_coa_category = 0;
+                        $jurnalPiutang->transaction_type = 'Pin';
+                        $jurnalPiutang->save();
+
+                        if (!empty($paymentIn->paymentType->coa_id)) {
+                            $coaId = $paymentIn->paymentType->coa_id;
+                        } else {
+                            $coaId = $paymentIn->companyBank->coa_id;
+                        }
+
+                        $jurnalUmumKas = new JurnalUmum;
+                        $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
+                        $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
+                        $jurnalUmumKas->coa_id = $coaId;
+                        $jurnalUmumKas->branch_id = $paymentIn->branch_id;
+                        $jurnalUmumKas->total = $paymentIn->payment_amount;
+                        $jurnalUmumKas->debet_kredit = 'D';
+                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumKas->transaction_subject = $paymentIn->customer->name;
+                        $jurnalUmumKas->is_coa_category = 0;
+                        $jurnalUmumKas->transaction_type = 'Pin';
+                        $jurnalUmumKas->save();
+
+                        if ($model->tax_service_amount > 0) {
+                            $jurnalPph = new JurnalUmum;
+                            $jurnalPph->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalPph->coa_id = 1473;
+                            $jurnalPph->branch_id = $paymentIn->branch_id;
+                            $jurnalPph->total = $paymentIn->tax_service_amount;
+                            $jurnalPph->debet_kredit = 'D';
+                            $jurnalPph->tanggal_posting = date('Y-m-d');
+                            $jurnalPph->transaction_subject = $paymentIn->customer->name;
+                            $jurnalPph->is_coa_category = 0;
+                            $jurnalPph->transaction_type = 'Pin';
+                            $jurnalPph->save();
+                        }
 
                     }// end if approved
                 }
