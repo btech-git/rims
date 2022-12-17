@@ -115,7 +115,7 @@ $this->menu=array(
                 <?php if (!empty($model->assetDepreciationDetails)): ?>
                     <?php //$depreciationTransactions = AssetDepreciation::model()->findAllByAttributes(array('asset_purchase_id' => $model->id)); ?>
                     <?php foreach ($model->assetDepreciationDetails as $assetDepreciationDetail): ?>
-                        <?php $depreciationJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $assetDepreciationDetail->assetDepreciationHeader->transaction_number, 'is_coa_category' => 0)); ?>
+                        <?php $depreciationJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $assetDepreciationDetail->assetDepreciationHeader->transaction_number, 'transaction_subject' => $model->transaction_number, 'is_coa_category' => 0)); ?>
                         <?php foreach ($depreciationJournals as $i => $depreciationJournal): ?>
 
                             <?php $amountDebit = $depreciationJournal->debet_kredit == 'D' ? CHtml::value($depreciationJournal, 'total') : 0; ?>
@@ -141,7 +141,7 @@ $this->menu=array(
                 <?php if (!empty($model->assetSales)): ?>
                     <?php $saleTransactions = AssetSale::model()->findAllByAttributes(array('asset_purchase_id' => $model->id)); ?>
                     <?php foreach ($saleTransactions as $saleTransaction): ?>
-                        <?php $saleJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $saleTransaction->transaction_number, 'is_coa_category' => 0)); ?>
+                        <?php $saleJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $saleTransaction->transaction_number, 'transaction_subject' => $model->transaction_number, 'is_coa_category' => 0)); ?>
                         <?php foreach ($saleJournals as $i => $saleJournal): ?>
 
                             <?php $amountDebit = $saleJournal->debet_kredit == 'D' ? CHtml::value($saleJournal, 'total') : 0; ?>

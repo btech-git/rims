@@ -134,7 +134,7 @@ class AssetManagementController extends Controller {
                 $jurnalSale->total = $model->sale_price;
                 $jurnalSale->debet_kredit = 'D';
                 $jurnalSale->tanggal_posting = date('Y-m-d');
-                $jurnalSale->transaction_subject = 'Penjualan Aset Tetap';
+                $jurnalSale->transaction_subject = $model->transaction_number;
                 $jurnalSale->is_coa_category = 0;
                 $jurnalSale->transaction_type = 'SFA';
                 $jurnalSale->save();
@@ -147,7 +147,7 @@ class AssetManagementController extends Controller {
                 $jurnalAccumulation->total = $model->assetPurchase->accumulated_depreciation_value;
                 $jurnalAccumulation->debet_kredit = 'D';
                 $jurnalAccumulation->tanggal_posting = date('Y-m-d');
-                $jurnalAccumulation->transaction_subject = 'Penjualan Aset Tetap';
+                $jurnalAccumulation->transaction_subject = $model->transaction_number;
                 $jurnalAccumulation->is_coa_category = 0;
                 $jurnalAccumulation->transaction_type = 'SFA';
                 $jurnalAccumulation->save();
@@ -161,7 +161,7 @@ class AssetManagementController extends Controller {
                     $jurnalOtherIncome->total = $model->sale_price + $model->assetPurchase->accumulated_depreciation_value - $model->assetPurchase->purchase_value;
                     $jurnalOtherIncome->debet_kredit = 'K';
                     $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
-                    $jurnalOtherIncome->transaction_subject = 'Penjualan Aset Tetap';
+                    $jurnalOtherIncome->transaction_subject = $model->transaction_number;
                     $jurnalOtherIncome->is_coa_category = 0;
                     $jurnalOtherIncome->transaction_type = 'SFA';
                     $jurnalOtherIncome->save();
@@ -174,7 +174,7 @@ class AssetManagementController extends Controller {
                     $jurnalOtherIncome->total = $model->assetPurchase->purchase_value - $model->sale_price + $model->assetPurchase->accumulated_depreciation_value;
                     $jurnalOtherIncome->debet_kredit = 'D';
                     $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
-                    $jurnalOtherIncome->transaction_subject = 'Penjualan Aset Tetap';
+                    $jurnalOtherIncome->transaction_subject = $model->transaction_number;
                     $jurnalOtherIncome->is_coa_category = 0;
                     $jurnalOtherIncome->transaction_type = 'SFA';
                     $jurnalOtherIncome->save();
@@ -188,7 +188,7 @@ class AssetManagementController extends Controller {
                 $jurnalInventory->total = $model->assetPurchase->purchase_value;
                 $jurnalInventory->debet_kredit = 'K';
                 $jurnalInventory->tanggal_posting = date('Y-m-d');
-                $jurnalInventory->transaction_subject = 'Penjualan Aset Tetap';
+                $jurnalInventory->transaction_subject = $model->transaction_number;
                 $jurnalInventory->is_coa_category = 0;
                 $jurnalInventory->transaction_type = 'SFA';
                 $jurnalInventory->save();
