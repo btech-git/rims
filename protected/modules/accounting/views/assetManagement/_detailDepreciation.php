@@ -22,9 +22,7 @@
                 </td>
                 
                 <td style="text-align: center">
-                    <?php echo CHtml::encode(CHtml::value($detail, 'assetPurchase.assetCategory.coaExpense.name')); ?> ||
-                    <?php echo CHtml::encode(CHtml::value($detail, 'assetPurchase.assetCategory.code')); ?> ||
-                    <?php echo CHtml::encode(CHtml::value($detail, 'assetPurchase.assetCategory.coaAccumulation.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'assetPurchase.assetCategory.code')); ?>
                 </td>
                 
                 <td style="text-align: center">
