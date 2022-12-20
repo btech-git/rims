@@ -32,7 +32,7 @@ class CashDailySummaryController extends Controller {
      */
     public function actionSummary() {
         $user = Users::model()->findByPk(Yii::app()->user->id);
-        $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
+//        $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $totalDaily = isset($_GET['TotalDaily']) ? $_GET['TotalDaily'] : 0.00;
