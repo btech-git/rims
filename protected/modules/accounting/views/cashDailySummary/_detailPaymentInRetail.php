@@ -49,7 +49,10 @@
         <tr>
             <td style="text-align: right">Total Daily Cash</td>
             <?php foreach ($paymentTypes as $paymentType): ?>
-                <td style="text-align: center">&nbsp;</td>
+                <td style="text-align: right">
+                    <?php $totalAmount = $paymentType->getTotalAmountPaymentInRetail($transactionDate); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmount)); ?>
+                </td>
             <?php endforeach; ?>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::hiddenField('TotalDaily', $totalDaily); ?>

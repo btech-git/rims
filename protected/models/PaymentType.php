@@ -94,14 +94,23 @@ class PaymentType extends CActiveRecord {
         ));
     }
 
-    public function getTotalAmountPaymentInRetail() {
-        $total = 0;
+    public function getTotalAmountPaymentInRetail($transactionDate) {
+        $params = array(
+            ':payment_date' => $transactionDate,
+            'payment_type_id' => $this->id,
+        );
+        
+        $sql = "SELECT COALESCE(SUM(pi.payment_amount), 0) as total_amount
+                FROM " . PaymentIn::model()->tableName() . " pi
+                INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = pi.customer_id
+                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual' AND pi.payment_type_id = :payment_type_id
+                GROUP BY pi.payment_type_id
+                ORDER BY pi.payment_type_id";
+        
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
 
-        foreach ($this->paymentIns as $paymentIn) {
-            $total += $paymentIn->payment_amount;
-        }
-
-        return $total;
+        return ($value === false) ? 0 : $value;
     }
 
 }
