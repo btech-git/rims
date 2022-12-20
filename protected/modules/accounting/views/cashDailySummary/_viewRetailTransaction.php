@@ -4,6 +4,10 @@
         'id'=>'asset-purchase-grid',
         'dataProvider'=>$retailTransactionDataProvider,
         'filter'=>null,
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
         'columns'=>array(
             array(
                 'name' => 'transaction_number', 
