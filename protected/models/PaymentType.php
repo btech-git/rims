@@ -104,7 +104,7 @@ class PaymentType extends CActiveRecord {
                 FROM " . PaymentIn::model()->tableName() . " pi
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = pi.customer_id
-                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual' AND pi.payment_type_id = :payment_type_id
+                WHERE pi.payment_date = :payment_date AND pi.payment_type_id = :payment_type_id
                 GROUP BY pi.payment_type_id
                 ORDER BY pi.payment_type_id";
         
