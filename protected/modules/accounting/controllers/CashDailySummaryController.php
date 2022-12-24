@@ -94,12 +94,13 @@ class CashDailySummaryController extends Controller {
         $retailTransactionDataProvider = $retailTransaction->searchByDailyCashReport();
         $retailTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
         $retailTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
+        $retailTransactionDataProvider->criteria->addCondition('customer.customer_type = "Individual"');
         
         $wholesaleTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $wholesaleTransactionDataProvider = $wholesaleTransaction->searchByDailyCashReport();
         $wholesaleTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
-        $wholesaleTransactionDataProvider->criteria->addCondition('customer.customer_type = "Company"');
         $wholesaleTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
+        $wholesaleTransactionDataProvider->criteria->addCondition('customer.customer_type = "Company"');
         
         $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $purchaseOrderDataProvider = $purchaseOrder->searchByDailyCashReport();

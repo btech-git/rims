@@ -931,7 +931,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('carMake.name', $this->car_make_code, true);
         $criteria->compare('carModel.name', $this->car_model_code, true);
 
-        $criteria->addCondition('customer.customer_type = "Individual"');
 //        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
 //        $criteria->params = array(':userId' => Yii::app()->user->id);
 
