@@ -92,6 +92,8 @@ class CashDailySummaryController extends Controller {
         
         $retailTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $retailTransactionDataProvider = $retailTransaction->searchByDailyCashReport();
+        $retailTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
         
         $wholesaleTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $wholesaleTransactionDataProvider = $wholesaleTransaction->searchByDailyCashReport();
