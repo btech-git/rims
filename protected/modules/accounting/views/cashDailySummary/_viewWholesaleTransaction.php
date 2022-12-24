@@ -13,7 +13,7 @@
     <tbody>
         <?php $grandTotal = 0.00; ?>
         <?php foreach ($wholesaleTransactionDataProvider->data as $i => $header): ?>
-            <?php $totalPrice = CHtml::value($header, 'grand_total'); ?>
+            <?php $totalPrice = CHtml::value($header, 'subtotal'); ?>
             <tr>
                 <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td>
