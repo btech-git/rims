@@ -915,6 +915,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('transaction_time_out', $this->transaction_time_out, true);
         $criteria->compare('user_id_assign_mechanic', $this->user_id_assign_mechanic);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
+        $criteria->compare('t.tanggal_transaksi', $this->tanggal_transaksi,true);
+        $criteria->compare('t.branch_id', $this->branch_id);
 
         $criteria->together = 'true';
         $criteria->with = array(
@@ -931,8 +933,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('carMake.name', $this->car_make_code, true);
         $criteria->compare('carModel.name', $this->car_model_code, true);
 
-        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+        $criteria->addCondition('customer.customer_type = "Individual"');
+//        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
