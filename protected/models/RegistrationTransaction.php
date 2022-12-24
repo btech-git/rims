@@ -915,7 +915,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('transaction_time_out', $this->transaction_time_out, true);
         $criteria->compare('user_id_assign_mechanic', $this->user_id_assign_mechanic);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
-        $criteria->compare('t.tanggal_transaksi', $this->tanggal_transaksi,true);
+        $criteria->compare('t.transaction_date', $this->transaction_date,true);
         $criteria->compare('t.branch_id', $this->branch_id);
 
         $criteria->together = 'true';
