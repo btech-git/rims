@@ -30,7 +30,7 @@
         ),
     )); ?>
     
-    <div style="text-align: right; font-weight: bold">
+    <div style="text-align: center; font-weight: bold">
         Total Sales Retail: <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $this->reportGrandTotalRetailTransaction($retailTransactionDataProvider))); ?>
     </div>
 
