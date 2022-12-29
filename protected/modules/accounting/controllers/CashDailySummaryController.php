@@ -202,16 +202,16 @@ class CashDailySummaryController extends Controller {
         
         $cashDaily->amount = $paymentInRetailAmount;
         
-        $criteria = new CDbCriteria;
-        $criteria->with = array('customer');
-        $criteria->params = array(
-            't.payment_date' => $transactionDate, 
-            't.branch_id' => $branchId, 
-            't.payment_type_id' => $paymentTypeId,
-            'customer.customer_type' => "Individual",
-        );
-        $paymentIns = PaymentIn::model()->findAll($criteria);
-        
+        $model = new PaymentIn('search');
+        $model->unsetAttributes();  // clear any default values
+
+        $dataProvider = $model->search();
+        $dataProvider->criteria->with = array('customer');
+        $dataProvider->criteria->compare('customer.customer_type', 'Individual');   
+        $dataProvider->criteria->compare('t.payment_date', $transactionDate, true);
+        $dataProvider->criteria->compare('t.branch_id', $branchId);
+        $dataProvider->criteria->compare('t.payment_type_id', $paymentTypeId);
+            
         if (isset($_POST['CashDailySummary'])) {
             $cashDaily->attributes = $_POST['CashDailySummary'];
             $cashDaily->images = CUploadedFile::getInstances($cashDaily, 'images');
@@ -234,7 +234,7 @@ class CashDailySummaryController extends Controller {
 
         $this->render('create', array(
             'cashDaily' => $cashDaily,
-            'paymentIns' => $paymentIns,
+            'dataProvider' => $dataProvider,
         ));
     }
 

@@ -112,6 +112,71 @@
         </table>
     </div>
 
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'payment-in-grid',
+                    'dataProvider' => $dataProvider,
+                    'filter' => NULL,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'name' => 'invoice_id', 
+                            'value' => 'CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
+                            'type' => 'raw'
+                        ),
+                        array(
+                            'name' => 'customer_name', 
+                            'value' => '$data->customer->name'
+                        ),
+                        array(
+                            'header' => 'Plate #', 
+                            'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
+                        ),
+                        array(
+                            'name' => 'payment_number',
+                            'value' => 'CHtml::link($data->payment_number, array("view", "id"=>$data->id))',
+                            'type' => 'raw'
+                        ),
+                        'payment_date',
+                        array(
+                            'name' => 'payment_amount', 
+                            'value' => 'AppHelper::formatMoney($data->payment_amount)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                        'notes',
+                        array(
+                            'header' => 'Invoice Status',
+                            'name' => 'invoice_status',
+                            'value' => '$data->invoice->status',
+                        ),
+                        array(
+                            'header' => 'Type',
+                            'value' => '$data->invoice->referenceTypeLiteral',
+                        ),
+                        array(
+                            'header' => 'Created By',
+                            'name' => 'user_id',
+                            'filter' => false,
+                            'value' => 'empty($data->user_id) ? "N/A" : $data->user->username '
+                        ),
+                        array(
+                            'header' => 'Approved By',
+                            'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->paymentInApprovals[0]->supervisor->username '
+                        ),
+                        array(
+                            'header' => 'Tanggal Input',
+                            'name' => 'created_datetime',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
+                        ),
+                    ),
+                )); ?>
+            </div>
+            
     <hr />
     
     <div class="row">
