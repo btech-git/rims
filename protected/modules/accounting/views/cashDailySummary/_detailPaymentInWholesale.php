@@ -16,7 +16,7 @@
         <?php foreach ($paymentInWholesaleDataProvider->data as $i => $paymentIn): ?>
             <?php $totalAmount = $paymentIn->payment_amount; ?>
             <tr>
-                <td><?php echo CHtml::encode($i); ?></td>
+                <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'branch.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'customer.name')); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>

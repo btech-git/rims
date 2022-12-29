@@ -32,7 +32,7 @@ class CashDailySummaryController extends Controller {
      */
     public function actionSummary() {
         $user = Users::model()->findByPk(Yii::app()->user->id);
-//        $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
+        $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $totalDaily = isset($_GET['TotalDaily']) ? $_GET['TotalDaily'] : 0.00;
@@ -52,7 +52,7 @@ class CashDailySummaryController extends Controller {
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = pi.customer_id
-                WHERE pi.payment_date = :payment_date" . $branchConditionSql . "
+                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual'" . /*$branchConditionSql*/ "
                 GROUP BY pi.branch_id, pi.payment_type_id
                 ORDER BY pi.branch_id, pi.payment_type_id";
         
