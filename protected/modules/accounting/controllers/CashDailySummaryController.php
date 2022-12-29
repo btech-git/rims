@@ -202,12 +202,15 @@ class CashDailySummaryController extends Controller {
         
         $cashDaily->amount = $paymentInRetailAmount;
         
-        $paymentIns = PaymentIn::model()->with('customer')->findAllByAttributes(array(
+        $criteria = new CDbCriteria;
+        $criteria->join = 'inner join customer on customer.id = payment_in.customer_id';
+        $criteria->condition = 'customer.customer_type = "Individual"';
+        $criteria->params = array(
             'payment_date' => $transactionDate, 
             'branch_id' => $branchId, 
-            'payment_type_id' => $paymentTypeId,
-            'customer.customer_type' => 'Individual',
-        ));
+            'payment_type_id' => $paymentTypeId
+        );
+        $paymentIns = PaymentIn::model()->findAllByAttributes($criteria);
         
         if (isset($_POST['CashDailySummary'])) {
             $cashDaily->attributes = $_POST['CashDailySummary'];
