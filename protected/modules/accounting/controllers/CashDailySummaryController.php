@@ -210,7 +210,7 @@ class CashDailySummaryController extends Controller {
             'branch_id' => $branchId, 
             'payment_type_id' => $paymentTypeId
         );
-        $paymentIns = PaymentIn::model()->findAllByAttributes($criteria);
+        $paymentIns = PaymentIn::model()->findAll($criteria);
         
         if (isset($_POST['CashDailySummary'])) {
             $cashDaily->attributes = $_POST['CashDailySummary'];
