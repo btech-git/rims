@@ -78,7 +78,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($paymentIns as $paymentIn): ?>
+                <?php /*foreach ($paymentIns as $paymentIn): ?>
                     <tr>
                         <td>
                             <?php echo CHtml::link($paymentIn->payment_number, array('javascript:;'), array(
@@ -107,7 +107,7 @@
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'invoice.payment_left'))); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'user.username')); ?></td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endforeach;*/ ?>
             </tbody>
         </table>
     </div>
