@@ -203,8 +203,8 @@ class CashDailySummaryController extends Controller {
         $cashDaily->amount = $paymentInRetailAmount;
         
         $criteria = new CDbCriteria;
-        $criteria->join = 'inner join rims_customer on customer.id = payment_in.customer_id';
-        $criteria->condition = 'customer.customer_type = "Individual"';
+        $criteria->join = 'inner join rims_customer c on c.id = t.customer_id';
+        $criteria->condition = 'c.customer_type = "Individual"';
         $criteria->params = array(
             'payment_date' => $transactionDate, 
             'branch_id' => $branchId, 
