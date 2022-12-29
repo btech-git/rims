@@ -85,8 +85,8 @@
                     'value' => '$data->invoice->status',
                 ),
                 array(
-                    'header' => 'Total', 
-                    'value' => 'AppHelper::formatMoney($data->invoice->total_price)',
+                    'header' => 'Payment', 
+                    'value' => 'AppHelper::formatMoney($data->payment_amount)',
                     'htmlOptions' => array('style' => 'text-align: right'),
                 ),
                 array(
