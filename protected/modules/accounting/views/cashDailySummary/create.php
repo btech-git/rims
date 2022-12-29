@@ -38,133 +38,65 @@
         </table>
     </div>
 
-    <div class="row">
-        <table>
-            <thead>
-                <tr>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Payment In #', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Tanggal Payment', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Invoice #', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Tanggal Invoice', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Jatuh Tempo', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Customer', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Vehicle', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Invoice Status', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Grand Total', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Remaining', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Admin', ''); ?>
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php /*foreach ($paymentIns as $paymentIn): ?>
-                    <tr>
-                        <td>
-                            <?php echo CHtml::link($paymentIn->payment_number, array('javascript:;'), array(
-                                'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
-                                    "codeNumber" => $paymentIn->payment_number
-                                )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                            )); ?>
-                        </td>
-                        <td>
-                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'payment_date'))); ?>
-                            <?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_time')); ?>
-                        </td>
-                        <td>
-                            <?php echo CHtml::link($paymentIn->invoice->invoice_number, array('javascript:;'), array(
-                                'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
-                                    "codeNumber" => $paymentIn->invoice->invoice_number
-                                )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                            )); ?>
-                        </td>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'invoice.invoice_date'))); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'invoice.due_date'))); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'customer.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'vehicle.plate_number')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'invoice.status')); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'invoice.total_price'))); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'invoice.payment_left'))); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'user.username')); ?></td>
-                    </tr>
-                <?php endforeach;*/ ?>
-            </tbody>
-        </table>
+    <div class="grid-view">
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'payment-in-grid',
+            'dataProvider' => $dataProvider,
+            'filter' => NULL,
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager' => array(
+                'cssFile' => false,
+                'header' => '',
+            ),
+            'columns' => array(
+                array(
+                    'name' => 'payment_number',
+                    'value' => 'CHtml::link($data->payment_number, array("/transaction/paymentIn/view", "id"=>$data->id))',
+                    'type' => 'raw'
+                ),
+                array(
+                    'name' => 'payment_date', 
+                    'value' => 'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->payment_date))',
+                ),
+                array(
+                    'name' => 'invoice_id', 
+                    'value' => 'CHtml::link($data->invoice->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->invoice_id))',
+                    'type' => 'raw'
+                ),
+                array(
+                    'header' => 'Tanggal Inv', 
+                    'value' => 'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice->invoice_date))',
+                ),
+                array(
+                    'header' => 'Jatuh Tempo', 
+                    'value' => 'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice->due_date))',
+                ),
+                array(
+                    'name' => 'customer_name', 
+                    'value' => '$data->customer->name'
+                ),
+                array(
+                    'header' => 'Plate #', 
+                    'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
+                ),
+                array(
+                    'header' => 'Invoice Status',
+                    'name' => 'invoice_status',
+                    'value' => '$data->invoice->status',
+                ),
+                array(
+                    'header' => 'Total', 
+                    'value' => 'AppHelper::formatMoney($data->invoice->total_price)',
+                    'htmlOptions' => array('style' => 'text-align: right'),
+                ),
+                array(
+                    'header' => 'Remaining', 
+                    'value' => 'AppHelper::formatMoney($data->invoice->payment_left)',
+                    'htmlOptions' => array('style' => 'text-align: right'),
+                ),
+            ),
+        )); ?>
     </div>
-
-            <div class="grid-view">
-                <?php $this->widget('zii.widgets.grid.CGridView', array(
-                    'id' => 'payment-in-grid',
-                    'dataProvider' => $dataProvider,
-                    'filter' => NULL,
-                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                    'pager' => array(
-                        'cssFile' => false,
-                        'header' => '',
-                    ),
-                    'columns' => array(
-                        array(
-                            'name' => 'payment_number',
-                            'value' => 'CHtml::link($data->payment_number, array("/transaction/paymentIn/view", "id"=>$data->id))',
-                            'type' => 'raw'
-                        ),
-                        array(
-                            'name' => 'payment_date', 
-                            'value' => 'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->payment_date))',
-                        ),
-                        array(
-                            'name' => 'invoice_id', 
-                            'value' => 'CHtml::link($data->invoice->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->invoice_id))',
-                            'type' => 'raw'
-                        ),
-                        'invoice.invoice_date',
-                        'invoice.due_date',
-                        array(
-                            'name' => 'customer_name', 
-                            'value' => '$data->customer->name'
-                        ),
-                        array(
-                            'header' => 'Plate #', 
-                            'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
-                        ),
-                        array(
-                            'header' => 'Invoice Status',
-                            'name' => 'invoice_status',
-                            'value' => '$data->invoice->status',
-                        ),
-                        array(
-                            'header' => 'Total', 
-                            'value' => 'AppHelper::formatMoney($data->invoice->total_price)',
-                            'htmlOptions' => array('style' => 'text-align: right'),
-                        ),
-                        array(
-                            'header' => 'Remaining', 
-                            'value' => 'AppHelper::formatMoney($data->invoice->payment_left)',
-                            'htmlOptions' => array('style' => 'text-align: right'),
-                        ),
-                    ),
-                )); ?>
-            </div>
             
     <hr />
     
