@@ -32,7 +32,7 @@ class CashDailySummaryController extends Controller {
      */
     public function actionSummary() {
         $user = Users::model()->findByPk(Yii::app()->user->id);
-        $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
+//        $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $totalDaily = isset($_GET['TotalDaily']) ? $_GET['TotalDaily'] : 0.00;
@@ -42,10 +42,10 @@ class CashDailySummaryController extends Controller {
         $params = array(
             ':payment_date' => $transactionDate,
         );
-        if (!empty($userBranch)) {
-            $branchConditionSql = " AND pi.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :user_id)";
-            $params[':user_id'] = $user->id;
-        }
+//        if (!empty($userBranch)) {
+//            $branchConditionSql = " AND pi.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :user_id)";
+//            $params[':user_id'] = $user->id;
+//        }
         
         $sql = "SELECT pi.branch_id, pi.payment_type_id, b.name as branch_name, pt.name as payment_type_name, COALESCE(SUM(pi.payment_amount), 0) as total_amount
                 FROM " . PaymentIn::model()->tableName() . " pi
