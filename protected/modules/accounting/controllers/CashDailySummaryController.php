@@ -205,9 +205,9 @@ class CashDailySummaryController extends Controller {
         $criteria = new CDbCriteria;
         $criteria->join = 'inner join rims_customer c on c.id = t.customer_id';
         $criteria->params = array(
-            'payment_date' => $transactionDate, 
-            'branch_id' => $branchId, 
-            'payment_type_id' => $paymentTypeId,
+            't.payment_date' => $transactionDate, 
+            't.branch_id' => $branchId, 
+            't.payment_type_id' => $paymentTypeId,
             'c.customer_type' => "Individual",
         );
         $paymentIns = PaymentIn::model()->findAll($criteria);
