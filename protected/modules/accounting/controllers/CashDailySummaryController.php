@@ -189,9 +189,10 @@ class CashDailySummaryController extends Controller {
         $cashDaily->payment_type_id = $paymentTypeId;
         $cashDaily->user_id = Yii::app()->user->id;
 
-        $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
-                FROM " . PaymentIn::model()->tableName() . "
-                WHERE payment_date = :payment_date AND branch_id = :branch_id AND payment_type_id = :payment_type_id";
+        $sql = "SELECT COALESCE(SUM(p.payment_amount), 0) as total_amount
+                FROM " . PaymentIn::model()->tableName() . " p 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
+                WHERE p.payment_date = :payment_date AND p.branch_id = :branch_id AND p.payment_type_id = :payment_type_id AND c.customer_type = 'Individual'";
         
         $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
             ':payment_date' => $transactionDate,
@@ -201,10 +202,11 @@ class CashDailySummaryController extends Controller {
         
         $cashDaily->amount = $paymentInRetailAmount;
         
-        $paymentIns = PaymentIn::model()->findAllByAttributes(array(
+        $paymentIns = PaymentIn::model()->with('customer')->findAllByAttributes(array(
             'payment_date' => $transactionDate, 
             'branch_id' => $branchId, 
-            'payment_type_id' => $paymentTypeId
+            'payment_type_id' => $paymentTypeId,
+            'customer.customer_type' => 'Individual',
         ));
         
         if (isset($_POST['CashDailySummary'])) {
