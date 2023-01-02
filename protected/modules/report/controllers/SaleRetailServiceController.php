@@ -23,8 +23,10 @@ class SaleRetailServiceController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $saleRetail = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
+        $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $serviceName = (isset($_GET['ServiceName'])) ? $_GET['ServiceName'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -32,20 +34,29 @@ class SaleRetailServiceController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $saleRetailSummary = new SaleRetailSummary($saleRetail->search());
+        $saleRetailSummary = new SaleRetailServiceSummary($registrationService->search());
         $saleRetailSummary->setupLoading();
         $saleRetailSummary->setupPaging($pageSize, $currentPage);
         $saleRetailSummary->setupSorting();
-        $saleRetailSummary->setupFilter($startDate, $endDate, $branchId);
+        $filters = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'customerName' => $customerName,
+            'serviceName' => $serviceName,
+        );
+        $saleRetailSummary->setupFilter($filters);
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleRetailSummary, $branchId, $saleRetailSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('summary', array(
-            'saleRetail' => $saleRetail,
+            'registrationService' => $registrationService,
             'saleRetailSummary' => $saleRetailSummary,
             'branchId' => $branchId,
+            'customerName' => $customerName,
+            'serviceName' => $serviceName,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,

@@ -145,4 +145,16 @@ class MaintenanceRequestHeader extends MonthlyTransactionActiveRecord {
         return parent::model($className);
     }
 
+    public function getPriorityLevelConstant() {
+        
+        if ($this->priority_level == 1) {
+            return 'Low';
+        } elseif ($this->priority_level == 2) {
+            return 'Medium';
+        } elseif ($this->priority_level == 3) {
+            return 'High';
+        } else {
+            return 'None';
+        }
+    }
 }

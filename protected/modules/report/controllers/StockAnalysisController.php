@@ -29,6 +29,7 @@ class StockAnalysisController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
         $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
         $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
@@ -37,6 +38,7 @@ class StockAnalysisController extends Controller {
         $productSubCategoryId = (isset($_GET['ProductSubCategoryId'])) ? $_GET['ProductSubCategoryId'] : '';
         
         $dataProvider = $inventoryDetail->search();
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($dataProvider, array(
                 'startDate' => $startDate, 
@@ -55,6 +57,7 @@ class StockAnalysisController extends Controller {
             'product' => $product,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'branchId' => $branchId,
             'brandId' => $brandId,
             'subBrandId' => $subBrandId,
             'subBrandSeriesId' => $subBrandSeriesId,

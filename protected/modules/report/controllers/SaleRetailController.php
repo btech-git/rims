@@ -25,6 +25,8 @@ class SaleRetailController extends Controller {
 
         $saleRetail = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $repairType = (isset($_GET['RepairType'])) ? $_GET['RepairType'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -36,7 +38,14 @@ class SaleRetailController extends Controller {
         $saleRetailSummary->setupLoading();
         $saleRetailSummary->setupPaging($pageSize, $currentPage);
         $saleRetailSummary->setupSorting();
-        $saleRetailSummary->setupFilter($startDate, $endDate, $branchId);
+        $filters = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'customerName' => $customerName,
+            'repairType' => $repairType,
+        );
+        $saleRetailSummary->setupFilter($filters);
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleRetailSummary, $branchId, $saleRetailSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -46,6 +55,8 @@ class SaleRetailController extends Controller {
             'saleRetail' => $saleRetail,
             'saleRetailSummary' => $saleRetailSummary,
             'branchId' => $branchId,
+            'customerName' => $customerName,
+            'repairType' => $repairType,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,

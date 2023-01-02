@@ -13,6 +13,7 @@ $this->breadcrumbs = array(
         <?php $ccontroller = Yii::app()->controller->id;
         $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Maintenance Request', Yii::app()->baseUrl . '/frontDesk/maintenanceRequest/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("maintenanceRequestCreate"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/maintenanceRequest/updateApproval?headerId=' . $maintenanceRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
 
         <h1>View Maintenance Request #<?php echo $maintenanceRequest->id; ?></h1>
 
@@ -21,10 +22,16 @@ $this->breadcrumbs = array(
             'attributes' => array(
                 'id',
                 'transaction_number',
+                'transaction_date',
                 'transaction_time',
                 'maintenance_type',
                 'description',
                 'status',
+                array(
+                    'name' => 'priority_level',
+                    'header' => 'Priority',
+                    'value' => $maintenanceRequest->priorityLevelConstant,
+                ),
                 array(
                     'name' => 'branch_id',
                     'header' => 'Branch',

@@ -125,22 +125,28 @@ Yii::app()->clientScript->registerScript('report', '
                 <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => array(
                         'Transfer Request' => array(
-                            'content' => $this->renderPartial(
-                                '_viewTransfer',
-                                array(
-                                    'transferDataProvider' => $transferDataProvider, 
-                                    'transfer' => $transfer
-                                ), true
-                            )
+                            'content' => $this->renderPartial('_viewTransfer', array(
+                                'transferDataProvider' => $transferDataProvider, 
+                                'transfer' => $transfer
+                            ), true)
                         ),
                         'Sent Request' => array(
-                            'content' => $this->renderPartial(
-                                '_viewSent',
-                                array(
-                                    'sentDataProvider' => $sentDataProvider, 
-                                    'sent' => $sent
-                                ), true
-                            )
+                            'content' => $this->renderPartial('_viewSent', array(
+                                'sentDataProvider' => $sentDataProvider, 
+                                'sent' => $sent
+                            ), true)
+                        ),
+                        'Cuti Karyawan' => array(
+                            'content' => $this->renderPartial('_viewEmployeeDayoff', array(
+                                'employeeDayoffDataProvider' => $employeeDayoffDataProvider,
+                                'employeeDayoff' => $employeeDayoff,
+                            ), true)
+                        ),
+                        'Maintenance Request' => array(
+                            'content' => $this->renderPartial('_viewMaintenanceRequest', array(
+                                'maintenanceRequestHeader' => $maintenanceRequestHeader,
+                                'maintenanceRequestHeaderDataProvider' => $maintenanceRequestHeaderDataProvider,
+                            ), true)
                         ),
                     ),
                     // additional javascript options for the tabs plugin

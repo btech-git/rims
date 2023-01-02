@@ -155,13 +155,14 @@ class InventoryDetail extends CActiveRecord {
         ));
     }
 
-    public function getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId) {
+    public function getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId) {
         $brandIdConditionSql = '';
         $subBrandIdConditionSql = '';
         $subBrandSeriesIdConditionSql = '';
         $productMasterCategoryIdConditionSql = '';
         $productSubMasterCategoryIdConditionSql = '';
         $productSubCategoryIdConditionSql = '';
+        $branchIdConditionSql = '';
 
         $params = array(
             ':start_date' => $startDate,
@@ -198,6 +199,11 @@ class InventoryDetail extends CActiveRecord {
             $params[':product_sub_category_id'] = $productSubCategoryId;
         }
 
+        if (!empty($branchId)) {
+            $branchIdConditionSql = " AND i.warehouse_id IN (SELECT id FROM " . Warehouse::model()->tableName() . " WHERE branch_id = :branch_id)";
+            $params[':branch_id'] = $branchId;
+        }
+
         $sql = "SELECT p.id AS id, p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
@@ -205,7 +211,7 @@ class InventoryDetail extends CActiveRecord {
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
-                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $subBrandIdConditionSql . $subBrandSeriesIdConditionSql . $productSubMasterCategoryIdConditionSql . $productSubCategoryIdConditionSql . $productMasterCategoryIdConditionSql . " 
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date " . $brandIdConditionSql . $subBrandIdConditionSql . $subBrandSeriesIdConditionSql . $productSubMasterCategoryIdConditionSql . $productSubCategoryIdConditionSql . $productMasterCategoryIdConditionSql . $branchIdConditionSql ." 
                 GROUP BY i.product_id
                 ORDER BY total_sale DESC
                 LIMIT 50";

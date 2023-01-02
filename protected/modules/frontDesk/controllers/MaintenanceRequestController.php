@@ -132,7 +132,7 @@ class MaintenanceRequestController extends Controller {
     }
 
     public function actionUpdateApproval($headerId) {
-        $maintenanceRequest = $this->instantiate($headerId);
+        $maintenanceRequest = $this->loadModel($headerId);
         $historis = MaintenanceRequestApproval::model()->findAllByAttributes(array('maintenance_request_header_id' => $headerId));
         $model = new MaintenanceRequestApproval;
         $model->date = date('Y-m-d');

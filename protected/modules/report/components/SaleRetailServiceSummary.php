@@ -1,6 +1,6 @@
 <?php
 
-class SaleRetailSummary extends CComponent {
+class SaleRetailServiceSummary extends CComponent {
 
     public $dataProvider;
 
@@ -10,11 +10,14 @@ class SaleRetailSummary extends CComponent {
 
     public function setupLoading() {
         $this->dataProvider->criteria->with = array(
-            'customer',
-            'vehicle',
-            'insuranceCompany',
-            'branch',
-            'user',
+            'registrationTransaction' => array(
+                'with' => array(
+                    'customer',
+                    'vehicle',
+                    'branch',
+                ),
+            ),
+            'service'
         );
     }
 
@@ -28,16 +31,16 @@ class SaleRetailSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.transaction_date', 't.branch_id');
-        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+//        $this->dataProvider->sort->attributes = array('registrationTransaction.transaction_date');
+        $this->dataProvider->criteria->order = 'registrationTransaction.transaction_date';
     }
 
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
-        $this->dataProvider->criteria->compare('t.repair_type', $filters['repairType']);
+        $this->dataProvider->criteria->addBetweenCondition('registrationTransaction.transaction_date', $startDate, $endDate);
+        $this->dataProvider->criteria->compare('registrationTransaction.branch_id', $filters['branchId']);
         $this->dataProvider->criteria->compare('customer.name', $filters['customerName'], true);
+        $this->dataProvider->criteria->compare('service.name', $filters['serviceName'], true);
     }
 }

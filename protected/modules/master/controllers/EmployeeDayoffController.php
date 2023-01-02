@@ -99,25 +99,27 @@ class EmployeeDayoffController extends Controller {
      */
     public function actionCreate() {
         $model = new EmployeeDayoff;
+        $model->date_created = date('Y-m-d');
+        $model->time_created = date('H:i:s');
+        $model->user_id = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $employee = new Employee('search');
         $employee->unsetAttributes();  // clear any default values
-        if (isset($_GET['Employee']))
+        if (isset($_GET['Employee'])) {
             $employee->attributes = $_GET['Employe'];
+        }
 
         $employeeCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
-        //$employeeCriteria->condition = 'availability = "Yes"';
-
         $employeeDataProvider = new CActiveDataProvider('Employee', array(
             'criteria' => $employeeCriteria,
         ));
         if (isset($_POST['EmployeeDayoff'])) {
             $model->attributes = $_POST['EmployeeDayoff'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(

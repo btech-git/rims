@@ -32,9 +32,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
+                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -54,10 +52,23 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
+                                        <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::textField('CustomerName', $customerName, array('size' => 3)); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Repair Type</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('RepairType', $repairType, array('GR' => 'GR', 'BR' => 'BR'), array('empty' => '-- All Type --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +109,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch </span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -128,8 +151,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="clear"></div>
             </div>
             
-            <br/>
-
             <div class="hide">
                 <div class="right"></div>
                 <div class="clear"></div>
@@ -138,13 +159,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     </div>
 </div>
 
-<div class="hide">
-    <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $saleRetailSummary->dataProvider->pagination->itemCount,
-            'pageSize' => $saleRetailSummary->dataProvider->pagination->pageSize,
-            'currentPage' => $saleRetailSummary->dataProvider->pagination->getCurrentPage(false),
-        )); ?>
-    </div>
-    <div class="clear"></div>
+<br/>
+
+<div class="right">
+    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        'itemCount' => $saleRetailSummary->dataProvider->pagination->itemCount,
+        'pageSize' => $saleRetailSummary->dataProvider->pagination->pageSize,
+        'currentPage' => $saleRetailSummary->dataProvider->pagination->getCurrentPage(false),
+    )); ?>
 </div>
+<div class="clear"></div>

@@ -383,7 +383,7 @@
 //                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Salary')
                     ),
                     array(
-                        'label' => 'Libur Karyawan', 
+                        'label' => 'Cuti Karyawan', 
                         'url' => array('/master/employeeDayoff/admin'), 
 //                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
                     ),
@@ -492,6 +492,7 @@
                     array('label' => 'Laporan Penerimaan Barang', 'url' => array('/report/receiveItem/summary'), 'visible' => Yii::app()->user->checkAccess('receiveItemReport')),
                     array('label' => 'Laporan Sent Request', 'url' => array('/report/sentRequest/summary'), 'visible' => Yii::app()->user->checkAccess('sentRequestReport')),
                     array('label' => 'Laporan Transfer Request', 'url' => array('/report/transferRequest/summary'), 'visible' => Yii::app()->user->checkAccess('transferRequestReport')),
+                    array('label' => 'Laporan Performance Mechanic', 'url' => array('/report/mechanicPerformance/summary'), 'visible' => Yii::app()->user->checkAccess('generalRepairReport')),
                     array('label' => '-----------------------'),
                     array('label' => 'Laporan Pembelian', 'url' => array('/transaction/transactionPurchaseOrder/laporanPembelian'), 'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')),
                     array('label' => 'Laporan Penjualan', 'url' => array('/transaction/transactionSalesOrder/laporanPenjualan'), 'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))),

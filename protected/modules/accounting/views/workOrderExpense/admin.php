@@ -69,9 +69,9 @@ $('.search-form form').submit(function(){
             <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>
             <div class="clearfix"></div>
             <div class="search-form" style="display:none">
-                <?php /*$this->renderPartial('_search', array(
+                <?php $this->renderPartial('_search', array(
                     'model' => $paymentOut,
-                ));*/ ?>
+                )); ?>
             </div><!-- search-form -->
         </div>
     </div>

@@ -2,7 +2,8 @@
     <div class="clearfix page-action">
         <div class="row">
             <span style="text-align: center">
-                <h3>Fast Moving Items</h3>
+                <?php $branch = Branch::model()->findByPk($branchId); ?>
+                <h3>Fast Moving Items <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></h3>
             </span>
             
             <table>
@@ -20,7 +21,7 @@
                 </thead>
 
                 <tbody>
-                    <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId); ?>
+                    <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId); ?>
                     <?php foreach ($fastMovingItems as $fastMovingItem): ?>
                         <tr>
                             <td><?php echo CHtml::encode($fastMovingItem['id']); ?></td>
@@ -30,7 +31,7 @@
                             <td><?php echo CHtml::encode($fastMovingItem['brand']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['sub_brand']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['sub_brand_series']); ?></td>
-                            <td><?php echo CHtml::encode($fastMovingItem['total_sale']); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode($fastMovingItem['total_sale']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

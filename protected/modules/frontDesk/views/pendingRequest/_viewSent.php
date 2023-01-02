@@ -34,8 +34,8 @@
             'template'=>'{views}',
             'buttons'=>array(
                 'views' => array(
-                    'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("frontDesk/pendingRequest/viewSent", array("id"=>$data->id))',
+                    'label'=>'approval',
+                    'url'=>'Yii::app()->createUrl("transaction/transactionSentRequest/updateApproval", array("headerId"=>$data->id))',
                 ),
             ),
         ),

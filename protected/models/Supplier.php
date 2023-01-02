@@ -211,15 +211,6 @@ class Supplier extends CActiveRecord {
         $criteria->compare('coaOutstandingOrder.name', $this->coa_outstanding_name, true);
         $criteria->compare('coaOutstandingOrder.code', $this->coa_outstanding_code, true);
 
-        // $criteria->together = true;
-        // $criteria->with = array('productMasterCategory','productSubMasterCategory','productSubCategory','brand');
-        // // $criteria->compare('t.name',$product->name,true);
-        // $criteria->compare('productMasterCategory.name',$this->product_master_category_name,true);
-        // $criteria->compare('productSubMasterCategory.name',$this->product_sub_master_category_name,true);
-        // $criteria->compare('productSubCategory.name',$this->product_sub_category_name,true);
-        // $criteria->compare('production_year',$this->production_year,true);
-        // $criteria->compare('brand.name',$this->product_brand_name,true);
-
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));

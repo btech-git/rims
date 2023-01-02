@@ -2,8 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $saleRetailSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($saleRetailSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+    $("#PageSize").val("' . $mechanicPerformanceSummary->dataProvider->pagination->pageSize . '");
+    $("#CurrentPage").val("' . ($mechanicPerformanceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -52,10 +52,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Customer</span>
+                                        <span class="prefix">Mechanic</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerName', $customerName, array('size' => 3)); ?>
+                                        <?php echo CHtml::textField('MechanicName', $mechanicName, array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
@@ -65,10 +65,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Product</span>
+                                        <span class="prefix">Service</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('ProductName', $productName, array('size' => 3)); ?>
+                                        <?php echo CHtml::textField('ServiceName', $serviceName, array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
@@ -141,8 +141,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'registrationProduct' => $registrationProduct,
-                        'saleRetailSummary' => $saleRetailSummary,
+                        'registrationService' => $registrationService,
+                        'mechanicPerformanceSummary' => $mechanicPerformanceSummary,
                         'branchId' => $branchId,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
@@ -153,14 +153,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         </div>
     </div>
 </div>
-            
+
 <br/>
 
 <div class="right">
     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'itemCount' => $saleRetailSummary->dataProvider->pagination->itemCount,
-        'pageSize' => $saleRetailSummary->dataProvider->pagination->pageSize,
-        'currentPage' => $saleRetailSummary->dataProvider->pagination->getCurrentPage(false),
+        'itemCount' => $mechanicPerformanceSummary->dataProvider->pagination->itemCount,
+        'pageSize' => $mechanicPerformanceSummary->dataProvider->pagination->pageSize,
+        'currentPage' => $mechanicPerformanceSummary->dataProvider->pagination->getCurrentPage(false),
     )); ?>
 </div>
 <div class="clear"></div>

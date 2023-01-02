@@ -107,22 +107,28 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
-        $criteria->compare('transaction_time', $this->transaction_time, true);
-        $criteria->compare('note', $this->note, true);
-        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
-        $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('status', $this->status, true);
-        $criteria->compare('grand_total', $this->grand_total, true);
-        $criteria->compare('total_payment', $this->total_payment, true);
-        $criteria->compare('payment_remaining', $this->payment_remaining, true);
-        $criteria->compare('supplier_id', $this->supplier_id);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.transaction_number', $this->transaction_number, true);
+        $criteria->compare('t.transaction_date', $this->transaction_date, true);
+        $criteria->compare('t.transaction_time', $this->transaction_time, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('t.grand_total', $this->grand_total, true);
+        $criteria->compare('t.total_payment', $this->total_payment, true);
+        $criteria->compare('t.payment_remaining', $this->payment_remaining, true);
+        $criteria->compare('t.supplier_id', $this->supplier_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
         ));
     }
 

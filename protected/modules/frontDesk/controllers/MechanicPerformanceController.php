@@ -49,8 +49,8 @@ class MechanicPerformanceController extends Controller {
     public function actionView($employeeId) {
         $employee = Employee::model()->findByPk($employeeId);
         $employeeBranchDivisionPositionLevel = EmployeeBranchDivisionPositionLevel::model()->findByAttributes(array('employee_id' => $employeeId));
-        $user = Users::model()->findByAttributes(array('employee_id' => $employeeId));
-        $registrationServices = RegistrationService::model()->findAllByAttributes(array('start_mechanic_id' => $user->id));
+//        $user = Users::model()->findByAttributes(array('employee_id' => $employeeId));
+        $registrationServices = RegistrationService::model()->findAllByAttributes(array('start_mechanic_id' => $employeeId));
 
         $this->render('view', array(
             'employee' => $employee,

@@ -31,8 +31,8 @@ class PendingRequestController extends Controller {
     public function actionIndex() {
         $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
         $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
-        $status_document = (isset($_GET['status_document'])) ? $_GET['status_document'] : 'Approved';
-        $destination_approval_status = (isset($_GET['destination_approval_status'])) ? $_GET['destination_approval_status'] : 0;
+        $status_document = (isset($_GET['status_document'])) ? $_GET['status_document'] : '';
+        $destination_approval_status = (isset($_GET['destination_approval_status'])) ? $_GET['destination_approval_status'] : '';
         $mainBranch = (isset($_GET['MainBranch'])) ? $_GET['MainBranch'] : '';
         $requesterBranch = (isset($_GET['RequesterBranch'])) ? $_GET['RequesterBranch'] : '';
 
@@ -44,14 +44,24 @@ class PendingRequestController extends Controller {
         $transferDataProvider->criteria->with = array('destinationBranch', 'requesterBranch');
         $transferDataProvider->criteria->order = 't.transfer_request_date DESC';
         $transferDataProvider->criteria->addBetweenCondition('t.transfer_request_date', $tanggal_mulai, $tanggal_sampai);
-//        $transferDataProvider->criteria->addCondition("destination_approval_status = 0");
 
         $sent = Search::bind(new TransactionSentRequest('search'), isset($_GET['TransactionSentRequest']) ? $_GET['TransactionSentRequest'] : '');
         $sentDataProvider = $sent->search();
         $sentDataProvider->criteria->with = array('requesterBranch', 'destinationBranch');
         $sentDataProvider->criteria->order = 't.sent_request_date DESC';
         $sentDataProvider->criteria->addBetweenCondition('t.sent_request_date', $tanggal_mulai, $tanggal_sampai);
-//        $sentDataProvider->criteria->addCondition("destination_approval_status = 0");
+
+        $employeeDayoff = Search::bind(new EmployeeDayoff('search'), isset($_GET['EmployeeDayoff']) ? $_GET['EmployeeDayoff'] : '');
+        $employeeDayoffDataProvider = $employeeDayoff->search();
+        $employeeDayoffDataProvider->criteria->with = array('employee');
+        $employeeDayoffDataProvider->criteria->order = 't.date_created DESC';
+        $employeeDayoffDataProvider->criteria->addBetweenCondition('t.date_created', $tanggal_mulai, $tanggal_sampai);
+
+        $maintenanceRequestHeader = Search::bind(new MaintenanceRequestHeader('search'), isset($_GET['MaintenanceRequestHeader']) ? $_GET['MaintenanceRequestHeader'] : '');
+        $maintenanceRequestHeaderDataProvider = $maintenanceRequestHeader->search();
+        $maintenanceRequestHeaderDataProvider->criteria->with = array('branch');
+        $maintenanceRequestHeaderDataProvider->criteria->order = 't.transaction_date DESC';
+        $maintenanceRequestHeaderDataProvider->criteria->addBetweenCondition('t.transaction_date', $tanggal_mulai, $tanggal_sampai);
 
         if (!empty($mainBranch)) {
             $transferDataProvider->criteria->addCondition('destination_branch_id = :destination_branch_id');
@@ -97,55 +107,10 @@ class PendingRequestController extends Controller {
             'transferDataProvider' => $transferDataProvider,
             'mainBranch' => $mainBranch,
             'requesterBranch' => $requesterBranch,
+            'employeeDayoffDataProvider' => $employeeDayoffDataProvider,
+            'employeeDayoff' => $employeeDayoff,
+            'maintenanceRequestHeader' => $maintenanceRequestHeader,
+            'maintenanceRequestHeaderDataProvider' => $maintenanceRequestHeaderDataProvider,
         ));
     }
-
-    public function actionViewSent($id) {
-        $model = TransactionSentRequest::model()->findByPk($id);
-        $sentDetails = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $id));
-
-        if (isset($_POST['Approve'])) {
-            $model->destination_approval_status = 1;
-
-            if ($model->update(array('destination_approval_status')))
-                $this->redirect(array('index'));
-        }
-
-        if (isset($_POST['Reject'])) {
-            $model->destination_approval_status = 2;
-
-            if ($model->update(array('destination_approval_status')))
-                $this->redirect(array('index'));
-        }
-
-        $this->render('viewSent', array(
-            'model' => $model,
-            'sentDetails' => $sentDetails,
-        ));
-    }
-
-    public function actionViewTransfer($id) {
-        $model = TransactionTransferRequest::model()->findByPk($id);
-        $transferDetails = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $id));
-
-        if (isset($_POST['Approve'])) {
-            $model->destination_approval_status = 1;
-
-            if ($model->update(array('destination_approval_status')))
-                $this->redirect(array('index'));
-        }
-
-        if (isset($_POST['Reject'])) {
-            $model->destination_approval_status = 2;
-
-            if ($model->update(array('destination_approval_status')))
-                $this->redirect(array('index'));
-        }
-
-        $this->render('viewTransfer', array(
-            'model' => $model,
-            'transferDetails' => $transferDetails,
-        ));
-    }
-
 }
