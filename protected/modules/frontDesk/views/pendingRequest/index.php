@@ -148,6 +148,12 @@ Yii::app()->clientScript->registerScript('report', '
                                 'maintenanceRequestHeaderDataProvider' => $maintenanceRequestHeaderDataProvider,
                             ), true)
                         ),
+                        'Material Request' => array(
+                            'content' => $this->renderPartial('_viewMaterialRequest', array(
+                                'materialRequestHeader' => $materialRequestHeader,
+                                'materialRequestHeaderDataProvider' => $materialRequestHeaderDataProvider,
+                            ), true)
+                        ),
                     ),
                     // additional javascript options for the tabs plugin
                     'options' => array(

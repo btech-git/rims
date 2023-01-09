@@ -63,12 +63,24 @@ class PendingRequestController extends Controller {
         $maintenanceRequestHeaderDataProvider->criteria->order = 't.transaction_date DESC';
         $maintenanceRequestHeaderDataProvider->criteria->addBetweenCondition('t.transaction_date', $tanggal_mulai, $tanggal_sampai);
 
+        $materialRequestHeader = Search::bind(new MaterialRequestHeader('search'), isset($_GET['MaterialRequestHeader']) ? $_GET['MaterialRequestHeader'] : '');
+        $materialRequestHeaderDataProvider = $materialRequestHeader->search();
+        $materialRequestHeaderDataProvider->criteria->with = array('branch');
+        $materialRequestHeaderDataProvider->criteria->order = 't.transaction_date DESC';
+        $materialRequestHeaderDataProvider->criteria->addBetweenCondition('t.transaction_date', $tanggal_mulai, $tanggal_sampai);
+
         if (!empty($mainBranch)) {
             $transferDataProvider->criteria->addCondition('destination_branch_id = :destination_branch_id');
             $transferDataProvider->criteria->params[':destination_branch_id'] = $mainBranch;
 
             $sentDataProvider->criteria->addCondition('destination_branch_id = :destination_branch_id');
             $sentDataProvider->criteria->params[':destination_branch_id'] = $mainBranch;
+
+            $maintenanceRequestHeaderDataProvider->criteria->addCondition('branch_id = :branch_id');
+            $maintenanceRequestHeaderDataProvider->criteria->params[':branch_id'] = $mainBranch;
+
+            $materialRequestHeaderDataProvider->criteria->addCondition('branch_id = :branch_id');
+            $materialRequestHeaderDataProvider->criteria->params[':branch_id'] = $mainBranch;
         }
 
         if (!empty($requesterBranch)) {
@@ -85,6 +97,12 @@ class PendingRequestController extends Controller {
 
             $sentDataProvider->criteria->addCondition('status_document = :status_document');
             $sentDataProvider->criteria->params[':status_document'] = $status_document;
+
+            $maintenanceRequestHeaderDataProvider->criteria->addCondition('status = :status_document');
+            $maintenanceRequestHeaderDataProvider->criteria->params[':status_document'] = $status_document;
+
+            $materialRequestHeaderDataProvider->criteria->addCondition('status_document = :status_document');
+            $materialRequestHeaderDataProvider->criteria->params[':status_document'] = $status_document;
         }
 
         if (!empty($destination_approval_status)) {
@@ -111,6 +129,8 @@ class PendingRequestController extends Controller {
             'employeeDayoff' => $employeeDayoff,
             'maintenanceRequestHeader' => $maintenanceRequestHeader,
             'maintenanceRequestHeaderDataProvider' => $maintenanceRequestHeaderDataProvider,
+            'materialRequestHeader' => $materialRequestHeader,
+            'materialRequestHeaderDataProvider' => $materialRequestHeaderDataProvider,
         ));
     }
 }
