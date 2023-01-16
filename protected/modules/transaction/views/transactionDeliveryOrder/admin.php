@@ -67,16 +67,16 @@ Yii::app()->clientScript->registerScript('search', "
                     'delivery_date',
                     'posting_date',
                     array(
-                        'name' => 'customer_name',
-                        'value' => '(!empty($data->customer->name) ? $data->customer->name : "")'
-                    ),
-                    array(
                         'name' => 'sender_id',
                         'value' => '(!empty($data->user->username) ? $data->user->username : "")'
                     ),
                     array(
                         'name' => 'branch_name',
-                        'value' => '$data->senderBranch->name'
+                        'value' => '$data->senderBranch->code'
+                    ),
+                    array(
+                        'header' => 'Movement Out',
+                        'value' => 'empty($data->movementOutHeaders) ? "Belum Diproses" : "Selesai"'
                     ),
                     array(
                         'header' => 'Input',
