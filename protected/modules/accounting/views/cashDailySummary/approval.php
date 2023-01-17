@@ -125,7 +125,7 @@
     </div>
     
     <hr />
-    
+    <?php if (empty($cashDailyApproval)): ?>
     <div class="field">
         <div class="row collapse">
             <div class="small-4 columns">
@@ -158,7 +158,12 @@
     <div class="row buttons">
         <?php echo CHtml::submitButton('Approve', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
     </div>
+    <?php else: ?>
+    <?php $cashDailyImages = CashDailyImages::model()->findAllByAttributes(array('cash_daily_summary_id' => $cashDailyApproval->id)); ?>
+    <?php foreach($cashDailyImages as $cashDailyImage): ?>
+    <div><?php echo CHtml::image(Yii::app()->baseUrl . '/images/uploads/cashDaily/' . $cashDailyImage->id . '-realization.' . $cashDailyImage->extension, '', array( 'style' => 'width: 300px' )); ?></div>
+    <?php endforeach; ?>
+    <?php endif; ?>
 
     <?php echo CHtml::endForm(); ?>
-
 </div><!-- form -->

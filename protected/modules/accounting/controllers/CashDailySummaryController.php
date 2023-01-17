@@ -31,14 +31,14 @@ class CashDailySummaryController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionSummary() {
-        $user = Users::model()->findByPk(Yii::app()->user->id);
+//        $user = Users::model()->findByPk(Yii::app()->user->id);
 //        $userBranch = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $totalDaily = isset($_GET['TotalDaily']) ? $_GET['TotalDaily'] : 0.00;
         $paymentTypes = PaymentType::model()->findAll(); 
         
-        $branchConditionSql = '';
+//        $branchConditionSql = '';
         $params = array(
             ':payment_date' => $transactionDate,
         );
@@ -281,10 +281,13 @@ class CashDailySummaryController extends Controller {
                 Yii::app()->end();
             } 
         }
+        
+        $cashDailyApproval = CashDailySummary::model()->findByAttributes(array('transaction_date' => $transactionDate, 'branch_id' => $branchId));
 
         $this->render('approval', array(
             'cashDaily' => $cashDaily,
             'paymentIns' => $paymentIns,
+            'cashDailyApproval' => $cashDailyApproval,
         ));
     }
 
