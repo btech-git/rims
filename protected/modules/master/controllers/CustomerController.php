@@ -53,6 +53,7 @@ class CustomerController extends Controller {
         $picDetails = CustomerPic::model()->findAllByAttributes(array('customer_id' => $id));
         $vehicleDetails = Vehicle::model()->findAllByAttributes(array('customer_id' => $id));
         $rateDetails = CustomerServiceRate::model()->findAllByAttributes(array('customer_id' => $id));
+        $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array('customer_id' => $id));
         
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
@@ -72,6 +73,7 @@ class CustomerController extends Controller {
             'picDetails' => $picDetails,
             'vehicleDetails' => $vehicleDetails,
             'rateDetails' => $rateDetails,
+            '$registrationTransactions' => $registrationTransactions,
         ));
     }
 
