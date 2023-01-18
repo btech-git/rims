@@ -73,7 +73,7 @@ class CustomerController extends Controller {
             'picDetails' => $picDetails,
             'vehicleDetails' => $vehicleDetails,
             'rateDetails' => $rateDetails,
-            '$registrationTransactions' => $registrationTransactions,
+            'registrationTransactions' => $registrationTransactions,
         ));
     }
 
