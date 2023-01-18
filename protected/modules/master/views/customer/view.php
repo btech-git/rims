@@ -135,16 +135,18 @@ $this->breadcrumbs = array(
                 <td>Total</td>
             </tr>
         </thead>
-        <?php foreach ($registrationTransactions as $registrationTransaction): ?>
-            <tr>
-                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_date')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'repair_type')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?></td>
-                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction, 'grand_total'))); ?></td>
-            </tr>
+        <?php foreach ($registrationTransactions as $i => $registrationTransaction): ?>
+            <?php if ($i < 50): ?>
+                <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_date')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'repair_type')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction, 'grand_total'))); ?></td>
+                </tr>
+            <?php endif; ?>
         <?php endforeach; ?>
     </table>
 </div>
