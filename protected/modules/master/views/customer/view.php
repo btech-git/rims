@@ -143,7 +143,7 @@ $this->breadcrumbs = array(
                 <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?></td>
-                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction->grand_total))); ?></td>
+                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction, 'grand_total'))); ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
