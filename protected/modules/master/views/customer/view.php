@@ -119,6 +119,38 @@ $this->breadcrumbs = array(
     </table>
 </div>
 
+<br/>
+
+<div class="row">
+    <h5>Sales History</h5>
+    <table class="detail">
+        <thead>
+            <tr>
+                <td>Transaction #</td>
+                <td>Date</td>
+                <td>Repair</td>
+                <td>Car #</td>
+                <td>Car Model</td>
+                <td>Car KM</td>
+                <td>Total</td>
+            </tr>
+        </thead>
+        <?php foreach ($registrationTransactions as $registrationTransaction): ?>
+            <tr>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_date')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'repair_type')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?></td>
+                <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction->grand_total))); ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
+
+<br />
+
 <div class="row">
     <h5>Service Exception Rates</h5>
     <table class="detail">
@@ -136,7 +168,6 @@ $this->breadcrumbs = array(
         </thead>
         <?php foreach ($rateDetails as $key => $rateDetail): ?>
             <tr>
-                <?php $service; ?>
                 <td><?php echo $rateDetail->serviceType ? $rateDetail->serviceType->name : ''; ?></td>
                 <td><?php echo $rateDetail->serviceCategory ? $rateDetail->serviceCategory->name : ''; ?></td>
                 <td><?php echo $rateDetail->service ? $rateDetail->service->name . ' (' . $rateDetail->service->code . ')' : ''; ?></td>
