@@ -198,7 +198,7 @@
                         <?php echo $form->labelEx($model, 'branch_id'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php if ($model->isNewRecord()): ?>
+                        <?php if ($model->isNewRecord): ?>
                             <?php echo $form->dropDownlist($model, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]',
                                 'onchange' => 'jQuery.ajax({
                                         type: "POST",
