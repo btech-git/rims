@@ -181,7 +181,7 @@ class PurchaseSummaryController extends Controller {
             ->setAutoSize(true);
         }
 
-        header('Content-Type: application/xls');
+        header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Pembelian Summary.xls"');
         header('Cache-Control: max-age=0');
 

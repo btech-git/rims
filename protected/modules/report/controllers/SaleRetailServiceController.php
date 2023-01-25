@@ -150,7 +150,7 @@ class SaleRetailServiceController extends Controller {
             }
         }
 
-        header('Content-Type: application/xlsx');
+        header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Penjualan Retail Service.xlsx"');
         header('Cache-Control: max-age=0');
 
