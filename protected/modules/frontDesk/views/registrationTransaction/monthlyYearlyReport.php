@@ -46,7 +46,16 @@ Yii::app()->clientScript->registerScript('report', '
                                         <span class="prefix">Year </span>
                                     </div>
                                      <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('year', $year, array('2016'=>'2016','2017' => '2017')); ?>
+                                        <?php echo CHtml::dropDownlist('year', $year, array(
+                                            '2016' => '2016',
+                                            '2017' => '2017',
+                                            '2018' => '2018',
+                                            '2019' => '2019',
+                                            '2020' => '2020',
+                                            '2021' => '2021',
+                                            '2022' => '2022',
+                                            '2023' => '2023'
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>

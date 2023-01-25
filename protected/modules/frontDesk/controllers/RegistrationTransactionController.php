@@ -3183,7 +3183,13 @@ class RegistrationTransactionController extends Controller {
 
     public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai) {
 
-        // var_dump($customer); die();
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
@@ -3552,7 +3558,13 @@ class RegistrationTransactionController extends Controller {
 
     public function getXlsYearlyReport($year, $branch) {
 
-        // var_dump($customer); die();
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
@@ -4076,7 +4088,13 @@ class RegistrationTransactionController extends Controller {
 
     public function getXlsMonthlyReport($year, $month, $branch) {
 
-        // var_dump($customer); die();
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
