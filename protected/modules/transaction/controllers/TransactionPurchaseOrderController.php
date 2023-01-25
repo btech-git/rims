@@ -10,7 +10,7 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
@@ -1304,8 +1304,8 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionlaporanPembelian() {
         $this->pageTitle = "RIMS - Laporan Pembelian";
 
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : '';
+        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
+        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
         $company = (isset($_GET['company'])) ? $_GET['company'] : '';
         $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
         $supplier_id = (isset($_GET['supplier_id'])) ? $_GET['supplier_id'] : '';
@@ -1348,7 +1348,6 @@ class TransactionPurchaseOrderController extends Controller {
         $supplierCriteria = new CDbCriteria;
         $supplierCriteria->compare('code', $supplier->code . '%', true, 'AND', false);
         $supplierCriteria->compare('name', $supplier->name, true);
-
 
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
             'criteria' => $supplierCriteria,
@@ -1572,8 +1571,8 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionlaporanOutstanding() {
         $this->pageTitle = "RIMS - Laporan Outstanding";
 
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : '';
+        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
+        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
         $due_mulai = (isset($_GET['due_mulai'])) ? $_GET['due_mulai'] : '';
         $due_sampai = (isset($_GET['due_sampai'])) ? $_GET['due_sampai'] : '';
         $company = (isset($_GET['company'])) ? $_GET['company'] : '';

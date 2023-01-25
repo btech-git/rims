@@ -3075,8 +3075,8 @@ class RegistrationTransactionController extends Controller {
     public function actionlaporanPenjualan() {
         $this->pageTitle = "RIMS - Laporan Penjualan";
 
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : '';
+        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
+        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
         $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
         $company = (isset($_GET['company'])) ? $_GET['company'] : '';
         $customer_id = (isset($_GET['customer_id'])) ? $_GET['customer_id'] : '';

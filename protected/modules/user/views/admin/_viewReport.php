@@ -60,7 +60,7 @@
         <tr>
             <td>Pembelian</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][purchaseReport]", CHtml::resolveValue($model, "roles[purchaseReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][purchaseOrderReport]", CHtml::resolveValue($model, "roles[purchaseOrderReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseReport')); ?>
             </td>
         </tr>
         <tr>
@@ -139,6 +139,12 @@
             <td>Transfer Request</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][transferRequestReport]", CHtml::resolveValue($model, "roles[transferRequestReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'transferRequestReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Mechanic Performance</td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][mechanicPerformanceReport]", CHtml::resolveValue($model, "roles[mechanicPerformanceReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'mechanicPerformanceReport')); ?>
             </td>
         </tr>
     </tbody>

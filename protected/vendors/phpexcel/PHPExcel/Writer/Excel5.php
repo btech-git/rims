@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2014 PHPExcel
+ * Copyright (c) 2006 - 2012 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Writer_Excel5
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license	http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version	1.8.0, 2014-03-02
+ * @version	1.7.7, 2012-05-19
  */
 
 
@@ -31,10 +31,17 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Writer_Excel5
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExcel_Writer_IWriter
+class PHPExcel_Writer_Excel5 implements PHPExcel_Writer_IWriter
 {
+	/**
+	 * Pre-calculate formulas
+	 *
+	 * @var boolean
+	 */
+	private $_preCalculateFormulas	= true;
+
 	/**
 	 * PHPExcel object
 	 *
@@ -113,15 +120,15 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	 * Save PHPExcel to file
 	 *
 	 * @param	string		$pFilename
-	 * @throws	PHPExcel_Writer_Exception
+	 * @throws	Exception
 	 */
 	public function save($pFilename = null) {
 
 		// garbage collect
 		$this->_phpExcel->garbageCollect();
 
-		$saveDebugLog = PHPExcel_Calculation::getInstance($this->_phpExcel)->getDebugLog()->getWriteDebugLog();
-		PHPExcel_Calculation::getInstance($this->_phpExcel)->getDebugLog()->setWriteDebugLog(FALSE);
+		$saveDebugLog = PHPExcel_Calculation::getInstance()->writeDebugLog;
+		PHPExcel_Calculation::getInstance()->writeDebugLog = false;
 		$saveDateReturnType = PHPExcel_Calculation_Functions::getReturnDateType();
 		PHPExcel_Calculation_Functions::setReturnDateType(PHPExcel_Calculation_Functions::RETURNDATE_EXCEL);
 
@@ -189,7 +196,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		}
 
 		// add binary data for global workbook stream
-		$OLE->append($this->_writerWorkbook->writeWorkbook($worksheetSizes));
+		$OLE->append( $this->_writerWorkbook->writeWorkbook($worksheetSizes) );
 
 		// add binary data for sheet streams
 		for ($i = 0; $i < $countSheets; ++$i) {
@@ -226,7 +233,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$res = $root->save($pFilename);
 
 		PHPExcel_Calculation_Functions::setReturnDateType($saveDateReturnType);
-		PHPExcel_Calculation::getInstance($this->_phpExcel)->getDebugLog()->setWriteDebugLog($saveDebugLog);
+		PHPExcel_Calculation::getInstance()->writeDebugLog = $saveDebugLog;
 	}
 
 	/**
@@ -234,11 +241,29 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	 *
 	 * @deprecated
 	 * @param	string	$pValue		Temporary storage directory
-	 * @throws	PHPExcel_Writer_Exception	when directory does not exist
+	 * @throws	Exception	Exception when directory does not exist
 	 * @return PHPExcel_Writer_Excel5
 	 */
 	public function setTempDir($pValue = '') {
 		return $this;
+	}
+
+	/**
+	 * Get Pre-Calculate Formulas
+	 *
+	 * @return boolean
+	 */
+	public function getPreCalculateFormulas() {
+		return $this->_preCalculateFormulas;
+	}
+
+	/**
+	 * Set Pre-Calculate Formulas
+	 *
+	 * @param boolean $pValue	Pre-Calculate Formulas?
+	 */
+	public function setPreCalculateFormulas($pValue = true) {
+		$this->_preCalculateFormulas = $pValue;
 	}
 
 	/**
@@ -249,8 +274,6 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	{
 		// 1-based index to BstoreContainer
 		$blipIndex = 0;
-		$lastReducedSpId = 0;
-		$lastSpId = 0;
 
 		foreach ($this->_phpExcel->getAllsheets() as $sheet) {
 			// sheet index
@@ -259,8 +282,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 			$escher = null;
 
 			// check if there are any shapes for this sheet
-			$filterRange = $sheet->getAutoFilter()->getRange();
-			if (count($sheet->getDrawingCollection()) == 0 && empty($filterRange)) {
+			if (count($sheet->getDrawingCollection()) == 0) {
 				continue;
 			}
 
@@ -300,8 +322,6 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
 				// set the shape type
 				$spContainer->setSpType(0x004B);
-				// set the shape flag
-				$spContainer->setSpFlag(0x02);
 
 				// set the shape index (we combine 1-based sheet index and $countShapes to create unique shape index)
 				$reducedSpId = $countShapes[$sheetIndex];
@@ -335,64 +355,6 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 				$spContainer->setEndOffsetY($twoAnchor['endOffsetY']);
 
 				$spgrContainer->addChild($spContainer);
-			}
-
-			// AutoFilters
-			if(!empty($filterRange)){
-				$rangeBounds = PHPExcel_Cell::rangeBoundaries($filterRange);
-				$iNumColStart = $rangeBounds[0][0];
-				$iNumColEnd = $rangeBounds[1][0];
-
-				$iInc = $iNumColStart;
-				while($iInc <= $iNumColEnd){
-					++$countShapes[$sheetIndex];
-
-					// create an Drawing Object for the dropdown
-					$oDrawing  = new PHPExcel_Worksheet_BaseDrawing();
-					// get the coordinates of drawing
-					$cDrawing   = PHPExcel_Cell::stringFromColumnIndex($iInc - 1) . $rangeBounds[0][1];
-					$oDrawing->setCoordinates($cDrawing);
-					$oDrawing->setWorksheet($sheet);
-
-					// add the shape
-					$spContainer = new PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer();
-					// set the shape type
-					$spContainer->setSpType(0x00C9);
-					// set the shape flag
-					$spContainer->setSpFlag(0x01);
-
-					// set the shape index (we combine 1-based sheet index and $countShapes to create unique shape index)
-					$reducedSpId = $countShapes[$sheetIndex];
-					$spId = $reducedSpId
-						| ($sheet->getParent()->getIndex($sheet) + 1) << 10;
-					$spContainer->setSpId($spId);
-
-					// keep track of last reducedSpId
-					$lastReducedSpId = $reducedSpId;
-
-					// keep track of last spId
-					$lastSpId = $spId;
-
-					$spContainer->setOPT(0x007F, 0x01040104); // Protection -> fLockAgainstGrouping
-					$spContainer->setOPT(0x00BF, 0x00080008); // Text -> fFitTextToShape
-					$spContainer->setOPT(0x01BF, 0x00010000); // Fill Style -> fNoFillHitTest
-					$spContainer->setOPT(0x01FF, 0x00080000); // Line Style -> fNoLineDrawDash
-					$spContainer->setOPT(0x03BF, 0x000A0000); // Group Shape -> fPrint
-
-					// set coordinates and offsets, client anchor
-					$endCoordinates = PHPExcel_Cell::stringFromColumnIndex(PHPExcel_Cell::stringFromColumnIndex($iInc - 1));
-					$endCoordinates .= $rangeBounds[0][1] + 1;
-
-					$spContainer->setStartCoordinates($cDrawing);
-					$spContainer->setStartOffsetX(0);
-					$spContainer->setStartOffsetY(0);
-					$spContainer->setEndCoordinates($endCoordinates);
-					$spContainer->setEndOffsetX(0);
-					$spContainer->setEndOffsetY(0);
-
-					$spgrContainer->addChild($spContainer);
-					$iInc++;
-				}
 			}
 
 			// identifier clusters, used for workbook Escher object
@@ -596,6 +558,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		// GKPIDDSI_CATEGORY : Category
 		if($this->_phpExcel->getProperties()->getCategory()){
 			$dataProp = $this->_phpExcel->getProperties()->getCategory();
+			$dataProp = 'Test result file';
 			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x02),
 								   'offset' => array('pack' => 'V'),
 								   'type' 	=> array('pack' => 'V', 'data' => 0x1E),

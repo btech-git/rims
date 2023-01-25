@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2014 PHPExcel
+ * Copyright (c) 2006 - 2012 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category	PHPExcel
  * @package		PHPExcel_Chart
- * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright	Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license		http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version		1.8.0, 2014-03-02
+ * @version		1.7.7, 2012-05-19
  */
 
 
@@ -31,7 +31,7 @@
  *
  * @category	PHPExcel
  * @package		PHPExcel_Chart
- * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright	Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Chart
 {
@@ -184,7 +184,7 @@ class PHPExcel_Chart
 	 * Set Worksheet
 	 *
 	 * @param	PHPExcel_Worksheet	$pValue
-	 * @throws	PHPExcel_Chart_Exception
+	 * @throws	Exception
 	 * @return PHPExcel_Chart
 	 */
 	public function setWorksheet(PHPExcel_Worksheet $pValue = null) {
@@ -203,36 +203,12 @@ class PHPExcel_Chart
 	}
 
 	/**
-	 * Set Title
-	 *
-	 * @param	PHPExcel_Chart_Title $title
-	 * @return	PHPExcel_Chart
-	 */
-	public function setTitle(PHPExcel_Chart_Title $title) {
-		$this->_title = $title;
-
-		return $this;
-	}
-
-	/**
 	 * Get Legend
 	 *
 	 * @return PHPExcel_Chart_Legend
 	 */
 	public function getLegend() {
 		return $this->_legend;
-	}
-
-	/**
-	 * Set Legend
-	 *
-	 * @param	PHPExcel_Chart_Legend $legend
-	 * @return	PHPExcel_Chart
-	 */
-	public function setLegend(PHPExcel_Chart_Legend $legend) {
-		$this->_legend = $legend;
-
-		return $this;
 	}
 
 	/**
@@ -245,36 +221,12 @@ class PHPExcel_Chart
 	}
 
 	/**
-	 * Set X-Axis Label
-	 *
-	 * @param	PHPExcel_Chart_Title $label
-	 * @return	PHPExcel_Chart
-	 */
-	public function setXAxisLabel(PHPExcel_Chart_Title $label) {
-		$this->_xAxisLabel = $label;
-
-		return $this;
-	}
-
-	/**
 	 * Get Y-Axis Label
 	 *
 	 * @return PHPExcel_Chart_Title
 	 */
 	public function getYAxisLabel() {
 		return $this->_yAxisLabel;
-	}
-
-	/**
-	 * Set Y-Axis Label
-	 *
-	 * @param	PHPExcel_Chart_Title $label
-	 * @return	PHPExcel_Chart
-	 */
-	public function setYAxisLabel(PHPExcel_Chart_Title $label) {
-		$this->_yAxisLabel = $label;
-
-		return $this;
 	}
 
 	/**
@@ -378,13 +330,6 @@ class PHPExcel_Chart
 		return $this;
 	}
 
-	/**
-	 * Set the offset position within the Top Left cell for the chart
-	 *
-	 * @param	integer	$xOffset
-	 * @param	integer	$yOffset
-	 * @return PHPExcel_Chart
-	 */
 	public function setTopLeftOffset($xOffset=null,$yOffset=null) {
 		if (!is_null($xOffset))
 			$this->setTopLeftXOffset($xOffset);
@@ -394,11 +339,6 @@ class PHPExcel_Chart
 		return $this;
 	}
 
-	/**
-	 * Get the offset position within the Top Left cell for the chart
-	 *
-	 * @return integer[]
-	 */
 	public function getTopLeftOffset() {
 		return array( 'X' => $this->_topLeftXOffset,
 					  'Y' => $this->_topLeftYOffset
@@ -470,13 +410,6 @@ class PHPExcel_Chart
 		return $this->_bottomRightCellRef;
 	}
 
-	/**
-	 * Set the offset position within the Bottom Right cell for the chart
-	 *
-	 * @param	integer	$xOffset
-	 * @param	integer	$yOffset
-	 * @return PHPExcel_Chart
-	 */
 	public function setBottomRightOffset($xOffset=null,$yOffset=null) {
 		if (!is_null($xOffset))
 			$this->setBottomRightXOffset($xOffset);
@@ -486,11 +419,6 @@ class PHPExcel_Chart
 		return $this;
 	}
 
-	/**
-	 * Get the offset position within the Bottom Right cell for the chart
-	 *
-	 * @return integer[]
-	 */
 	public function getBottomRightOffset() {
 		return array( 'X' => $this->_bottomRightXOffset,
 					  'Y' => $this->_bottomRightYOffset

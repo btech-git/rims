@@ -815,8 +815,8 @@ class TransactionSalesOrderController extends Controller {
     public function actionlaporanPenjualan() {
         $this->pageTitle = "RIMS - Laporan Penjualan";
 
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : '';
+        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
+        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
         $company = (isset($_GET['company'])) ? $_GET['company'] : '';
         $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
         $customer_id = (isset($_GET['customer_id'])) ? $_GET['customer_id'] : '';
@@ -1132,8 +1132,8 @@ class TransactionSalesOrderController extends Controller {
     public function actionlaporanOutstanding() {
         $this->pageTitle = "RIMS - Laporan Outstanding";
 
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : '';
+        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
+        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
         $due_mulai = (isset($_GET['due_mulai'])) ? $_GET['due_mulai'] : '';
         $due_sampai = (isset($_GET['due_sampai'])) ? $_GET['due_sampai'] : '';
         $company = (isset($_GET['company'])) ? $_GET['company'] : '';

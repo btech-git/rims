@@ -6,7 +6,7 @@ $this->breadcrumbs= array(
     );
     ?>
 
-    <?php /*if ($type == 'ban') {
+    <?php  if ($type == 'ban') {
             if ($brand == NULL) {
                 $brandname =  Brand::model()->findAllByAttributes(['id'=>$reportingComponets->getListBrandTire()]); 
             }else{

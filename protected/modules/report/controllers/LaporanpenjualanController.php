@@ -26,14 +26,14 @@ class LaporanpenjualanController extends Controller {
     public function actionIndex() {
         $reportingComponets = new ReportingComponents();
 
-        $type = (isset($_GETarray('type'))) ? $_GETarray('type') : 1;
-        $tanggal = (isset($_GETarray('tanggal'))) ? $_GETarray('tanggal') : date("Y-m-d");
-        $brand = (isset($_GETarray('brand'))) ? $_GETarray('brand') : '';
+        $type = (isset($_GET['type'])) ? $_GET['type'] : 1;
+        $tanggal = (isset($_GET['tanggal'])) ? $_GET['tanggal'] : date("Y-m-d");
+        $brand = (isset($_GET['brand'])) ? $_GET['brand'] : '';
         $sparepart = $reportingComponets->getListSparepart();
         // echo $reportingComponets->getListSparepart()array($type);
         // var_dump($sparepartarray(1));
 
-        if (isset($_GETarray('ExportExcel'))) {
+        if (isset($_GET['ExportExcel'])) {
             $this->getXls($type, $tanggal);
         }
 
@@ -45,12 +45,14 @@ class LaporanpenjualanController extends Controller {
     }
 
     public function actionHarian() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
 
         $reportingComponets = new ReportingComponents();
 
-        $tanggal = (isset($_GETarray('tanggal'))) ? $_GETarray('tanggal') : date("Y-m-d");
-        $brand = (isset($_GETarray('brand'))) ? $_GETarray('brand') : '';
-        $type = (isset($_GETarray('type'))) ? $_GETarray('type') : 'ban';
+        $tanggal = (isset($_GET['tanggal'])) ? $_GET['tanggal'] : date("Y-m-d");
+        $brand = (isset($_GET['brand'])) ? $_GET['brand'] : '';
+        $type = (isset($_GET['type'])) ? $_GET['type'] : 'ban';
 
         if ($type == 'ban') {
             $brandname = Brand::model()->findAllByAttributes(array('id' => $reportingComponets->getListBrandTire()));
@@ -62,7 +64,7 @@ class LaporanpenjualanController extends Controller {
             $jumlah_branch = count($branch);
         }
 
-        if (isset($_GETarray('ExportExcel')))
+        if (isset($_GET['ExportExcel']))
             $this->getXlsHarian($tanggal, $type);
 
         $this->render('hari', array(
@@ -77,11 +79,14 @@ class LaporanpenjualanController extends Controller {
     }
 
     public function actionBulanan() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
         $reportingComponets = new ReportingComponents();
 
-        $tanggal = (isset($_GETarray('tanggal'))) ? $_GETarray('tanggal') : date("Y-m-d");
-        $brand = (isset($_GETarray('brand'))) ? $_GETarray('brand') : '';
-        $type = (isset($_GETarray('type'))) ? $_GETarray('type') : 'ban';
+        $tanggal = (isset($_GET['tanggal'])) ? $_GET['tanggal']: date("Y-m-d");
+        $brand = (isset($_GET['brand'])) ? $_GET['brand'] : '';
+        $type = (isset($_GET['type'])) ? $_GET['type']: 'ban';
 
         if ($type == 'ban') {
             $brandname = Brand::model()->findAllByAttributes(array('id' => $reportingComponets->getListBrandTire())); //Brand::model()->findAllByAttributes(array('brand_id'=>''));
@@ -93,7 +98,7 @@ class LaporanpenjualanController extends Controller {
             $jumlah_branch = count($branch);
         }
 
-        if (isset($_GETarray('ExportExcel')))
+        if (isset($_GET['ExportExcel']))
             $this->getXlsBulanan($tanggal, $type);
 
         $this->render('bulan', array(
@@ -108,11 +113,14 @@ class LaporanpenjualanController extends Controller {
     }
 
     public function actionTahunan() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
         $reportingComponets = new ReportingComponents();
 
-        $tahun = (isset($_GETarray('tahun'))) ? $_GETarray('tahun') : date("Y");
-        $brand = (isset($_GETarray('brand'))) ? $_GETarray('brand') : '';
-        $type = (isset($_GETarray('type'))) ? $_GETarray('type') : 'ban';
+        $tahun = (isset($_GET['tahun'])) ? $_GET['tahun'] : date("Y");
+        $brand = (isset($_GET['brand'])) ? $_GET['brand'] : '';
+        $type = (isset($_GET['type'])) ? $_GET['type'] : 'ban';
 
         if ($type == 'ban') {
             $brandname = Brand::model()->findAllByAttributes(array('id' => $reportingComponets->getListBrandTire())); //Brand::model()->findAllByAttributes(array('brand_id'=>''));
@@ -124,7 +132,7 @@ class LaporanpenjualanController extends Controller {
             $jumlah_branch = count($branch);
         }
 
-        if (isset($_GETarray('ExportExcel')))
+        if (isset($_GET['ExportExcel']))
             $this->getXlsTahunan($tahun, $type);
 
         $this->render('tahun', array(
@@ -253,15 +261,9 @@ class LaporanpenjualanController extends Controller {
             )
         );
         // end style
-        // if ($type == 'ban') {
         $brandname = Brand::model()->findAllByAttributes(array('id' => $reportingComponets->getSparepartId($type))); //Brand::model()->findAllByAttributes(array('brand_id'=>''));
         $branch = Branch::model()->findAll();
         $jumlah_branch = count($branch);
-        // }else{
-        // 	$brandname =  Brand::model()->findAllByAttributes(array('id'=>$reportingComponets->getListBrandOil())); //Brand::model()->
-        // 	$branch =  Branch::model()->findAll();
-        // 	$jumlah_branch = count($branch);
-        // }
         // Add some data
         $typeName = substr($typeName, 0, 15);
         $objPHPExcel->setActiveSheetIndex(0)
@@ -276,9 +278,8 @@ class LaporanpenjualanController extends Controller {
 
         $arrayLetter = array();
         for ($letter = 'A'; $letter !== 'ZZ'; $letter++) {
-            $arrayLetterarray() = $letter;
+            $arrayLetter[] = $letter;
         }
-
 
         // $objPHPExcel->getActiveSheet()->getColumnDimension('A3')->setHeight(20);
         $objPHPExcel->getActiveSheet()->getRowDimension(3)->setRowHeight(25);
@@ -288,52 +289,49 @@ class LaporanpenjualanController extends Controller {
         $letterStep11 = 0;
         foreach ($brandname as $key => $value) {
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue($arrayLetterarray($letterStep11) . '3', 'NO')
-                    ->setCellValue($arrayLetterarray($letterStep11 + 1) . '3', 'TYPE ' . strtoupper($typeName))
-                    ->setCellValue($arrayLetterarray($letterStep11 + 2) . '3', 'KODE')
-                    ->setCellValue($arrayLetterarray($letterStep11 + 1) . '4', $value->name)
-                    ->setCellValue($arrayLetterarray($letterStep11 + 3) . '3', ' ');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11 + 1) . '4:' . $arrayLetterarray($letterStep11 + 2) . '4');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11) . '3:' . $arrayLetterarray($letterStep11) . '4');
+                    ->setCellValue($arrayLetter[$letterStep11] . '3', 'NO')
+                    ->setCellValue($arrayLetter[$letterStep11 + 1] . '3', 'TYPE ' . strtoupper($typeName))
+                    ->setCellValue($arrayLetter[$letterStep11 + 2] . '3', 'KODE')
+                    ->setCellValue($arrayLetter[$letterStep11 + 1] . '4', $value->name)
+                    ->setCellValue($arrayLetter[$letterStep11 + 3] . '3', ' ');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11 + 1] . '4:' . $arrayLetter[$letterStep11 + 2] . '4');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11] . '3:' . $arrayLetter[$letterStep11] . '4');
 
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11))->setWidth(5);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 1))->setWidth(15);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 2))->setWidth(15);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 3))->setWidth(2);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11])->setWidth(5);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 1])->setWidth(15);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 2])->setWidth(15);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 3])->setWidth(2);
 
-            $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleHorizontalVertivalCenter);
+            $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleHorizontalVertivalCenter);
 
             $starbranchheading = $letterStep11 + 4;
             foreach ($branch as $key => $bcan) {
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($starbranchheading) . '3', $bcan->name);
-                $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($starbranchheading))->setWidth(3);
-                $objPHPExcel->getActiveSheet()->getStyle($arrayLetterarray($starbranchheading) . '3')->getAlignment()->setTextRotation(90);
+                        ->setCellValue($arrayLetter[$starbranchheading] . '3', $bcan->name);
+                $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$starbranchheading])->setWidth(3);
+                $objPHPExcel->getActiveSheet()->getStyle($arrayLetter[$starbranchheading]. '3')->getAlignment()->setTextRotation(90);
 
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($starbranchheading) . '3:' . $arrayLetterarray($starbranchheading) . '4');
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$starbranchheading]. '3:' . $arrayLetter[$starbranchheading] . '4');
 
                 $starbranchheading++;
             }
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue($arrayLetterarray($letterStep11 + $jumlah_branch + 4) . '3', 'Total')
-                    ->setCellValue($arrayLetterarray($letterStep11 + $jumlah_branch + 5) . '3', ' ');
+                    ->setCellValue($arrayLetter[$letterStep11 + $jumlah_branch + 4] . '3', 'Total')
+                    ->setCellValue($arrayLetter[$letterStep11 + $jumlah_branch + 5] . '3', ' ');
 
-            $sheet->getStyle($arrayLetterarray($letterStep11 + $jumlah_branch + 5) . '3' . ':' . $arrayLetterarray($letterStep11 + $jumlah_branch + 5) . '5')->applyFromArray($styleBGColorGray);
+            $sheet->getStyle($arrayLetter[$letterStep11 + $jumlah_branch + 5] . '3' . ':' . $arrayLetter[$letterStep11 + $jumlah_branch + 5] . '5')->applyFromArray($styleBGColorGray);
 
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11 + $jumlah_branch + 4) . '3:' . $arrayLetterarray($letterStep11 + $jumlah_branch + 4) . '4');
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + $jumlah_branch + 4))->setWidth(10);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + $jumlah_branch + 5))->setWidth(2);
-
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11 + $jumlah_branch + 4] . '3:' . $arrayLetter[$letterStep11 + $jumlah_branch + 4] . '4');
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + $jumlah_branch + 4])->setWidth(10);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + $jumlah_branch + 5])->setWidth(2);
 
             $letterStep11 = $letterStep11 + $jumlah_branch + 6;
         }
         // end header loop//
 
-        $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleFontSize);
-        $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleBorderAll);
+        $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleFontSize);
+        $sheet->getStyle('A3:' . $arrayLetter[$letterStep11]. '4')->applyFromArray($styleBorderAll);
 
-
-        // var_dump($brandname); die();
         //	prepare for row content 
         $letterContentStep11 = 0;
         $startRow = 5;
@@ -345,33 +343,31 @@ class LaporanpenjualanController extends Controller {
             foreach ($products as $key => $product) {
                 # code...
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11) . $startRow, $nomor)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 1) . $startRow, (empty($product->subBrandSeries) ? '' : $product->subBrandSeries->name))
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 2) . $startRow, $product->manufacturer_code)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 3) . $startRow, '');
+                        ->setCellValue($arrayLetter[$letterContentStep11] . $startRow, $nomor)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 1] . $startRow, (empty($product->subBrandSeries) ? '' : $product->subBrandSeries->name))
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 2] . $startRow, $product->manufacturer_code)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 3] . $startRow, '');
 
                 $starbranchContent = $letterContentStep11 + 4;
                 foreach ($branch as $key => $bcan) {
 
                     if ($tanggal != NULL) {
                         $objPHPExcel->setActiveSheetIndex(0)
-                                ->setCellValue($arrayLetterarray($starbranchContent) . $startRow, $this->getStockDate($product->id, $bcan->id, $tanggal));
+                                ->setCellValue($arrayLetter[$starbranchContent] . $startRow, $this->getStockDate($product->id, $bcan->id, $tanggal));
                     } else {
                         $objPHPExcel->setActiveSheetIndex(0)
-                                ->setCellValue($arrayLetterarray($starbranchContent) . $startRow, $this->getStock($product->id, $bcan->id));
+                                ->setCellValue($arrayLetter[$starbranchContent] . $startRow, $this->getStock($product->id, $bcan->id));
                     }
 
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . $startRow, '=SUM(' . $arrayLetterarray($letterContentStep11 + 4) . $startRow . ':' . $arrayLetterarray($starbranchContent) . $startRow . ')')
-                            ->setCellValue($arrayLetterarray($letterContentStep11 + $jumlah_branch + 5) . $startRow, ' ');
+                            ->setCellValue($arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . $startRow, '=SUM(' . $arrayLetter[$letterContentStep11 + 4] . $startRow . ':' . $arrayLetter[$starbranchContent] . $startRow . ')')
+                            ->setCellValue($arrayLetter[$letterContentStep11 + $jumlah_branch + 5] . $startRow, ' ');
 
-                    $sheet->getStyle($arrayLetterarray($letterContentStep11 + $jumlah_branch + 5) . ($startRow + 1))->applyFromArray($styleBGColorGray);
+                    $sheet->getStyle($arrayLetter[$letterContentStep11 + $jumlah_branch + 5] . ($startRow + 1))->applyFromArray($styleBGColorGray);
 
                     $starbranchContent++;
                 }
-                // if ($startRow % 2 ) {
-                // 	$sheet->getStyle('A'.$startRow.':X'.$startRow)->applyFromArray($styleBgColorGanjil);
-                // }
+                
                 $nomor ++;
                 $startRow ++;
             }
@@ -379,27 +375,25 @@ class LaporanpenjualanController extends Controller {
             if (count($products) > 0) {
                 // set total
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 1) . $startRow, 'Total ' . $value->name)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 3) . $startRow, '');
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterContentStep11 + 1) . $startRow . ':' . $arrayLetterarray($letterContentStep11 + 2) . $startRow);
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 1] . $startRow, 'Total ' . $value->name)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 3] . $startRow, '');
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterContentStep11 + 1] . $startRow . ':' . $arrayLetter[$letterContentStep11 + 2] . $startRow);
                 // total branch
                 $totalstarbranchContent = $letterContentStep11 + 4;
                 foreach ($branch as $key => $bcan) {
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($totalstarbranchContent) . $startRow, '=SUM(' . $arrayLetterarray($totalstarbranchContent) . '5:' . $arrayLetterarray($totalstarbranchContent) . ($startRow - 1) . ')');
+                            ->setCellValue($arrayLetter[$totalstarbranchContent] . $startRow, '=SUM(' . $arrayLetter[$totalstarbranchContent] . '5:' . $arrayLetter[$totalstarbranchContent] . ($startRow - 1) . ')');
                     $totalstarbranchContent ++;
                 }
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . $startRow, '=SUM(' . $arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . '5:' . $arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . ($startRow - 1) . ')');
+                        ->setCellValue($arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . $startRow, '=SUM(' . $arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . '5:' . $arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . ($startRow - 1) . ')');
             }
 
             //style the content//
             //jump to next branch
             $letterContentStep11 = $letterContentStep11 + $jumlah_branch + 6;
-            $sheet->getStyle('A5:' . $arrayLetterarray($letterContentStep11 - 2) . $startRow)->applyFromArray($styleFontSize);
-            $sheet->getStyle('A5:' . $arrayLetterarray($letterContentStep11 - 2) . $startRow)->applyFromArray($styleBorderAll);
-
-
+            $sheet->getStyle('A5:' . $arrayLetter[$letterContentStep11 - 2] . $startRow)->applyFromArray($styleFontSize);
+            $sheet->getStyle('A5:' . $arrayLetter[$letterContentStep11 - 2] . $startRow)->applyFromArray($styleBorderAll);
 
             // reset to default
             $startRow = 5;
@@ -433,11 +427,15 @@ class LaporanpenjualanController extends Controller {
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         ini_set('memory_limit', '2048M');
 
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $reportingComponets = new ReportingComponents();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
+        $objPHPExcel->getProperties()->setCreator("BloomingTech")
                 ->setLastModifiedBy("Apri Pebriana")
                 ->setTitle("REKAP HARIAN " . date('d-m-Y'))
                 ->setSubject("Laporan Penjualan")
@@ -542,7 +540,7 @@ class LaporanpenjualanController extends Controller {
 
         $arrayLetter = array();
         for ($letter = 'E'; $letter !== 'ZZZ'; $letter++) {
-            $arrayLetterarray() = $letter;
+            $arrayLetter[] = $letter;
         }
 
         if ($type == 'ban') {
@@ -592,33 +590,25 @@ class LaporanpenjualanController extends Controller {
         $letterStep11 = 0;
         foreach ($branchs as $key => $branch) {
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue($arrayLetterarray($letterStep11) . '3', $branch->name);
+                    ->setCellValue($arrayLetter[$letterStep11] . '3', $branch->name);
             for ($i = 1; $i <= 32; $i++) {
 
                 if ($i == 32) {
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($letterStep11) . '3', 'Total');
-                    $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11))->setWidth(5);
-                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11) . '3:' . $arrayLetterarray($letterStep11) . '4');
+                            ->setCellValue($arrayLetter[$letterStep11] . '3', 'Total');
+                    $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11])->setWidth(5);
+                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11] . '3:' . $arrayLetter[$letterStep11] . '4');
                 } else {
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($letterStep11) . '4', $i);
-                    $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11))->setWidth(3);
+                            ->setCellValue($arrayLetter[$letterStep11]. '4', $i);
+                    $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11])->setWidth(3);
                 }
 
                 $letterStep11 = $letterStep11 + 1;
             }
-            // $letterStep11 = $letterStep11 +31;
-            // $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($mergestart).'3:'.$arrayLetterarray($letterStep11 - 3).'3');
-            // var_dump($arrayLetterarray($mergestart).'3:'.$arrayLetterarray($letterStep11).'3'); die();
-            // $mergestart = $mergestart + $letterStep11;
+            
         }
 
-
-        // $letterStep11 = $letterStep11+31;
-        // end header loop//
-        // var_dump($brandname); die();
-        //	prepare for row content 
         $startRow = 5;
         foreach ($brandname as $key => $value) {
             /// start row values/
@@ -638,9 +628,6 @@ class LaporanpenjualanController extends Controller {
 
                 $letterStep1 = 0;
                 foreach ($branchs as $key => $branch) {
-                    // $objPHPExcel->setActiveSheetIndex(0)
-                    // ->setCellValue($arrayLetterarray($letterStep1).$startRow, $branch->name);
-
                     for ($i = 1; $i <= 32; $i++) {
                         $tgl = date("m", strtotime($tanggal));
                         $querytgl = date("Y-m-", strtotime($tanggal)) . $i;
@@ -648,28 +635,27 @@ class LaporanpenjualanController extends Controller {
                         if (date("d", strtotime($tanggal)) < $i) {
                             if ($i == 32) {
                                 $objPHPExcel->setActiveSheetIndex(0)
-                                        ->setCellValue($arrayLetterarray($letterStep1) . $startRow, '=SUM(' . $arrayLetterarray($letterStep1 - 31) . $startRow . ':' . $arrayLetterarray($letterStep1 - 1) . $startRow . ')');
+                                        ->setCellValue($arrayLetter[$letterStep1] . $startRow, '=SUM(' . $arrayLetter[$letterStep1 - 31] . $startRow . ':' . $arrayLetter[$letterStep1 - 1] . $startRow . ')');
                             } else {
                                 $objPHPExcel->setActiveSheetIndex(0)
-                                        ->setCellValue($arrayLetterarray($letterStep1) . $startRow, '');
+                                        ->setCellValue($arrayLetter[$letterStep1] . $startRow, '');
                             }
                         } else {
                             if ($i == 32) {
                                 $objPHPExcel->setActiveSheetIndex(0)
-                                        ->setCellValue($arrayLetterarray($letterStep1) . $startRow, '=SUM(' . $arrayLetterarray($letterStep1 - 31) . $startRow . ':' . $arrayLetterarray($letterStep1 - 1) . $startRow . ')');
+                                        ->setCellValue($arrayLetter[$letterStep1] . $startRow, '=SUM(' . $arrayLetter[$letterStep1 - 31] . $startRow . ':' . $arrayLetter[$letterStep1 - 1] . $startRow . ')');
                             } else {
                                 $objPHPExcel->setActiveSheetIndex(0)
-                                        ->setCellValue($arrayLetterarray($letterStep1) . $startRow, $this->getRekapHarian($querytgl, $branch->id, $product->id));
+                                        ->setCellValue($arrayLetter[$letterStep1] . $startRow, $this->getRekapHarian($querytgl, $branch->id, $product->id));
                             }
                         }
-                        // $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep1))->setWidth(3);
+                        // $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep1))->setWidth(3);
                         $letterStep1 = $letterStep1 + 1;
                     }
                 }
                 $nomor ++;
                 $startRow ++;
             }
-
 
             $objPHPExcel->setActiveSheetIndex(0)
                     ->setCellValue('A' . $startRow, ' ')
@@ -685,8 +671,8 @@ class LaporanpenjualanController extends Controller {
 
             $startRow++;
         }
-        $sheet->getStyle('A3:' . $arrayLetterarray(0) . $startRow)->applyFromArray($styleFontSize);
-        $sheet->getStyle('A3:' . $arrayLetterarray(0) . $startRow)->applyFromArray($styleBorderAll);
+        $sheet->getStyle('A3:' . $arrayLetter[0] . $startRow)->applyFromArray($styleFontSize);
+        $sheet->getStyle('A3:' . $arrayLetter[0] . $startRow)->applyFromArray($styleBorderAll);
         // end header loop//
         // end row content
         // Rename worksheet
@@ -712,11 +698,18 @@ class LaporanpenjualanController extends Controller {
 
     public function getXlsBulanan($bulan, $type) {
 
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('memory_limit', '2048M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $reportingComponets = new ReportingComponents();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
+        $objPHPExcel->getProperties()->setCreator("BloomingTech")
                 ->setLastModifiedBy("Apri Pebriana")
                 ->setTitle("Laporan Penjualan " . date('d-m-Y'))
                 ->setSubject("Laporan Penjualan")
@@ -819,7 +812,6 @@ class LaporanpenjualanController extends Controller {
         );
         // end style
 
-
         if ($type == 'ban') {
             $brandname = Brand::model()->findAllByAttributes(array('id' => $reportingComponets->getListBrandTire())); //Brand::model()->findAllByAttributes(array('brand_id'=>''));
             $branch = Branch::model()->findAll();
@@ -830,24 +822,19 @@ class LaporanpenjualanController extends Controller {
             $jumlah_branch = count($branch);
         }
 
-
-
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('B1', 'REKAP JUAL PER CABANG ' . strtoupper(date("F", strtotime($bulan))));
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B1:N1');
-        // $objPHPExcel->setActiveSheetIndex(0)
-        //     ->setCellValue('A2', 'STOK '.strtoupper($type).date(' d F Y'));
-
+        
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle('B1:AZ1')->applyFromArray($styleHorizontalVertivalCenterBold);
         $objPHPExcel->getActiveSheet()->freezePane('D5');
 
         $arrayLetter = array();
         for ($letter = 'A'; $letter !== 'ZZ'; $letter++) {
-            $arrayLetterarray() = $letter;
+            $arrayLetter[] = $letter;
         }
-
 
         // $objPHPExcel->getActiveSheet()->getColumnDimension('A3')->setHeight(20);
         $objPHPExcel->getActiveSheet()->getRowDimension(3)->setRowHeight(25);
@@ -857,88 +844,82 @@ class LaporanpenjualanController extends Controller {
         $letterStep11 = 0;
         foreach ($brandname as $key => $value) {
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue($arrayLetterarray($letterStep11) . '3', 'NO')
-                    ->setCellValue($arrayLetterarray($letterStep11 + 1) . '3', 'TYPE ' . strtoupper($type))
-                    ->setCellValue($arrayLetterarray($letterStep11 + 2) . '3', 'KODE')
-                    ->setCellValue($arrayLetterarray($letterStep11 + 1) . '4', $value->name)
-                    ->setCellValue($arrayLetterarray($letterStep11 + 3) . '3', ' ');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11 + 1) . '4:' . $arrayLetterarray($letterStep11 + 2) . '4');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11) . '3:' . $arrayLetterarray($letterStep11) . '4');
+                    ->setCellValue($arrayLetter[$letterStep11] . '3', 'NO')
+                    ->setCellValue($arrayLetter[$letterStep11 + 1] . '3', 'TYPE ' . strtoupper($type))
+                    ->setCellValue($arrayLetter[$letterStep11 + 2] . '3', 'KODE')
+                    ->setCellValue($arrayLetter[$letterStep11 + 1] . '4', $value->name)
+                    ->setCellValue($arrayLetter[$letterStep11 + 3] . '3', ' ');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11 + 1] . '4:' . $arrayLetter[$letterStep11 + 2] . '4');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11] . '3:' . $arrayLetter[$letterStep11]. '4');
 
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11))->setWidth(5);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 1))->setWidth(15);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 2))->setWidth(15);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 3))->setWidth(2);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11])->setWidth(5);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 1])->setWidth(15);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 2])->setWidth(15);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 3])->setWidth(2);
 
-            $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleHorizontalVertivalCenter);
+            $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleHorizontalVertivalCenter);
 
             $starbranchheading = $letterStep11 + 4;
             foreach ($branch as $key => $bcan) {
 
                 $objPHPExcel->setActiveSheetIndex(0)
-                        // ->setCellValue($arrayLetterarray($starbranchheading).'3', $bulan)
-                        ->setCellValue($arrayLetterarray($starbranchheading) . '4', $bcan->name);
-                $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($starbranchheading))->setWidth(3);
-                $objPHPExcel->getActiveSheet()->getStyle($arrayLetterarray($starbranchheading) . '4')->getAlignment()->setTextRotation(90);
+                        // ->setCellValue($arrayLetter[$starbranchheading).'3', $bulan)
+                        ->setCellValue($arrayLetter[$starbranchheading] . '4', $bcan->name);
+                $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$starbranchheading])->setWidth(3);
+                $objPHPExcel->getActiveSheet()->getStyle($arrayLetter[$starbranchheading]. '4')->getAlignment()->setTextRotation(90);
 
-                // $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($starbranchheading).'3:'.$arrayLetterarray($starbranchheading).'4');
+                // $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$starbranchheading).'3:'.$arrayLetter[$starbranchheading).'4');
 
                 $starbranchheading++;
             }
 
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue($arrayLetterarray($letterStep11 + 4) . '3', strtoupper(date("F", strtotime($bulan))))
-                    ->setCellValue($arrayLetterarray($letterStep11 + $jumlah_branch + 4) . '3', 'Total')
-                    ->setCellValue($arrayLetterarray($letterStep11 + $jumlah_branch + 5) . '3', ' ');
+                    ->setCellValue($arrayLetter[$letterStep11 + 4] . '3', strtoupper(date("F", strtotime($bulan))))
+                    ->setCellValue($arrayLetter[$letterStep11 + $jumlah_branch + 4] . '3', 'Total')
+                    ->setCellValue($arrayLetter[$letterStep11 + $jumlah_branch + 5] . '3', ' ');
 
-            $sheet->getStyle($arrayLetterarray($letterStep11 + $jumlah_branch + 5) . '3' . ':' . $arrayLetterarray($letterStep11 + $jumlah_branch + 5) . '5')->applyFromArray($styleBGColorGray);
+            $sheet->getStyle($arrayLetter[$letterStep11 + $jumlah_branch + 5] . '3' . ':' . $arrayLetter[$letterStep11 + $jumlah_branch + 5] . '5')->applyFromArray($styleBGColorGray);
 
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11 + 4) . '3:' . $arrayLetterarray($letterStep11 + $jumlah_branch + 3) . '3');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11 + $jumlah_branch + 4) . '3:' . $arrayLetterarray($letterStep11 + $jumlah_branch + 4) . '4');
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + $jumlah_branch + 4))->setWidth(10);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + $jumlah_branch + 5))->setWidth(2);
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11 + 4] . '3:' . $arrayLetter[$letterStep11 + $jumlah_branch + 3] . '3');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11 + $jumlah_branch + 4] . '3:' . $arrayLetter[$letterStep11 + $jumlah_branch + 4] . '4');
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + $jumlah_branch + 4])->setWidth(10);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + $jumlah_branch + 5])->setWidth(2);
 
 
             $letterStep11 = $letterStep11 + $jumlah_branch + 6;
         }
         // end header loop//
 
-        $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleFontSize);
-        $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleBorderAll);
-
-
+        $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleFontSize);
+        $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleBorderAll);
 
         // for content loop
         $letterContentStep11 = 0;
         $startRow = 5;
         foreach ($brandname as $key => $value) {
             $products = Product::model()->findAllByAttributes(array('brand_id' => $value->id)); //product sub category
-            // var_dump(count($product)); die();
-            // for ($nomor=1; $nomor < count($product); $nomor++) { 
             $nomor = 1;
             foreach ($products as $key => $product) {
                 # code...
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11) . $startRow, $nomor)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 1) . $startRow, empty($product->subBrandSeries) ? '' : $product->subBrandSeries->name)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 2) . $startRow, $product->manufacturer_code)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 3) . $startRow, '');
+                        ->setCellValue($arrayLetter[$letterContentStep11] . $startRow, $nomor)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 1] . $startRow, empty($product->subBrandSeries) ? '' : $product->subBrandSeries->name)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 2] . $startRow, $product->manufacturer_code)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 3] . $startRow, '');
 
                 $starbranchContent = $letterContentStep11 + 4;
                 foreach ($branch as $key => $bcan) {
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($starbranchContent) . $startRow, $this->getRekapBulanan($bulan, $product->id, $bcan->id));
+                            ->setCellValue($arrayLetter[$starbranchContent] . $startRow, $this->getRekapBulanan($bulan, $product->id, $bcan->id));
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . $startRow, '=SUM(' . $arrayLetterarray($letterContentStep11 + 4) . $startRow . ':' . $arrayLetterarray($starbranchContent) . $startRow . ')')
-                            ->setCellValue($arrayLetterarray($letterContentStep11 + $jumlah_branch + 5) . $startRow, ' ');
+                            ->setCellValue($arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . $startRow, '=SUM(' . $arrayLetter[$letterContentStep11 + 4] . $startRow . ':' . $arrayLetter[$starbranchContent] . $startRow . ')')
+                            ->setCellValue($arrayLetter[$letterContentStep11 + $jumlah_branch + 5]. $startRow, ' ');
 
-                    $sheet->getStyle($arrayLetterarray($letterContentStep11 + $jumlah_branch + 5) . ($startRow + 1))->applyFromArray($styleBGColorGray);
+                    $sheet->getStyle($arrayLetter[$letterContentStep11 + $jumlah_branch + 5] . ($startRow + 1))->applyFromArray($styleBGColorGray);
 
                     $starbranchContent++;
                 }
-                // if ($startRow % 2 ) {
-                // 	$sheet->getStyle('A'.$startRow.':X'.$startRow)->applyFromArray($styleBgColorGanjil);
-                // }
+                
                 $nomor ++;
                 $startRow ++;
             }
@@ -946,27 +927,25 @@ class LaporanpenjualanController extends Controller {
             if (count($products) > 0) {
                 // set total
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 1) . $startRow, 'Total ' . $value->name)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 3) . $startRow, '');
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterContentStep11 + 1) . $startRow . ':' . $arrayLetterarray($letterContentStep11 + 2) . $startRow);
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 1] . $startRow, 'Total ' . $value->name)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 3] . $startRow, '');
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterContentStep11 + 1] . $startRow . ':' . $arrayLetter[$letterContentStep11 + 2] . $startRow);
                 // total branch
                 $totalstarbranchContent = $letterContentStep11 + 4;
                 foreach ($branch as $key => $bcan) {
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($totalstarbranchContent) . $startRow, '=SUM(' . $arrayLetterarray($totalstarbranchContent) . '5:' . $arrayLetterarray($totalstarbranchContent) . ($startRow - 1) . ')');
+                            ->setCellValue($arrayLetter[$totalstarbranchContent] . $startRow, '=SUM(' . $arrayLetter[$totalstarbranchContent] . '5:' . $arrayLetter[$totalstarbranchContent] . ($startRow - 1) . ')');
                     $totalstarbranchContent ++;
                 }
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . $startRow, '=SUM(' . $arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . '5:' . $arrayLetterarray($letterContentStep11 + $jumlah_branch + 4) . ($startRow - 1) . ')');
+                        ->setCellValue($arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . $startRow, '=SUM(' . $arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . '5:' . $arrayLetter[$letterContentStep11 + $jumlah_branch + 4] . ($startRow - 1) . ')');
             }
 
             //style the content//
             //jump to next branch
             $letterContentStep11 = $letterContentStep11 + $jumlah_branch + 6;
-            $sheet->getStyle('A5:' . $arrayLetterarray($letterContentStep11 - 2) . $startRow)->applyFromArray($styleFontSize);
-            $sheet->getStyle('A5:' . $arrayLetterarray($letterContentStep11 - 2) . $startRow)->applyFromArray($styleBorderAll);
-
-
+            $sheet->getStyle('A5:' . $arrayLetter[$letterContentStep11 - 2] . $startRow)->applyFromArray($styleFontSize);
+            $sheet->getStyle('A5:' . $arrayLetter[$letterContentStep11 - 2] . $startRow)->applyFromArray($styleBorderAll);
 
             // reset to default
             $startRow = 5;
@@ -997,6 +976,13 @@ class LaporanpenjualanController extends Controller {
 
     public function getXlsTahunan($tahun, $type) {
 
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        ini_set('memory_limit', '2048M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         if ($tahun == '') {
             $tahun = date("Y");
         } else {
@@ -1007,7 +993,7 @@ class LaporanpenjualanController extends Controller {
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
+        $objPHPExcel->getProperties()->setCreator("BloomingTech")
                 ->setLastModifiedBy("Apri Pebriana")
                 ->setTitle("Laporan Penjualan " . date('d-m-Y'))
                 ->setSubject("Laporan Penjualan")
@@ -1116,7 +1102,6 @@ class LaporanpenjualanController extends Controller {
         );
         // end style
 
-
         if ($type == 'ban') {
             $brandname = Brand::model()->findAllByAttributes(array('id' => $reportingComponets->getListBrandTire())); //Brand::model()->findAllByAttributes(array('brand_id'=>''));
             $branch = Branch::model()->findAll();
@@ -1127,14 +1112,10 @@ class LaporanpenjualanController extends Controller {
             $jumlah_branch = count($branch);
         }
 
-
-
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('B1', 'REKAP JUALAN GABUNGAN ' . strtoupper($tahun));
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B1:N1');
-        // $objPHPExcel->setActiveSheetIndex(0)
-        //     ->setCellValue('A2', 'STOK '.strtoupper($type).date(' d F Y'));
 
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle('B1:AZ1')->applyFromArray($styleHorizontalVertivalCenterBold);
@@ -1142,9 +1123,8 @@ class LaporanpenjualanController extends Controller {
 
         $arrayLetter = array();
         for ($letter = 'A'; $letter !== 'ZZ'; $letter++) {
-            $arrayLetterarray() = $letter;
+            $arrayLetter[] = $letter;
         }
-
 
         // $objPHPExcel->getActiveSheet()->getColumnDimension('A3')->setHeight(20);
         $objPHPExcel->getActiveSheet()->getRowDimension(3)->setRowHeight(25);
@@ -1154,20 +1134,20 @@ class LaporanpenjualanController extends Controller {
         $letterStep11 = 0;
         foreach ($brandname as $key => $value) {
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue($arrayLetterarray($letterStep11) . '3', 'NO')
-                    ->setCellValue($arrayLetterarray($letterStep11 + 1) . '3', 'TYPE ' . strtoupper($type))
-                    ->setCellValue($arrayLetterarray($letterStep11 + 2) . '3', 'KODE')
-                    ->setCellValue($arrayLetterarray($letterStep11 + 1) . '4', $value->name)
-                    ->setCellValue($arrayLetterarray($letterStep11 + 3) . '3', ' ');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11 + 1) . '4:' . $arrayLetterarray($letterStep11 + 2) . '4');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11) . '3:' . $arrayLetterarray($letterStep11) . '4');
+                    ->setCellValue($arrayLetter[$letterStep11] . '3', 'NO')
+                    ->setCellValue($arrayLetter[$letterStep11 + 1] . '3', 'TYPE ' . strtoupper($type))
+                    ->setCellValue($arrayLetter[$letterStep11 + 2] . '3', 'KODE')
+                    ->setCellValue($arrayLetter[$letterStep11 + 1] . '4', $value->name)
+                    ->setCellValue($arrayLetter[$letterStep11 + 3] . '3', ' ');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11 + 1] . '4:' . $arrayLetter[$letterStep11 + 2] . '4');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11] . '3:' . $arrayLetter[$letterStep11] . '4');
 
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11))->setWidth(5);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 1))->setWidth(15);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 2))->setWidth(15);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($letterStep11 + 3))->setWidth(2);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11])->setWidth(5);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 1])->setWidth(15);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 2])->setWidth(15);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$letterStep11 + 3])->setWidth(2);
 
-            $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleHorizontalVertivalBottom);
+            $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleHorizontalVertivalBottom);
 
             $starbranchheading = $letterStep11 + 4;
 
@@ -1175,38 +1155,31 @@ class LaporanpenjualanController extends Controller {
                 $tgl = $tahun . '-' . sprintf("%02d", $i) . '-01';
                 // var_dump($tgl); 
                 $objPHPExcel->setActiveSheetIndex(0)
-                        // ->setCellValue($arrayLetterarray($starbranchheading).'3', $bulan)
-                        ->setCellValue($arrayLetterarray($starbranchheading) . '4', strtoupper(date("M", strtotime($tgl))));
-                $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($starbranchheading))->setWidth(3);
-                $objPHPExcel->getActiveSheet()->getStyle($arrayLetterarray($starbranchheading) . '4')->getAlignment()->setTextRotation(90);
-
-                // $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($starbranchheading).'3:'.$arrayLetterarray($starbranchheading).'4');
+                        // ->setCellValue($arrayLetter[$starbranchheading).'3', $bulan)
+                        ->setCellValue($arrayLetter[$starbranchheading] . '4', strtoupper(date("M", strtotime($tgl))));
+                $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$starbranchheading])->setWidth(3);
+                $objPHPExcel->getActiveSheet()->getStyle($arrayLetter[$starbranchheading] . '4')->getAlignment()->setTextRotation(90);
 
                 $starbranchheading++;
             }
 
             // die();
             $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue($arrayLetterarray($letterStep11 + 4) . '3', strtoupper('Penjualan Tahun ' . $tahun))
-                    ->setCellValue($arrayLetterarray($starbranchheading) . '3', 'Total')
-                    ->setCellValue($arrayLetterarray($starbranchheading + 1) . '3', ' ');
+                    ->setCellValue($arrayLetter[$letterStep11 + 4] . '3', strtoupper('Penjualan Tahun ' . $tahun))
+                    ->setCellValue($arrayLetter[$starbranchheading] . '3', 'Total')
+                    ->setCellValue($arrayLetter[$starbranchheading + 1] . '3', ' ');
 
-            // $sheet->getStyle($arrayLetterarray($letterStep11 + 5).'3'.':'.$arrayLetterarray($letterStep11 + 5).'5')->applyFromArray($styleBGColorGray);
-
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterStep11 + 4) . '3:' . $arrayLetterarray($starbranchheading - 1) . '3');
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($starbranchheading) . '3:' . $arrayLetterarray($starbranchheading) . '4');
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($starbranchheading))->setWidth(10);
-            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetterarray($starbranchheading + 1))->setWidth(2);
-
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterStep11 + 4] . '3:' . $arrayLetter[$starbranchheading - 1] . '3');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$starbranchheading] . '3:' . $arrayLetter[$starbranchheading]. '4');
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$starbranchheading])->setWidth(10);
+            $objPHPExcel->getActiveSheet()->getColumnDimension($arrayLetter[$starbranchheading + 1])->setWidth(2);
 
             $letterStep11 = $letterStep11 + 18;
         }
         // end header loop//
 
-        $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleFontSize);
-        $sheet->getStyle('A3:' . $arrayLetterarray($letterStep11) . '4')->applyFromArray($styleBorderAll);
-
-
+        $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleFontSize);
+        $sheet->getStyle('A3:' . $arrayLetter[$letterStep11] . '4')->applyFromArray($styleBorderAll);
 
         // for content loop
         $letterContentStep11 = 0;
@@ -1219,25 +1192,25 @@ class LaporanpenjualanController extends Controller {
             foreach ($products as $key => $product) {
                 # code...
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11) . $startRow, $nomor)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 1) . $startRow, (empty($product->subBrandSeries) ? '' : $product->subBrandSeries->name))
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 2) . $startRow, $product->manufacturer_code)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 3) . $startRow, '');
+                        ->setCellValue($arrayLetter[$letterContentStep11] . $startRow, $nomor)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 1] . $startRow, (empty($product->subBrandSeries) ? '' : $product->subBrandSeries->name))
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 2] . $startRow, $product->manufacturer_code)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 3]. $startRow, '');
 
                 $starbranchContent = $letterContentStep11 + 4;
                 for ($i = 1; $i <= 12; $i++) {
                     // foreach (range(1, 12) as $month)
                     $tgl = $tahun . '-' . sprintf('%02d', $i) . '-01';
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($starbranchContent) . $startRow, $this->getRekapTahunan($tgl, $product->id));
+                            ->setCellValue($arrayLetter[$starbranchContent] . $startRow, $this->getRekapTahunan($tgl, $product->id));
 
                     $starbranchContent++;
                 }
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($starbranchContent) . $startRow, '=SUM(' . $arrayLetterarray($letterContentStep11 + 4) . $startRow . ':' . $arrayLetterarray($starbranchContent - 1) . $startRow . ')')
-                        ->setCellValue($arrayLetterarray($starbranchContent + 1) . $startRow, ' ');
+                        ->setCellValue($arrayLetter[$starbranchContent] . $startRow, '=SUM(' . $arrayLetter[$letterContentStep11 + 4] . $startRow . ':' . $arrayLetter[$starbranchContent - 1] . $startRow . ')')
+                        ->setCellValue($arrayLetter[$starbranchContent + 1] . $startRow, ' ');
 
-                $sheet->getStyle($arrayLetterarray($starbranchContent + 1) . ($startRow - 2))->applyFromArray($styleBGColorGray);
+                $sheet->getStyle($arrayLetter[$starbranchContent + 1] . ($startRow - 2))->applyFromArray($styleBGColorGray);
                 // if ($startRow % 2 ) {
                 // 	$sheet->getStyle('A'.$startRow.':X'.$startRow)->applyFromArray($styleBgColorGanjil);
                 // }
@@ -1248,27 +1221,25 @@ class LaporanpenjualanController extends Controller {
             if (count($products) > 0) {
                 // set total
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 1) . $startRow, 'Total ' . $value->name)
-                        ->setCellValue($arrayLetterarray($letterContentStep11 + 3) . $startRow, '');
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetterarray($letterContentStep11 + 1) . $startRow . ':' . $arrayLetterarray($letterContentStep11 + 2) . $startRow);
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 1] . $startRow, 'Total ' . $value->name)
+                        ->setCellValue($arrayLetter[$letterContentStep11 + 3]. $startRow, '');
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells($arrayLetter[$letterContentStep11 + 1]. $startRow . ':' . $arrayLetter[$letterContentStep11 + 2] . $startRow);
                 // total branch
                 $totalstarbranchContent = $letterContentStep11 + 4;
                 for ($i = 1; $i <= 12; $i++) {
                     $objPHPExcel->setActiveSheetIndex(0)
-                            ->setCellValue($arrayLetterarray($totalstarbranchContent) . $startRow, '=SUM(' . $arrayLetterarray($totalstarbranchContent) . '5:' . $arrayLetterarray($totalstarbranchContent) . ($startRow - 1) . ')');
+                            ->setCellValue($arrayLetter[$totalstarbranchContent] . $startRow, '=SUM(' . $arrayLetter[$totalstarbranchContent] . '5:' . $arrayLetter[$totalstarbranchContent] . ($startRow - 1) . ')');
                     $totalstarbranchContent ++;
                 }
                 $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($arrayLetterarray($totalstarbranchContent) . $startRow, '=SUM(' . $arrayLetterarray($totalstarbranchContent) . '5:' . $arrayLetterarray($totalstarbranchContent) . ($startRow - 1) . ')');
+                        ->setCellValue($arrayLetter[$totalstarbranchContent] . $startRow, '=SUM(' . $arrayLetter[$totalstarbranchContent]. '5:' . $arrayLetter[$totalstarbranchContent] . ($startRow - 1) . ')');
             }
 
             //style the content//
             //jump to next branch
             $letterContentStep11 = $letterContentStep11 + 18;
-            $sheet->getStyle('A5:' . $arrayLetterarray($letterContentStep11 - 2) . $startRow)->applyFromArray($styleFontSize);
-            $sheet->getStyle('A5:' . $arrayLetterarray($letterContentStep11 - 2) . $startRow)->applyFromArray($styleBorderAll);
-
-
+            $sheet->getStyle('A5:' . $arrayLetter[$letterContentStep11 - 2] . $startRow)->applyFromArray($styleFontSize);
+            $sheet->getStyle('A5:' . $arrayLetter[$letterContentStep11 - 2] . $startRow)->applyFromArray($styleBorderAll);
 
             // reset to default
             $startRow = 5;
@@ -1317,7 +1288,6 @@ class LaporanpenjualanController extends Controller {
     }
 
     public function getStockDate($productid, $branchid, $tanggal) {
-        // return 999;
         $getWarehouse = Warehouse::model()->findAllByAttributes(array("branch_id" => $branchid));
         if ($getWarehouse == NULL) {
             $totalstok = 0;
@@ -1369,13 +1339,11 @@ class LaporanpenjualanController extends Controller {
     }
 
     public function getRekapBulanan($bulan, $branch = 1, $product = 1) {
-        // $salesorder = TransactionSalesOrder::model()->findAllByAttributes(array('sale_order_date')=>$tgl);
 
         $totalPenjualan = 0;
         $criteria = new CDbCriteria();
         $criteria->with = array('transactionSalesOrderDetails');
         $criteria->compare('t.requester_branch_id', $branch, true);
-        // $criteria->compare('t.sale_order_date', $tgl, true);
         $criteria->addBetweenCondition('t.sale_order_date', date("Y-m-01", strtotime($bulan)), date("Y-m-t", strtotime($bulan)));
 
         $criteria->compare('transactionSalesOrderDetails.product_id', $product, true);
@@ -1390,7 +1358,6 @@ class LaporanpenjualanController extends Controller {
         } else {
             return '';
         }
-        // return 0;
     }
 
     public function getRekapTahunan($tahun, $product) {
@@ -1399,7 +1366,6 @@ class LaporanpenjualanController extends Controller {
         $totalPenjualan = 0;
         $criteria = new CDbCriteria();
         $criteria->with = array('transactionSalesOrderDetails');
-        // $criteria->compare('t.requester_branch_id', $branch, true);
         $criteria->addBetweenCondition('t.sale_order_date', date("Y-m-01", strtotime($tahun)), date("Y-m-t", strtotime($tahun)));
 
         $criteria->compare('transactionSalesOrderDetails.product_id', $product, true);
@@ -1415,5 +1381,4 @@ class LaporanpenjualanController extends Controller {
             return '';
         }
     }
-
 }

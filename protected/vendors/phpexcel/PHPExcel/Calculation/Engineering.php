@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2014 PHPExcel
+ * Copyright (c) 2006 - 2012 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category	PHPExcel
  * @package		PHPExcel_Calculation
- * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright	Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license		http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version		1.8.0, 2014-03-02
+ * @version		1.7.7, 2012-05-19
  */
 
 
@@ -45,7 +45,7 @@ define('EULER', 2.71828182845904523536);
  *
  * @category	PHPExcel
  * @package		PHPExcel_Calculation
- * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright	Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Calculation_Engineering {
 
@@ -741,6 +741,8 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
+	 * _cleanComplex
+	 *
 	 * Cleans the leading characters in a complex number string
 	 *
 	 * @param	string		$complexNumber	The complex number to clean
@@ -754,43 +756,39 @@ class PHPExcel_Calculation_Engineering {
 		return $complexNumber;
 	}
 
-	/**
-	 * Formats a number base string value with leading zeroes
-	 *
-	 * @param	string		$xVal		The "number" to pad
-	 * @param	integer		$places		The length that we want to pad this value
-	 * @return	string		The padded "number"
-	 */
-	private static function _nbrConversionFormat($xVal, $places) {
+
+	private static function _nbrConversionFormat($xVal,$places) {
 		if (!is_null($places)) {
 			if (strlen($xVal) <= $places) {
-				return substr(str_pad($xVal, $places, '0', STR_PAD_LEFT), -10);
+				return substr(str_pad($xVal,$places,'0',STR_PAD_LEFT),-10);
 			} else {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
 		}
 
-		return substr($xVal, -10);
+		return substr($xVal,-10);
 	}	//	function _nbrConversionFormat()
 
+
 	/**
-	 *	BESSELI
+	 * BESSELI
 	 *
-	 *	Returns the modified Bessel function In(x), which is equivalent to the Bessel function evaluated
-	 *		for purely imaginary arguments
+	 * Returns the modified Bessel function, which is equivalent to the Bessel function evaluated for
+	 * purely imaginary arguments
 	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		BESSELI(x,ord)
 	 *
-	 *	@access	public
-	 *	@category Engineering Functions
-	 *	@param	float		$x		The value at which to evaluate the function.
+	 * @access	public
+	 * @category Engineering Functions
+	 * @param	float		$x		The value at which to evaluate the function.
 	 *								If x is nonnumeric, BESSELI returns the #VALUE! error value.
-	 *	@param	integer		$ord	The order of the Bessel function.
-	 *								If ord is not an integer, it is truncated.
+	 * @param	integer		$ord	The order of the Bessel function. If n is not an integer, it is truncated.
 	 *								If $ord is nonnumeric, BESSELI returns the #VALUE! error value.
 	 *								If $ord < 0, BESSELI returns the #NUM! error value.
-	 *	@return	float
+	 * @return	float
+	 *
+	 * @TODO Better handling of the approximation method to support the differences between Excel/Gnumeric and Open/Libre Office
 	 *
 	 */
 	public static function BESSELI($x, $ord) {
@@ -828,21 +826,23 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	BESSELJ
+	 * BESSELJ
 	 *
-	 *	Returns the Bessel function
+	 * Returns the Bessel function
 	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		BESSELJ(x,ord)
 	 *
-	 *	@access	public
-	 *	@category Engineering Functions
-	 *	@param	float		$x		The value at which to evaluate the function.
+	 * @access	public
+	 * @category Engineering Functions
+	 * @param	float		$x		The value at which to evaluate the function.
 	 *								If x is nonnumeric, BESSELJ returns the #VALUE! error value.
-	 *	@param	integer		$ord	The order of the Bessel function. If n is not an integer, it is truncated.
+	 * @param	integer		$ord	The order of the Bessel function. If n is not an integer, it is truncated.
 	 *								If $ord is nonnumeric, BESSELJ returns the #VALUE! error value.
 	 *								If $ord < 0, BESSELJ returns the #NUM! error value.
-	 *	@return	float
+	 * @return	float
+	 *
+	 * @TODO Better handling of the approximation method to support the differences between Excel/Gnumeric and Open/Libre Office
 	 *
 	 */
 	public static function BESSELJ($x, $ord) {
@@ -916,22 +916,24 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	BESSELK
+	 * BESSELK
 	 *
-	 *	Returns the modified Bessel function Kn(x), which is equivalent to the Bessel functions evaluated
-	 *		for purely imaginary arguments.
+	 * Returns the modified Bessel function, which is equivalent to the Bessel functions evaluated
+	 * for purely imaginary arguments.
 	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		BESSELK(x,ord)
 	 *
-	 *	@access	public
-	 *	@category Engineering Functions
-	 *	@param	float		$x		The value at which to evaluate the function.
+	 * @access	public
+	 * @category Engineering Functions
+	 * @param	float		$x		The value at which to evaluate the function.
 	 *								If x is nonnumeric, BESSELK returns the #VALUE! error value.
-	 *	@param	integer		$ord	The order of the Bessel function. If n is not an integer, it is truncated.
+	 * @param	integer		$ord	The order of the Bessel function. If n is not an integer, it is truncated.
 	 *								If $ord is nonnumeric, BESSELK returns the #VALUE! error value.
 	 *								If $ord < 0, BESSELK returns the #NUM! error value.
-	 *	@return	float
+	 * @return	float
+	 *
+	 * @TODO Better handling of the approximation method to support the differences between Excel/Gnumeric and Open/Libre Office
 	 *
 	 */
 	public static function BESSELK($x, $ord) {
@@ -990,6 +992,13 @@ class PHPExcel_Calculation_Engineering {
 				(0.1020426050e6 + $y * (0.3549632885e3 + $y)))));
 			$fRet = $f1 / $f2 + 0.636619772 * ( self::BESSELJ($fNum, 1) * log($fNum) - 1 / $fNum);
 		} else {
+//			$z = 8.0 / $fNum;
+//			$y = ($z * $z);
+//			$xx = $fNum - 2.356194491;
+//			$f1 = 1 + $y * (0.183105e-2 + $y * (-0.3516396496e-4 + $y * (0.2457520174e-5 + $y * (-0.240337019e6))));
+//			$f2 = 0.04687499995 + $y * (-0.2002690873e-3 + $y * (0.8449199096e-5 + $y * (-0.88228987e-6 + $y * 0.105787412e-6)));
+//			$fRet = sqrt(0.636619772 / $fNum) * (sin($xx) * $f1 + $z * cos($xx) * $f2);
+			#i12430# ...but this seems to work much better.
 			$fRet = sqrt(0.636619772 / $fNum) * sin($fNum - 2.356194491);
 		}
 		return $fRet;
@@ -997,22 +1006,24 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	BESSELY
+	 * BESSELY
 	 *
-	 *	Returns the Bessel function, which is also called the Weber function or the Neumann function.
+	 * Returns the Bessel function, which is also called the Weber function or the Neumann function.
 	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		BESSELY(x,ord)
 	 *
-	 *	@access	public
-	 *	@category Engineering Functions
-	 *	@param	float		$x		The value at which to evaluate the function.
+	 * @access	public
+	 * @category Engineering Functions
+	 * @param	float		$x		The value at which to evaluate the function.
 	 *								If x is nonnumeric, BESSELK returns the #VALUE! error value.
-	 *	@param	integer		$ord	The order of the Bessel function. If n is not an integer, it is truncated.
+	 * @param	integer		$ord	The order of the Bessel function. If n is not an integer, it is truncated.
 	 *								If $ord is nonnumeric, BESSELK returns the #VALUE! error value.
 	 *								If $ord < 0, BESSELK returns the #NUM! error value.
 	 *
-	 *	@return	float
+	 * @TODO Better handling of the approximation method to support the differences between Excel/Gnumeric and Open/Libre Office
+	 *
+	 * @return	float
 	 */
 	public static function BESSELY($x, $ord) {
 		$x		= (is_null($x))		? 0.0 :	PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1935,7 +1946,7 @@ class PHPExcel_Calculation_Engineering {
 	/**
 	 * IMLOG2
 	 *
-	 * Returns the base-2 logarithm of a complex number in x + yi or x + yj text format.
+	 * Returns the common logarithm (base 10) of a complex number in x + yi or x + yj text format.
 	 *
 	 * Excel Function:
 	 *		IMLOG2(complexNumber)
@@ -2175,19 +2186,19 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	DELTA
+	 * DELTA
 	 *
-	 *	Tests whether two values are equal. Returns 1 if number1 = number2; returns 0 otherwise.
-	 *	Use this function to filter a set of values. For example, by summing several DELTA
-	 *	functions you calculate the count of equal pairs. This function is also known as the
-	 *	Kronecker Delta function.
+	 * Tests whether two values are equal. Returns 1 if number1 = number2; returns 0 otherwise.
+	 * Use this function to filter a set of values. For example, by summing several DELTA
+	 * functions you calculate the count of equal pairs. This function is also known as the
+	 * Kronecker Delta function.
 	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		DELTA(a[,b])
 	 *
-	 *	@param	float		$a	The first number.
-	 *	@param	float		$b	The second number. If omitted, b is assumed to be zero.
-	 *	@return	int
+	 * @param	float		$a	The first number.
+	 * @param	float		$b	The second number. If omitted, b is assumed to be zero.
+	 * @return	int
 	 */
 	public static function DELTA($a, $b=0) {
 		$a	= PHPExcel_Calculation_Functions::flattenSingleValue($a);
@@ -2198,19 +2209,19 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	GESTEP
+	 * GESTEP
 	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		GESTEP(number[,step])
 	 *
-	 *	Returns 1 if number >= step; returns 0 (zero) otherwise
-	 *	Use this function to filter a set of values. For example, by summing several GESTEP
-	 *	functions you calculate the count of values that exceed a threshold.
+	 * Returns 1 if number >= step; returns 0 (zero) otherwise
+	 * Use this function to filter a set of values. For example, by summing several GESTEP
+	 * functions you calculate the count of values that exceed a threshold.
 	 *
-	 *	@param	float		$number		The value to test against step.
-	 *	@param	float		$step		The threshold value.
+	 * @param	float		$number		The value to test against step.
+	 * @param	float		$step		The threshold value.
 	 *									If you omit a value for step, GESTEP uses zero.
-	 *	@return	int
+	 * @return	int
 	 */
 	public static function GESTEP($number, $step=0) {
 		$number	= PHPExcel_Calculation_Functions::flattenSingleValue($number);
@@ -2248,32 +2259,33 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	ERF
+	 * ERF
 	 *
-	 *	Returns the error function integrated between the lower and upper bound arguments.
+	 * Returns the error function integrated between lower_limit and upper_limit
 	 *
-	 *	Note: In Excel 2007 or earlier, if you input a negative value for the upper or lower bound arguments,
-	 *			the function would return a #NUM! error. However, in Excel 2010, the function algorithm was
-	 *			improved, so that it can now calculate the function for both positive and negative ranges.
-	 *			PHPExcel follows Excel 2010 behaviour, and accepts nagative arguments.
-	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		ERF(lower[,upper])
 	 *
-	 *	@param	float		$lower	lower bound for integrating ERF
-	 *	@param	float		$upper	upper bound for integrating ERF.
+	 * @param	float		$lower	lower bound for integrating ERF
+	 * @param	float		$upper	upper bound for integrating ERF.
 	 *								If omitted, ERF integrates between zero and lower_limit
-	 *	@return	float
+	 * @return	int
 	 */
-	public static function ERF($lower, $upper = NULL) {
+	public static function ERF($lower, $upper = null) {
 		$lower	= PHPExcel_Calculation_Functions::flattenSingleValue($lower);
 		$upper	= PHPExcel_Calculation_Functions::flattenSingleValue($upper);
 
 		if (is_numeric($lower)) {
+			if ($lower < 0) {
+				return PHPExcel_Calculation_Functions::NaN();
+			}
 			if (is_null($upper)) {
 				return self::_erfVal($lower);
 			}
 			if (is_numeric($upper)) {
+				if ($upper < 0) {
+					return PHPExcel_Calculation_Functions::NaN();
+				}
 				return self::_erfVal($upper) - self::_erfVal($lower);
 			}
 		}
@@ -2314,25 +2326,23 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	ERFC
+	 * ERFC
 	 *
-	 *	Returns the complementary ERF function integrated between x and infinity
+	 * Returns the complementary ERF function integrated between x and infinity
 	 *
-	 *	Note: In Excel 2007 or earlier, if you input a negative value for the lower bound argument,
-	 *		the function would return a #NUM! error. However, in Excel 2010, the function algorithm was
-	 *		improved, so that it can now calculate the function for both positive and negative x values.
-	 *			PHPExcel follows Excel 2010 behaviour, and accepts nagative arguments.
+	 * Excel Function:
+	 *		ERF(x)
 	 *
-	 *	Excel Function:
-	 *		ERFC(x)
-	 *
-	 *	@param	float	$x	The lower bound for integrating ERFC
-	 *	@return	float
+	 * @param	float		$x		The lower bound for integrating ERF
+	 * @return	int
 	 */
 	public static function ERFC($x) {
-		$x = PHPExcel_Calculation_Functions::flattenSingleValue($x);
+		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
 
 		if (is_numeric($x)) {
+			if ($x < 0) {
+				return PHPExcel_Calculation_Functions::NaN();
+			}
 			return self::_erfcVal($x);
 		}
 		return PHPExcel_Calculation_Functions::VALUE();
@@ -2340,10 +2350,9 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	getConversionGroups
-	 *	Returns a list of the different conversion groups for UOM conversions
+	 * getConversionGroups
 	 *
-	 *	@return	array
+	 * @return	array
 	 */
 	public static function getConversionGroups() {
 		$conversionGroups = array();
@@ -2355,11 +2364,9 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	getConversionGroupUnits
-	 *	Returns an array of units of measure, for a specified conversion group, or for all groups
+	 * getConversionGroupUnits
 	 *
-	 *	@param	string	$group	The group whose units of measure you want to retrieve
-	 *	@return	array
+	 * @return	array
 	 */
 	public static function getConversionGroupUnits($group = NULL) {
 		$conversionGroups = array();
@@ -2373,10 +2380,9 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	getConversionGroupUnitDetails
+	 * getConversionGroupUnitDetails
 	 *
-	 *	@param	string	$group	The group whose units of measure you want to retrieve
-	 *	@return	array
+	 * @return	array
 	 */
 	public static function getConversionGroupUnitDetails($group = NULL) {
 		$conversionGroups = array();
@@ -2392,10 +2398,9 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	getConversionMultipliers
-	 *	Returns an array of the Multiplier prefixes that can be used with Units of Measure in CONVERTUOM()
+	 * getConversionGroups
 	 *
-	 *	@return	array of mixed
+	 * @return	array
 	 */
 	public static function getConversionMultipliers() {
 		return self::$_conversionMultipliers;
@@ -2403,20 +2408,19 @@ class PHPExcel_Calculation_Engineering {
 
 
 	/**
-	 *	CONVERTUOM
+	 * CONVERTUOM
 	 *
-	 *	Converts a number from one measurement system to another.
-	 *	For example, CONVERT can translate a table of distances in miles to a table of distances
-	 *	in kilometers.
+	 * Converts a number from one measurement system to another.
+	 * For example, CONVERT can translate a table of distances in miles to a table of distances
+	 * in kilometers.
 	 *
-	 *	Excel Function:
+	 * Excel Function:
 	 *		CONVERT(value,fromUOM,toUOM)
 	 *
-	 *	@param	float		$value		The value in fromUOM to convert.
-	 *	@param	string		$fromUOM	The units for value.
-	 *	@param	string		$toUOM		The units for the result.
-	 *
-	 *	@return	float
+	 * @param	float		$value		The value in fromUOM to convert.
+	 * @param	string		$fromUOM	The units for value.
+	 * @param	string		$toUOM		The units for the result.
+	 * @return	float
 	 */
 	public static function CONVERTUOM($value, $fromUOM, $toUOM) {
 		$value		= PHPExcel_Calculation_Functions::flattenSingleValue($value);

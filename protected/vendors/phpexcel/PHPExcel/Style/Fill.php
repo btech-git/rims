@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2014 PHPExcel
+ * Copyright (c) 2006 - 2012 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category   PHPExcel
  * @package	PHPExcel_Style
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license	http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version	1.8.0, 2014-03-02
+ * @version	1.7.7, 2012-05-19
  */
 
 
@@ -31,9 +31,9 @@
  *
  * @category   PHPExcel
  * @package	PHPExcel_Style
- * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable
+class PHPExcel_Style_Fill implements PHPExcel_IComparable
 {
 	/* Fill types */
 	const FILL_NONE							= 'none';
@@ -63,56 +63,91 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 *
 	 * @var string
 	 */
-	protected $_fillType	= PHPExcel_Style_Fill::FILL_NONE;
+	private $_fillType	= PHPExcel_Style_Fill::FILL_NONE;
 
 	/**
 	 * Rotation
 	 *
 	 * @var double
 	 */
-	protected $_rotation	= 0;
+	private $_rotation	= 0;
 
 	/**
 	 * Start color
 	 *
 	 * @var PHPExcel_Style_Color
 	 */
-	protected $_startColor;
+	private $_startColor;
 
 	/**
 	 * End color
 	 *
 	 * @var PHPExcel_Style_Color
 	 */
-	protected $_endColor;
+	private $_endColor;
+
+	/**
+	 * Parent Borders
+	 *
+	 * @var _parentPropertyName string
+	 */
+	private $_parentPropertyName;
+
+	/**
+	 * Supervisor?
+	 *
+	 * @var boolean
+	 */
+	private $_isSupervisor;
+
+	/**
+	 * Parent. Only used for supervisor
+	 *
+	 * @var PHPExcel_Style
+	 */
+	private $_parent;
 
 	/**
 	 * Create a new PHPExcel_Style_Fill
 	 *
 	 * @param	boolean	$isSupervisor	Flag indicating if this is a supervisor or not
-	 *									Leave this value at default unless you understand exactly what
-	 *										its ramifications are
-	 * @param	boolean	$isConditional	Flag indicating if this is a conditional style or not
-	 *									Leave this value at default unless you understand exactly what
-	 *										its ramifications are
 	 */
-	public function __construct($isSupervisor = FALSE, $isConditional = FALSE)
+	public function __construct($isSupervisor = false)
 	{
 		// Supervisor?
-		parent::__construct($isSupervisor);
+		$this->_isSupervisor = $isSupervisor;
 
 		// Initialise values
-		if ($isConditional) {
-			$this->_fillType = NULL;
-		}
-		$this->_startColor			= new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_WHITE, $isSupervisor, $isConditional);
-		$this->_endColor			= new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_BLACK, $isSupervisor, $isConditional);
+		$this->_startColor			= new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_WHITE, $isSupervisor);
+		$this->_endColor			= new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_BLACK, $isSupervisor);
 
 		// bind parent if we are a supervisor
 		if ($isSupervisor) {
 			$this->_startColor->bindParent($this, '_startColor');
 			$this->_endColor->bindParent($this, '_endColor');
 		}
+	}
+
+	/**
+	 * Bind parent. Only used for supervisor
+	 *
+	 * @param PHPExcel_Style $parent
+	 * @return PHPExcel_Style_Fill
+	 */
+	public function bindParent($parent)
+	{
+		$this->_parent = $parent;
+		return $this;
+	}
+
+	/**
+	 * Is this a supervisor or a real style component?
+	 *
+	 * @return boolean
+	 */
+	public function getIsSupervisor()
+	{
+		return $this->_isSupervisor;
 	}
 
 	/**
@@ -124,6 +159,38 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	public function getSharedComponent()
 	{
 		return $this->_parent->getSharedComponent()->getFill();
+	}
+
+	/**
+	 * Get the currently active sheet. Only used for supervisor
+	 *
+	 * @return PHPExcel_Worksheet
+	 */
+	public function getActiveSheet()
+	{
+		return $this->_parent->getActiveSheet();
+	}
+
+	/**
+	 * Get the currently active cell coordinate in currently active sheet.
+	 * Only used for supervisor
+	 *
+	 * @return string E.g. 'A1'
+	 */
+	public function getSelectedCells()
+	{
+		return $this->getActiveSheet()->getSelectedCells();
+	}
+
+	/**
+	 * Get the currently active cell coordinate in currently active sheet.
+	 * Only used for supervisor
+	 *
+	 * @return string E.g. 'A1'
+	 */
+	public function getActiveCell()
+	{
+		return $this->getActiveSheet()->getActiveCell();
 	}
 
 	/**
@@ -156,7 +223,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 * </code>
 	 *
 	 * @param	array	$pStyles	Array containing style information
-	 * @throws	PHPExcel_Exception
+	 * @throws	Exception
 	 * @return PHPExcel_Style_Fill
 	 */
 	public function applyFromArray($pStyles = null) {
@@ -181,7 +248,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 				}
 			}
 		} else {
-			throw new PHPExcel_Exception("Invalid style array passed.");
+			throw new Exception("Invalid style array passed.");
 		}
 		return $this;
 	}
@@ -255,7 +322,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 * Set Start Color
 	 *
 	 * @param	PHPExcel_Style_Color $pValue
-	 * @throws	PHPExcel_Exception
+	 * @throws	Exception
 	 * @return PHPExcel_Style_Fill
 	 */
 	public function setStartColor(PHPExcel_Style_Color $pValue = null) {
@@ -284,7 +351,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 * Set End Color
 	 *
 	 * @param	PHPExcel_Style_Color $pValue
-	 * @throws	PHPExcel_Exception
+	 * @throws	Exception
 	 * @return PHPExcel_Style_Fill
 	 */
 	public function setEndColor(PHPExcel_Style_Color $pValue = null) {
@@ -318,4 +385,17 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 		);
 	}
 
+	/**
+	 * Implement PHP __clone to create a deep clone, not just a shallow copy.
+	 */
+	public function __clone() {
+		$vars = get_object_vars($this);
+		foreach ($vars as $key => $value) {
+			if ((is_object($value)) && ($key != '_parent')) {
+				$this->$key = clone $value;
+			} else {
+				$this->$key = $value;
+			}
+		}
+	}
 }
