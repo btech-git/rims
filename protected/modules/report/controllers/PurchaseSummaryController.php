@@ -45,7 +45,7 @@ class PurchaseSummaryController extends Controller {
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();
 
-        if (isset($_POST['SaveToExcel'])) {
+        if (isset($_GET['SaveToExcel'])) {
             $this->saveToExcel($purchaseSummary, $startDate, $endDate);
         }
 

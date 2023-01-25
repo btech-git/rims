@@ -51,7 +51,7 @@ class ReceivableController extends Controller {
         $customerDataProvider = $customer->search();
         $customerDataProvider->criteria->addCondition('t.customer_type = "Company" '); 
 
-        if (isset($_POST['SaveToExcel'])) {
+        if (isset($_GET['SaveToExcel'])) {
             $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate);
         }
 
