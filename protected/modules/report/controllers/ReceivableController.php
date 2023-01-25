@@ -168,7 +168,7 @@ class ReceivableController extends Controller {
 
         foreach ($saleInvoiceSummary->dataProvider->data as $header) {
             $worksheet->setCellValue("A{$counter}", $header->invoice_date);
-            $worksheet->setCellValue("B{$counter}", $header->getCodeNumber($header::CN_CONSTANT));
+            $worksheet->setCellValue("B{$counter}", $header->invoice_number);
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
