@@ -38,6 +38,10 @@ class RevenueRecapController extends Controller {
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         ini_set('memory_limit', '2048M');
 
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $reportingComponets = new ReportingComponents();
         $objPHPExcel = new PHPExcel();
 
