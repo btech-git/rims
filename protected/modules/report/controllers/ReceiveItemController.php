@@ -12,8 +12,9 @@ class ReceiveItemController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('receiveItemReport') ))
+            if (!(Yii::app()->user->checkAccess('receiveItemReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -53,6 +54,12 @@ class ReceiveItemController extends Controller {
     }
 
     protected function saveToExcel($receiveItemSummary, $branchId, $dataProvider, array $options = array()) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
 
         $objPHPExcel = new PHPExcel();
 

@@ -128,6 +128,9 @@ class GeneralLedgerController extends Controller {
 //    }
 
     protected function saveToExcel($dataProvider, array $options = array()) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
         
