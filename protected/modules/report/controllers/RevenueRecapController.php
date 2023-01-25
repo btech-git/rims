@@ -2,8 +2,25 @@
 
 class RevenueRecapController extends Controller {
 
-    public function actionTest() {
-        $this->getRevenueValue('2016-09-20', 1, 1);
+    public function filters() {
+        return array(
+//            'access',
+        );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+                $filterChain->action->id === 'index' || 
+                $filterChain->action->id === 'bulanan' || 
+                $filterChain->action->id === 'export' || 
+                $filterChain->action->id === 'harian' || 
+                $filterChain->action->id === 'tahunan'
+            ) {
+            if (!(Yii::app()->user->checkAccess('saleOrderReport')) || !(Yii::app()->user->checkAccess('saleInvoiceReport')))
+                $this->redirect(array('/site/login'));
+        }
+
+        $filterChain->run();
     }
 
     public function actionIndex() {

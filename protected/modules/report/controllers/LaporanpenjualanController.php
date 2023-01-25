@@ -1,10 +1,10 @@
 <?php
 
-class LaporanPenjualanController extends Controller {
+class LaporanpenjualanController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -44,13 +44,13 @@ class LaporanPenjualanController extends Controller {
         $this->getXls($type);
     }
 
-    public function actionDaily() {
+    public function actionHarian() {
 
         $reportingComponets = new ReportingComponents();
 
-        $tanggal = (isset($_GET['tanggal'])) ? $_GET['tanggal'] : date("Y-m-d");
-        $brand = (isset($_GET['brand'])) ? $_GET['brand'] : '';
-        $type = (isset($_GET['type'])) ? $_GET['type'] : 'ban';
+        $tanggal = (isset($_GETarray('tanggal'))) ? $_GETarray('tanggal') : date("Y-m-d");
+        $brand = (isset($_GETarray('brand'))) ? $_GETarray('brand') : '';
+        $type = (isset($_GETarray('type'))) ? $_GETarray('type') : 'ban';
 
         if ($type == 'ban') {
             $brandname = Brand::model()->findAllByAttributes(array('id' => $reportingComponets->getListBrandTire()));
@@ -62,11 +62,10 @@ class LaporanPenjualanController extends Controller {
             $jumlah_branch = count($branch);
         }
 
-//        if (isset($_GETarray('ExportExcel'))) {
-//            $this->getXlsHarian($tanggal, $type);
-//        }
+        if (isset($_GETarray('ExportExcel')))
+            $this->getXlsHarian($tanggal, $type);
 
-        $this->render('daily', array(
+        $this->render('hari', array(
             'tanggal' => $tanggal,
             'brand' => $brand,
             'brandname' => $brandname,
@@ -77,7 +76,7 @@ class LaporanPenjualanController extends Controller {
         ));
     }
 
-    public function actionMonthly() {
+    public function actionBulanan() {
         $reportingComponets = new ReportingComponents();
 
         $tanggal = (isset($_GETarray('tanggal'))) ? $_GETarray('tanggal') : date("Y-m-d");
@@ -97,7 +96,7 @@ class LaporanPenjualanController extends Controller {
         if (isset($_GETarray('ExportExcel')))
             $this->getXlsBulanan($tanggal, $type);
 
-        $this->render('monthly', array(
+        $this->render('bulan', array(
             'tanggal' => $tanggal,
             'brand' => $brand,
             'brandname' => $brandname,
@@ -108,7 +107,7 @@ class LaporanPenjualanController extends Controller {
         ));
     }
 
-    public function actionYearly() {
+    public function actionTahunan() {
         $reportingComponets = new ReportingComponents();
 
         $tahun = (isset($_GETarray('tahun'))) ? $_GETarray('tahun') : date("Y");
@@ -128,7 +127,7 @@ class LaporanPenjualanController extends Controller {
         if (isset($_GETarray('ExportExcel')))
             $this->getXlsTahunan($tahun, $type);
 
-        $this->render('yearly', array(
+        $this->render('tahun', array(
             'tahun' => $tahun,
             'brand' => $brand,
             'brandname' => $brandname,
