@@ -3496,6 +3496,9 @@ class RegistrationTransactionController extends Controller {
     }
 
     public function actionMonthlyYearly() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
         $this->pageTitle = "RIMS - Monthly & Yearly Report";
 
         // $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : '';
