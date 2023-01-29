@@ -20,8 +20,8 @@
                 'value' => '$data->customer->name',
             ),
             array(
-                'name' => 'subtotal',
-                'value' => 'number_format($data->subtotal, 0)',
+                'name' => 'grand_total',
+                'value' => 'number_format($data->grand_total, 0)',
                 'htmlOptions' => array(
                     'style' => 'text-align: right'         
                 ),
