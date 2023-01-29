@@ -80,7 +80,7 @@ class PayableController extends Controller {
         $grandTotal = 0.00;
 
         foreach ($dataProvider->data as $data)
-            $grandTotal += $data->total_price;
+            $grandTotal += $data->payment_amount;
 
         return $grandTotal;
     }
@@ -109,8 +109,8 @@ class PayableController extends Controller {
 
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $startDate = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
-        $endDate = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+        $startDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
+        $endDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -119,96 +119,76 @@ class PayableController extends Controller {
         $objPHPExcel = new PHPExcel();
 
         $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('Sinar Putra Metalindo');
-        $documentProperties->setTitle('Laporan Faktur Penjualan Manual');
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Laporan Hutang Supplier');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Penjualan Manual');
+        $worksheet->setTitle('Laporan Hutang Supplier');
 
-        $worksheet->mergeCells('A1:Y1');
-        $worksheet->mergeCells('A2:Y2');
-        $worksheet->mergeCells('A3:Y3');
-        $worksheet->mergeCells('A4:Y4');
-        $worksheet->getStyle('A1:Y3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Y3')->getFont()->setBold(true);
-        $worksheet->setCellValue('A1', 'Sinar Putra Metalindo');
-        $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan Manual');
-        $worksheet->setCellValue('A3', $startDate . ' - ' . $endDate);
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A4:M4');
+        $worksheet->getStyle('A1:M3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Laporan Hutang Supplier');
+        $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:Y6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:Y6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:M6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:M6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:Y6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'No Pajak');
-        $worksheet->setCellValue('D6', 'NPWP');
-        $worksheet->setCellValue('E6', 'Code');
-        $worksheet->setCellValue('F6', 'Customer');
-        $worksheet->setCellValue('G6', 'Purchasesman');
-//        $worksheet->setCellValue('H6', 'SPK #');
-        $worksheet->setCellValue('I6', 'PO #');
-        $worksheet->setCellValue('J6', 'Qty');
-        $worksheet->setCellValue('K6', 'Berat');
-        $worksheet->setCellValue('L6', 'Catatan');
-        $worksheet->setCellValue('M6', 'Tanggal Tukar TT');
-        $worksheet->setCellValue('N6', 'Tanggal TT');
-        $worksheet->setCellValue('O6', 'Bulan');
-        $worksheet->setCellValue('P6', 'Tahun');
-        $worksheet->setCellValue('Q6', 'Jenis');
-        $worksheet->setCellValue('R6', 'Tanggal Input');
-        $worksheet->setCellValue('S6', 'DPP');
-        $worksheet->setCellValue('T6', 'Discount');
-        $worksheet->setCellValue('U6', 'Pembulatan');
-        $worksheet->setCellValue('V6', 'PPn');
-        $worksheet->setCellValue('W6', 'PPh');
-        $worksheet->setCellValue('X6', 'Grand Total');
-        $worksheet->setCellValue('Y6', 'User');
+        $worksheet->getStyle('A6:M6')->getFont()->setBold(true);
+        $worksheet->setCellValue('A6', 'Tanggal Faktur');
+        $worksheet->setCellValue('B6', 'Jatuh Tempo');
+        $worksheet->setCellValue('C6', 'PO #');
+        $worksheet->setCellValue('D6', 'Supplier');
+        $worksheet->setCellValue('E6', 'Branch');
+        $worksheet->setCellValue('F6', 'Grand Total');
+        $worksheet->setCellValue('G6', 'Payment');
+        $worksheet->setCellValue('H6', 'Remaining');
+        $worksheet->setCellValue('I6', 'Tanggal Bayar');
+        $worksheet->setCellValue('J6', 'Payment In #');
+        $worksheet->setCellValue('K6', 'Payment Type');
+        $worksheet->setCellValue('L6', 'Jumlah (Rp)');
+        $worksheet->setCellValue('M6', 'Notes');
 
         $counter = 7;
 
         foreach ($purchaseSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->date);
-            $worksheet->setCellValue("B{$counter}", $header->getCodeNumber($header::CN_CONSTANT));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'tax_number')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.tax_registration_number')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.code'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'customer.company'));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'employeeIdPurchasesman.name')));
-//            $worksheet->setCellValue("H{$counter}", $header->workOrderCuttingHeader->getCodeNumber(WorkOrderCuttingHeader::CN_CONSTANT));
-            $worksheet->setCellValue("I{$counter}", empty($header->work_order_cutting_header_id) ? $header->purchase_order_number : $header->workOrderCuttingHeader->saleHeader->customer_order_number);
-            $worksheet->setCellValue("J{$counter}", $header->totalQuantity);
-            $worksheet->setCellValue("K{$counter}", $header->totalWeight);
-            $worksheet->setCellValue("L{$counter}", $header->note);
-            $worksheet->setCellValue("M{$counter}", CHtml::encode($header->date_receipt));
-            $worksheet->setCellValue("M{$counter}", empty($header->saleReceiptDetails) ? "" : CHtml::encode($header->saleReceiptDetails[0]->saleReceiptHeader->date_receipt));
-            $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($header, 'cn_month')));
-            $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($header, 'cn_year')));
-            $worksheet->setCellValue("Q{$counter}", CHtml::encode($header->getServiceType($header->service_type)));
-            $worksheet->setCellValue("R{$counter}", CHtml::encode($header->date_created));
-            $worksheet->setCellValue("S{$counter}", CHtml::encode(CHtml::value($header, 'subTotal')));
-            $worksheet->setCellValue("T{$counter}", CHtml::encode(CHtml::value($header, 'discount')));
-            $worksheet->setCellValue("U{$counter}", CHtml::encode(CHtml::value($header, 'rounding_nominal')));
-            $worksheet->setCellValue("V{$counter}", CHtml::encode(CHtml::value($header, 'calculatedTax')));
-            $worksheet->setCellValue("W{$counter}", CHtml::encode(CHtml::value($header, 'calculatedTaxIncome')));
-            $worksheet->setCellValue("X{$counter}", CHtml::encode(CHtml::value($header, 'grandTotal')));
-            $worksheet->setCellValue("Y{$counter}", CHtml::encode(CHtml::value($header, 'admin.name')));
+            $worksheet->setCellValue("A{$counter}", $header->purchase_order_date);
+            $worksheet->setCellValue("B{$counter}", $header->payment_date_estimate);
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_no')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'mainBranch.code'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'total_price'));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'payment_amount')));
+            $worksheet->setCellValue("H{$counter}", $header->payment_left);
+            
+            foreach ($header->paymentOuts as $detail) {
+                $worksheet->setCellValue("I{$counter}", $detail->payment_date);
+                $worksheet->setCellValue("J{$counter}", $detail->payment_number);
+                $worksheet->setCellValue("K{$counter}", $detail->paymentType->name);
+                $worksheet->setCellValue("L{$counter}", CHtml::encode($detail->payment_amount));
+                $worksheet->setCellValue("M{$counter}", $detail->notes);
 
+                $counter++;
+            }
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:Y{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
 
-        $worksheet->getStyle("A{$counter}:Y{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("S{$counter}:X{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("P{$counter}:V{$counter}");
-        $worksheet->setCellValue("P{$counter}", 'Total Penjualan');
-        $worksheet->setCellValue("W{$counter}", 'Rp');
-        $worksheet->setCellValue("X{$counter}", $this->reportGrandTotal($purchaseSummary->dataProvider));
+        $worksheet->getStyle("A{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->mergeCells("A{$counter}:J{$counter}");
+        $worksheet->setCellValue("A{$counter}", 'Total Hutang');
+        $worksheet->setCellValue("K{$counter}", 'Rp');
+        $worksheet->setCellValue("L{$counter}", $this->reportGrandTotal($purchaseSummary->dataProvider));
 
         $counter++;
 
-        for ($col = 'A'; $col !== 'X'; $col++) {
+        for ($col = 'A'; $col !== 'M'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -218,7 +198,7 @@ class PayableController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Faktur Penjualan.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Hutang Supplier.xls"');
         header('Cache-Control: max-age=0');
         $objWriter->save('php://output');
 
