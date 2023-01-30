@@ -130,7 +130,7 @@ class MaterialRequestController extends Controller {
             }
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
