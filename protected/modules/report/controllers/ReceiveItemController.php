@@ -150,7 +150,7 @@ class ReceiveItemController extends Controller {
         header('Content-Disposition: attachment;filename="Laporan Penerimaan Barang.xlsx"');
         header('Cache-Control: max-age=0');
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
 
         Yii::app()->end();

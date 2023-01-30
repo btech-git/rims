@@ -295,7 +295,7 @@ class BodyrepairController extends Controller {
         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 
         $objWriter->save('php://output');
         unset($this->objWriter);
@@ -570,7 +570,7 @@ class BodyrepairController extends Controller {
         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 
         $objWriter->save('php://output');
         unset($this->objWriter);

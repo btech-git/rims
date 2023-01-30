@@ -70,10 +70,10 @@ class BalanceSheetController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Balance Sheet Standar');
+        $documentProperties->setTitle('Laporan Balance Sheet Induk');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Balance Sheet Standar');
+        $worksheet->setTitle('Laporan Balance Sheet Induk');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -81,7 +81,7 @@ class BalanceSheetController extends Controller {
         $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Laporan Balance Sheet Standar');
+        $worksheet->setCellValue('A1', 'Laporan Balance Sheet Induk');
         $worksheet->setCellValue('A2', $startDateString . ' - ' . $endDateString);
 
         $counter = 5;
@@ -171,7 +171,7 @@ class BalanceSheetController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Standar.xlsx"');
+        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Induk.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter->save('php://output');
 
