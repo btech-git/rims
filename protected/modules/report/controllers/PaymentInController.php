@@ -127,6 +127,7 @@ class PaymentInController extends Controller {
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         ob_end_clean();
+        
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Payment In.xlsx"');

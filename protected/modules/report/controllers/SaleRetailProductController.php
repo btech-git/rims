@@ -134,36 +134,35 @@ class SaleRetailProductController extends Controller {
 
         $counter = 7;
         foreach ($dataProvider->data as $header) {
-            foreach ($header->registrationProducts as $detail) {
-                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->transaction_number));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->transaction_date));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'vehicle.plate_number')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'vehicle_mileage')));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'grand_total')));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'note')));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
-                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
-                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
-                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
-                $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($detail, 'retail_price')));
-                $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($detail, 'hpp')));
-                $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($detail, 'sale_price')));
-                $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($detail, 'discount')));
-                $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($detail, 'total_price')));
-                $worksheet->setCellValue("Q{$counter}", CHtml::encode(CHtml::value($detail, 'note')));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->registrationTransaction->transaction_number));
+    //            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->registrationTransaction->transaction_date));
+    //            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.customer.name')));
+    //            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle.plate_number')));
+    //            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle_mileage')));
+    //            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.grand_total')));
+    //            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.note')));
+    //            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.branch.name')));
+    //            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.user.username')));
+    //            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'product.name')));
+    //            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'quantity')));
+    //            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'retail_price')));
+    //            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'hpp')));
+    //            $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($header, 'sale_price')));
+    //            $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($header, 'discount')));
+    //            $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
+    //            $worksheet->setCellValue("Q{$counter}", CHtml::encode(CHtml::value($header, 'note')));
 
-                $counter++;
-            }
+            $counter++;
         }
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Penjualan Retail Product.xlsx"');
         header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
 
         Yii::app()->end();
