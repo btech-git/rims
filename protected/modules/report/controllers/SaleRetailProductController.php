@@ -137,22 +137,22 @@ class SaleRetailProductController extends Controller {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
                 $worksheet->setCellValue("A{$counter}", CHtml::encode($header->registrationTransaction->transaction_number));
-    //            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->registrationTransaction->transaction_date));
-    //            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.customer.name')));
-    //            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle.plate_number')));
-    //            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle_mileage')));
-    //            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.grand_total')));
-    //            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.note')));
-    //            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.branch.name')));
-    //            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.user.username')));
-    //            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'product.name')));
-    //            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'quantity')));
-    //            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'retail_price')));
-    //            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'hpp')));
-    //            $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($header, 'sale_price')));
-    //            $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($header, 'discount')));
-    //            $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
-    //            $worksheet->setCellValue("Q{$counter}", CHtml::encode(CHtml::value($header, 'note')));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->registrationTransaction->transaction_date));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.customer.name')));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle.plate_number')));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle_mileage')));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.grand_total')));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.note')));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.branch.name')));
+                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.user.username')));
+                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'product.name')));
+                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'quantity')));
+                $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'retail_price')));
+                $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'hpp')));
+                $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($header, 'sale_price')));
+                $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($header, 'discount')));
+                $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
+                $worksheet->setCellValue("Q{$counter}", CHtml::encode(CHtml::value($header, 'note')));
 
             $counter++;
         }
