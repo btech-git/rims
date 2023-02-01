@@ -50,8 +50,6 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?></td>
-
-
                     <td style="text-align: right; font-weight: bold">
                         <?php $saldo = $header->getBeginningStockReport($startDate); ?>
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
