@@ -162,7 +162,7 @@ class StockCardController extends Controller {
         $worksheet->setCellValue('G6', 'Stok');
         $worksheet->setCellValue('H6', 'Gudang');
 
-        $counter = 7;
+        $counter = 8;
 
         foreach ($stockCardSummary->dataProvider->data as $header) {
             $worksheet->setCellValue("A{$counter}", $header->name);
@@ -177,6 +177,8 @@ class StockCardController extends Controller {
             $stockData = $header->getInventoryStockReport($startDate, $endDate); 
             $totalStockIn = 0;
             $totalStockOut = 0;
+            
+            $counter++;
             
             foreach ($stockData as $stockRow) {
                 $stockIn = $stockRow['stock_in'];
@@ -197,9 +199,8 @@ class StockCardController extends Controller {
                 
                 $counter++;
             }
-            $worksheet->setCellValue("E{$counter}", $totalStockIn);
-            $worksheet->setCellValue("F{$counter}", $totalStockOut);
-            $counter++;
+//            $worksheet->setCellValue("E{$counter}", $totalStockIn);
+//            $worksheet->setCellValue("F{$counter}", $totalStockOut);
         }
 
 //        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
