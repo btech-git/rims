@@ -202,15 +202,15 @@ class StockCardController extends Controller {
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
-
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("E{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->setCellValue("F{$counter}", 'Total Penjualan');
-        $worksheet->setCellValue("G{$counter}", 'Rp');
-        $worksheet->setCellValue("H{$counter}", $this->reportGrandTotal($saleInvoiceSummary->dataProvider));
-
-        $counter++;
+//        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+//
+//        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//        $worksheet->getStyle("E{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//        $worksheet->setCellValue("F{$counter}", 'Total Penjualan');
+//        $worksheet->setCellValue("G{$counter}", 'Rp');
+//        $worksheet->setCellValue("H{$counter}", $this->reportGrandTotal($saleInvoiceSummary->dataProvider));
+//
+//        $counter++;
 
         for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()
