@@ -200,14 +200,14 @@ class StockCardController extends Controller {
                 $counter++;
             }
             
+            $worksheet->getStyle("E{$counter}:F{$counter}")->getFont()->setBold(true);
+
             $worksheet->setCellValue("E{$counter}", $totalStockIn);
             $worksheet->setCellValue("F{$counter}", $totalStockOut);
-            $counter++;
+            $counter++;$counter++;
             
         }
 
-//        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
-//
 //        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 //        $worksheet->getStyle("E{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 //        $worksheet->setCellValue("F{$counter}", 'Total Penjualan');
