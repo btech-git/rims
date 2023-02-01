@@ -199,8 +199,11 @@ class StockCardController extends Controller {
                 
                 $counter++;
             }
-//            $worksheet->setCellValue("E{$counter}", $totalStockIn);
-//            $worksheet->setCellValue("F{$counter}", $totalStockOut);
+            
+            $worksheet->setCellValue("E{$counter}", $totalStockIn);
+            $worksheet->setCellValue("F{$counter}", $totalStockOut);
+            $counter++;
+            
         }
 
 //        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
