@@ -171,6 +171,7 @@ class StockCardController extends Controller {
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'subBrand.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'subBrandSeries.name'));
+            $worksheet->getStyle("G{$counter}")->getFont()->setBold(true);
             $saldo = $header->getBeginningStockReport($startDate); 
             $worksheet->setCellValue("G{$counter}", $header->getBeginningStockReport($startDate));
             
