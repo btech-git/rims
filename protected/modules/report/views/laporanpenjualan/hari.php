@@ -145,8 +145,7 @@ $this->breadcrumbs= array(
                     </thead>
                     <tbody>
 
-                        <?php
-                        foreach ($brandname as $key => $value) {
+                        <?php foreach ($brandname as $key => $value) {
                             echo "<tr><td></td>";
                             echo "<td colspan='2'>".$value->name."</td>";
                             echo "<td colspan='32'></td>";
