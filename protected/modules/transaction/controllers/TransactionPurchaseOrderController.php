@@ -1373,10 +1373,14 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai, $branch) {
 
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
+        $objPHPExcel->getProperties()->setCreator("BloomingTech")
                 ->setLastModifiedBy("RIMS")
                 ->setTitle("Laporan Pembelian " . date('d-m-Y'))
                 ->setSubject("Laporan Pembelian")
@@ -1385,12 +1389,12 @@ class TransactionPurchaseOrderController extends Controller {
                 ->setCategory("Export Laporan Pembelian");
 
         // style for horizontal vertical center
-        $styleHorizontalVertivalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
+//        $styleHorizontalVertivalCenter = array(
+//            'alignment' => array(
+//                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+//                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+//            )
+//        );
         $styleHorizontalVertivalCenterBold = array(
             'font' => array(
                 'bold' => true,
@@ -1400,25 +1404,25 @@ class TransactionPurchaseOrderController extends Controller {
                 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
             )
         );
-        $styleLeftVertivalCenterBold = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleHorizontalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            )
-        );
-        $styleVerticalCenter = array(
-            'alignment' => array(
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
+//        $styleLeftVertivalCenterBold = array(
+//            'font' => array(
+//                'bold' => true,
+//            ),
+//            'alignment' => array(
+//                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+//                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+//            )
+//        );
+//        $styleHorizontalCenter = array(
+//            'alignment' => array(
+//                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+//            )
+//        );
+//        $styleVerticalCenter = array(
+//            'alignment' => array(
+//                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+//            )
+//        );
 
         $styleBold = array(
             'font' => array(
@@ -1427,12 +1431,12 @@ class TransactionPurchaseOrderController extends Controller {
         );
 
         // style color red
-        $styleColorRED = array(
-            'font' => array(
-                'color' => array('rgb' => 'FF0000'),
-                'bold' => true,
-            ),
-        );
+//        $styleColorRED = array(
+//            'font' => array(
+//                'color' => array('rgb' => 'FF0000'),
+//                'bold' => true,
+//            ),
+//        );
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
@@ -1541,9 +1545,9 @@ class TransactionPurchaseOrderController extends Controller {
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow, number_format($grandDisc, 2));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('P' . $startrow, number_format($grandPpn, 2));
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q' . $startrow, number_format($grandTotal, 2));
-        $sheet = $objPHPExcel->getActiveSheet();
+//        $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle("G" . ($startrow) . ":Q" . ($startrow))->applyFromArray($styleBold);
-        $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
+//        $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet
         $objPHPExcel->getActiveSheet()->setTitle('LAPORAN PEMBELIAN');
