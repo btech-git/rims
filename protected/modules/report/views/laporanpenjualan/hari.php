@@ -151,7 +151,7 @@ $this->breadcrumbs= array(
                             echo "<td colspan='32'></td>";
                             echo "</tr>";
                             $nomor =1;
-                                $products = Product::model()->findAllByAttributes(['brand_id'=>$value->id]); 
+                                $products = Product::model()->findAllByAttributes(['brand_id'=>$value->id], ['limit' => 100]); 
                                 foreach ($products as $key => $product) {
                                     echo "<tr>";
                                     echo "<td>" .$nomor."</td>";
