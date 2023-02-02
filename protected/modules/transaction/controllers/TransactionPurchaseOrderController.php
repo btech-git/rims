@@ -1556,13 +1556,14 @@ class TransactionPurchaseOrderController extends Controller {
         // $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->setActiveSheetIndex(0);
 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        ob_end_clean();
+
         // Save a xls file
         $filename = 'laporan_pembelian_data_' . date("Y-m-d");
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
         $objWriter->save('php://output');
         unset($this->objWriter);
