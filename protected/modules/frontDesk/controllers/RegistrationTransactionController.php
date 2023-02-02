@@ -3182,7 +3182,6 @@ class RegistrationTransactionController extends Controller {
     }
 
     public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai) {
-
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -3479,13 +3478,14 @@ class RegistrationTransactionController extends Controller {
         // $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->setActiveSheetIndex(0);
 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        ob_end_clean();
+
         // Save a xls file
         $filename = 'laporan_penjualan_registration_data_' . date("Y-m-d");
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
         $objWriter->save('php://output');
         unset($this->objWriter);
