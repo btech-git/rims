@@ -39,7 +39,7 @@ class SentRequestController extends Controller {
         $sentRequestSummary->setupFilter($startDate, $endDate, $branchId);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($sentRequestSummary, $branchId, $sentRequestSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($sentRequestSummary, $branchId, $startDate, $endDate);
         }
 
         $this->render('summary', array(
@@ -52,7 +52,7 @@ class SentRequestController extends Controller {
         ));
     }
 
-    protected function saveToExcel($sentRequestSummary, $branchId, $dataProvider, array $options = array()) {
+    protected function saveToExcel($sentRequestSummary, $branchId, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -69,21 +69,6 @@ class SentRequestController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Sent Request');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-        $worksheet->getColumnDimension('H')->setAutoSize(true);
-        $worksheet->getColumnDimension('I')->setAutoSize(true);
-        $worksheet->getColumnDimension('J')->setAutoSize(true);
-        $worksheet->getColumnDimension('K')->setAutoSize(true);
-        $worksheet->getColumnDimension('L')->setAutoSize(true);
-        $worksheet->getColumnDimension('M')->setAutoSize(true);
-        $worksheet->getColumnDimension('N')->setAutoSize(true);
-
         $worksheet->mergeCells('A1:N1');
         $worksheet->mergeCells('A2:N2');
         $worksheet->mergeCells('A3:N3');
@@ -94,7 +79,7 @@ class SentRequestController extends Controller {
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Sent Request');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
@@ -112,25 +97,31 @@ class SentRequestController extends Controller {
 
         $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
-        foreach ($dataProvider->data as $header) {
-            foreach ($header->transactionSentRequestDetails as $detail) {
-                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//        $counter = 7;
+//        foreach ($sentRequestSummary->dataProvider->data as $header) {
+//            foreach ($header->transactionSentRequestDetails as $detail) {
+//                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//
+//                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->sent_request_no));
+//                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->sent_request_date));
+//                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'status_document')));
+//                $worksheet->setCellValue("D{$counter}", CHtml::encode($header->estimate_arrival_date));
+//                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'destinationBranch.name')));
+//                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
+//                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'requesterBranch.name')));
+//                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'approval.username')));
+//                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
+//                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
+//                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'unit_price')));
+//
+//                $counter++;
+//            }
+//        }
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->sent_request_no));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->sent_request_date));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'status_document')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($header->estimate_arrival_date));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'destinationBranch.name')));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'requesterBranch.name')));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'approval.username')));
-                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
-                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
-                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'unit_price')));
-
-                $counter++;
-            }
+        for ($col = 'A'; $col !== 'K'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         header('Content-type: application/vnd.ms-excel');
