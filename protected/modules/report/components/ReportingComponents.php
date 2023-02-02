@@ -132,7 +132,7 @@ class ReportingComponents extends CComponent
         if ($salesOrder !=NULL) {
             foreach($salesOrder as $post)
             {
-                $totalPenjualan += $post->total_product;
+                $totalPenjualan += $post->quantity;
             }
             return $totalPenjualan;
         }else{
