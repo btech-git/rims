@@ -122,23 +122,22 @@ class ReportingComponents extends CComponent
 
         $totalPenjualan = 0;
         $criteria = new CDbCriteria();
-        $criteria->with = array('transactionSalesOrderDetails');
-        $criteria->compare('t.requester_branch_id', $branch, true);
-        $criteria->compare('t.sale_order_date', $tgl, true);
-        $criteria->compare('transactionSalesOrderDetails.product_id', $product, true);
+        $criteria->with = array('registrationTransaction');
+        $criteria->compare('registrationTransaction.branch_id', $branch, true);
+        $criteria->compare('registrationTransaction.transaction_date', $tgl, true);
+        $criteria->compare('t.product_id', $product, true);
         // find all posts
-        $salesOrder = TransactionSalesOrder::model()->findAll($criteria);
+        $salesOrder = RegistrationProduct::model()->findAll($criteria);
 
         if ($salesOrder !=NULL) {
             foreach($salesOrder as $post)
             {
-                $totalPenjualan = $totalPenjualan + $post->total_quantity;
+                $totalPenjualan += $post->total_product;
             }
             return $totalPenjualan;
         }else{
             return '0';
         }
-        // return 0;
     }
 
     public function getRekapBulanan($bulan ,$branch = 1,$product =1) {
