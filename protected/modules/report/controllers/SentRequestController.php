@@ -97,26 +97,26 @@ class SentRequestController extends Controller {
 
         $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-//        $counter = 7;
-//        foreach ($sentRequestSummary->dataProvider->data as $header) {
-//            foreach ($header->transactionSentRequestDetails as $detail) {
-//                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//
-//                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->sent_request_no));
-//                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->sent_request_date));
-//                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'status_document')));
-//                $worksheet->setCellValue("D{$counter}", CHtml::encode($header->estimate_arrival_date));
-//                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'destinationBranch.name')));
-//                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
-//                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'requesterBranch.name')));
-//                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'approval.username')));
-//                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
-//                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
-//                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'unit_price')));
-//
-//                $counter++;
-//            }
-//        }
+        $counter = 7;
+        foreach ($sentRequestSummary->dataProvider->data as $header) {
+            foreach ($header->transactionSentRequestDetails as $detail) {
+                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->sent_request_no));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->sent_request_date));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'status_document')));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($header->estimate_arrival_date));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'destinationBranch.name')));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'requesterBranch.name')));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'approval.username')));
+                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
+                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
+                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'unit_price')));
+
+                $counter++;
+            }
+        }
 
         for ($col = 'A'; $col !== 'K'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -124,11 +124,13 @@ class SentRequestController extends Controller {
             ->setAutoSize(true);
         }
 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        ob_end_clean();
+
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Sent Request.xlsx"');
         header('Cache-Control: max-age=0');
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
 
         Yii::app()->end();
