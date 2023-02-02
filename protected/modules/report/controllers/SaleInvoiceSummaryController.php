@@ -114,10 +114,8 @@ class SaleInvoiceSummaryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $startDate = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
-        $endDate = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+        $startDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
+        $endDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -136,11 +134,12 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet->mergeCells('A2:K2');
         $worksheet->mergeCells('A3:K3');
         $worksheet->mergeCells('A4:K4');
+        
         $worksheet->getStyle('A1:K3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:K3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Laporan Penjualan Summary');
-        $worksheet->setCellValue('A3', $startDate . ' - ' . $endDate);
+        $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A6:K6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:K6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -188,8 +187,8 @@ class SaleInvoiceSummaryController extends Controller {
 
         for ($col = 'A'; $col !== 'K'; $col++) {
             $objPHPExcel->getActiveSheet()
-                    ->getColumnDimension($col)
-                    ->setAutoSize(true);
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
