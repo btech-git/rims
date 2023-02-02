@@ -159,7 +159,7 @@ class PurchaseSummaryController extends Controller {
             $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
             $worksheet->setCellValue("G{$counter}", $header->payment_amount);
             $worksheet->setCellValue("H{$counter}", $header->payment_left);
-            $worksheet->setCellValue("I{$counter}", $header->approval->username);
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'approval.username')));
 
             $counter++;
         }
