@@ -1650,6 +1650,11 @@ class TransactionPurchaseOrderController extends Controller {
     }
 
     public function getXlsOutstanding($transactions, $tanggal_mulai, $tanggal_sampai) {
+        
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
@@ -1827,13 +1832,14 @@ class TransactionPurchaseOrderController extends Controller {
         // $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->setActiveSheetIndex(0);
 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        ob_end_clean();
+
         // Save a xls file
         $filename = 'outstanding_pembelian_data_' . date("Y-m-d");
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
         $objWriter->save('php://output');
         unset($this->objWriter);
