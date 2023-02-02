@@ -31,6 +31,9 @@ class BodyrepairController extends Controller {
     }
 
     public function getXlsBody($tanggal) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
         // $tanggal = (empty($tanggal))? 
 
         $modelCriteria = new CDbCriteria;
@@ -41,10 +44,9 @@ class BodyrepairController extends Controller {
 
         $models = RegistrationTransaction::model()->findAll($modelCriteria);
 
-
-        // empty($date)?$date = date('d F Y'):$date;
-        // $getBranch = Branch::model()->findByPk($branch);
-        // $branchname = ($branch == '00')?'HeadOffice':$getBranch->name;
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
 
         $objPHPExcel = new PHPExcel();
 
@@ -289,13 +291,14 @@ class BodyrepairController extends Controller {
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        ob_end_clean();
+
         // Save a xls file
         $filename = 'Body Repair Report - ' . date("Ymd");
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 
         $objWriter->save('php://output');
         unset($this->objWriter);
@@ -306,6 +309,9 @@ class BodyrepairController extends Controller {
     }
 
     public function getXlsGeneral($tanggal) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
         // $tanggal = (empty($tanggal))? 
 
         $modelCriteria = new CDbCriteria;
@@ -316,10 +322,9 @@ class BodyrepairController extends Controller {
 
         $models = RegistrationTransaction::model()->findAll($modelCriteria);
 
-
-        // empty($date)?$date = date('d F Y'):$date;
-        // $getBranch = Branch::model()->findByPk($branch);
-        // $branchname = ($branch == '00')?'HeadOffice':$getBranch->name;
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
 
         $objPHPExcel = new PHPExcel();
 
@@ -564,13 +569,14 @@ class BodyrepairController extends Controller {
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        ob_end_clean();
+
         // Save a xls file
         $filename = 'General Repair Report - ' . date("Ymd");
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 
         $objWriter->save('php://output');
         unset($this->objWriter);
