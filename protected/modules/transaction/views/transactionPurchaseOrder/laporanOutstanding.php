@@ -40,7 +40,7 @@ Yii::app()->clientScript->registerScript('report', '
                                         <span class="prefix">Company </span>
                                     </div>
                                      <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('company', $company, CHtml::listData(Company::model()->findAll(), 'id','name'), array('empty'=>'-- All Company --',
+                                        <?php echo CHtml::dropDownlist('company', $company, CHtml::listData(Company::model()->findAllByAttributes(array('is_deleted' => 0)), 'id','name'), array('empty'=>'-- All Company --',
                                             'onchange'=>'jQuery.ajax({
                                                         type: "POST",
                                                         url: "' . CController::createUrl('ajaxGetBranch') . '",

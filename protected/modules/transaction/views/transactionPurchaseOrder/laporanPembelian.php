@@ -43,7 +43,7 @@ $this->breadcrumbs = array(
                                                 </div>
                                                 <div class="small-8 columns">
                                                     <?php
-                                                    echo CHtml::dropDownlist('company', $company, CHtml::listData(Company::model()->findAll(), 'id', 'name'), array('empty' => '-- All Company --',
+                                                    echo CHtml::dropDownlist('company', $company, CHtml::listData(Company::model()->findAllByAttributes(array('is_deleted' => 0)), 'id', 'name'), array('empty' => '-- All Company --',
                                                         'onchange' => '
                                                 console.log($(this).val());
                                                        
