@@ -728,7 +728,8 @@ class Coa extends CActiveRecord {
                     WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
                     GROUP BY coa_id
                 ) j
-                GROUP BY j.coa_id";
+                GROUP BY j.coa_id
+                HAVING balance <> 0.00";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
