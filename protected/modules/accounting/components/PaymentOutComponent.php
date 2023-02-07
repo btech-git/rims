@@ -180,17 +180,24 @@ class PaymentOutComponent extends CComponent {
 
             if ($detail->isNewRecord) {
                 $detail->payment_out_id = $this->header->id;
-            } else {
-                $detail->total_invoice = $detail->receiveItem->grandTotal;
             }
+                
+            $detail->total_invoice = empty($detail->receive_item_id) ? $detail->workOrderExpenseHeader->grand_total : $detail->receiveItem->grandTotal;
 
             $valid = $detail->save(false) && $valid;
             $new_invoice[] = $detail->id;
 
-            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($detail->receiveItem->purchase_order_id);
-            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
-            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-            $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+            if (!empty($detail->receive_item_id)) {
+                $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($detail->receiveItem->purchase_order_id);
+                $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+                $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
+                $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+            } else {
+                $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
+                $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();
+                $workOrderExpenseHeader->payment_remaining = $workOrderExpenseHeader->getRemainingPayment();
+                $valid = $workOrderExpenseHeader->update(array('total_payment', 'payment_remaining')) && $valid;
+            }
         }
 
         //delete 
@@ -237,7 +244,7 @@ class PaymentOutComponent extends CComponent {
         $total = 0.00;
         
         foreach ($this->details as $detail) {
-            $total += $detail->receiveItem->grandTotal;
+            $total += empty($detail->receiveItem) ? $detail->workOrderExpenseHeader->grand_total : $detail->receiveItem->grandTotal;
         }
         
         return $total;

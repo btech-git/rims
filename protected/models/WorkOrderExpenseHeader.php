@@ -21,6 +21,7 @@
  *
  * The followings are the available model relations:
  * @property WorkOrderExpenseDetail[] $workOrderExpenseDetails
+ * @property PayOutDetail[] $payOutDetails
  * @property RegistrationTransaction $registrationTransaction
  * @property Branch $branch
  * @property Users $user
@@ -62,6 +63,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'workOrderExpenseDetails' => array(self::HAS_MANY, 'WorkOrderExpenseDetail', 'work_order_expense_header_id'),
+            'payOutDetails' => array(self::HAS_MANY, 'PayOutDetail', 'work_order_expense_header_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
@@ -150,6 +152,20 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         }
         
         return $total;
+    }
+    
+    public function getTotalPayment() {
+        $total = 0.00;
+        
+        foreach($this->payOutDetails as $detail) {
+            $total += $detail->total_invoice;
+        }
+        
+        return $total;
+    }
+    
+    public function getRemainingPayment() {
+        return $this->grand_total - $this->total_payment;
     }
     
     public function searchForPaymentOut() {

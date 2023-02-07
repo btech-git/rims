@@ -205,7 +205,11 @@
     <br />
     
     <div id="detail_div">
-        <?php $this->renderPartial('_detail', array('paymentOut' => $paymentOut)); ?>
+        <?php $this->renderPartial('_detail', array(
+            'paymentOut' => $paymentOut,
+            'receiveItem' => $receiveItem,
+            'workOrderExpense' => $workOrderExpense
+        )); ?>
     </div>
 	
     <div class="field">

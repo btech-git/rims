@@ -91,10 +91,12 @@ class PaymentOutController extends Controller {
         $paymentOut = $this->instantiate(null);
         
         if ($movementType == 1) {
+            $workOrderExpense = null;
             $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
             $supplier = Supplier::model()->findByPk($receiveItem->supplier_id);
             $paymentOut->header->supplier_id = $receiveItem->supplier_id;
         } elseif ($movementType == 2) {
+            $receiveItem = null;
             $workOrderExpense = WorkOrderExpenseHeader::model()->findByPk($transactionId);
             $supplier = Supplier::model()->findByPk($workOrderExpense->supplier_id);
             $paymentOut->header->supplier_id = $workOrderExpense->supplier_id;
@@ -110,8 +112,9 @@ class PaymentOutController extends Controller {
 
         $paymentOut->addInvoice($transactionId, $movementType);
         
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
@@ -135,6 +138,7 @@ class PaymentOutController extends Controller {
             'paymentOut' => $paymentOut,
             'supplier' => $supplier,
             'receiveItem' => $receiveItem,
+            'workOrderExpense' => $workOrderExpense
         ));
     }
 

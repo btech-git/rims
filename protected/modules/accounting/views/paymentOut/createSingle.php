@@ -9,5 +9,6 @@
     'paymentOut' => $paymentOut,
     'supplier' => $supplier,
     'receiveItem' => $receiveItem,
-)); ?>
+    'workOrderExpense' => $workOrderExpense
+)); 
 
