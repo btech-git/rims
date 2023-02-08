@@ -70,7 +70,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php endforeach; ?>
                     <tr>
                         <td>TOTAL: </td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_quantity'))); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_quantity'))); ?></td>
                         <td colspan="4">&nbsp;</td>
                     </tr>
                 </table>
