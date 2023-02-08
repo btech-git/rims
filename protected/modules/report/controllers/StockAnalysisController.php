@@ -44,6 +44,7 @@ class StockAnalysisController extends Controller {
                 'startDate' => $startDate, 
                 'endDate' => $endDate,
                 'brandId' => $brandId,
+                'branchId' => $branchId,
                 'subBrandId' => $subBrandId,
                 'subBrandSeriesId' => $subBrandSeriesId,
                 'productMasterCategoryId' => $productMasterCategoryId,
