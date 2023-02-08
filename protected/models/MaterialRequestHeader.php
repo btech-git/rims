@@ -8,9 +8,9 @@
  * @property string $transaction_number
  * @property string $transaction_date
  * @property string $transaction_time
- * @property integer $total_quantity
- * @property integer $total_quantity_movement_out
- * @property integer $total_quantity_remaining
+ * @property string $total_quantity
+ * @property string $total_quantity_movement_out
+ * @property string $total_quantity_remaining
  * @property string $status_document
  * @property string $status_progress
  * @property string $note
@@ -55,7 +55,8 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, transaction_date, transaction_time, branch_id, user_id, registration_transaction_id', 'required'),
-            array('branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining, registration_transaction_id', 'numerical', 'integerOnly' => true),
+            array('branch_id, user_id, registration_transaction_id', 'numerical', 'integerOnly' => true),
+            array('total_quantity, total_quantity_movement_out, total_quantity_remaining', 'length', 'max' => 10),
             array('transaction_number, status_document, status_progress', 'length', 'max' => 50),
             array('note', 'safe'),
             array('transaction_number', 'unique'),
