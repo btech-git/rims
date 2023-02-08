@@ -36,8 +36,9 @@ class TransactionJournalSummaryController extends Controller {
 //        $accountProfitLoss = Coa::model()->findByPk(1476);
 //        $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
-//        if (isset($_GET['SaveExcel']))
-//            $this->saveToExcel($accountCategoryTypes, $endDate, $branchId);
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId);
+        }
 
         $this->render('summary', array(
             'coaSubCategories' => $coaSubCategories,
@@ -73,12 +74,10 @@ class TransactionJournalSummaryController extends Controller {
         ));
     }
 
-    protected function saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($coaSubCategories, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
         $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
 
@@ -89,11 +88,11 @@ class TransactionJournalSummaryController extends Controller {
         $objPHPExcel = new PHPExcel();
 
         $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('Lanusa');
-        $documentProperties->setTitle('Laporan Balance Sheet');
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Laporan Jurnal Umum Rekap');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Balance Sheet');
+        $worksheet->setTitle('Laporan Jurnal Umum Rekap');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -103,48 +102,79 @@ class TransactionJournalSummaryController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', CHtml::encode(($branch === null) ? '' : $branch->name));
-        $worksheet->setCellValue('A2', 'Laporan Balance Sheet');
-        $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
+        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap');
+        $worksheet->setCellValue('A3', 'YTD: ' . $startDateString . ' - ' . $endDateString);
 
+        $worksheet->getStyle("A5:J5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->getStyle('A5:J5')->getFont()->setBold(true);
+        $worksheet->setCellValue('A5', 'Chart of Account');
+        $worksheet->setCellValue('B5', 'Debit');
+        $worksheet->setCellValue('C5', 'Credit');
 
         $counter = 6;
 
-
-        foreach ($accountCategoryTypes as $accountCategoryType) {
-            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryType, 'name')));
-
-            $counter++;
-
-            foreach ($accountCategoryType->accountCategories as $accountCategory) {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
-                $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategory->getBalanceTotal($startDate, $endDate, $branchId)));
-                $counter++;
+        $accountCategoryDebitBalance = 0.00;
+        $accountCategoryCreditBalance = 0.00;
+        foreach ($coaSubCategories as $coaSubCategory) {
+            $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC'));
+            foreach ($coas as $coa) {
+                $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId);
+                $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId);
+                if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
+                    $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
+                    if (empty($coa->coaIds)) {
+                        $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
+                        $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
+                    }
+                    $counter++;
+            
+                    $groupDebitBalance = 0;
+                    $groupCreditBalance = 0;
+                    if (!empty($coa->coaIds)) {
+                        $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC'));
+                        foreach ($coaIds as $account) {
+                            $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId);
+                            $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId);
+                            if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
+                                $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
+                                if (empty($coa->coaIds)) {
+                                    $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
+                                    $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
+                                }
+                                $groupDebitBalance += $journalDebitBalance;
+                                $groupCreditBalance += $journalCreditBalance;
+                                
+                                $counter++;
+                                
+                            }
+                        }
+                    }
+                }
+                $accountCategoryDebitBalance += $journalDebitBalance;
+                $accountCategoryCreditBalance += $journalCreditBalance;
             }
 
-            $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryType, 'name')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryType->getBalanceTotal($startDate, $endDate, $branchId)));
-
-            $counter++;
             $counter++;
         }
+        
+        $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
+        $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
 
-
-
-        for ($col = 'A'; $col !== 'H'; $col++) {
+        for ($col = 'A'; $col !== 'C'; $col++) {
             $objPHPExcel->getActiveSheet()
-                    ->getColumnDimension($col)
-                    ->setAutoSize(true);
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
-
-        header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Balance Sheet.xlsx"');
-        header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        ob_end_clean();
+        
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Laporan Jurnal Umum Rekap.xlsx"');
+        header('Cache-Control: max-age=0');
+
         $objWriter->save('php://output');
 
         Yii::app()->end();
