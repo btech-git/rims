@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'purchaseOrder.purchase_order_no')); ?></td>
             <td class="width1-7"><?php echo CHtml::encode($header->status); ?></td>
             <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
-            <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'companyBank.name')); ?></td>
+            <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'companyBank.bank.name')); ?></td>
             <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
             <td class="width1-11"><?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?></td>
         </tr>

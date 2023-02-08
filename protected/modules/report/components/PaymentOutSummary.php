@@ -33,10 +33,11 @@ class PaymentOutSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branch) {
+    public function setupFilter($startDate, $endDate, $branch, $transactionType) {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.branch_id', $branch);
+        $this->dataProvider->criteria->compare('t.payment_type_id', $paymentType);
     }
 }

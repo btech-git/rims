@@ -25,6 +25,7 @@ class PaymentOutController extends Controller {
 
         $paymentOut = Search::bind(new PaymentOut('search'), isset($_GET['PaymentOut']) ? $_GET['PaymentOut'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $paymentType = isset($_GET['PaymentType']) ? $_GET['PaymentType'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -36,7 +37,7 @@ class PaymentOutController extends Controller {
         $paymentOutSummary->setupLoading();
         $paymentOutSummary->setupPaging($pageSize, $currentPage);
         $paymentOutSummary->setupSorting();
-        $paymentOutSummary->setupFilter($startDate, $endDate, $branchId);
+        $paymentOutSummary->setupFilter($startDate, $endDate, $branchId, $paymentType);
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($paymentOutSummary, $branchId, $paymentOutSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -46,6 +47,7 @@ class PaymentOutController extends Controller {
             'paymentOut' => $paymentOut,
             'paymentOutSummary' => $paymentOutSummary,
             'branchId' => $branchId,
+            'paymentType' => $paymentType,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
