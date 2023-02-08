@@ -14,7 +14,7 @@
  * @property integer $approved_by
  * @property integer $destination_id
  * @property integer $destination_branch_id
- * @property integer $total_quantity
+ * @property string $total_quantity
  * @property string $total_price
  * @property integer $destination_approval_status
  * @property string $created_datetime
@@ -63,8 +63,9 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('sent_request_no, sent_request_date, status_document, estimate_arrival_date, requester_id, requester_branch_id, destination_branch_id, total_price', 'required'),
-            array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity, destination_approval_status', 'numerical', 'integerOnly' => true),
+            array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, destination_approval_status', 'numerical', 'integerOnly' => true),
             array('sent_request_no, status_document', 'length', 'max' => 30),
+            array('total_quantity', 'length', 'max' => 10),
             array('total_price', 'length', 'max' => 18),
             array('sent_request_no', 'unique'),
             // The following rule is used by search().
