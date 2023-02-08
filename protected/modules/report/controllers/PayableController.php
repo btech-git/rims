@@ -154,16 +154,28 @@ class PayableController extends Controller {
         $worksheet->setCellValue('M6', 'Notes');
 
         $counter = 7;
-
+        
+        $totalInvoice = 0.00;
+        $totalPayment = 0.00;
+        $totalRemaining = 0.00;
+        
         foreach ($purchaseSummary->dataProvider->data as $header) {
+            $totalPrice = CHtml::encode(CHtml::value($header, 'total_price'));
+            $paymentAmount = CHtml::encode(CHtml::value($header, 'payment_amount'));
+            $paymentLeft = CHtml::encode(CHtml::value($header, 'payment_left'));
+            
             $worksheet->setCellValue("A{$counter}", $header->purchase_order_date);
             $worksheet->setCellValue("B{$counter}", $header->payment_date_estimate);
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_no')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'mainBranch.code'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'total_price'));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'payment_amount')));
-            $worksheet->setCellValue("H{$counter}", $header->payment_left);
+            $worksheet->setCellValue("F{$counter}", $totalPrice);
+            $worksheet->setCellValue("G{$counter}", $paymentAmount);
+            $worksheet->setCellValue("H{$counter}", $paymentLeft);
+            
+            $totalInvoice += $totalPrice;
+            $totalPayment += $paymentAmount;
+            $totalRemaining += $paymentLeft;
             
             foreach ($header->paymentOuts as $detail) {
                 $worksheet->setCellValue("I{$counter}", $detail->payment_date);
@@ -180,10 +192,13 @@ class PayableController extends Controller {
         $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
 
         $worksheet->getStyle("A{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("A{$counter}:J{$counter}");
-        $worksheet->setCellValue("A{$counter}", 'Total Hutang');
-        $worksheet->setCellValue("K{$counter}", 'Rp');
+        $worksheet->getStyle("F{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->mergeCells("A{$counter}:D{$counter}");
+        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("E{$counter}", 'Rp');
+        $worksheet->setCellValue("F{$counter}", $totalInvoice);
+        $worksheet->setCellValue("G{$counter}", $totalPayment);
+        $worksheet->setCellValue("H{$counter}", $totalRemaining);
         $worksheet->setCellValue("L{$counter}", $this->reportGrandTotal($purchaseSummary->dataProvider));
 
         $counter++;
