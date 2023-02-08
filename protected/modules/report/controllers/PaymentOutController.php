@@ -123,7 +123,7 @@ class PaymentOutController extends Controller {
             $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'purchaseOrder.purchase_order_no')));
             $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'status')));
             $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'paymentType.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'companyBank.name')));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'companyBank.bank.name')));
             $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
             $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
 
