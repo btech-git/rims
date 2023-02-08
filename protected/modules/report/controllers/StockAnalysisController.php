@@ -121,6 +121,7 @@ class StockAnalysisController extends Controller {
         
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
+        $branchId = (empty($options['branchId'])) ? $options['branchId'] : '';
         $brandId = (empty($options['brandId'])) ? $options['brandId'] : '';
         $subBrandId = (empty($options['subBrandId'])) ? $options['subBrandId'] : '';
         $subBrandSeriesId = (empty($options['subBrandSeriesId'])) ? $options['subBrandSeriesId'] : '';
@@ -166,7 +167,7 @@ class StockAnalysisController extends Controller {
 
         $counter = 7; 
         
-        $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId);
+        $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId);
         foreach ($fastMovingItems as $i => $header) {
             $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($header['code']));
