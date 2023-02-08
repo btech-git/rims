@@ -1,16 +1,17 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 10% }
+    .width1-1 { width: 15% }
     .width1-2 { width: 15% }
-    .width1-3 { width: 15% }
-    .width1-4 { width: 10% }
+    .width1-3 { width: 10% }
+    .width1-4 { width: 25% }
     .width1-5 { width: 10% }
-    .width1-6 { width: 15% }
+    .width1-6 { width: 10% }
     .width1-7 { width: 15% }
 
     .width2-1 { width: 40% }
-    .width2-2 { width: 5% }
+    .width2-2 { width: 15% }
     .width2-3 { width: 15% }
+    .width2-4 { width: 15% }
 ');
 ?>
 
@@ -54,7 +55,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <td class="width1-3"><?php echo CHtml::encode($header->status_document); ?></td>
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></td>
             <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
-            <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?></td>
+            <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'branch.code')); ?></td>
             <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'status_progress')); ?></td>
         </tr>
         <tr class="items2">
