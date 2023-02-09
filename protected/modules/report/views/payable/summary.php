@@ -167,7 +167,18 @@ Yii::app()->clientScript->registerScript('report', '
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Payment Type </span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeDropDownlist($purchaseOrderHeader, 'payment_type', array('Cash' => 'Cash', 'Credit' => 'Credit'), array('empty'=>'-- All Payment --')); ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
