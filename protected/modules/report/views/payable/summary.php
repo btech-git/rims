@@ -10,23 +10,34 @@ Yii::app()->clientScript->registerScript('report', '
 ');
 ?>
 
-<div id="maincontent">
-    <div class="clearfix page-action">
-        <div class="form" style="text-align: center">
+<div class="clear"></div>
 
-            <?php echo CHtml::beginForm(array(''), 'get'); ?>
-
-            <?php Yii::app()->clientScript->registerCoreScript('jquery'); ?>
-            <?php Yii::app()->clientScript->registerCoreScript('jquery.ui'); ?>
-
-            <div class="row" style="background-color: #DFDFDF">
-                <div class="medium-12 columns">
+<div class="tab reportTab">
+    <div class="tabHead"></div>
+    
+    <div class="tabBody">
+        <div id="detail_div">
+            <div>
+                <div class="myForm">
+                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <label class="prefix">Supplier</label>
+                                        <span class="prefix">Jumlah per Halaman</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
                                         <?php echo CHtml::activeTextField($purchaseOrderHeader, 'supplier_id', array(
@@ -92,13 +103,44 @@ Yii::app()->clientScript->registerScript('report', '
                                     </div>
                                 </div>
                             </div>
-                            
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <label class="prefix">Tanggal</label>
+                                        <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
+                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch </span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeDropDownlist($purchaseOrderHeader, 'main_branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-2 columns">
+                                        <span class="prefix">Tanggal </span>
+                                    </div>
+                                    <div class="small-5 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
@@ -106,9 +148,12 @@ Yii::app()->clientScript->registerScript('report', '
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
+                                                'placeholder' => 'Mulai',
                                             ),
                                         )); ?>
-                                        -
+                                    </div>
+
+                                    <div class="small-5 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -116,90 +161,57 @@ Yii::app()->clientScript->registerScript('report', '
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
+                                                'placeholder' => 'Sampai',
                                             ),
                                         )); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix">Jumlah per Halaman</label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix">Halaman saat ini</label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
-                                    </div>
-                                     <div class="small-8 columns">
-                                          <?php echo CHtml::activeDropDownlist($purchaseOrderHeader, 'main_branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <?php echo CHtml::resetButton('Hapus');  ?>
-                                <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;', 'class' => 'button success')); ?>
-                                <?php echo CHtml::submitButton('Save To Excel', array('name' => 'SaveToExcel', 'class' => 'button primary')); ?>
-                            </div>
 
-                            <br />
-                            
                         </div>
                     </div>
+
+                    <div class="clear"></div>
+                    <div class="row buttons">
+                        <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
+                        <?php echo CHtml::resetButton('Hapus');  ?>
+                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                    </div>
+
+                    <?php echo CHtml::endForm(); ?>
+                    <div class="clear"></div>
+
                 </div>
+
+                <hr />
+
+                <div class="relative">
+                    <?php $this->renderPartial('_summary', array(
+                        'purchaseSummary' => $purchaseSummary, 
+                        'startDate' => $startDate, 
+                        'endDate' => $endDate
+                    )); ?>
+                </div>
+                <div class="clear"></div>
             </div>
+            
+            <br/>
 
-            <div class="row">
-                <?php echo CHtml::hiddenField('sort', '', array('id' => 'CurrentSort')); ?>
+            <div class="hide">
+                <div class="right"></div>
+                <div class="clear"></div>
             </div>
-
-            <?php echo CHtml::endForm(); ?>
-
         </div>
-
-        <hr />
-
-        <div class="right"><?php echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?></div>
-        <div class="clear"></div>
-        <div class="right"><?php echo ReportHelper::sortText($purchaseSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
-        <div class="clear"></div>
-
-        <div>
-            <?php $this->renderPartial('_summary', array(
-                'purchaseSummary' => $purchaseSummary, 
-                'startDate' => $startDate, 
-                'endDate' => $endDate
-            )); ?>
-        </div>
-
-        <div class="right">
-            <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-                'itemCount' => $purchaseSummary->dataProvider->pagination->itemCount,
-                'pageSize' => $purchaseSummary->dataProvider->pagination->pageSize,
-                'currentPage' => $purchaseSummary->dataProvider->pagination->getCurrentPage(false),
-            ));*/ ?>
-        </div>
-        <div class="clear"></div>
     </div>
+</div>
+
+<div class="hide">
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $purchaseSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $purchaseSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $purchaseSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
 </div>
