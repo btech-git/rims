@@ -159,6 +159,7 @@ class TransactionJournalSummaryController extends Controller {
             $counter++;
         }
         
+        $worksheet->setCellValue("A{$counter}", "Total");
         $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
         $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
 
