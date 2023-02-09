@@ -319,6 +319,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             t.id NOT IN (
                 SELECT receive_item_id
                 FROM " . PayOutDetail::model()->tableName() . " 
+                WHERE receive_item_id IS NOT null
             ) AND t.invoice_number IS NOT NULL AND t.purchase_order_id IS NOT NULL AND t.receive_item_date > '2021-12-31'
         ";
         
