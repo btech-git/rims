@@ -2,8 +2,6 @@
 Yii::app()->clientScript->registerScript('report', '
 	$(".breadcrumbs").addClass("hide");
 
-	$("#StartDate").val("' . $startDate . '");
-	$("#EndDate").val("' . $endDate . '");
 	$("#PageSize").val("' . $purchaseSummary->dataProvider->pagination->pageSize . '");
 	$("#CurrentPage").val("' . ($purchaseSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
