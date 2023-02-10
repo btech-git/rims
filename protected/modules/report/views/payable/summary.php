@@ -145,9 +145,7 @@ Yii::app()->clientScript->registerScript('report', '
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'purchaseSummary' => $purchaseSummary, 
-                        'startDate' => $startDate, 
-                        'endDate' => $endDate
+                        'purchaseSummary' => $purchaseSummary,
                     )); ?>
                 </div>
                 <div class="clear"></div>
