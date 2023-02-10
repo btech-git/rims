@@ -30,7 +30,7 @@ class PayableController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchaseSummary = new PurchaseSummary($purchaseOrderHeader->search());
+        $purchaseSummary = new PayableSummary($purchaseOrderHeader->search());
         $purchaseSummary->setupLoading();
         $purchaseSummary->setupPaging($pageSize, $currentPage);
         $purchaseSummary->setupSorting();
