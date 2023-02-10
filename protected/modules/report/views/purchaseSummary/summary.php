@@ -68,7 +68,7 @@ Yii::app()->clientScript->registerScript('report', '
                                                     $.ajax({
                                                         type: "POST",
                                                         dataType: "JSON",
-                                                        url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $purchaseOrderHeader->id)) . '",
+                                                        url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $purchaseOrderHeader->id)) . '",
                                                         data: $("form").serialize(),
                                                         success: function(data) {
                                                             $("#supplier_name").html(data.supplier_name);

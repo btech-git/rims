@@ -29,11 +29,8 @@ class PayableSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($filters) {
-        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
-        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+    public function setupFilter() {
         $this->dataProvider->criteria->addCondition('t.total_price - t.payment_amount > 0 AND t.status_document = "Approved"');
-        $this->dataProvider->criteria->addBetweenCondition('t.purchase_order_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.supplier_id', false);
     }
 }

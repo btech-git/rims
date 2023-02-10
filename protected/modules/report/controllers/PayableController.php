@@ -12,8 +12,9 @@ class PayableController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('accountingReport')))
+            if (!(Yii::app()->user->checkAccess('accountingReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -25,37 +26,27 @@ class PayableController extends Controller {
 
         $purchaseOrderHeader = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : array());
 
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $supplier_id = (isset($_GET['supplier_id'])) ? $_GET['supplier_id'] : '';
 
         $purchaseSummary = new PurchaseSummary($purchaseOrderHeader->search());
         $purchaseSummary->setupLoading();
         $purchaseSummary->setupPaging($pageSize, $currentPage);
         $purchaseSummary->setupSorting();
-        $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        );
-        $purchaseSummary->setupFilter($filters);
+        $purchaseSummary->setupFilter();
 
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();
 
         if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcel($purchaseSummary, $startDate, $endDate);
+            $this->saveToExcel($purchaseSummary);
         }
 
         $this->render('summary', array(
             'purchaseOrderHeader' => $purchaseOrderHeader,
             'purchaseSummary' => $purchaseSummary,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
             'currentSort' => $currentSort,
-            'supplier_id' => $supplier_id,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
         ));
@@ -79,8 +70,9 @@ class PayableController extends Controller {
     public function reportGrandTotal($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
-            $grandTotal += $data->payment_amount;
+        foreach ($dataProvider->data as $data) {
+            $grandTotal += $data->total_price;
+        }
 
         return $grandTotal;
     }
@@ -88,8 +80,9 @@ class PayableController extends Controller {
     public function reportTotalPayment($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->payment_amount;
+        }
 
         return $grandTotal;
     }
@@ -97,8 +90,9 @@ class PayableController extends Controller {
     public function reportTotalRemaining($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->payment_left;
+        }
 
         return $grandTotal;
     }

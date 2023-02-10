@@ -46,57 +46,6 @@ Yii::app()->clientScript->registerScript('report', '
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
                                         )); ?>
 
-                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                                            'id' => 'supplier-dialog',
-                                            // additional javascript options for the dialog plugin
-                                            'options' => array(
-                                                'title' => 'Supplier',
-                                                'autoOpen' => false,
-                                                'width' => 'auto',
-                                                'modal' => true,
-                                            ),
-                                        )); ?>
-                                        <?php $this->widget('zii.widgets.grid.CGridView', array(
-                                            'id' => 'supplier-grid',
-                                            'dataProvider' => $supplierDataProvider,
-                                            'filter' => $supplier,
-                                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                                            'pager' => array(
-                                                'cssFile' => false,
-                                                'header' => '',
-                                            ),
-                                            'selectionChanged' => 'js:function(id) {
-                                                $("#' . CHtml::activeId($purchaseOrderHeader, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
-                                                $("#supplier-dialog").dialog("close");
-                                                if ($.fn.yiiGridView.getSelection(id) == "")
-                                                {
-                                                    $("#supplier_name").html("");
-                                                    $("#supplier_code").html("");
-                                                    $("#supplier_mobile_phone").html("");
-                                                }
-                                                else
-                                                {
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        dataType: "JSON",
-                                                        url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $purchaseOrderHeader->id)) . '",
-                                                        data: $("form").serialize(),
-                                                        success: function(data) {
-                                                            $("#supplier_name").html(data.supplier_name);
-                                                            $("#supplier_code").html(data.supplier_code);
-                                                            $("#supplier_mobile_phone").html(data.supplier_mobile_phone);
-                                                        },
-                                                    });
-                                                }
-                                            }',
-                                            'columns' => array(
-                                                'code',
-                                                'name',
-                                                'mobile_phone',
-                                            ),
-                                        )); ?>
-                                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-
                                         <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
                                         <?php echo CHtml::encode(CHtml::value($purchaseOrderHeader, 'supplier.name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?>    
@@ -216,13 +165,55 @@ Yii::app()->clientScript->registerScript('report', '
     </div>
 </div>
 
-<div class="hide">
-    <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $purchaseSummary->dataProvider->pagination->itemCount,
-            'pageSize' => $purchaseSummary->dataProvider->pagination->pageSize,
-            'currentPage' => $purchaseSummary->dataProvider->pagination->getCurrentPage(false),
-        )); ?>
-    </div>
-    <div class="clear"></div>
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'supplier-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Supplier',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'supplier-grid',
+        'dataProvider' => $supplierDataProvider,
+        'filter' => $supplier,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#' . CHtml::activeId($purchaseOrderHeader, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#supplier-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "")
+            {
+                $("#supplier_name").html("");
+                $("#supplier_code").html("");
+                $("#supplier_mobile_phone").html("");
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $purchaseOrderHeader->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#supplier_name").html(data.supplier_name);
+                        $("#supplier_code").html(data.supplier_code);
+                        $("#supplier_mobile_phone").html(data.supplier_mobile_phone);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'code',
+            'name',
+            'mobile_phone',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>
