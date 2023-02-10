@@ -65,7 +65,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Transaction Type </span>
+                                        <span class="prefix">Payment Type </span>
                                     </div>
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownlist('PaymentType', $paymentType, CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array('empty' => '-- All Type --')); ?>

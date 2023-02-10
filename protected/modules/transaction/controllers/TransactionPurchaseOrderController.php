@@ -1584,6 +1584,7 @@ class TransactionPurchaseOrderController extends Controller {
         $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
         $supplier_id = (isset($_GET['supplier_id'])) ? $_GET['supplier_id'] : '';
         $supplier_name = (isset($_GET['supplier_name'])) ? $_GET['supplier_name'] : '';
+        $paymentType = (isset($_GET['PaymentType'])) ? $_GET['PaymentType'] : '';
 
         $criteria = new CDbCriteria;
         
@@ -1592,6 +1593,10 @@ class TransactionPurchaseOrderController extends Controller {
             $criteria->with = array('transaction_po' => array('together' => true, 'with' => array('supplier')));
             //$criteria->compare('supplier.id', $->supplier_id, true);
             $criteria->addCondition("supplier_id = '" . $supplier_id . "'");
+        }
+        
+        if (!empty($paymentType)) {
+            $criteria->addCondition("transaction_po.payment_type = '" . $paymentType . "'");
         }
         
         if ($company != "") {
@@ -1642,6 +1647,7 @@ class TransactionPurchaseOrderController extends Controller {
             'transactions' => $transactions,
             'branch' => $branch,
             'company' => $company,
+            'paymentType' => $paymentType,
             'supplier_id' => $supplier_id,
             'supplier_name' => $supplier_name,
             'supplier' => $supplier,

@@ -10,5 +10,6 @@
     'supplier' => $supplier,
     'receiveItem' => $receiveItem,
     'receiveItemDataProvider' => $receiveItemDataProvider,
+    'movementType' => $movementType,
 )); ?>
 

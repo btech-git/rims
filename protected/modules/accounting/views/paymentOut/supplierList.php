@@ -33,7 +33,7 @@
         array(
             'header' => '',
             'type' => 'raw',
-            'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id))',
+            'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id, "movementType" => 1))',
             'htmlOptions' => array(
                 'style' => 'text-align: center;'
             ),

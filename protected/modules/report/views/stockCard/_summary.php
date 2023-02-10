@@ -1,11 +1,12 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
-    .width1-2 { width: 15% }
-    .width1-3 { width: 15% }
+    .width1-2 { width: 10% }
+    .width1-3 { width: 18% }
     .width1-4 { width: 10% }
     .width1-5 { width: 10% }
-    .width1-6 { width: 15% }
+    .width1-6 { width: 10% }
+    .width1-7 { width: 10% }
     .width1-7 { width: 15% }
 
     .width2-1 { width: 40% }
@@ -33,11 +34,11 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Tanggal</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Jenis Transaksi</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Transaksi #</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Gudang</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Masuk</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keluar</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Stok</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Gudang</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Nilai</th>
             </tr>
         </thead>
         
@@ -51,8 +52,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?></td>
                     <td style="text-align: right; font-weight: bold">
-                        <?php $saldo = $header->getBeginningStockReport($startDate); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
+                        <?php $stock = $header->getBeginningStockReport($startDate); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
                     </td>
                     
                     <td>&nbsp;</td>
@@ -65,16 +66,17 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php $transactionNumber = $stockRow['transaction_number']; ?>
                     <?php $stockIn = $stockRow['stock_in']; ?>
                     <?php $stockOut = $stockRow['stock_out']; ?>
-                    <?php $saldo += $stockIn + $stockOut; ?>
+                    <?php $stock += $stockIn + $stockOut; ?>
+                    <?php $inventoryValue = $stockRow['purchase_price'] * $stock; ?>
                     <tr class="items2">
                         <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
                         <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
                         <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
-                        <td><?php echo CHtml::encode($stockRow['notes']); ?></td>
+                        <td><?php echo CHtml::encode($stockRow['name']); ?></td>
                         <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
                         <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
-                        <td><?php echo CHtml::encode($stockRow['name']); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
                     </tr>
                     <?php $totalStockIn += $stockIn; ?>
                     <?php $totalStockOut += $stockOut; ?>

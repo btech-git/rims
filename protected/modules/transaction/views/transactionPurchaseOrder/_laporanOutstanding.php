@@ -3,9 +3,6 @@ Yii::app()->clientScript->registerCss('_report', '
 	.price {text-align: right;}
 ');
 ?>
-<?php //echo(CJSON::encode($orderPenjualanPendingSummary->dataProvider->data));  ?>
-
-
 
 <div class="reportHeader">
     <div>PT RATU PERDANA INDAH JAYA</div>

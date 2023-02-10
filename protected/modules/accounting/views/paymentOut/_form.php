@@ -279,7 +279,10 @@
     <br />
     
     <div id="detail_div">
-        <?php $this->renderPartial('_detail', array('paymentOut' => $paymentOut)); ?>
+        <?php $this->renderPartial('_detail', array(
+            'paymentOut' => $paymentOut,
+            'movementType' => $movementType,
+        )); ?>
     </div>
 	
     <div class="field">

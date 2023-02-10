@@ -81,14 +81,14 @@ Yii::app()->clientScript->registerScript('report', '
                     </div>
                     
                     <div class="row">
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
                                     <div class="small-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
@@ -110,11 +110,12 @@ Yii::app()->clientScript->registerScript('report', '
                                                 'readonly' => true,
                                                 'placeholder' => 'Sampai',
                                             ),
-                                        )); ?>
+                                        ));*/ ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
+                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -143,6 +144,13 @@ Yii::app()->clientScript->registerScript('report', '
 
                 <hr />
 
+                <div class="right"><?php echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?></div>
+                <br />
+                <div class="right"><?php echo ReportHelper::sortText($purchaseSummary->dataProvider->sort, array('Tanggal', 'Supplier')); ?></div>
+                <div class="clear"></div>
+
+                <br />
+        
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'purchaseSummary' => $purchaseSummary,

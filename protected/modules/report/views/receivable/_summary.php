@@ -20,7 +20,7 @@
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
     <div style="font-size: larger">Laporan Piutang Customer</div>
-    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+    <div><?php echo 'Per tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime(date('Y-m-d')))); ?></div>
 </div>
 
 <br />

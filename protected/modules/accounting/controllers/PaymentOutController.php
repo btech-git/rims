@@ -38,7 +38,7 @@ class PaymentOutController extends Controller {
         ));
     }
 
-    public function actionCreate($supplierId) {
+    public function actionCreate($supplierId, $movementType) {
         $paymentOut = $this->instantiate(null);
         $supplier = Supplier::model()->findByPk($supplierId);
 
@@ -47,7 +47,6 @@ class PaymentOutController extends Controller {
         $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->supplier_id = $supplierId;
         $paymentOut->header->status = 'Draft';
-//        $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
 
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
@@ -84,6 +83,7 @@ class PaymentOutController extends Controller {
             'supplier' => $supplier,
             'receiveItem' => $receiveItem,
             'receiveItemDataProvider' => $receiveItemDataProvider,
+            'movementType' => $movementType,
         ));
     }
 
@@ -138,7 +138,8 @@ class PaymentOutController extends Controller {
             'paymentOut' => $paymentOut,
             'supplier' => $supplier,
             'receiveItem' => $receiveItem,
-            'workOrderExpense' => $workOrderExpense
+            'workOrderExpense' => $workOrderExpense,
+            'movementType' => $movementType,
         ));
     }
 
@@ -339,12 +340,14 @@ class PaymentOutController extends Controller {
                 $invoices = array();
                 $invoices = $_POST['selectedIds'];
 
-                foreach ($invoices as $invoice)
+                foreach ($invoices as $invoice) {
                     $paymentOut->addInvoice($invoice, $movementType);
+                }
             }
 
             $this->renderPartial('_detail', array(
                 'paymentOut' => $paymentOut,
+                'movementType' => $movementType,
             ));
         }
     }

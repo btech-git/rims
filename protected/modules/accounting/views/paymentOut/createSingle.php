@@ -9,6 +9,7 @@
     'paymentOut' => $paymentOut,
     'supplier' => $supplier,
     'receiveItem' => $receiveItem,
-    'workOrderExpense' => $workOrderExpense
+    'workOrderExpense' => $workOrderExpense,
+    'movementType' => $movementType,
 )); 
 

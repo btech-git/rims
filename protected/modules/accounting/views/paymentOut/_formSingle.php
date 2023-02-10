@@ -208,7 +208,8 @@
         <?php $this->renderPartial('_detail', array(
             'paymentOut' => $paymentOut,
             'receiveItem' => $receiveItem,
-            'workOrderExpense' => $workOrderExpense
+            'workOrderExpense' => $workOrderExpense,
+            'movementType' => $movementType,
         )); ?>
     </div>
 	

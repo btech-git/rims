@@ -1,5 +1,5 @@
 <table style="border: 1px solid">
-    <?php if (empty($receiveItem)): ?>
+    <?php if ($movementType == 2): ?>
         <thead>
             <tr style="background-color: skyblue">
                 <th style="text-align: center; width: 15%">Sub Pekerjaan #</th>
@@ -17,7 +17,7 @@
                         <?php $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]work_order_expense_header_id"); ?>
-                        <?php echo CHtml::encode($workOrderExpenseHeader->transaction_number); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'transaction_number')); ?>
                         <?php echo CHtml::error($detail, 'work_order_expense_header_id'); ?>
                     </td>
 
@@ -68,7 +68,9 @@
             <?php foreach ($paymentOut->details as $i => $detail): ?>
                 <tr style="background-color: azure">
                     <td>
-                        <?php //$receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
+                        <?php if (empty($receiveItem)): ?>
+                            <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
+                        <?php endif; ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]work_order_expense_header_id"); ?>
                         <?php echo CHtml::encode($receiveItem->invoice_number); ?>
