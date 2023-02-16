@@ -68,9 +68,7 @@
             <?php foreach ($paymentOut->details as $i => $detail): ?>
                 <tr style="background-color: azure">
                     <td>
-                        <?php if (empty($receiveItem)): ?>
-                            <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
-                        <?php endif; ?>
+                        <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]work_order_expense_header_id"); ?>
                         <?php echo CHtml::encode($receiveItem->invoice_number); ?>

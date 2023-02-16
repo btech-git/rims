@@ -338,6 +338,7 @@
     'id' => 'purchase-invoice-grid',
     'dataProvider' => $receiveItemDataProvider,
     'filter' => $receiveItem,
+    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager' => array(
         'cssFile' => false,
         'header' => '',
