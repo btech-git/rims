@@ -23,6 +23,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <span class="prefix">Halaman saat ini</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::hiddenField('PageSize', $pageSize); ?>
+                                        <?php echo CHtml::textField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
@@ -67,42 +80,38 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         
                         <div class="medium-6 columns">
                             <div class="field">
-            <table>
-                <thead>
-                    <tr>
-                        <td>Code</td>
-                        <td>Name</td>
-                        <td>Category</td>
-                        <td>Sub Category</td>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <tr>
-                        <td>
-                            <?php echo CHtml::activeTextField($account, 'code'); ?>
-                        </td>
-                        
-                        <td>
-                            <?php echo CHtml::activeTextField($account, 'name'); ?>
-                        </td>
-                        
-                        <td>
-                            <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
-                                'empty' => '-- All --',
-                            )); ?>
-                        </td>
-                        
-                        <td>
-                            <div id="sub_category">
-                                <?php echo CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
-                                    'empty' => '-- All --',
-                                )); ?>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>Code</td>
+                                            <td>Name</td>
+                                            <td>Category</td>
+                                            <td>Sub Category</td>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td><?php echo CHtml::activeTextField($account, 'code'); ?></td>
+
+                                            <td><?php echo CHtml::activeTextField($account, 'name'); ?></td>
+
+                                            <td>
+                                                <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                                    'empty' => '-- All --',
+                                                )); ?>
+                                            </td>
+
+                                            <td>
+                                                <div id="sub_category">
+                                                    <?php echo CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                                        'empty' => '-- All --',
+                                                    )); ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
             
 <!--                                <div class="row collapse">
                                     <div class="small-4 columns">
@@ -140,6 +149,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php echo ReportHelper::summaryText($generalLedgerSummary->dataProvider); ?>
+                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                    </div>
+
                     <?php $this->renderPartial('_summary', array(
                         'account' => $account,
                         'generalLedgerSummary' => $generalLedgerSummary,

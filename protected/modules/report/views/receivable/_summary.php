@@ -10,11 +10,12 @@
     .width1-9 { width: 10% }
     .width1-10 { width: 10% }
     
-    .width2-1 { width: 10% }
-    .width2-2 { width: 10% }
-    .width2-3 { width: 10% }
-    .width2-4 { width: 10% }
-    .width2-5 { width: 10% }
+    .width2-1 { width: 15% }
+    .width2-2 { width: 15% }
+    .width2-3 { width: 15% }
+    .width2-4 { width: 15% }
+    .width2-5 { width: 15% }
+    .width2-6 { width: 25% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -32,7 +33,7 @@
         <th class="width1-3">Faktur #</th>
         <th class="width1-4">Customer</th>
         <th class="width1-5">Vehicle</th>
-        <th class="width1-6">Branch</th>
+        <th class="width1-6">Brand</th>
         <th class="width1-7">Status</th>
         <th class="width1-8">Grand Total</th>
         <th class="width1-9">Payment</th>
@@ -46,8 +47,9 @@
                     <th class="width2-1">Tanggal Bayar</th>
                     <th class="width2-2">Payment In #</th>
                     <th class="width2-3">Payment Type</th>
-                    <th class="width2-4">Jumlah (Rp)</th>
-                    <th class="width2-5">Notes</th>
+                    <th class="width2-4">Bank</th>
+                    <th class="width2-5">Jumlah (Rp)</th>
+                    <th class="width2-6">Notes</th>
                 </tr>
             </table>
         </td>
@@ -59,7 +61,7 @@
             <td class="width1-3"><?php echo CHtml::encode($header->invoice_number); ?></td>
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
             <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
-            <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?></td>
+            <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?></td>
             <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
             <td class="width1-8" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($header->total_price))); ?></td>
             <td class="width1-9" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($header->payment_amount))); ?></td>
@@ -73,8 +75,9 @@
                             <th class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->payment_date))); ?></th>
                             <th class="width2-2"><?php echo CHtml::encode(CHtml::value($detail, 'payment_number')); ?></th>
                             <th class="width2-3"><?php echo CHtml::encode(CHtml::value($detail, 'paymentType.name')); ?></th>
-                            <th class="width2-4"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($detail->payment_amount))); ?></th>
-                            <th class="width2-5"><?php echo CHtml::encode(CHtml::value($detail, 'notes')); ?></th>
+                            <th class="width2-4"><?php echo CHtml::encode(CHtml::value($detail, 'companyBank.bank.name')); ?></th>
+                            <th class="width2-5"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($detail->payment_amount))); ?></th>
+                            <th class="width2-6"><?php echo CHtml::encode(CHtml::value($detail, 'notes')); ?></th>
                         </tr>
                     <?php endforeach; ?>
                 </table>

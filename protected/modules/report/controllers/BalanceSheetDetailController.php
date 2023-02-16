@@ -23,9 +23,9 @@ class BalanceSheetDetailController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $dateNow = date('Y-m-d');
-//        list($yearNow, , ) = explode('-', $dateNow);
-//        $dateStart = $yearNow . '-01-01';
-        $dateStart = '2022-01-01';
+        list($yearNow, , ) = explode('-', $dateNow);
+        $dateStart = $yearNow . '-01-01';
+//        $dateStart = '2022-01-01';
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
@@ -37,8 +37,9 @@ class BalanceSheetDetailController extends Controller {
         $accountProfitLoss = Coa::model()->findByPk(1476);
         $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
-        if (isset($_GET['SaveExcel']))
+        if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
+        }
 
         $this->render('summary', array(
             'accountCategoryAssets' => $accountCategoryAssets,

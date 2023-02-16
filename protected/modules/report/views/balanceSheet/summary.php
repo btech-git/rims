@@ -40,8 +40,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Periode:</span>
                                     </div>
 
-<!--                                <div class="small-4 columns">
-                                    <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
@@ -50,10 +50,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'readonly' => true,
                                             'placeholder' => 'Mulai',
                                         ),
-                                    ));*/ ?>
-                                </div>-->
+                                    )); ?>
+                                </div>
 
-                                    <div class="small-8 columns">
+                                    <div class="small-4 columns">
                                         <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',

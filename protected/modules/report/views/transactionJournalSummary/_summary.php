@@ -19,8 +19,8 @@
         <?php foreach ($coaSubCategories as $coaSubCategory): ?>
             <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC')); ?>
             <?php foreach ($coas as $coa): ?>
-                <?php $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId); ?>
-                <?php $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId); ?>
+                <?php $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType); ?>
+                <?php $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType); ?>
                 <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance): ?>
                     <tr>
                         <td>
@@ -43,8 +43,8 @@
                     <?php if (!empty($coa->coaIds)): ?> 
                         <?php $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC')); ?>
                         <?php foreach ($coaIds as $account): ?>
-                            <?php $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId); ?>
-                            <?php $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId); ?>
+                            <?php $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType); ?>
+                            <?php $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType); ?>
                             <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance): ?>
                                 <tr>
                                     <td style="font-size: 10px">

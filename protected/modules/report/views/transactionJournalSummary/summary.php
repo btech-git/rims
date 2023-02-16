@@ -30,10 +30,39 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
+                            
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Transaction Type</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('TransactionType', $transactionType, array(
+                                            'PO' => 'PURCHASE',
+                                            'RG' => 'BR / GR',
+                                            'DO' => 'DELIVERY',
+                                            'TR' => 'TRANSFER REQUEST',
+                                            'RCI' => 'RECEIVE',
+                                            'CSI' => 'CONSIGNMENT IN',
+                                            'CSO' => 'CONSIGNMENT OUT',
+                                            'MI' => 'MOVEMENT IN',
+                                            'MO' => 'MOVEMENT OUT',
+                                            'Pin' => 'PAYMENT IN',
+                                            'Pout' => 'PAYMENT OUT',
+                                            'SO' => 'SALES',
+                                            'CASH' => 'CASH TRANSACTION',
+                                            'JP' => 'JURNAL UMUM',
+                                        ), array('empty' => '-- All Transaction --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="row">
-                        <div class="medium-6 columns">
+                        <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -90,6 +119,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'transactionType' => $transactionType,
                     )); ?>
                 </div>
                 <div class="clear"></div>

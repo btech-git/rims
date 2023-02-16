@@ -26,6 +26,7 @@ class TransactionJournalSummaryController extends Controller {
         list($yearNow, , ) = explode('-', $dateNow);
         $dateStart = $yearNow . '-01-01';
 
+        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -45,7 +46,7 @@ class TransactionJournalSummaryController extends Controller {
 //            'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
 //            'accountProfitLoss' => $accountProfitLoss,
 //            'accountProfitLossPrevious' => $accountProfitLossPrevious,
-//            'accountCategoryTypes' => $accountCategoryTypes,
+            'transactionType' => $transactionType,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,

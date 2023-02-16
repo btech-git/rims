@@ -29,11 +29,11 @@ class GeneralLedgerController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
+//        $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
-        $generalLedgerSummary->setupLoading($startDate, $endDate);
+        $generalLedgerSummary->setupLoading();
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
         $generalLedgerSummary->setupFilter($startDate, $endDate, $branchId);
@@ -64,10 +64,13 @@ class GeneralLedgerController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
-            'number' => $number,
+//            'number' => $number,
             'branchId' => $branchId,
             'coa' => $coa,
             'coaDataProvider' => $coaDataProvider,
+            'currentSort' => $currentSort,
+            'pageSize' => $pageSize,
+            'currentPage' => $currentPage,
         ));
     }
 
