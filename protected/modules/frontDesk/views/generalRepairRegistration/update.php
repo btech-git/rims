@@ -18,18 +18,11 @@ $this->menu=array(
 
 
 <div id="maincontent">
-	<?php echo $this->renderPartial('_form', array(
+    <?php echo $this->renderPartial('_form', array(
         'generalRepairRegistration' => $generalRepairRegistration,
         'vehicle' => $vehicle,
         'customer' => $customer,
-        'qs'=>$qs,
-        'qsDataProvider'=>$qsDataProvider,
-        'service'=>$service,
-        'serviceDataProvider'=>$serviceDataProvider,
-        'product'=>$product,
-        'productDataProvider'=>$productDataProvider,
-        'serviceArray'=>$serviceArray,
-        'type'=>$type,
+        'employeeId' => $employeeId,
     )); ?>
 </div>
 	

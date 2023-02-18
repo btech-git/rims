@@ -42,6 +42,15 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionCreate($vehicleId) {
         $generalRepairRegistration = $this->instantiate(null);
+        $employeeId = isset($_POST['EmployeeId']) ? $_POST['EmployeeId'] : '';
+        
+        if (!empty($employeeId)) {
+            $user = Users::model()->findByAttributes(array('employee_id' => $employeeId));
+            $generalRepairRegistration->header->user_id_assign_mechanic = $user->id;
+        } else {
+            $user = null;
+            $generalRepairRegistration->header->user_id_assign_mechanic = null;
+        }
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
 
@@ -69,6 +78,7 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
+            'employeeId' => $employeeId,
         ));
     }
 
@@ -166,83 +176,18 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionUpdate($id) {
         $generalRepairRegistration = $this->instantiate($id);
+        $employeeId = isset($_POST['EmployeeId']) ? $_POST['EmployeeId'] : '';
+        
+        if (!empty($employeeId)) {
+            $user = Users::model()->findByAttributes(array('employee_id' => $employeeId));
+            $generalRepairRegistration->header->user_id_assign_mechanic = $user->id;
+        } else {
+            $user = null;
+            $generalRepairRegistration->header->user_id_assign_mechanic = null;
+        }
+        
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
-        $type = "";
-
-        $qs = new QuickService('search');
-        $qs->unsetAttributes();  // clear any default values
-        if (isset($_GET['QuickService'])) {
-            $qs->attributes = $_GET['QuickService'];
-        }
-        $qsCriteria = new CDbCriteria;
-        $qsCriteria->compare('name', $qs->name, true);
-        $qsCriteria->compare('code', $qs->code, true);
-        $qsCriteria->compare('rate', $qs->rate, true);
-
-        $qsDataProvider = new CActiveDataProvider('QuickService', array(
-            'criteria' => $qsCriteria,
-        ));
-
-        $service = new Service('search');
-        $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service'])) {
-            $service->attributes = $_GET['Service'];
-        }
-
-        $serviceCriteria = new CDbCriteria;
-        $serviceCriteria->together = 'true';
-        $serviceCriteria->with = array('serviceCategory', 'serviceType');
-
-        $serviceCriteria->compare('t.name', $service->name, true);
-        $serviceCriteria->compare('t.code', $service->code, true);
-        $explodeKeyword = explode(" ", $service->findkeyword);
-
-        foreach ($explodeKeyword as $key) {
-            $serviceCriteria->compare('t.code', $key, true, 'OR');
-            $serviceCriteria->compare('t.name', $key, true, 'OR');
-            $serviceCriteria->compare('description', $key, true, 'OR');
-            $serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
-            $serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
-            $serviceCriteria->compare('serviceType.name', $key, true, 'OR');
-            $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
-        }
-
-        $serviceDataProvider = new CActiveDataProvider('Service', array(
-            'criteria' => $serviceCriteria,
-        ));
-
-        $serviceChecks = RegistrationService::model()->findAllByAttributes(array('service_id' => $id));
-        $serviceArray = array();
-
-        foreach ($serviceChecks as $key => $serviceCheck) {
-            array_push($serviceArray, $serviceCheck->service_id);
-        }
-
-        $product = new Product('search');
-        $product->unsetAttributes();  // clear any default values
-
-        if (isset($_GET['Product'])) {
-            $product->attributes = $_GET['Product'];
-        }
-
-        $productCriteria = new CDbCriteria;
-        $productCriteria->together = true;
-        $productCriteria->with = array(
-            'productMasterCategory',
-            'productSubMasterCategory',
-            'productSubCategory',
-            'brand'
-        );
-        $productCriteria->compare('t.name', $product->name, true);
-        $productCriteria->compare('productMasterCategory.name', $product->product_master_category_name, true);
-        $productCriteria->compare('productSubMasterCategory.name', $product->product_sub_master_category_name, true);
-        $productCriteria->compare('productSubCategory.name', $product->product_sub_category_name, true);
-        $productCriteria->compare('brand.name', $product->product_brand_name, true);
-
-        $productDataProvider = new CActiveDataProvider('Product', array(
-            'criteria' => $productCriteria,
-        ));
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($generalRepairRegistration);
@@ -262,14 +207,7 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
-            'qs' => $qs,
-            'qsDataProvider' => $qsDataProvider,
-            'service' => $service,
-            'serviceDataProvider' => $serviceDataProvider,
-            'product' => $product,
-            'productDataProvider' => $productDataProvider,
-            'serviceArray' => $serviceArray,
-            'type' => $type,
+            'employeeId' => $employeeId,
         ));
     }
 
