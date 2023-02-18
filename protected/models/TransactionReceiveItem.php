@@ -36,6 +36,7 @@
  * @property string $invoice_date_created
  * @property string $invoice_time_created
  * @property string $created_datetime
+ * @property integer $movement_type
  *
  * The followings are the available model relations:
  * @property MovementInHeader[] $movementInHeaders
@@ -91,8 +92,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('receive_item_no, receive_item_date, user_id_receive, recipient_branch_id', 'required'),
-            array('recipient_id, recipient_branch_id, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id, user_id_receive, user_id_invoice', 'numerical', 'integerOnly' => true),
+            array('receive_item_no, receive_item_date, user_id_receive, recipient_branch_id, movement_type', 'required'),
+            array('recipient_id, recipient_branch_id, destination_branch, supplier_id, movement_type, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id, user_id_receive, user_id_invoice', 'numerical', 'integerOnly' => true),
             array('receive_item_no, request_type', 'length', 'max' => 30),
             array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
             array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total, invoice_grand_total_rounded, invoice_rounding_nominal', 'length', 'max' => 18),
@@ -100,7 +101,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note, invoice_date_created, invoice_time_created', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_no, receive_item_date, arrival_date, created_datetime, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created', 'safe', 'on' => 'search'),
+            array('id, receive_item_no, receive_item_date, arrival_date, created_datetime, movement_type, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created', 'safe', 'on' => 'search'),
         );
     }
 
@@ -158,6 +159,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             'movement_out_id' => 'Movement Out',
             'note' => 'Catatan',
             'supplier_delivery_number' => 'SJ #',
+            'movement_type' => 'Movement Type',
         );
     }
 
@@ -197,6 +199,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.user_id_invoice', $this->user_id_invoice);
         $criteria->compare('t.invoice_grand_total_rounded', $this->invoice_grand_total_rounded);
         $criteria->compare('t.invoice_rounding_nominal', $this->invoice_rounding_nominal);
+        $criteria->compare('t.movement_type', $this->movement_type);
 
         $criteria->together = 'true';
         $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'transferRequest', 'consignmentIn', 'deliveryOrder', 'movementOut');
