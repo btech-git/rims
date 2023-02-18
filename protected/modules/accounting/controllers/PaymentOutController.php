@@ -47,6 +47,7 @@ class PaymentOutController extends Controller {
         $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->supplier_id = $supplierId;
         $paymentOut->header->status = 'Draft';
+        $paymentOut->header->movement_type = $movementType;
 
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
@@ -108,7 +109,7 @@ class PaymentOutController extends Controller {
         $paymentOut->header->payment_date = date('Y-m-d');
         $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->status = 'Draft';
-//        $paymentOut->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+        $paymentOut->header->movement_type = $movementType;
 
         $paymentOut->addInvoice($transactionId, $movementType);
         
@@ -146,14 +147,15 @@ class PaymentOutController extends Controller {
     public function actionUpdate($id) {
         $paymentOut = $this->instantiate($id);
         $supplier = Supplier::model()->findByPk($paymentOut->header->supplier_id);
+        $movementType = $paymentOut->header->movement_type;
 
-        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
-        $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
+//        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
+//        $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
 
-        if (!empty($paymentOut->header->supplier_id)) {
-            $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
-            $receiveItemDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
-        }
+//        if (!empty($paymentOut->header->supplier_id)) {
+//            $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
+//            $receiveItemDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
+//        }
         
         if (isset($_POST['Submit'])) {
             $this->loadState($paymentOut);
@@ -167,8 +169,9 @@ class PaymentOutController extends Controller {
         $this->render('update', array(
             'paymentOut' => $paymentOut,
             'supplier' => $supplier,
-            'receiveItem' => $receiveItem,
-            'receiveItemDataProvider' => $receiveItemDataProvider,
+//            'receiveItem' => $receiveItem,
+//            'receiveItemDataProvider' => $receiveItemDataProvider,
+            'movementType' => $movementType,
         ));
     }
 
@@ -352,7 +355,7 @@ class PaymentOutController extends Controller {
         }
     }
 
-    public function actionAjaxHtmlRemoveDetail($id, $index) {
+    public function actionAjaxHtmlRemoveDetail($id, $index, $movementType) {
         if (Yii::app()->request->isAjaxRequest) {
             $paymentOut = $this->instantiate($id);
             $this->loadState($paymentOut);
@@ -361,6 +364,7 @@ class PaymentOutController extends Controller {
 
             $this->renderPartial('_detail', array(
                 'paymentOut' => $paymentOut,
+                'movementType' => $movementType,
             ));
         }
     }

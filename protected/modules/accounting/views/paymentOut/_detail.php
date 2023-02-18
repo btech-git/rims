@@ -44,7 +44,7 @@
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
                                 'type' => 'POST',
-                                'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $paymentOut->header->id, 'index' => $i)),
+                                'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $paymentOut->header->id, 'index' => $i, 'movementType' => $movementType)),
                                 'update' => '#detail_div',
                             )),
                         )); ?>
@@ -102,7 +102,7 @@
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
                                 'type' => 'POST',
-                                'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $paymentOut->header->id, 'index' => $i)),
+                                'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $paymentOut->header->id, 'index' => $i, 'movementType' => $movementType)),
                                 'update' => '#detail_div',
                             )),
                         )); ?>

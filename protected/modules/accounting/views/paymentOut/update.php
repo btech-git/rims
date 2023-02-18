@@ -8,7 +8,8 @@
 <?php echo $this->renderPartial('_form', array(
     'paymentOut' => $paymentOut,
     'supplier' => $supplier,
-    'receiveItem' => $receiveItem,
-    'receiveItemDataProvider' => $receiveItemDataProvider,
+    'movementType' => $movementType,
+//    'receiveItem' => $receiveItem,
+//    'receiveItemDataProvider' => $receiveItemDataProvider,
 )); ?>
 

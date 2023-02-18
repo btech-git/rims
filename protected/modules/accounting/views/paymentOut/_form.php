@@ -272,7 +272,9 @@
     <hr />
 
     <div class="row">
-        <?php echo CHtml::button('Tambah Invoice', array('name' => 'Search', 'onclick' => '$("#purchase-invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#purchase-invoice-dialog").dialog("open"); return false; }')); ?>
+        <?php if ($paymentOut->header->isNewRecord): ?>
+            <?php echo CHtml::button('Tambah Invoice', array('name' => 'Search', 'onclick' => '$("#purchase-invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#purchase-invoice-dialog").dialog("open"); return false; }')); ?>
+        <?php endif; ?>
         <?php echo CHtml::hiddenField('PurchaseInvoiceId'); ?>
     </div>
 
@@ -321,87 +323,88 @@
     <?php echo CHtml::endForm(); ?>
 
 </div><!-- form -->
+<?php if ($paymentOut->header->isNewRecord): ?>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'purchase-invoice-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Purchase Invoice',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
 
-<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id' => 'purchase-invoice-dialog',
-    // additional javascript options for the dialog plugin
-    'options' => array(
-        'title' => 'Purchase Invoice',
-        'autoOpen' => false,
-        'width' => 'auto',
-        'modal' => true,
-    ),
-)); ?>
+    <?php echo CHtml::beginForm('', 'post'); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'purchase-invoice-grid',
+        'dataProvider' => $receiveItemDataProvider,
+        'filter' => $receiveItem,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'columns' => array(
+            array(
+                'id' => 'selectedIds',
+                'class' => 'CCheckBoxColumn',
+                'selectableRows' => '50',
+            ),
+            array(
+                'name' => 'purchase_order_no',
+                'header' => 'PO #',
+                'value' => '$data->purchaseOrder->purchase_order_no',
+            ),
+            array(
+                'name' => 'invoice_number',
+                'header' => 'Invoice #',
+                'value' => '$data->invoice_number',
+            ),
+            array(
+                'header' => 'Tanggal',
+                'name' => 'invoice_date',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
+            ),
+            array(
+                'name' => 'supplier_delivery_number',
+                'header' => 'Supplier SJ #',
+                'value' => '$data->supplier_delivery_number',
+            ),
+            array(
+                'header' => 'Jatuh Tempo',
+                'name' => 'invoice_due_date',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_due_date)'
+            ),
+            array(
+                'header' => 'Total',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "grandTotal"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+            array(
+                'name' => 'user_id_invoice',
+                'filter' => false,
+                'header' => 'Admin',
+                'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
+            ),
+            array(
+                'header' => 'Tanggal Input',
+                'value' => '$data->dateTimeCreated',
+            ),
+        ),
+    )); ?>
 
-<?php echo CHtml::beginForm('', 'post'); ?>
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'purchase-invoice-grid',
-    'dataProvider' => $receiveItemDataProvider,
-    'filter' => $receiveItem,
-    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-    'pager' => array(
-        'cssFile' => false,
-        'header' => '',
-    ),
-    'columns' => array(
-        array(
-            'id' => 'selectedIds',
-            'class' => 'CCheckBoxColumn',
-            'selectableRows' => '50',
-        ),
-        array(
-            'name' => 'purchase_order_no',
-            'header' => 'PO #',
-            'value' => '$data->purchaseOrder->purchase_order_no',
-        ),
-        array(
-            'name' => 'invoice_number',
-            'header' => 'Invoice #',
-            'value' => '$data->invoice_number',
-        ),
-        array(
-            'header' => 'Tanggal',
-            'name' => 'invoice_date',
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
-        ),
-        array(
-            'name' => 'supplier_delivery_number',
-            'header' => 'Supplier SJ #',
-            'value' => '$data->supplier_delivery_number',
-        ),
-        array(
-            'header' => 'Jatuh Tempo',
-            'name' => 'invoice_due_date',
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_due_date)'
-        ),
-        array(
-            'header' => 'Total',
-            'filter' => false,
-            'value' => 'number_format(CHtml::value($data, "grandTotal"), 2)',
-            'htmlOptions' => array('style' => 'text-align: right'),
-        ),
-        array(
-            'name' => 'user_id_invoice',
-            'filter' => false,
-            'header' => 'Admin',
-            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
-        ),
-        array(
-            'header' => 'Tanggal Input',
-            'value' => '$data->dateTimeCreated',
-        ),
-    ),
-)); ?>
+    <?php echo CHtml::ajaxSubmitButton('Add Invoice', CController::createUrl('ajaxHtmlAddInvoices', array('id' => $paymentOut->header->id, 'movementType' => 1)), array(
+        'type' => 'POST',
+        'data' => 'js:$("form").serialize()',
+        'success' => 'js:function(html) {
+            $("#detail_div").html(html);
+            $("#purchase-invoice-dialog").dialog("close");
+        }'
+    )); ?>
 
-<?php echo CHtml::ajaxSubmitButton('Add Invoice', CController::createUrl('ajaxHtmlAddInvoices', array('id' => $paymentOut->header->id, 'movementType' => 1)), array(
-    'type' => 'POST',
-    'data' => 'js:$("form").serialize()',
-    'success' => 'js:function(html) {
-        $("#detail_div").html(html);
-        $("#purchase-invoice-dialog").dialog("close");
-    }'
-)); ?>
+    <?php echo CHtml::endForm(); ?>
 
-<?php echo CHtml::endForm(); ?>
-
-<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+<?php endif; ?>
