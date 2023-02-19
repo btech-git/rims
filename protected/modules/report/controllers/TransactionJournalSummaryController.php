@@ -115,55 +115,55 @@ class TransactionJournalSummaryController extends Controller {
         $worksheet->setCellValue('B5', 'Debit');
         $worksheet->setCellValue('C5', 'Credit');
 
-//        $counter = 6;
+        $counter = 6;
 
-//        $accountCategoryDebitBalance = 0.00;
-//        $accountCategoryCreditBalance = 0.00;
-//        foreach ($coaSubCategories as $coaSubCategory) {
-//            $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC'));
-//            foreach ($coas as $coa) {
-//                $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-//                $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-//                if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
-//                    $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
-//                    if (empty($coa->coaIds)) {
-//                        $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-//                        $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
-//                    }
-//                    $counter++;
-//            
-//                    $groupDebitBalance = 0;
-//                    $groupCreditBalance = 0;
-//                    if (!empty($coa->coaIds)) {
-//                        $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC'));
-//                        foreach ($coaIds as $account) {
-//                            $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-//                            $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-//                            if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
-//                                $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
-//                                if (empty($coa->coaIds)) {
-//                                    $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-//                                    $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
-//                                }
-//                                $groupDebitBalance += $journalDebitBalance;
-//                                $groupCreditBalance += $journalCreditBalance;
-//                                
-//                                $counter++;
-//                                
-//                            }
-//                        }
-//                    }
-//                }
-//                $accountCategoryDebitBalance += $journalDebitBalance;
-//                $accountCategoryCreditBalance += $journalCreditBalance;
-//            }
-//
-//            $counter++;
-//        }
-//        
-//        $worksheet->setCellValue("A{$counter}", "Total");
-//        $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
-//        $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
+        $accountCategoryDebitBalance = 0.00;
+        $accountCategoryCreditBalance = 0.00;
+        foreach ($coaSubCategories as $coaSubCategory) {
+            $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC'));
+            foreach ($coas as $coa) {
+                $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
+                $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
+                if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
+                    $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
+                    if (empty($coa->coaIds)) {
+                        $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
+                        $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
+                    }
+                    $counter++;
+            
+                    $groupDebitBalance = 0;
+                    $groupCreditBalance = 0;
+                    if (!empty($coa->coaIds)) {
+                        $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC'));
+                        foreach ($coaIds as $account) {
+                            $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
+                            $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
+                            if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
+                                $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
+                                if (empty($coa->coaIds)) {
+                                    $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
+                                    $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
+                                }
+                                $groupDebitBalance += $journalDebitBalance;
+                                $groupCreditBalance += $journalCreditBalance;
+                                
+                                $counter++;
+                                
+                            }
+                        }
+                    }
+                }
+                $accountCategoryDebitBalance += $journalDebitBalance;
+                $accountCategoryCreditBalance += $journalCreditBalance;
+            }
+
+            $counter++;
+        }
+        
+        $worksheet->setCellValue("A{$counter}", "Total");
+        $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
+        $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
 
         for ($col = 'A'; $col !== 'C'; $col++) {
             $objPHPExcel->getActiveSheet()
