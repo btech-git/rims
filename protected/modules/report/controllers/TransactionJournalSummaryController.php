@@ -165,7 +165,7 @@ class TransactionJournalSummaryController extends Controller {
         $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
         $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
 
-        for ($col = 'A'; $col !== 'C'; $col++) {
+        for ($col = 'A'; $col !== 'D'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
