@@ -33,10 +33,13 @@ class PaymentInSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branch) {
+    public function setupFilter($startDate, $endDate, $branch, $customerType) {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.branch_id', $branch);
+        if (!empty($customerType)) {
+            $this->dataProvider->criteria->compare('customer.customer_type', $customerType);
+        }
     }
 }

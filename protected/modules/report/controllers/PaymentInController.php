@@ -25,6 +25,8 @@ class PaymentInController extends Controller {
 
         $paymentIn = Search::bind(new PaymentIn('search'), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $customerId = isset($_GET['CustomerId']) ? $_GET['CustomerId'] : '';
+        $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -36,7 +38,19 @@ class PaymentInController extends Controller {
         $paymentInSummary->setupLoading();
         $paymentInSummary->setupPaging($pageSize, $currentPage);
         $paymentInSummary->setupSorting();
-        $paymentInSummary->setupFilter($startDate, $endDate, $branchId);
+        $paymentInSummary->setupFilter($startDate, $endDate, $branchId, $customerType);
+
+        $customer = new Customer('search');
+        $customer->unsetAttributes();  // clear any default values
+        
+        if (isset($_GET['Customer'])) {
+            $customer->attributes = $_GET['Customer'];
+        }
+        
+        $customerCriteria = new CDbCriteria;
+        $customerDataProvider = new CActiveDataProvider('Customer', array(
+            'criteria' => $customerCriteria,
+        ));
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($paymentInSummary, $branchId, $paymentInSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -45,11 +59,28 @@ class PaymentInController extends Controller {
         $this->render('summary', array(
             'paymentIn' => $paymentIn,
             'paymentInSummary' => $paymentInSummary,
+            'customerId' => $customerId,
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
+            'customerType' => $customerType,
             'branchId' => $branchId,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
         ));
+    }
+
+    public function actionAjaxJsonCustomer() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
+            $customer = Customer::model()->findByPk($customerId);
+
+            $object = array(
+                'customer_name' => CHtml::value($customer, 'name'),
+            );
+            
+            echo CJSON::encode($object);
+        }
     }
 
     protected function saveToExcel($paymentInSummary, $branchId, $dataProvider, array $options = array()) {
