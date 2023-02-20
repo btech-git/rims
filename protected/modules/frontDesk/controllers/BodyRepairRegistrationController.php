@@ -375,7 +375,7 @@ class BodyRepairRegistrationController extends Controller {
         $transactionCode = $model->transaction_number;
         $transactionDate = $model->transaction_date;
         $branchId = $model->branch_id;
-        $transactionSubject = $model->customer->name;
+        $transactionSubject = $model->note;
         
         $journalReferences = array();
         
@@ -387,7 +387,7 @@ class BodyRepairRegistrationController extends Controller {
         $jurnalUmumReceivable->total = $model->grand_total;
         $jurnalUmumReceivable->debet_kredit = 'D';
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-        $jurnalUmumReceivable->transaction_subject = $model->customer->name;
+        $jurnalUmumReceivable->transaction_subject = $transactionSubject;
         $jurnalUmumReceivable->is_coa_category = 0;
         $jurnalUmumReceivable->transaction_type = 'RG BR';
         $jurnalUmumReceivable->save();
@@ -402,7 +402,7 @@ class BodyRepairRegistrationController extends Controller {
             $jurnalUmumPpn->total = $model->ppn_price;
             $jurnalUmumPpn->debet_kredit = 'K';
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-            $jurnalUmumPpn->transaction_subject = $model->customer->name;
+            $jurnalUmumPpn->transaction_subject = $transactionSubject;
             $jurnalUmumPpn->is_coa_category = 0;
             $jurnalUmumPpn->transaction_type = 'RG BR';
             $jurnalUmumPpn->save();
@@ -418,7 +418,7 @@ class BodyRepairRegistrationController extends Controller {
             $jurnalUmumPpn->total = $model->pph_price;
             $jurnalUmumPpn->debet_kredit = 'D';
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-            $jurnalUmumPpn->transaction_subject = $model->customer->name;
+            $jurnalUmumPpn->transaction_subject = $transactionSubject;
             $jurnalUmumPpn->is_coa_category = 0;
             $jurnalUmumPpn->transaction_type = 'RG BR';
             $jurnalUmumPpn->save();

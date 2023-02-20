@@ -86,7 +86,7 @@ class PaymentInController extends Controller {
             $jurnalPiutang->total = $totalKas;
             $jurnalPiutang->debet_kredit = 'K';
             $jurnalPiutang->tanggal_posting = date('Y-m-d');
-            $jurnalPiutang->transaction_subject = $model->customer->name;
+            $jurnalPiutang->transaction_subject = $model->notes;
             $jurnalPiutang->is_coa_category = 0;
             $jurnalPiutang->transaction_type = 'Pin';
             $jurnalPiutang->save();
@@ -105,7 +105,7 @@ class PaymentInController extends Controller {
             $jurnalUmumKas->total = $model->payment_amount;
             $jurnalUmumKas->debet_kredit = 'D';
             $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-            $jurnalUmumKas->transaction_subject = $model->customer->name;
+            $jurnalUmumKas->transaction_subject = $model->notes;
             $jurnalUmumKas->is_coa_category = 0;
             $jurnalUmumKas->transaction_type = 'Pin';
             $jurnalUmumKas->save();
@@ -119,7 +119,7 @@ class PaymentInController extends Controller {
                 $jurnalPph->total = $model->tax_service_amount;
                 $jurnalPph->debet_kredit = 'D';
                 $jurnalPph->tanggal_posting = date('Y-m-d');
-                $jurnalPph->transaction_subject = $model->customer->name;
+                $jurnalPph->transaction_subject = $model->notes;
                 $jurnalPph->is_coa_category = 0;
                 $jurnalPph->transaction_type = 'Pin';
                 $jurnalPph->save();
@@ -657,7 +657,7 @@ class PaymentInController extends Controller {
                         $jurnalPiutang->total = $totalKas;
                         $jurnalPiutang->debet_kredit = 'K';
                         $jurnalPiutang->tanggal_posting = date('Y-m-d');
-                        $jurnalPiutang->transaction_subject = $paymentIn->customer->name;
+                        $jurnalPiutang->transaction_subject = $paymentIn->notes;
                         $jurnalPiutang->is_coa_category = 0;
                         $jurnalPiutang->transaction_type = 'Pin';
                         $jurnalPiutang->save();
@@ -676,7 +676,7 @@ class PaymentInController extends Controller {
                         $jurnalUmumKas->total = $paymentIn->payment_amount;
                         $jurnalUmumKas->debet_kredit = 'D';
                         $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumKas->transaction_subject = $paymentIn->customer->name;
+                        $jurnalUmumKas->transaction_subject = $paymentIn->notes;
                         $jurnalUmumKas->is_coa_category = 0;
                         $jurnalUmumKas->transaction_type = 'Pin';
                         $jurnalUmumKas->save();
@@ -690,7 +690,7 @@ class PaymentInController extends Controller {
                             $jurnalPph->total = $paymentIn->tax_service_amount;
                             $jurnalPph->debet_kredit = 'D';
                             $jurnalPph->tanggal_posting = date('Y-m-d');
-                            $jurnalPph->transaction_subject = $paymentIn->customer->name;
+                            $jurnalPph->transaction_subject = $paymentIn->notes;
                             $jurnalPph->is_coa_category = 0;
                             $jurnalPph->transaction_type = 'Pin';
                             $jurnalPph->save();

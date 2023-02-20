@@ -60,7 +60,7 @@ class TransactionReceiveItemController extends Controller {
         $transactionCode = $model->receive_item_no;
         $transactionDate = $model->receive_item_date;
         $branchId = $model->recipient_branch_id;
-        $transactionSubject = $model->supplier->name;
+        $transactionSubject = $model->note;
         
         $journalReferences = array();
         
@@ -102,7 +102,7 @@ class TransactionReceiveItemController extends Controller {
             $jurnalUmumOutstanding->total = $totalJournal;
             $jurnalUmumOutstanding->debet_kredit = 'K';
             $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-            $jurnalUmumOutstanding->transaction_subject = $model->supplier->name;
+            $jurnalUmumOutstanding->transaction_subject = $transactionSubject;
             $jurnalUmumOutstanding->is_coa_category = 0;
             $jurnalUmumOutstanding->transaction_type = 'RCI';
             $jurnalUmumOutstanding->save();

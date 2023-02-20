@@ -398,34 +398,22 @@
     <?php endif; ?>
     
     <?php if (
-        Yii::app()->user->checkAccess('accountingReport') || 
-        Yii::app()->user->checkAccess('financeReport') ||
-        Yii::app()->user->checkAccess('receivableJournalReport') || 
-        Yii::app()->user->checkAccess('generalLedgerReport') || 
-        Yii::app()->user->checkAccess('cashTransactionReport') || 
-        Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
-        Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
-        Yii::app()->user->checkAccess('summaryProfitLossReport') || 
-        Yii::app()->user->checkAccess('standardProfitLossReport') || 
         Yii::app()->user->checkAccess('financialAnalysisReport') || 
-        Yii::app()->user->checkAccess('kertasKerjaReport') || 
-        Yii::app()->user->checkAccess('transactionJournalReport') || 
-        Yii::app()->user->checkAccess('journalSummaryReport') || 
         Yii::app()->user->checkAccess('cashDailyReport') || 
-        Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
-        Yii::app()->user->checkAccess('cashDailySummaryReport') || 
-        Yii::app()->user->checkAccess('financialForecastReport') || 
-        Yii::app()->user->checkAccess('cashDailyTransactionReport')
+        Yii::app()->user->checkAccess('kertasKerjaReport')
     ): ?>
         <li class="mdropdown"><a href="#">ACCOUNTING/FINANCE</a>
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
                     array('label' => 'Analisa Keuangan', 'url' => array('/accounting/forecasting/admin'), 'visible' => Yii::app()->user->checkAccess('financialAnalysisReport')),
-                    array('label' => 'Laporan Cash Transaction', 'url' => array('/report/cashTransaction/summary'), 'visible' => Yii::app()->user->checkAccess('cashTransactionReport')),
                     array('label' => 'Kertas Kerja', 'url' => array('/accounting/coa/kertasKerja'), 'visible' => Yii::app()->user->checkAccess('kertasKerjaReport')),
                     array('label' => 'Laporan Kas Harian', 'url' => array('/report/kasharian/report'), 'visible' => Yii::app()->user->checkAccess('cashDailyReport')),
                     array('label' => 'Transaksi Dashboard', 'url' => array('/report/analyticsTransaction/summary'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                    array('label' => 'Aset Management', 'url' => array('/accounting/assetManagement/admin')),
+                    array(
+                        'label' => 'Aset Management', 
+                        'url' => array('/accounting/assetManagement/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('generalManager')
+                    ),
                     array(
                         'label' => 'Financial Forecast', 
                         'url' => array('/accounting/financialForecast/summary'), 
@@ -452,6 +440,24 @@
             Yii::app()->user->checkAccess('deliveryReport') || 
             Yii::app()->user->checkAccess('receiveItemReport') || 
             Yii::app()->user->checkAccess('sentRequestReport') || 
+            Yii::app()->user->checkAccess('accountingReport') || 
+            Yii::app()->user->checkAccess('financeReport') ||
+            Yii::app()->user->checkAccess('receivableJournalReport') || 
+            Yii::app()->user->checkAccess('generalLedgerReport') || 
+            Yii::app()->user->checkAccess('cashTransactionReport') || 
+            Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
+            Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
+            Yii::app()->user->checkAccess('summaryProfitLossReport') || 
+            Yii::app()->user->checkAccess('standardProfitLossReport') || 
+            Yii::app()->user->checkAccess('financialAnalysisReport') || 
+            Yii::app()->user->checkAccess('kertasKerjaReport') || 
+            Yii::app()->user->checkAccess('transactionJournalReport') || 
+            Yii::app()->user->checkAccess('journalSummaryReport') || 
+            Yii::app()->user->checkAccess('cashDailyReport') || 
+            Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
+            Yii::app()->user->checkAccess('cashDailySummaryReport') || 
+            Yii::app()->user->checkAccess('financialForecastReport') || 
+            Yii::app()->user->checkAccess('cashDailyTransactionReport') ||
             Yii::app()->user->checkAccess('transferRequestReport')
         ): ?>
         <li><?php echo CHtml::link('LAPORAN ', array('/report/default')); ?>

@@ -71,7 +71,7 @@ class TransactionSalesOrderController extends Controller {
             $transactionCode = $model->sale_order_no;
             $transactionDate = $model->sale_order_date;
             $branchId = $model->requester_branch_id;
-            $transactionSubject = $model->customer->name;
+            $transactionSubject = $model->note;
 
             $journalReferences = array();
         
@@ -86,7 +86,7 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumKas->total = $model->total_price;
                 $jurnalUmumKas->debet_kredit = 'D';
                 $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $model->customer->name;
+                $jurnalUmumKas->transaction_subject = $transactionSubject;
                 $jurnalUmumKas->is_coa_category = 0;
                 $jurnalUmumKas->transaction_type = 'SO';
                 $jurnalUmumKas->save();
@@ -102,7 +102,7 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumPiutang->total = $model->total_price;
                 $jurnalUmumPiutang->debet_kredit = 'D';
                 $jurnalUmumPiutang->tanggal_posting = date('Y-m-d');
-                $jurnalUmumPiutang->transaction_subject = $model->customer->name;
+                $jurnalUmumPiutang->transaction_subject = $transactionSubject;
                 $jurnalUmumPiutang->is_coa_category = 0;
                 $jurnalUmumPiutang->transaction_type = 'SO';
                 $jurnalUmumPiutang->save();
@@ -132,7 +132,7 @@ class TransactionSalesOrderController extends Controller {
                     $jurnalUmumPpn->total = $model->ppn_price;
                     $jurnalUmumPpn->debet_kredit = 'K';
                     $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumPpn->transaction_subject = $model->customer->name;
+                    $jurnalUmumPpn->transaction_subject = $transactionSubject;
                     $jurnalUmumPpn->is_coa_category = 0;
                     $jurnalUmumPpn->transaction_type = 'SO';
                     $jurnalUmumPpn->save();

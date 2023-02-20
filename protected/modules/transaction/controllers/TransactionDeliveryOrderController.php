@@ -53,6 +53,7 @@ class TransactionDeliveryOrderController extends Controller {
                 'kode_transaksi' => $model->delivery_order_no,
                 'branch_id' => $model->sender_branch_id,
             ));
+            $transactionSubject = $model->request_type;
 
             foreach ($deliveryDetails as $detail) {
                 if ($model->request_type == 'Sales Order') {
@@ -68,7 +69,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumMasterInventory->total = $jumlah;
                     $jurnalUmumMasterInventory->debet_kredit = 'K';
                     $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterInventory->transaction_subject = $transactionSubject;
                     $jurnalUmumMasterInventory->is_coa_category = 1;
                     $jurnalUmumMasterInventory->transaction_type = 'DO';
                     $jurnalUmumMasterInventory->save();
@@ -83,7 +84,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumInventory->total = $jumlah;
                     $jurnalUmumInventory->debet_kredit = 'K';
                     $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventory->transaction_subject = $transactionSubject;
                     $jurnalUmumInventory->is_coa_category = 0;
                     $jurnalUmumInventory->transaction_type = 'DO';
                     $jurnalUmumInventory->save();
@@ -97,7 +98,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumMasterOutstandingPart->total = $jumlah;
                     $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
                     $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterOutstandingPart->transaction_subject = $transactionSubject;
                     $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
                     $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
                     $jurnalUmumMasterOutstandingPart->save();
@@ -111,7 +112,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumOutstandingPart->total = $jumlah;
                     $jurnalUmumOutstandingPart->debet_kredit = 'D';
                     $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumOutstandingPart->transaction_subject = $transactionSubject;
                     $jurnalUmumOutstandingPart->is_coa_category = 0;
                     $jurnalUmumOutstandingPart->transaction_type = 'DO';
                     $jurnalUmumOutstandingPart->save();
@@ -128,7 +129,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumMasterOutstandingPart->total = $hppPrice;
                     $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
                     $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterOutstandingPart->transaction_subject = $transactionSubject;
                     $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
                     $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
                     $jurnalUmumMasterOutstandingPart->save();
@@ -142,7 +143,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumOutstandingPart->total = $hppPrice;
                     $jurnalUmumOutstandingPart->debet_kredit = 'D';
                     $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumOutstandingPart->transaction_subject = $transactionSubject;
                     $jurnalUmumOutstandingPart->is_coa_category = 0;
                     $jurnalUmumOutstandingPart->transaction_type = 'DO';
                     $jurnalUmumOutstandingPart->save();
@@ -157,7 +158,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumMasterInventory->total = $hppPrice;
                     $jurnalUmumMasterInventory->debet_kredit = 'K';
                     $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterInventory->transaction_subject = $transactionSubject;
                     $jurnalUmumMasterInventory->is_coa_category = 1;
                     $jurnalUmumMasterInventory->transaction_type = 'DO';
                     $jurnalUmumMasterInventory->save();
@@ -172,7 +173,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumInventory->total = $hppPrice;
                     $jurnalUmumInventory->debet_kredit = 'K';
                     $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventory->transaction_subject = $transactionSubject;
                     $jurnalUmumInventory->is_coa_category = 0;
                     $jurnalUmumInventory->transaction_type = 'DO';
                     $jurnalUmumInventory->save();
@@ -192,7 +193,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalMasterUmumConsignment->total = $salePrice;
                     $jurnalMasterUmumConsignment->debet_kredit = 'D';
                     $jurnalMasterUmumConsignment->tanggal_posting = date('Y-m-d');
-                    $jurnalMasterUmumConsignment->transaction_subject = 'Delivery Order';
+                    $jurnalMasterUmumConsignment->transaction_subject = $transactionSubject;
                     $jurnalMasterUmumConsignment->is_coa_category = 1;
                     $jurnalMasterUmumConsignment->transaction_type = 'DO';
                     $jurnalMasterUmumConsignment->save();
@@ -207,7 +208,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumConsignment->total = $salePrice;
                     $jurnalUmumConsignment->debet_kredit = 'D';
                     $jurnalUmumConsignment->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumConsignment->transaction_subject = 'Delivery Order';
+                    $jurnalUmumConsignment->transaction_subject = $transactionSubject;
                     $jurnalUmumConsignment->is_coa_category = 0;
                     $jurnalUmumConsignment->transaction_type = 'DO';
                     $jurnalUmumConsignment->save();
@@ -220,7 +221,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalMasterUmumInventoryInTransit->total = $salePrice;
                     $jurnalMasterUmumInventoryInTransit->debet_kredit = 'D';
                     $jurnalMasterUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
-                    $jurnalMasterUmumInventoryInTransit->transaction_subject = 'Delivery Order';
+                    $jurnalMasterUmumInventoryInTransit->transaction_subject = $transactionSubject;
                     $jurnalMasterUmumInventoryInTransit->is_coa_category = 1;
                     $jurnalMasterUmumInventoryInTransit->transaction_type = 'DO';
                     $jurnalMasterUmumInventoryInTransit->save();
@@ -234,7 +235,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumInventoryInTransit->total = $salePrice;
                     $jurnalUmumInventoryInTransit->debet_kredit = 'K';
                     $jurnalUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInventoryInTransit->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventoryInTransit->transaction_subject = $transactionSubject;
                     $jurnalUmumInventoryInTransit->is_coa_category = 0;
                     $jurnalUmumInventoryInTransit->transaction_type = 'DO';
                     $jurnalUmumInventoryInTransit->save();
@@ -251,7 +252,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumMasterOutstandingPart->total = $hppPrice;
                     $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
                     $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterOutstandingPart->transaction_subject = $transactionSubject;
                     $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
                     $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
                     $jurnalUmumMasterOutstandingPart->save();
@@ -265,7 +266,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumOutstandingPart->total = $hppPrice;
                     $jurnalUmumOutstandingPart->debet_kredit = 'D';
                     $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                    $jurnalUmumOutstandingPart->transaction_subject = $transactionSubject;
                     $jurnalUmumOutstandingPart->is_coa_category = 0;
                     $jurnalUmumOutstandingPart->transaction_type = 'DO';
                     $jurnalUmumOutstandingPart->save();
@@ -280,7 +281,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumMasterInventory->total = $hppPrice;
                     $jurnalUmumMasterInventory->debet_kredit = 'K';
                     $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumMasterInventory->transaction_subject = $transactionSubject;
                     $jurnalUmumMasterInventory->is_coa_category = 1;
                     $jurnalUmumMasterInventory->transaction_type = 'DO';
                     $jurnalUmumMasterInventory->save();
@@ -295,7 +296,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumInventory->total = $hppPrice;
                     $jurnalUmumInventory->debet_kredit = 'K';
                     $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                    $jurnalUmumInventory->transaction_subject = $transactionSubject;
                     $jurnalUmumInventory->is_coa_category = 0;
                     $jurnalUmumInventory->transaction_type = 'DO';
                     $jurnalUmumInventory->save();
