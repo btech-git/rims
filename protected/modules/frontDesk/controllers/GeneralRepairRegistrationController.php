@@ -171,10 +171,10 @@ class GeneralRepairRegistrationController extends Controller {
         
         if (!empty($employeeId)) {
             $user = Users::model()->findByAttributes(array('employee_id' => $employeeId));
-            $generalRepairRegistration->header->user_id_assign_mechanic = $user->id;
+            $generalRepairRegistration->header->employee_id_assign_mechanic = $user->id;
         } else {
             $user = null;
-            $generalRepairRegistration->header->user_id_assign_mechanic = null;
+            $generalRepairRegistration->header->employee_id_assign_mechanic = null;
         }
         
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
