@@ -22,7 +22,6 @@ $this->menu=array(
         'generalRepairRegistration' => $generalRepairRegistration,
         'vehicle' => $vehicle,
         'customer' => $customer,
-        'employeeId' => $employeeId,
     )); ?>
 </div>
 	

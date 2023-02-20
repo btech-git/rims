@@ -195,7 +195,7 @@
                             <span class="prefix">Assigned Mechanic</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo !empty($model->user_id_assign_mechanic) ? $model->userIdAssignMechanic->username : ''; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_assign_mechanic) ? $model->employeeIdAssignMechanic->name : ''; ?>"> 
                         </div>
                     </div>
                 </div>

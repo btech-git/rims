@@ -12,6 +12,5 @@ $this->breadcrumbs=array(
         'generalRepairRegistration' => $generalRepairRegistration,
         'vehicle' => $vehicle,
         'customer' => $customer,
-        'employeeId' => $employeeId,
     )); ?>
 </div>

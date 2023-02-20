@@ -42,15 +42,7 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionCreate($vehicleId) {
         $generalRepairRegistration = $this->instantiate(null);
-        $employeeId = isset($_POST['EmployeeId']) ? $_POST['EmployeeId'] : '';
         
-        if (!empty($employeeId)) {
-            $user = Users::model()->findByAttributes(array('employee_id' => $employeeId));
-            $generalRepairRegistration->header->user_id_assign_mechanic = $user->id;
-        } else {
-            $user = null;
-            $generalRepairRegistration->header->user_id_assign_mechanic = null;
-        }
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
 
@@ -78,7 +70,6 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
-            'employeeId' => $employeeId,
         ));
     }
 

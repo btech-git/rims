@@ -100,16 +100,16 @@
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'user_id_assign_mechanic'); ?></label>
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'employee_id_assign_mechanic'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::dropDownlist('EmployeeId', $employeeId, CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
                                                     "branch_id" => $generalRepairRegistration->header->branch_id,
                                                     "division_id" => 1,
                                                     "position_id" => 1,
                                                     "level_id" => array(1, 2, 3),
                                                 )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
-                                                <?php echo $form->error($generalRepairRegistration->header,'user_id_assign_mechanic'); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'employee_id_assign_mechanic'); ?>
                                             </div>
                                         </div>
                                     </div>
