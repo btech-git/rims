@@ -153,7 +153,7 @@ $('.search-form form').submit(function(){
                     'edit' => array(
                         'label' => 'edit',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/update", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && empty($data->invoiceHeaders) && Yii::app()->user->checkAccess("bodyRepairEdit")',
+                        'visible' => 'Yii::app()->user->checkAccess("bodyRepairEdit")', //'$data->status != "Finished" && empty($data->invoiceHeaders) && ',
                     ),
                     'hapus' => array(
                         'label' => 'delete',

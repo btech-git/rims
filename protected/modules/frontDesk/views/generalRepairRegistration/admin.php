@@ -132,7 +132,7 @@ Yii::app()->clientScript->registerScript('search', "
                     'edit' => array(
                         'label' => 'edit',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/update", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("generalRepairEdit") && empty($data->invoiceHeaders)',
+                        'visible' => 'Yii::app()->user->checkAccess("generalRepairEdit")', //' && $data->status != "Finished" && empty($data->invoiceHeaders)',
                     ),
                     'hapus' => array(
                         'label' => 'delete',
