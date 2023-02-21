@@ -100,8 +100,8 @@ class SaleRetailController extends Controller {
         $worksheet->mergeCells('A2:AD2');
         $worksheet->mergeCells('A3:AD3');
 
-        $worksheet->getStyle('A1:AD5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AD5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:AD6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AD6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));

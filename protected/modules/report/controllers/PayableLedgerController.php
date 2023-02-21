@@ -40,24 +40,13 @@ class PayableLedgerController extends Controller {
         );
         $payableLedgerSummary->setupFilter($filters);
         
-//        $supplier->unsetAttributes();  // clear any default values
-//        if (isset($_GET['Supplier'])) {
-//            $supplier->attributes = $_GET['Supplier'];
-//        }
-//        $supplierCriteria = new CDbCriteria;
-//        $supplierCriteria->compare('t.name', $supplier->name, true);
-//        $supplierCriteria->compare('t.company', $supplier->company, true);
-//        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
-//            'criteria' => $supplierCriteria,
-//            'sort' => array(
-//                "defaultOrder" => "t.status ASC, t.name ASC",
-//            ),
-//        ));
-
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($payableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+        }
+        
         $this->render('summary', array(
             'supplier' => $supplier,
             'supplierName' => $supplierName,
-//            'supplierDataProvider' => $supplierDataProvider,
             'payableLedgerSummary' => $payableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -78,6 +67,118 @@ class PayableLedgerController extends Controller {
         }
     }
 
+    protected function saveToExcel($payableLedgerSummary, array $options = array()) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
+        $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
+        
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('PT. Raperind Motor');
+        $documentProperties->setTitle('Buku Besar Pembantu Hutang');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Buku Besar Pembantu Hutang');
+
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
+
+        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A2', 'Buku Besar Pembantu Hutang');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
+
+        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'Tanggal');
+        $worksheet->setCellValue('B5', 'Jenis Transaksi');
+        $worksheet->setCellValue('C5', 'Transaksi #');
+        $worksheet->setCellValue('D5', 'Keterangan');
+        $worksheet->setCellValue('E5', 'Nilai');
+        $worksheet->setCellValue('F5', 'Saldo');
+
+        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+
+        foreach ($payableLedgerSummary->data as $header) {
+            $saldo = $header->getBeginningBalancePayable($startDate);
+            if ($saldo > 0.00) {
+                $worksheet->mergeCells("A{$counter}:B{$counter}");
+                $worksheet->mergeCells("C{$counter}:E{$counter}");
+                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
+                
+                $counter++;
+                
+                $payableData = $header->getPayableLedgerReport($startDate, $endDate);
+                $positiveAmount = 0; 
+                $negativeAmount = 0;
+                
+                foreach ($payableData as $payableRow) {
+                    $purchaseAmount = $payableRow['purchase_amount'];
+                    $paymentAmount = $payableRow['payment_amount'];
+                    $amount = $payableRow['amount'];
+                    $saldo += $amount;
+                    
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode($payableRow['tanggal_transaksi']));
+                    $worksheet->setCellValue("B{$counter}", CHtml::encode($payableRow['transaction_type']));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode($payableRow['transaction_number']));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode($payableRow['remark']));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode($amount));
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
+                    
+                    $positiveAmount += $purchaseAmount;
+                    $negativeAmount += $paymentAmount; 
+                    
+                    $counter++;
+                }
+                
+                $worksheet->mergeCells("A{$counter}:E{$counter}");
+                $worksheet->setCellValue("A{$counter}", "Total Penambahan");
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($positiveAmount));
+                $counter++;
+                
+                $worksheet->mergeCells("A{$counter}:E{$counter}");
+                $worksheet->setCellValue("A{$counter}", "Total Penurunan");
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($negativeAmount));
+                $counter++;
+                
+                $worksheet->mergeCells("A{$counter}:E{$counter}");
+                $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
+                $counter++; $counter++;
+                
+            }
+        }
+            
+        for ($col = 'A'; $col !== 'G'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Buku Besar Pembantu Hutang.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
     public function actionRedirectTransaction($codeNumber) {
         list($leftPart,, ) = explode('/', $codeNumber);
         list(, $codeNumberConstant) = explode('.', $leftPart);
