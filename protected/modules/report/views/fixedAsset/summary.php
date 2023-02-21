@@ -1,5 +1,6 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
+    $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -38,12 +39,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage'));*/ ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     
                     <div class="row">
                         <div class="medium-6 columns">
@@ -51,6 +52,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 <div class="row collapse">
                                     <div class="small-2 columns">
                                         <span class="prefix">Periode Tanggal </span>
+                                    </div>
+
+                                    <div class="small-5 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
                                     </div>
 
                                     <div class="small-5 columns">
@@ -78,15 +92,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
-                    <?php echo CHtml::endForm();*/ ?>
+                    <?php echo CHtml::endForm(); ?>
                     <div class="clear"></div>
-                </div>-->
+                </div>
 
                 <hr />
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'assetCategories' => $assetCategories,
+                        'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>
                 </div>

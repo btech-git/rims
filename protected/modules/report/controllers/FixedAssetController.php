@@ -23,12 +23,14 @@ class FixedAssetController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $assetCategories = AssetCategory::model()->findAll();
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+//        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $this->render('summary', array(
             'assetCategories' => $assetCategories,
+            'startDate' => $startDate,
             'endDate' => $endDate,
         ));
     }

@@ -13,7 +13,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Laporan Aset Tetap</div>
-    <div><?php echo 'Per Tanggal ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+    <div><?php echo 'Periode ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
@@ -32,10 +32,10 @@ Yii::app()->clientScript->registerCss('_report', '
     <tr id="header2">
         <td colspan="8">&nbsp;</td>
     </tr>
-    <?php foreach ($assetCategories as $header): ?>
+    <?php foreach ($assetCategories as $assetCategory): ?>
     
         <tr class="items1">
-            <td style="font-weight: bold" colspan="8"><?php echo CHtml::encode(CHtml::value($header, 'description')); ?></td>
+            <td style="font-weight: bold" colspan="8"><?php echo CHtml::encode(CHtml::value($assetCategory, 'description')); ?></td>
         </tr>
         
         <?php $totalPurchaseValue = 0.00; ?>
@@ -44,7 +44,14 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $totalAdjustedValue = 0.00; ?>
         <?php $totalYearlyValue = 0.00; ?>
         
-        <?php foreach ($header->assetPurchases as $i => $detail): ?>
+        <?php $assetPurchases = AssetPurchase::model()->findAll(array(
+            'condition' => 'asset_category_id = :asset_category_id AND transaction_date BETWEEN :start_date AND :end_date', 
+            'params' => array(
+                ':asset_category_id ' => $assetCategory->id,
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+            ))); ?>
+        <?php foreach ($assetPurchases as $detail): ?>
             <?php $purchaseValue = CHtml::value($detail, 'purchase_value'); ?>
             <?php $accumulatedValue = CHtml::value($detail, 'accumulated_depreciation_value'); ?>
             <?php $currentValue = CHtml::value($detail, 'current_value'); ?>
@@ -65,7 +72,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $totalPurchaseValue += $purchaseValue; ?>
             <?php $totalAccumulatedValue += $accumulatedValue; ?>
             <?php $totalCurrentValue += $currentValue; ?>
-            <?php $totalAdjustedValue += 0.00; //$adjustedValue; ?>
+            <?php $totalAdjustedValue += $adjustedValue; ?>
             <?php $totalYearlyValue += 0.00; ?>
 
         <?php endforeach; ?>
