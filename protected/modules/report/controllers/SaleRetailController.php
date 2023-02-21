@@ -207,6 +207,8 @@ class SaleRetailController extends Controller {
                     $counter++;                    
                 }
             }
+            $counter++;
+            
         }
 
         for ($col = 'A'; $col !== 'AD'; $col++) {
