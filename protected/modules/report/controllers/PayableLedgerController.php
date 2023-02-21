@@ -131,7 +131,7 @@ class PayableLedgerController extends Controller {
                     $amount = $payableRow['amount'];
                     $saldo += $amount;
                     
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode($payableRow['tanggal_transaksi']));
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode($payableRow['transaction_date']));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode($payableRow['transaction_type']));
                     $worksheet->setCellValue("C{$counter}", CHtml::encode($payableRow['transaction_number']));
                     $worksheet->setCellValue("D{$counter}", CHtml::encode($payableRow['remark']));
