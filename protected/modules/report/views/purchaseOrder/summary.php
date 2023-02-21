@@ -32,6 +32,27 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Supplier </span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextField($purchaseOrder, 'supplier_id', array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($purchaseOrder, 'supplier.name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -47,9 +68,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
+                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -140,11 +159,64 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
 <div class="hide">
     <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
             'itemCount' => $purchaseOrderSummary->dataProvider->pagination->itemCount,
             'pageSize' => $purchaseOrderSummary->dataProvider->pagination->pageSize,
             'currentPage' => $purchaseOrderSummary->dataProvider->pagination->getCurrentPage(false),
-        )); ?>
+        ));*/ ?>
     </div>
     <div class="clear"></div>
+</div>
+
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'supplier-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Supplier',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'supplier-grid',
+        'dataProvider' => $supplierDataProvider,
+        'filter' => $supplier,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#' . CHtml::activeId($purchaseOrder, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#supplier-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "")
+            {
+                $("#supplier_name").html("");
+                $("#supplier_code").html("");
+                $("#supplier_mobile_phone").html("");
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $purchaseOrder->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#supplier_name").html(data.supplier_name);
+                        $("#supplier_code").html(data.supplier_code);
+                        $("#supplier_mobile_phone").html(data.supplier_mobile_phone);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'code',
+            'name',
+            'mobile_phone',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

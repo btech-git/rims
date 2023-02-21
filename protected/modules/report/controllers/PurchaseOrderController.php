@@ -39,6 +39,9 @@ class PurchaseOrderController extends Controller {
         $purchaseOrderSummary->setupSorting();
         $purchaseOrderSummary->setupFilter($startDate, $endDate, $branchId);
 
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($purchaseOrderSummary, $branchId, $purchaseOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
@@ -47,6 +50,8 @@ class PurchaseOrderController extends Controller {
             'purchaseOrder' => $purchaseOrder,
             'purchaseOrderSummary' => $purchaseOrderSummary,
             'branchId' => $branchId,
+            'supplier'=>$supplier,
+            'supplierDataProvider'=>$supplierDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
