@@ -45,12 +45,13 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $totalYearlyValue = 0.00; ?>
         
         <?php $assetPurchases = AssetPurchase::model()->findAll(array(
-            'condition' => 'asset_category_id = :asset_category_id AND transaction_date BETWEEN :start_date AND :end_date', 
+            'condition' => 'asset_category_id = :asset_category_id', 
             'params' => array(
                 ':asset_category_id ' => $assetCategory->id,
-                ':start_date' => $startDate,
-                ':end_date' => $endDate,
-            ))); ?>
+//                ':start_date' => $startDate,
+//                ':end_date' => $endDate,
+            )
+        )); ?>
         <?php foreach ($assetPurchases as $detail): ?>
             <?php $purchaseValue = CHtml::value($detail, 'purchase_value'); ?>
             <?php $accumulatedValue = CHtml::value($detail, 'accumulated_depreciation_value'); ?>
