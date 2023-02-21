@@ -161,6 +161,7 @@ class ReceivableLedgerController extends Controller {
                 $counter++;
                 
             }
+            $counter++;
         }
             
         for ($col = 'A'; $col !== 'G'; $col++) {
