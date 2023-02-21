@@ -48,6 +48,8 @@ class PaymentInController extends Controller {
         }
         
         $customerCriteria = new CDbCriteria;
+        $customerCriteria->compare('t.name', $customer->name, true);
+        $customerCriteria->compare('t.email', $customer->email, true);
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
         ));

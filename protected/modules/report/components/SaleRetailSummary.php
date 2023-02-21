@@ -38,6 +38,6 @@ class SaleRetailSummary extends CComponent {
         $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
         $this->dataProvider->criteria->compare('t.repair_type', $filters['repairType']);
-        $this->dataProvider->criteria->compare('customer.name', $filters['customerName'], true);
+        $this->dataProvider->criteria->compare('customer.id', $filters['customerId']);
     }
 }

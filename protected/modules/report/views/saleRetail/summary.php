@@ -55,7 +55,76 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerName', $customerName, array('size' => 3)); ?>
+                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }',
+                                        )); ?>
+
+                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                            'id' => 'customer-dialog',
+                                            // additional javascript options for the dialog plugin
+                                            'options' => array(
+                                                'title' => 'Customer',
+                                                'autoOpen' => false,
+                                                'width' => 'auto',
+                                                'modal' => true,
+                                            ),
+                                        )); ?>
+
+                                        <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                            'id' => 'customer-grid',
+                                            'dataProvider' => $customerDataProvider,
+                                            'filter' => $customer,
+                                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                                            'pager'=>array(
+                                               'cssFile'=>false,
+                                               'header'=>'',
+                                            ),
+                                            'selectionChanged' => 'js:function(id){
+                                                $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
+                                                $("#customer-dialog").dialog("close");
+                                                if ($.fn.yiiGridView.getSelection(id) == "") {
+                                                    $("#customer_name").html("");
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        dataType: "JSON",
+                                                        url: "' . CController::createUrl('ajaxJsonCustomer') . '",
+                                                        data: $("form").serialize(),
+                                                        success: function(data) {
+                                                            $("#customer_name").html(data.customer_name);
+                                                        },
+                                                    });
+                                                }
+                                            }',
+                                            'columns' => array(
+                                                'name',
+                                                array(
+                                                    'name' => 'email',
+                                                    'value' => 'CHtml::encode(CHtml::value($data, "email"))',
+                                                ),
+                                                array(
+                                                    'name' => 'customer_type',
+                                                    'filter' => false, 
+                                                    'value' => '$data->customer_type',
+                                                ),
+                                                array(
+                                                    'header' => 'COA account',
+                                                    'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
+                                                ),
+                                                array(
+                                                    'header' => 'PIC',
+                                                    'value' => 'empty($data->customerPics) ? "" : $data->customerPics[0]->name',
+                                                ),
+                                            ),
+                                        )); ?>
+                                        <?php $this->endWidget(); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                                        <?php $customer = Customer::model()->findByPk($customerId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?> 
+
                                     </div>
                                 </div>
                             </div>
@@ -162,10 +231,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 <br/>
 
 <div class="right">
-    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
         'itemCount' => $saleRetailSummary->dataProvider->pagination->itemCount,
         'pageSize' => $saleRetailSummary->dataProvider->pagination->pageSize,
         'currentPage' => $saleRetailSummary->dataProvider->pagination->getCurrentPage(false),
-    )); ?>
+    )); */?>
 </div>
 <div class="clear"></div>

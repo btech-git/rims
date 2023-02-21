@@ -25,8 +25,8 @@ class SaleRetailController extends Controller {
 
         $saleRetail = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $repairType = (isset($_GET['RepairType'])) ? $_GET['RepairType'] : '';
+        $customerId = isset($_GET['CustomerId']) ? $_GET['CustomerId'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -42,10 +42,24 @@ class SaleRetailController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'customerName' => $customerName,
+            'customerId' => $customerId,
             'repairType' => $repairType,
         );
         $saleRetailSummary->setupFilter($filters);
+
+        $customer = new Customer('search');
+        $customer->unsetAttributes();  // clear any default values
+        
+        if (isset($_GET['Customer'])) {
+            $customer->attributes = $_GET['Customer'];
+        }
+        
+        $customerCriteria = new CDbCriteria;
+        $customerCriteria->compare('t.name', $customer->name, true);
+        $customerCriteria->compare('t.email', $customer->email, true);
+        $customerDataProvider = new CActiveDataProvider('Customer', array(
+            'criteria' => $customerCriteria,
+        ));
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleRetailSummary, $branchId, $saleRetailSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -55,7 +69,9 @@ class SaleRetailController extends Controller {
             'saleRetail' => $saleRetail,
             'saleRetailSummary' => $saleRetailSummary,
             'branchId' => $branchId,
-            'customerName' => $customerName,
+            'customerId' => $customerId,
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
             'repairType' => $repairType,
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -79,37 +95,6 @@ class SaleRetailController extends Controller {
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Retail');
-
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-        $worksheet->getColumnDimension('H')->setAutoSize(true);
-        $worksheet->getColumnDimension('I')->setAutoSize(true);
-        $worksheet->getColumnDimension('J')->setAutoSize(true);
-        $worksheet->getColumnDimension('K')->setAutoSize(true);
-        $worksheet->getColumnDimension('L')->setAutoSize(true);
-        $worksheet->getColumnDimension('M')->setAutoSize(true);
-        $worksheet->getColumnDimension('N')->setAutoSize(true);
-        $worksheet->getColumnDimension('O')->setAutoSize(true);
-        $worksheet->getColumnDimension('P')->setAutoSize(true);
-        $worksheet->getColumnDimension('Q')->setAutoSize(true);
-        $worksheet->getColumnDimension('R')->setAutoSize(true);
-        $worksheet->getColumnDimension('S')->setAutoSize(true);
-        $worksheet->getColumnDimension('T')->setAutoSize(true);
-        $worksheet->getColumnDimension('U')->setAutoSize(true);
-        $worksheet->getColumnDimension('V')->setAutoSize(true);
-        $worksheet->getColumnDimension('W')->setAutoSize(true);
-        $worksheet->getColumnDimension('X')->setAutoSize(true);
-        $worksheet->getColumnDimension('Y')->setAutoSize(true);
-        $worksheet->getColumnDimension('Z')->setAutoSize(true);
-        $worksheet->getColumnDimension('AA')->setAutoSize(true);
-        $worksheet->getColumnDimension('AB')->setAutoSize(true);
-        $worksheet->getColumnDimension('AC')->setAutoSize(true);
-        $worksheet->getColumnDimension('AD')->setAutoSize(true);
 
         $worksheet->mergeCells('A1:AD1');
         $worksheet->mergeCells('A2:AD2');
@@ -156,9 +141,15 @@ class SaleRetailController extends Controller {
         $worksheet->setCellValue('AC5', 'Branch');
         $worksheet->setCellValue('AD5', 'Admin');
 
-        $worksheet->getStyle('A5:AD5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A6', 'Barang / Jasa');
+        $worksheet->setCellValue('B6', 'Quantity');
+        $worksheet->setCellValue('C6', 'Harga');
+        $worksheet->setCellValue('D6', 'Discount');
+        $worksheet->setCellValue('E6', 'Total');
+        
+        $worksheet->getStyle('A6:AD6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 8;
         foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -194,6 +185,34 @@ class SaleRetailController extends Controller {
             $worksheet->setCellValue("AD{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
 
             $counter++;
+            
+            if (!empty($header->registrationProducts)) {
+                foreach ($header->registrationProducts as $detailProduct) {
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detailProduct, 'product.name')));
+                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($detailProduct, 'quantity')));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detailProduct, 'sale_price')));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detailProduct, 'discountAmount')));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($detailProduct, 'total_price')));
+                    
+                    $counter++;
+                }
+            } elseif (!empty($header->registrationServices)) {
+                foreach ($header->registrationServices as $detailService) {
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detailProduct, 'service.name')));
+                    $worksheet->setCellValue("B{$counter}", '1');
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detailProduct, 'price')));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detailProduct, 'discountAmount')));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($detailProduct, 'total_price')));
+                    
+                    $counter++;                    
+                }
+            }
+        }
+
+        for ($col = 'A'; $col !== 'AD'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');

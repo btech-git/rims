@@ -58,7 +58,7 @@
         <tr class="items1">
             <td class="width1-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
             <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?></td>
-            <td class="width1-3"><?php echo CHtml::encode($header->invoice_number); ?></td>
+            <td class="width1-3"><?php echo CHtml::link($header->invoice_number, Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $header->invoice_number)), array('target' => '_blank'));?></td>
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
             <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
             <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?></td>
@@ -73,7 +73,7 @@
                     <?php foreach ($header->paymentIns as $detail): ?>
                         <tr>
                             <th class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->payment_date))); ?></th>
-                            <th class="width2-2"><?php echo CHtml::encode(CHtml::value($detail, 'payment_number')); ?></th>
+                            <th class="width2-2"><?php echo CHtml::link($detail->payment_number, Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $detail->payment_number)), array('target' => '_blank'));?></th>
                             <th class="width2-3"><?php echo CHtml::encode(CHtml::value($detail, 'paymentType.name')); ?></th>
                             <th class="width2-4"><?php echo CHtml::encode(CHtml::value($detail, 'companyBank.bank.name')); ?></th>
                             <th class="width2-5"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($detail->payment_amount))); ?></th>

@@ -158,10 +158,9 @@ class ReceivableLedgerController extends Controller {
                 $worksheet->mergeCells("A{$counter}:E{$counter}");
                 $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
                 $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
-                $counter++;
+                $counter++; $counter++;
                 
             }
-            $counter++;
         }
             
         for ($col = 'A'; $col !== 'G'; $col++) {
