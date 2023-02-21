@@ -136,6 +136,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php echo ReportHelper::summaryText($purchaseOrderSummary->dataProvider); ?>
+                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                    </div>
+
                     <?php $this->renderPartial('_summary', array(
                         'purchaseOrder' => $purchaseOrder,
                         'purchaseOrderSummary' => $purchaseOrderSummary,

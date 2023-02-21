@@ -152,6 +152,11 @@ Yii::app()->clientScript->registerScript('report', '
                 <br />
         
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?>
+                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                    </div>
+
                     <?php $this->renderPartial('_summary', array(
                         'purchaseSummary' => $purchaseSummary,
                     )); ?>
