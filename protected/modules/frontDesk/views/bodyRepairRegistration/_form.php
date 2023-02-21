@@ -73,19 +73,6 @@
 
                             <div class="row">
                                 <div class="medium-6 columns">
-<!--                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php //echo $form->labelEx($bodyRepairRegistration->header,'transaction_number'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php //echo CHtml::encode(CHtml::value($bodyRepairRegistration->header,'transaction_number')); ?>
-                                                <?php //echo $form->textField($bodyRepairRegistration->header,'transaction_number',array('size'=>30,'maxlength'=>30, 'readonly' => true)); ?>
-                                                <?php //echo $form->error($bodyRepairRegistration->header,'transaction_number'); ?>
-                                            </div>
-                                        </div>
-                                    </div>-->
-
                                     <?php if(!$bodyRepairRegistration->header->isNewRecord): ?>
                                         <?php if($bodyRepairRegistration->header->work_order_number != ""): ?>
                                             <div class="field">
@@ -154,16 +141,20 @@
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'user_id'); ?></label>
+                                                <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'employee_id_assign_mechanic'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->hiddenField($bodyRepairRegistration->header,'user_id', array('value'=>Yii::app()->user->getId(),'readonly'=>true)); ?>
-                                                <?php echo $form->labelEx($bodyRepairRegistration->header,'user_id', array('value'=>Yii::app()->user->getName())); ?>
-                                                <?php echo $form->error($bodyRepairRegistration->header,'user_id'); ?>
+                                                <?php echo CHtml::activeDropDownlist($bodyRepairRegistration->header, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                                                    "branch_id" => $bodyRepairRegistration->header->branch_id,
+                                                    "division_id" => array(2),
+                                                    "position_id" => 1,
+                                                    "level_id" => array(1, 2, 3),
+                                                )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
+                                                <?php echo $form->error($bodyRepairRegistration->header,'employee_id_assign_mechanic'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">

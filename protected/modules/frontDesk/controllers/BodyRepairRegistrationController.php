@@ -210,115 +210,115 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration = $this->instantiate($id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
-        $type = "";
-
-        $damage = new Service('search');
-        $damage->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service'])) {
-            $damage->attributes = $_GET['Service'];
-        }
-
-        $damageCriteria = new CDbCriteria;
-        $damageCriteria->together = 'true';
-        $damageCriteria->with = array('serviceCategory', 'serviceType');
-
-        $damageCriteria->compare('t.name', $damage->name, true);
-        $damageCriteria->compare('t.code', $damage->code, true);
-        $damageCriteria->compare('t.service_category_id', $damage->service_category_id);
-        $damageCriteria->compare('t.service_type_id', 2);
-        $explodeKeyword = explode(" ", $damage->findkeyword);
-        foreach ($explodeKeyword as $key) {
-            $damageCriteria->compare('t.code', $key, true, 'OR');
-            $damageCriteria->compare('t.name', $key, true, 'OR');
-            $damageCriteria->compare('description', $key, true, 'OR');
-            $damageCriteria->compare('serviceCategory.name', $key, true, 'OR');
-            $damageCriteria->compare('serviceCategory.code', $key, true, 'OR');
-            $damageCriteria->compare('serviceType.name', $key, true, 'OR');
-            $damageCriteria->compare('serviceType.code', $key, true, 'OR');
-        }
-
-        $damageDataProvider = new CActiveDataProvider('Service', array(
-            'criteria' => $damageCriteria,
-        ));
-
-        $qs = new QuickService('search');
-        $qs->unsetAttributes();  // clear any default values
-        if (isset($_GET['QuickService'])) {
-            $qs->attributes = $_GET['QuickService'];
-        }
-        $qsCriteria = new CDbCriteria;
-        $qsCriteria->compare('name', $qs->name, true);
-        $qsCriteria->compare('code', $qs->code, true);
-        $qsCriteria->compare('rate', $qs->rate, true);
-
-        $qsDataProvider = new CActiveDataProvider('QuickService', array(
-            'criteria' => $qsCriteria,
-        ));
-        $service = new Service('search');
-        $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service'])) {
-            $service->attributes = $_GET['Service'];
-        }
-
-        $serviceCriteria = new CDbCriteria;
-        $serviceCriteria->together = 'true';
-        $serviceCriteria->with = array('serviceCategory', 'serviceType');
-
-        $serviceCriteria->compare('t.name', $service->name, true);
-        $serviceCriteria->compare('t.code', $service->code, true);
-        $explodeKeyword = explode(" ", $service->findkeyword);
-        foreach ($explodeKeyword as $key) {
-            $serviceCriteria->compare('t.code', $key, true, 'OR');
-            $serviceCriteria->compare('t.name', $key, true, 'OR');
-            $serviceCriteria->compare('description', $key, true, 'OR');
-            $serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
-            $serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
-            $serviceCriteria->compare('serviceType.name', $key, true, 'OR');
-            $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
-        }
-
-        $serviceDataProvider = new CActiveDataProvider('Service', array(
-            'criteria' => $serviceCriteria,
-        ));
-
-        $serviceChecks = RegistrationService::model()->findAllByAttributes(array('service_id' => $id));
-        $serviceArray = array();
-        foreach ($serviceChecks as $key => $serviceCheck) {
-            array_push($serviceArray, $serviceCheck->service_id);
-        }
-
-        $product = new Product('search');
-        $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product'])) {
-            $product->attributes = $_GET['Product'];
-        }
-
-        $productCriteria = new CDbCriteria;
-        $productCriteria->together = true;
-        $productCriteria->with = array(
-            'productMasterCategory',
-            'productSubMasterCategory',
-            'productSubCategory',
-            'brand'
-        );
-        $productCriteria->compare('t.name', $product->name, true);
-        $productCriteria->compare('productMasterCategory.name', $product->product_master_category_name, true);
-        $productCriteria->compare('productSubMasterCategory.name', $product->product_sub_master_category_name, true);
-        $productCriteria->compare('productSubCategory.name', $product->product_sub_category_name, true);
-        $productCriteria->compare('brand.name', $product->product_brand_name, true);
-
-        $productDataProvider = new CActiveDataProvider('Product', array(
-            'criteria' => $productCriteria,
-        ));
+//        $type = "";
+//
+//        $damage = new Service('search');
+//        $damage->unsetAttributes();  // clear any default values
+//        if (isset($_GET['Service'])) {
+//            $damage->attributes = $_GET['Service'];
+//        }
+//
+//        $damageCriteria = new CDbCriteria;
+//        $damageCriteria->together = 'true';
+//        $damageCriteria->with = array('serviceCategory', 'serviceType');
+//
+//        $damageCriteria->compare('t.name', $damage->name, true);
+//        $damageCriteria->compare('t.code', $damage->code, true);
+//        $damageCriteria->compare('t.service_category_id', $damage->service_category_id);
+//        $damageCriteria->compare('t.service_type_id', 2);
+//        $explodeKeyword = explode(" ", $damage->findkeyword);
+//        foreach ($explodeKeyword as $key) {
+//            $damageCriteria->compare('t.code', $key, true, 'OR');
+//            $damageCriteria->compare('t.name', $key, true, 'OR');
+//            $damageCriteria->compare('description', $key, true, 'OR');
+//            $damageCriteria->compare('serviceCategory.name', $key, true, 'OR');
+//            $damageCriteria->compare('serviceCategory.code', $key, true, 'OR');
+//            $damageCriteria->compare('serviceType.name', $key, true, 'OR');
+//            $damageCriteria->compare('serviceType.code', $key, true, 'OR');
+//        }
+//
+//        $damageDataProvider = new CActiveDataProvider('Service', array(
+//            'criteria' => $damageCriteria,
+//        ));
+//
+//        $qs = new QuickService('search');
+//        $qs->unsetAttributes();  // clear any default values
+//        if (isset($_GET['QuickService'])) {
+//            $qs->attributes = $_GET['QuickService'];
+//        }
+//        $qsCriteria = new CDbCriteria;
+//        $qsCriteria->compare('name', $qs->name, true);
+//        $qsCriteria->compare('code', $qs->code, true);
+//        $qsCriteria->compare('rate', $qs->rate, true);
+//
+//        $qsDataProvider = new CActiveDataProvider('QuickService', array(
+//            'criteria' => $qsCriteria,
+//        ));
+//        $service = new Service('search');
+//        $service->unsetAttributes();  // clear any default values
+//        if (isset($_GET['Service'])) {
+//            $service->attributes = $_GET['Service'];
+//        }
+//
+//        $serviceCriteria = new CDbCriteria;
+//        $serviceCriteria->together = 'true';
+//        $serviceCriteria->with = array('serviceCategory', 'serviceType');
+//
+//        $serviceCriteria->compare('t.name', $service->name, true);
+//        $serviceCriteria->compare('t.code', $service->code, true);
+//        $explodeKeyword = explode(" ", $service->findkeyword);
+//        foreach ($explodeKeyword as $key) {
+//            $serviceCriteria->compare('t.code', $key, true, 'OR');
+//            $serviceCriteria->compare('t.name', $key, true, 'OR');
+//            $serviceCriteria->compare('description', $key, true, 'OR');
+//            $serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
+//            $serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
+//            $serviceCriteria->compare('serviceType.name', $key, true, 'OR');
+//            $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
+//        }
+//
+//        $serviceDataProvider = new CActiveDataProvider('Service', array(
+//            'criteria' => $serviceCriteria,
+//        ));
+//
+//        $serviceChecks = RegistrationService::model()->findAllByAttributes(array('service_id' => $id));
+//        $serviceArray = array();
+//        foreach ($serviceChecks as $key => $serviceCheck) {
+//            array_push($serviceArray, $serviceCheck->service_id);
+//        }
+//
+//        $product = new Product('search');
+//        $product->unsetAttributes();  // clear any default values
+//        if (isset($_GET['Product'])) {
+//            $product->attributes = $_GET['Product'];
+//        }
+//
+//        $productCriteria = new CDbCriteria;
+//        $productCriteria->together = true;
+//        $productCriteria->with = array(
+//            'productMasterCategory',
+//            'productSubMasterCategory',
+//            'productSubCategory',
+//            'brand'
+//        );
+//        $productCriteria->compare('t.name', $product->name, true);
+//        $productCriteria->compare('productMasterCategory.name', $product->product_master_category_name, true);
+//        $productCriteria->compare('productSubMasterCategory.name', $product->product_sub_master_category_name, true);
+//        $productCriteria->compare('productSubCategory.name', $product->product_sub_category_name, true);
+//        $productCriteria->compare('brand.name', $product->product_brand_name, true);
+//
+//        $productDataProvider = new CActiveDataProvider('Product', array(
+//            'criteria' => $productCriteria,
+//        ));
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($bodyRepairRegistration);
             
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $bodyRepairRegistration->header->transaction_number,
-            ));
+//            JurnalUmum::model()->deleteAllByAttributes(array(
+//                'kode_transaksi' => $bodyRepairRegistration->header->transaction_number,
+//            ));
             
-            $bodyRepairRegistration->header->setCodeNumberByRevision('transaction_number');
+//            $bodyRepairRegistration->header->setCodeNumberByRevision('transaction_number');
 
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
@@ -329,16 +329,16 @@ class BodyRepairRegistrationController extends Controller {
             'bodyRepairRegistration' => $bodyRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
-            'damage' => $damage,
-            'damageDataProvider' => $damageDataProvider,
-            'qs' => $qs,
-            'qsDataProvider' => $qsDataProvider,
-            'service' => $service,
-            'serviceDataProvider' => $serviceDataProvider,
-            'product' => $product,
-            'productDataProvider' => $productDataProvider,
-            'serviceArray' => $serviceArray,
-            'type' => $type,
+//            'damage' => $damage,
+//            'damageDataProvider' => $damageDataProvider,
+//            'qs' => $qs,
+//            'qsDataProvider' => $qsDataProvider,
+//            'service' => $service,
+//            'serviceDataProvider' => $serviceDataProvider,
+//            'product' => $product,
+//            'productDataProvider' => $productDataProvider,
+//            'serviceArray' => $serviceArray,
+//            'type' => $type,
         ));
     }
 

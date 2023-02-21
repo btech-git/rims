@@ -105,7 +105,7 @@
                                             <div class="small-8 columns">
                                                 <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
                                                     "branch_id" => $generalRepairRegistration->header->branch_id,
-                                                    "division_id" => 1,
+                                                    "division_id" => array(1, 3, 5),
                                                     "position_id" => 1,
                                                     "level_id" => array(1, 2, 3),
                                                 )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
