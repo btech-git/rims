@@ -568,7 +568,7 @@ class PaymentOutController extends Controller {
                             $jurnalUmumKas->total = $paymentOut->payment_amount;
                             $jurnalUmumKas->debet_kredit = 'K';
                             $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumKas->transaction_subject = $paymentOut->supplier->name;
+                            $jurnalUmumKas->transaction_subject = $paymentOut->notes;
                             $jurnalUmumKas->is_coa_category = 0;
                             $jurnalUmumKas->transaction_type = 'Pout';
                             $jurnalUmumKas->save();
@@ -581,7 +581,7 @@ class PaymentOutController extends Controller {
                             $jurnalUmumKasBank->total = $paymentOut->payment_amount;
                             $jurnalUmumKasBank->debet_kredit = 'K';
                             $jurnalUmumKasBank->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumKasBank->transaction_subject = $paymentOut->supplier->name;
+                            $jurnalUmumKasBank->transaction_subject = $paymentOut->notes;
                             $jurnalUmumKasBank->is_coa_category = 0;
                             $jurnalUmumKasBank->transaction_type = 'Pout';
                             $jurnalUmumKasBank->save();

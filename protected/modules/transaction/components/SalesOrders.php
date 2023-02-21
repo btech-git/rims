@@ -228,7 +228,7 @@ class SalesOrders extends CComponent {
             $transactionCode = $this->header->sale_order_no;
             $transactionDate = $this->header->sale_order_date;
             $branchId = $this->header->requester_branch_id;
-            $transactionSubject = $this->header->customer->name;
+            $transactionSubject = $this->header->note;
 
             $journalReferences = array();
 
@@ -243,7 +243,7 @@ class SalesOrders extends CComponent {
                 $jurnalUmumKas->total = $this->header->total_price;
                 $jurnalUmumKas->debet_kredit = 'D';
                 $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $this->header->customer->name;
+                $jurnalUmumKas->transaction_subject = $transactionSubject;
                 $jurnalUmumKas->is_coa_category = 0;
                 $jurnalUmumKas->transaction_type = 'SO';
                 $valid = $jurnalUmumKas->save() && $valid;
@@ -259,7 +259,7 @@ class SalesOrders extends CComponent {
                 $jurnalUmumPiutang->total = $this->header->total_price;
                 $jurnalUmumPiutang->debet_kredit = 'D';
                 $jurnalUmumPiutang->tanggal_posting = date('Y-m-d');
-                $jurnalUmumPiutang->transaction_subject = $this->header->customer->name;
+                $jurnalUmumPiutang->transaction_subject = $transactionSubject;
                 $jurnalUmumPiutang->is_coa_category = 0;
                 $jurnalUmumPiutang->transaction_type = 'SO';
                 $valid = $jurnalUmumPiutang->save() && $valid;
@@ -321,7 +321,7 @@ class SalesOrders extends CComponent {
                     $jurnalUmumPpn->total = $this->header->ppn_price;
                     $jurnalUmumPpn->debet_kredit = 'K';
                     $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumPpn->transaction_subject = $this->header->customer->name;
+                    $jurnalUmumPpn->transaction_subject = $transactionSubject;
                     $jurnalUmumPpn->is_coa_category = 0;
                     $jurnalUmumPpn->transaction_type = 'SO';
                     $valid = $jurnalUmumPpn->save() && $valid;

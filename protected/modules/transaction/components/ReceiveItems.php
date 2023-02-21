@@ -180,7 +180,7 @@ class ReceiveItems extends CComponent {
         $transactionCode = $this->header->receive_item_no;
         $transactionDate = $this->header->receive_item_date;
         $branchId = $this->header->recipient_branch_id;
-        $transactionSubject = '';
+        $transactionSubject = $this->header->note;
         
         if ($this->header->request_type == 'Purchase Order' || $this->header->request_type == 'Consignment In') {
             $transactionSubject = $this->header->supplier->name;
@@ -304,7 +304,7 @@ class ReceiveItems extends CComponent {
             $jurnalUmumOutstanding->total = $totalJournal;
             $jurnalUmumOutstanding->debet_kredit = 'K';
             $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-            $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
+            $jurnalUmumOutstanding->transaction_subject = $transactionSubject;
             $jurnalUmumOutstanding->is_coa_category = 0;
             $jurnalUmumOutstanding->transaction_type = 'RCI';
             $jurnalUmumOutstanding->save();

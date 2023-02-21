@@ -84,7 +84,7 @@ class TransactionReturnOrderController extends Controller {
                 $jurnalUmumRetur->total = $jumlah;
                 $jurnalUmumRetur->debet_kredit = 'K';
                 $jurnalUmumRetur->tanggal_posting = date('Y-m-d');
-                $jurnalUmumRetur->transaction_subject = 'Retur Pembelian';
+                $jurnalUmumRetur->transaction_subject = $returnDetail->note;
                 $jurnalUmumRetur->is_coa_category = 0;
                 $jurnalUmumRetur->transaction_type = 'RTO';
                 $jurnalUmumRetur->save();
@@ -98,7 +98,7 @@ class TransactionReturnOrderController extends Controller {
                     $jurnalUmumPersediaan->total = $jumlah;
                     $jurnalUmumPersediaan->debet_kredit = 'D';
                     $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumPersediaan->transaction_subject = 'Retur Pembelian';
+                    $jurnalUmumPersediaan->transaction_subject = $returnDetail->note;
                     $jurnalUmumPersediaan->is_coa_category = 0;
                     $jurnalUmumPersediaan->transaction_type = 'RTO';
                     $jurnalUmumPersediaan->save();
@@ -497,7 +497,7 @@ class TransactionReturnOrderController extends Controller {
                         $jurnalUmumRetur->total = $jumlah;
                         $jurnalUmumRetur->debet_kredit = 'K';
                         $jurnalUmumRetur->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumRetur->transaction_subject = 'Retur Pembelian';
+                        $jurnalUmumRetur->transaction_subject = $returnDetail->note;
                         $jurnalUmumRetur->is_coa_category = 0;
                         $jurnalUmumRetur->transaction_type = 'RTO';
                         $jurnalUmumRetur->save();
@@ -529,7 +529,7 @@ class TransactionReturnOrderController extends Controller {
                             $jurnalUmumPersediaan->total = $jumlah;
                             $jurnalUmumPersediaan->debet_kredit = 'D';
                             $jurnalUmumPersediaan->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumPersediaan->transaction_subject = 'Retur Pembelian';
+                            $jurnalUmumPersediaan->transaction_subject = $returnDetail->note;
                             $jurnalUmumPersediaan->is_coa_category = 0;
                             $jurnalUmumPersediaan->transaction_type = 'RTO';
                             $jurnalUmumPersediaan->save();

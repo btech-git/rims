@@ -205,7 +205,7 @@ class WorkOrderExpenseController extends Controller {
                 $jurnalHutang->total = $workOrderExpense->grand_total;
                 $jurnalHutang->debet_kredit = 'K';
                 $jurnalHutang->tanggal_posting = date('Y-m-d');
-                $jurnalHutang->transaction_subject = $workOrderExpense->supplier->name;
+                $jurnalHutang->transaction_subject = $workOrderExpense->note;
                 $jurnalHutang->is_coa_category = 0;
                 $jurnalHutang->transaction_type = 'WOE';
                 $jurnalHutang->save();
@@ -218,7 +218,7 @@ class WorkOrderExpenseController extends Controller {
                 $jurnalUmumKas->total = $workOrderExpense->grand_total;
                 $jurnalUmumKas->debet_kredit = 'D';
                 $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $workOrderExpense->supplier->name;
+                $jurnalUmumKas->transaction_subject = $workOrderExpense->note;
                 $jurnalUmumKas->is_coa_category = 0;
                 $jurnalUmumKas->transaction_type = 'WOE';
                 $jurnalUmumKas->save();

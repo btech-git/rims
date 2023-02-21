@@ -106,7 +106,7 @@ class CashTransactionController extends Controller {
                     $jurnalUmum->debet_kredit = 'K';
                     $jurnalUmum->tanggal_posting = date('Y-m-d');
                     $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                    $jurnalUmum->transaction_subject = 'Cash Transaction In';
+                    $jurnalUmum->transaction_subject = $ctDetail->notes;
                     $jurnalUmum->is_coa_category = 0;
                     $jurnalUmum->transaction_type = 'CASH';
                     $jurnalUmum->save(false);
@@ -119,7 +119,7 @@ class CashTransactionController extends Controller {
                     $jurnalUmum->debet_kredit = 'D';
                     $jurnalUmum->tanggal_posting = date('Y-m-d');
                     $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                    $jurnalUmum->transaction_subject = 'Cash Transaction Out';
+                    $jurnalUmum->transaction_subject = $ctDetail->notes;
                     $jurnalUmum->is_coa_category = 0;
                     $jurnalUmum->transaction_type = 'CASH';
                     $jurnalUmum->save(false);
@@ -541,7 +541,7 @@ class CashTransactionController extends Controller {
                             $jurnalUmum->debet_kredit = 'K';
                             $jurnalUmum->tanggal_posting = date('Y-m-d');
                             $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                            $jurnalUmum->transaction_subject = 'Cash Transaction In';
+                            $jurnalUmum->transaction_subject = $ctDetail->notes;
                             $jurnalUmum->is_coa_category = 0;
                             $jurnalUmum->transaction_type = 'CASH';
                             $jurnalUmum->save(false);
@@ -570,7 +570,7 @@ class CashTransactionController extends Controller {
                             $jurnalUmum->debet_kredit = 'D';
                             $jurnalUmum->tanggal_posting = date('Y-m-d');
                             $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                            $jurnalUmum->transaction_subject = 'Cash Transaction Out';
+                            $jurnalUmum->transaction_subject = $ctDetail->notes;
                             $jurnalUmum->is_coa_category = 0;
                             $jurnalUmum->transaction_type = 'CASH';
                             $jurnalUmum->save(false);

@@ -214,7 +214,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumMasterInventory->total = $jumlah;
                 $jurnalUmumMasterInventory->debet_kredit = 'K';
                 $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                $jurnalUmumMasterInventory->transaction_subject = $this->header->request_type;
                 $jurnalUmumMasterInventory->is_coa_category = 1;
                 $jurnalUmumMasterInventory->transaction_type = 'DO';
                 $jurnalUmumMasterInventory->save();
@@ -231,7 +231,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumInventory->total = $jumlah;
                 $jurnalUmumInventory->debet_kredit = 'K';
                 $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-                $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                $jurnalUmumInventory->transaction_subject = $this->header->request_type;
                 $jurnalUmumInventory->is_coa_category = 0;
                 $jurnalUmumInventory->transaction_type = 'DO';
                 $jurnalUmumInventory->save();
@@ -261,7 +261,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumMasterOutstandingPart->total = $jumlah;
                 $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
                 $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                $jurnalUmumMasterOutstandingPart->transaction_subject = $this->header->request_type;
                 $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
                 $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
                 $jurnalUmumMasterOutstandingPart->save();
@@ -275,7 +275,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumOutstandingPart->total = $jumlah;
                 $jurnalUmumOutstandingPart->debet_kredit = 'D';
                 $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                $jurnalUmumOutstandingPart->transaction_subject = $this->header->request_type;
                 $jurnalUmumOutstandingPart->is_coa_category = 0;
                 $jurnalUmumOutstandingPart->transaction_type = 'DO';
                 $jurnalUmumOutstandingPart->save();
@@ -312,7 +312,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumMasterOutstandingPart->total = $hppPrice;
                 $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
                 $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                $jurnalUmumMasterOutstandingPart->transaction_subject = $this->header->request_type;
                 $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
                 $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
                 $jurnalUmumMasterOutstandingPart->save();
@@ -326,7 +326,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumOutstandingPart->total = $hppPrice;
                 $jurnalUmumOutstandingPart->debet_kredit = 'D';
                 $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                $jurnalUmumOutstandingPart->transaction_subject = $this->header->request_type;
                 $jurnalUmumOutstandingPart->is_coa_category = 0;
                 $jurnalUmumOutstandingPart->transaction_type = 'DO';
                 $jurnalUmumOutstandingPart->save();
@@ -343,7 +343,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumMasterInventory->total = $hppPrice;
                 $jurnalUmumMasterInventory->debet_kredit = 'K';
                 $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                $jurnalUmumMasterInventory->transaction_subject = $this->header->request_type;
                 $jurnalUmumMasterInventory->is_coa_category = 1;
                 $jurnalUmumMasterInventory->transaction_type = 'DO';
                 $jurnalUmumMasterInventory->save();
@@ -360,7 +360,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumInventory->total = $hppPrice;
                 $jurnalUmumInventory->debet_kredit = 'K';
                 $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-                $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                $jurnalUmumInventory->transaction_subject = $this->header->request_type;
                 $jurnalUmumInventory->is_coa_category = 0;
                 $jurnalUmumInventory->transaction_type = 'DO';
                 $jurnalUmumInventory->save();
@@ -396,7 +396,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalMasterUmumConsignment->total = $salePrice;
                 $jurnalMasterUmumConsignment->debet_kredit = 'D';
                 $jurnalMasterUmumConsignment->tanggal_posting = date('Y-m-d');
-                $jurnalMasterUmumConsignment->transaction_subject = 'Delivery Order';
+                $jurnalMasterUmumConsignment->transaction_subject = $this->header->request_type;
                 $jurnalMasterUmumConsignment->is_coa_category = 1;
                 $jurnalMasterUmumConsignment->transaction_type = 'DO';
                 $jurnalMasterUmumConsignment->save();
@@ -413,7 +413,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumConsignment->total = $salePrice;
                 $jurnalUmumConsignment->debet_kredit = 'D';
                 $jurnalUmumConsignment->tanggal_posting = date('Y-m-d');
-                $jurnalUmumConsignment->transaction_subject = 'Delivery Order';
+                $jurnalUmumConsignment->transaction_subject = $this->header->request_type;
                 $jurnalUmumConsignment->is_coa_category = 0;
                 $jurnalUmumConsignment->transaction_type = 'DO';
                 $jurnalUmumConsignment->save();
@@ -426,7 +426,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalMasterUmumInventoryInTransit->total = $salePrice;
                 $jurnalMasterUmumInventoryInTransit->debet_kredit = 'D';
                 $jurnalMasterUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
-                $jurnalMasterUmumInventoryInTransit->transaction_subject = 'Delivery Order';
+                $jurnalMasterUmumInventoryInTransit->transaction_subject = $this->header->request_type;
                 $jurnalMasterUmumInventoryInTransit->is_coa_category = 1;
                 $jurnalMasterUmumInventoryInTransit->transaction_type = 'DO';
                 $jurnalMasterUmumInventoryInTransit->save();
@@ -440,7 +440,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumInventoryInTransit->total = $salePrice;
                 $jurnalUmumInventoryInTransit->debet_kredit = 'K';
                 $jurnalUmumInventoryInTransit->tanggal_posting = date('Y-m-d');
-                $jurnalUmumInventoryInTransit->transaction_subject = 'Delivery Order';
+                $jurnalUmumInventoryInTransit->transaction_subject = $this->header->request_type;
                 $jurnalUmumInventoryInTransit->is_coa_category = 0;
                 $jurnalUmumInventoryInTransit->transaction_type = 'DO';
                 $jurnalUmumInventoryInTransit->save();
@@ -477,7 +477,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumMasterOutstandingPart->total = $hppPrice;
                 $jurnalUmumMasterOutstandingPart->debet_kredit = 'D';
                 $jurnalUmumMasterOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterOutstandingPart->transaction_subject = 'Delivery Order';
+                $jurnalUmumMasterOutstandingPart->transaction_subject = $this->header->request_type;
                 $jurnalUmumMasterOutstandingPart->is_coa_category = 1;
                 $jurnalUmumMasterOutstandingPart->transaction_type = 'DO';
                 $jurnalUmumMasterOutstandingPart->save();
@@ -491,7 +491,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumOutstandingPart->total = $hppPrice;
                 $jurnalUmumOutstandingPart->debet_kredit = 'D';
                 $jurnalUmumOutstandingPart->tanggal_posting = date('Y-m-d');
-                $jurnalUmumOutstandingPart->transaction_subject = 'Delivery Order';
+                $jurnalUmumOutstandingPart->transaction_subject = $this->header->request_type;
                 $jurnalUmumOutstandingPart->is_coa_category = 0;
                 $jurnalUmumOutstandingPart->transaction_type = 'DO';
                 $jurnalUmumOutstandingPart->save();
@@ -508,7 +508,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumMasterInventory->total = $hppPrice;
                 $jurnalUmumMasterInventory->debet_kredit = 'K';
                 $jurnalUmumMasterInventory->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterInventory->transaction_subject = 'Delivery Order';
+                $jurnalUmumMasterInventory->transaction_subject = $this->header->request_type;
                 $jurnalUmumMasterInventory->is_coa_category = 1;
                 $jurnalUmumMasterInventory->transaction_type = 'DO';
                 $jurnalUmumMasterInventory->save();
@@ -525,7 +525,7 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumInventory->total = $hppPrice;
                 $jurnalUmumInventory->debet_kredit = 'K';
                 $jurnalUmumInventory->tanggal_posting = date('Y-m-d');
-                $jurnalUmumInventory->transaction_subject = 'Delivery Order';
+                $jurnalUmumInventory->transaction_subject = $this->header->request_type;
                 $jurnalUmumInventory->is_coa_category = 0;
                 $jurnalUmumInventory->transaction_type = 'DO';
                 $jurnalUmumInventory->save();

@@ -142,47 +142,47 @@ class AssetDepreciation extends CComponent {
 
         $valid = $this->header->save(false);
 
-            foreach ($this->details as $detail) {
-                if ($detail->amount <= 0.00) {
-                    continue;
-                }
-                
-                $detail->asset_depreciation_header_id = $this->header->id;
-                $detail->save();
-                
-                $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id);
-                $assetPurchase->accumulated_depreciation_value = $assetPurchase->totalDepreciationValue;
-                $assetPurchase->current_value = $assetPurchase->purchase_value - $assetPurchase->totalDepreciationValue;
-                $assetPurchase->status = 'Depresiasi';
-                $assetPurchase->update(array('accumulated_depreciation_value', 'current_value', 'status'));
-
-                $assetCategory = AssetCategory::model()->findByPk($assetPurchase->asset_category_id);
-                $jurnalExpense = new JurnalUmum;
-                $jurnalExpense->kode_transaksi = $this->header->transaction_number;
-                $jurnalExpense->tanggal_transaksi = $detail->depreciation_date;
-                $jurnalExpense->coa_id = $assetCategory->coa_expense_id;
-                $jurnalExpense->branch_id = 6;
-                $jurnalExpense->total = $detail->amount;
-                $jurnalExpense->debet_kredit = 'D';
-                $jurnalExpense->tanggal_posting = date('Y-m-d');
-                $jurnalExpense->transaction_subject = $assetPurchase->transaction_number;
-                $jurnalExpense->is_coa_category = 0;
-                $jurnalExpense->transaction_type = 'DFA';
-                $jurnalExpense->save();
-
-                $jurnalAccumulation = new JurnalUmum;
-                $jurnalAccumulation->kode_transaksi = $this->header->transaction_number;
-                $jurnalAccumulation->tanggal_transaksi = $detail->depreciation_date;
-                $jurnalAccumulation->coa_id = $assetCategory->coa_accumulation_id;
-                $jurnalAccumulation->branch_id = 6;
-                $jurnalAccumulation->total = $detail->amount;
-                $jurnalAccumulation->debet_kredit = 'K';
-                $jurnalAccumulation->tanggal_posting = date('Y-m-d');
-                $jurnalAccumulation->transaction_subject = $assetPurchase->transaction_number;
-                $jurnalAccumulation->is_coa_category = 0;
-                $jurnalAccumulation->transaction_type = 'DFA';
-                $jurnalAccumulation->save();
+        foreach ($this->details as $detail) {
+            if ($detail->amount <= 0.00) {
+                continue;
             }
+
+            $detail->asset_depreciation_header_id = $this->header->id;
+            $detail->save();
+
+            $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id);
+            $assetPurchase->accumulated_depreciation_value = $assetPurchase->totalDepreciationValue;
+            $assetPurchase->current_value = $assetPurchase->purchase_value - $assetPurchase->totalDepreciationValue;
+            $assetPurchase->status = 'Depresiasi';
+            $assetPurchase->update(array('accumulated_depreciation_value', 'current_value', 'status'));
+
+            $assetCategory = AssetCategory::model()->findByPk($assetPurchase->asset_category_id);
+            $jurnalExpense = new JurnalUmum;
+            $jurnalExpense->kode_transaksi = $this->header->transaction_number;
+            $jurnalExpense->tanggal_transaksi = $detail->depreciation_date;
+            $jurnalExpense->coa_id = $assetCategory->coa_expense_id;
+            $jurnalExpense->branch_id = 6;
+            $jurnalExpense->total = $detail->amount;
+            $jurnalExpense->debet_kredit = 'D';
+            $jurnalExpense->tanggal_posting = date('Y-m-d');
+            $jurnalExpense->transaction_subject = $assetPurchase->transaction_number;
+            $jurnalExpense->is_coa_category = 0;
+            $jurnalExpense->transaction_type = 'DFA';
+            $jurnalExpense->save();
+
+            $jurnalAccumulation = new JurnalUmum;
+            $jurnalAccumulation->kode_transaksi = $this->header->transaction_number;
+            $jurnalAccumulation->tanggal_transaksi = $detail->depreciation_date;
+            $jurnalAccumulation->coa_id = $assetCategory->coa_accumulation_id;
+            $jurnalAccumulation->branch_id = 6;
+            $jurnalAccumulation->total = $detail->amount;
+            $jurnalAccumulation->debet_kredit = 'K';
+            $jurnalAccumulation->tanggal_posting = date('Y-m-d');
+            $jurnalAccumulation->transaction_subject = $assetPurchase->transaction_number;
+            $jurnalAccumulation->is_coa_category = 0;
+            $jurnalAccumulation->transaction_type = 'DFA';
+            $jurnalAccumulation->save();
+        }
 
         return $valid;
     }

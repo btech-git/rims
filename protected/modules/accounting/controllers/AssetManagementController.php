@@ -72,7 +72,7 @@ class AssetManagementController extends Controller {
                 $jurnalInventory->total = $model->purchase_value;
                 $jurnalInventory->debet_kredit = 'D';
                 $jurnalInventory->tanggal_posting = date('Y-m-d');
-                $jurnalInventory->transaction_subject = 'Pembelian Aset Tetap';
+                $jurnalInventory->transaction_subject = $model->note;
                 $jurnalInventory->is_coa_category = 0;
                 $jurnalInventory->transaction_type = 'PFA';
                 $jurnalInventory->save();
@@ -86,7 +86,7 @@ class AssetManagementController extends Controller {
                 $jurnalBanking->total = $model->purchase_value;
                 $jurnalBanking->debet_kredit = 'K';
                 $jurnalBanking->tanggal_posting = date('Y-m-d');
-                $jurnalBanking->transaction_subject = 'Pembelian Aset Tetap';
+                $jurnalBanking->transaction_subject = $model->note;
                 $jurnalBanking->is_coa_category = 0;
                 $jurnalBanking->transaction_type = 'PFA';
                 $jurnalBanking->save();
@@ -134,7 +134,7 @@ class AssetManagementController extends Controller {
                 $jurnalSale->total = $model->sale_price;
                 $jurnalSale->debet_kredit = 'D';
                 $jurnalSale->tanggal_posting = date('Y-m-d');
-                $jurnalSale->transaction_subject = $model->transaction_number;
+                $jurnalSale->transaction_subject = $model->note;
                 $jurnalSale->is_coa_category = 0;
                 $jurnalSale->transaction_type = 'SFA';
                 $jurnalSale->save();
@@ -147,7 +147,7 @@ class AssetManagementController extends Controller {
                 $jurnalAccumulation->total = $model->assetPurchase->accumulated_depreciation_value;
                 $jurnalAccumulation->debet_kredit = 'D';
                 $jurnalAccumulation->tanggal_posting = date('Y-m-d');
-                $jurnalAccumulation->transaction_subject = $model->transaction_number;
+                $jurnalAccumulation->transaction_subject = $model->note;
                 $jurnalAccumulation->is_coa_category = 0;
                 $jurnalAccumulation->transaction_type = 'SFA';
                 $jurnalAccumulation->save();
@@ -161,7 +161,7 @@ class AssetManagementController extends Controller {
                     $jurnalOtherIncome->total = $model->sale_price + $model->assetPurchase->accumulated_depreciation_value - $model->assetPurchase->purchase_value;
                     $jurnalOtherIncome->debet_kredit = 'K';
                     $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
-                    $jurnalOtherIncome->transaction_subject = $model->transaction_number;
+                    $jurnalOtherIncome->transaction_subject = $model->note;
                     $jurnalOtherIncome->is_coa_category = 0;
                     $jurnalOtherIncome->transaction_type = 'SFA';
                     $jurnalOtherIncome->save();
@@ -174,7 +174,7 @@ class AssetManagementController extends Controller {
                     $jurnalOtherIncome->total = $model->assetPurchase->purchase_value - $model->sale_price + $model->assetPurchase->accumulated_depreciation_value;
                     $jurnalOtherIncome->debet_kredit = 'D';
                     $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
-                    $jurnalOtherIncome->transaction_subject = $model->transaction_number;
+                    $jurnalOtherIncome->transaction_subject = $model->note;
                     $jurnalOtherIncome->is_coa_category = 0;
                     $jurnalOtherIncome->transaction_type = 'SFA';
                     $jurnalOtherIncome->save();
@@ -188,7 +188,7 @@ class AssetManagementController extends Controller {
                 $jurnalInventory->total = $model->assetPurchase->purchase_value;
                 $jurnalInventory->debet_kredit = 'K';
                 $jurnalInventory->tanggal_posting = date('Y-m-d');
-                $jurnalInventory->transaction_subject = $model->transaction_number;
+                $jurnalInventory->transaction_subject = $model->note;
                 $jurnalInventory->is_coa_category = 0;
                 $jurnalInventory->transaction_type = 'SFA';
                 $jurnalInventory->save();
