@@ -14,8 +14,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     <div class="tabBody">
         <div id="detail_div">
             <div>
+                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
 <!--                <div class="myForm">
-                    <?php /*echo CHtml::beginForm(array(''), 'get'); ?>
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
@@ -24,7 +24,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Jumlah per Halaman</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
+                                        <?php /*echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>

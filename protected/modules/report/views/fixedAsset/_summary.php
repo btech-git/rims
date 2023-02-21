@@ -45,11 +45,11 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $totalYearlyValue = 0.00; ?>
         
         <?php $assetPurchases = AssetPurchase::model()->findAll(array(
-            'condition' => 'asset_category_id = :asset_category_id', 
+            'condition' => 'asset_category_id = :asset_category_id AND transaction_date BETWEEN :start_date AND :end_date', 
             'params' => array(
-                ':asset_category_id ' => $assetCategory->id,
-//                ':start_date' => $startDate,
-//                ':end_date' => $endDate,
+                ':asset_category_id' => $assetCategory->id,
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
             )
         )); ?>
         <?php foreach ($assetPurchases as $detail): ?>
@@ -80,10 +80,10 @@ Yii::app()->clientScript->registerCss('_report', '
         <tr>
             <td style="text-align: right; font-weight: bold" colspan="2">TOTAL: </td>
             <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchaseValue)); ?></td>
-            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAdjustedValue)); ?></td>
+            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalYearlyValue)); ?></td>
             <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAccumulatedValue)); ?></td>
             <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCurrentValue)); ?></td>
-            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalYearlyValue)); ?></td>
+            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAdjustedValue)); ?></td>
             <td>&nbsp;</td>
         </tr>
         <tr>
