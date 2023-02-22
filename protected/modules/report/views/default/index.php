@@ -273,7 +273,7 @@
                                     ),
                                     array(
                                         'label' => 'Pembelian per Barang', 
-                                        'url' => array('/report/purchaseSummary/summary'), 
+                                        'url' => array('/report/purchasePerProduct/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')
                                     ),
                                     array(
