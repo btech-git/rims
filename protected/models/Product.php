@@ -517,4 +517,23 @@ class Product extends CActiveRecord {
         
         return empty ($this->transactionPurchaseOrderDetails ) ? 0.00 : $unitPrice / $quantity;
     }
+    
+    public function getPurchasePriceReport($startDate, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(d.total_price), 0) AS total_purchase 
+            FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
+            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
+            WHERE d.product_id = :product_id AND h.purchase_order_date BETWEEN :start_date AND :end_date
+            GROUP BY d.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
 }

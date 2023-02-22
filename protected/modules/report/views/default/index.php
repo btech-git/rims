@@ -170,8 +170,18 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
+                                        'label' => 'Penjualan per Pelanggan', 
+                                        'url' => array('/report/saleRetailCustomer/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))
+                                    ),
+                                    array(
                                         'label' => 'Rincian Penjualan per Pelanggan', 
                                         'url' => array('/report/saleRetail/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Barang/Jasa', 
+                                        'url' => array('/report/saleRetailProductService/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))
                                     ),
                                     array(
@@ -252,12 +262,22 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
+                                        'label' => 'Pembelian per Pemasok', 
+                                        'url' => array('/report/purchaseSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')
+                                    ),
+                                    array(
                                         'label' => 'Rincian Pembelian per Pemasok', 
                                         'url' => array('/report/purchaseOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')
                                     ),
                                     array(
-                                        'label' => 'Laporan Pembelian (Summary)', 
+                                        'label' => 'Pembelian per Barang', 
+                                        'url' => array('/report/purchaseSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rincian Pembelian per Barang', 
                                         'url' => array('/report/purchaseSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')
                                     ),
