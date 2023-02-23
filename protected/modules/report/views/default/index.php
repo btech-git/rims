@@ -278,7 +278,7 @@
                                     ),
                                     array(
                                         'label' => 'Rincian Pembelian per Barang', 
-                                        'url' => array('/report/purchaseSummary/summary'), 
+                                        'url' => array('/report/purchasePerProductDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')
                                     ),
                                 ),
