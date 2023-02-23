@@ -137,10 +137,11 @@ class PurchasePerProductDetailController extends Controller {
 
                     $counter++;
                 }
+            
+                $worksheet->setCellValue("N{$counter}", 'Total');
+                $worksheet->setCellValue("O{$counter}", CHtml::encode($totalPurchase));
+                $counter++;$counter++;
             }
-            $worksheet->setCellValue("N{$counter}", 'Total');
-            $worksheet->setCellValue("O{$counter}", CHtml::encode($totalPurchase));
-            $counter++;$counter++;
         }
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
