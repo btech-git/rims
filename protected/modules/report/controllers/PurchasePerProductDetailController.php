@@ -131,7 +131,7 @@ class PurchasePerProductDetailController extends Controller {
                 $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'quantity')));
                 $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'unit_price')));
                 $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'discount')));
-                $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($totalPrice)));
+                $worksheet->setCellValue("O{$counter}", CHtml::encode($totalPrice));
                 $totalPurchase += $totalPrice;
 
                 $counter++;
