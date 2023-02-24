@@ -302,12 +302,12 @@ class TransactionReceiveItemController extends Controller {
 
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
-        $dataProvider->criteria->together = true;
-        $dataProvider->criteria->with = array(
-            'supplier',
-            'recipientBranch',
-            'purchaseOrder',
-        );
+//        $dataProvider->criteria->together = true;
+//        $dataProvider->criteria->with = array(
+//            'supplier',
+//            'recipientBranch',
+//            'purchaseOrder',
+//        );
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
