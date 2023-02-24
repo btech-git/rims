@@ -202,7 +202,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.movement_type', $this->movement_type);
 
         $criteria->together = 'true';
-        $criteria->with = array('recipientBranch', 'supplier', 'purchaseOrder', 'consignmentIn', 'deliveryOrder', 'movementOut');
+        $criteria->with = array('recipientBranch', 'supplier', 'deliveryOrder', 'purchaseOrder', 'consignmentIn', 'movementOut');
         $criteria->compare('recipientBranch.name', $this->branch_name, true);
         $criteria->compare('supplier.name', $this->supplier_name, true);
         $criteria->compare('purchaseOrder.purchase_order_no', $this->purchase_order_no, true);
