@@ -121,6 +121,15 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             'problem',
             array(
+                'name' => 'employee_id_assign_mechanic',
+                'filter' => CHtml::activeDropDownlist($model, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                    "division_id" => array(2),
+                    "position_id" => 1,
+                    "level_id" => array(1, 2, 3),
+                )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")),
+                'value' => 'empty($data->employeeIdAssignMechanic) ? "" : $data->employeeIdAssignMechanic->name'
+            ),
+            array(
                 'class' => 'CButtonColumn',
                 'template' => '{views} {edit} {hapus} {finish}',
                 'buttons' => array(

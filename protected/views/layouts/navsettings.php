@@ -432,6 +432,12 @@
                             'url' => array('/master/inspectionModule/admin'), 
                             'visible' => Yii::app()->user->checkAccess('masterInspectionModuleCreate') || Yii::app()->user->checkAccess('masterInspectionModuleEdit') || Yii::app()->user->checkAccess('masterInspectionModuleApproval')
                         ),
+                        array(
+                            'label' => 'Employee Branch Division Position Level', 
+                            'url' => array('/master/employeeBranchDivisionPositionLevel/admin'), 
+                            'linkOptions' => array('class' => 'titleNav'), 
+                            'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || Yii::app()->user->checkAccess('masterEmployeeApproval')
+                        ),
                     ),
                 )); ?>
             </li>
