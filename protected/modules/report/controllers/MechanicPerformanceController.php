@@ -23,10 +23,9 @@ class MechanicPerformanceController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $registrationService = Search::bind(new RegistrationService('search'), isset($_GET['RegistrationService']) ? $_GET['RegistrationService'] : array());
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $mechanicName = (isset($_GET['MechanicName'])) ? $_GET['MechanicName'] : '';
-        $serviceName = (isset($_GET['ServiceName'])) ? $_GET['ServiceName'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -34,7 +33,7 @@ class MechanicPerformanceController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $mechanicPerformanceSummary = new MechanicPerformanceSummary($registrationService->search());
+        $mechanicPerformanceSummary = new MechanicPerformanceSummary($registrationTransaction->search());
         $mechanicPerformanceSummary->setupLoading();
         $mechanicPerformanceSummary->setupPaging($pageSize, $currentPage);
         $mechanicPerformanceSummary->setupSorting();
@@ -43,7 +42,6 @@ class MechanicPerformanceController extends Controller {
             'endDate' => $endDate,
             'branchId' => $branchId,
             'mechanicName' => $mechanicName,
-            'serviceName' => $serviceName,
         );
         $mechanicPerformanceSummary->setupFilter($filters);
 
@@ -52,11 +50,10 @@ class MechanicPerformanceController extends Controller {
 //        }
 
         $this->render('summary', array(
-            'registrationService' => $registrationService,
+            'registrationTransaction' => $registrationTransaction,
             'mechanicPerformanceSummary' => $mechanicPerformanceSummary,
             'branchId' => $branchId,
             'mechanicName' => $mechanicName,
-            'serviceName' => $serviceName,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,

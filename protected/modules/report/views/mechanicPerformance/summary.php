@@ -55,24 +55,28 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Mechanic</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('MechanicName', $mechanicName, array('size' => 3)); ?>
+                                        <?php echo CHtml::activeDropDownlist($registrationTransaction, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                                            "division_id" => array(1, 3, 5),
+                                            "position_id" => 1,
+                                            "level_id" => array(1, 2, 3),
+                                        )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Service</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('ServiceName', $serviceName, array('size' => 3)); ?>
+                                        <?php //echo CHtml::textField('ServiceName', $serviceName, array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     
                     <div class="row">
@@ -141,7 +145,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'registrationService' => $registrationService,
                         'mechanicPerformanceSummary' => $mechanicPerformanceSummary,
                         'branchId' => $branchId,
                         'startDate' => $startDate,
