@@ -23,7 +23,7 @@ class BalanceSheetController extends Controller {
         ini_set('memory_limit', '1024M');
         
         $dateNow = date('Y-m-d');
-        list($yearNow, , ) = explode('-', $dateNow);
+//        list($yearNow, , ) = explode('-', $dateNow);
 //        $dateStart = $yearNow . '-01-01';
 //        $dateStart = '2022-01-01';
 

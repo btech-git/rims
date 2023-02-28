@@ -54,7 +54,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
 
                                     <div class="small-4 columns">
-                                        <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
+                                        <?php //echo CHtml::hiddenField('StartDate', $startDate); ?>
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
