@@ -24,11 +24,11 @@ class BalanceSheetController extends Controller {
         
         $dateNow = date('Y-m-d');
         list($yearNow, , ) = explode('-', $dateNow);
-        $dateStart = $yearNow . '-01-01';
+//        $dateStart = $yearNow . '-01-01';
 //        $dateStart = '2022-01-01';
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateNow;
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : $dateNow;
 
         $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id IN (12)'));

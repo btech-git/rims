@@ -24,12 +24,12 @@ class BalanceSheetDetailController extends Controller {
 
         $dateNow = date('Y-m-d');
         list($yearNow, , ) = explode('-', $dateNow);
-        $dateStart = $yearNow . '-01-01';
+//        $dateStart = $yearNow . '-01-01';
 //        $dateStart = '2022-01-01';
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateStart;
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateNow;
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : $dateNow;
 
         $accountCategoryAssets = CoaCategory::model()->findAll(array('condition' => 't.id = 12'));
         $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
