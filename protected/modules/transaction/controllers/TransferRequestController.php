@@ -309,7 +309,7 @@ class TransferRequestController extends Controller {
             $jurnalUmumMasterOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
             $jurnalUmumMasterOutstandingPartDestination->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
             $jurnalUmumMasterOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
-            $jurnalUmumMasterOutstandingPartDestination->total = $hppPrice;
+            $jurnalUmumMasterOutstandingPartDestination->total = $transferRequest->total_price;
             $jurnalUmumMasterOutstandingPartDestination->debet_kredit = 'D';
             $jurnalUmumMasterOutstandingPartDestination->tanggal_posting = date('Y-m-d');
             $jurnalUmumMasterOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
