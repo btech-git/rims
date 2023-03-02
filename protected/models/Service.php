@@ -56,6 +56,7 @@
  * @property ServiceProduct[] $serviceProducts
  * @property ServicePricelist[] $servicePricelists
  * @property ServiceStandardPricelist[] $serviceStandardPricelists
+ * @property RegistrationService[] $registrationServices
  * @property User $user
  */
 class Service extends CActiveRecord {
@@ -120,6 +121,7 @@ class Service extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'registrationServices' => array(self::HAS_MANY, 'RegistrationService', 'service_id'),
             'customerServiceRates' => array(self::HAS_MANY, 'CustomerServiceRate', 'service_id'),
             'insuranceCompanyPricelists' => array(self::HAS_MANY, 'InsuranceCompanyPricelist', 'service_id'),
             'serviceCategory' => array(self::BELONGS_TO, 'ServiceCategory', 'service_category_id'),

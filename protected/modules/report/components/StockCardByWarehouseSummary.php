@@ -1,0 +1,43 @@
+<?php
+
+class StockCardByWarehouseSummary extends CComponent {
+
+    public $dataProvider;
+
+    public function __construct($dataProvider) {
+        $this->dataProvider = $dataProvider;
+    }
+
+    public function setupLoading() {
+        $this->dataProvider->criteria->together = TRUE;
+        $this->dataProvider->criteria->with = array(
+            'inventoryDetails',
+        );
+    }
+
+    public function setupPaging($pageSize, $currentPage) {
+        $pageSize = (empty($pageSize)) ? 5000 : $pageSize;
+        $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
+        $this->dataProvider->pagination->pageSize = $pageSize;
+
+        $currentPage = (empty($currentPage)) ? 0 : $currentPage - 1;
+        $this->dataProvider->pagination->currentPage = $currentPage;
+    }
+
+    public function setupSorting() {
+        $this->dataProvider->sort->attributes = array('t.name');
+        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+    }
+
+    public function setupFilter($filters) {
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $productId = $filters['productId'];
+        
+        $this->dataProvider->criteria->addBetweenCondition('inventoryDetails.transaction_date', $startDate, $endDate);
+        if (!empty($productId)) {
+            $this->dataProvider->criteria->compare('inventoryDetails.product_id', $productId);
+        }
+    }
+
+}

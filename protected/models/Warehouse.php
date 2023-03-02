@@ -20,6 +20,7 @@
  * The followings are the available model relations:
  * @property BranchWarehouse[] $branchWarehouses
  * @property Inventory[] $inventories
+ * @property InventoryDetail[] $inventoryDetails
  * @property TransactionReturnItemDetail[] $transactionReturnItemDetails
  * @property WarehouseDivision[] $warehouseDivisions
  * @property WarehouseSection[] $warehouseSections
@@ -66,6 +67,7 @@ class Warehouse extends CActiveRecord {
         return array(
             'branchWarehouses' => array(self::HAS_MANY, 'BranchWarehouse', 'warehouse_id'),
             'inventories' => array(self::HAS_MANY, 'Inventory', 'warehouse_id'),
+            'inventoryDetails' => array(self::HAS_MANY, 'InventoryDetail', 'warehouse_id'),
             'transactionReturnItemDetails' => array(self::HAS_MANY, 'TransactionReturnItemDetail', 'warehouse_id'),
             'warehouseDivisions' => array(self::HAS_MANY, 'WarehouseDivision', 'warehouse_id'),
             'warehouseSections' => array(self::HAS_MANY, 'WarehouseSection', 'warehouse_id'),
@@ -110,14 +112,14 @@ class Warehouse extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('code', $this->code, true);
-        $criteria->compare('name', $this->name, true);
-        $criteria->compare('description', $this->description, true);
-        $criteria->compare('row', $this->row);
-        $criteria->compare('column', $this->column);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('.name', $this->name, true);
+        $criteria->compare('t.description', $this->description, true);
+        $criteria->compare('.row', $this->row);
+        $criteria->compare('t.column', $this->column);
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
-        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
         $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('t.date_approval', $this->date_approval);
         $criteria->compare('t.user_id', $this->user_id);
@@ -145,4 +147,37 @@ class Warehouse extends CActiveRecord {
         return parent::model($className);
     }
 
+    public function getBeginningStockReport($startDate) {
+        $sql = "
+            SELECT COALESCE(SUM(stock_in - stock_out), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . "
+            WHERE warehouse_id = :warehouse_id AND transaction_date < :start_date
+            GROUP BY warehouse_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':warehouse_id' => $this->id,
+            ':start_date' => $startDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getInventoryStockReport($startDate, $endDate) {
+        
+        $sql = "SELECT i.transaction_number, i.transaction_date, i.transaction_type, i.notes, i.stock_in, i.stock_out, i.purchase_price, p.name AS product_name
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date AND i.warehouse_id = :warehouse_id
+                ORDER BY i.transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':warehouse_id' => $this->id,
+        ));
+        
+        return $resultSet;
+    }
+    
 }

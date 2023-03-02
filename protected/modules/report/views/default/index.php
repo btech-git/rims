@@ -331,6 +331,11 @@
                                         'url' => array('/report/stockCard/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardReport')
                                     ),
+                                    array(
+                                        'label' => 'Mutasi per Gudang', 
+                                        'url' => array('/report/stockCardByWarehouse/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardReport')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
@@ -343,6 +348,16 @@
                             <h2>Pekerjaan Pesanan</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
+                                    array(
+                                        'label' => 'Penyelesaian Pesanan per Pekerjaan', 
+                                        'url' => array('/report/workOrderByService/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('generalManager')
+                                    ),
+                                    array(
+                                        'label' => 'Penyelesaian Pesanan per Kendaraan', 
+                                        'url' => array('/report/workOrderByVehicle/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('generalManager')
+                                    ),
                                     array(
                                         'label' => 'Laporan Mekanik', 
                                         'url' => array('/report/mechanicPerformance/summary'), 
