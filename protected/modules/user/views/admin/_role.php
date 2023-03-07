@@ -102,42 +102,42 @@
             'Laporan' => array(
                 'content' => $this->renderPartial(
                     '_viewReport',
-                    array('model' => $model, 'counter' => $counter+110),
+                    array('model' => $model, 'counter' => $counter+98),
                     true
                 )
             ),
             'Setting Company' => array(
                 'content' => $this->renderPartial(
                     '_viewCompany',
-                    array('model' => $model, 'counter' => $counter+132),
+                    array('model' => $model, 'counter' => $counter+133),
                     true
                 )
             ),
             'Setting Accounting' => array(
                 'content' => $this->renderPartial(
                     '_viewAccounting',
-                    array('model' => $model, 'counter' => $counter+175),
+                    array('model' => $model, 'counter' => $counter+176),
                     true
                 )
             ),
             'Setting Product' => array(
                 'content' => $this->renderPartial(
                     '_viewProduct',
-                    array('model' => $model, 'counter' => $counter+191),
+                    array('model' => $model, 'counter' => $counter+192),
                     true
                 )
             ),
             'Setting Service' => array(
                 'content' => $this->renderPartial(
                     '_viewService',
-                    array('model' => $model, 'counter' => $counter+225),
+                    array('model' => $model, 'counter' => $counter+226),
                     true
                 )
             ),
             'Setting Vehicle' => array(
                 'content' => $this->renderPartial(
                     '_viewVehicle',
-                    array('model' => $model, 'counter' => $counter+262),
+                    array('model' => $model, 'counter' => $counter+263),
                     true
                 )
             ),

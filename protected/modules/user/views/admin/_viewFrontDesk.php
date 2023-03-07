@@ -14,7 +14,7 @@
         <tr>
             <td>General Repair</td>
             <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][generalRepairCreate]", CHtml::resolveValue($model, "roles[generalRepairCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'generalRepairCreate')); ?></td>
-            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][generalRepairEdit]", CHtml::resolveValue($model, "roles[generalRepairEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'generalRepairEdit')); ?></td>
+                <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][generalRepairEdit]", CHtml::resolveValue($model, "roles[generalRepairEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'generalRepairEdit')); ?></td>
             <td style="text-align: center"><?php //echo CHtml::checkBox("User[roles][generalRepairApproval]", CHtml::resolveValue($model, "roles[generalRepairApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'generalRepairApproval')); ?></td>
         </tr>
         <tr>

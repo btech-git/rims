@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php echo CHtml::checkBox("User[roles][areaManager]", CHtml::resolveValue($model, "roles[areaManager]"), array('id' => 'User_roles_' . $counter, 'value' => 'areaManager')); ?>
+                <?php echo CHtml::checkBox("User[roles][masterCompany]", CHtml::resolveValue($model, "roles[masterCompany]"), array('id' => 'User_roles_' . $counter, 'value' => 'masterCompany')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>

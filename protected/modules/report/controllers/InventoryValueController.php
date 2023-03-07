@@ -219,25 +219,25 @@ class InventoryValueController extends Controller {
                 $totalValue += CHtml::value($inventoryCostOfGoodsSold[$i], 'value'); 
             }
                         
-            $worksheet->setCellValue("O{$counter}", CHtml::encode($totalStock));
-            $worksheet->setCellValue("P{$counter}", CHtml::encode($totalCogs));
-            $worksheet->setCellValue("Q{$counter}", CHtml::encode($totalValue));
+            $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalStock));
+            $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalCogs));
+            $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalValue));
             $counter++;
 
         }
 
-        for ($col = 'A'; $col !== 'R'; $col++) {
+        for ($col = 'A'; $col !== $column; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        ob_end_clean();
         // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
+        header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Nilai Persediaan.xlsx"');
         header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();
