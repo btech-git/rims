@@ -12,7 +12,7 @@ class SaleRetailCustomerController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('saleOrderReport')) || !(Yii::app()->user->checkAccess('saleInvoiceReport')))
+            if (!(Yii::app()->user->checkAccess('saleCustomerSummaryReport')))
                 $this->redirect(array('/site/login'));
         }
 

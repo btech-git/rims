@@ -12,7 +12,7 @@ class PayableController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('accountingReport'))) {
+            if (!(Yii::app()->user->checkAccess('supplierPayableReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }

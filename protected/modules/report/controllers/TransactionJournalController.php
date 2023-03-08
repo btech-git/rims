@@ -4,13 +4,13 @@ class TransactionJournalController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('accountingReport')) || !(Yii::app()->user->checkAccess('financeReport')))
+            if (!(Yii::app()->user->checkAccess('transactionJournalReport')))
                 $this->redirect(array('/site/login'));
         }
 
