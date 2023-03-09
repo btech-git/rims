@@ -443,7 +443,7 @@ class TransactionSentRequestController extends Controller {
         $destinationBranchDataProvider->criteria->compare('t.status_document', "Approved");
         $destinationBranchDataProvider->criteria->compare('t.destination_approved_by', null);
 
-        $this->render('admin', array(
+        $this->render('adminDestination', array(
             'model' => $model,
             'destinationBranchDataProvider' => $destinationBranchDataProvider,
         ));
