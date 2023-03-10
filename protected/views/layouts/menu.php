@@ -412,12 +412,12 @@
                     array(
                         'label' => 'Aset Management', 
                         'url' => array('/accounting/assetManagement/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('generalManager')
+                        'visible' => Yii::app()->user->checkAccess('assetManagement')
                     ),
                     array(
                         'label' => 'Financial Forecast', 
                         'url' => array('/accounting/financialForecast/summary'), 
-                        'visible' => Yii::app()->user->checkAccess('generalManager')
+                        'visible' => Yii::app()->user->checkAccess('financialSummary')
                     ),
                 ),
             )); ?>
