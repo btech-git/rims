@@ -11,17 +11,22 @@ class AssetManagementController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('salePaymentCreate')))
+        if (
+                $filterChain->action->id === 'create' || 
+                $filterChain->action->id === 'delete' || 
+                $filterChain->action->id === 'update' || 
+                $filterChain->action->id === 'admin' || 
+                $filterChain->action->id === 'ajaxHtmlResetPayment' || 
+                $filterChain->action->id === 'ajaxHtmlRemovePayment' || 
+                $filterChain->action->id === 'ajaxHtmlAddAccount' || 
+                $filterChain->action->id === 'ajaxJsonTotal' || 
+                $filterChain->action->id === 'ajaxJsonSaleReceipt' || 
+                $filterChain->action->id === 'memo' || 
+                $filterChain->action->id === 'view'
+            ) {
+            if (!(Yii::app()->user->checkAccess('assetManagement'))) {
                 $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('salePaymentEdit')))
-                $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'ajaxHtmlResetPayment' || $filterChain->action->id === 'ajaxHtmlRemovePayment' || $filterChain->action->id === 'ajaxHtmlAddAccount' || $filterChain->action->id === 'ajaxJsonTotal' || $filterChain->action->id === 'ajaxJsonSaleReceipt' || $filterChain->action->id === 'memo' || $filterChain->action->id === 'view') {
-            if (!(Yii::app()->user->checkAccess('salePaymentCreate') || Yii::app()->user->checkAccess('salePaymentEdit')))
-                $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
