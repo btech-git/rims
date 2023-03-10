@@ -400,6 +400,8 @@
     <?php if (
         Yii::app()->user->checkAccess('financialAnalysisReport') || 
         Yii::app()->user->checkAccess('cashDailyReport') || 
+        Yii::app()->user->checkAccess('assetManagement') || 
+        Yii::app()->user->checkAccess('financialSummary') || 
         Yii::app()->user->checkAccess('kertasKerjaReport')
     ): ?>
         <li class="mdropdown"><a href="#">ACCOUNTING/FINANCE</a>
