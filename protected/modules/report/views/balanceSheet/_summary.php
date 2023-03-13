@@ -238,7 +238,7 @@
                                     
                                 <tr>
                                     <td style="font-weight: bold">
-                                        <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> -  
+                                        <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> -  
                                         <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                                     </td>
 

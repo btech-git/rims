@@ -89,12 +89,13 @@ class ProfitLossController extends Controller {
                 $accountCategoryBalance = 0.00;
                 $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC'));
                 foreach ($coas as $coa) {
+                    $coaBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0;
                     $accountGroupBalance = 0.00;
                     foreach ($coa->coaIds as $account) {
                         $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId);
                         $accountGroupBalance += $accountBalance;
                     }
-                    $accountCategoryBalance += $accountGroupBalance;
+                    $accountCategoryBalance += (empty($coa->coaIds)) ? $coaBalance : $accountGroupBalance;
                 }
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
@@ -135,12 +136,12 @@ class ProfitLossController extends Controller {
             ->setAutoSize(true);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        ob_end_clean();
         // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
+        header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Profit Loss Induk.xlsx"');
         header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();

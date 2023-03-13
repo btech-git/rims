@@ -129,17 +129,20 @@ class ProfitLossDetailController extends Controller {
 
                 $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC'));
                 foreach ($coas as $coa) {
-                    $accountGroupBalance = 0.00;
+                    $coaBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0;
                     $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($coa, 'code')));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode($coaBalance));
                     $counter++;
+                    
+                    $accountGroupBalance = 0.00;
                     foreach ($coa->coaIds as $account) {
                         $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId);
                         if ((int) $accountBalance !== 0) {
                             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')));
                             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($account, 'name')));
-                            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                             $worksheet->setCellValue("C{$counter}", CHtml::encode($accountBalance));
+                            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                             $counter++;
                             $accountGroupBalance += $accountBalance;
                         }
@@ -149,7 +152,7 @@ class ProfitLossDetailController extends Controller {
                     $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     $worksheet->setCellValue("C{$counter}", CHtml::encode($accountGroupBalance));
                     $counter++; $counter++;
-                    $accountCategoryBalance += $accountGroupBalance;
+                    $accountCategoryBalance += (empty($coa->coaIds)) ? $coaBalance : $accountGroupBalance;
                 }
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
@@ -190,12 +193,12 @@ class ProfitLossDetailController extends Controller {
             ->setAutoSize(true);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        ob_end_clean();
         // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
+        header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Profit Loss Standar.xlsx"');
         header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();
