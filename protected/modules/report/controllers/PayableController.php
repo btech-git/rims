@@ -39,7 +39,7 @@ class PayableController extends Controller {
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();
 
-        if (isset($_GET['SaveToExcel'])) {
+        if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($purchaseSummary);
         }
 
@@ -97,14 +97,9 @@ class PayableController extends Controller {
         return $grandTotal;
     }
 
-    protected function saveToExcel($purchaseSummary, $startDate, $endDate) {
+    protected function saveToExcel($purchaseSummary) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
-
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $startDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
-        $endDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -127,7 +122,7 @@ class PayableController extends Controller {
         $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Laporan Hutang Supplier');
-        $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
+//        $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A6:M6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:M6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);

@@ -34,13 +34,14 @@ Yii::app()->clientScript->registerCss('_report', '
         <tr id="header1">
             <th class="width1-1">Payment #</th>
             <th class="width1-2">Tanggal</th>
-            <th class="width1-4">Note</th>
-            <th class="width1-5">Supplier</th>
-            <th class="width1-7">Status</th>
-            <th class="width1-8">Payment Type</th>
-            <th class="width1-9">Bank</th>
-            <th class="width1-10">Admin</th>
-            <th class="width1-3">Amount</th>
+            <th class="width1-3">Note</th>
+            <th class="width1-4">Supplier</th>
+            <th class="width1-5">Status</th>
+            <th class="width1-6">Payment Type</th>
+            <th class="width1-7">Bank Asal</th>
+            <th class="width1-8">Bank Tujuan</th>
+            <th class="width1-9">Admin</th>
+            <th class="width1-10">Amount</th>
         </tr>
     </thead>
     
@@ -55,6 +56,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
                 <td class="width1-7"><?php echo CHtml::encode($header->status); ?></td>
                 <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
+                <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'bank.name')); ?></td>
                 <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'companyBank.bank.name')); ?></td>
                 <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
                 <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
@@ -65,7 +67,7 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <tfoot>
         <tr>
-            <td colspan="8" style="text-align: right; font-weight: bold">Total Payment Out</td>
+            <td colspan="9" style="text-align: right; font-weight: bold">Total Payment Out</td>
             <td class="width1-3" style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
         </tr>
     </tfoot>

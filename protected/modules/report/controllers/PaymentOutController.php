@@ -40,7 +40,7 @@ class PaymentOutController extends Controller {
         $paymentOutSummary->setupFilter($startDate, $endDate, $branchId, $paymentType);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($paymentOutSummary, $branchId, $paymentOutSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($paymentOutSummary->dataProvider, $branchId, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('summary', array(
@@ -54,7 +54,7 @@ class PaymentOutController extends Controller {
         ));
     }
 
-    protected function saveToExcel($paymentOutSummary, $branchId, $dataProvider, array $options = array()) {
+    protected function saveToExcel($dataProvider, $branchId, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -71,31 +71,19 @@ class PaymentOutController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Payment Out');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-        $worksheet->getColumnDimension('H')->setAutoSize(true);
-        $worksheet->getColumnDimension('I')->setAutoSize(true);
-        $worksheet->getColumnDimension('J')->setAutoSize(true);
-        $worksheet->getColumnDimension('K')->setAutoSize(true);
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
 
-        $worksheet->mergeCells('A1:K1');
-        $worksheet->mergeCells('A2:K2');
-        $worksheet->mergeCells('A3:K3');
-
-        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Payment Out');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Payment #');
         $worksheet->setCellValue('B5', 'Tanggal');
@@ -105,37 +93,51 @@ class PaymentOutController extends Controller {
         $worksheet->setCellValue('F5', 'PO #');
         $worksheet->setCellValue('G5', 'Status');
         $worksheet->setCellValue('H5', 'Payment Type');
-        $worksheet->setCellValue('I5', 'Bank');
-        $worksheet->setCellValue('J5', 'Branch');
-        $worksheet->setCellValue('K5', 'Admin');
+        $worksheet->setCellValue('I5', 'Bank Asal');
+        $worksheet->setCellValue('J5', 'Bank Tujuan');
+        $worksheet->setCellValue('K5', 'Branch');
+        $worksheet->setCellValue('L5', 'Admin');
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $totalPayment = 0.00;
         foreach ($dataProvider->data as $header) {
+            $paymentAmount = CHtml::value($header, 'payment_amount');
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->payment_number));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($header->payment_date));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'payment_amount')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode($paymentAmount));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'notes')));
             $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
             $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'purchaseOrder.purchase_order_no')));
             $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'status')));
             $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'paymentType.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'companyBank.bank.name')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'bank.name')));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'companyBank.bank.name')));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
+            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
 
-            $counter++;
+            $counter++; $counter++;
+            $totalPayment += $paymentAmount;
+        }
+        
+        $worksheet->getStyle("B{$counter}:D{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue("C{$counter}", CHtml::encode($totalPayment));        
+
+        for ($col = 'A'; $col !== 'L'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        ob_end_clean();
         // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
+        header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Payment Out.xlsx"');
         header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();

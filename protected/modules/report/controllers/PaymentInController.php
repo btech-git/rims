@@ -141,12 +141,14 @@ class PaymentInController extends Controller {
         $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $totalPayment = 0.00;
         foreach ($dataProvider->data as $header) {
+            $paymentAmount = CHtml::value($header, 'payment_amount');
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->payment_number));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($header->payment_date));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'payment_amount')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode($paymentAmount));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'notes')));
             $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
             $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'vehicle.plate_number')));
@@ -155,16 +157,25 @@ class PaymentInController extends Controller {
             $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
             $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
 
-            $counter++;
+            $counter++; $counter++;
+            $totalPayment += $paymentAmount;
         }
+        
+        $worksheet->getStyle("B{$counter}:D{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue("C{$counter}", CHtml::encode($totalPayment));        
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        ob_end_clean();
+        for ($col = 'A'; $col !== 'L'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
         
         // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
+        header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Payment In.xlsx"');
         header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();

@@ -45,7 +45,7 @@ class ReceivableController extends Controller {
         $customerDataProvider = $customer->search();
         $customerDataProvider->criteria->addCondition('t.customer_type = "Company" '); 
 
-        if (isset($_GET['SaveToExcel'])) {
+        if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleInvoiceSummary);
         }
 
@@ -102,7 +102,7 @@ class ReceivableController extends Controller {
         return $grandTotal;
     }
 
-    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate) {
+    protected function saveToExcel($saleInvoiceSummary) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -111,11 +111,6 @@ class ReceivableController extends Controller {
         spl_autoload_register(array('YiiBase', 'autoload'));
 
         $objPHPExcel = new PHPExcel();
-
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $startDate = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
-        $endDate = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
@@ -132,7 +127,7 @@ class ReceivableController extends Controller {
         $worksheet->getStyle('A1:J3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Laporan Piutang Customer');
-        $worksheet->setCellValue('A3', $startDate . ' - ' . $endDate);
+//        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A6:J6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A7:J7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -153,8 +148,10 @@ class ReceivableController extends Controller {
         $worksheet->setCellValue('A7', 'Tanggal Bayar');
         $worksheet->setCellValue('B7', 'Payment In #');
         $worksheet->setCellValue('C7', 'Payment Type');
-        $worksheet->setCellValue('D7', 'Jumlah (Rp)');
-        $worksheet->setCellValue('E7', 'Notes');
+        $worksheet->setCellValue('D7', 'Bank Asal');
+        $worksheet->setCellValue('E7', 'Bank Tujuan');
+        $worksheet->setCellValue('F7', 'Jumlah (Rp)');
+        $worksheet->setCellValue('G7', 'Notes');
         $counter = 9;
 
         foreach ($saleInvoiceSummary->dataProvider->data as $header) {
@@ -175,8 +172,10 @@ class ReceivableController extends Controller {
                 $worksheet->setCellValue("A{$counter}", $detail->payment_date);
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($detail, 'payment_number')));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detail, 'paymentType.name')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'payment_amount')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($detail, 'notes')));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'bank.name')));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($detail, 'companyBank.bank.name')));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($detail, 'payment_amount')));
+                $worksheet->setCellValue("G$counter}", CHtml::encode(CHtml::value($detail, 'notes')));
                 
             }
         }
@@ -194,8 +193,8 @@ class ReceivableController extends Controller {
 
         for ($col = 'A'; $col !== 'X'; $col++) {
             $objPHPExcel->getActiveSheet()
-                    ->getColumnDimension($col)
-                    ->setAutoSize(true);
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         // We'll be outputting an excel file

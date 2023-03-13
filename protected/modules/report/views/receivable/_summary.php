@@ -10,12 +10,13 @@
     .width1-9 { width: 10% }
     .width1-10 { width: 10% }
     
-    .width2-1 { width: 15% }
-    .width2-2 { width: 15% }
-    .width2-3 { width: 15% }
+    .width2-1 { width: 13% }
+    .width2-2 { width: 13% }
+    .width2-3 { width: 13% }
     .width2-4 { width: 15% }
     .width2-5 { width: 15% }
-    .width2-6 { width: 25% }
+    .width2-6 { width: 15% }
+    .width2-7 { width: 16% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -47,9 +48,10 @@
                     <th class="width2-1">Tanggal Bayar</th>
                     <th class="width2-2">Payment In #</th>
                     <th class="width2-3">Payment Type</th>
-                    <th class="width2-4">Bank</th>
-                    <th class="width2-5">Jumlah (Rp)</th>
-                    <th class="width2-6">Notes</th>
+                    <th class="width2-4">Bank Asal</th>
+                    <th class="width2-5">Bank Tujuan</th>
+                    <th class="width2-6">Jumlah (Rp)</th>
+                    <th class="width2-7">Notes</th>
                 </tr>
             </table>
         </td>
@@ -75,9 +77,10 @@
                             <th class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->payment_date))); ?></th>
                             <th class="width2-2"><?php echo CHtml::link($detail->payment_number, Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $detail->payment_number)), array('target' => '_blank'));?></th>
                             <th class="width2-3"><?php echo CHtml::encode(CHtml::value($detail, 'paymentType.name')); ?></th>
-                            <th class="width2-4"><?php echo CHtml::encode(CHtml::value($detail, 'companyBank.bank.name')); ?></th>
-                            <th class="width2-5"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($detail->payment_amount))); ?></th>
-                            <th class="width2-6"><?php echo CHtml::encode(CHtml::value($detail, 'notes')); ?></th>
+                            <th class="width2-4"><?php echo CHtml::encode(CHtml::value($detail, 'bank.name')); ?></th>
+                            <th class="width2-5"><?php echo CHtml::encode(CHtml::value($detail, 'companyBank.bank.name')); ?></th>
+                            <th class="width2-6"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($detail->payment_amount))); ?></th>
+                            <th class="width2-7"><?php echo CHtml::encode(CHtml::value($detail, 'notes')); ?></th>
                         </tr>
                     <?php endforeach; ?>
                 </table>
