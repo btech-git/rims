@@ -278,7 +278,7 @@ class BalanceSheetController extends Controller {
         }
 
         // We'll be outputting an excel file
-        header('Content-Type: application/xls');
+        header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Balance Sheet Induk.xls"');
         header('Cache-Control: max-age=0');
         
