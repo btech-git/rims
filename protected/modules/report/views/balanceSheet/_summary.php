@@ -47,11 +47,15 @@
                             </td>
                             <td></td>
                         </tr>
-                        <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null)); ?> 
+                        <?php $coas = Coa::model()->findAllByAttributes(array(
+                            'coa_sub_category_id' => $accountCategory->id, 
+                            'is_approved' => 1, 
+                            'coa_id' => null
+                        )); ?> 
                         <?php foreach ($coas as $coa): ?>
                             <?php $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId); ?>
                             <?php $coaSubs = Coa::model()->findAllByAttributes(array('is_approved' => 1, 'coa_id' => $coa->id)); ?> 
-                            <?php if ((int) $accountGroupBalance !== 0): ?>
+                            <?php //if ((int) $accountGroupBalance !== 0): ?>
                                 <?php if (!empty($coaSubs)): ?>
                                     <?php $accountGroupBalance = 0; ?> 
                                     <?php foreach ($coaSubs as $account): ?>
@@ -59,7 +63,7 @@
                                         <?php $accountGroupBalance += $accountBalance; ?>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
-                            <?php endif; ?>
+                            <?php //endif; ?>
                             <?php $accountCategoryBalance += $accountGroupBalance; ?>
                         <?php endforeach; ?>
                         <tr>

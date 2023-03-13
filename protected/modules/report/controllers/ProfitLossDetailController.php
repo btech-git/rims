@@ -132,30 +132,30 @@ class ProfitLossDetailController extends Controller {
                     $coaBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0;
                     $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($coa, 'code')));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($coaBalance));
+                    $worksheet->setCellValue("C{$counter}", ($coaBalance == 0) ? 0 : CHtml::encode($coaBalance));
                     $counter++;
                     
                     $accountGroupBalance = 0.00;
-                    foreach ($coa->coaIds as $account) {
-                        $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId);
-                        if ((int) $accountBalance !== 0) {
-                            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')));
-                            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($account, 'name')));
-                            $worksheet->setCellValue("C{$counter}", CHtml::encode($accountBalance));
-                            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                            $counter++;
-                            $accountGroupBalance += $accountBalance;
+                    if (!empty($coa->coaIds)) {
+                        foreach ($coa->coaIds as $account) {
+                            $accountBalance = $account->getProfitLossBalance($startDate, $endDate, $branchId);
+                            if ((int) $accountBalance !== 0) {
+                                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')));
+                                $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($account, 'name')));
+                                $worksheet->setCellValue("C{$counter}", CHtml::encode($accountBalance));
+                                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                                $counter++;
+                                $accountGroupBalance += $accountBalance;
+                            }
                         }
+                        $worksheet->setCellValue("B{$counter}", 'Total ' . CHtml::encode(CHtml::value($coa, 'name')));
+                        $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        $worksheet->setCellValue("C{$counter}", CHtml::encode($accountGroupBalance));
+                        $counter++; $counter++;
                     }
-                    $worksheet->setCellValue("A{$counter}", 'Total');
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
-                    $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($accountGroupBalance));
-                    $counter++; $counter++;
                     $accountCategoryBalance += (empty($coa->coaIds)) ? $coaBalance : $accountGroupBalance;
                 }
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
+                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
                 $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryBalance));
                 $counter++;$counter++;

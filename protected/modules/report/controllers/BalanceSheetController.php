@@ -112,7 +112,7 @@ class BalanceSheetController extends Controller {
                         foreach ($coas as $coa) {
                             $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId);
                             $coaSubs = Coa::model()->findAllByAttributes(array('is_approved' => 1, 'coa_id' => $coa->id));
-                            if ((int) $accountGroupBalance !== 0) {
+//                            if ((int) $accountGroupBalance !== 0) {
                                 if (!empty($coaSubs)) {
                                     $accountGroupBalance = 0;
                                     foreach ($coaSubs as $account) {
@@ -120,7 +120,7 @@ class BalanceSheetController extends Controller {
                                         $accountGroupBalance += $accountBalance;
                                     }
                                 }
-                            }
+//                            }
                             $accountCategoryBalance += $accountGroupBalance;
                         }
                         
@@ -278,11 +278,11 @@ class BalanceSheetController extends Controller {
         }
 
         // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Induk.xls"');
+        header('Content-Type: application/xls');
+        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Induk.xlsx"');
         header('Cache-Control: max-age=0');
         
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();
