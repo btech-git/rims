@@ -148,7 +148,7 @@
                                                     "branch_id" => $bodyRepairRegistration->header->branch_id,
                                                     "division_id" => array(2),
                                                     "position_id" => 1,
-                                                    "level_id" => array(1, 2, 3),
+                                                    "level_id" => array(1, 2, 3, 4),
                                                 )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'employee_id_assign_mechanic'); ?>
                                             </div>
