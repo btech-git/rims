@@ -79,8 +79,6 @@ class BalanceSheetDetailController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
         $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
 
