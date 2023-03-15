@@ -9,6 +9,7 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupLoading() {
+        $this->dataProvider->criteria->together = true;
         $this->dataProvider->criteria->with = array(
             'coa',
             'branch' => array(
@@ -17,7 +18,6 @@ class TransactionJournalSummary extends CComponent {
                 ),
             ),
         );
-        $this->dataProvider->criteria->together = true;
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -40,6 +40,7 @@ class TransactionJournalSummary extends CComponent {
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
         $this->dataProvider->criteria->addCondition("is_coa_category = 0");
+        
         if (!empty($branchId) && empty($companyId) || !empty($branchId) && !empty($companyId)) {
             $this->dataProvider->criteria->addColumnCondition(array('t.branch_id' => $branchId));
         } else if (empty($branchId) && !empty($companyId)) {
