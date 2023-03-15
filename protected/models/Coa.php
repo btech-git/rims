@@ -791,7 +791,7 @@ class Coa extends CActiveRecord {
                     WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'K'
                     GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
                 ) t
-                ORDER BY tanggal_transaksi ASC";
+                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':start_date' => $startDate,
