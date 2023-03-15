@@ -9,6 +9,7 @@ class SentRequestSummary extends CComponent {
     }
 
     public function setupLoading() {
+        $this->dataProvider->criteria->together = TRUE;
         $this->dataProvider->criteria->with = array(
 //            'approval',
             'user',

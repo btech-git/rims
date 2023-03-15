@@ -176,12 +176,12 @@
                                     array(
                                         'label' => 'Penjualan per Pelanggan', 
                                         'url' => array('/report/saleRetailCustomer/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+//                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Pelanggan', 
                                         'url' => array('/report/saleRetail/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
+//                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                     array(
                                         'label' => 'Penjualan per Barang/Jasa', 

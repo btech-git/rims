@@ -9,12 +9,9 @@ class SaleRetailSummary extends CComponent {
     }
 
     public function setupLoading() {
+        $this->dataProvider->criteria->together = TRUE;
         $this->dataProvider->criteria->with = array(
-            'customer',
-            'vehicle',
-            'insuranceCompany',
-            'branch',
-            'user',
+            'registrationTransactions',
         );
     }
 
@@ -28,16 +25,13 @@ class SaleRetailSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.transaction_date', 't.branch_id');
+        $this->dataProvider->sort->attributes = array('t.name');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
-        $this->dataProvider->criteria->compare('t.repair_type', $filters['repairType']);
-        $this->dataProvider->criteria->compare('customer.id', $filters['customerId']);
+        $this->dataProvider->criteria->addBetweenCondition('registrationTransactions.transaction_date', $startDate, $endDate);
     }
 }

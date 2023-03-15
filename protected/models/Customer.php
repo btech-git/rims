@@ -36,6 +36,7 @@
  * @property CustomerPic[] $customerPics
  * @property CustomerServiceRate[] $customerServiceRates
  * @property Vehicle[] $vehicles 
+ * @property RegistrationTransaction[] $registrationTransactions
  * @property InvoiceHeader[] $invoiceHeaders
  * @property PaymentIn[] $paymentIns
  * @property TransactionDeliveryOrder[] $transactionDeliveryOrders
@@ -96,6 +97,7 @@ class Customer extends CActiveRecord {
             'vehicles' => array(self::HAS_MANY, 'Vehicle', 'customer_id'),
             'color' => array(self::BELONGS_TO, 'Colors', 'color_id'),
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
+            'registrationTransactions' => array(self::HAS_MANY, 'RegistrationTransaction', 'customer_id'),
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'customer_id'),
             'invoiceHeaders' => array(self::HAS_MANY, 'InvoiceHeader', 'customer_id'),
             'transactionDeliveryOrders' => array(self::HAS_MANY, 'TransactionDeliveryOrder', 'customer_id'),
@@ -306,6 +308,23 @@ class Customer extends CActiveRecord {
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
             ':customer_id' => $this->id,
             ':start_date' => $startDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getTotalSales($startDate, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(grand_total), 0) AS total 
+            FROM " . RegistrationTransaction::model()->tableName() . "
+            WHERE customer_id = :customer_id AND transaction_date BETWEEN :start_date AND :end_date
+            GROUP BY customer_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':customer_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
         ));
 
         return ($value === false) ? 0 : $value;

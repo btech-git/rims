@@ -2,8 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $saleRetailSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($saleRetailSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+    $("#PageSize").val("' . $saleRetailCustomerSummary->dataProvider->pagination->pageSize . '");
+    $("#CurrentPage").val("' . ($saleRetailCustomerSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -55,7 +55,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                                        <?php echo CHtml::activeTextField($customer, 'id', array(
                                             'readonly' => true,
                                             'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }',
@@ -82,7 +82,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                'header'=>'',
                                             ),
                                             'selectionChanged' => 'js:function(id){
-                                                $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
+                                                $("#' . CHtml::activeId($customer, 'id') . '").val($.fn.yiiGridView.getSelection(id));
                                                 $("#customer-dialog").dialog("close");
                                                 if ($.fn.yiiGridView.getSelection(id) == "") {
                                                     $("#customer_name").html("");
@@ -121,7 +121,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                         <?php $this->endWidget(); ?>
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customer = Customer::model()->findByPk($customerId); ?>
                                         <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?> 
 
@@ -134,10 +133,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Repair Type</span>
+                                        <span class="prefix">Type</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('RepairType', $repairType, array('GR' => 'GR', 'BR' => 'BR'), array('empty' => '-- All Type --')); ?>
+                                        <?php echo CHtml::activeDropDownlist($customer, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company'), array('empty' => '-- All Type --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -179,19 +178,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="clear"></div>
@@ -210,9 +196,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'saleRetail' => $saleRetail,
-                        'saleRetailSummary' => $saleRetailSummary,
-                        'branchId' => $branchId,
+                        'customer' => $customer,
+                        'saleRetailCustomerSummary' => $saleRetailCustomerSummary,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>
@@ -232,9 +217,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
 <div class="right">
     <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'itemCount' => $saleRetailSummary->dataProvider->pagination->itemCount,
-        'pageSize' => $saleRetailSummary->dataProvider->pagination->pageSize,
-        'currentPage' => $saleRetailSummary->dataProvider->pagination->getCurrentPage(false),
+        'itemCount' => $saleRetailCustomerSummary->dataProvider->pagination->itemCount,
+        'pageSize' => $saleRetailCustomerSummary->dataProvider->pagination->pageSize,
+        'currentPage' => $saleRetailCustomerSummary->dataProvider->pagination->getCurrentPage(false),
     )); */?>
 </div>
 <div class="clear"></div>
