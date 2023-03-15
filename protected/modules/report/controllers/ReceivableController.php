@@ -197,6 +197,7 @@ class ReceivableController extends Controller {
             ->setAutoSize(true);
         }
 
+        ob_end_clean();
         // We'll be outputting an excel file
         header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Piutang Customer.xlsx"');
