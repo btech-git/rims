@@ -171,6 +171,7 @@ class TransactionJournalSummaryController extends Controller {
             ->setAutoSize(true);
         }
 
+        ob_end_clean();
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Jurnal Umum Rekap.xlsx"');
         header('Cache-Control: max-age=0');
