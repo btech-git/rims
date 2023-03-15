@@ -77,9 +77,10 @@ class ReceivableController extends Controller {
 
     public function reportGrandTotal($dataProvider) {
         $grandTotal = 0.00;
-
-        foreach ($dataProvider->data as $data)
+ 
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->total_price;
+        }
 
         return $grandTotal;
     }
@@ -185,7 +186,7 @@ class ReceivableController extends Controller {
         $worksheet->getStyle("A{$counter}:Y{$counter}")->getFont()->setBold(true);
 
         $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $worksheet->mergeCells("A{$counter}:H{$counter}");
         $worksheet->setCellValue("A{$counter}", 'Total Penjualan');
         $worksheet->setCellValue("I{$counter}", 'Rp');

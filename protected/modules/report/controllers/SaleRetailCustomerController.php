@@ -182,6 +182,17 @@ class SaleRetailCustomerController extends Controller {
             
         }
 
+        $worksheet->getStyle("A{$counter}:AD{$counter}")->getFont()->setBold(true);
+
+        $worksheet->getStyle("A{$counter}:AD{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("Y{$counter}", 'Rp');
+        $worksheet->setCellValue("Z{$counter}", $this->reportGrandTotal($dataProvider));
+
+        $counter++;
+
         for ($col = 'A'; $col !== 'AD'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
@@ -199,4 +210,15 @@ class SaleRetailCustomerController extends Controller {
 
         Yii::app()->end();
     }
+    
+    public function reportGrandTotal($dataProvider) {
+        $grandTotal = 0.00;
+
+        foreach ($dataProvider->data as $data) {
+            $grandTotal += $data->grand_total;
+        }
+
+        return $grandTotal;
+    }
+
 }
