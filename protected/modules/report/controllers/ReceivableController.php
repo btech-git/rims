@@ -184,12 +184,12 @@ class ReceivableController extends Controller {
 
         $worksheet->getStyle("A{$counter}:Y{$counter}")->getFont()->setBold(true);
 
-        $worksheet->getStyle("A{$counter}:Y{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("S{$counter}:X{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("P{$counter}:V{$counter}");
-        $worksheet->setCellValue("P{$counter}", 'Total Penjualan');
-        $worksheet->setCellValue("W{$counter}", 'Rp');
-        $worksheet->setCellValue("X{$counter}", $this->reportGrandTotal($saleInvoiceSummary->dataProvider));
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->setCellValue("A{$counter}", 'Total Penjualan');
+        $worksheet->setCellValue("I{$counter}", 'Rp');
+        $worksheet->setCellValue("J{$counter}", $this->reportGrandTotal($saleInvoiceSummary->dataProvider));
 
         $counter++;
 
