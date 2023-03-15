@@ -186,7 +186,7 @@ class SaleRetailCustomerController extends Controller {
 
         $worksheet->getStyle("A{$counter}:AD{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->mergeCells("A{$counter}:X{$counter}");
         $worksheet->setCellValue("A{$counter}", 'Total');
         $worksheet->setCellValue("Y{$counter}", 'Rp');
         $worksheet->setCellValue("Z{$counter}", $this->reportGrandTotal($dataProvider));
