@@ -38,7 +38,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-6">Grand Total</th>
             <th class="width1-7">Status</th>
         </tr>
-        <tr id="header2">
+<!--        <tr id="header2">
             <td colspan="7">
                 <table>
                     <tr>
@@ -50,7 +50,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     </tr>
                 </table>
             </td>
-        </tr>
+        </tr>-->
     </thead>
     <tbody>
         <?php $totalSale = 0.00; ?>
@@ -67,7 +67,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tr>
             <?php $totalSale += $grandTotal; ?>
             
-            <tr class="items2">
+            <?php /*<tr class="items2">
                 <td colspan="7">
                     <table>
                         <?php if (!empty($header->registrationProducts)): ?>
@@ -93,7 +93,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php endif; ?>
                     </table>
                 </td>
-            </tr>
+            </tr> */ ?>
         <?php endforeach; ?>
     </tbody>
     

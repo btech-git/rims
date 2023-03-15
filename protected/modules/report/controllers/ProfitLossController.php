@@ -136,7 +136,7 @@ class ProfitLossController extends Controller {
 
         ob_end_clean();
         // We'll be outputting an excel file
-        header('Content-type: application/xls');
+        header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Profit Loss Induk.xlsx"');
         header('Cache-Control: max-age=0');
         
