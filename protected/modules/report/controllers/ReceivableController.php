@@ -177,6 +177,8 @@ class ReceivableController extends Controller {
                 $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($detail, 'payment_amount')));
                 $worksheet->setCellValue("G$counter}", CHtml::encode(CHtml::value($detail, 'notes')));
                 
+                $counter++;
+            
             }
         }
 
