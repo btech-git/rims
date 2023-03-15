@@ -193,7 +193,7 @@ class ReceivableController extends Controller {
 
         $counter++;
 
-        for ($col = 'A'; $col !== 'X'; $col++) {
+        for ($col = 'A'; $col !== 'K'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
