@@ -126,7 +126,11 @@ class ReceivableLedgerController extends Controller {
                     $saleAmount = $receivableRow['sale_amount'];
                     $paymentAmount = $receivableRow['payment_amount'];
                     $amount = $receivableRow['amount'];
-                    $saldo += $amount;
+                    if ($receivableRow['transaction_type'] == 'D') {
+                        $saldo += $amount;
+                    } else {
+                        $saldo -= $amount;
+                    }
                     
                     $worksheet->setCellValue("A{$counter}", CHtml::encode($receivableRow['tanggal_transaksi']));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode($receivableRow['transaction_type']));
