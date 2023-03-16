@@ -1,6 +1,6 @@
 <?php
 
-class SaleRetailProductController extends Controller {
+class SaleRetailProductDetailController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -12,7 +12,7 @@ class SaleRetailProductController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('saleProductReport')))
+            if (!(Yii::app()->user->checkAccess('saleSummaryReport')))
                 $this->redirect(array('/site/login'));
         }
 
@@ -125,19 +125,19 @@ class SaleRetailProductController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Retail Product');
+        $documentProperties->setTitle('Rincian Penjualan Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Retail Product');
+        $worksheet->setTitle('Rincian Penjualan Barang');
 
         $worksheet->mergeCells('A1:I1');
         $worksheet->mergeCells('A2:I2');
         $worksheet->mergeCells('A3:I3');
 
-        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:I6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:I6')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A2', 'Penjualan Retail Product');
+        $worksheet->setCellValue('A2', 'Rincian Penjualan  Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -150,36 +150,59 @@ class SaleRetailProductController extends Controller {
         $worksheet->setCellValue('F5', 'Master Category');
         $worksheet->setCellValue('G5', 'Sub Master Category');
         $worksheet->setCellValue('H5', 'Sub Category');
-        $worksheet->setCellValue('I5', 'Total');
 
-        $worksheet->getStyle('A5:I5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A6', 'Penjualan #');
+        $worksheet->setCellValue('B6', 'Tanggal');
+        $worksheet->setCellValue('C6', 'Jenis');
+        $worksheet->setCellValue('D6', 'Customer');
+        $worksheet->setCellValue('E6', 'Vehicle');
+        $worksheet->setCellValue('F6', 'Quantity');
+        $worksheet->setCellValue('G6', 'Harga');
+        $worksheet->setCellValue('H6', 'Total');
 
-        $counter = 7;
-        $totalSale = 0.00;
+        $worksheet->getStyle('A6:I6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 8;
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate);
-            $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->id));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->manufacturer_code));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'productMasterCategory.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'productSubCategory.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode($grandTotal));
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->code));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'serviceCategory.name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'serviceType.name')));
 
             $counter++;
             
-            $totalSale += $grandTotal;
+            $saleRetailData = $header->getSaleRetailReport($startDate, $endDate);
+            $totalSale = 0.00;
+            foreach ($saleRetailData as $saleRetailRow) {
+                $total = $saleRetailRow['total_price'];
+                
+                $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['transaction_number']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['transaction_date']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['repair_type']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['customer']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['vehicle']));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailRow['quantity']));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($saleRetailRow['sale_price']));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($total));
+
+                $counter++;
+                $totalSale += $total;
+
+            }
+
+            $worksheet->getStyle("G{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+            $worksheet->setCellValue("G{$counter}", 'TOTAL');
+            $worksheet->setCellValue("H{$counter}", CHtml::encode($totalSale));
+            $counter++;$counter++;
+
         }
         
-        $worksheet->setCellValue("H{$counter}", 'TOTAL');
-        $worksheet->setCellValue("I{$counter}", CHtml::encode($totalSale));
-        $counter++;$counter++;
-
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'I'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -188,9 +211,9 @@ class SaleRetailProductController extends Controller {
         ob_end_clean();
 
         header('Content-Type: application/xls');
-        header('Content-Disposition: attachment;filename="Penjualan Retail Product.xlsx"');
+        header('Content-Disposition: attachment;filename="Rincian Penjualan Barang.xlsx"');
         header('Cache-Control: max-age=0');
-        
+
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 

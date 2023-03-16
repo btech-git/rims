@@ -536,4 +536,40 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getTotalSales($startDate, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(p.total_price), 0) AS total 
+            FROM " . RegistrationProduct::model()->tableName() . " p 
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+            WHERE p.product_id = :product_id AND r.transaction_date BETWEEN :start_date AND :end_date
+            GROUP BY product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getSaleRetailReport($startDate, $endDate) {
+        
+        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, p.quantity, p.sale_price, p.total_price
+                FROM " . RegistrationProduct::model()->tableName() . " p 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+                WHERE r.transaction_date BETWEEN :start_date AND :end_date AND product_id = :product_id
+                ORDER BY r.transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':product_id' => $this->id,
+        ));
+        
+        return $resultSet;
+    }
 }

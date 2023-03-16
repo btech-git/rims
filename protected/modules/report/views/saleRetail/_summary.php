@@ -44,7 +44,6 @@ Yii::app()->clientScript->registerCss('_report', '
     </thead>
     <tbody>
         <?php foreach ($saleRetailSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = CHtml::value($header, 'grand_total'); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode($header->customer_type); ?></td>

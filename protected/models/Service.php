@@ -298,4 +298,42 @@ class Service extends CActiveRecord {
         return $level;
     }
 
+    public function getTotalSales($startDate, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(p.total_price), 0) AS total 
+            FROM " . RegistrationService::model()->tableName() . " p 
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+            WHERE p.service_id = :service_id AND r.transaction_date BETWEEN :start_date AND :end_date
+            GROUP BY service_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':service_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getSaleRetailReport($startDate, $endDate) {
+        
+        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, t.name as type, p.total_price
+                FROM " . RegistrationService::model()->tableName() . " p 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+                INNER JOIN " . ServiceType::model()->tableName() . " t ON t.id = p.service_type_id
+                WHERE r.transaction_date BETWEEN :start_date AND :end_date AND service_id = :service_id
+                ORDER BY r.transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':service_id' => $this->id,
+        ));
+        
+        return $resultSet;
+    }
+    
 }

@@ -1,6 +1,6 @@
 <?php
 
-class SaleRetailServiceController extends Controller {
+class SaleRetailServiceDetailController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -85,52 +85,78 @@ class SaleRetailServiceController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Retail Service');
+        $documentProperties->setTitle('Penjualan Retail Service Detail');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Retail Service');
+        $worksheet->setTitle('Penjualan Retail Service Detail');
 
-        $worksheet->mergeCells('A1:E1');
-        $worksheet->mergeCells('A2:E2');
-        $worksheet->mergeCells('A3:E3');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
 
-        $worksheet->getStyle('A1:E5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:E5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A2', 'Penjualan Retail Service');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
+        $worksheet->setCellValue('A2', 'Penjualan Retail Service Detail');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:E5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Name');
         $worksheet->setCellValue('C5', 'Category');
         $worksheet->setCellValue('D5', 'Type');
-        $worksheet->setCellValue('E5', 'Total');
 
-        $worksheet->getStyle('A5:E5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A6', 'Penjualan #');
+        $worksheet->setCellValue('B6', 'Tanggal');
+        $worksheet->setCellValue('C6', 'Jenis');
+        $worksheet->setCellValue('D6', 'Customer');
+        $worksheet->setCellValue('E6', 'Vehicle');
+        $worksheet->setCellValue('F6', 'Type');
+        $worksheet->setCellValue('G6', 'Harga');
 
-        $counter = 7;
-        $totalSale = 0.00;
+        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 8;
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate);
-            $worksheet->getStyle("E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->code));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->name));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'name')));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'serviceCategory.name')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'serviceType.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode($grandTotal));
-
+            
             $counter++;
-            $totalSale += $grandTotal;
+            
+            $saleRetailData = $header->getSaleRetailReport($startDate, $endDate);
+            $totalSale = 0.00;
+            foreach ($saleRetailData as $saleRetailRow) {
+                $total = $saleRetailRow['total_price'];
+                
+                $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['transaction_number']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['transaction_date']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['repair_type']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['customer']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['vehicle']));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailRow['type']));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($total));
+
+                $counter++;
+                $totalSale += $total;
+
+            }
+
+            $worksheet->getStyle("F{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+            $worksheet->setCellValue("F{$counter}", 'TOTAL');
+            $worksheet->setCellValue("G{$counter}", CHtml::encode($totalSale));
+            $counter++;$counter++;
+
         }
 
-        $worksheet->setCellValue("D{$counter}", 'TOTAL');
-        $worksheet->setCellValue("E{$counter}", CHtml::encode($totalSale));
-        $counter++;$counter++;
-
-        for ($col = 'A'; $col !== 'F'; $col++) {
+        for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -139,7 +165,7 @@ class SaleRetailServiceController extends Controller {
         ob_end_clean();
 
         header('Content-Type: application/xls');
-        header('Content-Disposition: attachment;filename="Penjualan Retail Service.xlsx"');
+        header('Content-Disposition: attachment;filename="Penjualan Retail Service Detail.xlsx"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

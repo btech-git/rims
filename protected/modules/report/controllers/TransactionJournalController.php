@@ -297,6 +297,9 @@ class TransactionJournalController extends Controller {
         } else if ($codeNumberConstant === 'PAS') {
             $model = AssetPurchase::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'WOE') {
+            $model = WorkOrderExpense::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/accounting/workOrderExpense/view', 'id' => $model->id));
         }
     }
 }

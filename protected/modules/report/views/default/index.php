@@ -184,18 +184,23 @@
 //                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                     array(
-                                        'label' => 'Penjualan per Barang/Jasa', 
-                                        'url' => array('/report/saleRetailProductService/summary'), 
+                                        'label' => 'Penjualan per Barang', 
+                                        'url' => array('/report/saleRetailProduct/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Barang', 
-                                        'url' => array('/report/saleRetailProduct/summary'), 
+                                        'url' => array('/report/saleRetailProductDetail/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleProductReport'))
                                     ),
                                     array(
-                                        'label' => 'Rincian Penjualan per Jasa', 
+                                        'label' => 'Penjualan per Jasa', 
                                         'url' => array('/report/saleRetailService/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Rincian Penjualan per Jasa', 
+                                        'url' => array('/report/saleRetailServiceDetail/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleServiceReport'))
                                     ),
                                 ),
