@@ -136,6 +136,41 @@ class WorkOrderExpenseController extends Controller {
         $workOrderExpense = $this->loadModel($id);
         $workOrderExpenseDetails = WorkOrderExpenseDetail::model()->findAllByAttributes(array('work_order_expense_header_id' => $id));
         
+        if (isset($_POST['Process'])) {
+            
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $workOrderExpense->transaction_number,
+                'branch_id' => $workOrderExpense->branch_id,
+            ));
+
+            $jurnalHutang = new JurnalUmum;
+            $jurnalHutang->kode_transaksi = $workOrderExpense->transaction_number;
+            $jurnalHutang->tanggal_transaksi = $workOrderExpense->transaction_date;
+            $jurnalHutang->coa_id = $workOrderExpense->supplier->coa_id;
+            $jurnalHutang->branch_id = $workOrderExpense->branch_id;
+            $jurnalHutang->total = $workOrderExpense->grand_total;
+            $jurnalHutang->debet_kredit = 'K';
+            $jurnalHutang->tanggal_posting = date('Y-m-d');
+            $jurnalHutang->transaction_subject = $workOrderExpense->note;
+            $jurnalHutang->is_coa_category = 0;
+            $jurnalHutang->transaction_type = 'WOE';
+            $jurnalHutang->save();
+
+            $jurnalUmumKas = new JurnalUmum;
+            $jurnalUmumKas->kode_transaksi = $workOrderExpense->transaction_number;
+            $jurnalUmumKas->tanggal_transaksi = $workOrderExpense->transaction_date;
+            $jurnalUmumKas->coa_id = 2149;
+            $jurnalUmumKas->branch_id = $workOrderExpense->branch_id;
+            $jurnalUmumKas->total = $workOrderExpense->grand_total;
+            $jurnalUmumKas->debet_kredit = 'D';
+            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+            $jurnalUmumKas->transaction_subject = $workOrderExpense->note;
+            $jurnalUmumKas->is_coa_category = 0;
+            $jurnalUmumKas->transaction_type = 'WOE';
+            $jurnalUmumKas->save();
+
+        }
+        
         $this->render('view', array(
             'workOrderExpense' => $workOrderExpense,
             'workOrderExpenseDetails' => $workOrderExpenseDetails,
