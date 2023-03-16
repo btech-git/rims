@@ -9,14 +9,14 @@ class PayableSummary extends CComponent {
     }
 
     public function setupLoading() {
+        $this->dataProvider->criteria->together = TRUE;
         $this->dataProvider->criteria->with = array(
-            'supplier',
-            'mainBranch',
+            'transactionPurchaseOrders',
         );
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 100 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 1000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -25,12 +25,11 @@ class PayableSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.purchase_order_date', 'supplier.name');
+        $this->dataProvider->sort->attributes = array('t.name');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter() {
-        $this->dataProvider->criteria->addCondition('t.total_price - t.payment_amount > 0 AND t.status_document = "Approved"');
-        $this->dataProvider->criteria->compare('t.supplier_id', false);
+        $this->dataProvider->criteria->addCondition('transactionPurchaseOrders.payment_left > 10.0');
     }
 }

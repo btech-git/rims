@@ -23,40 +23,29 @@ class ReceivableController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
 
-        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
-        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $saleInvoiceSummary = new ReceivableSummary($invoiceHeader->search());
-        $saleInvoiceSummary->setupLoading();
-        $saleInvoiceSummary->setupPaging($pageSize, $currentPage);
-        $saleInvoiceSummary->setupSorting();
-        $filters = array(
-            'plateNumber' => $plateNumber,
-            'customerType' => $customerType,
-        );
-        $saleInvoiceSummary->setupFilter($filters);
-
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
-        $customerDataProvider->criteria->addCondition('t.customer_type = "Company" '); 
+        $receivableSummary = new ReceivableSummary($customerDataProvider);
+        $receivableSummary->setupLoading();
+        $receivableSummary->setupPaging($pageSize, $currentPage);
+        $receivableSummary->setupSorting();
+        $receivableSummary->setupFilter();
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleInvoiceSummary);
+            $this->saveToExcel($receivableSummary);
         }
 
         $this->render('summary', array(
-            'invoiceHeader' => $invoiceHeader,
-            'saleInvoiceSummary' => $saleInvoiceSummary,
-            'currentSort' => $currentSort,
-            'plateNumber' => $plateNumber,
-            'customerType' => $customerType,
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
+            'receivableSummary' => $receivableSummary,
+            'currentSort' => $currentSort,
+            'currentPage' => $currentPage,
         ));
     }
 
@@ -75,35 +64,7 @@ class ReceivableController extends Controller {
         }
     }
 
-    public function reportGrandTotal($dataProvider) {
-        $grandTotal = 0.00;
- 
-        foreach ($dataProvider->data as $data) {
-            $grandTotal += $data->total_price;
-        }
-
-        return $grandTotal;
-    }
-
-    public function reportTotalPayment($dataProvider) {
-        $grandTotal = 0.00;
-
-        foreach ($dataProvider->data as $data)
-            $grandTotal += $data->payment_amount;
-
-        return $grandTotal;
-    }
-
-    public function reportTotalRemaining($dataProvider) {
-        $grandTotal = 0.00;
-
-        foreach ($dataProvider->data as $data)
-            $grandTotal += $data->payment_left;
-
-        return $grandTotal;
-    }
-
-    protected function saveToExcel($saleInvoiceSummary) {
+    protected function saveToExcel($receivableSummary) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -120,81 +81,76 @@ class ReceivableController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Piutang Customer');
 
-        $worksheet->mergeCells('A1:J1');
-        $worksheet->mergeCells('A2:J2');
-        $worksheet->mergeCells('A3:J3');
-        $worksheet->mergeCells('A4:J4');
-        $worksheet->getStyle('A1:J3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:J3')->getFont()->setBold(true);
-        $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Piutang Customer');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
+        
+        $worksheet->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G3')->getFont()->setBold(true);
+        $worksheet->setCellValue('A2', 'Raperind Motor');
+        $worksheet->setCellValue('A3', 'Laporan Piutang Customer');
 //        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A6:J6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A7:J7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:G5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:G6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:J6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:G6')->getFont()->setBold(true);
+        $worksheet->setCellValue('A5', 'Name');
+        $worksheet->setCellValue('B5', 'Type');
+
         $worksheet->setCellValue('A6', 'Tanggal');
         $worksheet->setCellValue('B6', 'Faktur #');
         $worksheet->setCellValue('C6', 'Jatuh Tempo');
-        $worksheet->setCellValue('D6', 'Customer');
-        $worksheet->setCellValue('E6', 'Vehicle');
-        $worksheet->setCellValue('F6', 'Branch');
-        $worksheet->setCellValue('G6', 'Status');
-        $worksheet->setCellValue('H6', 'Grand Total');
-        $worksheet->setCellValue('I6', 'Payment');
-        $worksheet->setCellValue('J6', 'Remaining');
+        $worksheet->setCellValue('D6', 'Vehicle');
+        $worksheet->setCellValue('E6', 'Grand Total');
+        $worksheet->setCellValue('F6', 'Payment');
+        $worksheet->setCellValue('G6', 'Remaining');
+        $counter = 8;
 
-        $worksheet->getStyle('A7:J7')->getFont()->setBold(true);
-        $worksheet->setCellValue('A7', 'Tanggal Bayar');
-        $worksheet->setCellValue('B7', 'Payment In #');
-        $worksheet->setCellValue('C7', 'Payment Type');
-        $worksheet->setCellValue('D7', 'Bank Asal');
-        $worksheet->setCellValue('E7', 'Bank Tujuan');
-        $worksheet->setCellValue('F7', 'Jumlah (Rp)');
-        $worksheet->setCellValue('G7', 'Notes');
-        $counter = 9;
-
-        foreach ($saleInvoiceSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->invoice_date);
-            $worksheet->setCellValue("B{$counter}", $header->invoice_number);
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'branch.name'));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'status')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'payment_amount')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'payment_left')));
+        foreach ($receivableSummary->dataProvider->data as $header) {
+            $worksheet->setCellValue("A{$counter}", $header->name);
+            $worksheet->setCellValue("B{$counter}", $header->customer_type);
 
             $counter++;
             
-            foreach ($header->paymentIns as $detail) {
-                $worksheet->setCellValue("A{$counter}", $detail->payment_date);
-                $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($detail, 'payment_number')));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detail, 'paymentType.name')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'bank.name')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($detail, 'companyBank.bank.name')));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($detail, 'payment_amount')));
-                $worksheet->setCellValue("G$counter}", CHtml::encode(CHtml::value($detail, 'notes')));
+            $receivableData = $header->getReceivableReport();
+            $totalRevenue = 0.00;
+            $totalPayment = 0.00;
+            $totalReceivable = 0.00;
+            foreach ($receivableData as $receivableRow) {
+                $revenue = $receivableRow['total_price'];
+                $paymentAmount = $receivableRow['payment_amount'];
+                $paymentLeft = $receivableRow['payment_left'];
+                
+                $worksheet->setCellValue("A{$counter}", $receivableRow['invoice_date']);
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($receivableRow['invoice_number']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($receivableRow['due_date']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($receivableRow['vehicle']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($revenue));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($paymentAmount));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($paymentLeft));
                 
                 $counter++;
             
+                $totalRevenue += $revenue;
+                $totalPayment += $paymentAmount;
+                $totalReceivable += $paymentLeft;
             }
+            
+            $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+
+            $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->mergeCells("A{$counter}:D{$counter}");
+            $worksheet->setCellValue("A{$counter}", 'Total');
+            $worksheet->setCellValue("E{$counter}", $totalRevenue);
+            $worksheet->setCellValue("F{$counter}", $totalPayment);
+            $worksheet->setCellValue("G{$counter}", $totalReceivable);
+
+            $counter++;$counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:Y{$counter}")->getFont()->setBold(true);
-
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("A{$counter}:H{$counter}");
-        $worksheet->setCellValue("A{$counter}", 'Total Penjualan');
-        $worksheet->setCellValue("I{$counter}", 'Rp');
-        $worksheet->setCellValue("J{$counter}", $this->reportGrandTotal($saleInvoiceSummary->dataProvider));
-
-        $counter++;
-
-        for ($col = 'A'; $col !== 'K'; $col++) {
+        for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

@@ -42,7 +42,8 @@ Yii::app()->clientScript->registerScript('report', '
                                 <div class="small-8 columns">
                                     <?php echo CHtml::activeDropDownlist($jurnalUmum, 'transaction_type', array(
                                         'PO' => 'PURCHASE',
-                                        'RG' => 'BR / GR',
+                                        'RG GR' => 'GENERAL REPAIR',
+                                        'RG BR' => 'BODY REPAIR',
                                         'DO' => 'DELIVERY',
                                         'TR' => 'TRANSFER REQUEST',
                                         'RCI' => 'RECEIVE',

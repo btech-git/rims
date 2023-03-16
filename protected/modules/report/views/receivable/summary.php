@@ -2,8 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
 	$(".breadcrumbs").addClass("hide");
 
-	$("#PageSize").val("' . $saleInvoiceSummary->dataProvider->pagination->pageSize . '");
-	$("#CurrentPage").val("' . ($saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+	$("#PageSize").val("' . $receivableSummary->dataProvider->pagination->pageSize . '");
+	$("#CurrentPage").val("' . ($receivableSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -36,29 +36,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Customer</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($invoiceHeader, 'customer_id', array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
                                         <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
@@ -67,29 +44,25 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Vehicle Plate #</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PlateNumber', $plateNumber, array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
+                                        <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                          <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                        <?php echo CHtml::activeTextField($customer, 'id', array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -144,16 +117,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
-                <div class="right"><?php echo ReportHelper::summaryText($saleInvoiceSummary->dataProvider); ?></div>
+                <div class="right"><?php echo ReportHelper::summaryText($receivableSummary->dataProvider); ?></div>
                 <br />
-                <div class="right"><?php echo ReportHelper::sortText($saleInvoiceSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
+                <div class="right"><?php echo ReportHelper::sortText($receivableSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
                 <div class="clear"></div>
 
                 <br />
         
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'saleInvoiceSummary' => $saleInvoiceSummary,
+                        'receivableSummary' => $receivableSummary,
                     )); ?>
                 </div>
                 <div class="clear"></div>
@@ -188,25 +161,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 'header' => '',
             ),
             'selectionChanged' => 'js:function(id) {
-                $("#' . CHtml::activeId($invoiceHeader, 'customer_id') . '").val($.fn.yiiGridView.getSelection(id));
+                $("#' . CHtml::activeId($customer, 'id') . '").val($.fn.yiiGridView.getSelection(id));
                 $("#customer-dialog").dialog("close");
                 if ($.fn.yiiGridView.getSelection(id) == "")
                 {
                     $("#customer_name").html("");
-                    $("#customer_type").html("");
-                    $("#customer_mobile_phone").html("");
                 }
                 else
                 {
                     $.ajax({
                         type: "POST",
                         dataType: "JSON",
-                        url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $invoiceHeader->id)) . '",
+                        url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $customer->id)) . '",
                         data: $("form").serialize(),
                         success: function(data) {
                             $("#customer_name").html(data.customer_name);
-                            $("#customer_type").html(data.customer_type);
-                            $("#customer_mobile_phone").html(data.customer_mobile_phone);
                         },
                     });
                 }

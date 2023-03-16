@@ -2,8 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
 	$(".breadcrumbs").addClass("hide");
 
-	$("#PageSize").val("' . $purchaseSummary->dataProvider->pagination->pageSize . '");
-	$("#CurrentPage").val("' . ($purchaseSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+	$("#PageSize").val("' . $payableSummary->dataProvider->pagination->pageSize . '");
+	$("#CurrentPage").val("' . ($payableSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
 ');
 ?>
@@ -35,29 +35,6 @@ Yii::app()->clientScript->registerScript('report', '
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Supplier </span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($purchaseOrderHeader, 'supplier_id', array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($purchaseOrderHeader, 'supplier.name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
                                         <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
@@ -66,20 +43,8 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownlist($purchaseOrderHeader, 'main_branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    
+
                     <div class="row">
 <!--                        <div class="medium-6 columns">
                             <div class="field">
@@ -115,15 +80,22 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>-->
-                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Payment Type </span>
+                                        <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownlist($purchaseOrderHeader, 'payment_type', array('Cash' => 'Cash', 'Credit' => 'Credit'), array('empty'=>'-- All Payment --')); ?>
+                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
                                 </div>
                             </div>
@@ -144,21 +116,21 @@ Yii::app()->clientScript->registerScript('report', '
 
                 <hr />
 
-                <div class="right"><?php echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?></div>
+                <div class="right"><?php echo ReportHelper::summaryText($payableSummary->dataProvider); ?></div>
                 <br />
-                <div class="right"><?php echo ReportHelper::sortText($purchaseSummary->dataProvider->sort, array('Tanggal', 'Supplier')); ?></div>
+                <div class="right"><?php echo ReportHelper::sortText($payableSummary->dataProvider->sort, array('Tanggal', 'Supplier')); ?></div>
                 <div class="clear"></div>
 
                 <br />
         
                 <div class="relative">
                     <div class="reportDisplay">
-                        <?php echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?>
+                        <?php echo ReportHelper::summaryText($payableSummary->dataProvider); ?>
                         <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                     </div>
 
                     <?php $this->renderPartial('_summary', array(
-                        'purchaseSummary' => $purchaseSummary,
+                        'payableSummary' => $payableSummary,
                     )); ?>
                 </div>
                 <div class="clear"></div>
@@ -195,25 +167,23 @@ Yii::app()->clientScript->registerScript('report', '
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id) {
-            $("#' . CHtml::activeId($purchaseOrderHeader, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#' . CHtml::activeId($supplier, 'id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#supplier-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "")
             {
                 $("#supplier_name").html("");
                 $("#supplier_code").html("");
-                $("#supplier_mobile_phone").html("");
             }
             else
             {
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $purchaseOrderHeader->id)) . '",
+                    url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $supplier->id)) . '",
                     data: $("form").serialize(),
                     success: function(data) {
                         $("#supplier_name").html(data.supplier_name);
                         $("#supplier_code").html(data.supplier_code);
-                        $("#supplier_mobile_phone").html(data.supplier_mobile_phone);
                     },
                 });
             }
@@ -221,7 +191,7 @@ Yii::app()->clientScript->registerScript('report', '
         'columns' => array(
             'code',
             'name',
-            'mobile_phone',
+            'company',
         ),
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
