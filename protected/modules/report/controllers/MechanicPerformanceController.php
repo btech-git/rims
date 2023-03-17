@@ -152,10 +152,10 @@ class MechanicPerformanceController extends Controller {
                 }
             }
 
-            $worksheet->getStyle("G{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-            $worksheet->setCellValue("H{$counter}", 'TOTAL');
-            $worksheet->setCellValue("I{$counter}", CHtml::encode($totalSale));
+            $worksheet->setCellValue("E{$counter}", 'TOTAL');
+            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalSale));
             $counter++;$counter++;
 
         }

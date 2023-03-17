@@ -334,4 +334,22 @@ class Supplier extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public function getTotalPurchase($startDate, $endDate) {
+        $sql = "
+            SELECT COALESCE(SUM(total_price), 0) AS total 
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND transaction_date BETWEEN :start_date AND :end_date
+            GROUP BY supplier_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':supplier_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
 }
