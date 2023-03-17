@@ -105,7 +105,6 @@
                                                     ),
                                                     'htmlOptions' => array(
                                                         'readonly' => true,
-                                                        'value' => date('Y-m-d'),
                                                     ),
                                                 )); ?>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'transaction_date'); ?>
