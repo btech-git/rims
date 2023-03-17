@@ -25,6 +25,7 @@ class PurchasePerProductController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
+        $productDataProvider = $product->search();
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -32,13 +33,11 @@ class PurchasePerProductController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchasePerProductSummary = new PurchasePerProductSummary($product->search());
+        $purchasePerProductSummary = new PurchasePerProductSummary($productDataProvider);
         $purchasePerProductSummary->setupLoading();
         $purchasePerProductSummary->setupPaging($pageSize, $currentPage);
         $purchasePerProductSummary->setupSorting();
         $purchasePerProductSummary->setupFilter($startDate, $endDate);
-
-        $productDataProvider = $product->search();
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($purchasePerProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
@@ -50,8 +49,62 @@ class PurchasePerProductController extends Controller {
             'purchasePerProductSummary' => $purchasePerProductSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'currentPage' => $currentPage,
             'currentSort' => $currentSort,
         ));
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'productBrandId' => $productBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'productSubBrandId' => $productSubBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'productMasterCategoryId' => $productMasterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubCategorySelect', array(
+                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxJsonProduct() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productId = (isset($_POST['Product']['id'])) ? $_POST['Product']['id'] : '';
+            $product = Product::model()->findByPk($productId);
+
+            $object = array(
+                'product_name' => CHtml::value($product, 'name'),
+            );
+            
+            echo CJSON::encode($object);
+        }
     }
 
     protected function saveToExcel($dataProvider, array $options = array()) {

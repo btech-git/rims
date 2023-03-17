@@ -48,7 +48,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">

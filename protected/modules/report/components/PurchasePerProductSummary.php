@@ -9,9 +9,10 @@ class PurchasePerProductSummary extends CComponent {
     }
 
     public function setupLoading() {
-//        $this->dataProvider->criteria->with = array(
-//            'transactionPurchaseOrderDetails',
-//        );
+        $this->dataProvider->criteria->together = TRUE;
+        $this->dataProvider->criteria->with = array(
+            'transactionPurchaseOrderDetails',
+        );
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -29,9 +30,6 @@ class PurchasePerProductSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate) {
-//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-//        $this->dataProvider->criteria->addBetweenCondition('transactionPurchaseOrderDetails.purchase_order_date', $startDate, $endDate);
-//        $this->dataProvider->criteria->compare('transactionPurchaseOrderDetails.main_branch_id', $branch);
+        $this->dataProvider->criteria->addBetweenCondition('transactionPurchaseOrderDetails.purchase_order_date', $startDate, $endDate);
     }
 }
