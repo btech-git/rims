@@ -55,28 +55,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Mechanic</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownlist($registrationTransaction, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
-                                            "division_id" => array(1, 3, 5),
+                                        <?php echo CHtml::dropDownlist('EmployeeId', $employeeId, CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                                            "division_id" => array(1, 2, 3, 5),
                                             "position_id" => 1,
-                                            "level_id" => array(1, 2, 3),
+                                            "level_id" => array(1, 2, 3, 4),
                                         )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-<!--                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('ServiceName', $serviceName, array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
                     </div>
                     
                     <div class="row">
@@ -114,26 +101,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::resetButton('Hapus');  ?>
-                        <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>
@@ -145,8 +119,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
+                        'employee' => $employee,
                         'mechanicPerformanceSummary' => $mechanicPerformanceSummary,
-                        'branchId' => $branchId,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>

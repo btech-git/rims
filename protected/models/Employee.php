@@ -45,6 +45,7 @@
  * @property RegistrationService[] $registrationServices
  * @property RegistrationServiceEmployee[] $registrationServiceEmployees
  * @property WorkOrderDetail[] $workOrderDetails
+ * @property RegistrationTransaction[] $registrationTransactions
  */
 class Employee extends CActiveRecord {
 
@@ -106,6 +107,7 @@ class Employee extends CActiveRecord {
             'registrationServices1' => array(self::HAS_MANY, 'RegistrationService', 'supervisor_id'),
             'registrationServicesFinish' => array(self::HAS_MANY, 'RegistrationService', 'finish_mechanic_id'),
             'workOrderDetails' => array(self::HAS_MANY, 'WorkOrderDetail', 'employee_id'),
+            'registrationTransactions' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_assign_mechanic'),
         );
     }
 

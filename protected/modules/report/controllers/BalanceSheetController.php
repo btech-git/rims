@@ -63,6 +63,8 @@ class BalanceSheetController extends Controller {
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
         spl_autoload_register(array('YiiBase', 'autoload'));
+        
+        ob_start();
 
         $objPHPExcel = new PHPExcel();
 

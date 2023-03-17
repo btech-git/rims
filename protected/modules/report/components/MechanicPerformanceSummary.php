@@ -9,11 +9,9 @@ class MechanicPerformanceSummary extends CComponent {
     }
 
     public function setupLoading() {
+        $this->dataProvider->criteria->together = TRUE;
         $this->dataProvider->criteria->with = array(
-            'customer',
-            'vehicle',
-            'branch',
-            'employeeIdAssignMechanic'
+            'registrationTransactions',
         );
     }
 
@@ -27,15 +25,14 @@ class MechanicPerformanceSummary extends CComponent {
     }
 
     public function setupSorting() {
-//        $this->dataProvider->sort->attributes = array('registrationTransaction.transaction_date');
-        $this->dataProvider->criteria->order = 't.transaction_date';
+        $this->dataProvider->sort->attributes = array('t.name');
+        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
-        $this->dataProvider->criteria->compare('employeeIdAssignMechanic.name', $filters['mechanicName'], true);
+        $this->dataProvider->criteria->addBetweenCondition('registrationTransactions.transaction_date', $startDate, $endDate);
+        $this->dataProvider->criteria->compare('t.id', $filters['employeeId']);
     }
 }
