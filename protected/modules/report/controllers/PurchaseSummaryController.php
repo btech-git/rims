@@ -43,7 +43,7 @@ class PurchaseSummaryController extends Controller {
         );
         $purchaseSummary->setupFilter($filters);
 
-        if (isset($_GET['SaveToExcel'])) {
+        if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($purchaseSummary->dataProvider, $startDate, $endDate);
         }
 
