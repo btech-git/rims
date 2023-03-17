@@ -111,7 +111,7 @@ class PurchaseSummaryController extends Controller {
 
         $totalPurchase = 0.00;
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate);
+            $grandTotal = $header->getTotalPurchase($startDate, $endDate);
             $worksheet->setCellValue("A{$counter}", $header->code);
             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
