@@ -339,7 +339,7 @@ class Supplier extends CActiveRecord {
         $sql = "
             SELECT COALESCE(SUM(total_price), 0) AS total 
             FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = :supplier_id AND transaction_date BETWEEN :start_date AND :end_date
+            WHERE supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date
             GROUP BY supplier_id
         ";
 
