@@ -60,14 +60,11 @@ class PurchaseSummaryController extends Controller {
 
     public function actionAjaxJsonSupplier($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $supplierId = (isset($_POST['TransactionPurchaseOrder']['supplier_id'])) ? $_POST['TransactionPurchaseOrder']['supplier_id'] : '';
-            $supplier = Supplier::model()->findByPk($supplierId);
+            $supplier = Supplier::model()->findByPk($id);
 
             $object = array(
-                'supplier_id' => CHtml::value($supplier, 'id'),
-                'supplier_name' => CHtml::value($supplier, 'name'),
+                'supplier_name' => CHtml::value($supplier, 'company'),
                 'supplier_code' => CHtml::value($supplier, 'code'),
-                'supplier_mobile_phone' => CHtml::value($supplier, 'mobile_phone'),
             );
             echo CJSON::encode($object);
         }

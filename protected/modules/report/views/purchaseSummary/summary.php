@@ -40,14 +40,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($purchaseOrderHeader, 'supplier_id', array(
+                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
                                             'readonly' => true,
                                             'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
                                         )); ?>
 
                                         <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($purchaseOrderHeader, 'supplier.name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
                                 </div>
@@ -192,25 +192,23 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id) {
-            $("#' . CHtml::activeId($purchaseOrderHeader, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#' . CHtml::activeId($supplier, 'id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#supplier-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "")
             {
                 $("#supplier_name").html("");
                 $("#supplier_code").html("");
-                $("#supplier_mobile_phone").html("");
             }
             else
             {
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $purchaseOrderHeader->id)) . '",
+                    url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $supplier->id)) . '",
                     data: $("form").serialize(),
                     success: function(data) {
                         $("#supplier_name").html(data.supplier_name);
                         $("#supplier_code").html(data.supplier_code);
-                        $("#supplier_mobile_phone").html(data.supplier_mobile_phone);
                     },
                 });
             }
@@ -218,7 +216,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         'columns' => array(
             'code',
             'name',
-            'mobile_phone',
+            'company',
         ),
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
