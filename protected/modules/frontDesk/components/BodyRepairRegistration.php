@@ -344,14 +344,15 @@ class BodyRepairRegistration extends CComponent {
         $isNewRecord = $this->header->isNewRecord;
         if ($isNewRecord) {
             $this->header->status = 'Registration';
-        } else
+            $this->header->vehicle_status = 'DI BENGKEL';
+            $this->header->service_status = 'Bongkar - Pending';
+        } /*else {
             $this->header->status = 'Update Registration';
+        }*/
 
         $this->header->total_quickservice = 0;
         $this->header->total_quickservice_price = 0;
-        $this->header->vehicle_status = 'DI BENGKEL';
         $this->header->repair_type = 'BR';
-        $this->header->service_status = 'Bongkar - Pending';
         $this->header->priority_level = 2;
 
         $valid = $this->header->save();

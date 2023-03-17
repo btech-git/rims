@@ -362,9 +362,9 @@ class GeneralRepairRegistration extends CComponent {
             $this->header->repair_type = 'GR';
             $this->header->service_status = 'Pending';
             $this->header->priority_level = 2;
-        } else {
+        } /*else {
             $this->header->status = 'Update Registration';
-        }
+        }*/
 
         $valid = $this->header->save();
 
