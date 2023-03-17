@@ -71,7 +71,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             ),
                                         )); ?>
 
-                                        <?php echo CHtml::beginForm(); ?>
                                         <div class="row">
                                             <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
                                                 <table>
@@ -276,7 +275,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 )); ?>
                                             </div>
                                         </div>
-                                        <?php echo CHtml::endForm(); ?>
                                         <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
                                         <?php echo CHtml::openTag('span', array('id' => 'product_name')); ?>
@@ -355,11 +353,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
-                    <div class="reportDisplay">
-                        <?php echo ReportHelper::summaryText($purchasePerProductSummary->dataProvider); ?>
-                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
-                    </div>
-
                     <?php $this->renderPartial('_summary', array(
                         'product' => $product,
                         'productDataProvider' => $productDataProvider,
@@ -370,24 +363,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
                 <div class="clear"></div>
             </div>
-            
-            <br/>
-
-            <div class="hide">
-                <div class="right"></div>
-                <div class="clear"></div>
-            </div>
         </div>
     </div>
 </div>
 
-<div class="hide">
-    <div class="right">
-        <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $purchasePerProductSummary->dataProvider->pagination->itemCount,
-            'pageSize' => $purchasePerProductSummary->dataProvider->pagination->pageSize,
-            'currentPage' => $purchasePerProductSummary->dataProvider->pagination->getCurrentPage(false),
-        ));*/ ?>
-    </div>
-    <div class="clear"></div>
+<div class="right">
+    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        'itemCount' => $purchasePerProductSummary->dataProvider->pagination->itemCount,
+        'pageSize' => $purchasePerProductSummary->dataProvider->pagination->pageSize,
+        'currentPage' => $purchasePerProductSummary->dataProvider->pagination->getCurrentPage(false),
+    )); ?>
 </div>
+<div class="clear"></div>

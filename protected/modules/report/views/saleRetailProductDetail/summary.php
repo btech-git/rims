@@ -72,7 +72,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             ),
                                         )); ?>
 
-                                        <?php echo CHtml::beginForm(); ?>
                                         <div class="row">
                                             <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
                                                 <table>
@@ -277,7 +276,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 )); ?>
                                             </div>
                                         </div>
-                                        <?php echo CHtml::endForm(); ?>
                                         <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
                                         <?php echo CHtml::openTag('span', array('id' => 'product_name')); ?>
