@@ -13,7 +13,7 @@ class PurchasePerProductSummary extends CComponent {
         $this->dataProvider->criteria->with = array(
             'transactionPurchaseOrderDetails' => array(
                 'with' => array(
-                    'transactionPurchaseOrderHeader'
+                    'purchaseOrder'
                 ),
             ),
         );
@@ -34,6 +34,6 @@ class PurchasePerProductSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate) {
-        $this->dataProvider->criteria->addBetweenCondition('transactionPurchaseOrderHeader.purchase_order_date', $startDate, $endDate);
+        $this->dataProvider->criteria->addBetweenCondition('purchaseOrder.purchase_order_date', $startDate, $endDate);
     }
 }
