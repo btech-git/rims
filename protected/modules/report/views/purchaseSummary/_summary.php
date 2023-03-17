@@ -26,7 +26,7 @@
     <tbody>
         <?php $totalPurchase = 0.00; ?>
         <?php foreach ($purchaseSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = $header->getTotalSales($startDate, $endDate); ?>
+            <?php $grandTotal = $header->getTotalPurchase($startDate, $endDate); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode($header->company); ?></td>
