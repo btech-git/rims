@@ -9,10 +9,9 @@ class PurchaseOrderSummary extends CComponent {
     }
 
     public function setupLoading() {
+        $this->dataProvider->criteria->together = TRUE;
         $this->dataProvider->criteria->with = array(
-            'supplier',
-            'user',
-            'mainBranch',
+            'transactionPurchaseOrders',
         );
     }
 
@@ -26,14 +25,11 @@ class PurchaseOrderSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.purchase_order_date', 't.main_branch_id');
+        $this->dataProvider->sort->attributes = array('t.name');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branch) {
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $this->dataProvider->criteria->addBetweenCondition('t.purchase_order_date', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('t.main_branch_id', $branch);
+    public function setupFilter($startDate, $endDate) {
+        $this->dataProvider->criteria->addBetweenCondition('transactionPurchaseOrders.purchase_order_date', $startDate, $endDate);
     }
 }

@@ -37,18 +37,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Supplier </span>
+                                        <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($purchaseOrder, 'supplier_id', array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($purchaseOrder, 'supplier.name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
+                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -60,27 +52,35 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
+                                        <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Branch </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php //echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     
                     <div class="row">
@@ -142,9 +142,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
 
                     <?php $this->renderPartial('_summary', array(
-                        'purchaseOrder' => $purchaseOrder,
                         'purchaseOrderSummary' => $purchaseOrderSummary,
-                        'branchId' => $branchId,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>
@@ -200,7 +198,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             {
                 $("#supplier_name").html("");
                 $("#supplier_code").html("");
-                $("#supplier_mobile_phone").html("");
             }
             else
             {
@@ -212,7 +209,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     success: function(data) {
                         $("#supplier_name").html(data.supplier_name);
                         $("#supplier_code").html(data.supplier_code);
-                        $("#supplier_mobile_phone").html(data.supplier_mobile_phone);
                     },
                 });
             }
@@ -220,7 +216,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         'columns' => array(
             'code',
             'name',
-            'mobile_phone',
+            'company',
         ),
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>

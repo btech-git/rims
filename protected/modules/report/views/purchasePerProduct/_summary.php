@@ -47,13 +47,17 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?></td>
                 <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?></td>
                 <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?></td>
-                <td class="width1-10" style="text-align: right;"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchasePrice)); ?></td>
+                <td class="width1-10" style="text-align: right;">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchasePrice)); ?>
+                </td>
             </tr>
             <?php $totalPurchase += $purchasePrice; ?>
         <?php endif; ?>
     <?php endforeach; ?>
     <tr>
-        <td style="text-align: right; font-weight: bold" colspan="8">Total</td>
-        <td style="text-align: right; font-weight: bold" class="width1-9"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
+        <td style="text-align: right; font-weight: bold" colspan="9">Total</td>
+        <td style="text-align: right; font-weight: bold" class="width1-10">
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
+        </td>
     </tr>
 </table>

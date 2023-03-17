@@ -24,8 +24,8 @@ class PurchaseOrderController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : array());
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -33,32 +33,40 @@ class PurchaseOrderController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchaseOrderSummary = new PurchaseOrderSummary($purchaseOrder->search());
+        $purchaseOrderSummary = new PurchaseOrderSummary($supplierDataProvider);
         $purchaseOrderSummary->setupLoading();
         $purchaseOrderSummary->setupPaging($pageSize, $currentPage);
         $purchaseOrderSummary->setupSorting();
-        $purchaseOrderSummary->setupFilter($startDate, $endDate, $branchId);
-
-        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
-        $supplierDataProvider = $supplier->search();
+        $purchaseOrderSummary->setupFilter($startDate, $endDate);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseOrderSummary, $branchId, $purchaseOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($purchaseOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('summary', array(
-            'purchaseOrder' => $purchaseOrder,
             'purchaseOrderSummary' => $purchaseOrderSummary,
-            'branchId' => $branchId,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'currentPage' => $currentPage,
             'currentSort' => $currentSort,
         ));
     }
 
-    protected function saveToExcel($purchaseOrderSummary, $branchId, $dataProvider, array $options = array()) {
+    public function actionAjaxJsonSupplier($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $supplier = Supplier::model()->findByPk($id);
+
+            $object = array(
+                'supplier_name' => CHtml::value($supplier, 'company'),
+                'supplier_code' => CHtml::value($supplier, 'code'),
+            );
+            echo CJSON::encode($object);
+        }
+    }
+
+    protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 

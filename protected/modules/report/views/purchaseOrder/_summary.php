@@ -15,84 +15,74 @@ Yii::app()->clientScript->registerCss('_report', '
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">
-        <?php $branch = Branch::model()->findByPk($branchId); ?>
-        <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
-    </div>
-    <div style="font-size: larger">Laporan Purchase Order</div>
+    <div style="font-size: larger">Rincian Pembelian per Pemasok</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
 
 <table class="report">
-    <tr id="header1">
-        <th class="width1-1">Purchase #</th>
-        <th class="width1-2">Tanggal</th>
-        <th class="width1-3">Status</th>
-        <th class="width1-4">Type</th>
-        <th class="width1-5">Supplier</th>
-        <th class="width1-6">Approved By</th>
-        <th class="width1-7">Branch</th>
-        <th class="width1-8">Admin</th>
-    </tr>
-    <tr id="header2">
-        <td colspan="8">
-            <table>
-                <tr>
-                    <th class="width2-1">Product</th>
-                    <th class="width2-2">Quantity</th>
-                    <th class="width2-3">Retail Price</th>
-                    <th class="width2-4">Unit Price</th>
-                    <th class="width2-5">Total Quantity</th>
-                    <th class="width2-6">Discount</th>
-                    <th class="width2-7">Total Price</th>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <?php foreach ($purchaseOrderSummary->dataProvider->data as $header): ?>
-        <tr class="items1">
-            <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
-            <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->purchase_order_date))); ?></td>
-            <td class="width1-3"><?php echo CHtml::encode(($header->status_document)); ?></td>
-            <td class="width1-4"><?php echo CHtml::encode($header->getPurchaseStatus($header->purchase_type)); ?></td>
-            <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
-            <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'approval.username')); ?></td>
-            <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'mainBranch.name')); ?></td>
-            <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
+    <thead>
+        <tr id="header1">
+                <th class="width1-1">Code</th>
+                <th class="width1-2">Company</th>
+                <th class="width1-3">Name</th>
         </tr>
-        
-        <tr class="items2">
-            <td colspan="8">
+        <tr id="header2">
+            <td colspan="3">
                 <table>
-                    <?php foreach ($header->transactionPurchaseOrderDetails as $detail): ?>
-                        <tr>
-                            <td class="width2-1"><?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
-                            <td class="width2-2" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'quantity'))); ?></td>
-                            <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'retail_price'))); ?></td>
-                            <td class="width2-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'unit_price'))); ?></td>
-                            <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total_quantity'))); ?></td>
-                            <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'discount'))); ?></td>
-                            <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total_price'))); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
                     <tr>
-                        <td style="text-align: right">TOTAL QUANTITY: </td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_quantity'))); ?></td>
-                        <td style="text-align: right" colspan="4">SUB TOTAL: </td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'subtotal'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right" colspan="6">PPN: </td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'ppn_price'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right" colspan="6">GRAND TOTAL: </td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_price'))); ?></td>
+                        <th class="width2-1">Pembelian #</th>
+                        <th class="width2-2">Tanggal</th>
+                        <th class="width2-3">Payment</th>
+                        <th class="width2-4">Status</th>
+                        <th class="width2-5">Total Price</th>
                     </tr>
                 </table>
             </td>
         </tr>
-    <?php endforeach; ?>
+    </thead>
+    
+    <tbody>
+        <?php foreach ($purchaseOrderSummary->dataProvider->data as $header): ?>
+            <tr class="items1">
+                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
+                    <td class="width1-2"><?php echo CHtml::encode($header->company); ?></td>
+                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+            </tr>
+
+            <tr class="items2">
+                <td colspan="3">
+                    <table>
+                        <?php $totalPurchase = 0.00; ?>
+                        <?php $purchaseOrders = TransactionPurchaseOrder::model()->findAll(array(
+                            'condition' => 'supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date', 
+                            'params' => array(
+                                ':supplier_id' => $header->id,
+                                ':start_date' => $startDate,
+                                ':end_date' => $endDate,
+                            )
+                        )); ?>
+                        <?php if (!empty($purchaseOrders)): ?>
+                            <?php foreach ($purchaseOrders as $detail): ?>
+                                <?php $grandTotal = CHtml::value($detail, 'total_price'); ?>
+                                <tr>
+                                    <td class="width2-1"><?php echo CHtml::link(CHtml::encode($detail->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$detail->id), array("target" => "_blank")); ?></td>
+                                    <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->purchase_order_date))); ?></td>
+                                    <td class="width2-3"><?php echo CHtml::encode(CHtml::value($detail, 'payment_type')); ?></td>
+                                    <td class="width2-4"><?php echo CHtml::encode(CHtml::value($detail, 'payment_status')); ?></td>
+                                    <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+                                </tr>
+                                <?php $totalPurchase += $grandTotal; ?>
+                            <?php endforeach; ?>
+                            <tr>
+                                <td style="text-align: right" colspan="4">Total</td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    </table>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>
