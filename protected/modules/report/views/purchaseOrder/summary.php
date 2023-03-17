@@ -204,7 +204,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonCustomer', array('id' => $purchaseOrder->id)) . '",
+                    url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $supplier->id)) . '",
                     data: $("form").serialize(),
                     success: function(data) {
                         $("#supplier_name").html(data.supplier_name);
