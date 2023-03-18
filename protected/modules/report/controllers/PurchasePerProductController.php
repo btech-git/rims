@@ -171,13 +171,13 @@ class PurchasePerProductController extends Controller {
             ->setAutoSize(true);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         ob_end_clean();
 
-        header('Content-type: application/vnd.ms-excel');
+        header('Content-Type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Pembelian per Barang.xlsx"');
         header('Cache-Control: max-age=0');
 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();

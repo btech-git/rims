@@ -142,6 +142,9 @@ class PurchaseOrderController extends Controller {
                     
                 }
                 
+                $worksheet->getStyle("G{$counter}:H{$counter}")->getFont()->setBold(true);
+                $worksheet->getStyle("G{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
                 $worksheet->setCellValue("G{$counter}", 'TOTAL');
                 $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPurchase));
                 $counter++;$counter++;
