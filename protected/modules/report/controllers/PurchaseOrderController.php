@@ -76,6 +76,9 @@ class PurchaseOrderController extends Controller {
 
         $objPHPExcel = new PHPExcel();
 
+        $startDate = $options['startDate'];
+        $endDate = $options['endDate']; 
+        
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
         $documentProperties->setTitle('Rincian Pembelian per Pemasok');
@@ -91,7 +94,7 @@ class PurchaseOrderController extends Controller {
         $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Rincian Pembelian per Pemasok');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
