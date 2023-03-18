@@ -44,9 +44,9 @@ Yii::app()->clientScript->registerCss('_report', '
     <tbody>
         <?php foreach ($purchaseOrderSummary->dataProvider->data as $header): ?>
             <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                    <td class="width1-2"><?php echo CHtml::encode($header->company); ?></td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode($header->company); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
             </tr>
 
             <tr class="items2">
@@ -74,8 +74,8 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <?php $totalPurchase += $grandTotal; ?>
                             <?php endforeach; ?>
                             <tr>
-                                <td style="text-align: right" colspan="4">Total</td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
+                                <td style="text-align: right; font-weight: bold" colspan="4">Total</td>
+                                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
                             </tr>
                         <?php endif; ?>
                     </table>

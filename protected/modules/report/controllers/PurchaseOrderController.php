@@ -78,10 +78,10 @@ class PurchaseOrderController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Purchase Order');
+        $documentProperties->setTitle('Rincian Pembelian per Pemasok');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Purchase Order');
+        $worksheet->setTitle('Rincian Pembelian per Pemasok');
 
         $worksheet->mergeCells('A1:N1');
         $worksheet->mergeCells('A2:N2');
@@ -90,63 +90,59 @@ class PurchaseOrderController extends Controller {
         $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
 
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Purchase Order');
+        $worksheet->setCellValue('A2', 'Rincian Pembelian per Pemasok');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
         $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'Purchase #');
-        $worksheet->setCellValue('B5', 'Tanggal');
-        $worksheet->setCellValue('C5', 'Status');
-        $worksheet->setCellValue('D5', 'Type');
-        $worksheet->setCellValue('E5', 'Supplier');
-        $worksheet->setCellValue('F5', 'Payment Type');
-        $worksheet->setCellValue('G5', 'Tanggal Terima');
-        $worksheet->setCellValue('H5', 'Admin ');
-        $worksheet->setCellValue('I5', 'Branch');
-        $worksheet->setCellValue('J5', 'Approval By');
-        $worksheet->setCellValue('K5', 'Total Price');
-        $worksheet->setCellValue('L5', 'Payment');
-        $worksheet->setCellValue('M5', 'Remaining');
-        $worksheet->setCellValue('N5', 'Product');
-        $worksheet->setCellValue('O5', 'Retail Price');
-        $worksheet->setCellValue('P5', 'Unit Price');
-        $worksheet->setCellValue('Q5', 'Quantity');
-        $worksheet->setCellValue('R5', 'Total Quantity');
-        $worksheet->setCellValue('S5', 'Discount');
-        $worksheet->setCellValue('T5', 'Total Price');
+        $worksheet->setCellValue('A5', 'Code');
+        $worksheet->setCellValue('B5', 'Company');
+        $worksheet->setCellValue('C5', 'Name');
+        
+        $worksheet->setCellValue('A6', 'Pembelian #');
+        $worksheet->setCellValue('B6', 'Tanggal');
+        $worksheet->setCellValue('C6', 'Payment');
+        $worksheet->setCellValue('D6', 'Status');
+        $worksheet->setCellValue('E6', 'Total Price');
 
         $worksheet->getStyle('A5:T5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 8;
         foreach ($dataProvider->data as $header) {
-            foreach ($header->transactionPurchaseOrderDetails as $detail) {
-                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->purchase_order_no));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->purchase_order_date));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'status_document')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($header->getPurchaseStatus($header->purchase_type)));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($header->payment_type));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'estimate_date_arrival')));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
-                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'mainBranch.name')));
-                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'approval.username')));
-                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
-                $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'payment_amount')));
-                $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'payment_left')));
-                $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
-                $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($detail, 'retail_price')));
-                $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($detail, 'unit_price')));
-                $worksheet->setCellValue("Q{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
-                $worksheet->setCellValue("R{$counter}", CHtml::encode(CHtml::value($detail, 'total_quantity')));
-                $worksheet->setCellValue("S{$counter}", CHtml::encode(CHtml::value($detail, 'discount')));
-                $worksheet->setCellValue("T{$counter}", CHtml::encode(CHtml::value($detail, 'total_price')));
+            $totalPurchase = 0.00;
+            $purchaseOrders = TransactionPurchaseOrder::model()->findAll(array(
+                'condition' => 'supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date', 
+                'params' => array(
+                    ':supplier_id' => $header->id,
+                    ':start_date' => $startDate,
+                    ':end_date' => $endDate,
+                )
+            ));
+            
+            if (!empty($purchaseOrders)) {
+                foreach ($purchaseOrders as $detail) {
+                    $grandTotal = CHtml::value($detail, 'total_price'); 
 
-                $counter++;
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
+                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode($header->purchase_order_no));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode($header->purchase_order_date));
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'payment_type')));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'payment_status')));
+                    $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotal));
+
+                    $counter++;
+                    
+                    $totalPurchase += $grandTotal;
+                    
+                }
+                
+                $worksheet->setCellValue("G{$counter}", 'TOTAL');
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPurchase));
+                $counter++;$counter++;
             }
         }
         
@@ -156,13 +152,13 @@ class PurchaseOrderController extends Controller {
             ->setAutoSize(true);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         ob_end_clean();
 
-        header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Purchase Order.xlsx"');
+        header('Content-Type: application/xls');
+        header('Content-Disposition: attachment;filename="Rincian Pembelian per Pemasok.xlsx"');
         header('Cache-Control: max-age=0');
 
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();
