@@ -86,29 +86,28 @@ class PurchaseOrderController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Pembelian per Pemasok');
 
-        $worksheet->mergeCells('A1:E1');
-        $worksheet->mergeCells('A2:E2');
-        $worksheet->mergeCells('A3:E3');
-
-        $worksheet->getStyle('A1:E5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:E5')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:H1');
+        $worksheet->mergeCells('A2:H2');
+        $worksheet->mergeCells('A3:H3');
+        
+        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Rincian Pembelian per Pemasok');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:E5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:H5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
-        
-        $worksheet->setCellValue('A6', 'Pembelian #');
-        $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Payment');
-        $worksheet->setCellValue('D6', 'Status');
-        $worksheet->setCellValue('E6', 'Total Price');
+        $worksheet->setCellValue('D5', 'Pembelian #');
+        $worksheet->setCellValue('E5', 'Tanggal');
+        $worksheet->setCellValue('F5', 'Payment');
+        $worksheet->setCellValue('G5', 'Status');
+        $worksheet->setCellValue('H5', 'Total Price');
 
-        $worksheet->getStyle('A5:E5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:H5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         foreach ($dataProvider->data as $header) {
