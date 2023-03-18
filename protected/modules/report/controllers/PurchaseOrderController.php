@@ -131,10 +131,10 @@ class PurchaseOrderController extends Controller {
                     $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
                     $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($header->purchase_order_no));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode($header->purchase_order_date));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'payment_type')));
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'payment_status')));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode($detail->purchase_order_no));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode($detail->purchase_order_date));
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($detail, 'payment_type')));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($detail, 'payment_status')));
                     $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotal));
 
                     $counter++;
