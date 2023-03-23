@@ -313,4 +313,10 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+    
+    public function getApprovalStatus() {
+        $paymentOutApproval = PaymentOutApproval::model()->findByAttributes(array('payment_out_id' => $this->id), array('order' => 'id DESC'));
+        
+        return $paymentOutApproval->approval_type;
+    }
 }

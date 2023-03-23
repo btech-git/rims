@@ -124,6 +124,10 @@ $('.search-form form').submit(function(){
                             'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->paymentInApprovals[0]->supervisor->username '
                         ),
                         array(
+                            'header' => 'Approval Status',
+                            'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->getApprovalStatus()'
+                        ),
+                        array(
                             'header' => 'Tanggal Input',
                             'name' => 'created_datetime',
                             'filter' => false,

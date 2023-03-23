@@ -257,6 +257,12 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
 
         $this->setCodeNumberByNext('payment_number', $branchCode, PaymentIn::CONSTANT, $currentMonth, $currentYear);
     }
+    
+    public function getApprovalStatus() {
+        $paymentInApproval = PaymentInApproval::model()->findByAttributes(array('payment_in_id' => $this->id), array('order' => 'id DESC'));
+        
+        return $paymentInApproval->approval_type;
+    }
 
     public function searchByDailyCashReport() {
         // @todo Please modify the following code to remove attributes that should not be searched.
