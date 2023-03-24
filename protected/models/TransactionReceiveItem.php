@@ -321,8 +321,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->condition = " 
             t.id NOT IN (
                 SELECT receive_item_id
-                FROM " . PayOutDetail::model()->tableName() . " 
-                WHERE receive_item_id IS NOT null
+                FROM " . PayOutDetail::model()->tableName() . " p
+                LEFT OUTER JOIN " . PaymentOutApproval::model()->tableName() . " a ON p.payment_out_id = a.payment_out_id
+                WHERE t.receive_item_id IS NOT null AND 
             ) AND t.invoice_number IS NOT NULL AND t.purchase_order_id IS NOT NULL AND t.receive_item_date > '2021-12-31'
         ";
         
