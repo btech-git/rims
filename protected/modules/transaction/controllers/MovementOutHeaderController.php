@@ -69,7 +69,7 @@ class MovementOutHeaderController extends Controller {
             $transactionCode = $model->movement_out_no;
             $transactionDate = $model->date_posting;
             $branchId = $model->branch_id;
-            $transactionSubject = $model->movement_type;
+            $transactionSubject = $model->getMovementType($model->movement_type);
 
             $journalReferences = array();
         
@@ -670,7 +670,7 @@ class MovementOutHeaderController extends Controller {
         $transactionCode = $movementOut->header->movement_out_no;
         $transactionDate = $movementOut->header->date_posting;
         $branchId = $movementOut->header->branch_id;
-        $transactionSubject = $movementOut->header->movement_type;
+        $transactionSubject = $movementOut->header->getMovementType($movementOut->header->movement_type);
         
         $journalReferences = array();
         
