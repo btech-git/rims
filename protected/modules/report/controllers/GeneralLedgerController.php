@@ -150,15 +150,6 @@ class GeneralLedgerController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Buku Besar');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-
-
         $worksheet->mergeCells('A1:G1');
         $worksheet->mergeCells('A2:G2');
         $worksheet->mergeCells('A3:G3');
@@ -227,7 +218,7 @@ class GeneralLedgerController extends Controller {
             ->setAutoSize(true);
         }
 
-//        ob_end_clean();
+        ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Buku Besar.xlsx"');
