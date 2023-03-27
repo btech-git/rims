@@ -170,13 +170,13 @@ class WorkOrderByVehicleController extends Controller {
             ->setAutoSize(true);
         }
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Kartu Stok Persediaan.xlsx"');
+        header('Content-Disposition: attachment;filename="Laporan Kartu Stok Persediaan.xls"');
         header('Cache-Control: max-age=0');
         
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
 
         Yii::app()->end();
