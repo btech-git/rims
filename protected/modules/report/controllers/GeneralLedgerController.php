@@ -227,7 +227,7 @@ class GeneralLedgerController extends Controller {
             ->setAutoSize(true);
         }
 
-        ob_end_clean();
+//        ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/xls');
         header('Content-Disposition: attachment;filename="Laporan Buku Besar.xlsx"');
