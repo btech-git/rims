@@ -176,7 +176,7 @@ class WorkOrderByServiceController extends Controller {
         header('Content-Disposition: attachment;filename="Laporan Kartu Stok Persediaan.xls"');
         header('Cache-Control: max-age=0');
         
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
 
         Yii::app()->end();
