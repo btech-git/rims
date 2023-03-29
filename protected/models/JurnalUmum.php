@@ -245,6 +245,30 @@ class JurnalUmum extends CActiveRecord {
         ));
     }
 
+    public static function getBalanceSheetDataByTransactionYear($transactionYear, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':transaction_year' => $transactionYear,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1) AS transaction_month, j.coa_id, j.debet_kredit, c.`code`, c.`name`, c.normal_balance, SUM(j.total) AS total
+                FROM rims_jurnal_umum j
+                INNER JOIN rims_coa c ON c.id = j.coa_id
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 1) = :transaction_year AND c.coa_category_id IN (1, 2, 3, 4, 5, 23) " . $branchConditionSql . "
+                GROUP BY SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1), j.coa_id, j.debet_kredit
+                ORDER BY c.`code` ASC, transaction_month ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public static function graphSalePerBranch() {
         
         $sql = "SELECT b.name AS branch_name, SUM(j.total) AS total
