@@ -46,6 +46,11 @@
                                         'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')
                                     ),
                                     array(
+                                        'label' => 'Laba Rugi (Multi Periode)', 
+                                        'url' => array('/report/profitLossMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')
+                                    ),
+                                    array(
                                         'label' => 'Neraca (induk)', 
                                         'url' => array('/report/balanceSheet/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('summaryBalanceSheetReport')
@@ -53,6 +58,11 @@
                                     array(
                                         'label' => 'Neraca (Standar)', 
                                         'url' => array('/report/balanceSheetDetail/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('standardBalanceSheetReport')
+                                    ),
+                                    array(
+                                        'label' => 'Neraca (Multi Periode)', 
+                                        'url' => array('/report/balanceSheetMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('standardBalanceSheetReport')
                                     ),
                                 ),

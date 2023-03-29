@@ -17,13 +17,13 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($balanceSheetInfo as $balanceSheetRow): ?>
+        <?php foreach ($profitLossInfo as $profitLossRow): ?>
             <tr>
-                <td><?php echo $balanceSheetRow['code']; ?></td>
-                <td><?php echo $balanceSheetRow['name']; ?></td>
+                <td><?php echo $profitLossRow['code']; ?></td>
+                <td><?php echo $profitLossRow['name']; ?></td>
                 <?php foreach (range(1, 12) as $monthNumber): ?>
                     <?php $month = str_pad($monthNumber, 2, '0', STR_PAD_LEFT); ?>
-                    <?php $balance = isset($balanceSheetRow[$month]['total']) ? $balanceSheetRow[$month]['total'] : ''; ?>
+                    <?php $balance = isset($profitLossRow[$month]['total']) ? $profitLossRow[$month]['total'] : ''; ?>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)); ?>
                     </td>

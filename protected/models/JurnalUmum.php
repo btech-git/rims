@@ -260,7 +260,31 @@ class JurnalUmum extends CActiveRecord {
         $sql = "SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1) AS transaction_month, j.coa_id, j.debet_kredit, c.`code`, c.`name`, c.normal_balance, SUM(j.total) AS total
                 FROM rims_jurnal_umum j
                 INNER JOIN rims_coa c ON c.id = j.coa_id
-                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 1) = :transaction_year AND c.coa_category_id IN (1, 2, 3, 4, 5, 23) " . $branchConditionSql . "
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 1) = :transaction_year AND c.coa_category_id IN (1, 2, 3, 4, 5, 23) AND c.is_approved = 1 " . $branchConditionSql . "
+                GROUP BY SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1), j.coa_id, j.debet_kredit
+                ORDER BY c.`code` ASC, transaction_month ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getProfitLossDataByTransactionYear($transactionYear, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':transaction_year' => $transactionYear,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1) AS transaction_month, j.coa_id, j.debet_kredit, c.`code`, c.`name`, c.normal_balance, SUM(j.total) AS total
+                FROM rims_jurnal_umum j
+                INNER JOIN rims_coa c ON c.id = j.coa_id
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 1) = :transaction_year AND c.coa_category_id IN (6, 7, 8, 9, 10) AND c.is_approved = 1 " . $branchConditionSql . "
                 GROUP BY SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1), j.coa_id, j.debet_kredit
                 ORDER BY c.`code` ASC, transaction_month ASC";
 
