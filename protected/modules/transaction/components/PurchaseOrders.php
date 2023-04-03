@@ -235,7 +235,7 @@ class PurchaseOrders extends CComponent {
             $jurnalUmumOutstanding->tanggal_transaksi = $this->header->purchase_order_date;
             $jurnalUmumOutstanding->coa_id = $this->header->supplier->coa_outstanding_order;
             $jurnalUmumOutstanding->branch_id = $this->header->main_branch_id;
-            $jurnalUmumOutstanding->total = $subTotal;
+            $jurnalUmumOutstanding->total = $this->header->subtotal;
             $jurnalUmumOutstanding->debet_kredit = 'D';
             $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
             $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
