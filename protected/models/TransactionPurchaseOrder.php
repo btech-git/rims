@@ -381,17 +381,17 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         }
     }
 
-//    public function getTotalPayment() {
-//        $total = 0.00;
-//        
-//        foreach ($this->transactionReceiveItems as $transactionReceiveItem) {
-//            foreach ($transactionReceiveItem->payOutDetails as $payOutDetail) {
-//                $total += $payOutDetail->payment_amount;
-//            }
-//        }
-//        
-//        return $total;
-//    }
+    public function getTotalPayment() {
+        $total = 0.00;
+        
+        foreach ($this->transactionReceiveItems as $transactionReceiveItem) {
+            foreach ($transactionReceiveItem->payOutDetails as $payOutDetail) {
+                $total += $payOutDetail->total_invoice;
+            }
+        }
+        
+        return $total;
+    }
     
     public function getTotalRemaining() {
         
