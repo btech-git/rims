@@ -381,19 +381,21 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         }
     }
 
-    public function getTotalPayment() {
-        $total = 0.00;
-        
-        foreach ($this->paymentOuts as $detail) {
-            $total += $detail->payment_amount;
-        }
-        
-        return $total;
-    }
+//    public function getTotalPayment() {
+//        $total = 0.00;
+//        
+//        foreach ($this->transactionReceiveItems as $transactionReceiveItem) {
+//            foreach ($transactionReceiveItem->payOutDetails as $payOutDetail) {
+//                $total += $payOutDetail->payment_amount;
+//            }
+//        }
+//        
+//        return $total;
+//    }
     
     public function getTotalRemaining() {
         
-        return $this->total_price - $this->getTotalPayment();
+        return $this->total_price - $this->payment_amount;
     }
 
     public function searchByPendingJournal() {

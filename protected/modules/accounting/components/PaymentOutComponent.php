@@ -189,7 +189,7 @@ class PaymentOutComponent extends CComponent {
 
             if (!empty($detail->receive_item_id)) {
                 $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($detail->receiveItem->purchase_order_id);
-                $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+                $purchaseOrder->payment_amount = $detail->total_invoice;
                 $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
                 $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
             } else {

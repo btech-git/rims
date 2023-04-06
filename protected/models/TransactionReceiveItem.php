@@ -52,6 +52,7 @@
  * @property Users $userIdInvoice
  * @property TransactionReceiveItemDetail[] $transactionReceiveItemDetails
  * @property TransactionReturnOrder[] $transactionReturnOrders
+ * @property PayOutDetail[] $payOutDetails
  */
 class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
 
@@ -126,6 +127,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             'userIdInvoice' => array(self::BELONGS_TO, 'Users', 'user_id_invoice'),
             'transactionReceiveItemDetails' => array(self::HAS_MANY, 'TransactionReceiveItemDetail', 'receive_item_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'receive_item_id'),
+            'payOutDetails' => array(self::HAS_MANY, 'PayOutDetail', 'receive_item_id'),
         );
     }
 

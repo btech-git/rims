@@ -22,18 +22,23 @@ class BalanceSheetMonthlyController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $yearNow = date('Y');
+        $yearMonthNow = date('Y-m');
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $transactionYear = (isset($_GET['TransactionYear'])) ? $_GET['TransactionYear'] : $yearNow;
+        $startYearMonth = (isset($_GET['StartYearMonth'])) ? $_GET['StartYearMonth'] : $yearMonthNow;
+        $endYearMonth = (isset($_GET['EndYearMonth'])) ? $_GET['EndYearMonth'] : $yearMonthNow;
         
         $balanceSheetInfo = array();
-        $balanceSheetData = JurnalUmum::getBalanceSheetDataByTransactionYear($transactionYear, $branchId);
+        $balanceSheetData = JurnalUmum::getBalanceSheetDataByTransactionYear($startYearMonth, $endYearMonth, $branchId);
         foreach ($balanceSheetData as $balanceSheetItem) {
-            $balanceSheetInfo[$balanceSheetItem['coa_id']]['code'] = $balanceSheetItem['code'];
-            $balanceSheetInfo[$balanceSheetItem['coa_id']]['name'] = $balanceSheetItem['name'];
-            if (!isset($balanceSheetInfo[$balanceSheetItem['coa_id']][$balanceSheetItem['transaction_month']]['total'])) {
-                $balanceSheetInfo[$balanceSheetItem['coa_id']][$balanceSheetItem['transaction_month']]['total'] = '0.00';
+            $balanceSheetInfo[$balanceSheetItem['category_id']]['code'] = $balanceSheetItem['category_code'];
+            $balanceSheetInfo[$balanceSheetItem['category_id']]['name'] = $balanceSheetItem['category_name'];
+            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['code'] = $balanceSheetItem['sub_category_code'];
+            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['name'] = $balanceSheetItem['sub_category_name'];
+            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['code'] = $balanceSheetItem['coa_code'];
+            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['name'] = $balanceSheetItem['coa_name'];
+            if (!isset($balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']])) {
+                $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] = '0.00';
             }
             $amount = '0.00';
             if (strtoupper($balanceSheetItem['debet_kredit']) === 'D' && strtolower($balanceSheetItem['normal_balance']) === 'debit') {
@@ -45,7 +50,7 @@ class BalanceSheetMonthlyController extends Controller {
             } else if (strtoupper($balanceSheetItem['debet_kredit']) === 'K' && strtolower($balanceSheetItem['normal_balance']) === 'kredit') {
                 $amount = +$balanceSheetItem['total'];
             }
-            $balanceSheetInfo[$balanceSheetItem['coa_id']][$balanceSheetItem['transaction_month']]['total'] += $amount;
+            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] += $amount;
         }
 
 //        if (isset($_GET['SaveExcel'])) {
@@ -53,9 +58,10 @@ class BalanceSheetMonthlyController extends Controller {
 //        }
 
         $this->render('summary', array(
-            'yearNow' => $yearNow,
+            'yearMonthNow' => $yearMonthNow,
             'branchId' => $branchId,
-            'transactionYear' => $transactionYear,
+            'startYearMonth' => $startYearMonth,
+            'endYearMonth' => $endYearMonth,
             'balanceSheetInfo' => $balanceSheetInfo,
         ));
     }

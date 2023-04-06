@@ -1,6 +1,7 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
-	$("#TransactionYear").val("' . $transactionYear . '");
+	$("#StartYearMonth").val("' . $startYearMonth . '");
+	$("#EndYearMonth").val("' . $endYearMonth . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
@@ -38,10 +39,26 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-4 columns">
                                         <span class="prefix">Periode:</span>
                                     </div>
+                                    <?php list($yearNow, $monthNow) = explode('-', $yearMonthNow); ?>
+                                    <?php $currentYear = intval($yearNow); ?>
+                                    <?php $currentMonth = intval($monthNow); ?>
+                                    <?php $yearMonthRange = array(); ?>
+                                    <?php for ($i = 0; $i < 36; $i++): ?>
+                                        <?php $month = str_pad($currentMonth, 2, '0', STR_PAD_LEFT); ?>
+                                        <?php $yearMonthRange[$currentYear . '-' . $month] = date('F', mktime(null, null, null, $currentMonth)) . ' ' . $currentYear; ?>
+                                        <?php $currentMonth--; ?>
+                                        <?php if ($currentMonth === 0): ?>
+                                            <?php $currentMonth = 12; ?>
+                                            <?php $currentYear--; ?>
+                                        <?php endif; ?>
+                                    <?php endfor; ?>
 
-                                    <div class="small-8 columns">
-                                        <?php $yearRange = range($yearNow, $yearNow - 5, -1); ?>
-                                        <?php echo CHtml::dropDownList('TransactionYear', $transactionYear, array_combine($yearRange, $yearRange)); ?>
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::dropDownList('StartYearMonth', $startYearMonth, $yearMonthRange); ?>
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::dropDownList('EndYearMonth', $endYearMonth, $yearMonthRange); ?>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +82,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'branchId' => $branchId,
-                        'transactionYear' => $transactionYear,
+                        'startYearMonth' => $startYearMonth,
+                        'endYearMonth' => $endYearMonth,
                         'balanceSheetInfo' => $balanceSheetInfo,
                     )); ?>
                 </div>

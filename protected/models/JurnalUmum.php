@@ -245,11 +245,12 @@ class JurnalUmum extends CActiveRecord {
         ));
     }
 
-    public static function getBalanceSheetDataByTransactionYear($transactionYear, $branchId) {
+    public static function getBalanceSheetDataByTransactionYear($startYearMonth, $endYearMonth, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
-            ':transaction_year' => $transactionYear,
+            ':start_year_month' => $startYearMonth,
+            ':end_year_month' => $endYearMonth,
         );
         
         if (!empty($branchId)) {
@@ -257,12 +258,14 @@ class JurnalUmum extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1) AS transaction_month, j.coa_id, j.debet_kredit, c.`code`, c.`name`, c.normal_balance, SUM(j.total) AS total
+        $sql = "SELECT SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) AS transaction_month_year, j.coa_id, j.debet_kredit, cc.id AS category_id, cc.`code` AS category_code, cc.`name` AS category_name, s.id AS sub_category_id, s.`code` AS sub_category_code, s.`name` AS sub_category_name, c.`code` AS coa_code, c.`name` AS coa_name, c.normal_balance, SUM(j.total) AS total
                 FROM rims_jurnal_umum j
                 INNER JOIN rims_coa c ON c.id = j.coa_id
-                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 1) = :transaction_year AND c.coa_category_id IN (1, 2, 3, 4, 5, 23) AND c.is_approved = 1 " . $branchConditionSql . "
-                GROUP BY SUBSTRING_INDEX(SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), '-', -1), j.coa_id, j.debet_kredit
-                ORDER BY c.`code` ASC, transaction_month ASC";
+                INNER JOIN rims_coa_sub_category s ON s.id = c.coa_sub_category_id
+                INNER JOIN rims_coa_category cc ON cc.id = s.coa_category_id
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) BETWEEN :start_year_month AND :end_year_month AND c.coa_category_id IN (1, 2, 3, 4, 5, 23) AND c.is_approved = 1 " . $branchConditionSql . "
+                GROUP BY SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), j.coa_id, j.debet_kredit
+                ORDER BY cc.`code`, s.`code` ASC, c.`code` ASC, transaction_month_year ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
