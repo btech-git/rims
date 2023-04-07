@@ -159,7 +159,7 @@ class WorkOrderExpenseController extends Controller {
             $jurnalUmumKas = new JurnalUmum;
             $jurnalUmumKas->kode_transaksi = $workOrderExpense->transaction_number;
             $jurnalUmumKas->tanggal_transaksi = $workOrderExpense->transaction_date;
-            $jurnalUmumKas->coa_id = 2149;
+            $jurnalUmumKas->coa_id = 1110;
             $jurnalUmumKas->branch_id = $workOrderExpense->branch_id;
             $jurnalUmumKas->total = $workOrderExpense->grand_total;
             $jurnalUmumKas->debet_kredit = 'D';
@@ -248,7 +248,7 @@ class WorkOrderExpenseController extends Controller {
                 $jurnalUmumKas = new JurnalUmum;
                 $jurnalUmumKas->kode_transaksi = $workOrderExpense->transaction_number;
                 $jurnalUmumKas->tanggal_transaksi = $workOrderExpense->transaction_date;
-                $jurnalUmumKas->coa_id = 2149;
+                $jurnalUmumKas->coa_id = 1110;
                 $jurnalUmumKas->branch_id = $workOrderExpense->branch_id;
                 $jurnalUmumKas->total = $workOrderExpense->grand_total;
                 $jurnalUmumKas->debet_kredit = 'D';
