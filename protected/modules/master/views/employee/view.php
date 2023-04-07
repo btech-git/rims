@@ -33,6 +33,10 @@ $this->menu = array(
                 'name',
                 'id_card',
                 'local_address',
+                array(
+                    'label' => 'Tanggal Join',
+                    'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($model, 'recruitment_date'))),
+                ),
                 array('name' => 'province_name', 'value' => $model->province->name),
                 array('name' => 'city_name', 'value' => $model->city->name),
                 'home_address',

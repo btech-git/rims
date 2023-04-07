@@ -56,15 +56,14 @@ class EmployeeController extends Controller {
         $employeeDivisions = EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array('employee_id' => $id));
         $attendance = new EmployeeAttendance('search');
         $attendance->unsetAttributes();  // clear any default values
-        if (isset($_GET['EmployeeAttendance']))
+        
+        if (isset($_GET['EmployeeAttendance'])) {
             $attendance->attributes = $_GET['EmployeeAttendance'];
+        }
 
         $attendanceCriteria = new CDbCriteria;
         $attendanceCriteria->addCondition("employee_id = " . $id);
-        // $attendanceCriteria->compare('code',$coa->code.'%',true,'AND', false);
-        // $attendanceCriteria->compare('name',$coa->name,true);
-
-
+        
         $dataProvider = new CActiveDataProvider('EmployeeAttendance', array(
             'criteria' => $attendanceCriteria,
             'pagination' => array('pageSize' => 31),

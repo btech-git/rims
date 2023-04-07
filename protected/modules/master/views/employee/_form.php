@@ -66,6 +66,31 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <?php echo $form->labelEx($employee->header, 'recruitment_date', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                'model' => $employee->header,
+                                'attribute' => "recruitment_date",
+                                'options'=>array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth'=>true,
+                                    'changeYear'=>true,
+    //                                'yearRange'=>'1900:2020'
+                                ),
+                                'htmlOptions'=>array(
+                                    'value'=>date('Y-m-d'),
+                                    'readonly' => true,
+                                ),
+                            )); ?>
+                            <?php echo $form->error($employee->header, 'recruitment_date'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <label class="prefix"><?php echo $form->labelEx($employee->header, 'local_address'); ?></label>
                         </div>
                         <div class="small-8 columns">

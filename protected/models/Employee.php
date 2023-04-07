@@ -28,6 +28,7 @@
  * @property integer $is_deleted
  * @property string $deleted_at
  * @property integer $deleted_by
+ * @property string $recruitment_date
  *
  * The followings are the available model relations:
  * @property Province $province
@@ -76,10 +77,10 @@ class Employee extends CActiveRecord {
             array('id_card, driving_license, off_day', 'length', 'max' => 30),
             array('salary_type, payment_type, code', 'length', 'max' => 50),
             array('availability', 'length', 'max' => 5),
-            array('deleted_at', 'safe'),
+            array('deleted_at, recruitment_date', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day', 'safe', 'on' => 'search'),
+            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date', 'safe', 'on' => 'search'),
         );
     }
 
@@ -135,7 +136,7 @@ class Employee extends CActiveRecord {
             'payment_type' => 'Payment Type',
             'code' => 'Code',
             'availability' => 'Availability',
-            // 'is_deleted' => 'Deleted',
+            'recruitment_date' => 'Tanggal Join',
             'skills' => 'Skills',
             'registration_service_id' => 'Registration Service',
             'off_day' => 'Off Day',
@@ -189,6 +190,7 @@ class Employee extends CActiveRecord {
         $criteria->compare('availability', $this->availability, true);
         $criteria->compare('skills', $this->skills, true);
         $criteria->compare('off_day', $this->off_day, true);
+        $criteria->compare('recruitment_date', $this->recruitment_date);
 
         $tampilkan = ($this->is_deleted == 1) ? array(0, 1) : array(0);
         $criteria->addInCondition('is_deleted', $tampilkan);
