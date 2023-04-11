@@ -100,10 +100,10 @@ class ProfitLossMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Profit Loss per Periode');
+        $documentProperties->setTitle('Profit Loss Multi Periode');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Profit Loss per Periode');
+        $worksheet->setTitle('Profit Loss Multi Periode');
 
         $worksheet->mergeCells('A1:E1');
         $worksheet->mergeCells('A2:E2');
@@ -111,7 +111,7 @@ class ProfitLossMonthlyController extends Controller {
         $worksheet->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:E3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Profit Loss per Periode');
+        $worksheet->setCellValue('A1', 'Profit Loss Multi Periode');
         $worksheet->setCellValue('A2', $startYearMonth . ' - ' . $endYearMonth);
         if (!empty($branch)) {
             $worksheet->setCellValue('A3', $branch->name);
@@ -190,7 +190,7 @@ class ProfitLossMonthlyController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Profit Loss per Periode.xlsx"');
+        header('Content-Disposition: attachment;filename="Profit Loss Multi Periode.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

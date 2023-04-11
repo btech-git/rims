@@ -100,10 +100,10 @@ class BalanceSheetMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Balance Sheet per Periode');
+        $documentProperties->setTitle('Balance Sheet Multi Periode');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Balance Sheet per Periode');
+        $worksheet->setTitle('Balance Sheet Multi Periode');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -111,7 +111,7 @@ class BalanceSheetMonthlyController extends Controller {
         $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Balance Sheet per Periode');
+        $worksheet->setCellValue('A1', 'Balance Sheet Multi Periode');
         $worksheet->setCellValue('A2', $startYearMonth . ' - ' . $endYearMonth);
         if (!empty($branch)) {
             $worksheet->setCellValue('A3', $branch->name);
@@ -190,7 +190,7 @@ class BalanceSheetMonthlyController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Balance Sheet per Periode.xlsx"');
+        header('Content-Disposition: attachment;filename="Balance Sheet Multi Periode.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
