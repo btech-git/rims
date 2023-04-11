@@ -30,7 +30,7 @@
         <tbody>
             <?php foreach ($balanceSheetInfo as $categoryInfo): ?>
                 <tr>
-                    <td colspan="<?php echo count($yearMonthList) + 1; ?>"><?php echo $categoryInfo['code']; ?> - <?php echo $categoryInfo['name']; ?></td>
+                    <td colspan="<?php echo count($yearMonthList) + 1; ?>" style="font-weight: bold"><?php echo $categoryInfo['code']; ?> - <?php echo $categoryInfo['name']; ?></td>
                 </tr>
                 <?php $categoryTotalSums = array(); ?>
                 <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
@@ -38,7 +38,7 @@
                 <?php endforeach; ?>
                 <?php foreach ($categoryInfo['sub_categories'] as $subCategoryInfo): ?>
                     <tr>
-                        <td colspan="<?php echo count($yearMonthList) + 1; ?>" style="padding-left: 25px;"><?php echo $subCategoryInfo['code']; ?> - <?php echo $subCategoryInfo['name']; ?></td>
+                        <td colspan="<?php echo count($yearMonthList) + 1; ?>" style="padding-left: 25px; font-weight: bold;"><?php echo $subCategoryInfo['code']; ?> - <?php echo $subCategoryInfo['name']; ?></td>
                     </tr>
                     <?php $subCategoryTotalSums = array(); ?>
                     <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
@@ -57,9 +57,9 @@
                         </tr>
                     <?php endforeach; ?>
                     <tr>
-                        <td style="text-align: right">Total <?php echo $subCategoryInfo['name']; ?></td>
+                        <td style="text-align: right; font-weight: bold; font-size: 14px;">Total <?php echo $subCategoryInfo['name']; ?></td>
                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
-                            <td style="text-align: right">
+                            <td style="text-align: right; font-weight: bold; font-size: 14px;">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $subCategoryTotalSums[$yearMonth])); ?>
                             </td>
                         <?php endforeach; ?>
@@ -69,9 +69,9 @@
                     <?php endforeach; ?>
                 <?php endforeach; ?>
                 <tr>
-                    <td style="text-align: right">Total <?php echo $categoryInfo['name']; ?></td>
+                    <td style="text-align: right; font-weight: bold; font-size: 16px;">Total <?php echo $categoryInfo['name']; ?></td>
                     <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
-                        <td style="text-align: right">
+                        <td style="text-align: right; font-weight: bold; font-size: 16px;">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $categoryTotalSums[$yearMonth])); ?>
                         </td>
                     <?php endforeach; ?>

@@ -22,18 +22,23 @@ class ProfitLossMonthlyController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $yearNow = date('Y');
+        $yearMonthNow = date('Y-m');
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $transactionYear = (isset($_GET['TransactionYear'])) ? $_GET['TransactionYear'] : $yearNow;
+        $startYearMonth = (isset($_GET['StartYearMonth'])) ? $_GET['StartYearMonth'] : $yearMonthNow;
+        $endYearMonth = (isset($_GET['EndYearMonth'])) ? $_GET['EndYearMonth'] : $yearMonthNow;
         
         $profitLossInfo = array();
-        $profitLossData = JurnalUmum::getProfitLossDataByTransactionYear($transactionYear, $branchId);
+        $profitLossData = JurnalUmum::getProfitLossDataByTransactionYear($startYearMonth, $endYearMonth, $branchId);
         foreach ($profitLossData as $profitLossItem) {
-            $profitLossInfo[$profitLossItem['coa_id']]['code'] = $profitLossItem['code'];
-            $profitLossInfo[$profitLossItem['coa_id']]['name'] = $profitLossItem['name'];
-            if (!isset($profitLossInfo[$profitLossItem['coa_id']][$profitLossItem['transaction_month']]['total'])) {
-                $profitLossInfo[$profitLossItem['coa_id']][$profitLossItem['transaction_month']]['total'] = '0.00';
+            $profitLossInfo[$profitLossItem['category_id']]['code'] = $profitLossItem['category_code'];
+            $profitLossInfo[$profitLossItem['category_id']]['name'] = $profitLossItem['category_name'];
+            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['code'] = $profitLossItem['sub_category_code'];
+            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['name'] = $profitLossItem['sub_category_name'];
+            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['code'] = $profitLossItem['coa_code'];
+            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['name'] = $profitLossItem['coa_name'];
+            if (!isset($profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']])) {
+                $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] = '0.00';
             }
             $amount = '0.00';
             if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'debit') {
@@ -45,27 +50,45 @@ class ProfitLossMonthlyController extends Controller {
             } else if (strtoupper($profitLossItem['debet_kredit']) === 'K' && strtolower($profitLossItem['normal_balance']) === 'kredit') {
                 $amount = +$profitLossItem['total'];
             }
-            $profitLossInfo[$profitLossItem['coa_id']][$profitLossItem['transaction_month']]['total'] += $amount;
+            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] += $amount;
         }
 
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($accountCategoryAssets, $accountCategoryLiabilitiesEquities, $startDate, $endDate, $branchId);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($profitLossInfo, $startYearMonth, $endYearMonth, $branchId);
+        }
 
         $this->render('summary', array(
-            'yearNow' => $yearNow,
+            'yearMonthNow' => $yearMonthNow,
             'branchId' => $branchId,
-            'transactionYear' => $transactionYear,
+            'startYearMonth' => $startYearMonth,
+            'endYearMonth' => $endYearMonth,
             'profitLossInfo' => $profitLossInfo,
         ));
     }
 
-    protected function saveToExcel($accountCategoryAssets, $accountCategoryLiabilitiesEquities, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($profitLossInfo, $startYearMonth, $endYearMonth, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
-        $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+        list($startYearNow, $startMonthNow) = explode('-', $startYearMonth);
+        list($endYearNow, $endMonthNow) = explode('-', $endYearMonth);
+        $currentStartYear = intval($startYearNow);
+        $currentStartMonth = intval($startMonthNow);
+        $currentEndYear = intval($endYearNow);
+        $currentEndMonth = intval($endMonthNow);
+        $yearMonthList = array();
+        $currentYear = $currentStartYear;
+        $currentMonth = $currentStartMonth;
+        while ($currentYear < $currentEndYear || $currentYear === $currentEndYear && $currentMonth <= $currentEndMonth){
+            $month = str_pad($currentMonth, 2, '0', STR_PAD_LEFT);
+            $yearMonthList[$currentYear . '-' . $month] = date('M', mktime(null, null, null, $currentMonth)) . ' ' . date('y', mktime(null, null, null, $currentMonth, null, $currentYear));
+            $currentMonth++;
+            if ($currentMonth === 13) {
+                $currentMonth = 1;
+                $currentYear++;
+            }
+        }
+        $branch = empty($branchId) ? '' : Branch::model()->findbyPk($branchId);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -77,209 +100,87 @@ class ProfitLossMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Balance Sheet Induk');
+        $documentProperties->setTitle('Profit Loss per Periode');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Balance Sheet Induk');
+        $worksheet->setTitle('Profit Loss per Periode');
 
-        $worksheet->mergeCells('A1:B1');
-        $worksheet->mergeCells('A2:B2');
-        $worksheet->mergeCells('A3:B3');
-        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:E1');
+        $worksheet->mergeCells('A2:E2');
+        $worksheet->mergeCells('A3:E3');
+        $worksheet->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:E3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Laporan Balance Sheet Induk');
-        $worksheet->setCellValue('A2', $startDateString . ' - ' . $endDateString);
+        $worksheet->setCellValue('A1', 'Profit Loss per Periode');
+        $worksheet->setCellValue('A2', $startYearMonth . ' - ' . $endYearMonth);
+        if (!empty($branch)) {
+            $worksheet->setCellValue('A3', $branch->name);
+        }
 
-        $counter = 5;
+        $column = 'B'; 
+        if (count($yearMonthList) <= 12 && count($yearMonthList) >= 1) {
+            $worksheet->setCellValue('A4', 'Account');
+            foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                $worksheet->setCellValue($column . '4', $yearMonthFormatted);
+                $column++;                
+            }
+            
+            $counter = 6;
 
-        $accountCategoryAssetBalance = 0.00;
-        foreach ($accountCategoryAssets as $accountCategoryAsset) {
-            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryAsset, 'name')));
-
-            $counter++;
-
-            $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryAsset->id), array('order' => 'code'));
-            foreach ($accountCategoryPrimarys as $accountCategoryPrimary) {
-                $accountCategoryPrimaryBalance = 0.00;
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
-                
+            foreach ($profitLossInfo as $categoryInfo) {
+                $worksheet->setCellValue("A{$counter}", $categoryInfo['code'] . " - " . $categoryInfo['name']);
                 $counter++;
-
-                $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
-                foreach ($accountCategorySubs as $accountCategorySub) {
-                    $accountCategorySubBalance = 0.00;
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategorySub, 'name')));
-                    
+                
+                $categoryTotalSums = array();
+                foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                    $categoryTotalSums[$yearMonth] = '0.00';
+                }
+                foreach ($categoryInfo['sub_categories'] as $subCategoryInfo) {
+                    $worksheet->setCellValue("A{$counter}", $subCategoryInfo['code'] . " - " . $subCategoryInfo['name']);
                     $counter++;
-
-                    $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
-                    foreach ($coaSubCategoryCodes as $accountCategory) {
-                        $accountCategoryBalance = 0.00;
-                        $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null));
-                        foreach ($coas as $coa) {
-                            $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId);
-                            $coaSubs = Coa::model()->findAllByAttributes(array('is_approved' => 1, 'coa_id' => $coa->id));
-//                            if ((int) $accountGroupBalance !== 0) {
-                                if (!empty($coaSubs)) {
-                                    $accountGroupBalance = 0;
-                                    foreach ($coaSubs as $account) {
-                                        $accountBalance = $account->getBalanceSheetBalance($startDate, $endDate, $branchId);
-                                        $accountGroupBalance += $accountBalance;
-                                    }
-                                }
-//                            }
-                            $accountCategoryBalance += $accountGroupBalance;
-                        }
-                        
-                        $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')) . ' - ' . CHtml::encode(CHtml::value($accountCategory, 'name')));
-                        $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                        $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryBalance));
-                        $counter++;
-                        
-                        $accountCategorySubBalance += $accountCategoryBalance;
+                    
+                    $subCategoryTotalSums = array();
+                    foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                        $subCategoryTotalSums[$yearMonth] = '0.00';
                     }
                     
-                    $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-                    $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategorySub, 'name')));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategorySubBalance));
-
-                    $accountCategoryPrimaryBalance += $accountCategorySubBalance;
+                    foreach ($subCategoryInfo['accounts'] as $accountInfo) {
+                        $column = 'B'; 
+                        $worksheet->setCellValue("A{$counter}", $accountInfo['code'] . " - " . $accountInfo['name']);
+                        foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                            $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '';
+                            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($balance));
+                            $column++;
+                            $subCategoryTotalSums[$yearMonth] += $balance;
+                        }
+                        $counter++;
+                        
+                    }
+                    
+                    $column = 'B'; 
+                    $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                    $worksheet->setCellValue("A{$counter}", "Total " . $subCategoryInfo['name']);
+                    foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                        $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($subCategoryTotalSums[$yearMonth]));
+                        $column++;
+                    }
                     $counter++;
+                    foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                        $categoryTotalSums[$yearMonth] += $subCategoryTotalSums[$yearMonth];
+                    }
                 }
                 
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryPrimaryBalance));
-
-                $accountCategoryAssetBalance += $accountCategoryPrimaryBalance;
+                $column = 'B'; 
+                $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $worksheet->setCellValue("A{$counter}", "Total " . $categoryInfo['name']);
+                foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                    $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($categoryTotalSums[$yearMonth]));
+                    $column++;
+                }
                 $counter++;
             }
-
-            $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryAsset, 'name')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryAssetBalance));
-
-            $counter++;
         }
         
-        $accountCategoryLiabilityEquityBalance = 0.00; 
-        foreach ($accountCategoryLiabilitiesEquities as $accountCategoryLiabilitiesEquity) {
-            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')));
-
-            $counter++;
-            
-            $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryLiabilitiesEquity->id), array('order' => 'code'));
-            foreach ($accountCategoryPrimarys as $accountCategoryPrimary) {
-                $accountCategoryPrimaryBalance = 0.00;
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
-                
-                $counter++;
-            
-                if ($accountCategoryPrimary->id == 5) {
-                    $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
-                    foreach ($coaSubCategoryCodes as $accountCategory) {
-                        $accountCategoryBalance = 0.00;
-                        $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'));
-                        foreach ($coas as $account) {
-                            $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
-                            $accountCategoryBalance += $accountBalance;
-                        }
-                        
-                        $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')));
-                        $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
-                        $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryBalance));
-                        $accountCategoryPrimaryBalance += $accountCategoryBalance;
-                        
-                        $counter++;
-
-                    }
-                } else {
-                    $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
-                    foreach ($accountCategorySubs as $accountCategorySub) {
-                        $accountCategorySubBalance = 0.00;
-                        $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
-                        
-                        $counter++;
-                        
-                        if ($accountCategorySub->id == 3) {
-                            $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
-                            foreach ($coaCategorySecondaries as $coaCategorySecondary) {
-                                $accountCategorySecondaryBalance = 0.00;
-                                $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $coaCategorySecondary->id), array('order' => 'code'));
-                                foreach ($coaSubCategoryCodes as $accountCategory) {
-                                    $accountCategoryBalance = 0.00;
-                                    $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'));
-                                    foreach ($coas as $account) {
-                                        $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); 
-                                        $accountCategoryBalance += $accountBalance;
-                                    }
-                                    
-                                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')));
-                                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
-                                    $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryBalance));
-                        
-                                    $counter++;
-                                    
-                                    $accountCategorySecondaryBalance += $accountCategoryBalance; 
-                                }
-                                
-                                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($coaCategorySecondary, 'name')));
-                                $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategorySecondaryBalance));
-
-                                $counter++;
-
-                                $accountCategorySubBalance += $accountCategorySecondaryBalance;
-                            }
-                        } else {
-                            $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
-                            foreach ($coaSubCategoryCodes as $accountCategory) {
-                                $accountCategoryBalance = 0.00; 
-                                $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'));
-                                foreach ($coas as $account) {
-                                    $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
-                                    $accountCategoryBalance += $accountBalance;
-                                }
-                                
-                                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'code')));
-                                $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
-                                $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryBalance));
-
-                                $counter++;
-
-                                $accountCategorySubBalance += $accountCategoryBalance;
-                            }
-                        }
-
-                        $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategorySub, 'name')));
-                        $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategorySubBalance));
-
-                        $counter++;
-                        
-                        $accountCategoryPrimaryBalance += $accountCategorySubBalance;
-
-                    }
-                }
-
-                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryPrimaryBalance));
-
-                $counter++;
-
-                $accountCategoryLiabilityEquityBalance += $accountCategoryPrimaryBalance;
-            }
-                
-            $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryLiabilityEquityBalance));
-
-            $counter++;
-        }
-
         for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
@@ -289,7 +190,7 @@ class ProfitLossMonthlyController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/xls');
-        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Induk.xlsx"');
+        header('Content-Disposition: attachment;filename="Profit Loss per Periode.xlsx"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
