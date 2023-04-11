@@ -189,7 +189,7 @@ class BalanceSheetMonthlyController extends Controller {
 
         ob_end_clean();
         // We'll be outputting an excel file
-        header('Content-type: application/xls');
+        header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Balance Sheet per Periode.xlsx"');
         header('Cache-Control: max-age=0');
         
