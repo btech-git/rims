@@ -144,7 +144,7 @@ class InventoryDetail extends CActiveRecord {
         if ($branchId !== '') {
             $criteria->compare('warehouse.branch_id', $branchId);
         }
-        $criteria->order = 't.transaction_date DESC';
+        $criteria->order = 't.transaction_date ASC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
