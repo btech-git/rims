@@ -5,9 +5,9 @@
                 <th>Transaction Type</th>
                 <th>Transaction Number</th>
                 <th>Transaction Date</th>
-                <th>Stock In</th>
-                <th>Stock Out</th>
-                <th>Total</th>
+                <th>Qty In</th>
+                <th>Qty Out</th>
+                <th>Stock</th>
                 <th>Warehouse</th>
                 <th>Notes</th>
             </tr>
