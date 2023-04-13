@@ -2,9 +2,9 @@
     <table>
         <thead>
             <tr>
-                <th>Transaction Type</th>
+                <th>Type</th>
                 <th>Transaction Number</th>
-                <th>Transaction Date</th>
+                <th>Date</th>
                 <th>Qty In</th>
                 <th>Qty Out</th>
                 <th>Stock</th>
