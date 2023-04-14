@@ -149,7 +149,7 @@ class InventoryDetail extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 300,
+                'pageSize' => 500,
                 'currentPage' => $currentPage,
             ),
         ));
