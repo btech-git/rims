@@ -46,18 +46,24 @@ class InventoryController extends Controller {
         $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
         $detailTabs = array();
         
+        $limit = 200;
+        
         foreach ($branches as $branch) {
+            $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, $branch->id, $limit);
+            $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
+            $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, $branch->id, $excludeInventoryIds);
             $tabContent = $this->renderPartial('_viewStock', array(
-                'dataProvider' => $this->getInventoryDetailDataProvider($product->id, $branch->id, 0),
-                'productId' => $product->id,
-                'branchId' => $branch->id,
+                'latestInventoryData' => $latestInventoryData,
+                'inventoryBeginningStock' => $inventoryBeginningStock,
             ), true);
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
+        $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, '', $limit);
+        $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
+        $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, '', $excludeInventoryIds);
         $tabContent = $this->renderPartial('_viewStock', array(
-            'dataProvider' => $this->getInventoryDetailDataProvider($product->id, '', 0),
-            'productId' => $product->id,
-            'branchId' => '',
+            'latestInventoryData' => $latestInventoryData,
+            'inventoryBeginningStock' => $inventoryBeginningStock,
         ), true);
         $detailTabs['All'] = array('content' => $tabContent);
 

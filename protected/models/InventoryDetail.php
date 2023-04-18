@@ -295,4 +295,56 @@ class InventoryDetail extends CActiveRecord {
 
         return $value;
     }
+
+    public static function getLatestInventoryData($productId, $branchId, $limit) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $productId,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+
+        $sql = "SELECT i.id,  i.transaction_type, i.transaction_number, i.transaction_date, i.stock_in, i.stock_out, w.code AS warehouse_code, i.notes
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
+                WHERE i.product_id = :product_id " . $branchConditionSql . "
+                ORDER BY i.transaction_date DESC, i.id DESC
+                LIMIT {$limit}";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+
+    public static function getInventoryBeginningStock($productId, $branchId, $excludeInventoryIds) {
+        $branchConditionSql = '';
+        $excludeInventoryConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $productId,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($excludeInventoryIds)) {
+            $idsText = implode(',', $excludeInventoryIds);
+            $excludeInventoryConditionSql = " AND i.id NOT IN ({$idsText})";
+        }
+
+        $sql = "SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_stock
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
+                WHERE i.product_id = :product_id " . $branchConditionSql . $excludeInventoryConditionSql . "";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return $value;
+    }
 }
