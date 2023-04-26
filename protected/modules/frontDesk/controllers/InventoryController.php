@@ -16,7 +16,7 @@ class InventoryController extends Controller {
             $filterChain->action->id === 'detail' || 
             $filterChain->action->id === 'redirectTransaction'
         ) {
-            if (!(Yii::app()->user->checkAccess('stockInventoryReport')))
+            if (!(Yii::app()->user->checkAccess('warehouseStockReport')))
                 $this->redirect(array('/site/login'));
         }
 
