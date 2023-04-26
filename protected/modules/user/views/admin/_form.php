@@ -203,7 +203,19 @@ Yii::app()->clientScript->registerScript('userRoles', "
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($model, 'branch_id', array('class' => 'prefix')); ?>
+                        <?php echo $form->labelEx($model, 'Branch Assignment', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'code'), array('empty' => '-- Pilih Branch --')); ?>
+                        <?php echo CHtml::error($model, 'branch_id'); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'Branch Data Access', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php $branches = Branch::model()->findAll(array('order' => 'code')); ?>
