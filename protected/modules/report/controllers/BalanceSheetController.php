@@ -132,7 +132,7 @@ class BalanceSheetController extends Controller {
                         $accountCategorySubBalance += $accountCategoryBalance;
                     }
                     
-                    $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                    $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
                     $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategorySub, 'name')));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategorySubBalance));
@@ -141,7 +141,7 @@ class BalanceSheetController extends Controller {
                     $counter++;$counter++;
                 }
                 
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
                 $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryPrimaryBalance));
