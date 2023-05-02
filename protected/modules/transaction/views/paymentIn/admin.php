@@ -169,6 +169,7 @@ $('.search-form form').submit(function(){
                             ),
                             array(
                                 'header' => 'Plate #', 
+                                'filter' => CHtml::textField('PlateNumberInvoice', $plateNumberInvoice),
                                 'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
                             ),
                             array(

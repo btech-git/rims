@@ -452,6 +452,8 @@ class PaymentInController extends Controller {
         $invoice = new InvoiceHeader('search');
         $invoice->unsetAttributes();
         
+        $plateNumberInvoice = isset($_GET['PlateNumberInvoice']) ? $_GET['PlateNumberInvoice'] : '';
+        
         if (isset($_GET['InvoiceHeader'])) {
             $invoice->attributes = $_GET['InvoiceHeader'];
         }
@@ -466,8 +468,9 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('user_id', $invoice->user_id);
         
         $invoiceCriteria->together = true;
-        $invoiceCriteria->with = array('customer');
+        $invoiceCriteria->with = array('customer', 'vehicle');
         $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
+        $invoiceCriteria->compare('vehicle.plate_number', $plateNumberInvoice, true);
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
             'criteria' => $invoiceCriteria,
             'sort' => array(
@@ -512,6 +515,7 @@ class PaymentInController extends Controller {
             'invoiceDataProvider' => $invoiceDataProvider,
             'customerType' => $customerType,
             'plateNumber' => $plateNumber,
+            'plateNumberInvoice' => $plateNumberInvoice,
             'dataProvider' => $dataProvider,
         ));
     }
