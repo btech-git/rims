@@ -196,20 +196,31 @@ class GeneralLedgerController extends Controller {
             $worksheet->setCellValue("G{$counter}", CHtml::encode($header->getBeginningBalanceLedger($startDate)));
             $counter++;$counter++;
 
+            $totalDebit = 0; 
+            $totalCredit = 0;
             foreach ($header->jurnalUmums as $detail) {
                 $worksheet->getStyle("A{$counter}:D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
                 $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
+                $debitAmount = $detail->debet_kredit == 'D' ? $detail->total : 0;
+                $creditAmount = $detail->debet_kredit == 'K' ? $detail->total : 0;
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detail, 'kode_transaksi')));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($detail->tanggal_transaksi))));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_subject')));
                 $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_type')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($detail->debet_kredit == 'D' ? $detail->total : 0));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($detail->debet_kredit == 'K' ? $detail->total : 0));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($debitAmount));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($creditAmount));
                 $worksheet->setCellValue("G{$counter}", CHtml::encode($detail->currentSaldo));
 
+                $totalDebit += $debitAmount;
+                $totalCredit += $creditAmount;
                 $counter++;
             }
+            $worksheet->setCellValue("D{$counter}", 'TOTAL');
+            $worksheet->setCellValue("E{$counter}", CHtml::encode($totalDebit));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalCredit));
+            $counter++;
+            $counter++;
         }
 
         for ($col = 'A'; $col !== 'H'; $col++) {
