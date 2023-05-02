@@ -27,15 +27,15 @@ Yii::app()->clientScript->registerCss('_report', '
 
     <br />
 
-    <table style="width: 80%; margin: 0 auto; border-spacing: 0pt">
+    <table style="width: 100%; margin: 0 auto; border-spacing: 0pt">
         <thead>
             <tr>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Tanggal</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Jenis Transaksi</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Transaksi #</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Tanggal</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 5%">Db/Cr</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Transaksi #</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Nilai</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Saldo</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Nilai</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Saldo</th>
             </tr>
         </thead>
         
@@ -54,7 +54,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         </td>
                     </tr>
 
-                    <?php $receivableData = $header->getReceivableLedgerReport($startDate, $endDate); ?>
+                    <?php $receivableData = $header->getReceivableLedgerReport($startDate, $endDate, $branchId); ?>
                     <?php $positiveAmount = 0; ?>
                     <?php $negativeAmount = 0; ?>
                     <?php foreach ($receivableData as $receivableRow): ?>

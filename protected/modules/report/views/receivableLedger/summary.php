@@ -21,7 +21,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
-                                <table>
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch </span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
+                                </div>
+<!--                                <table>
                                     <thead>
                                         <tr>
                                             <td>Code</td>
@@ -33,7 +41,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                     <tbody>
                                         <tr>
-                                            <td><?php echo CHtml::activeTextField($account, 'code'); ?></td>
+                                            <td><?php /*echo CHtml::activeTextField($account, 'code'); ?></td>
                                             <td><?php echo CHtml::activeTextField($account, 'name'); ?></td>
 
                                             <td>
@@ -46,12 +54,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 <div id="sub_category">
                                                     <?php echo CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                                                         'empty' => '-- All --',
-                                                    )); ?>
+                                                    ));*/ ?>
                                                 </div>
                                             </td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </table>-->
 <!--                                <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">COA </span>
@@ -118,8 +126,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'receivableLedgerSummary' => $receivableLedgerSummary,
-//                        'jurnalUmum' => $jurnalUmum,
                         'account' => $account,
+                        'branchId' => $branchId,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>
