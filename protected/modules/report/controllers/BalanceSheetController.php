@@ -150,7 +150,7 @@ class BalanceSheetController extends Controller {
                 $counter++;$counter++;
             }
 
-            $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
             $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryAsset, 'name')));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryAssetBalance));
@@ -220,8 +220,10 @@ class BalanceSheetController extends Controller {
                                     $accountCategorySecondaryBalance += $accountCategoryBalance; 
                                 }
                                 
+                                $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                                $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                                 $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($coaCategorySecondary, 'name')));
-                                $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategorySecondaryBalance));
+                                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategorySecondaryBalance));
 
                                 $counter++;$counter++;
 
@@ -247,8 +249,10 @@ class BalanceSheetController extends Controller {
                             }
                         }
 
+                        $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                        $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                         $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategorySub, 'name')));
-                        $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategorySubBalance));
+                        $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategorySubBalance));
 
                         $counter++;$counter++;
                         
@@ -257,16 +261,20 @@ class BalanceSheetController extends Controller {
                     }
                 }
 
+                $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryPrimaryBalance));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryPrimaryBalance));
 
                 $counter++;
 
                 $accountCategoryLiabilityEquityBalance += $accountCategoryPrimaryBalance;
             }
                 
+            $worksheet->getStyle("B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode($accountCategoryLiabilityEquityBalance));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryLiabilityEquityBalance));
 
             $counter++;
         }
