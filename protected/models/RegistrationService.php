@@ -536,4 +536,30 @@ class RegistrationService extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getProfitLossDataByTransactionYear($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT substring(h.transaction_date, 1, 10) as transaction_date, d.service_type_id AS service_type_id, s.name AS service_type_name, COALESCE(COUNT(d.service_type_id), 0) AS total
+                FROM " . ServiceType::model()->tableName() . " s 
+                LEFT OUTER JOIN " . RegistrationService::model()->tableName() . " d ON s.id = r.service_type_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = d.registration_transaction_id
+                WHERE substring(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND s.is_deleted = 0 " . $branchConditionSql . "
+                GROUP BY substring(h.transaction_date, 1, 10), d.service_type_id
+                ORDER BY substring(h.transaction_date, 1, 10) ASC, s.name ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

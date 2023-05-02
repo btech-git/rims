@@ -139,7 +139,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.notes', $this->notes, true);
         $criteria->compare('t.payment_type', $this->payment_type, true);
         $criteria->compare('t.user_id', $this->user_id);
-        $criteria->compare('t.branch_id', $this->branch_id);
+//        $criteria->compare('t.branch_id', $this->branch_id);
         $criteria->compare('t.status', $this->status, true);
         $criteria->compare('t.company_bank_id', $this->company_bank_id);
         $criteria->compare('t.nomor_giro', $this->nomor_giro, true);
@@ -147,6 +147,10 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.bank_id', $this->bank_id);
         $criteria->compare('t.payment_type_id', $this->payment_type_id);
 
+//        $criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+        
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');
         $criteria->compare('purchaseOrder.purchase_order_no', $this->purchase_order_number, true);
@@ -211,8 +215,8 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('bank_id', $this->bank_id);
         $criteria->compare('payment_type_id', $this->payment_type_id);
 
-//        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-//        $criteria->params = array(':userId' => Yii::app()->user->id);
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');

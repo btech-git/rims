@@ -932,8 +932,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('carMake.name', $this->car_make_code, true);
         $criteria->compare('carModel.name', $this->car_model_code, true);
 
-        $criteria->addCondition("t.id IN (SELECT registration_transaction_id FROM " . InvoiceHeader::model()->tableName() . ")");
-//        $criteria->params = array(':userId' => Yii::app()->user->id);
+        $criteria->addCondition("t.id IN (SELECT registration_transaction_id FROM " . InvoiceHeader::model()->tableName() . ") AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
