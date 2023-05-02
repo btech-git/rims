@@ -32,7 +32,7 @@ class GeneralLedgerSummary extends CComponent {
     public function setupFilter($startDate, $endDate, $accountId) {
         $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
         $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', '2019-01-01', '2020-04-04');
+        $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
 
         $this->dataProvider->criteria->compare('t.id', '836');
     }

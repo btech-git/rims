@@ -43,7 +43,7 @@
                                         <label class="prefix">Branch</label>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAllByPk(Yii::app()->user->branch_ids, array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(UserBranch::model()->findAllByAttributes(array('users_id' => Yii::app()->user->id)), 'branch_id', 'branch.name'), array('empty' => '-- All --')); ?>
                                     </div>
                                 </div>
                             </div>

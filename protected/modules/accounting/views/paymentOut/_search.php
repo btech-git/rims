@@ -1,11 +1,14 @@
-<?php
-/* @var $this PaymentInController */
-/* @var $model PaymentIn */
-/* @var $form CActiveForm */
-?>
+<?php /*Yii::app()->clientScript->registerScript('report', '
+	$("#header").addClass("hide");
+	$("#mainmenu").addClass("hide");
+	$(".breadcrumbs").addClass("hide");
+	$("#footer").addClass("hide");
+
+	$("#StartDate").val("' . $startDate . '");
+	$("#EndDate").val("' . $endDate . '");
+');*/ ?>
 
 <div class="wide form" id="advSearch">
-
     <?php $form=$this->beginWidget('CActiveForm', array(
             'action'=>Yii::app()->createUrl($this->route),
             'method'=>'get',
@@ -43,19 +46,30 @@
                     <div class="small-4 columns">
                         <?php echo $form->label($model,'payment_date', array('class'=>'prefix')); ?>
                     </div>
-                    <div class="small-8 columns">
-                        <?php //echo $form->textField($model,'payment_date'); ?>
+                    <div class="small-4 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                            'model' => $model,
-                            'attribute' => "payment_date",
+                            'name' => 'StartDate',
+                            'attribute' => $startDate,
                             'options'=>array(
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
                                 'changeYear'=>true,
-                                'yearRange'=>'1900:2020'
                             ),
                             'htmlOptions'=>array(
-//                                'value'=>date('Y-m-d'),
+                                'readonly' => true,
+                            ),
+                        )); ?>
+                    </div>
+                    <div class="small-4 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                            'name' => 'EndDate',
+                            'attribute' => $endDate,
+                            'options'=>array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth'=>true,
+                                'changeYear'=>true,
+                            ),
+                            'htmlOptions'=>array(
                                 'readonly' => true,
                             ),
                         )); ?>

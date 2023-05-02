@@ -251,8 +251,11 @@ class PaymentOutController extends Controller {
 
     public function actionAdmin() {
         $paymentOut = Search::bind(new PaymentOut('search'), isset($_GET['PaymentOut']) ? $_GET['PaymentOut'] : array());
-        $supplierName = isset($_GET['SupplierName']) ? $_GET['SupplierName'] : '';
         $paymentApproval = PaymentOutApproval::model()->findByAttributes(array('payment_out_id' => $paymentOut->id));
+        
+        $supplierName = isset($_GET['SupplierName']) ? $_GET['SupplierName'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
         if (isset($_GET['pageSize'])) {
             Yii::app()->user->setState('pageSize', (int) $_GET['pageSize']);
@@ -260,7 +263,7 @@ class PaymentOutController extends Controller {
         }
 
         $dataProvider = $paymentOut->search();
-        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
         $dataProvider->criteria->with = array(
             'supplier',
             'paymentOutApprovals',
@@ -283,6 +286,8 @@ class PaymentOutController extends Controller {
             'paymentOut' => $paymentOut,
             'dataProvider' => $dataProvider,
             'supplierName' => $supplierName,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'receiveItem' => $receiveItem,
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'paymentApproval' => $paymentApproval,

@@ -1,4 +1,4 @@
-<?php /*Yii::app()->clientScript->registerScript('report', '
+<?php Yii::app()->clientScript->registerScript('report', '
 	$("#header").addClass("hide");
 	$("#mainmenu").addClass("hide");
 	$(".breadcrumbs").addClass("hide");
@@ -10,8 +10,8 @@
 	$("#CurrentPage").val("' . ($generalLedgerSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
 ');
-//Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
-*/ ?>
+// Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
+ ?>
 
 <div>
     <div class="form" style="text-align: center">
