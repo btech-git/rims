@@ -23,6 +23,7 @@ class ReceivableLedgerController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -42,6 +43,7 @@ class ReceivableLedgerController extends Controller {
         
         $this->render('summary', array(
             'account' => $account,
+            'branchId' => $branchId,
             'receivableLedgerSummary' => $receivableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
