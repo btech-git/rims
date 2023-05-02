@@ -157,7 +157,7 @@ class PaymentInController extends Controller {
             $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
             $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
 
-            $counter++; $counter++;
+            $counter++;
             $totalPayment += $paymentAmount;
         }
         
