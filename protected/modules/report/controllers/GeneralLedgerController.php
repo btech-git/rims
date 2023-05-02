@@ -216,6 +216,10 @@ class GeneralLedgerController extends Controller {
                 $totalCredit += $creditAmount;
                 $counter++;
             }
+                                
+            $worksheet->getStyle("D{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("D{$counter}:F{$counter}")->getFont()->setBold(true);
+            
             $worksheet->setCellValue("D{$counter}", 'TOTAL');
             $worksheet->setCellValue("E{$counter}", CHtml::encode($totalDebit));
             $worksheet->setCellValue("F{$counter}", CHtml::encode($totalCredit));
