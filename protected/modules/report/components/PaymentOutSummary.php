@@ -29,7 +29,7 @@ class PaymentOutSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->criteria->order = array('t.payment_date DESC', 't.payment_number ASC');
+        $this->dataProvider->criteria->order = 't.payment_date DESC';
     }
 
     public function setupFilter($startDate, $endDate, $branch, $paymentType) {
