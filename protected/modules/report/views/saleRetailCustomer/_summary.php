@@ -17,9 +17,10 @@ Yii::app()->clientScript->registerCss('_report', '
 <table class="report">
     <thead>
         <tr id="header1">
-            <th class="width1-1">Customer</th>
-            <th class="width1-2">Type</th>
-            <th class="width1-3">Total Sales</th>
+            <th class="width1-1">ID</th>
+            <th class="width1-2">Customer</th>
+            <th class="width1-3">Type</th>
+            <th class="width1-4">Total Sales</th>
         </tr>
     </thead>
     
