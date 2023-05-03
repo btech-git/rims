@@ -16,7 +16,7 @@ class PayableSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 1000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 5000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -29,7 +29,11 @@ class PayableSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter() {
+    public function setupFilter($supplierId) {
+        if (!empty($supplierId)) {
+            $this->dataProvider->criteria->compare('t.id', $supplierId);
+        }
+        
         $this->dataProvider->criteria->addCondition('transactionPurchaseOrders.payment_left > 10.0');
     }
 }

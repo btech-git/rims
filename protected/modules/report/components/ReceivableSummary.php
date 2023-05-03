@@ -16,7 +16,7 @@ class ReceivableSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 1000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 5000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -29,9 +29,11 @@ class ReceivableSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter() {
+    public function setupFilter($customerId) {
+        if (!empty($customerId)) {
+            $this->dataProvider->criteria->compare('t.id', $customerId);
+        }
+        
         $this->dataProvider->criteria->addCondition('invoiceHeaders.payment_left > 10.0');
-//        $this->dataProvider->criteria->compare('vehicle.plate_number', $filters['plateNumber'], TRUE);
-//        $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType'], false);
     }
 }
