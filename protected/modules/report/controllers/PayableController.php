@@ -30,12 +30,20 @@ class PayableController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-
-        $payableSummary = new PayableSummary($supplierDataProvider);
+        $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
+        
+        $supplierReport = new Supplier('search');
+        $supplierReport->unsetAttributes();  // clear any default values
+        
+        if (isset($_GET['Supplier'])) {
+            $supplierReport->attributes = $_GET['Supplier'];
+        }
+        
+        $payableSummary = new PayableSummary($supplierReport->searchByPayableReport());
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();
-        $payableSummary->setupFilter();
+        $payableSummary->setupFilter($supplierId);
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($payableSummary);
@@ -45,14 +53,15 @@ class PayableController extends Controller {
             'payableSummary' => $payableSummary,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
+            'supplierId' => $supplierId,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
         ));
     }
 
-    public function actionAjaxJsonSupplier($id) {
+    public function actionAjaxJsonSupplier() {
         if (Yii::app()->request->isAjaxRequest) {
-            $supplierId = (isset($_POST['TransactionPurchaseOrder']['supplier_id'])) ? $_POST['TransactionPurchaseOrder']['supplier_id'] : '';
+            $supplierId = (isset($_POST['SupplierId'])) ? $_POST['SupplierId'] : '';
             $supplier = Supplier::model()->findByPk($supplierId);
 
             $object = array(
@@ -157,6 +166,7 @@ class PayableController extends Controller {
             ->setAutoSize(true);
         }
 
+        ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Hutang Supplier.xls"');

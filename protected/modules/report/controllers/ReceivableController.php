@@ -29,12 +29,20 @@ class ReceivableController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
 
-        $receivableSummary = new ReceivableSummary($customerDataProvider);
+        $customerReport = new Customer('search');
+        $customerReport->unsetAttributes();  // clear any default values
+        
+        if (isset($_GET['Customer'])) {
+            $customerReport->attributes = $_GET['Customer'];
+        }
+        
+        $receivableSummary = new ReceivableSummary($customerReport->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
-        $receivableSummary->setupFilter();
+        $receivableSummary->setupFilter($customerId);
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($receivableSummary);
@@ -43,15 +51,16 @@ class ReceivableController extends Controller {
         $this->render('summary', array(
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
+            'customerId' => $customerId,
             'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
         ));
     }
 
-    public function actionAjaxJsonCustomer($id) {
+    public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
-            $customerId = (isset($_POST['InvoiceHeader']['customer_id'])) ? $_POST['InvoiceHeader']['customer_id'] : '';
+            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
             $customer = Customer::model()->findByPk($customerId);
 
             $object = array(
