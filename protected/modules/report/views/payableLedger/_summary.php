@@ -42,7 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($payableLedgerSummary->dataProvider->data as $header): ?>
                 <?php $payableAmount = $header->getPayableAmount(); ?>
-                <?php if ($payableAmount !== 0.00): ?>
+                <?php if ($payableAmount !== 0): ?>
                     <tr class="items1">
                         <td colspan="5">
                             <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
