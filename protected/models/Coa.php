@@ -810,6 +810,93 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
+    public function getPayableAmount() {
+        $params = array(
+            ':coa_id' => $this->id,
+        );
+        
+        $sql = "SELECT SUM(j.debet) - SUM(j.credit) as balance
+                FROM (
+                    SELECT coa_id, SUM(total) as debet, 0 AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    GROUP BY coa_id
+                    UNION
+                    SELECT coa_id, 0 as debet, SUM(total) AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    GROUP BY coa_id
+                ) j
+                GROUP BY j.coa_id
+                HAVING balance <> 0.00";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+        
+    }
+    
+    public function getBeginningBalancePayable($startDate) {
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+        );
+        
+        $sql = "SELECT SUM(j.debet) - SUM(j.credit) as balance
+                FROM (
+                    SELECT coa_id, SUM(total) as debet, 0 AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    GROUP BY coa_id
+                    UNION
+                    SELECT coa_id, 0 as debet, SUM(total) AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    GROUP BY coa_id
+                ) j
+                GROUP BY j.coa_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+        
+    }
+    
+    public function getPayableLedgerReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT kode_transaksi, tanggal_transaksi, transaction_type, remark, amount, purchase_amount, payment_amount, supplier
+                FROM (
+                    SELECT j.coa_id, SUM(total) AS amount, SUM(total) AS purchase_amount, 0 AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS supplier
+                    FROM " . JurnalUmum::model()->tableName() . " j
+                    INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'D'" . $branchConditionSql .
+                    " GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
+                    UNION
+                    SELECT j.coa_id, SUM(total) AS amount, 0 AS purchase_amount, SUM(total) AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS supplier
+                    FROM " . JurnalUmum::model()->tableName() . " j
+                    INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'K'" . $branchConditionSql .
+                    " GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
+                ) t
+                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
     public function getCodeName() {
         return $this->code . ' - ' . $this->name;
     }
