@@ -20,7 +20,7 @@ class SaleRetailProductSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 100 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 1000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
