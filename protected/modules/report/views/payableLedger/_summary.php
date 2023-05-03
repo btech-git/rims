@@ -62,7 +62,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $purchaseAmount = $payableRow['purchase_amount']; ?>
                         <?php $paymentAmount = $payableRow['payment_amount']; ?>
                         <?php $amount = $payableRow['amount']; ?>
-                        <?php if ($receivableRow['transaction_type'] == 'K'): ?>
+                        <?php if ($payableRow['transaction_type'] == 'K'): ?>
                             <?php $saldo += $amount; ?>
                         <?php else: ?>
                             <?php $saldo -= $amount; ?>
