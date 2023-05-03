@@ -98,6 +98,5 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php endif; ?>
             <?php endforeach; ?>
         </tbody>
-        
     </table>
 </div>

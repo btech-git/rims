@@ -23,7 +23,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
+                                        <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
@@ -84,6 +84,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'StartDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -97,6 +99,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'EndDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
