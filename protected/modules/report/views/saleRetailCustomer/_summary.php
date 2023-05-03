@@ -1,8 +1,9 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 25% }
-    .width1-2 { width: 20% }
-    .width1-3 { width: 25% }
+    .width1-1 { width: 10% }
+    .width1-2 { width: 25% }
+    .width1-3 { width: 20% }
+    .width1-4 { width: 25% }
 ');
 ?>
 
@@ -27,9 +28,10 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php foreach ($saleRetailCustomerSummary->dataProvider->data as $header): ?>
             <?php $grandTotal = $header->getTotalSales($startDate, $endDate); ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></td>
-                <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></td>
+                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
             </tr>
             <?php $totalSale += $grandTotal; ?>
         <?php endforeach; ?>
@@ -37,7 +39,7 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="2">Total</td>
+            <td style="text-align: right" colspan="3">Total</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
         </tr>
     </tfoot>
