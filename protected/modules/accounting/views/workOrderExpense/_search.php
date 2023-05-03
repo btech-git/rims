@@ -32,18 +32,37 @@
                         <?php echo $form->label($model,'transaction_date', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                            'model' => $model,
-                            'attribute' => "transaction_date",
-                            'options'=>array(
-                                'dateFormat' => 'yy-mm-dd',
-                                'changeMonth'=>true,
-                                'changeYear'=>true,
-                            ),
-                            'htmlOptions'=>array(
-                                'readonly' => true,
-                            ),
-                        )); ?>
+                        <div class="medium-5 columns">
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                'name' => 'StartDate',
+                                'attribute' => $startDate,
+                                'options'=>array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth'=>true,
+                                    'changeYear'=>true,
+                                ),
+                                'htmlOptions'=>array(
+                                    'readonly' => true,
+                                ),
+                            )); ?>
+                        </div>
+                        <div class="medium-2 columns" style="text-align: center; vertical-align: middle">
+                            S/D
+                        </div>
+                        <div class="medium-5 columns">
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                'name' => 'EndDate',
+                                'attribute' => $endDate,
+                                'options'=>array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth'=>true,
+                                    'changeYear'=>true,
+                                ),
+                                'htmlOptions'=>array(
+                                    'readonly' => true,
+                                ),
+                            )); ?>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -63,6 +63,8 @@ $('.search-form form').submit(function(){
                             'model' => $model,
                             'customerType' => $customerType,
                             'plateNumber' => $plateNumber,
+                            'startDate' => $startDate,
+                            'endDate' => $endDate,
                         )); ?>
                     </div><!-- search-form -->
                 </div>

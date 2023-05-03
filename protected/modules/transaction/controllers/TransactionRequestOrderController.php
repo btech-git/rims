@@ -1300,13 +1300,19 @@ class TransactionRequestOrderController extends Controller
         if (isset($_GET['TransactionRequestOrder'])) {
             $model->attributes = $_GET['TransactionRequestOrder'];
         }
+        
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addBetweenCondition('t.request_order_date', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

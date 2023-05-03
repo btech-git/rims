@@ -624,15 +624,21 @@ class TransactionSalesOrderController extends Controller {
     public function actionAdmin() {
         $model = new TransactionSalesOrder('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionSalesOrder']))
+        if (isset($_GET['TransactionSalesOrder'])) {
             $model->attributes = $_GET['TransactionSalesOrder'];
+        } 
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addBetweenCondition('t.sale_order_date', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

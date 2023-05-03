@@ -100,12 +100,18 @@ class JournalAdjustmentController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        
         $journalAdjustmentHeader = Search::bind(new JournalAdjustmentHeader('search'), isset($_GET['JournalAdjustmentHeader']) ? $_GET['JournalAdjustmentHeader'] : array());
         $journalAdjustmentHeaderDataProvider = $journalAdjustmentHeader->searchByAdmin();
+        $journalAdjustmentHeaderDataProvider->criteria->addBetweenCondition('t.date', $startDate, $endDate);
         
         $this->render('admin', array(
             'journalAdjustmentHeader' => $journalAdjustmentHeader,
             'journalAdjustmentHeaderDataProvider' => $journalAdjustmentHeaderDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

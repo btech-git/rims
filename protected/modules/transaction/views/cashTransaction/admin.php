@@ -52,6 +52,8 @@ $('.search-form form').submit(function(){
                         <?php $this->renderPartial('_search', array(
                             'model' => $model,
                             'user' => $user,
+                            'startDate' => $startDate,
+                            'endDate' => $endDate,
                         )); ?>
                     </div><!-- search-form -->
                 </div>

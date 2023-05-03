@@ -197,6 +197,9 @@ class WorkOrderExpenseController extends Controller {
 
     public function actionAdmin() {
         $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
+        
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
         if (isset($_GET['pageSize'])) {
             Yii::app()->user->setState('pageSize', (int) $_GET['pageSize']);
@@ -207,10 +210,13 @@ class WorkOrderExpenseController extends Controller {
         $dataProvider->criteria->with = array(
             'registrationTransaction',
         );
+        $dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
 
         $this->render('admin', array(
             'paymentOut' => $workOrderExpense,
             'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

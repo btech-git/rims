@@ -41,17 +41,20 @@ Yii::app()->clientScript->registerScript('search', "
                 <div class="page-size-wrap">
                     <span>Display by:</span><?php echo $pageSizeDropDown; ?>
                 </div>
-<!--                <div class="search-bar">
+                
+                <div class="search-bar">
                     <div class="clearfix button-bar">
-                        <?php /*echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>
+                        <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>
                         <div class="clearfix"></div>
                         <div class="search-form" style="display:none">
                             <?php $this->renderPartial('_search', array(
                                 'model' => $journalAdjustmentHeader,
-                            )); */ ?>
-                        </div> search-form 
+                                'startDate' => $startDate,
+                                'endDate' => $endDate,
+                            )); ?>
+                        </div>
                     </div>
-                </div>-->
+                </div>
             </center>
 
             <div class="grid-view">

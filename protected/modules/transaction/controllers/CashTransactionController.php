@@ -317,14 +317,18 @@ class CashTransactionController extends Controller {
             $model->attributes = $_GET['CashTransaction'];
         
         $user = Users::model()->findByPk(Yii::app()->user->getId());
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         
         $cashInTransactionDataProvider = $model->search();
         $cashInTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
         $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In" ');
+        $cashInTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
 
         $cashOutTransactionDataProvider = $model->search();
         $cashOutTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
         $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out" ');
+        $cashOutTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
         
 //        if ((int) $user->branch_id != 6) {
 //            $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = ' . $user->branch_id);
@@ -336,6 +340,8 @@ class CashTransactionController extends Controller {
             'user' => $user,
             'cashInTransactionDataProvider' => $cashInTransactionDataProvider,
             'cashOutTransactionDataProvider' => $cashOutTransactionDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

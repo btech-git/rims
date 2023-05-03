@@ -453,6 +453,8 @@ class PaymentInController extends Controller {
         $invoice->unsetAttributes();
         
         $plateNumberInvoice = isset($_GET['PlateNumberInvoice']) ? $_GET['PlateNumberInvoice'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         
         if (isset($_GET['InvoiceHeader'])) {
             $invoice->attributes = $_GET['InvoiceHeader'];
@@ -488,6 +490,7 @@ class PaymentInController extends Controller {
             $model->attributes = $_GET['PaymentIn'];
         
         $dataProvider = $model->search();
+        $dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
         $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
         $dataProvider->criteria->with = array(
             'customer',
@@ -517,6 +520,8 @@ class PaymentInController extends Controller {
             'plateNumber' => $plateNumber,
             'plateNumberInvoice' => $plateNumberInvoice,
             'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 
