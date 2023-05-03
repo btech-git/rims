@@ -51,6 +51,40 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
+                                    <div class="small-2 columns">
+                                        <span class="prefix">Tanggal </span>
+                                    </div>
+                                    <div class="small-5 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
+                                    </div>
+
+                                    <div class="small-5 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Sampai',
+                                            ),
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Product</span>
                                     </div>
@@ -281,56 +315,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php echo CHtml::encode(CHtml::value($product, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?> 
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-<!--                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::activeDropDownlist($customer, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company'), array('empty' => '-- All Type --')); ?>
-                                    </div>
-                                </div>
-                            </div>-->
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <span class="prefix">Tanggal </span>
-                                    </div>
-                                    <div class="small-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'StartDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Mulai',
-                                            ),
-                                        )); ?>
-                                    </div>
-
-                                    <div class="small-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'EndDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Sampai',
-                                            ),
-                                        )); ?>
                                     </div>
                                 </div>
                             </div>
