@@ -26,6 +26,7 @@ class PurchaseSummaryController extends Controller {
 
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();
+        $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -33,7 +34,7 @@ class PurchaseSummaryController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchaseSummary = new PurchaseSummary($supplierDataProvider);
+        $purchaseSummary = new PurchaseSummary($supplier->search());
         $purchaseSummary->setupLoading();
         $purchaseSummary->setupPaging($pageSize, $currentPage);
         $purchaseSummary->setupSorting();

@@ -26,20 +26,14 @@ class PayableController extends Controller {
 
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();
+        $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
         
-        $supplierReport = new Supplier('search');
-        $supplierReport->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['Supplier'])) {
-            $supplierReport->attributes = $_GET['Supplier'];
-        }
-        
-        $payableSummary = new PayableSummary($supplierReport->searchByPayableReport());
+        $payableSummary = new PayableSummary($supplier->search());
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();

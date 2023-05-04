@@ -25,6 +25,7 @@ class SaleRetailController extends Controller {
 
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -32,7 +33,7 @@ class SaleRetailController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $saleRetailSummary = new SaleRetailSummary($customerDataProvider);
+        $saleRetailSummary = new SaleRetailSummary($customer->search());
         $saleRetailSummary->setupLoading();
         $saleRetailSummary->setupPaging($pageSize, $currentPage);
         $saleRetailSummary->setupSorting();

@@ -25,6 +25,7 @@ class SaleRetailServiceController extends Controller {
 
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : array());
         $serviceDataProvider = $service->search();
+        $serviceDataProvider->pagination->pageVar = 'page_dialog';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -32,7 +33,7 @@ class SaleRetailServiceController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $saleRetailServiceSummary = new SaleRetailServiceSummary($serviceDataProvider);
+        $saleRetailServiceSummary = new SaleRetailServiceSummary($service->search());
         $saleRetailServiceSummary->setupLoading();
         $saleRetailServiceSummary->setupPaging($pageSize, $currentPage);
         $saleRetailServiceSummary->setupSorting();

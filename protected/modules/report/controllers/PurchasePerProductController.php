@@ -26,6 +26,7 @@ class PurchasePerProductController extends Controller {
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
+        $productDataProvider->pagination->pageVar = 'page_dialog';
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -33,7 +34,7 @@ class PurchasePerProductController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchasePerProductSummary = new PurchasePerProductSummary($productDataProvider);
+        $purchasePerProductSummary = new PurchasePerProductSummary($product->search());
         $purchasePerProductSummary->setupLoading();
         $purchasePerProductSummary->setupPaging($pageSize, $currentPage);
         $purchasePerProductSummary->setupSorting();
