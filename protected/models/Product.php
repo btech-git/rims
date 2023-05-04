@@ -365,55 +365,55 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
-//    public function searchByStockCheck($pageNumber) {
-//
-//        $criteria = new CDbCriteria;
-//
-//        $criteria->compare('t.id', $this->id);
-//        $criteria->compare('t.code', $this->code, true);
-//        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
-//        $criteria->compare('t.name', $this->name, true);
-//        $criteria->compare('t.brand_id', $this->brand_id);
-//        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
-//        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
-//        $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
-//        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
-//        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
-//        $criteria->compare('t.unit_id', $this->unit_id);
-//
-//        return new CActiveDataProvider($this, array(
-//            'criteria' => $criteria,
-//            'pagination' => array(
-//                'pageSize' => 500,
-//                'currentPage' => $pageNumber - 1,
-//            ),
-//        ));
-//    }
+    public function searchByStockCheck($pageNumber) {
 
-//    public function getInventoryTotalQuantities() {
-//        $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
-//                FROM " . Inventory::model()->tableName() . " i
-//                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-//                WHERE i.product_id = :product_id 
-//                GROUP BY w.branch_id";
-//
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
-//
-//        return $resultSet;
-//    }
-//
-//    public function getInventoryCostOfGoodsSold() {
-//        $sql = "SELECT w.branch_id, p.hpp AS cogs
-//                FROM " . Inventory::model()->tableName() . " i
-//                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-//                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
-//                WHERE i.product_id = :product_id 
-//                GROUP BY w.branch_id";
-//
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
-//
-//        return $resultSet;
-//    }
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.brand_id', $this->brand_id);
+        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
+        $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
+        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
+        $criteria->compare('t.unit_id', $this->unit_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $pageNumber - 1,
+            ),
+        ));
+    }
+
+    public function getInventoryTotalQuantities() {
+        $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
+                FROM " . Inventory::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE i.product_id = :product_id 
+                GROUP BY w.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
+
+        return $resultSet;
+    }
+
+    public function getInventoryCostOfGoodsSold() {
+        $sql = "SELECT w.branch_id, p.hpp AS cogs
+                FROM " . Inventory::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                WHERE i.product_id = :product_id 
+                GROUP BY w.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
+
+        return $resultSet;
+    }
 
     public function getRetailPriceTax() {
         return $this->retail_price * 10 / 100;

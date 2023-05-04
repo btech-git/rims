@@ -204,7 +204,7 @@ class Customer extends CActiveRecord {
                 ),
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             ),
         ));
     }
