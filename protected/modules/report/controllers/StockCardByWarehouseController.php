@@ -147,6 +147,7 @@ class StockCardByWarehouseController extends Controller {
             $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
         }
     }
+    
     protected function saveToExcel($stockCardSummary, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -225,6 +226,7 @@ class StockCardByWarehouseController extends Controller {
             
             }
             
+            $worksheet->getStyle("D{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
             $worksheet->setCellValue("D{$counter}", 'TOTAL');
             $worksheet->setCellValue("E{$counter}", CHtml::encode($totalStockIn));
             $worksheet->setCellValue("F{$counter}", CHtml::encode($totalStockOut));

@@ -29,16 +29,20 @@ class BalanceSheetMonthlyController extends Controller {
         $endYearMonth = (isset($_GET['EndYearMonth'])) ? $_GET['EndYearMonth'] : $yearMonthNow;
         
         $balanceSheetInfo = array();
+        $balanceSheetInfo['1'] = array();
+        $balanceSheetInfo['2'] = array();
+        $balanceSheetInfo['3'] = array();
         $balanceSheetData = JurnalUmum::getBalanceSheetDataByTransactionYear($startYearMonth, $endYearMonth, $branchId);
         foreach ($balanceSheetData as $balanceSheetItem) {
-            $balanceSheetInfo[$balanceSheetItem['category_id']]['code'] = $balanceSheetItem['category_code'];
-            $balanceSheetInfo[$balanceSheetItem['category_id']]['name'] = $balanceSheetItem['category_name'];
-            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['code'] = $balanceSheetItem['sub_category_code'];
-            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['name'] = $balanceSheetItem['sub_category_name'];
-            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['code'] = $balanceSheetItem['coa_code'];
-            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['name'] = $balanceSheetItem['coa_name'];
-            if (!isset($balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']])) {
-                $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] = '0.00';
+            $elementNumber = substr($balanceSheetItem['coa_code'], 0, 1);
+            $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['code'] = $balanceSheetItem['category_code'];
+            $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['name'] = $balanceSheetItem['category_name'];
+            $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['code'] = $balanceSheetItem['sub_category_code'];
+            $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['name'] = $balanceSheetItem['sub_category_name'];
+            $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['code'] = $balanceSheetItem['coa_code'];
+            $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['name'] = $balanceSheetItem['coa_name'];
+            if (!isset($balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']])) {
+                $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] = '0.00';
             }
             $amount = '0.00';
             if (strtoupper($balanceSheetItem['debet_kredit']) === 'D' && strtolower($balanceSheetItem['normal_balance']) === 'debit') {
@@ -50,7 +54,7 @@ class BalanceSheetMonthlyController extends Controller {
             } else if (strtoupper($balanceSheetItem['debet_kredit']) === 'K' && strtolower($balanceSheetItem['normal_balance']) === 'kredit') {
                 $amount = +$balanceSheetItem['total'];
             }
-            $balanceSheetInfo[$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] += $amount;
+            $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] += $amount;
         }
 
         if (isset($_GET['SaveExcel'])) {

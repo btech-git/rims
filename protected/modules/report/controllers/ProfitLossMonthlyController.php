@@ -29,16 +29,23 @@ class ProfitLossMonthlyController extends Controller {
         $endYearMonth = (isset($_GET['EndYearMonth'])) ? $_GET['EndYearMonth'] : $yearMonthNow;
         
         $profitLossInfo = array();
+        $profitLossInfo['4'] = array();
+        $profitLossInfo['5'] = array();
+        $profitLossInfo['5*'] = array();
+        $profitLossInfo['6'] = array(); 
+        $profitLossInfo['7'] = array();
+        $profitLossInfo['8'] = array();
         $profitLossData = JurnalUmum::getProfitLossDataByTransactionYear($startYearMonth, $endYearMonth, $branchId);
         foreach ($profitLossData as $profitLossItem) {
-            $profitLossInfo[$profitLossItem['category_id']]['code'] = $profitLossItem['category_code'];
-            $profitLossInfo[$profitLossItem['category_id']]['name'] = $profitLossItem['category_name'];
-            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['code'] = $profitLossItem['sub_category_code'];
-            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['name'] = $profitLossItem['sub_category_name'];
-            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['code'] = $profitLossItem['coa_code'];
-            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['name'] = $profitLossItem['coa_name'];
-            if (!isset($profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']])) {
-                $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] = '0.00';
+            $elementNumber = substr($profitLossItem['coa_code'], 0, 1);
+            $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['code'] = $profitLossItem['category_code'];
+            $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['name'] = $profitLossItem['category_name'];
+            $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['code'] = $profitLossItem['sub_category_code'];
+            $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['name'] = $profitLossItem['sub_category_name'];
+            $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['code'] = $profitLossItem['coa_code'];
+            $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['name'] = $profitLossItem['coa_name'];
+            if (!isset($profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']])) {
+                $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] = '0.00';
             }
             $amount = '0.00';
             if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'debit') {
@@ -50,7 +57,7 @@ class ProfitLossMonthlyController extends Controller {
             } else if (strtoupper($profitLossItem['debet_kredit']) === 'K' && strtolower($profitLossItem['normal_balance']) === 'kredit') {
                 $amount = +$profitLossItem['total'];
             }
-            $profitLossInfo[$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] += $amount;
+            $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] += $amount;
         }
 
         if (isset($_GET['SaveExcel'])) {

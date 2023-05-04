@@ -25,20 +25,14 @@ class ReceivableController extends Controller {
 
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
 
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
-
-        $customerReport = new Customer('search');
-        $customerReport->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Customer'])) {
-            $customerReport->attributes = $_GET['Customer'];
-        }
-        
-        $receivableSummary = new ReceivableSummary($customerReport->search());
+        $receivableSummary = new ReceivableSummary($customer->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
