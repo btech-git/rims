@@ -38,7 +38,11 @@ class ReceivableLedgerController extends Controller {
         $receivableLedgerSummary->setupFilter();
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($receivableLedgerSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate, 
+                'branchId' => $branchId,
+            ));
         }
         
         $this->render('summary', array(
@@ -120,7 +124,7 @@ class ReceivableLedgerController extends Controller {
                 
                 $counter++;
                 
-                $receivableData = $header->getReceivableLedgerReport($startDate, $endDate);
+                $receivableData = $header->getReceivableLedgerReport($startDate, $endDate, $options['branchId']);
                 $positiveAmount = 0; 
                 $negativeAmount = 0;
                 

@@ -38,7 +38,11 @@ class PayableLedgerController extends Controller {
         $payableLedgerSummary->setupFilter();
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($payableLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($payableLedgerSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate,
+                'branchId' => $branchId,
+            ));
         }
         
         $this->render('summary', array(
@@ -118,7 +122,7 @@ class PayableLedgerController extends Controller {
                 
                 $counter++;
                 
-                $payableData = $header->getPayableLedgerReport($startDate, $endDate);
+                $payableData = $header->getPayableLedgerReport($startDate, $endDate, $options['branchId']);
                 $positiveAmount = 0; 
                 $negativeAmount = 0;
                 
@@ -126,11 +130,15 @@ class PayableLedgerController extends Controller {
                     $purchaseAmount = $payableRow['purchase_amount'];
                     $paymentAmount = $payableRow['payment_amount'];
                     $amount = $payableRow['amount'];
-                    $saldo += $amount;
+                    if ($payableRow['transaction_type'] == 'K') {
+                        $saldo += $amount;
+                    } else {
+                        $saldo -= $amount;
+                    }
                     
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode($payableRow['transaction_date']));
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode($payableRow['tanggal_transaksi']));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode($payableRow['transaction_type']));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($payableRow['transaction_number']));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode($payableRow['kode_transaksi']));
                     $worksheet->setCellValue("D{$counter}", CHtml::encode($payableRow['remark']));
                     $worksheet->setCellValue("E{$counter}", CHtml::encode($amount));
                     $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
