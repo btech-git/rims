@@ -131,58 +131,90 @@ class BalanceSheetMonthlyController extends Controller {
             
             $counter = 7;
 
-            foreach ($balanceSheetInfo as $categoryInfo) {
-                $worksheet->setCellValue("A{$counter}", $categoryInfo['code'] . " - " . $categoryInfo['name']);
-                $counter++;
-                
-                $categoryTotalSums = array();
-                foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                    $categoryTotalSums[$yearMonth] = '0.00';
-                }
-                foreach ($categoryInfo['sub_categories'] as $subCategoryInfo) {
-                    $worksheet->setCellValue("A{$counter}", $subCategoryInfo['code'] . " - " . $subCategoryInfo['name']);
+            $elementNames = array('1' => 'Aktiva', '2' => 'Kewajiban', '3' => 'Ekuitas');
+            $elementsTotalSums = array();
+            foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                $elementsTotalSums['1'][$yearMonth] = '0.00';
+                $elementsTotalSums['2'][$yearMonth] = '0.00';
+                $elementsTotalSums['3'][$yearMonth] = '0.00';
+            }
+            foreach ($balanceSheetInfo as $elementNumber => $balanceSheetElementInfo) {
+                foreach ($balanceSheetElementInfo as $categoryInfo) {
+                    $worksheet->setCellValue("A{$counter}", $categoryInfo['code'] . " - " . $categoryInfo['name']);
                     $counter++;
-                    
-                    $subCategoryTotalSums = array();
+
+                    $categoryTotalSums = array();
                     foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                        $subCategoryTotalSums[$yearMonth] = '0.00';
+                        $categoryTotalSums[$yearMonth] = '0.00';
                     }
-                    
-                    foreach ($subCategoryInfo['accounts'] as $accountInfo) {
-                        $column = 'B'; 
-                        $worksheet->setCellValue("A{$counter}", $accountInfo['code'] . " - " . $accountInfo['name']);
+                    foreach ($categoryInfo['sub_categories'] as $subCategoryInfo) {
+                        $worksheet->setCellValue("A{$counter}", $subCategoryInfo['code'] . " - " . $subCategoryInfo['name']);
+                        $counter++;
+
+                        $subCategoryTotalSums = array();
                         foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                            $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '';
-                            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($balance));
+                            $subCategoryTotalSums[$yearMonth] = '0.00';
+                        }
+
+                        foreach ($subCategoryInfo['accounts'] as $accountInfo) {
+                            $column = 'B'; 
+                            $worksheet->setCellValue("A{$counter}", $accountInfo['code'] . " - " . $accountInfo['name']);
+                            foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                                $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '';
+                                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($balance));
+                                $column++;
+                                $subCategoryTotalSums[$yearMonth] += $balance;
+                            }
+                            $counter++;
+
+                        }
+
+                        $column = 'B'; 
+                        $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        $worksheet->setCellValue("A{$counter}", "Total " . $subCategoryInfo['name']);
+                        foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($subCategoryTotalSums[$yearMonth]));
                             $column++;
-                            $subCategoryTotalSums[$yearMonth] += $balance;
                         }
                         $counter++;
-                        
+                        foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                            $categoryTotalSums[$yearMonth] += $subCategoryTotalSums[$yearMonth];
+                        }
                     }
-                    
+
                     $column = 'B'; 
                     $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $worksheet->setCellValue("A{$counter}", "Total " . $subCategoryInfo['name']);
+                    $worksheet->setCellValue("A{$counter}", "Total " . $categoryInfo['name']);
                     foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                        $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($subCategoryTotalSums[$yearMonth]));
+                        $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($categoryTotalSums[$yearMonth]));
                         $column++;
                     }
                     $counter++;
+                    
                     foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                        $categoryTotalSums[$yearMonth] += $subCategoryTotalSums[$yearMonth];
+                        $elementsTotalSums[$elementNumber][$yearMonth] += $categoryTotalSums[$yearMonth];
                     }
                 }
-                
+
                 $column = 'B'; 
                 $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                $worksheet->setCellValue("A{$counter}", "Total " . $categoryInfo['name']);
+                $worksheet->setCellValue("A{$counter}", "Total " . $elementNames[$elementNumber]);
                 foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                    $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($categoryTotalSums[$yearMonth]));
+                    $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($elementsTotalSums[$elementNumber][$yearMonth]));
                     $column++;
                 }
                 $counter++;
+
             }
+
+            $column = 'B'; 
+            $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->setCellValue("A{$counter}", "Total Kewajiban & Ekuitas");
+            foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($elementsTotalSums['2'][$yearMonth] + $elementsTotalSums['3'][$yearMonth]));
+                $column++;
+            }
+            $counter++;
         }
         
         for ($col = 'A'; $col !== 'H'; $col++) {
