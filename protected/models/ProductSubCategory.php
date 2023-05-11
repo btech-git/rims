@@ -172,6 +172,38 @@ class ProductSubCategory extends CActiveRecord {
         ));
     }
 
+    public function getInventoryTotalQuantityData($productMasterCategoryId, $productSubMasterCategoryId) {
+        $productMasterCategoryConditionSql = '';
+        $productSubMasterCategoryConditionSql = '';
+
+        $params = array();
+        
+        if (!empty($productMasterCategoryConditionSql)) {
+            $productMasterCategoryConditionSql = ' AND mc.id = :product_master_category_id';
+            $params[':product_master_category_id'] = $productMasterCategoryId;
+        }
+        
+        if (!empty($productSubMasterCategoryConditionSql)) {
+            $productSubMasterCategoryConditionSql = ' AND sm.id = :product_sub_master_category_id';
+            $params[':product_sub_master_category_id'] = $productSubMasterCategoryId;
+        }
+                
+        $sql = "SELECT p.product_sub_category_id, w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
+                FROM " . Inventory::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                INNER JOIN " . ProductSubCategory::model()->tableName() . " s ON s.id = p.product_sub_category_id
+                INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " sm ON sm.id = s.product_sub_master_category
+                INNER JOIN " . ProductMasterCategory::model()->tableName() . " mc ON mc.id = sm.product_master_category_id
+                WHERE s.status = 'Active'" . $productMasterCategoryConditionSql . $productSubMasterCategoryConditionSql . "
+                GROUP BY p.product_sub_category_id, w.branch_id
+                ORDER BY p.product_sub_category_id ASC, w.branch_id ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+
     public function getInventoryTotalQuantities() {
         $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
                 FROM " . Inventory::model()->tableName() . " i

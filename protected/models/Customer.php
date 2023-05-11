@@ -330,16 +330,17 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getReceivableReport() {
+    public function getReceivableReport($endDate) {
         $sql = "
             SELECT invoice_number, invoice_date, due_date, v.plate_number AS vehicle, COALESCE(p.total_price, 0) AS total_price, COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left 
             FROM " . InvoiceHeader::model()->tableName() . " p 
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
-            WHERE p.customer_id = :customer_id AND payment_left > 10.00
+            WHERE p.customer_id = :customer_id AND payment_left > 10.00 AND invoice_date <= :end_date
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':customer_id' => $this->id,
+            ':end_date' => $endDate,
         ));
 
         return $resultSet;
