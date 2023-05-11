@@ -48,7 +48,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -288,21 +287,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         </div>
                         
                         <div class="medium-6 columns">
-<!--                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::activeDropDownlist($customer, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company'), array('empty' => '-- All Type --')); ?>
-                                    </div>
-                                </div>
-                            </div>-->
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
@@ -369,10 +353,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 <br/>
 
 <div class="right">
-    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
         'itemCount' => $saleRetailProductSummary->dataProvider->pagination->itemCount,
         'pageSize' => $saleRetailProductSummary->dataProvider->pagination->pageSize,
         'currentPage' => $saleRetailProductSummary->dataProvider->pagination->getCurrentPage(false),
-    )); ?>
+    ));*/ ?>
 </div>
 <div class="clear"></div>

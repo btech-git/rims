@@ -33,7 +33,6 @@
             <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                 <?php $elementsTotalSums['4'][$yearMonth] = '0.00'; ?>
                 <?php $elementsTotalSums['5'][$yearMonth] = '0.00'; ?>
-                <?php $elementsTotalSums['5*'][$yearMonth] = '0.00'; ?>
                 <?php $elementsTotalSums['6'][$yearMonth] = '0.00'; ?>
                 <?php $elementsTotalSums['7'][$yearMonth] = '0.00'; ?>
                 <?php $elementsTotalSums['8'][$yearMonth] = '0.00'; ?>
@@ -45,6 +44,15 @@
                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                             <td style="text-align: right; font-weight: bold; font-size: 20px;">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $elementsTotalSums['4'][$yearMonth] - $elementsTotalSums['5'][$yearMonth])); ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php elseif ($elementNumber === '8*'): ?>
+                    <tr>
+                        <td style="text-align: right; font-weight: bold; font-size: 20px;">Profit / Loss Net</td>
+                        <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
+                            <td style="text-align: right; font-weight: bold; font-size: 20px;">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $elementsTotalSums['4'][$yearMonth] - $elementsTotalSums['5'][$yearMonth] - $elementsTotalSums['6'][$yearMonth] + $elementsTotalSums['7'][$yearMonth] - $elementsTotalSums['8'][$yearMonth])); ?>
                             </td>
                         <?php endforeach; ?>
                     </tr>
@@ -117,14 +125,6 @@
                     </tr>
                 <?php endif; ?>
             <?php endforeach; ?>
-            <tr>
-                <td style="text-align: right; font-weight: bold; font-size: 20px;">Profit / Loss Net</td>
-                <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
-                    <td style="text-align: right; font-weight: bold; font-size: 20px;">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $elementsTotalSums['4'][$yearMonth] - $elementsTotalSums['5'][$yearMonth] - $elementsTotalSums['6'][$yearMonth] + $elementsTotalSums['7'][$yearMonth] - $elementsTotalSums['8'][$yearMonth])); ?>
-                    </td>
-                <?php endforeach; ?>
-            </tr>
         </tbody>
     </table>
 <?php endif; ?>

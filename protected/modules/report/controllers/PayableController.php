@@ -32,6 +32,7 @@ class PayableController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $payableSummary = new PayableSummary($supplier->search());
         $payableSummary->setupLoading();
@@ -48,6 +49,7 @@ class PayableController extends Controller {
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
             'supplierId' => $supplierId,
+            'endDate' => $endDate,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
         ));

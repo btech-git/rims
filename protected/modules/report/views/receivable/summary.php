@@ -1,7 +1,7 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
     $(".breadcrumbs").addClass("hide");
-
+    $("#EndDate").val("' . $endDate . '");
     $("#PageSize").val("' . $receivableSummary->dataProvider->pagination->pageSize . '");
     $("#CurrentPage").val("' . ($receivableSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
@@ -68,26 +68,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-<!--                        <div class="medium-6 columns">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <span class="prefix">Tanggal </span>
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Per Tanggal</span>
                                     </div>
-                                    <div class="small-5 columns">
-                                        <?php /* $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'StartDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Mulai',
-                                            ),
-                                        )); ?>
-                                    </div>
-
-                                    <div class="small-5 columns">
+                                    <div class="small-8 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -95,13 +82,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
-                                                'placeholder' => 'Sampai',
+//                                                'placeholder' => 'Sampai',
                                             ),
-                                        ));*/ ?>
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>-->
+                        </div>
                     </div>
 
                     <div class="clear"></div>
@@ -128,6 +115,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'receivableSummary' => $receivableSummary,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
                 <div class="clear"></div>

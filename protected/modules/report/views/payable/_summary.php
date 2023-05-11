@@ -49,7 +49,7 @@
         <tr class="items2">
             <td colspan="3">
                 <table>
-                    <?php $payableData = $header->getPayableReport(); ?>
+                    <?php $payableData = $header->getPayableReport($endDate); ?>
                     <?php $totalPurchase = 0.00; ?>
                     <?php $totalPayment = 0.00; ?>
                     <?php $totalPayable = 0.00; ?>

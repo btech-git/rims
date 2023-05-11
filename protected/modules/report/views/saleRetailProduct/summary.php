@@ -352,10 +352,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 <br/>
 
 <div class="right">
-    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
         'itemCount' => $saleRetailProductSummary->dataProvider->pagination->itemCount,
         'pageSize' => $saleRetailProductSummary->dataProvider->pagination->pageSize,
         'currentPage' => $saleRetailProductSummary->dataProvider->pagination->getCurrentPage(false),
-    )); ?>
+    ));*/ ?>
 </div>
 <div class="clear"></div>

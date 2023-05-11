@@ -31,6 +31,7 @@ class ReceivableController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $receivableSummary = new ReceivableSummary($customer->search());
         $receivableSummary->setupLoading();
@@ -46,6 +47,7 @@ class ReceivableController extends Controller {
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
             'customerId' => $customerId,
+            'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,

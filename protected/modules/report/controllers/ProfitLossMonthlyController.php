@@ -35,6 +35,7 @@ class ProfitLossMonthlyController extends Controller {
         $profitLossInfo['6'] = array(); 
         $profitLossInfo['7'] = array();
         $profitLossInfo['8'] = array();
+        $profitLossInfo['8*'] = array();
         $profitLossData = JurnalUmum::getProfitLossDataByTransactionYear($startYearMonth, $endYearMonth, $branchId);
         foreach ($profitLossData as $profitLossItem) {
             $elementNumber = substr($profitLossItem['coa_code'], 0, 1);
@@ -137,7 +138,6 @@ class ProfitLossMonthlyController extends Controller {
             foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
                 $elementsTotalSums['4'][$yearMonth] = '0.00';
                 $elementsTotalSums['5'][$yearMonth] = '0.00';
-                $elementsTotalSums['5*'][$yearMonth] = '0.00';
                 $elementsTotalSums['6'][$yearMonth] = '0.00';
                 $elementsTotalSums['7'][$yearMonth] = '0.00';
                 $elementsTotalSums['8'][$yearMonth] = '0.00';
@@ -153,6 +153,15 @@ class ProfitLossMonthlyController extends Controller {
                     }
                     $counter++;
                     
+                } elseif ($elementNumber === '8*') {
+                    $column = 'B'; 
+                    $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                    $worksheet->setCellValue("A{$counter}", "Profit / Loss Net");
+                    foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+                        $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($elementsTotalSums['4'][$yearMonth] - $elementsTotalSums['5'][$yearMonth] - $elementsTotalSums['6'][$yearMonth] + $elementsTotalSums['7'][$yearMonth] - $elementsTotalSums['8'][$yearMonth]));
+                        $column++;
+                    }
+                    $counter++;
                 } else {
                     foreach ($profitLossElementInfo as $categoryInfo) {
                         $worksheet->setCellValue("A{$counter}", $categoryInfo['code'] . " - " . $categoryInfo['name']);
@@ -220,14 +229,6 @@ class ProfitLossMonthlyController extends Controller {
                     $counter++;
                 }
             }
-            $column = 'B'; 
-            $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("A{$counter}", "Profit / Loss Net");
-            foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($elementsTotalSums['4'][$yearMonth] - $elementsTotalSums['5'][$yearMonth] - $elementsTotalSums['6'][$yearMonth] + $elementsTotalSums['7'][$yearMonth] - $elementsTotalSums['8'][$yearMonth]));
-                $column++;
-            }
-            $counter++;
         }
         
         for ($col = 'A'; $col !== 'H'; $col++) {
