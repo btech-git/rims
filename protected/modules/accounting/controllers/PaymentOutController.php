@@ -264,10 +264,10 @@ class PaymentOutController extends Controller {
 
         $dataProvider = $paymentOut->search();
         $dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
-        $dataProvider->criteria->with = array(
-            'supplier',
-            'paymentOutApprovals',
-        );
+//        $dataProvider->criteria->with = array(
+//            'supplier',
+//            'paymentOutApprovals',
+//        );
 
         if (!empty($supplierName)) {
             $dataProvider->criteria->addCondition("supplier.name LIKE :supplier_name");

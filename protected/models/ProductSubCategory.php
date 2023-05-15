@@ -166,7 +166,7 @@ class ProductSubCategory extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 500,
+                'pageSize' => 100,
                 'currentPage' => $pageNumber - 1,
             ),
         ));
@@ -197,7 +197,8 @@ class ProductSubCategory extends CActiveRecord {
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " mc ON mc.id = sm.product_master_category_id
                 WHERE s.status = 'Active'" . $productMasterCategoryConditionSql . $productSubMasterCategoryConditionSql . "
                 GROUP BY p.product_sub_category_id, w.branch_id
-                ORDER BY p.product_sub_category_id ASC, w.branch_id ASC";
+                ORDER BY p.product_sub_category_id ASC, w.branch_id ASC
+                LIMIT 100";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

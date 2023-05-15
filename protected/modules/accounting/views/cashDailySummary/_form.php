@@ -62,7 +62,7 @@
                                 <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;', 'class'=>'button info')); ?>
                                 
                                 <?php if (empty($existingDate)): ?>
-                                    <?php echo CHtml::submitButton('Approve', array('name' => 'Approve', 'class'=>'button success right', 'confirm' => 'Are you sure you want to approve?')); ?>
+                                    <?php //echo CHtml::submitButton('Approve', array('name' => 'Approve', 'class'=>'button success right', 'confirm' => 'Are you sure you want to approve?')); ?>
                                 <?php endif; ?>
                             </div>
                         </div>

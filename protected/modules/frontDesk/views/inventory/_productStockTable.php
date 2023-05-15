@@ -35,19 +35,14 @@
                 <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                 
                 <?php foreach ($branches as $branch): ?>
-                    <?php $index = -1; ?>
+                    <?php $stockValue = 0; ?>
                     <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
                         <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
-                            <?php $index = $i; ?>
                             <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <?php if ($index >= 0): ?>
-                        <td><?php echo CHtml::encode($stockValue); ?></td>
-                    <?php else: ?>
-                        <td><?php echo 0; ?></td>
-                    <?php endif; ?>
+                    <td><?php echo CHtml::encode($stockValue); ?></td>
                     <?php $totalStock += $stockValue; ?>
                 <?php endforeach; ?>
                         

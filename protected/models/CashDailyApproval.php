@@ -8,6 +8,7 @@
  * @property string $transaction_date
  * @property string $amount
  * @property integer $user_id
+ * @property integer $branch_id
  * @property string $approval_date
  * @property string $approval_time
  *
@@ -41,11 +42,11 @@ class CashDailyApproval extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_date, user_id, approval_date, approval_time', 'required'),
-            array('user_id', 'numerical', 'integerOnly' => true),
+            array('user_id, branch_id', 'numerical', 'integerOnly' => true),
             array('amount', 'length', 'max' => 18),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_date, amount, user_id, approval_date, approval_time', 'safe', 'on' => 'search'),
+            array('id, transaction_date, amount, user_id, approval_date, approval_time, branch_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -57,6 +58,7 @@ class CashDailyApproval extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
         );
     }
 
@@ -69,6 +71,7 @@ class CashDailyApproval extends CActiveRecord {
             'transaction_date' => 'Transaction Date',
             'amount' => 'Amount',
             'user_id' => 'User',
+            'branch_id' => 'Branch',
             'approval_date' => 'Approval Date',
             'approval_time' => 'Approval Time',
         );
@@ -88,6 +91,7 @@ class CashDailyApproval extends CActiveRecord {
         $criteria->compare('transaction_date', $this->transaction_date, true);
         $criteria->compare('amount', $this->amount, true);
         $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('approval_date', $this->approval_date, true);
         $criteria->compare('approval_time', $this->approval_time, true);
 

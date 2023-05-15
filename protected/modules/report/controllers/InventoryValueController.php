@@ -21,25 +21,25 @@ class InventoryValueController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
+        $productSubCategory = Search::bind(new ProductSubCategory(), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         
-        $productDataProvider = $product->searchByStockCheck($pageNumber);
+        $productSubCategoryDataProvider = $productSubCategory->searchByStockCheck($pageNumber);
         $branches = Branch::model()->findAll();
 
         if (isset($_GET['Clear'])) {
-            $product->unsetAttributes();
+            $productSubCategory->unsetAttributes();
         }
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($productDataProvider, array());
+            $this->saveToExcel($productSubCategoryDataProvider, array());
         }
         
         $this->render('summary', array(
             'currentSort' => $currentSort,
-            'product' => $product,
-            'productDataProvider' => $productDataProvider,
+            'productSubCategory' => $productSubCategory,
+            'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
             'branches' => $branches,
         ));
     }

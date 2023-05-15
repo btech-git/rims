@@ -16,18 +16,6 @@
 
     <div class="row">
         <div class="small-12 medium-6 columns">
-		<!-- BEGIN FIELDS -->
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->label($model,'purchase_order_id', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model,'purchase_order_id'); ?>
-                    </div>
-                </div>
-            </div>	
-
             <!-- BEGIN FIELDS -->
             <div class="field">
                 <div class="row collapse">

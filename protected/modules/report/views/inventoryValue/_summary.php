@@ -1,62 +1,42 @@
 <div style="text-align: right">
-    <?php echo ReportHelper::summaryText($productDataProvider); ?>
+    <?php echo ReportHelper::summaryText($productSubCategoryDataProvider); ?>
 </div>
 
 <table>
     <thead>
         <tr>
-            <th style="text-align: center">ID</th>
-            <th style="text-align: center">Code</th>
-            <th style="text-align: center">Name</th>
-            <th style="text-align: center">Brand</th>
-            <th style="text-align: center">Sub Brand</th>
-            <th style="text-align: center">Sub Brand Series</th>
-            <th style="text-align: center">Category</th>
+            <th style="text-align: center">Sub Category</th>
+            <th style="text-align: center">Sub Master Category</th>
+            <th style="text-align: center">Master Category</th>
             <?php foreach ($branches as $branch): ?>
                 <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
             <?php endforeach; ?>
             <th style="text-align: center">Stock</th>
-            <th style="text-align: center">HPP</th>
-            <th style="text-align: center">Inventory</th>
         </tr>
     </thead>
     
     <tbody>
-        <?php foreach ($productDataProvider->data as $product): ?>
-            <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantities(); ?>
-            <?php $inventoryCostOfGoodsSold = $product->getInventoryCostOfGoodsSold(); ?>
+        <?php foreach ($productSubCategoryDataProvider->data as $productSubCategory): ?>
+            <?php $inventoryTotalQuantities = $productSubCategory->getInventoryTotalQuantities(); ?>
             <?php $totalStock = 0; ?>
             <tr>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                <td><?php echo CHtml::link(CHtml::value($product, 'name'), array('detail', 'id' => $product->id)); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
+                <td><?php echo CHtml::link(CHtml::value($productSubCategory, 'name'), array('detail', 'id' => $productSubCategory->id)); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($productSubCategory, 'productSubMasterCategory.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($productSubCategory, 'productSubMasterCategory.productMasterCategory.name')); ?></td>
                 
                 <?php foreach ($branches as $branch): ?>
-                    <?php $index = -1; ?>
+                    <?php $stockValue = 0; ?>
                     <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
                         <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
-                            <?php $index = $i; ?>
+                            <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
-                    <?php if ($index >= 0): ?>
-                        <td><?php echo CHtml::encode($stockValue); ?></td>
-                    <?php else: ?>
-                        <td><?php echo 0; ?></td>
-                    <?php endif; ?>
+                    <td><?php echo CHtml::encode($stockValue); ?></td>
                     <?php $totalStock += $stockValue; ?>
                 <?php endforeach; ?>
                         
-                <?php $totalCogs = CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
-                <?php $totalValue = $totalCogs * $totalStock; ?>
                 <td style="text-align: center"><?php echo CHtml::encode($totalStock); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCogs)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalValue)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

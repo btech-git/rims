@@ -126,13 +126,15 @@ class CashDailySummaryController extends Controller {
         }
 
         $existingDate = CashDailyApproval::model()->findByAttributes(array('transaction_date' => $transactionDate));
-        if (isset($_GET['Approve']) && empty($existingDate)) {
+        if (isset($_GET['Approve'])) {
+            $branchId = $_GET['Approve'];
             $cashDailyApproval = new CashDailyApproval;
             $cashDailyApproval->transaction_date = $transactionDate;
             $cashDailyApproval->amount = $totalDaily;
             $cashDailyApproval->user_id = Yii::app()->user->id;
             $cashDailyApproval->approval_date = date('Y-m-d');
             $cashDailyApproval->approval_time = date('H:i:s');
+            $cashDailyApproval->branch_id = $branchId;
 
             if ($cashDailyApproval->save(Yii::app()->db)) {                
                 $this->redirect(array('summary'));

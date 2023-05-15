@@ -147,9 +147,9 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.bank_id', $this->bank_id);
         $criteria->compare('t.payment_type_id', $this->payment_type_id);
 
-//        $criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
-        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-        $criteria->params = array(':userId' => Yii::app()->user->id);
+        $criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+//        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+//        $criteria->params = array(':userId' => Yii::app()->user->id);
         
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');

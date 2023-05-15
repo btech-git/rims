@@ -14,7 +14,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     
-                    <div class="row">
+<!--                    <div class="row">
                         <table>
                             <thead>
                                 <tr>
@@ -29,7 +29,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <tbody>
                                 <tr>
                                     <td>
-                                        <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        <?php /*echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
                                             'empty' => '-- All --',
                                             'order' => 'name',
                                             'onchange' => CHtml::ajax(array(
@@ -169,17 +169,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
                                                 'update' => '#product_stock_table',
                                             )),
-                                        )); ?>
+                                        ));*/ ?>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div>-->
                     
                     <div class="clear"></div>
                     <div class="row buttons">
-                        <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                        <?php echo CHtml::resetButton('Hapus');  ?>
+                        <?php //echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
+                        <?php //echo CHtml::resetButton('Hapus');  ?>
                         <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
@@ -192,11 +192,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'productDataProvider' => $productDataProvider,
+                        'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
                         'branches' => $branches,
                     )); ?>
                 </div>
                 <div class="clear"></div>
+                <div>
+                    <div class="right">
+                        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+                            'itemCount' => $productSubCategoryDataProvider->pagination->itemCount,
+                            'pageSize' => $productSubCategoryDataProvider->pagination->pageSize,
+                            'currentPage' => $productSubCategoryDataProvider->pagination->getCurrentPage(false),
+                        )); ?>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
             </div>
         </div>
     </div>
