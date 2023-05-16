@@ -738,22 +738,22 @@ class GeneralRepairRegistration extends CComponent {
         }
 
         JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $this->header->transaction_number,
+            'kode_transaksi' => $model->invoice_number,
             'branch_id' => $this->header->branch_id,
         ));
 
         $transactionType = 'RG GR';
         $postingDate = date('Y-m-d');
-        $transactionCode = $this->header->transaction_number;
-        $transactionDate = $this->header->transaction_date;
+        $transactionCode = $model->invoice_number;
+        $transactionDate = $model->invoice_date;
         $branchId = $this->header->branch_id;
         $transactionSubject = $this->header->customer->name;
         
         $journalReferences = array();
         
         $jurnalUmumReceivable = new JurnalUmum;
-        $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
-        $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
+        $jurnalUmumReceivable->kode_transaksi = $transactionCode;
+        $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
         $jurnalUmumReceivable->coa_id = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
         $jurnalUmumReceivable->branch_id = $this->header->branch_id;
         $jurnalUmumReceivable->total = $this->header->subtotal_product + $this->header->subtotal_service + $this->header->ppn_price;
@@ -761,14 +761,14 @@ class GeneralRepairRegistration extends CComponent {
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
         $jurnalUmumReceivable->is_coa_category = 0;
-        $jurnalUmumReceivable->transaction_type = 'RG GR';
+        $jurnalUmumReceivable->transaction_type = $transactionType;
         $valid = $jurnalUmumReceivable->save() && $valid;
 
         if ($this->header->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
             $jurnalUmumPpn = new JurnalUmum;
-            $jurnalUmumPpn->kode_transaksi = $this->header->transaction_number;
-            $jurnalUmumPpn->tanggal_transaksi = $this->header->transaction_date;
+            $jurnalUmumPpn->kode_transaksi = $transactionCode;
+            $jurnalUmumPpn->tanggal_transaksi = $transactionDate;
             $jurnalUmumPpn->coa_id = $coaPpn->id;
             $jurnalUmumPpn->branch_id = $this->header->branch_id;
             $jurnalUmumPpn->total = $this->header->ppn_price;
@@ -776,7 +776,7 @@ class GeneralRepairRegistration extends CComponent {
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
             $jurnalUmumPpn->transaction_subject = $this->header->customer->name;
             $jurnalUmumPpn->is_coa_category = 0;
-            $jurnalUmumPpn->transaction_type = 'RG GR';
+            $jurnalUmumPpn->transaction_type = $transactionType;
             $valid = $jurnalUmumPpn->save() && $valid;
         }
 

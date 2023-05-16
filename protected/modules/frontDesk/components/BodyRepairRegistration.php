@@ -540,15 +540,15 @@ class BodyRepairRegistration extends CComponent {
 
     public function validateInvoice() {
 
-        $valid = $this->header->validate(array('payment_status'));
+        $valid = $this->header->validate(array('sale_order_number'));
 
         return $valid;
     }
 
-    public function saveInvoice($dbConnection) {
+    public function saveInvoice($dbConnection, $id) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validateInvoice() && $this->flushInvoice();
+            $valid = $this->validateInvoice() && $this->flushInvoice($id);
 
             if ($valid) {
                 $dbTransaction->commit();
@@ -564,13 +564,20 @@ class BodyRepairRegistration extends CComponent {
         return $valid;
     }
 
-    public function flushInvoice() {
+    public function flushInvoice($id) {
 
         $this->header->payment_status = 'INVOICING';
         $valid = $this->header->update(array('payment_status'));
 
-        $model = new InvoiceHeader();
-        $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($this->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($this->header->transaction_date)), $this->header->branch_id);
+        $model = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $id));
+        
+        if (empty($model)) {
+            $model = new InvoiceHeader();
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($this->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($this->header->transaction_date)), $this->header->branch_id);
+        } else {
+            $model->setCodeNumberByRevision('invoice_number');
+        }
+        
         $model->invoice_date = date('Y-m-d');
         $model->due_date = date('Y-m-d');
         $model->reference_type = 2;
@@ -595,7 +602,7 @@ class BodyRepairRegistration extends CComponent {
         $model->pph = $this->header->pph;
         $model->payment_date_estimate = date('Y-m-d');
         $model->coa_bank_id_estimate = 7;
-        $model->save(false);
+        $valid = $model->save(false) && $valid;
 
         $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
         if (count($registrationProducts) != 0) {
@@ -639,10 +646,6 @@ class BodyRepairRegistration extends CComponent {
 
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
         if (count($invoices) > 0) {
-//            foreach ($invoices as $invoice) {
-//                $invoice->status = "CANCELLED";
-//                $invoice->save(false);
-//            }
 
             $real = RegistrationRealizationProcess::model()->findByAttributes(array(
                 'registration_transaction_id' => $this->header->id,
@@ -674,37 +677,37 @@ class BodyRepairRegistration extends CComponent {
         }
 
         JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $this->header->transaction_number,
+            'kode_transaksi' => $model->invoice_number,
             'branch_id' => $this->header->branch_id,
         ));
 
         $transactionType = 'RG BR';
         $postingDate = date('Y-m-d');
-        $transactionCode = $this->header->transaction_number;
-        $transactionDate = $this->header->transaction_date;
+        $transactionCode = $model->invoice_number;
+        $transactionDate = $model->invoice_date;
         $branchId = $this->header->branch_id;
         $transactionSubject = $this->header->customer->name;
 
         $journalReferences = array();
 
         $jurnalUmumReceivable = new JurnalUmum;
-        $jurnalUmumReceivable->kode_transaksi = $this->header->transaction_number;
-        $jurnalUmumReceivable->tanggal_transaksi = $this->header->transaction_date;
+        $jurnalUmumReceivable->kode_transaksi = $transactionCode;
+        $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
         $jurnalUmumReceivable->coa_id = (empty($this->header->insurance_company_id)) ? $this->header->customer->coa_id : $this->header->insuranceCompany->coa_id;
         $jurnalUmumReceivable->branch_id = $this->header->branch_id;
-        $jurnalUmumReceivable->total = $this->header->grand_total;
+        $jurnalUmumReceivable->total = $this->header->subtotal_product + $this->header->subtotal_service + $this->header->ppn_price;
         $jurnalUmumReceivable->debet_kredit = 'D';
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
         $jurnalUmumReceivable->is_coa_category = 0;
-        $jurnalUmumReceivable->transaction_type = 'RG BR';
-        $jurnalUmumReceivable->save();
+        $jurnalUmumReceivable->transaction_type = $transactionType;
+        $valid = $jurnalUmumReceivable->save() && $valid;
 
         if ($this->header->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
             $jurnalUmumPpn = new JurnalUmum;
-            $jurnalUmumPpn->kode_transaksi = $this->header->transaction_number;
-            $jurnalUmumPpn->tanggal_transaksi = $this->header->transaction_date;
+            $jurnalUmumPpn->kode_transaksi = $transactionCode;
+            $jurnalUmumPpn->tanggal_transaksi = $transactionDate;
             $jurnalUmumPpn->coa_id = $coaPpn->id;
             $jurnalUmumPpn->branch_id = $this->header->branch_id;
             $jurnalUmumPpn->total = $this->header->ppn_price;
@@ -712,8 +715,8 @@ class BodyRepairRegistration extends CComponent {
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
             $jurnalUmumPpn->transaction_subject = $this->header->customer->name;
             $jurnalUmumPpn->is_coa_category = 0;
-            $jurnalUmumPpn->transaction_type = 'RG BR';
-            $jurnalUmumPpn->save();
+            $jurnalUmumPpn->transaction_type = $transactionType;
+            $valid = $jurnalUmumPpn->save() && $valid;
         }
 
         if (count($this->productDetails) > 0) {
@@ -737,7 +740,7 @@ class BodyRepairRegistration extends CComponent {
                     $jurnalUmumDiskon = $rProduct->product->productSubMasterCategory->coa_diskon_penjualan;
                     $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
                     $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
-                    $journalReferences[$jurnalUmumDiskon]['values'][] = $rProduct->getDiscountAmount();
+                    $journalReferences[$jurnalUmumDiskon]['values'][] = $rProduct->discountAmount;
                 }
             }
         }

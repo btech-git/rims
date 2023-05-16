@@ -248,7 +248,7 @@ class GeneralRepairRegistrationController extends Controller {
             $transactionCode = $model->transaction_number;
             $transactionDate = $model->transaction_date;
             $branchId = $model->branch_id;
-            $transactionSubject = $model->note;
+            $transactionSubject = $model->customer->name;
 
             $journalReferences = array();
 

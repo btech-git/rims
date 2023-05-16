@@ -533,10 +533,11 @@ class BodyRepairRegistrationController extends Controller {
     public function actionGenerateInvoice($id) {
         $registration = $this->instantiate($id);
 
-        if ($registration->saveInvoice(Yii::app()->db)) {
-
-            $this->redirect(array('view', 'id' => $id));
-        }
+//        if (IdempotentManager::check()) {
+            if ($registration->saveInvoice(Yii::app()->db, $id)) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+//        }
     }
 
     public function actionGenerateSalesOrder($id) {
