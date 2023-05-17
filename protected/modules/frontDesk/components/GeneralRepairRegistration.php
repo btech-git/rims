@@ -742,7 +742,7 @@ class GeneralRepairRegistration extends CComponent {
             'branch_id' => $this->header->branch_id,
         ));
 
-        $transactionType = 'RG GR';
+        $transactionType = 'Invoice GR';
         $postingDate = date('Y-m-d');
         $transactionCode = $model->invoice_number;
         $transactionDate = $model->invoice_date;
@@ -759,7 +759,7 @@ class GeneralRepairRegistration extends CComponent {
         $jurnalUmumReceivable->total = $this->header->subtotal_product + $this->header->subtotal_service + $this->header->ppn_price;
         $jurnalUmumReceivable->debet_kredit = 'D';
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-        $jurnalUmumReceivable->transaction_subject = $this->header->customer->name;
+        $jurnalUmumReceivable->transaction_subject = $transactionSubject;
         $jurnalUmumReceivable->is_coa_category = 0;
         $jurnalUmumReceivable->transaction_type = $transactionType;
         $valid = $jurnalUmumReceivable->save() && $valid;
@@ -774,7 +774,7 @@ class GeneralRepairRegistration extends CComponent {
             $jurnalUmumPpn->total = $this->header->ppn_price;
             $jurnalUmumPpn->debet_kredit = 'K';
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-            $jurnalUmumPpn->transaction_subject = $this->header->customer->name;
+            $jurnalUmumPpn->transaction_subject = $transactionSubject;
             $jurnalUmumPpn->is_coa_category = 0;
             $jurnalUmumPpn->transaction_type = $transactionType;
             $valid = $jurnalUmumPpn->save() && $valid;

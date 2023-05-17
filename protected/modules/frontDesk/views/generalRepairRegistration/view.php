@@ -199,14 +199,14 @@ $this->breadcrumbs = array(
                 ), TRUE)
             );
             
-            if (Yii::app()->user->checkAccess("generalManager")) {
+            /*if (Yii::app()->user->checkAccess("generalManager")) {
                 $tabsArray['Journal'] = array(
                     'id' => 'journal',
                     'content' => $this->renderPartial('_viewJournal', array(
                         'model' => $model
                     ), TRUE)
                 );
-            }
+            }*/
             ?>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => $tabsArray,
@@ -229,7 +229,6 @@ $this->breadcrumbs = array(
         <?php if ($model->status !== 'Finished'): ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Estimasi', Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' =>'_blank')) ?>
         <?php endif; ?>
-        <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
     </div>
 </div>
 

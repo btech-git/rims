@@ -16,7 +16,7 @@ $this->menu = array(
 );
 ?>
 
-<!--<h1>View InvoiceHeader #<?php echo $model->id; ?></h1>-->
+<?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
@@ -276,7 +276,11 @@ $this->menu = array(
 
             <tbody>
                 <?php $totalDebit = 0; $totalCredit = 0; ?>
-                <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->invoice_number, 'is_coa_category' => 0)); ?>
+                
+                <?php $transactionInvoices = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->invoice_number, 'is_coa_category' => 0)); ?>
+                <?php $transactionRegistrations = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->registrationTransaction->transaction_number, 'is_coa_category' => 0)); ?>
+                <?php $transactions = empty($transactionInvoices) ? $transactionRegistrations : $transactionInvoices; ?>
+                
                 <?php foreach ($transactions as $i => $header): ?>
 
                     <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
@@ -309,7 +313,15 @@ $this->menu = array(
             </tfoot>
         </table>
     </div>
+    
+    <div>
+        <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
+    </div>
 </div>
+
+<?php echo IdempotentManager::generate(); ?>
+
+<?php echo CHtml::endForm(); ?>
 
 <script>
     var label = $('#status');

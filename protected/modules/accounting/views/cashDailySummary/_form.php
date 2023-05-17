@@ -36,18 +36,18 @@
                             </div>
                         </div>
                         
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <label class="prefix">Branch</label>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(UserBranch::model()->findAllByAttributes(array('users_id' => Yii::app()->user->id)), 'branch_id', 'branch.name'), array('empty' => '-- All --')); ?>
+                                        <?php //echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(UserBranch::model()->findAllByAttributes(array('users_id' => Yii::app()->user->id)), 'branch_id', 'branch.name'), array('empty' => '-- All --')); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
@@ -61,9 +61,9 @@
                                 <?php echo CHtml::resetButton('Clear', array('class'=>'button secondary')); ?>
                                 <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;', 'class'=>'button info')); ?>
                                 
-                                <?php if (empty($existingDate)): ?>
-                                    <?php //echo CHtml::submitButton('Approve', array('name' => 'Approve', 'class'=>'button success right', 'confirm' => 'Are you sure you want to approve?')); ?>
-                                <?php endif; ?>
+                                <?php /*if (empty($existingDate)): ?>
+                                    <?php echo CHtml::submitButton('Approve', array('name' => 'Approve', 'class'=>'button success right', 'confirm' => 'Are you sure you want to approve?')); ?>
+                                <?php endif;*/ ?>
                             </div>
                         </div>
                     </div>

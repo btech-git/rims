@@ -548,7 +548,7 @@ class BodyRepairRegistration extends CComponent {
     public function saveInvoice($dbConnection, $id) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validateInvoice() && $this->flushInvoice($id);
+            $valid = $this->validateInvoice() && IdempotentManager::build()->save() && $this->flushInvoice($id);
 
             if ($valid) {
                 $dbTransaction->commit();
@@ -681,7 +681,7 @@ class BodyRepairRegistration extends CComponent {
             'branch_id' => $this->header->branch_id,
         ));
 
-        $transactionType = 'RG BR';
+        $transactionType = 'Invoice BR';
         $postingDate = date('Y-m-d');
         $transactionCode = $model->invoice_number;
         $transactionDate = $model->invoice_date;
