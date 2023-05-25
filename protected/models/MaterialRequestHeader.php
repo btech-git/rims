@@ -113,19 +113,19 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
-        $criteria->compare('transaction_time', $this->transaction_time, true);
-        $criteria->compare('total_quantity', $this->total_quantity);
-        $criteria->compare('total_quantity_movement_out', $this->total_quantity_movement_out);
-        $criteria->compare('total_quantity_remaining', $this->total_quantity_remaining);
-        $criteria->compare('status_document', $this->status_document, true);
-        $criteria->compare('status_progress', $this->status_progress, true);
-        $criteria->compare('note', $this->note, true);
-        $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.transaction_number', $this->transaction_number, true);
+        $criteria->compare('t.transaction_date', $this->transaction_date, true);
+        $criteria->compare('t.transaction_time', $this->transaction_time, true);
+        $criteria->compare('t.total_quantity', $this->total_quantity);
+        $criteria->compare('t.total_quantity_movement_out', $this->total_quantity_movement_out);
+        $criteria->compare('t.total_quantity_remaining', $this->total_quantity_remaining);
+        $criteria->compare('t.status_document', $this->status_document, true);
+        $criteria->compare('t.status_progress', $this->status_progress, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
