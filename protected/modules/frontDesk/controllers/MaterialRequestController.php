@@ -156,9 +156,27 @@ class MaterialRequestController extends Controller {
         if (isset($_GET['MaterialRequestHeader'])) {
             $model->attributes = $_GET['MaterialRequestHeader'];
         }
+        
+        $dataProvider = $model->search();
+        $dataProvider->criteria->together = 'true';
+        $dataProvider->criteria->with = array(
+            'registrationTransaction' => array(
+                'with' => array(
+                    'vehicle'
+                ),
+            ),
+        );
+        
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
+        
+        if (!empty($plateNumber)) {
+            $dataProvider->criteria->compare('vehicle.plate_number', $plateNumber, true);
+        }
 
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
+            'plateNumber' => $plateNumber,
         ));
     }
 

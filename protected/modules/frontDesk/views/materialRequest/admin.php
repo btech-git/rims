@@ -26,7 +26,7 @@ Yii::app()->clientScript->registerScript('search', "
     });
     
     $('.search-form form').submit(function(){
-        $('#transaction-material-request-grid').yiiGridView('update', {
+        $('#material-request-grid').yiiGridView('update', {
             data: $(this).serialize()
         });
         
@@ -45,7 +45,8 @@ Yii::app()->clientScript->registerScript('search', "
             <div class="search-form" style="display:none">
                 <?php $this->renderPartial('_search',array(
                     'model'=>$model,
-                    )); ?>
+                    'plateNumber' => $plateNumber,
+                )); ?>
                 </div><!-- search-form -->				
             </div>
          </div>
@@ -54,7 +55,7 @@ Yii::app()->clientScript->registerScript('search', "
 
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'material-request-grid',
-                'dataProvider'=>$model->search(),
+                'dataProvider'=>$dataProvider,
                 'filter'=>null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
@@ -74,9 +75,8 @@ Yii::app()->clientScript->registerScript('search', "
                         'value'=>'$data->branch->code',
                     ),
                     array(
-                        'name'=>'user_id',
-                        'filter' => CHtml::activeDropDownList($model, 'user_id', CHtml::listData(Users::model()->findAll(), 'id', 'name'), array('empty' => '-- All --')),
-                        'value'=>'$data->user->username',
+                        'header' => 'Plate #',
+                        'value' => '$data->registrationTransaction->vehicle->plate_number',
                     ),
                     array(
                         'header' => 'Status Document',
@@ -91,6 +91,11 @@ Yii::app()->clientScript->registerScript('search', "
                         'name' => 'created_datetime',
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                    ),
+                    array(
+                        'name'=>'user_id',
+                        'filter' => CHtml::activeDropDownList($model, 'user_id', CHtml::listData(Users::model()->findAll(), 'id', 'name'), array('empty' => '-- All --')),
+                        'value'=>'$data->user->username',
                     ),
                     array(
                         'class'=>'CButtonColumn',
