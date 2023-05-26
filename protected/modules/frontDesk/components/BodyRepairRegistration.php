@@ -575,6 +575,10 @@ class BodyRepairRegistration extends CComponent {
             $model = new InvoiceHeader();
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($this->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($this->header->transaction_date)), $this->header->branch_id);
         } else {
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->invoice_number,
+            ));
+
             $model->setCodeNumberByRevision('invoice_number');
         }
         
@@ -675,11 +679,6 @@ class BodyRepairRegistration extends CComponent {
             $real->detail = 'Generate Invoice with number #' . $model->invoice_number;
             $real->save();
         }
-
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->invoice_number,
-            'branch_id' => $this->header->branch_id,
-        ));
 
         $transactionType = 'Invoice BR';
         $postingDate = date('Y-m-d');
