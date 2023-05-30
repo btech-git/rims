@@ -116,17 +116,17 @@ $('.search-form form').submit(function(){
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
-                        array(
-                            'class' => 'CButtonColumn',
-                            'template' => '{edit}',
-                            'buttons' => array(
-                                'edit' => array(
-                                    'label' => 'edit',
-                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("cashTransactionEdit")',
-                                ),
-                            ),
-                        ),
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                            'template' => '{edit}',
+//                            'buttons' => array(
+//                                'edit' => array(
+//                                    'label' => 'edit',
+//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
+//                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("cashTransactionEdit")',
+//                                ),
+//                            ),
+//                        ),
                     ),
                 )); ?>
             </div>
@@ -182,17 +182,17 @@ $('.search-form form').submit(function(){
                             'header' => 'Approved By',
                             'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
                         ),
-                        array(
-                            'class' => 'CButtonColumn',
-                            'template' => '{edit}',
-                            'buttons' => array(
-                                'edit' => array(
-                                    'label' => 'edit',
-                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-                                    'visible' => '$data->status == "Draft" && Yii::app()->user->checkAccess("cashTransactionEdit")',
-                                ),
-                            ),
-                        ),
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                            'template' => '{edit}',
+//                            'buttons' => array(
+//                                'edit' => array(
+//                                    'label' => 'edit',
+//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
+//                                    'visible' => '$data->status == "Draft" && Yii::app()->user->checkAccess("cashTransactionEdit")',
+//                                ),
+//                            ),
+//                        ),
                     ),
                 )); ?>
             </div>

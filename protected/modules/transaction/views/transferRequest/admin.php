@@ -106,17 +106,17 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'class'=>'CButtonColumn',
-                        'template'=>'{edit}',
-                        'buttons'=>array (
-                            'edit' => array (
-                                'label'=>'edit',
-                                'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestEdit")',
-                            ),
-                        ),
-                    ),
+//                    array(
+//                        'class'=>'CButtonColumn',
+//                        'template'=>'{edit}',
+//                        'buttons'=>array (
+//                            'edit' => array (
+//                                'label'=>'edit',
+//                                'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
+//                                'visible'=> '$data->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestEdit")',
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>

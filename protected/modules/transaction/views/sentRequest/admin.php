@@ -106,11 +106,11 @@ Yii::app()->clientScript->registerScript('search', "
                         'class'=>'CButtonColumn',
                         'template'=>'{edit}{delete}',
                         'buttons'=>array (
-                            'edit' => array (
-                                'label'=>'edit',
-                                'url'=>'Yii::app()->createUrl("transaction/sentRequest/update", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("sentRequestEdit")',
-                            ),
+//                            'edit' => array (
+//                                'label'=>'edit',
+//                                'url'=>'Yii::app()->createUrl("transaction/sentRequest/update", array("id"=>$data->id))',
+//                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("sentRequestEdit")',
+//                            ),
                             'delete' => array(
                                 'label' => 'delete',
                                 'url'=>'Yii::app()->createUrl("transaction/sentRequest/delete", array("id"=>$data->id))',

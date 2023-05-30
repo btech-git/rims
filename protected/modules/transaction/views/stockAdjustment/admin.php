@@ -74,17 +74,17 @@ $('.search-form form').submit(function(){
                     'value' => '$data->branch->name'
                 ),
                 'status',
-                array(
-                    'class' => 'CButtonColumn',
-                    'template' => '{edit}',
-                    'buttons' => array(
-                        'edit' => array(
-                            'label' => 'edit',
-                            'url' => 'Yii::app()->createUrl("transaction/stockAdjustment/update",array("id"=>$data->id))',
-                            'visible' => '$data->status!="Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.stockAdjustment.update")'
-                        ),
-                    ),
-                ),
+//                array(
+//                    'class' => 'CButtonColumn',
+//                    'template' => '{edit}',
+//                    'buttons' => array(
+//                        'edit' => array(
+//                            'label' => 'edit',
+//                            'url' => 'Yii::app()->createUrl("transaction/stockAdjustment/update",array("id"=>$data->id))',
+//                            'visible' => '$data->status!="Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("transaction.stockAdjustment.update")'
+//                        ),
+//                    ),
+//                ),
             )
         )); ?>
     </div>
