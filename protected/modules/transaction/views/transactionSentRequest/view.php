@@ -31,7 +31,7 @@ $this->menu = array(
             'visible' => Yii::app()->user->checkAccess("transaction.transactionSentRequest.admin")
         )); ?>
 
-        <?php if ($model->status_document == "Draft"): ?>
+        <?php //if ($model->status_document == "Draft"): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionSentRequest/update?id=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
@@ -43,7 +43,7 @@ $this->menu = array(
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
             )); ?>
-        <?php endif; ?>
+        <?php //endif; ?>
 
         <h1>View Transaction Sent Request #<?php echo $model->id; ?></h1>
 

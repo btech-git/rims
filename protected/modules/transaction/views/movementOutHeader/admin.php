@@ -95,17 +95,17 @@ $('.search-form form').submit(function(){
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
-//                        array(
-//                            'class' => 'CButtonColumn',
-//                            'template' => '{edit}',
-//                            'buttons' => array(
-//                                'edit' => array(
-//                                    'label' => 'edit',
-//                                    'url' => 'Yii::app()->createUrl("transaction/movementOutHeader/update", array("id"=>$data->id))',
+                        array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{edit}',
+                            'buttons' => array(
+                                'edit' => array(
+                                    'label' => 'edit',
+                                    'url' => 'Yii::app()->createUrl("transaction/movementOutHeader/update", array("id"=>$data->id))',
 //                                    'visible' => '($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && Yii::app()->user->checkAccess("movementOutEdit")',
-//                                ),
-//                            ),
-//                        ),
+                                ),
+                            ),
+                        ),
                     ),
                 )); ?>
             </div>

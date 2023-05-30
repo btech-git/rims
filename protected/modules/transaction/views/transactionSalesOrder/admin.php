@@ -138,11 +138,11 @@ $('.search-form form').submit(function(){
                         'class' => 'CButtonColumn',
                         'template' => '{edit} {print}',
                         'buttons' => array(
-//                            'edit' => array(
-//                                'label' => 'edit',
-//                                'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/update", array("id"=>$data->id))',
+                            'edit' => array(
+                                'label' => 'edit',
+                                'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/update", array("id"=>$data->id))',
 //                                'visible' => '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("saleOrderEdit")',
-//                            ),
+                            ),
                             'print' => array(
                                 'label' => 'print',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/pdf", array("id"=>$data->id))',
