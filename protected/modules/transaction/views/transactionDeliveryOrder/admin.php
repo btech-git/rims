@@ -88,11 +88,11 @@ Yii::app()->clientScript->registerScript('search', "
                         'class' => 'CButtonColumn',
                         'template' => '{edit} {print}',
                         'buttons' => array(
-//                            'edit' => array(
-//                                'label' => 'edit',
-//                                'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/update", array("id"=>$data->id))',
+                            'edit' => array(
+                                'label' => 'edit',
+                                'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/update", array("id"=>$data->id))',
 //                                'visible' => 'count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("deliveryEdit")',
-//                            ),
+                            ),
                             'print' => array(
                                 'label' => 'print',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/pdf", array("id"=>$data->id))',

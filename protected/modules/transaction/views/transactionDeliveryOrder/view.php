@@ -22,13 +22,13 @@ $this->menu = array(
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.admin"))) ?>
 
         <?php
-        $movements = MovementOutHeader::model()->findAllByAttributes(array('delivery_order_id' => $model->id));
-        if (count($movements) == 0):
+//        $movements = MovementOutHeader::model()->findAllByAttributes(array('delivery_order_id' => $model->id));
+//        if (count($movements) == 0):
         ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.update"))) ?>
-        <?php else: ?>
+        <?php //else: ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Print', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/pdf?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.pdf"))) ?>
-        <?php endif; ?>
+        <?php //endif; ?>
 
         <h1>View Transaction Delivery Order #<?php echo $model->id; ?></h1>
 
