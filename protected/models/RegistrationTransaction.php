@@ -1146,5 +1146,23 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+    
+    public static function getTotalQuantityVehicleCarMakeData($yearMonth) {
+        $params = array(
+            ':year_month' => $yearMonth,
+        );
+        
+        $sql = "SELECT c.id AS car_model_id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3) AS transaction_date, c.name AS car_model_name, COUNT(*) AS total_quantity_vehicle
+                FROM " . RegistrationTransaction::model()->tableName() . " t
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = t.vehicle_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " c ON c.id = v.car_model_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = c.car_make_id
+                WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 2) = :year_month
+                GROUP BY c.id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3)
+                ORDER BY c.name ASC, t.transaction_date ASC";
 
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }
