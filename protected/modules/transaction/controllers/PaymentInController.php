@@ -647,7 +647,6 @@ class PaymentInController extends Controller {
 
             $model = new PaymentInApproval;
             $model->date = date('Y-m-d H:i:s');
-            $invoiceHeader = InvoiceHeader::model()->findByPk($paymentIn->invoice_id);
             
             if (isset($_POST['PaymentInApproval'])) {
                 $model->attributes = $_POST['PaymentInApproval'];
@@ -656,6 +655,14 @@ class PaymentInController extends Controller {
                     $paymentIn->update(array('status'));
 
                     if ($model->approval_type == 'Approved') {
+                        $invoiceHeader = InvoiceHeader::model()->findByPk($paymentIn->invoice_id);
+                        if (!empty($invoiceHeader->registration_transaction_id)) {
+                            $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
+                            $coaId = !empty($registrationTransaction->insurance_company_id) ? $registrationTransaction->insuranceCompany->coa_id : $paymentIn->customer->coa_id;
+                        } else {
+                            $coaId = $paymentIn->customer->coa_id;
+                        }
+                        
                         if ($invoiceHeader->payment_left > 0.00) {
                             $invoiceHeader->status = 'PARTIALLY PAID';
                         } else {
@@ -674,7 +681,7 @@ class PaymentInController extends Controller {
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
                         $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
-                        $jurnalPiutang->coa_id = $paymentIn->customer->coa_id;
+                        $jurnalPiutang->coa_id = $coaId;
                         $jurnalPiutang->branch_id = $paymentIn->branch_id;
                         $jurnalPiutang->total = $totalKas;
                         $jurnalPiutang->debet_kredit = 'K';
