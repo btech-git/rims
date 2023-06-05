@@ -114,6 +114,7 @@ class SentRequests extends CComponent {
 
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
+        $this->header->sent_request_time = date('H:i:s');
         $this->header->total_quantity = $this->totalQuantity;
         $this->header->total_price = $this->grandTotal;
         $valid = $this->header->save();

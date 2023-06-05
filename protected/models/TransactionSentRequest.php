@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $sent_request_no
  * @property string $sent_request_date
+ * @property string $sent_request_time
  * @property string $status_document
  * @property string $estimate_arrival_date
  * @property integer $requester_id
@@ -62,7 +63,7 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sent_request_no, status_document, estimate_arrival_date, requester_id, requester_branch_id, destination_branch_id, total_price', 'required'),
+            array('sent_request_no, sent_request_date, sent_request_time, status_document, estimate_arrival_date, requester_id, requester_branch_id, destination_branch_id, total_price', 'required'),
             array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, destination_approval_status', 'numerical', 'integerOnly' => true),
             array('sent_request_no, status_document', 'length', 'max' => 30),
             array('total_quantity', 'length', 'max' => 10),
@@ -99,7 +100,8 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
         return array(
             'id' => 'ID',
             'sent_request_no' => 'Sent Request No',
-            'sent_request_date' => 'Sent Request Date',
+            'sent_request_date' => 'Date',
+            'sent_request_time' => 'Date',
             'status_document' => 'Status Document',
             'estimate_arrival_date' => 'Estimate Arrival Date',
             'requester_id' => 'Requester',
@@ -254,4 +256,7 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
         return ($totalRemaining == 0) ? 'Completed' : 'Partial';
     }
 
+    public function getTransactionDateTime() {
+        return $this->sent_request_date . ' ' . $this->sent_request_time;
+    }
 }

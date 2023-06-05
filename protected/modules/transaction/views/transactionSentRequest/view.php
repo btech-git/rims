@@ -52,7 +52,7 @@ $this->menu = array(
             'attributes' => array(
                 'id',
                 'sent_request_no',
-                'sent_request_date',
+                array('name' => 'sent_request_date', 'value' => $model->transactionDateTime),
                 'status_document',
                 'estimate_arrival_date',
                 array(

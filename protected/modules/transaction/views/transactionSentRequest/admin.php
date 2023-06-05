@@ -71,6 +71,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'type'=>'raw'
                     ),
                     'sent_request_date',
+                    'sent_request_time',
                     'estimate_arrival_date',
                     array(
                         'name'=>'requester_branch_id',
