@@ -67,7 +67,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transfer_request_no, transfer_request_date, transfer_request_time, status_document, requester_id, requester_branch_id, destination_branch_id, total_quantity, total_price', 'required'),
+            array('transfer_request_no, transfer_request_date, transfer_request_time, estimate_arrival_date, status_document, requester_id, requester_branch_id, destination_branch_id, total_quantity, total_price', 'required'),
             array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity, destination_approval_status', 'numerical', 'integerOnly' => true),
             array('transfer_request_no, status_document', 'length', 'max' => 30),
             array('total_price', 'length', 'max' => 18),
