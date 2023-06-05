@@ -33,25 +33,21 @@ $this->menu = array(
             'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.admin")
         )); ?>
 
-        <?php if ($model->status_document != 'Approved' && $model->status_document != 'Rejected'): ?>
+        <?php if (Yii::app()->user->checkAccess("saleOrderEdit")): //$model->status_document != 'Approved' && $model->status_document != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/update?id=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.update")
             )); ?>
         
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.updateApproval")
             )); ?>
         <?php else : ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/pdf?id=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.pdf")
             )); ?>
-
         <?php endif; ?>
         
         <?php $checkInvoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $model->id)); ?>

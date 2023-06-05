@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $transfer_request_no
  * @property string $transfer_request_date
+ * @property string $transfer_request_time
  * @property string $status_document
  * @property string $estimate_arrival_date
  * @property integer $requester_id
@@ -73,7 +74,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
             array('transfer_request_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transfer_request_no, transfer_request_date, created_datetime, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status, destination_approved_by', 'safe', 'on' => 'search'),
+            array('id, transfer_request_no, transfer_request_date, transfer_request_time, created_datetime, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status, destination_approved_by', 'safe', 'on' => 'search'),
         );
     }
 
@@ -104,7 +105,8 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         return array(
             'id' => 'ID',
             'transfer_request_no' => 'Transfer Request No',
-            'transfer_request_date' => 'Transfer Request Date',
+            'transfer_request_date' => 'Date',
+            'transfer_request_time' => 'Time',
             'status_document' => 'Status Document',
             'estimate_arrival_date' => 'Estimate Arrival Date',
             'requester_id' => 'Requester',
@@ -131,6 +133,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('transfer_request_no', $this->transfer_request_no, true);
         $criteria->compare('transfer_request_date', $this->transfer_request_date, true);
+        $criteria->compare('transfer_request_time', $this->transfer_request_time, true);
         $criteria->compare('status_document', $this->status_document, true);
         $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
         $criteria->compare('requester_id', $this->requester_id);
@@ -308,4 +311,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         return ($totalRemaining == 0) ? 'Completed' : 'Partial';
     }
 
+    public function getTransactionDateTime() {
+        return $this->transfer_request_date . ' ' . $this->transfer_request_time;
+    }
 }

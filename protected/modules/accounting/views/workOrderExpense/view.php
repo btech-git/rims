@@ -5,9 +5,9 @@
 
 
 <div id="link">
-    <?php //if (!($workOrderExpense->status == 'Approved' || $workOrderExpense->status == 'Rejected')): ?>
+    <?php if (Yii::app()->user->checkAccess("workOrderExpenseEdit")): //!($workOrderExpense->status == 'Approved' || $workOrderExpense->status == 'Rejected')): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.updateApproval"))) ?>
-    <?php //endif; ?>
+    <?php endif; ?>
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/workOrderExpense/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.admin"))) ?>
 </div>
 

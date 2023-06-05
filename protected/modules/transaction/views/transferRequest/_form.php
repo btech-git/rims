@@ -39,15 +39,11 @@
                             'attribute' => "transfer_request_date",
                             // additional javascript options for the date picker plugin
                             'options' => array(
-                                'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
                                 'changeYear' => true,
-//                                    'yearRange' => '1900:2020'
                             ),
                             'htmlOptions' => array(
                                 'readonly' => true,
-                                'value' => $transferRequest->header->isNewRecord ? date('Y-m-d') : $transferRequest->header->transfer_request_date,
-                                //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
                             ),
                         ));
                         ?>
@@ -107,13 +103,11 @@
                             'attribute' => "estimate_arrival_date",
                             // additional javascript options for the date picker plugin
                             'options' => array(
-                                'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
                                 'changeYear' => true,
-        //                                    'yearRange' => '1900:2020'
                             ),
                             'htmlOptions' => array(
-                                'value' => $transferRequest->header->isNewRecord ? date('Y-m-d') : $transferRequest->header->estimate_arrival_date,
+                                'readonly' => true,
                             ),
                         )); ?>
                         <?php echo CHtml::error($transferRequest->header, 'estimate_arrival_date'); ?>

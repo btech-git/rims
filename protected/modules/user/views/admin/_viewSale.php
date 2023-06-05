@@ -23,5 +23,11 @@
             <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][saleInvoiceEdit]", CHtml::resolveValue($model, "roles[saleInvoiceEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleInvoiceEdit')); ?></td>
             <td style="text-align: center"><?php //echo CHtml::checkBox("User[roles][saleInvoiceApproval]", CHtml::resolveValue($model, "roles[saleInvoiceApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleInvoiceApproval')); ?></td>
         </tr>
+        <tr>
+            <td>Sub Pekerjaan Luar</td>
+            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][workOrderExpenseCreate]", CHtml::resolveValue($model, "roles[workOrderExpenseCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'workOrderExpenseCreate')); ?></td>
+            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][workOrderExpenseEdit]", CHtml::resolveValue($model, "roles[workOrderExpenseEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'workOrderExpenseEdit')); ?></td>
+            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][workOrderExpenseApproval]", CHtml::resolveValue($model, "roles[workOrderExpenseApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'workOrderExpenseApproval')); ?></td>
+        </tr>
     </tbody>
 </table>

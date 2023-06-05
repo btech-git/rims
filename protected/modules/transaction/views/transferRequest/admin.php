@@ -82,6 +82,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'type'=>'raw'
                     ),
                     'transfer_request_date',
+                    'transfer_request_time',
                     'status_document',
 //                    'estimate_arrival_date',
                     array(

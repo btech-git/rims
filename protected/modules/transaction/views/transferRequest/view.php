@@ -54,7 +54,7 @@ $this->menu = array(
             'attributes' => array(
                 'id',
                 'transfer_request_no',
-                'transfer_request_date',
+                array('name' => 'transfer_request_date', 'value' => $transferRequest->transactionDateTime),
                 'status_document',
                 'estimate_arrival_date',
                 array('name' => 'requester_id', 'value' => $transferRequest->user->username),

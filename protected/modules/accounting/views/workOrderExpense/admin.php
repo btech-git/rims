@@ -139,7 +139,18 @@ $('.search-form form').submit(function(){
         ),
         array(
             'class' => 'CButtonColumn',
-            'template' => '{view}{update}',
+            'template' => '{view} {update}',
+            'buttons' => array(
+                'edit' => array(
+                    'label' => 'update',
+                    'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/update", array("id"=>$data->id))',
+                    'visible' => 'Yii::app()->user->checkAccess("workOrderExpenseEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+                ),
+                'print' => array(
+                    'label' => 'view',
+                    'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/view", array("id"=>$data->id))',
+                ),
+            ),
             'afterDelete' => 'function(){ location.reload(); }'
         ),
     ),

@@ -141,7 +141,7 @@ $('.search-form form').submit(function(){
                             'edit' => array(
                                 'label' => 'edit',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/update", array("id"=>$data->id))',
-//                                'visible' => '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("saleOrderEdit")',
+                                'visible' => 'Yii::app()->user->checkAccess("saleOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
                             ),
                             'print' => array(
                                 'label' => 'print',

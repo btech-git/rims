@@ -40,7 +40,7 @@ class TransferRequestController extends Controller {
     public function actionCreate() {
         $transferRequest = $this->instantiate(null);
         $transferRequest->header->requester_id = Yii::app()->user->id;
-        $transferRequest->header->transfer_request_date = date('Y-m-d H:i:s');
+        $transferRequest->header->transfer_request_date = date('Y-m-d');
         $transferRequest->header->created_datetime = date('Y-m-d H:i:s');
         $transferRequest->header->requester_branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
         $transferRequest->header->status_document = 'Draft';

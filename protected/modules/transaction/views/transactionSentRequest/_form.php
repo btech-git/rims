@@ -55,10 +55,8 @@
                                 'attribute' => "sent_request_date",
                                 // additional javascript options for the date picker plugin
                                 'options' => array(
-                                    'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2050'
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,

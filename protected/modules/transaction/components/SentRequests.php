@@ -116,7 +116,6 @@ class SentRequests extends CComponent {
         $isNewRecord = $this->header->isNewRecord;
         $this->header->total_quantity = $this->totalQuantity;
         $this->header->total_price = $this->grandTotal;
-        $this->header->created_datetime = date('Y-m-d H:i:s');
         $valid = $this->header->save();
 
         $requestDetails = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $this->header->id));

@@ -21,11 +21,11 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment In', Yii::app()->baseUrl . '/transaction/paymentIn/admin', array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.paymentIn.admin"))) ?>
-        <?php //if (!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentIn/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentIn.update"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment In', Yii::app()->baseUrl . '/transaction/paymentIn/admin', array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php if (Yii::app()->user->checkAccess("paymentInEdit")): //!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentIn/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+        <?php endif; ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.paymentIn.updateApproval"))) ?>
-        <?php //endif; ?>
         
         <?php if ($model->invoice->registrationTransaction->status != 'Finished'): ?>
             <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning')); ?>
