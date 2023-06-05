@@ -55,12 +55,12 @@
                                 'attribute' => "sent_request_date",
                                 // additional javascript options for the date picker plugin
                                 'options' => array(
+                                    'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
-//                                    'value' => $sentRequest->header->isNewRecord ? date('Y-m-d') : $sentRequest->header->sent_request_date,
                                 ),
                             )); ?>
                             <?php echo $form->error($sentRequest->header, 'sent_request_date'); ?>
@@ -99,11 +99,9 @@
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-//                                    'yearRange' => '1900:2020'
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
-                                    'value' => $sentRequest->header->isNewRecord ? date('Y-m-d') : $sentRequest->header->estimate_arrival_date,
                                 ),
                             ));
                             ?>

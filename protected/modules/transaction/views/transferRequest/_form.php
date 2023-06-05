@@ -39,6 +39,7 @@
                             'attribute' => "transfer_request_date",
                             // additional javascript options for the date picker plugin
                             'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
                                 'changeYear' => true,
                             ),
@@ -103,6 +104,7 @@
                             'attribute' => "estimate_arrival_date",
                             // additional javascript options for the date picker plugin
                             'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
                                 'changeYear' => true,
                             ),
