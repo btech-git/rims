@@ -116,17 +116,21 @@ $('.search-form form').submit(function(){
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
-//                        array(
-//                            'class' => 'CButtonColumn',
-//                            'template' => '{edit}',
-//                            'buttons' => array(
-//                                'edit' => array(
-//                                    'label' => 'edit',
-//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-//                                    'visible' => '$data->status != "Approved" && $data->status != "Rejected" && Yii::app()->user->checkAccess("cashTransactionEdit")',
-//                                ),
-//                            ),
-//                        ),
+                        array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{view}{update}',
+                            'buttons' => array(
+                                'update' => array(
+                                    'label' => 'update',
+                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
+                                    'visible' => 'Yii::app()->user->checkAccess("cashTransactionEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+                                ),
+                                'view' => array(
+                                    'label' => 'view',
+                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
+                                ),
+                            ),
+                        ),
                     ),
                 )); ?>
             </div>

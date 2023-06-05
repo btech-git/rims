@@ -93,9 +93,15 @@ Yii::app()->clientScript->registerScript('search', "
                             'class' => 'CButtonColumn',
                             'template' => '{view}{update}',
                             'buttons' => array(
-//                                'update' => array(
-//                                    'visible' => '$data->status == "Draft"',
-//                                ),
+                                'update' => array(
+                                    'label' => 'update',
+                                    'url' => 'Yii::app()->createUrl("accounting/journalAdjustment/update", array("id"=>$data->id))',
+                                    'visible' => 'Yii::app()->user->checkAccess("adjustmentJournalEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+                                ),
+                                'view' => array(
+                                    'label' => 'view',
+                                    'url' => 'Yii::app()->createUrl("accounting/journalAdjustment/view", array("id"=>$data->id))',
+                                ),
                             ),
                         ),
                     ),
