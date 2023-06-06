@@ -462,12 +462,15 @@ class PaymentInController extends Controller {
 
         $invoiceCriteria = new CDbCriteria;
         $invoiceCriteria->addCondition('t.payment_left > 0 AND t.invoice_date > "2021-12-31"');
-        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
-        $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
-        $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
-        $invoiceCriteria->compare('due_date', $invoice->due_date, true);
-        $invoiceCriteria->compare('total_price', $invoice->total_price, true);
-        $invoiceCriteria->compare('user_id', $invoice->user_id);
+//        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
+        $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
+        $invoiceCriteria->compare('t.invoice_date', $invoice->invoice_date, true);
+        $invoiceCriteria->compare('t.due_date', $invoice->due_date, true);
+        $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
+        $invoiceCriteria->compare('t.user_id', $invoice->user_id);
+        $invoiceCriteria->compare('t.status', $invoice->status, true);
+        $invoiceCriteria->compare('t.reference_type', $invoice->reference_type);
         
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer', 'vehicle');

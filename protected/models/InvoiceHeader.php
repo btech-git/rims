@@ -164,8 +164,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('t.invoice_number', $this->invoice_number, true);
-        // $criteria->compare('invoice_date',$this->invoice_date,true);
-        // $criteria->compare('due_date',$this->due_date,true);
         $criteria->compare('t.reference_type', $this->reference_type);
         $criteria->compare('t.sales_order_id', $this->sales_order_id);
         $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
@@ -178,7 +176,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.branch_id', $this->branch_id);
         $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('t.supervisor_id', $this->supervisor_id);
-        $criteria->compare('t.status', $this->status, FALSE);
+        $criteria->compare('t.status', $this->status);
         $criteria->compare('t.service_price', $this->service_price, true);
         $criteria->compare('t.product_price', $this->product_price, true);
         $criteria->compare('t.quick_service_price', $this->quick_service_price, true);
@@ -196,12 +194,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
             $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
         }
-
-        // $criteria->addCondition('invoice_date < :startDateInvoice AND invoice_date > :endDateInvoice');
-        // $criteria->params = array(':startDateInvoice' => $this->invoice_date, ':endDateInvoice' => $this->invoice_date_to);
-        // $criteria->addCondition('due_date < :startDateDue OR due_date > :endDateDue', 'OR');
-        // $criteria->params = array(':startDateDue' => $this->due_date, ':endDateDue' => $this->due_date_to);
-
 
         $criteria->together = 'true';
         $criteria->with = array('customer');

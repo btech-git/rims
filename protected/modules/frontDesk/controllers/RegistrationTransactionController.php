@@ -440,20 +440,20 @@ class RegistrationTransactionController extends Controller {
         }
         
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
-        $invoiceCriteria->addCondition("t.status != 'CANCELLED' AND t.registration_transaction_id IS NOT NULL AND invoice_date > '2021-01-01'");
         $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
-        $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
         $invoiceCriteria->compare('t.status', $invoice->status);
-        $invoiceCriteria->compare('t.registration_transaction_id', $invoice->registration_transaction_id);
+        $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
+//        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $invoiceCriteria->addCondition("t.status != 'CANCELLED' AND t.registration_transaction_id IS NOT NULL AND invoice_date > '2021-01-01'");
+//        $invoiceCriteria->compare('t.registration_transaction_id', $invoice->registration_transaction_id);
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array(
             'customer', 
             'vehicle',
         );
-        $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
-        $invoiceCriteria->compare('customer.customer_type', $invoice->customer_type);
         $invoiceCriteria->compare('vehicle.plate_number', $invoice->plate_number, true);
+        $invoiceCriteria->addSearchCondition('customer.name', $invoice->customer_name, true);
+        $invoiceCriteria->addSearchCondition('customer.customer_type', $invoice->customer_type, true);
 
         if (!empty($invoice->invoice_date) || !empty($invoice->invoice_date_to)) {
             $invoiceCriteria->addBetweenCondition('t.invoice_date', $invoice->invoice_date, $invoice->invoice_date_to);
