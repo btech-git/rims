@@ -104,7 +104,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("frontDesk/materialRequest/update", array("id"=>$data->id))',
-//                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("materialRequestEdit")',
+                                'visible'=> 'Yii::app()->user->checkAccess("materialRequestEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
                             ),
                         ),
                     ),

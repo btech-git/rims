@@ -31,14 +31,18 @@ $this->menu = array(
             'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.admin")
         ));  ?>
 
-        <?php if ($materialRequest->status_document != 'Approved' && $materialRequest->status_document != 'Rejected'): ?>
+        <?php //if ($materialRequest->status_document != 'Approved' && $materialRequest->status_document != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/frontDesk/materialRequest/update?id=' . $materialRequest->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.update")
+                'visible' => Yii::app()->user->checkAccess("materialRequestEdit")
             )); ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.materialRequest.updateApproval"))) ?>
-        <?php endif; ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+//                'visible' => Yii::app()->user->checkAccess("materialRequestEdit")
+            )); ?>
+        <?php //endif; ?>
 
         <h1>View Permintaan Bahan #<?php echo $materialRequest->id; ?></h1>
 

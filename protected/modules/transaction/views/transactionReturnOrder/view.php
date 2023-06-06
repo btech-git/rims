@@ -23,13 +23,21 @@ $this->menu = array(
 
         <?php
         $movements = MovementOutHeader::model()->findAllByAttributes(array('return_order_id' => $model->id));
-        if (empty($movements) && $model->status != 'Approved' && $model->status != 'Rejected'):
+//        if (empty($movements) && $model->status != 'Approved' && $model->status != 'Rejected'):
         ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.update"))) ?>
-        <?php endif; ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/update?id=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("purchaseReturnEdit")
+            )); ?>
+        <?php //endif; ?>
         
         <?php if ($model->status != 'Approved' && $model->status != 'Rejected'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.updateApproval"))) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.updateApproval")
+            )); ?>
         <?php endif; ?>
 
         <h1>View Transaction Return Beli #<?php echo $model->id; ?></h1>

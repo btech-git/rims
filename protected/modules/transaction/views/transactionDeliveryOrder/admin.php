@@ -91,7 +91,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array(
                                 'label' => 'edit',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/update", array("id"=>$data->id))',
-//                                'visible' => 'count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("deliveryEdit")',
+                                'visible' => 'Yii::app()->user->checkAccess("deliveryEdit")', //count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) == 0 && ',
                             ),
                             'print' => array(
                                 'label' => 'print',

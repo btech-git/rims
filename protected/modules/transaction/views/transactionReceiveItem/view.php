@@ -28,7 +28,11 @@ $this->menu = array(
         /*$movements = MovementInHeader::model()->findAllByAttributes(array('receive_item_id' => $model->id));
         if (count($movements)== 0 && $model->request_type != 'Retail Sales'):*/
         ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/update?id=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("receiveItemEdit")
+            )); ?>
         <?php //endif; ?>
 
         <?php if (empty($model->invoice_number) && !empty($model->purchase_order_id)): ?>

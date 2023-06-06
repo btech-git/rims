@@ -23,10 +23,18 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Movement In', Yii::app()->baseUrl . '/transaction/movementInHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.admin"))) ?>
 
-        <?php if (($model->status != 'Approved') && ($model->status != 'Delivered') && ($model->status != 'Finished') && $model->status != 'Rejected'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/movementInHeader/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.update"))) ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.updateApproval"))) ?>
-        <?php endif; ?>
+        <?php //if (($model->status != 'Approved') && ($model->status != 'Delivered') && ($model->status != 'Finished') && $model->status != 'Rejected'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/movementInHeader/update?id=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("movementInEdit")
+            )); ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+//                'visible' => Yii::app()->user->checkAccess("movementInEdit")
+            )); ?>
+        <?php //endif; ?>
         <?php /* echo CHtml::button('Update Delivered', array(
           'id' => 'detail-button',
           'name' => 'Detail',

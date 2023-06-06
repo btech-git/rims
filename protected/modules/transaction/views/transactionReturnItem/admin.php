@@ -105,7 +105,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array(
                                 'label' => 'edit',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionReturnItem/update", array("id"=>$data->id))',
-//                                'visible' => 'count(MovementInHeader::model()->findAllByAttributes(array("return_item_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("saleReturnEdit") && $data->status != "Rejected"'
+                                'visible' => 'Yii::app()->user->checkAccess("saleReturnEdit")', //count(MovementInHeader::model()->findAllByAttributes(array("return_item_id"=>$data->id))) == 0 &&  && $data->status != "Rejected"'
                             ),
                         ),
                     ),

@@ -24,10 +24,14 @@ $this->menu = array(
 
         <?php
         $movements = MovementInHeader::model()->findAllByAttributes(array('return_item_id' => $model->id));
-        if (empty($movements) && $model->status != 'Approved' && $model->status != 'Rejected'):
+//        if (empty($movements) && $model->status != 'Approved' && $model->status != 'Rejected'):
         ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReturnItem/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnItem.update"))) ?>
-        <?php endif; ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReturnItem/update?id=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("saleReturnEdit")
+            )); ?>
+        <?php //endif; ?>
         
         <?php if ($model->status != 'Approved' && $model->status != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnItem/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnItem.updateApproval"))) ?>

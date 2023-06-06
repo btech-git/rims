@@ -114,7 +114,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array (
                                 'label'=>'edit',
                                 'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
-//                                'visible'=> '$data->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestEdit")',
+                                'visible'=> 'Yii::app()->user->checkAccess("transferRequestEdit")', //$data->status_document == "Draft" && ',
                             ),
                         ),
                     ),

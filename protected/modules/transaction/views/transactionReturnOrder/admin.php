@@ -108,7 +108,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'edit' => array(
                                 'label' => 'edit',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionReturnOrder/update", array("id"=>$data->id))',
-//                                'visible' => 'count(MovementOutHeader::model()->findAllByAttributes(array("return_order_id"=>$data->id))) == 0 && Yii::app()->user->checkAccess("purchaseReturnEdit") && $data->status != "Rejected"',
+                                'visible' => 'Yii::app()->user->checkAccess("purchaseReturnEdit")', //count(MovementOutHeader::model()->findAllByAttributes(array("return_order_id"=>$data->id))) == 0 &&  && $data->status != "Rejected"',
                             ),
                         ),
                     ),

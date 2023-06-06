@@ -103,12 +103,12 @@ Yii::app()->clientScript->registerScript('search', "
                             'update' => array (
                                 'label'=>'update',
                                 'url'=>'Yii::app()->createUrl("transaction/transactionSentRequest/update", array("id"=>$data->id))',
-//                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSentRequest.update")',
+                                'visible'=> 'Yii::app()->user->checkAccess("sentRequestEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
                             ),
                             'delete' => array(
                                 'label' => 'delete',
                                 'url'=>'Yii::app()->createUrl("transaction/transactionSentRequest/delete", array("id"=>$data->id))',
-                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transaction.transactionSentRequest.update")',
+                                'visible'=> '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("sentRequestEdit")',
                                 'options' => array(
                                     'confirm' => 'Are you sure to delete this transaction?',
                                 ),

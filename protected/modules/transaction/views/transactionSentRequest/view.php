@@ -28,7 +28,6 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Sent Request', Yii::app()->baseUrl . '/transaction/transactionSentRequest/admin', array(
             'class' => 'button cbutton right',
-            'visible' => Yii::app()->user->checkAccess("transaction.transactionSentRequest.admin")
         )); ?>
 
         <?php //if ($model->status_document == "Draft"): ?>
@@ -41,7 +40,7 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
+//                'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
             )); ?>
         <?php //endif; ?>
 
