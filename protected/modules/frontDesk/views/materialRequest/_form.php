@@ -229,9 +229,8 @@
                     <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
                     <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
                 </div>
-
+                <?php echo IdempotentManager::generate(); ?>
                 <?php echo CHtml::endForm(); ?>
-
             </div>
         </div>
     </div>

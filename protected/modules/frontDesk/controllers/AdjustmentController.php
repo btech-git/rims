@@ -34,7 +34,7 @@ class AdjustmentController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($adjustment);
             $adjustment->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($adjustment->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($adjustment->header->date_posting)), $adjustment->header->branch_id);
 

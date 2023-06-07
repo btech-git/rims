@@ -43,7 +43,6 @@ class Cashs extends CComponent {
 
     public function removeDetailAt($index) {
         array_splice($this->details, $index, 1);
-        //var_dump(CJSON::encode($this->details));
     }
 
     public function save($dbConnection) {
@@ -52,19 +51,15 @@ class Cashs extends CComponent {
             $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
-                //print_r('1');
             } else {
                 $dbTransaction->rollback();
-                //print_r('2');
             }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
-            //print_r($e);
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
@@ -95,7 +90,6 @@ class Cashs extends CComponent {
     }
 
     public function flush() {
-//        $isNewRecord = $this->header->isNewRecord;
         $this->header->credit_amount = $this->totalDetails;
         $this->header->debit_amount = $this->totalDetails;
         $valid = $this->header->save();

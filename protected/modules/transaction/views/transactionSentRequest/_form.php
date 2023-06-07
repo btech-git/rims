@@ -213,6 +213,7 @@
                 </div>
             </div>
         </div>
+        <?php echo IdempotentManager::generate(); ?>
         <?php $this->endWidget(); ?>
     </div><!-- form -->
     

@@ -183,7 +183,7 @@ class TransactionPurchaseOrderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionPurchaseOrder'])) {
+        if (isset($_POST['TransactionPurchaseOrder']) && IdempotentManager::check()) {
             $this->loadState($purchaseOrder);
             $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
             $purchaseOrder->header->payment_date_estimate = date('Y-m-d');

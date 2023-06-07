@@ -101,7 +101,7 @@ class TransactionReturnItemController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionReturnItem'])) {
+        if (isset($_POST['TransactionReturnItem']) && IdempotentManager::check()) {
             $this->loadState($returnItem);
             $returnItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($returnItem->header->return_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($returnItem->header->return_item_date)), $returnItem->header->recipient_branch_id);
 

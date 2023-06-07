@@ -80,7 +80,7 @@ class MaterialRequestController extends Controller {
         $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
         $registrationTransactionDataProvider->criteria->addCondition('t.transaction_date > "2021-12-31"');
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($materialRequest);
             $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
 

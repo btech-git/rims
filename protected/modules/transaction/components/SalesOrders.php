@@ -61,7 +61,7 @@ class SalesOrders extends CComponent {
     public function save($dbConnection) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validate() && $this->flush();
+            $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
                 //print_r('1');

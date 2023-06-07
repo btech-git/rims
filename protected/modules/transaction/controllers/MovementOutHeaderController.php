@@ -190,7 +190,7 @@ class MovementOutHeaderController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['MovementOutHeader'])) {
+        if (isset($_POST['MovementOutHeader']) && IdempotentManager::check()) {
             $this->loadState($movementOut);
             $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
             

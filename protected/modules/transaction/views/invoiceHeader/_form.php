@@ -380,6 +380,8 @@
                 <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
                 <?php echo CHtml::submitButton($invoice->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
+            <?php echo IdempotentManager::generate(); ?>
+
         </div> <!-- close for <div class="small-12 medium-6 columns"> after detail -->
     </div> <!-- close for <div class="row"> after detail -->
 

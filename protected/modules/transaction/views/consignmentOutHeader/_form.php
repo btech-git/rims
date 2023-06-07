@@ -312,8 +312,8 @@
         <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
         <?php echo CHtml::submitButton($consignmentOut->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
     </div>
-
-<?php $this->endWidget(); ?>
+    <?php echo IdempotentManager::generate(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->
 

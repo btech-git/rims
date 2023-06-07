@@ -66,7 +66,7 @@ class WorkOrderExpenseController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($workOrderExpense);
             $workOrderExpense->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($workOrderExpense->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($workOrderExpense->header->transaction_date)), $workOrderExpense->header->branch_id);
 

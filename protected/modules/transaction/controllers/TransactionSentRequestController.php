@@ -150,7 +150,7 @@ class TransactionSentRequestController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['TransactionSentRequest'])) {
+        if (isset($_POST['TransactionSentRequest']) && IdempotentManager::check()) {
             $this->loadState($sentRequest);
             $sentRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($sentRequest->header->sent_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($sentRequest->header->sent_request_date)), $sentRequest->header->requester_branch_id);
 

@@ -53,7 +53,7 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration->header->customer_id = $vehicle->customer_id;
         $bodyRepairRegistration->header->branch_id = $bodyRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $bodyRepairRegistration->header->branch_id;
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($bodyRepairRegistration);
             $bodyRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);
 

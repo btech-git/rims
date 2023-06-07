@@ -144,7 +144,7 @@ class TransactionReturnOrderController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['TransactionReturnOrder'])) {
+        if (isset($_POST['TransactionReturnOrder']) && IdempotentManager::check()) {
             $this->loadState($returnOrder);
             
             if (!empty($returnOrder->header->recipient_branch_id)) {

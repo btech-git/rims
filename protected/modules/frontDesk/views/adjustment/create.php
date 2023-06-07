@@ -155,7 +155,8 @@
                     </div>
                 </div>
             </div>
-        <?php echo CHtml::endForm(); ?>
+            <?php echo IdempotentManager::generate(); ?>
+            <?php echo CHtml::endForm(); ?>
         </div><!-- form -->
     </div>
 </div>

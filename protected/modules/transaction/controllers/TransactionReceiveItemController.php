@@ -194,7 +194,7 @@ class TransactionReceiveItemController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['TransactionReceiveItem'])) {
+        if (isset($_POST['TransactionReceiveItem']) && IdempotentManager::check()) {
             $this->loadState($receiveItem);
             $receiveItem->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($receiveItem->header->receive_item_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($receiveItem->header->receive_item_date)), $receiveItem->header->recipient_branch_id);
 

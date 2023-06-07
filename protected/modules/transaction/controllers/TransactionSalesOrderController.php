@@ -234,7 +234,7 @@ class TransactionSalesOrderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionSalesOrder'])) {
+        if (isset($_POST['TransactionSalesOrder']) && IdempotentManager::check()) {
             $this->loadState($salesOrder);
             $salesOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($salesOrder->header->sale_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($salesOrder->header->sale_order_date)), $salesOrder->header->requester_branch_id);
             

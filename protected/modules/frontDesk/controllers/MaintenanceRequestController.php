@@ -49,7 +49,7 @@ class MaintenanceRequestController extends Controller {
         $maintenanceRequest->header->status = 'PENDING';
         $maintenanceRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($maintenanceRequest);
             $maintenanceRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($maintenanceRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($maintenanceRequest->header->transaction_date)), $maintenanceRequest->header->branch_id);
 

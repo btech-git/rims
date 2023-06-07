@@ -381,7 +381,7 @@ class TransactionDeliveryOrderController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['TransactionDeliveryOrder'])) {
+        if (isset($_POST['TransactionDeliveryOrder']) && IdempotentManager::check()) {
             $this->loadState($deliveryOrder);
             $deliveryOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($deliveryOrder->header->delivery_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($deliveryOrder->header->delivery_date)), $deliveryOrder->header->sender_branch_id);
             

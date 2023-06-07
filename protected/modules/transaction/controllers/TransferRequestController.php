@@ -50,7 +50,7 @@ class TransferRequestController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($transferRequest);
             $transferRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($transferRequest->header->transfer_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($transferRequest->header->transfer_request_date)), $transferRequest->header->requester_branch_id);
             

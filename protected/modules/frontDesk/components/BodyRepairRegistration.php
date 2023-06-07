@@ -326,11 +326,12 @@ class BodyRepairRegistration extends CComponent {
     public function save($dbConnection) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validate() && $this->flush();
-            if ($valid)
+            $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
+            if ($valid) {
                 $dbTransaction->commit();
-            else
+            } else {
                 $dbTransaction->rollback();
+            }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;

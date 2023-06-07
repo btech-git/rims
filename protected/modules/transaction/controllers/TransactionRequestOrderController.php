@@ -164,7 +164,7 @@ class TransactionRequestOrderController extends Controller
         if (isset($_POST['Cancel'])) 
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionRequestOrder'])) {
+        if (isset($_POST['TransactionRequestOrder']) && IdempotentManager::check()) {
             $this->loadState($requestOrder);
             $requestOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($requestOrder->header->request_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($requestOrder->header->request_order_date)), $requestOrder->header->requester_branch_id);
 

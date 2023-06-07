@@ -108,7 +108,7 @@ class ConsignmentOutHeaderController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['ConsignmentOutHeader'])) {
+        if (isset($_POST['ConsignmentOutHeader']) && IdempotentManager::check()) {
             $this->loadState($consignmentOut);
             $consignmentOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentOut->header->date_posting)), $consignmentOut->header->branch_id);
             

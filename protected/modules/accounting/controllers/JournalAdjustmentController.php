@@ -50,7 +50,7 @@ class JournalAdjustmentController extends Controller {
         $dataProvider = $account->search();
 //        $dataProvider->criteria->addCondition("t.status = 'Approved'");
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($journalVoucher);
             $journalVoucher->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($journalVoucher->header->date)), Yii::app()->dateFormatter->format('yyyy', strtotime($journalVoucher->header->date)), $journalVoucher->header->branch_id);
 

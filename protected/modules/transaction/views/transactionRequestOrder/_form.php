@@ -329,9 +329,9 @@
                 <?php echo CHtml::submitButton($requestOrder->header->isNewRecord ? 'Create' : 'Save',
                     array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
+            <?php echo IdempotentManager::generate(); ?>
 
             <?php $this->endWidget(); ?>
-
         </div>
     </div>
     <script type="text/javascript">

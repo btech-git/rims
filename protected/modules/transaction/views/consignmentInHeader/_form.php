@@ -238,6 +238,7 @@
                 <?php echo CHtml::submitButton($consignmentIn->header->isNewRecord ? 'Create' : 'Save',
                     array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
+            <?php echo IdempotentManager::generate(); ?>
 
             <?php $this->endWidget(); ?>
 

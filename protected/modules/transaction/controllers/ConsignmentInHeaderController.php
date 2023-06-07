@@ -114,7 +114,7 @@ class ConsignmentInHeaderController extends Controller {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['ConsignmentInHeader'])) {
+        if (isset($_POST['ConsignmentInHeader']) && IdempotentManager::check()) {
 
             $this->loadState($consignmentIn);
             $consignmentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($consignmentIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($consignmentIn->header->date_posting)), $consignmentIn->header->receive_branch);
