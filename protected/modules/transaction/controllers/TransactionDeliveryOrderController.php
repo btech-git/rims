@@ -459,7 +459,7 @@ class TransactionDeliveryOrderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionDeliveryOrder'])) {
+        if (isset($_POST['TransactionDeliveryOrder']) && IdempotentManager::check()) {
             $this->loadState($deliveryOrder);
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $deliveryOrder->header->delivery_order_no,

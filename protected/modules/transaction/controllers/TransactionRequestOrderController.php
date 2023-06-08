@@ -77,27 +77,6 @@ class TransactionRequestOrderController extends Controller
      */
     public function actionCreate()
     {
-        //$model=new TransactionRequestOrder;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // $product = new Product('search');
-        // $product->unsetAttributes();  // clear any default values
-        // if (isset($_GET['Product']))
-        // $product->attributes = $_GET['Product'];
-
-        // $productCriteria = new CDbCriteria;
-        // $productCriteria->compare('name',$product->name,true);
-        // $productCriteria->together=true;
-        // $productCriteria->with = array('productSubMasterCategory','productMasterCategory');
-        // $productCriteria->compare('productMasterCategory.name',$product->product_master_category_name == NULL ? $product->product_master_category_name : $product->product_master_category_name , true);
-        // $productCriteria->compare('productSubMasterCategory.name',$product->product_sub_master_category_name == NULL ? $product->product_sub_master_category_name : $product->product_sub_master_category_name , true);
-        // $productCriteria->compare('productSubCategory.name',$product->product_sub_category_name == NULL ? $product->product_sub_category_name : $product->product_sub_category_name , true);
-
-        // 	$productDataProvider = new CActiveDataProvider('Product', array(
-        //   	'criteria'=>$productCriteria,
-        // 	));
-
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -191,8 +170,6 @@ class TransactionRequestOrderController extends Controller
      */
     public function actionUpdate($id)
     {
-        //$model=$this->loadModel($id);
-
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $product = new Product('search');
@@ -205,42 +182,18 @@ class TransactionRequestOrderController extends Controller
         $productCriteria->compare('t.name', $product->name, true);
         $productCriteria->compare('manufacturer_code', $product->manufacturer_code, true);
         $productCriteria->together = true;
-        //$productCriteria->with = array('productSubMasterCategory','productMasterCategory','brand');
-        // $productCriteria->with = array('productPrices');
-        // $productCriteria->compare('productMasterCategory.name',$product->product_master_category_name == NULL ? $product->product_master_category_name : $product->product_master_category_name , true);
-        // $productCriteria->compare('productSubMasterCategory.name',$product->product_sub_master_category_name == NULL ? $product->product_sub_master_category_name : $product->product_sub_master_category_name , true);
-        // $productCriteria->compare('productSubCategory.name',$product->product_sub_category_name == NULL ? $product->product_sub_category_name : $product->product_sub_category_name , true);
-        // $productCriteria->compare('brand.name',$product->product_brand_name == NULL ? $product->product_brand_name : $product->product_brand_name , true);
         $productCriteria->select = 't.*, rims_product_master_category.name as product_master_category_name, rims_product_sub_master_category.name as product_sub_master_category_name, rims_product_sub_category.name as product_sub_category_name, rims_brand.name as product_brand_name, rims_supplier_product.product_id as product, rims_supplier.name as product_supplier';
         $productCriteria->join = 'join rims_product_master_category on rims_product_master_category.id = t.product_master_category_id join rims_product_sub_master_category on rims_product_sub_master_category.id = t.product_sub_master_category_id join rims_product_sub_category on rims_product_sub_category.id = t.product_sub_category_id join rims_brand on rims_brand.id = t.brand_id Left outer join rims_supplier_product on t.id = rims_supplier_product.product_id left outer join rims_supplier on rims_supplier_product.supplier_id = rims_supplier.id';
         $productCriteria->compare('rims_product_master_category.name', $product->product_master_category_name, true);
-        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name,
-            true);
+        $productCriteria->compare('rims_product_sub_master_category.name', $product->product_sub_master_category_name, true);
         $productCriteria->compare('rims_product_sub_category.name', $product->product_sub_category_name, true);
         $productCriteria->compare('rims_supplier.name', $product->product_supplier, true);
         $productCriteria->compare('rims_brand.name', $product->product_brand_name, true);
-        // $productCriteria->join = '';
-        //$productCriteria->with = array('productSubMasterCategory','productMasterCategory','brand');
-
-        // $productCriteria->compare('productPrices.purchase_price',$product->product_purchase_price == NULL ? $product->product_purchase_price : $product->product_purchase_price , true);
-
+        
         $productDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $productCriteria,
         ));
 
-
-        // $supplier = new SupplierProductView('search');
-        //     	$supplier->unsetAttributes();  // clear any default values
-        //     	if (isset($_GET['SupplierProductView']))
-        //       	$supplier->attributes = $_GET['SupplierProductView'];
-
-        // $supplierCriteria = new CDbCriteria;
-        // $supplierCriteria->compare('name',$supplier->name,true);
-        // $supplierCriteria->compare('product',$supplier->product,true);
-
-        // 	$supplierDataProvider = new CActiveDataProvider('SupplierProductView', array(
-        //   	'criteria'=>$supplierCriteria,
-        // 	));
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
         if (isset($_GET['Supplier'])) {
@@ -255,8 +208,6 @@ class TransactionRequestOrderController extends Controller
         $supplierCriteria->join = 'LEFT OUTER JOIN `rims_supplier_product`ON t.id = rims_supplier_product.supplier_id LEFT OUTER JOIN `rims_product`ON rims_supplier_product.product_id = rims_product.id ';
         $supplierCriteria->compare('rims_product.name ', $supplier->product_name, true);
 
-
-        //$supplierCriteria->compare('product',$supplier->product,true);
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
             'criteria' => $supplierCriteria,
         ));
@@ -278,7 +229,6 @@ class TransactionRequestOrderController extends Controller
             'criteria' => $priceCriteria,
         ));
 
-
         $requestOrder = $this->instantiate($id);
         $requestOrder->header->setCodeNumberByRevision('request_order_no');
 
@@ -287,11 +237,7 @@ class TransactionRequestOrderController extends Controller
         if (isset($_POST['Cancel'])) 
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionRequestOrder'])) {
-            // $model->attributes=$_POST['TransactionRequestOrder'];
-            // if($model->save())
-            // 	$this->redirect(array('view','id'=>$model->id));
-
+        if (isset($_POST['TransactionRequestOrder']) && IdempotentManager::check()) {
             $this->loadState($requestOrder);
             if ($requestOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $requestOrder->header->id));
@@ -300,7 +246,6 @@ class TransactionRequestOrderController extends Controller
                     echo $detail->quantity;
                 }
             }
-
         }
 
         $this->render('update', array(
@@ -374,12 +319,10 @@ class TransactionRequestOrderController extends Controller
     public function actionAjaxSupplier($id)
     {
         if (Yii::app()->request->isAjaxRequest) {
-            //$requestOrder = $this->instantiate($id);
             $supplier = Supplier::model()->findByPk($id);
             $tanggal = empty($_POST['TransactionRequestOrder']['request_order_date']) ? date('Y-m-d') : $_POST['TransactionRequestOrder']['request_order_date'];
             $tanggal_jatuh_tempo = date('Y-m-d', strtotime($tanggal . '+' . $supplier->tenor . ' days'));
             $paymentEstimation = $tanggal_jatuh_tempo;
-            //$supplier = Supplier::model()->findByPk($productPrice->supplier_id);
 
             $object = array(
                 //'id'=>$supplier->id,
@@ -395,10 +338,8 @@ class TransactionRequestOrderController extends Controller
     {
         if (Yii::app()->request->isAjaxRequest) {
             $price = ProductPrice::model()->findByPk($id);
-            //$supplier = Supplier::model()->findByPk($productPrice->supplier_id);
 
             $object = array(
-                //'id'=>$supplier->id,
                 'price' => $price->purchase_price,
             );
 
@@ -411,13 +352,6 @@ class TransactionRequestOrderController extends Controller
         if (Yii::app()->request->isAjaxRequest) {
             $product = Product::model()->findByPk($id);
             $unitName = Unit::model()->findByPk($product->unit_id)->name;
-//            $productUnit = ProductUnit::model()->findByAttributes(array(
-//                'product_id' => $product->id,
-//                'unit_type' => 'Main'
-//            ));
-//            if (count($productUnit) != 0) {
-//                $unit = $productUnit->unit_id;
-//            }
 
             $object = array(
                 'id' => $product->id,

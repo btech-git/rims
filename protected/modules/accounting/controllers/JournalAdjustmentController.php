@@ -81,7 +81,7 @@ class JournalAdjustmentController extends Controller {
         $dataProvider = $account->search();
         $dataProvider->criteria->addCondition("t.status = 'Approved'");
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($journalVoucher);
 
             if ($journalVoucher->save(Yii::app()->db)) {

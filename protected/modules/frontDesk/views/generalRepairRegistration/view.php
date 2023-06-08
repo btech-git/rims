@@ -103,6 +103,7 @@ $this->breadcrumbs = array(
                                 },
                             })'
                         )); ?>
+                        <?php echo IdempotentManager::generate(); ?>
                     
                     <?php //endif; ?>
                 </div>
@@ -201,14 +202,6 @@ $this->breadcrumbs = array(
                 ), TRUE)
             );
             
-            /*if (Yii::app()->user->checkAccess("generalManager")) {
-                $tabsArray['Journal'] = array(
-                    'id' => 'journal',
-                    'content' => $this->renderPartial('_viewJournal', array(
-                        'model' => $model
-                    ), TRUE)
-                );
-            }*/
             ?>
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => $tabsArray,
@@ -233,7 +226,5 @@ $this->breadcrumbs = array(
         <?php endif; ?>
     </div>
 </div>
-
-<?php echo IdempotentManager::generate(); ?>
 
 <?php echo CHtml::endForm(); ?>

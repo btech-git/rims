@@ -384,7 +384,7 @@ class BodyRepairRegistration extends CComponent {
     public function saveDetails($dbConnection) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
-            $valid = $this->validateDetails() && $this->flushDetails();
+            $valid = $this->validateDetails() && IdempotentManager::build()->save() && $this->flushDetails();
             if ($valid)
                 $dbTransaction->commit();
             else

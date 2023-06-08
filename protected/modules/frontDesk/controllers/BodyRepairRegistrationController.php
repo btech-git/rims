@@ -183,7 +183,7 @@ class BodyRepairRegistrationController extends Controller {
             $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
 
         //if (isset($_POST['_FormSubmit_'])) {
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadStateDetails($bodyRepairRegistration);
 
             if ($bodyRepairRegistration->saveDetails(Yii::app()->db))
@@ -210,116 +210,9 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration = $this->instantiate($id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
-//        $type = "";
-//
-//        $damage = new Service('search');
-//        $damage->unsetAttributes();  // clear any default values
-//        if (isset($_GET['Service'])) {
-//            $damage->attributes = $_GET['Service'];
-//        }
-//
-//        $damageCriteria = new CDbCriteria;
-//        $damageCriteria->together = 'true';
-//        $damageCriteria->with = array('serviceCategory', 'serviceType');
-//
-//        $damageCriteria->compare('t.name', $damage->name, true);
-//        $damageCriteria->compare('t.code', $damage->code, true);
-//        $damageCriteria->compare('t.service_category_id', $damage->service_category_id);
-//        $damageCriteria->compare('t.service_type_id', 2);
-//        $explodeKeyword = explode(" ", $damage->findkeyword);
-//        foreach ($explodeKeyword as $key) {
-//            $damageCriteria->compare('t.code', $key, true, 'OR');
-//            $damageCriteria->compare('t.name', $key, true, 'OR');
-//            $damageCriteria->compare('description', $key, true, 'OR');
-//            $damageCriteria->compare('serviceCategory.name', $key, true, 'OR');
-//            $damageCriteria->compare('serviceCategory.code', $key, true, 'OR');
-//            $damageCriteria->compare('serviceType.name', $key, true, 'OR');
-//            $damageCriteria->compare('serviceType.code', $key, true, 'OR');
-//        }
-//
-//        $damageDataProvider = new CActiveDataProvider('Service', array(
-//            'criteria' => $damageCriteria,
-//        ));
-//
-//        $qs = new QuickService('search');
-//        $qs->unsetAttributes();  // clear any default values
-//        if (isset($_GET['QuickService'])) {
-//            $qs->attributes = $_GET['QuickService'];
-//        }
-//        $qsCriteria = new CDbCriteria;
-//        $qsCriteria->compare('name', $qs->name, true);
-//        $qsCriteria->compare('code', $qs->code, true);
-//        $qsCriteria->compare('rate', $qs->rate, true);
-//
-//        $qsDataProvider = new CActiveDataProvider('QuickService', array(
-//            'criteria' => $qsCriteria,
-//        ));
-//        $service = new Service('search');
-//        $service->unsetAttributes();  // clear any default values
-//        if (isset($_GET['Service'])) {
-//            $service->attributes = $_GET['Service'];
-//        }
-//
-//        $serviceCriteria = new CDbCriteria;
-//        $serviceCriteria->together = 'true';
-//        $serviceCriteria->with = array('serviceCategory', 'serviceType');
-//
-//        $serviceCriteria->compare('t.name', $service->name, true);
-//        $serviceCriteria->compare('t.code', $service->code, true);
-//        $explodeKeyword = explode(" ", $service->findkeyword);
-//        foreach ($explodeKeyword as $key) {
-//            $serviceCriteria->compare('t.code', $key, true, 'OR');
-//            $serviceCriteria->compare('t.name', $key, true, 'OR');
-//            $serviceCriteria->compare('description', $key, true, 'OR');
-//            $serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
-//            $serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
-//            $serviceCriteria->compare('serviceType.name', $key, true, 'OR');
-//            $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
-//        }
-//
-//        $serviceDataProvider = new CActiveDataProvider('Service', array(
-//            'criteria' => $serviceCriteria,
-//        ));
-//
-//        $serviceChecks = RegistrationService::model()->findAllByAttributes(array('service_id' => $id));
-//        $serviceArray = array();
-//        foreach ($serviceChecks as $key => $serviceCheck) {
-//            array_push($serviceArray, $serviceCheck->service_id);
-//        }
-//
-//        $product = new Product('search');
-//        $product->unsetAttributes();  // clear any default values
-//        if (isset($_GET['Product'])) {
-//            $product->attributes = $_GET['Product'];
-//        }
-//
-//        $productCriteria = new CDbCriteria;
-//        $productCriteria->together = true;
-//        $productCriteria->with = array(
-//            'productMasterCategory',
-//            'productSubMasterCategory',
-//            'productSubCategory',
-//            'brand'
-//        );
-//        $productCriteria->compare('t.name', $product->name, true);
-//        $productCriteria->compare('productMasterCategory.name', $product->product_master_category_name, true);
-//        $productCriteria->compare('productSubMasterCategory.name', $product->product_sub_master_category_name, true);
-//        $productCriteria->compare('productSubCategory.name', $product->product_sub_category_name, true);
-//        $productCriteria->compare('brand.name', $product->product_brand_name, true);
-//
-//        $productDataProvider = new CActiveDataProvider('Product', array(
-//            'criteria' => $productCriteria,
-//        ));
-
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($bodyRepairRegistration);
             
-//            JurnalUmum::model()->deleteAllByAttributes(array(
-//                'kode_transaksi' => $bodyRepairRegistration->header->transaction_number,
-//            ));
-            
-//            $bodyRepairRegistration->header->setCodeNumberByRevision('transaction_number');
-
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
             }
@@ -329,16 +222,6 @@ class BodyRepairRegistrationController extends Controller {
             'bodyRepairRegistration' => $bodyRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
-//            'damage' => $damage,
-//            'damageDataProvider' => $damageDataProvider,
-//            'qs' => $qs,
-//            'qsDataProvider' => $qsDataProvider,
-//            'service' => $service,
-//            'serviceDataProvider' => $serviceDataProvider,
-//            'product' => $product,
-//            'productDataProvider' => $productDataProvider,
-//            'serviceArray' => $serviceArray,
-//            'type' => $type,
         ));
     }
 
@@ -451,27 +334,12 @@ class BodyRepairRegistrationController extends Controller {
 
         if ($model->header->update(array('work_order_number', 'work_order_date', 'work_order_time', 'status'))) {
             if ($model->header->repair_type == 'BR') {
-//                $real = RegistrationRealizationProcess::model()->findByAttributes(array(
-//                    'registration_transaction_id' => $id,
-//                    'name' => 'Work Order'
-//                ));
                 $real = new RegistrationRealizationProcess();
                 $real->checked = 1;
                 $real->checked_date = date('Y-m-d');
                 $real->checked_by = 1;
                 $real->detail = 'Add When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
                 $real->save();
-//                $real->detail = 'Update When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
-//                $real->update(array('checked', 'checked_by', 'checked_date', 'detail'));
-//            } else {
-//                $real = new RegistrationRealizationProcess();
-//                $real->registration_transaction_id = $model->header->id;
-//                $real->name = 'Work Order';
-//                $real->checked = 1;
-//                $real->checked_date = date('Y-m-d');
-//                $real->checked_by = 1;
-//                $real->detail = 'Add When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
-//                $real->save();
             }
 
             $this->redirect(array('view', 'id' => $id));
@@ -486,92 +354,6 @@ class BodyRepairRegistrationController extends Controller {
             'reals' => $reals,
         ));
     }
-
-//    public function actionReceive($movementOutDetailId, $registrationProductId, $quantity)
-//    {
-//        $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);
-//        $registration = RegistrationTransaction::model()->findByPk($registrationProduct->registration_transaction_id);
-//        $movementOutDetail = MovementOutDetail::model()->findByPk($movementOutDetailId);
-//        $movementOut = MovementOutHeader::model()->findByPk($movementOutDetail->movement_out_header_id);
-//
-//        $receiveHeader = new TransactionReceiveItem();
-//        $receiveHeader->receive_item_no = 'RI_' . $registration->id . mt_rand();
-//        $receiveHeader->receive_item_date = date('Y-m-d');
-//        $receiveHeader->arrival_date = date('Y-m-d');
-//        $receiveHeader->recipient_id = Yii::app()->user->getId();
-//        $receiveHeader->recipient_branch_id = $registration->branch_id;
-//        $receiveHeader->request_type = 'Retail Sales';
-//        $receiveHeader->request_date = $movementOut->date_posting;
-//        $receiveHeader->destination_branch = $registration->branch_id;
-//        $receiveHeader->movement_out_id = $movementOut->id;
-//        
-//        if ($receiveHeader->save(false)) {
-//            $receiveDetail = new TransactionReceiveItemDetail();
-//            $receiveDetail->receive_item_id = $receiveHeader->id;
-//            $receiveDetail->movement_out_detail_id = $movementOutDetail->id;
-//            $receiveDetail->product_id = $registrationProduct->product_id;
-//            $receiveDetail->qty_request = $registrationProduct->quantity;
-//            $receiveDetail->qty_received = $quantity;
-//            // $receiveDetail->save(false);
-//            if ($receiveDetail->save(false)) {
-//
-//                $criteria = new CDbCriteria;
-//                $criteria->together = 'true';
-//                $criteria->with = array('receiveItem');
-//                $criteria->condition = "receiveItem.movement_out_id =" . $movementOut->id . " AND receive_item_id != " . $receiveHeader->id;
-//                $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
-//
-//                $quantity = 0;
-//                //print_r($receiveItemDetails);
-//                foreach ($receiveItemDetails as $receiveItemDetail) {
-//                    $quantity += $receiveItemDetail->qty_received;
-//                }
-//
-//                $moveOutDetail = MovementOutDetail::model()->findByAttributes(array(
-//                    'id' => $movementOutDetailId,
-//                    'movement_out_header_id' => $movementOut->id
-//                ));
-//
-//                $moveOutDetail->quantity_receive_left = $moveOutDetail->quantity - ($receiveDetail->qty_received + $quantity);
-//                //$consignmentDetail->qty_request_left = 100;
-//                $moveOutDetail->quantity_receive = $quantity + $receiveDetail->qty_received;
-//
-//                if ($moveOutDetail->save(false)) {
-//                    $mcriteria = new CDbCriteria;
-//                    $mcriteria->together = 'true';
-//                    $mcriteria->with = array('movementOutHeader');
-//                    $mcriteria->condition = "movementOutHeader.registration_transaction_id =" . $registration->id . " AND movement_out_header_id != " . $movementOut->id;
-//                    $moDetails = MovementOutDetail::model()->findAll($mcriteria);
-//
-//                    $mquantity = 0;
-//                    //print_r($receiveItemDetails);
-//                    foreach ($moDetails as $moDetail) {
-//                        $mquantity += $moDetail->quantity_receive;
-//                    }
-//
-//                    $rpDetail = RegistrationProduct::model()->findByAttributes(array(
-//                        'id' => $registrationProductId,
-//                        'registration_transaction_id' => $registration->id
-//                    ));
-//
-//                    $rpDetail->quantity_receive_left = $rpDetail->quantity - ($movementOutDetail->quantity_receive + $mquantity);
-//                    //$consignmentDetail->qty_request_left = 100;
-//                    $rpDetail->quantity_receive = $mquantity + $movementOutDetail->quantity_receive;
-//                    
-//                    if ($rpDetail->save(false)) {
-//                        $registrationRealization = new RegistrationRealizationProcess();
-//                        $registrationRealization->registration_transaction_id = $registration->id;
-//                        $registrationRealization->name = 'Receive Item';
-//                        $registrationRealization->checked = 1;
-//                        $registrationRealization->checked_by = Yii::app()->user->id;
-//                        $registrationRealization->checked_date = date('Y-m-d');
-//                        $registrationRealization->detail = 'Receive Item for Product : ' . $registrationProduct->product->name . ' from Movement Out #: ' . $movementOut->movement_out_no . ' Quantity : ' . $quantity;
-//                        $registrationRealization->save();
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     public function actionPdf($id) {
         $bodyRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
@@ -1005,21 +787,16 @@ class BodyRepairRegistrationController extends Controller {
             $bodyRepairRegistration = $this->instantiate($id);
             $this->loadStateDetails($bodyRepairRegistration);
 
-//			$totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalQuickServiceQuantity));
-//			$subTotalQuickService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalQuickService));
             $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $bodyRepairRegistration->totalQuantityService));
             $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalService));
             $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->totalDiscountService));
             $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalService));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxItemAmount));
-//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->taxServiceAmount));
             $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalProduct));
             $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $bodyRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
-//                'totalQuickServiceQuantity' => $totalQuickServiceQuantity,
-//                'subTotalQuickService' => $subTotalQuickService,
                 'totalQuantityService' => $totalQuantityService,
                 'subTotalService' => $subTotalService,
                 'totalDiscountService' => $totalDiscountService,
@@ -1027,7 +804,6 @@ class BodyRepairRegistrationController extends Controller {
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
                 'grandTotalProduct' => $grandTotalProduct,
-//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotal' => $grandTotal,
             ));
         }

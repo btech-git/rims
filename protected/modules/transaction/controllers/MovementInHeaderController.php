@@ -251,7 +251,7 @@ class MovementInHeaderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['MovementInHeader'])) {
+        if (isset($_POST['MovementInHeader']) && IdempotentManager::check()) {
             $this->loadState($movementIn);
             $movementIn->header->setCodeNumberByRevision('movement_in_number');
             

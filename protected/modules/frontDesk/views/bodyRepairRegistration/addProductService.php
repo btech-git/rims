@@ -116,17 +116,6 @@ $this->breadcrumbs=array(
                                                     }',
                                                 )),
                                             )); ?>
-                                            <?php /*echo CHtml::activeCheckBox($bodyRepairRegistration->header,'ppn', array(
-                                                'onchange' => CHtml::ajax(array(
-                                                    'type' => 'POST',
-                                                    'dataType' => 'JSON',
-                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $bodyRepairRegistration->header->id)),
-                                                    'success' => 'function(data) {
-                                                        $("#grand_total_transaction").html(data.grandTotal);
-                                                        $("#tax_item_amount").html(data.taxItemAmount);
-                                                    }',
-                                                )),
-                                            ));*/ ?>
                                             <?php echo CHtml::activeDropDownList($bodyRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
@@ -145,21 +134,6 @@ $this->breadcrumbs=array(
                                                 )),
                                             )); ?>
                                         </td>
-<!--                                        <td>
-                                            <?php /*echo CHtml::activeCheckBox($bodyRepairRegistration->header,'pph', array(
-                                                'onchange' => CHtml::ajax(array(
-                                                    'type' => 'POST',
-                                                    'dataType' => 'JSON',
-                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $bodyRepairRegistration->header->id)),
-                                                    'success' => 'function(data) {
-                                                        $("#grand_total_transaction").html(data.grandTotal);
-                                                        $("#tax_service_amount").html(data.taxServiceAmount);
-                                                        $("#total_quick_service_quantity").html(data.totalQuickServiceQuantity);
-                                                        $("#sub_total_quick_service").html(data.subTotalQuickService);
-                                                    }',
-                                                )),
-                                            ));*/ ?>
-                                        </td>-->
                                         <?php if($bodyRepairRegistration->header->work_order_number != ""): ?>
                                             <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'work_order_number')); ?></td>
                                         <?php endif; ?>
@@ -391,6 +365,8 @@ $this->breadcrumbs=array(
                                     </div>
                                 </div>
                             </div>
+            
+                            <?php echo IdempotentManager::generate(); ?>
                         </div>
                     </div> <!-- end row -->
                 </div>

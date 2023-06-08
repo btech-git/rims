@@ -113,7 +113,7 @@ class WorkOrderExpenseController extends Controller {
 
         $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($workOrderExpense);
             $workOrderExpense->header->setCodeNumberByRevision('transaction_number');
 

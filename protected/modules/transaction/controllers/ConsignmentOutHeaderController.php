@@ -171,11 +171,8 @@ class ConsignmentOutHeaderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['ConsignmentOutHeader'])) {
-            // $model->attributes=$_POST['ConsignmentOutHeader'];
-            // if($model->save())
-            // 	$this->redirect(array('view','id'=>$model->id));
-
+        if (isset($_POST['ConsignmentOutHeader']) && IdempotentManager::check()) {
+            
             $this->loadState($consignmentOut);
             if ($consignmentOut->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $consignmentOut->header->id));

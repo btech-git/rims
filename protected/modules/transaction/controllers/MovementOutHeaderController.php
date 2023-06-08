@@ -313,7 +313,7 @@ class MovementOutHeaderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['MovementOutHeader'])) {
+        if (isset($_POST['MovementOutHeader']) && IdempotentManager::check()) {
             $this->loadState($movementOut);
             
             if ($movementOut->save(Yii::app()->db)) {

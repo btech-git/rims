@@ -223,7 +223,7 @@ class TransactionReceiveItemController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionReceiveItem'])) {
+        if (isset($_POST['TransactionReceiveItem']) && IdempotentManager::check()) {
             
             $this->loadState($receiveItem);
             JurnalUmum::model()->deleteAllByAttributes(array(

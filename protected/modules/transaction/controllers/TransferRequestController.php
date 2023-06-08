@@ -80,7 +80,7 @@ class TransferRequestController extends Controller {
         }
         $transferRequest->details = $details;
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($transferRequest);
 
             JurnalUmum::model()->deleteAllByAttributes(array(
@@ -306,9 +306,7 @@ class TransferRequestController extends Controller {
                         $transferRequestDetail->save(false);
 
                         $hppPrice = $detail->product->hpp * $detail->quantity;
-
                     }
-                    
                 }
 
                 $transferRequest->save(false);
@@ -484,8 +482,7 @@ class TransferRequestController extends Controller {
         }
     }
 
-	public function actionAjaxHtmlUpdateProductSubBrandSelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
 
@@ -495,8 +492,7 @@ class TransferRequestController extends Controller {
         }
     }
     
-	public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
 
@@ -506,8 +502,7 @@ class TransferRequestController extends Controller {
         }
     }
     
-	public function actionAjaxHtmlUpdateProductSubMasterCategorySelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
 
@@ -517,8 +512,7 @@ class TransferRequestController extends Controller {
         }
     }
     
-	public function actionAjaxHtmlUpdateProductSubCategorySelect()
-	{
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
 

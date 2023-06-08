@@ -121,19 +121,6 @@ class TransactionReturnItemController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        // $model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['TransactionReturnItem']))
-        // {
-        // 	$model->attributes=$_POST['TransactionReturnItem'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('update',array(
-        // 	'model'=>$model,
-        // ));
-
         $transfer = new TransactionSentRequest('search');
         $transfer->unsetAttributes();  // clear any default values
         if (isset($_GET['TransactionSentRequest']))
@@ -143,32 +130,34 @@ class TransactionReturnItemController extends Controller {
         $transferCriteria->compare('sent_request_no', $transfer->sent_request_no . '%', true, 'AND', false);
 
         $transferDataProvider = new CActiveDataProvider('TransactionSentRequest', array(
-                    'criteria' => $transferCriteria,
-                ));
+            'criteria' => $transferCriteria,
+        ));
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionSalesOrder']))
+        if (isset($_GET['TransactionSalesOrder'])) {
             $sales->attributes = $_GET['TransactionSalesOrder'];
+        }
 
         $salesCriteria = new CDbCriteria;
         $salesCriteria->compare('sale_order_no', $sales->sale_order_no . '%', true, 'AND', false);
 
         $salesDataProvider = new CActiveDataProvider('TransactionSalesOrder', array(
-                    'criteria' => $salesCriteria,
-                ));
+            'criteria' => $salesCriteria,
+        ));
 
         $delivery = new TransactionDeliveryOrder('search');
         $delivery->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionDeliveryOrder']))
+        if (isset($_GET['TransactionDeliveryOrder'])) {
             $delivery->attributes = $_GET['TransactionDeliveryOrder'];
+        }
 
         $deliveryCriteria = new CDbCriteria;
         $deliveryCriteria->compare('delivery_order_no', $delivery->delivery_order_no . '%', true, 'AND', false);
 
         $deliveryDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array(
-                    'criteria' => $deliveryCriteria,
-                ));
+            'criteria' => $deliveryCriteria,
+        ));
 
         $returnItem = $this->instantiate($id);
         $returnItem->header->setCodeNumberByRevision('return_item_no');
@@ -178,7 +167,7 @@ class TransactionReturnItemController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionReturnItem'])) {
+        if (isset($_POST['TransactionReturnItem']) && IdempotentManager::check()) {
             $this->loadState($returnItem);
             if ($returnItem->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $returnItem->header->id));
@@ -288,15 +277,12 @@ class TransactionReturnItemController extends Controller {
             $returnItem->addDetail($requestType, $requestId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('returnItem' => $returnItem
-                    ), false, true);
+            $this->renderPartial('_detail', array('returnItem' => $returnItem), false, true);
         }
     }
 
     public function actionAjaxHtmlRemoveDetailRequest($id) {
         if (Yii::app()->request->isAjaxRequest) {
-
-
 
             $returnItem = $this->instantiate($id);
             $this->loadState($returnItem);
@@ -304,15 +290,12 @@ class TransactionReturnItemController extends Controller {
             $returnItem->removeDetailAt();
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('returnItem' => $returnItem
-                    ), false, true);
+            $this->renderPartial('_detail', array('returnItem' => $returnItem), false, true);
         }
     }
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-
-
 
             $returnItem = $this->instantiate($id);
             $this->loadState($returnItem);
@@ -320,8 +303,7 @@ class TransactionReturnItemController extends Controller {
             $returnItem->removeDetail($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('returnItem' => $returnItem
-                    ), false, true);
+            $this->renderPartial('_detail', array('returnItem' => $returnItem), false, true);
         }
     }
 
@@ -333,7 +315,6 @@ class TransactionReturnItemController extends Controller {
                 $customer = Customer::model()->findByPk($sales->customer_id);
                 $customer_name = $customer->name;
             }
-
 
             $object = array(
                 'id' => $sales->id,
@@ -397,7 +378,6 @@ class TransactionReturnItemController extends Controller {
                 $customer_name = $customer->name;
             }
 
-
             $object = array(
                 'id' => $consignment->id,
                 'no' => $consignment->consignment_out_no,
@@ -445,11 +425,9 @@ class TransactionReturnItemController extends Controller {
     public function instantiate($id) {
         if (empty($id)) {
             $returnItem = new ReturnItems(new TransactionReturnItem(), array());
-            //print_r("test");
         } else {
             $returnItemModel = $this->loadModel($id);
             $returnItem = new ReturnItems($returnItemModel, $returnItemModel->transactionReturnItemDetails);
-            //print_r("test");
         }
         return $returnItem;
     }
@@ -458,7 +436,6 @@ class TransactionReturnItemController extends Controller {
         if (isset($_POST['TransactionReturnItem'])) {
             $returnItem->header->attributes = $_POST['TransactionReturnItem'];
         }
-
 
         if (isset($_POST['TransactionReturnItemDetail'])) {
             foreach ($_POST['TransactionReturnItemDetail'] as $i => $item) {

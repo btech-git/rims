@@ -76,7 +76,7 @@ class MaintenanceRequestController extends Controller {
         }
         $maintenanceRequest->details = $details;
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($maintenanceRequest);
 
             if ($maintenanceRequest->save(Yii::app()->db))

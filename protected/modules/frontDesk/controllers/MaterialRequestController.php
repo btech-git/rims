@@ -119,7 +119,7 @@ class MaterialRequestController extends Controller {
         }
         $materialRequest->details = $details;
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($materialRequest);
             $materialRequest->header->setCodeNumberByRevision('transaction_number');
 

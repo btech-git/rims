@@ -157,7 +157,7 @@ class PaymentOutController extends Controller {
 //            $receiveItemDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
 //        }
         
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentOut);
             $paymentOut->header->setCodeNumberByRevision('payment_number');
 

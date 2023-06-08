@@ -198,7 +198,7 @@ class TransactionSentRequestController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionSentRequest'])) {
+        if (isset($_POST['TransactionSentRequest']) && IdempotentManager::check()) {
             $this->loadState($sentRequest);
 
             JurnalUmum::model()->deleteAllByAttributes(array(

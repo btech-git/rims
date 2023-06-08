@@ -266,7 +266,7 @@ class TransactionPurchaseOrderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionPurchaseOrder'])) {
+        if (isset($_POST['TransactionPurchaseOrder']) && IdempotentManager::check()) {
             $this->loadState($purchaseOrder);
             
             JurnalUmum::model()->deleteAllByAttributes(array(

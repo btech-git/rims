@@ -120,6 +120,8 @@ $this->breadcrumbs = array(
                                     })
                                 '
                             )); ?>
+
+                            <?php echo IdempotentManager::generate(); ?>
                         <?php //endif; ?>
                     <?php endif; ?>
                 </div>
@@ -260,7 +262,5 @@ $this->breadcrumbs = array(
         <?php endif; ?>
     </div>
 </div>
-
-<?php echo IdempotentManager::generate(); ?>
 
 <?php echo CHtml::endForm(); ?>

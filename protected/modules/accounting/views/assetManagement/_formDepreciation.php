@@ -73,6 +73,8 @@
         <div class="row buttons">
             <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
         </div>
+            
+        <?php echo IdempotentManager::generate(); ?>
 
     </div>
 

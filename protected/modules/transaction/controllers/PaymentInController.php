@@ -315,7 +315,7 @@ class PaymentInController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['PaymentIn'])) {
+        if (isset($_POST['PaymentIn']) && IdempotentManager::check()) {
             $dbTransaction = Yii::app()->db->beginTransaction();
             try {
                 $valid = true; 

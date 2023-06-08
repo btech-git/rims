@@ -188,23 +188,14 @@ class ConsignmentInHeaderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['ConsignmentInHeader'])) {
+        if (isset($_POST['ConsignmentInHeader']) && IdempotentManager::check()) {
             $this->loadState($consignmentIn);
             if ($consignmentIn->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $consignmentIn->header->id));
             }
         }
 
-
-        // if(isset($_POST['ConsignmentInHeader']))
-        // {
-        // 	$model->attributes=$_POST['ConsignmentInHeader'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-
         $this->render('update', array(
-            //'model'=>$model,
             'consignmentIn' => $consignmentIn,
             'supplier' => $supplier,
             'supplierDataProvider' => $supplierDataProvider,

@@ -55,7 +55,7 @@ class AssetManagementController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetPurchase'];
             $model->accumulated_depreciation_value = 0.00;
             $model->depreciation_start_date = date('Y-m-d');
@@ -64,7 +64,7 @@ class AssetManagementController extends Controller {
             $model->monthly_useful_life = empty($model->assetCategory) ? 0 : $model->assetCategory->number_of_years * 12;
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), 6);
             
-            if ($model->save()) {
+            if ($model->save() && IdempotentManager::build()->save()) {
                 JurnalUmum::model()->deleteAllByAttributes(array(
                     'kode_transaksi' => $model->transaction_number,
                 ));
@@ -118,11 +118,11 @@ class AssetManagementController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['AssetSale'])) {
+        if (isset($_POST['AssetSale']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetSale'];
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), 6);
             
-            if ($model->save()) {
+            if ($model->save() && IdempotentManager::build()->save()) {
                 $assetSale = AssetPurchase::model()->findByPk($id);
                 $assetSale->status = 'Sold';
                 $assetSale->update(array('status'));
@@ -216,15 +216,13 @@ class AssetManagementController extends Controller {
         $assetDepreciation->header->transaction_date = date('Y-m-t');
         $assetDepreciation->header->transaction_time = date('H:i:s');
         $assetDepreciation->header->user_id = Yii::app()->user->id;
-//        $periodMonth = isset($_GET['DepreciationPeriodMonth']) ? $_GET['DepreciationPeriodMonth'] : date('m');
-//        $periodYear = isset($_GET['DepreciationPeriodYear']) ? $_GET['DepreciationPeriodYear'] : date('Y');
         
         $assetDepreciation->addAsset();
         
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['Submit'])) {
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($assetDepreciation);
             $assetDepreciation->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($assetDepreciation->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($assetDepreciation->header->transaction_date)), 6);
             
@@ -235,8 +233,6 @@ class AssetManagementController extends Controller {
 
         $this->render('createDepreciation', array(
             'assetDepreciation' => $assetDepreciation,
-//            'periodMonth' => $periodMonth,
-//            'periodYear' => $periodYear,
         ));
     }
 
@@ -251,7 +247,7 @@ class AssetManagementController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['AssetPurchase'])) {
+        if (isset($_POST['AssetPurchase']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetPurchase'];
             if ($model->save())
                 $this->redirect(array('view', 'id' => $model->id));
@@ -366,6 +362,5 @@ class AssetManagementController extends Controller {
         } else {
             $assetDepreciation->details = array();
         }
-        
     }
 }

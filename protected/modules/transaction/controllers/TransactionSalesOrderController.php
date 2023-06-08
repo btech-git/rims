@@ -258,19 +258,6 @@ class TransactionSalesOrderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        // $model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['TransactionSalesOrder']))
-        // {
-        // 	$model->attributes=$_POST['TransactionSalesOrder'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('update',array(
-        // 	'model'=>$model,
-        // ));
-
         $salesOrder = $this->instantiate($id);
         $salesOrder->header->setCodeNumberByRevision('sale_order_no');
 
@@ -278,8 +265,11 @@ class TransactionSalesOrderController extends Controller {
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
-        if (isset($_GET['Customer']))
+        
+        if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
+        }
+        
         $customerCriteria = new CDbCriteria;
         $customerCriteria->compare('name', $customer->name, true);
         $customerDataProvider = new CActiveDataProvider('Customer', array(
@@ -288,8 +278,10 @@ class TransactionSalesOrderController extends Controller {
 
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
+        
+        if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
+        }
 
         $productCriteria = new CDbCriteria;
         $productCriteria->compare('t.id', $product->id, true);
@@ -308,7 +300,7 @@ class TransactionSalesOrderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionSalesOrder'])) {
+        if (isset($_POST['TransactionSalesOrder']) && IdempotentManager::check()) {
             $this->loadState($salesOrder);
 
             if ($salesOrder->save(Yii::app()->db))
@@ -319,8 +311,6 @@ class TransactionSalesOrderController extends Controller {
             'salesOrder' => $salesOrder,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
-            // 'request'=>$request,
-            // 'requestDataProvider'=>$requestDataProvider,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
         ));
@@ -336,8 +326,7 @@ class TransactionSalesOrderController extends Controller {
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
 
-            $this->renderPartial('_detailSalesOrder', array('salesOrder' => $salesOrder
-                    ), false, true);
+            $this->renderPartial('_detailSalesOrder', array('salesOrder' => $salesOrder), false, true);
         }
     }
 
@@ -347,12 +336,10 @@ class TransactionSalesOrderController extends Controller {
             $salesOrder = $this->instantiate($id);
             $this->loadState($salesOrder);
 
-            //print_r(CJSON::encode($salesOrder->details));
             $salesOrder->removeDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detailSalesOrder', array('salesOrder' => $salesOrder,
-                    ), false, true);
+            $this->renderPartial('_detailSalesOrder', array('salesOrder' => $salesOrder,), false, true);
         }
     }
 
@@ -365,8 +352,6 @@ class TransactionSalesOrderController extends Controller {
             $tanggal_jatuh_tempo = date('Y-m-d', strtotime($tanggal . '+' . $tenor . ' days'));
             $coa = !empty($customer->coa_id) ? $customer->coa_id : '';
             $paymentEstimation = $coa == "" ? $tanggal : $tanggal_jatuh_tempo;
-
-            //$supplier = Supplier::model()->findByPk($productPrice->supplier_id);
 
             $object = array(
                 'id' => $customer->id,
@@ -389,16 +374,6 @@ class TransactionSalesOrderController extends Controller {
             $total = 0;
             $totalItems = 0;
             $priceBeforeDisc = $discount = $subtotal = $ppn = 0;
-            // if($requestType == 'Request for Purchase'){
-            // 	foreach ($salesOrder->details as $key => $detail) {
-            // 		$totalItems += $detail->total;
-            // 		$total += $detail->subtotal;_quantity;
-            // 	}
-            // } else if($requestType == 'Request for Transfer'){
-            // 	foreach ($salesOrder->transferDetails as $key => $transferDetail) {
-            // 		$totalItems += $transferDetail->quantity;	
-            // 	}
-            // }
             $getPpn = $_POST['TransactionSalesOrder']['ppn'];
 
             foreach ($salesOrder->details as $key => $detail) {
@@ -411,13 +386,15 @@ class TransactionSalesOrderController extends Controller {
 
                 $total += $subtotal + $ppn;
             }
+            
             $object = array(
                 'priceBeforeDisc' => $priceBeforeDisc,
                 'discount' => $discount,
                 'subtotal' => $subtotal,
                 'total' => $total,
                 'ppn' => $ppn,
-                'totalItems' => $totalItems);
+                'totalItems' => $totalItems
+            );
             echo CJSON::encode($object);
         }
     }
@@ -442,14 +419,13 @@ class TransactionSalesOrderController extends Controller {
                 break;
             case 3:
                 $newquantity = $quantity + $discountAmount;
-                // $retail = $price / $newquantity;
-                // $subtotal= $retail * $quantity;
                 $subtotal = $price;
                 $totalquantity = $newquantity;
                 break;
         }
         $newPrice = $subtotal / $quantity;
         $discountAmount = $price - $subtotal;
+        
         $object = array(
             'subtotal' => $subtotal,
             'totalquantity' => $totalquantity,
@@ -480,8 +456,6 @@ class TransactionSalesOrderController extends Controller {
                 break;
             case 3:
                 $newquantity = $quantity + $discountAmount;
-                // $retail = $price / $newquantity;
-                // $subtotal= $retail * $quantity;
                 $subtotal = $price;
                 $totalquantity = $newquantity;
                 break;
@@ -569,12 +543,10 @@ class TransactionSalesOrderController extends Controller {
 
     public function actionUpdateApproval($headerId) {
         $salesOrder = TransactionSalesOrder::model()->findByPk($headerId);
-        //$salesOrderDetail = TransactionSalesOrderDetail::model()->findByPk($detailId);
         $historis = TransactionSalesOrderApproval::model()->findAllByAttributes(array('sales_order_id' => $headerId));
         $model = new TransactionSalesOrderApproval;
         $model->date = date('Y-m-d H:i:s');
         $branch = Branch::model()->findByPk($salesOrder->requester_branch_id);
-        //$model = $this->loadModelDetail($detailId);
         if (isset($_POST['TransactionSalesOrderApproval'])) {
             $model->attributes = $_POST['TransactionSalesOrderApproval'];
             if ($model->save()) {
@@ -774,18 +746,8 @@ class TransactionSalesOrderController extends Controller {
         if ($company == NULL) {
             echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
         } else {
-            // $companyarray = [];
-            // foreach ($company as $key => $value) {
-            // 	$companyarray[] = (int) $value->company_id;
-            // }
             $data = CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name'));
-            // $criteria = new CDbCriteria;
-            // $criteria->addInCondition('company_id', $companyarray); 
-            // $data = CompanyBank::model()->findAll($criteria);
-            // var_dump($data); die("S");			// var_dump($data->); die("S");
             if (count($data) > 0) {
-                // $bank = $data->bank->name;
-                // $data=CHtml::listData($data,'bank_id',$data);
                 echo CHtml::tag('option', array('value' => ''), '[--Select Company Bank--]', true);
                 foreach ($data as $value => $name) {
                     echo CHtml::tag('option', array('value' => $name->id), CHtml::encode($name->bank->name . " " . $name->account_no . " a/n " . $name->account_name), true);
@@ -880,15 +842,8 @@ class TransactionSalesOrderController extends Controller {
 
         if (isset($_GET['SaveExcel']))
             $this->getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai, $branch);
-        //$dataProvider=new CActiveDataProvider('JurnalUmum');
-        // $model=new JurnalUmum('search');
-        // $model->unsetAttributes();  // clear any default values
-        // if(isset($_GET['JurnalUmum']))
-        // 	$model->attributes=$_GET['JurnalUmum'];
 
         $this->render('laporanPenjualan', array(
-            // 'dataProvider'=>$dataProvider,
-            //'jurnals'=>$jurnals,
             'company' => $company,
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_sampai' => $tanggal_sampai,
@@ -905,7 +860,6 @@ class TransactionSalesOrderController extends Controller {
 
     public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai, $branch) {
 
-        // var_dump($customer); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
@@ -965,10 +919,6 @@ class TransactionSalesOrderController extends Controller {
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-                // 'fill' => array(
-                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                //     'color' => array('rgb' => 'FF0000')
-                // )
         );
 
         // Add some data
@@ -998,30 +948,16 @@ class TransactionSalesOrderController extends Controller {
                 ->setCellValue('P7', 'BIAYA')
                 ->setCellValue('Q7', 'TOTAL');
 
-
-        // ->setCellValue('L2', 'Historical');
-
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:S2');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:S3');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:S4');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I7:M7');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E7:F7');
-        //$objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:J1');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:D2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E2:G2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H2:H3');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I2:K2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('L2:L3');
 
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle('A2:S2')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A3:S3')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A4:S4')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
-        //$sheet->getStyle('A7:I7')->applyFromArray($styleBold);
-        // $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
@@ -1040,23 +976,15 @@ class TransactionSalesOrderController extends Controller {
         $objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(15);
 
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-        //$objPHPExcel->getActiveSheet()->freezePane('E4');
-
         $startrow = 8;
         $grandPbd = $grandDisc = $grandPpn = $grandSubtotal = $grandTotal = 0;
         foreach ($transactions as $key => $transaction) {
 
-            //$phone = ($value->customerPhones !=NULL)?$this->phoneNumber($value->customerPhones):'';
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transaction->sale_order_date);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $transaction->sale_order_no);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $transaction->customer->name);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->payment_type);
-            //$objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$startrow, );
-            //$customertype = (($value->customer_type == 'Individual')?"P":(($value->customer_type == 'Company')?"K":""));
-            //$objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$startrow, "");
+            
             $startrow = $startrow + 1;
             foreach ($transaction->transactionSalesOrderDetails as $key => $transactionDetail) {
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transactionDetail->product->code);
@@ -1091,11 +1019,6 @@ class TransactionSalesOrderController extends Controller {
             $grandPpn += $transaction->ppn_price;
             $grandSubtotal += $transaction->subtotal;
             $grandTotal += $transaction->total_price;
-            // $objPHPExcel->getActiveSheet()
-            //     ->getStyle('C'.$startrow)
-            //     ->getNumberFormat()
-            //     ->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
-            // $lastkode = $jurnal->kode_transaksi;
             $startrow++;
         }
 
@@ -1107,9 +1030,7 @@ class TransactionSalesOrderController extends Controller {
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q' . $startrow, number_format($grandTotal, 2));
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle("G" . ($startrow) . ":Q" . ($startrow))->applyFromArray($styleBold);
-        // $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$startrow, $totalDebet);
-        // $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$startrow, $totalKredit);
-        // die();
+        
         $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet
@@ -1146,7 +1067,6 @@ class TransactionSalesOrderController extends Controller {
         $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
         $customer_id = (isset($_GET['customer_id'])) ? $_GET['customer_id'] : '';
         $customer_name = (isset($_GET['customer_name'])) ? $_GET['customer_name'] : '';
-        // $paymentType = (isset($_GET['payment_type'])) ? $_GET['payment_type'] : '';
 
         $criteria = new CDbCriteria;
 
@@ -1154,7 +1074,6 @@ class TransactionSalesOrderController extends Controller {
             $criteria->with = array('transaction_so' => array('together' => true, 'with' => array('customer')));
             $criteria->addCondition("customer_id = '" . $customer_id . "'");
         }
-        //$criteria->addBetweenCondition('t.purchase_order_date', $tanggal_mulai, $tanggal_sampai);
         $criteria->with = array('transaction_so');
         $criteria->addBetweenCondition('transaction_so.sale_order_date', $tanggal_mulai, $tanggal_sampai);
         $criteria->addBetweenCondition('t.due_date', $due_mulai, $due_sampai);
@@ -1177,7 +1096,6 @@ class TransactionSalesOrderController extends Controller {
         }
         $transactions = Forecasting::model()->findAll($criteria);
 
-        //$jurnals = JurnalUmum::model()->findAll($coaCriteria);
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
         if (isset($_GET['Customer']))
@@ -1188,23 +1106,14 @@ class TransactionSalesOrderController extends Controller {
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('customer_type', $customer->customer_type, true);
 
-
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
         ));
-        //print_r($jurnals);
 
         if (isset($_GET['SaveExcel']))
             $this->getXlsOutstanding($transactions, $tanggal_mulai, $tanggal_sampai);
-        //$dataProvider=new CActiveDataProvider('JurnalUmum');
-        // $model=new JurnalUmum('search');
-        // $model->unsetAttributes();  // clear any default values
-        // if(isset($_GET['JurnalUmum']))
-        // 	$model->attributes=$_GET['JurnalUmum'];
 
         $this->render('laporanOutstanding', array(
-            // 'dataProvider'=>$dataProvider,
-            //'jurnals'=>$jurnals,
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_sampai' => $tanggal_sampai,
             'due_mulai' => $due_mulai,
@@ -1214,15 +1123,12 @@ class TransactionSalesOrderController extends Controller {
             'company' => $company,
             'customer_id' => $customer_id,
             'customer_name' => $customer_name,
-            // 'paymentType'=>$paymentType,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
         ));
     }
 
     public function getXlsOutstanding($transactions, $tanggal_mulai, $tanggal_sampai) {
-        //$lastkode = "";
-        // var_dump($customer); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
@@ -1282,10 +1188,6 @@ class TransactionSalesOrderController extends Controller {
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-                // 'fill' => array(
-                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                //     'color' => array('rgb' => 'FF0000')
-                // )
         );
         $styleBorder = array(
             'borders' => array(
@@ -1327,32 +1229,18 @@ class TransactionSalesOrderController extends Controller {
                 ->setCellValue('M7', 'NO PELUNASAN')
                 ->setCellValue('N7', 'KODE BANK');
 
-
-        // ->setCellValue('L2', 'Historical');
-
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:N2');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:N3');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:N4');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E7:F7');
-        //$objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:J1');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:D2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E2:G2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H2:H3');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I2:K2');
-        // $objPHPExcel->setActiveSheetIndex(0)->mergeCells('L2:L3');
 
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle('A2:J2')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A3:J3')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A4:J4')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
-        // $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
 
         $sheet->getStyle('A7:N7')->applyFromArray($styleBold);
         $sheet->getStyle('B7:N7')->applyFromArray($styleBorder);
         $sheet->getStyle('B7:N7')->applyFromArray($styleSize);
-        // $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(2);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(17);
@@ -1367,23 +1255,17 @@ class TransactionSalesOrderController extends Controller {
         $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(11);
         $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(13);
         $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        // $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-        //$objPHPExcel->getActiveSheet()->freezePane('E4');
 
         $startrow = 8;
         $totalDebet = $totalKredit = 0;
         $totalNota = $ppn = $lain = $bayar = $piutang = 0;
         foreach ($transactions as $key => $transaction) {
 
-            //$phone = ($value->customerPhones !=NULL)?$this->phoneNumber($value->customerPhones):'';
             $so = TransactionSalesOrder::model()->findByPk($transaction->transaction_id);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $so->customer->name);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $so->sale_order_date);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->due_date);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $so->sale_order_no);
-            //$customertype = (($value->customer_type == 'Individual')?"P":(($value->customer_type == 'Company')?"K":""));
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, "");
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, number_format($so->subtotal, 2));
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($so->ppn_price, 2));
@@ -1400,14 +1282,7 @@ class TransactionSalesOrderController extends Controller {
             $lain += $so->discount;
             $bayar += $transaction->realization_balance;
             $piutang += $so->total_price;
-
-            // $objPHPExcel->getActiveSheet()->setCellValue('L'.$startrow,'see details');
-            // $objPHPExcel->getActiveSheet()->getCell('L'.$startrow)->getHyperlink()->setUrl("sheet://'Historical'!A1");
-            // $objPHPExcel->getActiveSheet()
-            //     ->getStyle('C'.$startrow)
-            //     ->getNumberFormat()
-            //     ->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
-            // $lastkode = $jurnal->kode_transaksi;
+            
             $startrow++;
         }
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, "TOTAL");
@@ -1420,9 +1295,7 @@ class TransactionSalesOrderController extends Controller {
         $sheet->getStyle("F" . ($startrow) . ":K" . ($startrow))->applyFromArray($styleBold);
         $sheet->getStyle("F" . ($startrow) . ":K" . ($startrow))->applyFromArray($BStyle);
         $sheet->getStyle("B" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleSize);
-        // $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$startrow, $totalDebet);
-        // $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$startrow, $totalKredit);
-        // die();
+        
         $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet
@@ -1449,7 +1322,6 @@ class TransactionSalesOrderController extends Controller {
     }
 
     public function actionAjaxGetBranch() {
-
 
         $data = Branch::model()->findAllByAttributes(array('company_id' => $_POST['company']));
 

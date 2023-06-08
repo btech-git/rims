@@ -497,6 +497,7 @@ $this->breadcrumbs=array(
                                     </div>
                                 </div>
                             </div>
+                            <?php echo IdempotentManager::generate(); ?>
                         </div>
                     </div> <!-- end row -->
                 </div>

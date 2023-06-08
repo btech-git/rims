@@ -310,8 +310,7 @@ class InvoiceHeaderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['InvoiceHeader'])) {
-
+        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
 
             $this->loadState($invoice);
             if ($invoice->save(Yii::app()->db)) {

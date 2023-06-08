@@ -136,7 +136,6 @@ class TransactionReturnOrderController extends Controller {
         $receiveDataProvider->criteria->addCondition('t.receive_item_date > "2021-12-31"');
 
         $returnOrder = $this->instantiate(null);
-//        $returnOrder->header->recipient_branch_id = $returnOrder->header->isNewRecord ? UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()))->branch_id : $returnOrder->header->recipient_branch_id;
         $returnOrder->header->created_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($returnOrder->header);
 
@@ -169,18 +168,6 @@ class TransactionReturnOrderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        // $model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['TransactionReturnOrder']))
-        // {
-        // 	$model->attributes=$_POST['TransactionReturnOrder'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('update',array(
-        // 	'model'=>$model,
-        // ));
         $receive = new TransactionReceiveItem('search');
         $receive->unsetAttributes();  // clear any default values
         if (isset($_GET['TransactionReceiveItem']))
@@ -190,8 +177,8 @@ class TransactionReturnOrderController extends Controller {
         $receiveCriteria->compare('receive_item_no', $receive->receive_item_no . '%', true, 'AND', false);
 
         $receiveDataProvider = new CActiveDataProvider('TransactionReceiveItem', array(
-                    'criteria' => $receiveCriteria,
-                ));
+            'criteria' => $receiveCriteria,
+        ));
 
         $returnOrder = $this->instantiate($id);
         $returnOrder->header->setCodeNumberByRevision('return_order_no');
@@ -201,7 +188,7 @@ class TransactionReturnOrderController extends Controller {
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
-        if (isset($_POST['TransactionReturnOrder'])) {
+        if (isset($_POST['TransactionReturnOrder']) && IdempotentManager::check()) {
             $this->loadState($returnOrder);
             if ($returnOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $returnOrder->header->id));
@@ -238,15 +225,12 @@ class TransactionReturnOrderController extends Controller {
             $returnOrder->addDetail($requestType, $requestId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('returnOrder' => $returnOrder
-                    ), false, true);
+            $this->renderPartial('_detail', array('returnOrder' => $returnOrder), false, true);
         }
     }
 
     public function actionAjaxHtmlRemoveDetailRequest($id) {
         if (Yii::app()->request->isAjaxRequest) {
-
-
 
             $returnOrder = $this->instantiate($id);
             $this->loadState($returnOrder);
@@ -254,15 +238,12 @@ class TransactionReturnOrderController extends Controller {
             $returnOrder->removeDetailAt();
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('returnOrder' => $returnOrder
-                    ), false, true);
+            $this->renderPartial('_detail', array('returnOrder' => $returnOrder), false, true);
         }
     }
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-
-
 
             $returnOrder = $this->instantiate($id);
             $this->loadState($returnOrder);
@@ -270,8 +251,7 @@ class TransactionReturnOrderController extends Controller {
             $returnOrder->removeDetail($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('returnOrder' => $returnOrder
-                    ), false, true);
+            $this->renderPartial('_detail', array('returnOrder' => $returnOrder), false, true);
         }
     }
 
@@ -283,7 +263,6 @@ class TransactionReturnOrderController extends Controller {
                 $supplier = Supplier::model()->findByPk($purchase->supplier_id);
                 $supplier_name = $supplier->name;
             }
-
 
             $object = array(
                 'id' => $purchase->id,
@@ -306,7 +285,6 @@ class TransactionReturnOrderController extends Controller {
                 $supplier = Supplier::model()->findByPk($consignment->supplier_id);
                 $supplier_name = $supplier->name;
             }
-
 
             $object = array(
                 'id' => $consignment->id,
@@ -396,11 +374,9 @@ class TransactionReturnOrderController extends Controller {
     public function instantiate($id) {
         if (empty($id)) {
             $returnOrder = new ReturnOrders(new TransactionReturnOrder(), array());
-            //print_r("test");
         } else {
             $returnOrderModel = $this->loadModel($id);
             $returnOrder = new ReturnOrders($returnOrderModel, $returnOrderModel->transactionReturnOrderDetails);
-            //print_r("test");
         }
         return $returnOrder;
     }
@@ -409,7 +385,6 @@ class TransactionReturnOrderController extends Controller {
         if (isset($_POST['TransactionReturnOrder'])) {
             $returnOrder->header->attributes = $_POST['TransactionReturnOrder'];
         }
-
 
         if (isset($_POST['TransactionReturnOrderDetail'])) {
             foreach ($_POST['TransactionReturnOrderDetail'] as $i => $item) {
@@ -467,7 +442,6 @@ class TransactionReturnOrderController extends Controller {
                 $returnOrder->save(false);
                 
                 if ($model->approval_type == 'Approved') {
-//                    $receive = TransactionReceiveItem::model()->findByPk($returnOrder->receive_item_id);
                     $jumlah = 0;
                     $branch = Branch::model()->findByPk($returnOrder->recipient_branch_id);
                     
@@ -502,23 +476,6 @@ class TransactionReturnOrderController extends Controller {
                         $jurnalUmumRetur->transaction_type = 'RTO';
                         $jurnalUmumRetur->save();
                         
-                        //save product master category coa inventory in transit
-//                        $coaMasterInventory = Coa::model()->findByPk($receiveDetail->product->productMasterCategory->coaInventoryInTransit->id);
-//                        $getCoaMasterInventory = $coaMasterInventory->code;
-//                        $coaMasterInventoryWithCode = Coa::model()->findByAttributes(array('code' => $getCoaMasterInventory));
-//                        $jurnalUmumMasterPersediaan = new JurnalUmum;
-//                        $jurnalUmumMasterPersediaan->kode_transaksi = $returnOrder->return_order_no;
-//                        $jurnalUmumMasterPersediaan->tanggal_transaksi = $returnOrder->return_order_date;
-//                        $jurnalUmumMasterPersediaan->coa_id = $coaMasterInventoryWithCode->id;
-//                        $jurnalUmumMasterPersediaan->branch_id = $returnOrder->recipient_branch_id;
-//                        $jurnalUmumMasterPersediaan->total = $jumlah;
-//                        $jurnalUmumMasterPersediaan->debet_kredit = 'K';
-//                        $jurnalUmumMasterPersediaan->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumMasterPersediaan->transaction_subject = $returnOrder->supplier->name;
-//                        $jurnalUmumMasterPersediaan->is_coa_category = 1;
-//                        $jurnalUmumMasterPersediaan->transaction_type = 'RTO';
-//                        $jurnalUmumMasterPersediaan->save();
-
                         //save product sub master category coa inventory in transit
                         if (empty($returnOrder->supplier_id)) {
                             $jurnalUmumPersediaan = new JurnalUmum;
@@ -534,21 +491,6 @@ class TransactionReturnOrderController extends Controller {
                             $jurnalUmumPersediaan->transaction_type = 'RTO';
                             $jurnalUmumPersediaan->save();
                         }
-
-//                        $getCoaPpn = '108.00.000';
-//                        $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
-//                        $jurnalPpn = new JurnalUmum;
-//                        $jurnalPpn->kode_transaksi = $returnOrder->return_order_no;
-//                        $jurnalPpn->tanggal_transaksi = $returnOrder->return_order_date;
-//                        $jurnalPpn->coa_id = $coaPpnWithCode->id;
-//                        $jurnalPpn->branch_id = $returnOrder->recipient_branch_id;
-//                        $jurnalPpn->total = $jumlah * 0.1;
-//                        $jurnalPpn->debet_kredit = 'K';
-//                        $jurnalPpn->tanggal_posting = date('Y-m-d');
-//                        $jurnalPpn->transaction_subject = $returnOrder->supplier->name;
-//                        $jurnalPpn->is_coa_category = 0;
-//                        $jurnalPpn->transaction_type = 'RTO';
-//                        $jurnalPpn->save();
                     }
                 }
 
@@ -560,8 +502,6 @@ class TransactionReturnOrderController extends Controller {
             'model' => $model,
             'returnOrder' => $returnOrder,
             'historis' => $historis,
-                //'jenisPersediaan'=>$jenisPersediaan,
-                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
     }
 
