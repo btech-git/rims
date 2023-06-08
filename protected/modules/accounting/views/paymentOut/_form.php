@@ -3,25 +3,12 @@
     <?php echo CHtml::errorSummary($paymentOut->header); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php //echo CHtml::label('Payment Out #', false); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php //echo CHtml::encode(CHtml::value($paymentOut->header, 'payment_number')); ?>
-                        <?php //echo CHtml::error($paymentOut->header, 'payment_number'); ?>
-                    </div>
-                </div>
-            </div>-->
-            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
                         <?php echo CHtml::label('Tanggal Payment', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php //echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($paymentOut->header, 'payment_date'))); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                             'model' => $paymentOut->header,
                             'attribute' => "payment_date",
@@ -29,7 +16,6 @@
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
                                 'changeYear'=>true,
-//                                'yearRange'=>'1900:2020'
                             ),
                             'htmlOptions'=>array(
                                 'value'=>date('Y-m-d'),
@@ -187,7 +173,6 @@
                     </div>
                     <div class="small-8 columns">
                         <?php
-//                            $branchId = $paymentOut->header->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $paymentOut->header->branch_id;
                             $userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
                             $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => $userBranch->branch_id));
                         ?>
@@ -214,61 +199,6 @@
         </div>
     </div>
 
-<!--    <div id="product">
-        <fieldset>
-            <legend>Product</legend>
-            <table>
-                <thead>
-                    <tr>
-                        <td>Manufacture Code</td>
-                        <td>Name</td>
-                        <td>Qty</td>
-                        <td>Unit</td>
-                        <td>Unit Price</td>
-                        <td>Total</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php /*if (!empty($paymentOut->header->purchase_order_id)): ?>
-                        <?php foreach ($purchaseOrder->transactionPurchaseOrderDetails as $purchaseOrderDetail): ?>
-                            <tr>
-                                <?php $product = Product::model()->findByPK($purchaseOrderDetail->product_id); ?>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($purchaseOrderDetail, 'quantity')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrderDetail, 'unit_price'))); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrderDetail, 'total_price'))); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="5" style="text-align: right">SUB TOTAL</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder, 'subtotal'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" style="text-align: right">PPN 10%</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder, 'ppn_price'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" style="text-align: right">GRAND TOTAL</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder, 'total_price'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" style="text-align: right">PAYMENT AMOUNT</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder, 'payment_amount'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" style="text-align: right">REMAINING</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseOrder, 'payment_left')));*/ ?></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </fieldset>
-    </div>-->
-    
     <hr />
 
     <div class="row">
