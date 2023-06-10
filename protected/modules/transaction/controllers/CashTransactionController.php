@@ -220,7 +220,6 @@ class CashTransactionController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $cashTransaction = $this->instantiate($id);
-        $cashTransaction->header->setCodeNumberByRevision('transaction_number');
         $this->performAjaxValidation($cashTransaction->header);
 
         $coaKas = new Coa('search');
@@ -265,6 +264,11 @@ class CashTransactionController extends Controller {
 
         if (isset($_POST['CashTransaction']) && IdempotentManager::check()) {
             $this->loadState($cashTransaction);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $cashTransaction->transaction_number,
+                'branch_id' => $cashTransaction->branch_id,
+            ));
+            $cashTransaction->header->setCodeNumberByRevision('transaction_number');
 
             if ($cashTransaction->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $cashTransaction->header->id));

@@ -20,23 +20,42 @@
     </thead>
     <tbody>
         <?php $footerTotalSums = array(); ?>
-        <?php foreach ($registrationVehicleCarMakeInfo as $registrationVehicleCarMakeItem): ?>
+        <?php foreach ($registrationVehicleInfo as $registrationVehicleCarMakeInfo): ?>
+            <?php $groupTotalSums = array(); ?>
             <tr>
-                <td style="text-align: right"><?php echo $registrationVehicleCarMakeItem['name']; ?></td>
-                <?php $totalSum = 0; ?>
+                <td style="text-align: left"><?php echo $registrationVehicleCarMakeInfo['name']; ?></td>
+            </tr>
+            <?php foreach ($registrationVehicleCarMakeInfo['car_models'] as $registrationVehicleCarModelInfo): ?>
+                <tr>
+                    <td style="text-align: right"><?php echo $registrationVehicleCarModelInfo['name']; ?></td>
+                    <?php $totalSum = 0; ?>
+                    <?php foreach ($dateNumList as $dateNum): ?>
+                        <?php $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT); ?>
+                        <?php $total = isset($registrationVehicleCarModelInfo['totals'][$transactionDate]) ? $registrationVehicleCarModelInfo['totals'][$transactionDate] : ''; ?>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode($total); ?>
+                        </td>
+                        <?php $totalSum += $total; ?>
+                        <?php if (!isset($groupTotalSums[$dateNum])): ?>
+                            <?php $groupTotalSums[$dateNum] = 0; ?>
+                        <?php endif; ?>
+                        <?php $groupTotalSums[$dateNum] += $total; ?>
+                    <?php endforeach; ?>
+                    <td style="text-align: right"><?php echo CHtml::encode($totalSum); ?></td>
+                </tr>
+            <?php endforeach; ?>
+            <tr>
+                <td style="text-align: right">Total</td>
+                <?php $groupSubTotal = 0; ?>
                 <?php foreach ($dateNumList as $dateNum): ?>
-                    <?php $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT); ?>
-                    <?php $total = isset($registrationVehicleCarMakeItem['totals'][$transactionDate]) ? $registrationVehicleCarMakeItem['totals'][$transactionDate] : ''; ?>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode($total); ?>
-                    </td>
-                    <?php $totalSum += $total; ?>
                     <?php if (!isset($footerTotalSums[$dateNum])): ?>
                         <?php $footerTotalSums[$dateNum] = 0; ?>
                     <?php endif; ?>
-                    <?php $footerTotalSums[$dateNum] += $total; ?>
+                    <?php $footerTotalSums[$dateNum] += $groupTotalSums[$dateNum]; ?>
+                    <td style="text-align: right"><?php echo $groupTotalSums[$dateNum]; ?></td>
+                    <?php $groupSubTotal += $groupTotalSums[$dateNum]; ?>
                 <?php endforeach; ?>
-                <td style="text-align: right"><?php echo CHtml::encode($totalSum); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode($groupSubTotal); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -45,9 +64,6 @@
             <td style="text-align: right">Total</td>
             <?php $grandTotal = 0; ?>
             <?php foreach ($dateNumList as $dateNum): ?>
-                <?php if (!isset($footerTotalSums[$dateNum])): ?>
-                    <?php $footerTotalSums[$dateNum] = 0; ?>
-                <?php endif; ?>
                 <td style="text-align: right"><?php echo CHtml::encode($footerTotalSums[$dateNum]); ?></td>
                 <?php $grandTotal += $footerTotalSums[$dateNum]; ?>
             <?php endforeach; ?>

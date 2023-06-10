@@ -27,11 +27,12 @@ class RegistrationVehicleCarMakeController extends Controller {
 
         $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
         
-        $registrationVehicleCarMakeInfo = array();
-        $registrationVehicleCarMakeData = RegistrationTransaction::getTotalQuantityVehicleCarMakeData($yearMonth);
-        foreach ($registrationVehicleCarMakeData as $registrationVehicleCarMakeItem) {
-            $registrationVehicleCarMakeInfo[$registrationVehicleCarMakeItem['car_model_id']]['name'] = $registrationVehicleCarMakeItem['car_model_name'];
-            $registrationVehicleCarMakeInfo[$registrationVehicleCarMakeItem['car_model_id']]['totals'][$registrationVehicleCarMakeItem['transaction_date']] = $registrationVehicleCarMakeItem['total_quantity_vehicle'];
+        $registrationVehicleInfo = array();
+        $registrationVehicleData = RegistrationTransaction::getTotalQuantityVehicleCarMakeData($yearMonth);
+        foreach ($registrationVehicleData as $registrationVehicleItem) {
+            $registrationVehicleInfo[$registrationVehicleItem['car_make_id']]['name'] = $registrationVehicleItem['car_make_name'];
+            $registrationVehicleInfo[$registrationVehicleItem['car_make_id']]['car_models'][$registrationVehicleItem['car_model_id']]['name'] = $registrationVehicleItem['car_model_name'];
+            $registrationVehicleInfo[$registrationVehicleItem['car_make_id']]['car_models'][$registrationVehicleItem['car_model_id']]['totals'][$registrationVehicleItem['transaction_date']] = $registrationVehicleItem['total_quantity_vehicle'];
         }
 
 //        if (isset($_GET['SaveExcel'])) {
@@ -41,7 +42,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         $this->render('summary', array(
             'yearMonthNow' => $yearMonthNow,
             'yearMonth' => $yearMonth,
-            'registrationVehicleCarMakeInfo' => $registrationVehicleCarMakeInfo,
+            'registrationVehicleInfo' => $registrationVehicleInfo,
         ));
     }
     protected function saveToExcel($registrationServiceInfo, $yearMonth) {

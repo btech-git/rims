@@ -63,7 +63,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php $this->renderPartial('_summary', array(
                         'yearMonthNow' => $yearMonthNow,
                         'yearMonth' => $yearMonth,
-                        'registrationVehicleCarMakeInfo' => $registrationVehicleCarMakeInfo,
+                        'registrationVehicleInfo' => $registrationVehicleInfo,
                     )); ?>
                 </div>
                 <div class="clear"></div>

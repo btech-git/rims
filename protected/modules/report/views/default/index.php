@@ -376,11 +376,11 @@
                                         'url' => array('/report/registrationServiceCategory/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('workOrderServiceReport')
                                     ),
-//                                    array(
-//                                        'label' => 'Penyelesaian Pesanan per Kendaraan', 
-//                                        'url' => array('/report/registrationServiceCategory/summary'), 
-//                                        'visible' => Yii::app()->user->checkAccess('workOrderVehicleReport')
-//                                    ),
+                                    array(
+                                        'label' => 'Penyelesaian Pesanan per Kendaraan', 
+                                        'url' => array('/report/registrationVehicleCarMake/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('workOrderVehicleReport')
+                                    ),
                                     array(
                                         'label' => 'Laporan Mekanik', 
                                         'url' => array('/report/mechanicPerformance/summary'), 

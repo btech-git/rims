@@ -120,7 +120,6 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.supervisor_id', $this->supervisor_id);
         $criteria->compare('t.status', $this->status, true);
 
-
         $criteria->together = 'true';
         $criteria->with = array('receiveItem', 'branch', 'returnItem');
         $criteria->addSearchCondition('receiveItem.receive_item_no', $this->receive_item_number, true);
