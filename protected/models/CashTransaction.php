@@ -15,6 +15,7 @@
  * @property integer $branch_id
  * @property integer $user_id
  * @property string $status
+ * @property string $note
  * @property string $created_datetime
  *
  * The followings are the available model relations:
@@ -60,9 +61,10 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             array('debit_amount, credit_amount', 'length', 'max' => 18),
             array('status', 'length', 'max' => 30),
             array('transaction_number', 'unique'),
+            array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, note, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -98,6 +100,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             'credit_amount' => 'Credit Amount',
             'branch_id' => 'Branch',
             'user_id' => 'User',
+            'note' => 'Note',
             'status' => 'Status',
         );
     }
@@ -130,6 +133,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
+        $criteria->compare('note', $this->note, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
