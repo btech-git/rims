@@ -139,7 +139,7 @@ $this->breadcrumbs = array(
 
         <br />
 
-        <?php if (Yii::app()->user->checkAccess("accountingHead") && $journalVoucher->status === 'Approved' && empty($transactions)): ?>
+        <?php if (Yii::app()->user->checkAccess("accountingHead") && $journalVoucher->status === 'Approved'): ?>
             <div class="field buttons text-center">
                 <?php echo CHtml::beginForm(); ?>
                 <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
