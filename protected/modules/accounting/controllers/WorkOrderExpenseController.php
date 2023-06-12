@@ -115,6 +115,10 @@ class WorkOrderExpenseController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($workOrderExpense);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $workOrderExpense->header->transaction_number,
+            ));
+
             $workOrderExpense->header->setCodeNumberByRevision('transaction_number');
 
             if ($workOrderExpense->save(Yii::app()->db)) {
