@@ -234,8 +234,7 @@ class CashTransactionController extends Controller {
         if (isset($_POST['CashTransaction']) && IdempotentManager::check()) {
             $this->loadState($cashTransaction);
             JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $cashTransaction->transaction_number,
-                'branch_id' => $cashTransaction->branch_id,
+                'kode_transaksi' => $cashTransaction->header->transaction_number,
             ));
             $cashTransaction->header->setCodeNumberByRevision('transaction_number');
 
