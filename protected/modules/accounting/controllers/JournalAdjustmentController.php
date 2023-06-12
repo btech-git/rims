@@ -140,7 +140,7 @@ class JournalAdjustmentController extends Controller {
             $jurnalUmum->total = ($detail->debit == 0.00) ? $detail->credit : $detail->debit;
             $jurnalUmum->debet_kredit = ($detail->debit == 0.00) ? 'K' : 'D';
             $jurnalUmum->tanggal_posting = date('Y-m-d');
-            $jurnalUmum->transaction_subject = $detail->memo;
+            $jurnalUmum->transaction_subject = $journalVoucher->note;
             $jurnalUmum->is_coa_category = 0;
             $jurnalUmum->transaction_type = 'JP';
 
