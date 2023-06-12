@@ -126,6 +126,27 @@ class JournalAdjustmentController extends Controller {
 
         $detailsDataProvider->criteria->with = array('coa');
 
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $journalVoucher->transaction_number,
+            'branch_id' => $journalVoucher->branch_id,
+        ));
+
+        foreach ($journalVoucher->journalAdjustmentDetails as $detail) {
+            $jurnalUmum = new JurnalUmum;
+            $jurnalUmum->kode_transaksi = $journalVoucher->transaction_number;
+            $jurnalUmum->tanggal_transaksi = $journalVoucher->date;
+            $jurnalUmum->coa_id = $detail->coa_id;
+            $jurnalUmum->branch_id = $journalVoucher->branch_id;
+            $jurnalUmum->total = ($detail->debit == 0.00) ? $detail->credit : $detail->debit;
+            $jurnalUmum->debet_kredit = ($detail->debit == 0.00) ? 'K' : 'D';
+            $jurnalUmum->tanggal_posting = date('Y-m-d');
+            $jurnalUmum->transaction_subject = $detail->memo;
+            $jurnalUmum->is_coa_category = 0;
+            $jurnalUmum->transaction_type = 'JP';
+
+            $jurnalUmum->save(false);
+        }
+        
         $this->render('view', array(
             'journalVoucher' => $journalVoucher,
             'detailsDataProvider' => $detailsDataProvider,
