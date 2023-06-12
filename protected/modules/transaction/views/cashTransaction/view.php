@@ -175,6 +175,16 @@ $this->menu = array(
                                         </div>
                                     </div>
                                 </div>
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <span class="prefix">Catatan</span>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <input type="text" readonly="true" value="<?php echo $model->note; ?>"> 
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="large-6 columns">

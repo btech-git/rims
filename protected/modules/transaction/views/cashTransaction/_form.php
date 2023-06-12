@@ -243,6 +243,19 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix"><?php echo CHtml::label('Catatan', false); ?></label>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeTextArea($cashTransaction->header, 'note', array('rows' => 3)); ?>
+                                    <?php echo CHtml::error($cashTransaction->header, 'note'); ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
