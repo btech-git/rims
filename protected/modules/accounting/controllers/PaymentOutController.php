@@ -149,16 +149,12 @@ class PaymentOutController extends Controller {
         $supplier = Supplier::model()->findByPk($paymentOut->header->supplier_id);
         $movementType = $paymentOut->header->movement_type;
 
-//        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
-//        $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
-
-//        if (!empty($paymentOut->header->supplier_id)) {
-//            $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
-//            $receiveItemDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
-//        }
-        
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentOut);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $paymentOut->header->payment_number,
+            ));
+
             $paymentOut->header->setCodeNumberByRevision('payment_number');
 
             if ($paymentOut->save(Yii::app()->db)) {
@@ -169,8 +165,6 @@ class PaymentOutController extends Controller {
         $this->render('update', array(
             'paymentOut' => $paymentOut,
             'supplier' => $supplier,
-//            'receiveItem' => $receiveItem,
-//            'receiveItemDataProvider' => $receiveItemDataProvider,
             'movementType' => $movementType,
         ));
     }
