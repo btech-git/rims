@@ -11,19 +11,27 @@
     <tbody>
         <tr>
             <td>Daftar Transaksi Pending</td>
-            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][pendingTransactionView]", CHtml::resolveValue($model, "roles[pendingTransactionView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'pendingTransactionView')); ?></td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][pendingTransactionView]", CHtml::resolveValue($model, "roles[pendingTransactionView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'pendingTransactionView')); ?>
+            </td>
         </tr>
         <tr>
             <td>Order Outstanding</td>
-            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][orderOutstandingView]", CHtml::resolveValue($model, "roles[orderOutstandingView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'orderOutstandingView')); ?></td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][orderOutstandingView]", CHtml::resolveValue($model, "roles[orderOutstandingView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'orderOutstandingView')); ?>
+            </td>
         </tr>
         <tr>
             <td>Approval Permintaan</td>
-            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][requestApprovalView]", CHtml::resolveValue($model, "roles[requestApprovalView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'requestApprovalView')); ?></td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][requestApprovalView]", CHtml::resolveValue($model, "roles[requestApprovalView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'requestApprovalView')); ?>
+            </td>
         </tr>
         <tr>
             <td>Approval Data Master</td>
-            <td style="text-align: center"><?php echo CHtml::checkBox("User[roles][masterApprovalView]", CHtml::resolveValue($model, "roles[masterApprovalView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterApprovalView')); ?></td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][masterApprovalView]", CHtml::resolveValue($model, "roles[masterApprovalView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterApprovalView')); ?>
+            </td>
         </tr>
     </tbody>
 </table>

@@ -38,42 +38,42 @@
             'Penjualan' => array(
                 'content' => $this->renderPartial(
                     '_viewSale',
-                    array('model' => $model, 'counter' => $counter+22),
+                    array('model' => $model, 'counter' => $counter+24),
                     true
                 )
             ),
             'Pelunasan' => array(
                 'content' => $this->renderPartial(
                     '_viewPayment',
-                    array('model' => $model, 'counter' => $counter+28),
+                    array('model' => $model, 'counter' => $counter+35),
                     true
                 )
             ),
             'Tunai' => array(
                 'content' => $this->renderPartial(
                     '_viewCash',
-                    array('model' => $model, 'counter' => $counter+35),
+                    array('model' => $model, 'counter' => $counter+44),
                     true
                 )
             ),
             'Operasional' => array(
                 'content' => $this->renderPartial(
                     '_viewOperational',
-                    array('model' => $model, 'counter' => $counter+42),
+                    array('model' => $model, 'counter' => $counter+53),
                     true
                 )
             ),
             'Gudang' => array(
                 'content' => $this->renderPartial(
                     '_viewInventory',
-                    array('model' => $model, 'counter' => $counter+67),
+                    array('model' => $model, 'counter' => $counter+86),
                     true
                 )
             ),
             'Idle Management' => array(
                 'content' => $this->renderPartial(
                     '_viewIdleManagement',
-                    array('model' => $model, 'counter' => $counter+85),
+                    array('model' => $model, 'counter' => $counter+109),
                     true
                 )
             ),
@@ -95,49 +95,49 @@
             'Accounting/Finance' => array(
                 'content' => $this->renderPartial(
                     '_viewFinance',
-                    array('model' => $model, 'counter' => $counter+100),
+                    array('model' => $model, 'counter' => $counter+123),
                     true
                 )
             ),
             'Laporan' => array(
                 'content' => $this->renderPartial(
                     '_viewReport',
-                    array('model' => $model, 'counter' => $counter+107),
+                    array('model' => $model, 'counter' => $counter+129),
                     true
                 )
             ),
             'Setting Company' => array(
                 'content' => $this->renderPartial(
                     '_viewCompany',
-                    array('model' => $model, 'counter' => $counter+143),
+                    array('model' => $model, 'counter' => $counter+164),
                     true
                 )
             ),
             'Setting Accounting' => array(
                 'content' => $this->renderPartial(
                     '_viewAccounting',
-                    array('model' => $model, 'counter' => $counter+187),
+                    array('model' => $model, 'counter' => $counter+207),
                     true
                 )
             ),
             'Setting Product' => array(
                 'content' => $this->renderPartial(
                     '_viewProduct',
-                    array('model' => $model, 'counter' => $counter+204),
+                    array('model' => $model, 'counter' => $counter+223),
                     true
                 )
             ),
             'Setting Service' => array(
                 'content' => $this->renderPartial(
                     '_viewService',
-                    array('model' => $model, 'counter' => $counter+239),
+                    array('model' => $model, 'counter' => $counter+257),
                     true
                 )
             ),
             'Setting Vehicle' => array(
                 'content' => $this->renderPartial(
                     '_viewVehicle',
-                    array('model' => $model, 'counter' => $counter+277),
+                    array('model' => $model, 'counter' => $counter+294),
                     true
                 )
             ),
