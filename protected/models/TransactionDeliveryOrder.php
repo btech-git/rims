@@ -214,9 +214,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.delivery_date', $this->delivery_date, true);
         $criteria->compare('t.posting_date', $this->posting_date, true);
         $criteria->compare('t.sender_id', $this->sender_id);
-        $criteria->compare('t.sender_branch_id', $this->sender_branch_id);
-        $criteria->compare('t.destination_branch', $this->destination_branch);
-        $criteria->compare('t.delivery_order_no', $this->delivery_order_no . '%', true, 'AND', false);
+        $criteria->compare('t.delivery_order_no', $this->delivery_order_no, true);
         $criteria->compare('t.request_type', $this->request_type, true);
 
         return new CActiveDataProvider($this, array(

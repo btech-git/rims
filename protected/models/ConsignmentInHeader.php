@@ -152,18 +152,17 @@ class ConsignmentInHeader extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-			SELECT COALESCE(SUM(d.quantity - d.qty_received), 0) AS quantity_remaining
-			FROM " . ConsignmentInDetail::model()->tableName() . " d
-			WHERE t.id = d.consignment_in_id
-			GROUP BY d.consignment_in_id
-			HAVING quantity_remaining > 0
-		)";
+            SELECT COALESCE(SUM(d.quantity - d.qty_received), 0) AS quantity_remaining
+            FROM " . ConsignmentInDetail::model()->tableName() . " d
+            WHERE t.id = d.consignment_in_id
+            GROUP BY d.consignment_in_id
+            HAVING quantity_remaining > 0
+        ) AND t.date_posting > '2021-12-31' AND t.status_document = 'Approved'";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('date_posting', $this->date_posting, true);
         $criteria->compare('supplier_id', $this->supplier_id);
-        $criteria->compare('consignment_in_number', $this->consignment_in_number . '%', true, 'AND', false);
-        $criteria->addCondition("status_document = 'Approved'");
+        $criteria->compare('consignment_in_number', $this->consignment_in_number, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

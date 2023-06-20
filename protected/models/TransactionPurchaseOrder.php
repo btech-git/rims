@@ -277,7 +277,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             WHERE t.id = d.purchase_order_id
             GROUP BY d.purchase_order_id
             HAVING quantity_remaining > 0
-        )";
+        ) AND t.purchase_order_date > '2021-12-31' AND t.status_document = 'Approved'";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('purchase_order_no', $this->purchase_order_no, true);
@@ -286,8 +286,6 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->together = 'true';
         $criteria->with = array('supplier');
         $criteria->compare('supplier.name', $this->supplier_name, true);
-
-        $criteria->addCondition("status_document = 'Approved'");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
