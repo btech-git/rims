@@ -32,21 +32,19 @@ $this->menu = array(
         )); ?>
 
         <?php if ($transferRequest->status_document == 'Draft'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit',
-                Yii::app()->baseUrl . '/transaction/transferRequest/update?id=' . $transferRequest->id, array(
-                    'class' => 'button cbutton right',
-                    'style' => 'margin-right:10px',
-                    'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
-                )); ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval',
-                Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id,
-                array(
-                    'class' => 'button cbutton right',
-                    'style' => 'margin-right:10px',
-                    'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
-                )); ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transferRequest/update?id=' . $transferRequest->id, array(
+                'class' => 'button cbutton right',
+                'style' => 'margin-right:10px',
+                'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
+            )); ?>
         <?php endif; ?>
 
+        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("transferRequestSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php endif; ?>
+        
         <h1>View Transaction Transfer Request #<?php echo $transferRequest->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(

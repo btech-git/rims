@@ -36,14 +36,14 @@ $this->menu = array(
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
             )); ?>
-        
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right',
-                'style' => 'margin-right:10px',
-//                'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
-            )); ?>
         <?php //endif; ?>
 
+        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("sentRequestApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("sentRequestSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php endif; ?>
+        
         <h1>View Transaction Sent Request #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(

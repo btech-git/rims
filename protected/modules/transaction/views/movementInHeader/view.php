@@ -29,11 +29,13 @@ $this->menu = array(
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("movementInEdit")
             )); ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px', 
-//                'visible' => Yii::app()->user->checkAccess("movementInEdit")
-            )); ?>
+        
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("movementInApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("movementInSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php endif; ?>
+        
         <?php //endif; ?>
         <?php /* echo CHtml::button('Update Delivered', array(
           'id' => 'detail-button',

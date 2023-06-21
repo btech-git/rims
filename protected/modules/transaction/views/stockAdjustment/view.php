@@ -21,13 +21,12 @@ $this->menu=array(
 	<?php $ccontroller = Yii::app()->controller->id; $ccaction = Yii::app()->controller->action->id; ?>
 	<?php echo CHtml::link('<span class="fa fa-list"></span>Manage Stock Adjustment', Yii::app()->baseUrl.'/transaction/stockAdjustment/admin', array('class'=>'button cbutton right', 'visible'=>Yii::app()->user->checkAccess("transaction.stockAdjustment.admin"))) ?>
 	
-	<?php if ($model->status!='Approved' && $model->status != 'Rejected') : ?>
-		<?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/stockAdjustment/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.stockAdjustment.update"))) ?>
-		
+	<?php if ($model->status == 'Draft' && Yii::app()->user->checkAccess("stockAdjustmentEdit")) : ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/stockAdjustment/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.stockAdjustment.update"))) ?>
 	<?php endif ?>
 
 
-<h1>View StockAdjustmentHeader #<?php echo $model->id; ?></h1>
+<h1>View Stock Adjustment #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

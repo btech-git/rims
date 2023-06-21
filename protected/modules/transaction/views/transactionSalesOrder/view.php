@@ -38,16 +38,17 @@ $this->menu = array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
             )); ?>
-        
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right',
-                'style' => 'margin-right:10px',
-            )); ?>
         <?php else : ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/pdf?id=' . $model->id, array(
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
             )); ?>
+        <?php endif; ?>
+        
+        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("saleOrderApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("saleOrderSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
         <?php endif; ?>
         
         <?php $checkInvoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $model->id)); ?>

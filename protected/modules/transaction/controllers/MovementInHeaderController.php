@@ -504,6 +504,7 @@ class MovementInHeaderController extends Controller {
         $historis = MovementInApproval::model()->findAllByAttributes(array('movement_in_id' => $headerId));
         $model = new MovementInApproval;
         $model->date = date('Y-m-d H:i:s');
+        $details = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $headerId));
 
         if (isset($_POST['MovementInApproval'])) {
             $model->attributes = $_POST['MovementInApproval'];
@@ -511,6 +512,63 @@ class MovementInHeaderController extends Controller {
             if ($model->save()) {
                 $movement->status = $model->approval_type;
                 $movement->save(false);
+
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $movement->movement_in_number,
+                    'branch_id' => $movement->branch_id,
+                ));
+
+                if ($model->approval_type == 'Approved') {
+                    $transactionType = 'MI';
+                    $postingDate = date('Y-m-d');
+                    $transactionCode = $movement->movement_in_number;
+                    $transactionDate = $movement->date_posting;
+                    $branchId = $movement->branch_id;
+                    $transactionSubject = $movement->getMovementType($movement->movement_type);
+
+                    $journalReferences = array();
+
+                    foreach ($details as $movementDetail) {
+                        $unitPrice = empty($movementDetail->receiveItemDetail->purchaseOrderDetail) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
+                        $jumlah = $movementDetail->quantity * $unitPrice;
+
+                        $value = $jumlah;
+                        $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+                        $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
+                        $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
+                        $journalReferences[$coaMasterTransitId]['values'][] = $value;
+
+                        $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+                        $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
+                        $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
+                        $journalReferences[$coaSubTransitId]['values'][] = $value;
+
+                        $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+                        $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
+                        $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
+                        $journalReferences[$coaMasterInventoryId]['values'][] = $value;
+
+                        $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                        $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';
+                        $journalReferences[$coaSubInventoryId]['is_coa_category'] = 0;
+                        $journalReferences[$coaSubInventoryId]['values'][] = $value;
+                    }
+
+                    foreach ($journalReferences as $coaId => $journalReference) {
+                        $jurnalUmumPersediaan = new JurnalUmum();
+                        $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                        $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                        $jurnalUmumPersediaan->coa_id = $coaId;
+                        $jurnalUmumPersediaan->branch_id = $branchId;
+                        $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+                        $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+                        $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                        $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                        $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+                        $jurnalUmumPersediaan->transaction_type = $transactionType;
+                        $jurnalUmumPersediaan->save();
+                    }
+                }
 
                 $this->redirect(array('view', 'id' => $headerId));
             }

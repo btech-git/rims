@@ -22,6 +22,10 @@ class PaymentOutController extends Controller {
             if (!(Yii::app()->user->checkAccess('paymentOutCreate') || Yii::app()->user->checkAccess('paymentOutEdit')))
                 $this->redirect(array('/site/login'));
         }
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('paymentOutApproval') || Yii::app()->user->checkAccess('paymentOutSupervisor')))
+                $this->redirect(array('/site/login'));
+        }
 
         $filterChain->run();
     }

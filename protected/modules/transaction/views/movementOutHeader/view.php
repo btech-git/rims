@@ -28,13 +28,14 @@ $this->menu = array(
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("movementOutEdit")
             )); ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px', 
-//                'visible' => Yii::app()->user->checkAccess("movementOutEdit")
-            )); ?>
         <?php //endif; ?>
 
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("movementOutApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("movementOutSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php endif; ?>
+        
         <?php if ($model->status != 'Finished'): ?>
             <?php echo CHtml::button('Update Delivered', array(
                 'id' => 'detail-button',

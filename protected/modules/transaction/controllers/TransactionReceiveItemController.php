@@ -322,42 +322,47 @@ class TransactionReceiveItemController extends Controller {
         }
         
         $deliveryDataProvider = $delivery->searchByReceive();
+        $deliveryDataProvider->criteria->addCondition('sender_branch_id IN (:branch_ids) OR destination_branch IN (:branch_ids)');
+        $deliveryDataProvider->criteria->params = array(
+            ':branch_ids' => implode(',', Yii::app()->user->branch_ids),
+        );
+//        $deliveryDataProvider->criteria->addInCondition('destination_branch', Yii::app()->user->branch_ids);
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionPurchaseOrder']))
+        if (isset($_GET['TransactionPurchaseOrder'])) {
             $purchase->attributes = $_GET['TransactionPurchaseOrder'];
+        }
         
         $purchaseDataProvider = $purchase->searchByReceive();
-        $purchaseDataProvider->criteria->addCondition("t.purchase_order_date > '2021-12-31'");
+        $purchaseDataProvider->criteria->addInCondition('t.main_branch_id', Yii::app()->user->branch_ids);
 
         $consignment = new ConsignmentInHeader('search');
         $consignment->unsetAttributes();  // clear any default values
-        if (isset($_GET['ConsignmentInHeader']))
+        if (isset($_GET['ConsignmentInHeader'])) {
             $consignment->attributes = $_GET['ConsignmentInHeader'];
+        }
 
         $consignmentCriteria = new CDbCriteria;
-        $consignmentCriteria->compare('consignment_in_number', $consignment->consignment_in_number . '%', true, 'AND', false);
-        $consignmentCriteria->addCondition("status_document = 'Approved'");
-        $consignmentCriteria->order = 't.date_posting DESC';
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
             'criteria' => $consignmentCriteria,
         ));
-        $consignmentDataProvider->criteria->addCondition("t.date_posting > '2021-12-31'");
+        $consignmentDataProvider->criteria->addInCondition('t.receive_branch', Yii::app()->user->branch_ids);
 
         $movement = new MovementOutHeader('search');
         $movement->unsetAttributes();  // clear any default values
-        if (isset($_GET['MovementOutHeader']))
+        if (isset($_GET['MovementOutHeader'])) {
             $movement->attributes = $_GET['MovementOutHeader'];
+        }
 
         $movementCriteria = new CDbCriteria;
         $movementCriteria->compare('movement_out_no', $movement->movement_out_no, true);
-        $movementCriteria->addCondition("status != 'Draft' AND status != 'Rejected' AND status != 'Revised'");
+        $movementCriteria->addCondition("status = 'Approved' AND t.date_posting > '2021-12-31'");
         $movementCriteria->order = 't.date_posting DESC';
         $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
             'criteria' => $movementCriteria,
         ));
-        $movementDataProvider->criteria->addCondition("t.date_posting > '2021-12-31'");
+        $movementDataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(
             'model' => $model,
@@ -463,7 +468,6 @@ class TransactionReceiveItemController extends Controller {
                 $supplier_name = $supplier->name;
             }
 
-
             $object = array(
                 'id' => $consigment->id,
                 'no' => $consigment->consignment_in_number,
@@ -484,7 +488,6 @@ class TransactionReceiveItemController extends Controller {
             $object = array(
                 'id' => $supplier->id,
                 'name' => $supplier->name,
-                    //'email'=> $supplier->email,
             );
 
             echo CJSON::encode($object);
@@ -498,16 +501,7 @@ class TransactionReceiveItemController extends Controller {
             //$requestType =$receiveItem->header->request_type;
             $total = 0;
             $totalItems = 0;
-            // if($requestType == 'Request for Purchase'){
-            // 	foreach ($receiveItem->details as $key => $detail) {
-            // 		$totalItems += $detail->total;
-            // 		$total += $detail->subtotal;_quantity;
-            // 	}
-            // } else if($requestType == 'Request for Transfer'){
-            // 	foreach ($receiveItem->transferDetails as $key => $transferDetail) {
-            // 		$totalItems += $transferDetail->quantity;	
-            // 	}
-            // }
+            
             foreach ($receiveItem->details as $key => $detail) {
                 $totalItems += $detail->quantity;
                 $total += $detail->unit_price;
@@ -527,8 +521,7 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem->addDetail($requestType, $requestId);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            $this->renderPartial('_detail', array('receiveItem' => $receiveItem
-                    ), false, true);
+            $this->renderPartial('_detail', array('receiveItem' => $receiveItem), false, true);
         }
     }
 
@@ -597,18 +590,22 @@ class TransactionReceiveItemController extends Controller {
                     $receiveItem->details[] = $detail;
                 }
             }
-            if (count($_POST['TransactionReceiveItemDetail']) < count($receiveItem->details))
+            
+            if (count($_POST['TransactionReceiveItemDetail']) < count($receiveItem->details)) {
                 array_splice($receiveItem->details, $i + 1);
-        }
-        else {
+            }
+        } else {
             $receiveItem->details = array();
         }
     }
 
     public function loadModel($id) {
         $model = TransactionReceiveItem::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 

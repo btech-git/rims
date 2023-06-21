@@ -190,6 +190,11 @@ class TransactionReturnOrderController extends Controller {
 
         if (isset($_POST['TransactionReturnOrder']) && IdempotentManager::check()) {
             $this->loadState($returnOrder);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $returnOrder->header->return_order_no,
+                'branch_id' => $returnOrder->header->recipient_branch_id,
+            ));
+
             if ($returnOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $returnOrder->header->id));
             }

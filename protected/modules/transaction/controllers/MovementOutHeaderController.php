@@ -212,109 +212,23 @@ class MovementOutHeaderController extends Controller {
      */
     public function actionUpdate($id) {
         $movementOut = $this->instantiate($id);
-        $movementOut->header->setCodeNumberByRevision('movement_out_no');
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementOut->header);
-
-//        $deliveryOrder = new TransactionDeliveryOrder('search');
-//        $deliveryOrder->unsetAttributes();
-//        
-//        if (isset($_GET['TransactionDeliveryOrder']))
-//            $deliveryOrder->attributes = $_GET['TransactionDeliveryOrder'];
-//        
-//        $deliveryOrderCriteria = new CDbCriteria;
-//        $deliveryOrderCriteria->compare('sender_branch_id', $movementOut->header->branch_id);
-//        $deliveryOrderCriteria->together = 'true';
-//        $deliveryOrderCriteria->with = array('senderBranch');
-//        $deliveryOrderCriteria->compare('senderBranch.name', $deliveryOrder->branch_name, true);
-//        $deliveryOrderCriteria->compare('delivery_order_no', $deliveryOrder->delivery_order_no, true);
-//        $deliveryOrderDataProvider = new CActiveDataProvider('TransactionDeliveryOrder', array('criteria' => $deliveryOrderCriteria));
-//
-//        $deliveryOrderDetail = new TransactionDeliveryOrderDetail('search');
-//        $deliveryOrderDetail->unsetAttributes();  // clear any default values
-//        
-//        if (isset($_GET['TransactionDeliveryOrderDetail']))
-//            $deliveryOrderDetail->attributes = $_GET['TransactionDeliveryOrderDetail'];
-//        
-//        $deliveryOrderDetailCriteria = new CDbCriteria;
-//        $deliveryOrderDetailCriteria->compare('delivery_order_id', $movementOut->header->delivery_order_id);
-//        $deliveryOrderDetailCriteria->together = 'true';
-//        $deliveryOrderDetailCriteria->with = array('product', 'deliveryOrder');
-//        $deliveryOrderDetailCriteria->compare('delivery_order_id', $deliveryOrderDetail->delivery_order_id, true);
-//        $deliveryOrderDetailCriteria->compare('deliveryOrder.delivery_order_no', $deliveryOrderDetail->delivery_order_no, true);
-//        $deliveryOrderDetailCriteria->compare('product.name', $deliveryOrderDetail->product_name, true);
-//        $deliveryOrderDetailDataProvider = new CActiveDataProvider('TransactionDeliveryOrderDetail', array(
-//            'criteria' => $deliveryOrderDetailCriteria,
-//        ));
-//
-//        /* Return Order */
-//        $returnOrder = new TransactionReturnOrder('search');
-//        $returnOrder->unsetAttributes();
-//        
-//        if (isset($_GET['TransactionReturnOrder']))
-//            $returnOrder->attributes = $_GET['TransactionReturnOrder'];
-//        
-//        $returnOrderCriteria = new CDbCriteria;
-//        $returnOrderCriteria->compare('recipient_branch_id', $returnOrder->recipient_branch_id, true);
-//        $returnOrderCriteria->together = 'true';
-//        $returnOrderCriteria->with = array('recipientBranch');
-//        $returnOrderCriteria->compare('recipientBranch.name', $returnOrder->branch_name, true);
-//        $returnOrderCriteria->compare('return_order_no', $returnOrder->return_order_no, true);
-//        $returnOrderDataProvider = new CActiveDataProvider('TransactionReturnOrder', array('criteria' => $returnOrderCriteria));
-//
-//        $returnOrderDetail = new TransactionReturnOrderDetail('search');
-//        $returnOrderDetail->unsetAttributes();  // clear any default values
-//        
-//        if (isset($_GET['TransactionReturnOrderDetail']))
-//            $returnOrderDetail->attributes = $_GET['TransactionReturnOrderDetail'];
-//        
-//        $returnOrderDetailCriteria = new CDbCriteria;
-//        $returnOrderDetailCriteria->together = 'true';
-//        $returnOrderDetailCriteria->with = array('product', 'returnOrder');
-//        $returnOrderDetailCriteria->compare('return_order_id', $returnOrderDetail->return_order_id, true);
-//        $returnOrderDetailCriteria->compare('returnOrder.return_order_no', $returnOrderDetail->return_order_no, true);
-//        $returnOrderDetailCriteria->compare('product.name', $returnOrderDetail->product_name, true);
-//        $returnOrderDetailDataProvider = new CActiveDataProvider('TransactionReturnOrderDetail', array(
-//            'criteria' => $returnOrderDetailCriteria,
-//        ));
-//
-//        /* Registration Transaction */
-//        $movementTransaction = new RegistrationTransaction('search');
-//        $movementTransaction->unsetAttributes();
-//        
-//        if (isset($_GET['RegistrationTransaction']))
-//            $movementTransaction->attributes = $_GET['RegistrationTransaction'];
-//        
-//        $movementTransactionCriteria = new CDbCriteria;
-//        $movementTransactionCriteria->together = 'true';
-//        $movementTransactionCriteria->with = array('branch');
-//        $movementTransactionCriteria->compare('branch.name', $movementTransaction->branch_name, true);
-//        $movementTransactionCriteria->compare('transaction_number', $movementTransaction->transaction_number, true);
-//        $movementTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array('criteria' => $movementTransactionCriteria));
-//
-//        $movementProduct = new RegistrationProduct('search');
-//        $movementProduct->unsetAttributes();  // clear any default values
-//        
-//        if (isset($_GET['RegistrationProduct']))
-//            $movementProduct->attributes = $_GET['RegistrationProduct'];
-//        
-//        $movementProductCriteria = new CDbCriteria;
-//        $movementProductCriteria->together = 'true';
-//        $movementProductCriteria->with = array('product', 'registrationTransaction');
-//        $movementProductCriteria->compare('registrationTransaction.transaction_number', $movementProduct->transaction_number);
-//        $movementProductCriteria->compare('product.name', $movementProduct->product_name, true);
-//        $movementProductDataProvider = new CActiveDataProvider('RegistrationProduct', array(
-//            'criteria' => $movementProductCriteria,
-//        ));
-
         $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['MovementOutHeader']) && IdempotentManager::check()) {
             $this->loadState($movementOut);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $movementOut->header->movement_out_no,
+                'branch_id' => $movementOut->header->branch_id,
+            ));
+
+            $movementOut->header->setCodeNumberByRevision('movement_out_no');
             
             if ($movementOut->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $movementOut->header->id));
@@ -324,18 +238,6 @@ class MovementOutHeaderController extends Controller {
         $this->render('update', array(
             'movementOut' => $movementOut,
             'warehouses' => $warehouses,
-//            'deliveryOrder' => $deliveryOrder,
-//            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
-//            'deliveryOrderDetail' => $deliveryOrderDetail,
-//            'deliveryOrderDetailDataProvider' => $deliveryOrderDetailDataProvider,
-//            'returnOrder' => $returnOrder,
-//            'returnOrderDataProvider' => $returnOrderDataProvider,
-//            'returnOrderDetail' => $returnOrderDetail,
-//            'returnOrderDetailDataProvider' => $returnOrderDetailDataProvider,
-//            'registrationTransaction' => $movementTransaction,
-//            'registrationTransactionDataProvider' => $movementTransactionDataProvider,
-//            'registrationProduct' => $movementProduct,
-//            'registrationProductDataProvider' => $movementProductDataProvider,
         ));
     }
 
@@ -595,14 +497,80 @@ class MovementOutHeaderController extends Controller {
         $historis = MovementOutApproval::model()->findAllByAttributes(array('movement_out_id' => $headerId));
         $model = new MovementOutApproval;
         $model->date = date('Y-m-d H:i:s');
-//        $branch = Branch::model()->findByPk($movement->branch_id);
+        $details = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $headerId));
 
         if (isset($_POST['MovementOutApproval'])) {
             $model->attributes = $_POST['MovementOutApproval'];
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $movement->movement_out_no,
+                'branch_id' => $movement->branch_id,
+            ));
+
             if ($model->save()) {
                 $movement->status = $model->approval_type;
                 $movement->save(false);
-                
+
+                if ($model->approval_type == 'Approved') {
+                    $transactionType = 'MO';
+                    $postingDate = date('Y-m-d');
+                    $transactionCode = $movement->movement_out_no;
+                    $transactionDate = $movement->date_posting;
+                    $branchId = $movement->branch_id;
+                    $transactionSubject = $movement->getMovementType($movement->movement_type);
+
+                    $journalReferences = array();
+
+                    foreach ($details as $movementDetail) {
+                        $value = $movementDetail->quantity * $movementDetail->product->hpp;
+
+                        if ((int)$movement->movement_type == 3) {
+                            $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
+                            $journalReferences[$coaId]['debet_kredit'] = 'D';
+                            $journalReferences[$coaId]['is_coa_category'] = 1;
+                            $journalReferences[$coaId]['values'][] = $value;
+                            $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+                            $journalReferences[$coaId]['debet_kredit'] = 'D';
+                            $journalReferences[$coaId]['is_coa_category'] = 0;
+                            $journalReferences[$coaId]['values'][] = $value;
+
+                        } else {
+                            $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+                            $journalReferences[$coaId]['debet_kredit'] = 'D';
+                            $journalReferences[$coaId]['is_coa_category'] = 1;
+                            $journalReferences[$coaId]['values'][] = $value;
+                            $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+                            $journalReferences[$coaId]['debet_kredit'] = 'D';
+                            $journalReferences[$coaId]['is_coa_category'] = 0;
+                            $journalReferences[$coaId]['values'][] = $value;
+                        }
+
+                        $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+                        $journalReferences[$coaId]['debet_kredit'] = 'K';
+                        $journalReferences[$coaId]['is_coa_category'] = 1;
+                        $journalReferences[$coaId]['values'][] = $value;
+                        $coaId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                        $journalReferences[$coaId]['debet_kredit'] = 'K';
+                        $journalReferences[$coaId]['is_coa_category'] = 0;
+                        $journalReferences[$coaId]['values'][] = $value;
+
+                    }
+
+                    foreach ($journalReferences as $coaId => $journalReference) {
+                        $jurnalUmumPersediaan = new JurnalUmum();
+                        $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                        $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                        $jurnalUmumPersediaan->coa_id = $coaId;
+                        $jurnalUmumPersediaan->branch_id = $branchId;
+                        $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+                        $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+                        $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                        $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                        $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+                        $jurnalUmumPersediaan->transaction_type = $transactionType;
+                        $jurnalUmumPersediaan->save();
+                    }
+                }
+
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }

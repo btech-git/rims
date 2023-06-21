@@ -169,6 +169,11 @@ class TransactionReturnItemController extends Controller {
 
         if (isset($_POST['TransactionReturnItem']) && IdempotentManager::check()) {
             $this->loadState($returnItem);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $returnItem->header->return_item_no,
+                'branch_id' => $returnItem->header->recipient_branch_id,
+            ));
+
             if ($returnItem->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $returnItem->header->id));
             } else {
@@ -494,7 +499,6 @@ class TransactionReturnItemController extends Controller {
                 $jumlah = 0;
                 $branch = Branch::model()->findByPk($returnItem->recipient_branch_id);
                 if ($model->approval_type == 'Approved') {
-
                     foreach ($returnItem->transactionReturnItemDetails as $key => $deliveryDetail) {
                         $jumlah = $deliveryDetail->price * $deliveryDetail->quantity;
 

@@ -5,10 +5,14 @@
 
 
 <div id="link">
-    <?php if (Yii::app()->user->checkAccess("workOrderExpenseEdit")): //!($workOrderExpense->status == 'Approved' || $workOrderExpense->status == 'Rejected')): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.updateApproval"))) ?>
-    <?php endif; ?>
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/workOrderExpense/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.admin"))) ?>
+    
+    <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("workOrderExpenseApproval")): ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+    <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("workOrderExpenseSupervisor")): ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+    <?php endif; ?>
+
 </div>
 
 <h1>View Sub Pekerjaan Luar <?php //echo $this->id . '/' . $this->action->id; ?></h1>

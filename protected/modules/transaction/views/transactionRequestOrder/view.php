@@ -19,13 +19,15 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Purchase Request', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionRequestOrder.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Purchase Request', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/admin', array('class' => 'button cbutton right')) ?>
 
         <?php if (Yii::app()->user->checkAccess("requestOrderEdit")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionRequestOrder.update"))) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
-        <?php if ($model->status_document != "Approved" && $model->status_document != 'Rejected'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionRequestOrder.updateApproval"))) ?>
+        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("requestOrderApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("requestOrderSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
 
 

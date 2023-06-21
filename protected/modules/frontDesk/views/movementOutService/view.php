@@ -16,7 +16,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>View RegistrationService #<?php echo $model->id; ?></h1>
+<h1>View Registration Service #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

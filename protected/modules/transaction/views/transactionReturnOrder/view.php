@@ -32,14 +32,12 @@ $this->menu = array(
             )); ?>
         <?php //endif; ?>
         
-        <?php if ($model->status != 'Approved' && $model->status != 'Rejected'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.updateApproval")
-            )); ?>
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("purchaseReturnApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("purchaseReturnSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
-
+        
         <h1>View Transaction Return Beli #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(

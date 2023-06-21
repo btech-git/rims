@@ -38,7 +38,6 @@ Yii::app()->clientScript->registerScript('search', "
 	
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Receive Item', Yii::app()->baseUrl.'/transaction/transactionReceiveItem/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionReceiveItem.create"))) ?>
         <h1>Manage Transaction Receive Item</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">

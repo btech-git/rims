@@ -23,11 +23,11 @@
             ),
             array(
                 'header'=>'Branch Asal', 
-                'value'=>'empty($data->sent_request_id) ? $data->transferRequest->destinationBranch->code : $data->sentRequest->destinationBranch->code', 
+                'value'=>'$data->senderBranch->code', 
             ),
             array(
                 'header'=>'Branch Tujuan', 
-                'value'=>'empty($data->sent_request_id) ? $data->transferRequest->requesterBranch->code : $data->sentRequest->requesterBranch->code', 
+                'value'=>'$data->destinationBranch->code', 
             ),
             array(
                 'header'=>'Receives',
