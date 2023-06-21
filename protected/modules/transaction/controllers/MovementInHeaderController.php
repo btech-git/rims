@@ -31,7 +31,7 @@ class MovementInHeaderController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('movementInApproval')))
+            if (!(Yii::app()->user->checkAccess('movementInApproval')) || !(Yii::app()->user->checkAccess('movementInSupervisor')))
                 $this->redirect(array('/site/login'));
         }
 
@@ -40,7 +40,7 @@ class MovementInHeaderController extends Controller {
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('movementInCreate')) || !(Yii::app()->user->checkAccess('movementInEdit')) || !(Yii::app()->user->checkAccess('movementInApproval')))
+            if (!(Yii::app()->user->checkAccess('movementInCreate')) || !(Yii::app()->user->checkAccess('movementInEdit')))
                 $this->redirect(array('/site/login'));
         }
 

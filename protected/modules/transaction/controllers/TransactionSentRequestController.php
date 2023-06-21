@@ -29,7 +29,7 @@ class TransactionSentRequestController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('sentRequestApproval')))
+            if (!(Yii::app()->user->checkAccess('sentRequestApproval')) || !(Yii::app()->user->checkAccess('sentRequestSupervisor')))
                 $this->redirect(array('/site/login'));
         }
 

@@ -5,23 +5,29 @@ class WorkOrderExpenseController extends Controller {
     public $layout = '//layouts/column1';
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-//        if ($filterChain->action->id === 'create') {
-//            if (!(Yii::app()->user->checkAccess('paymentOutCreate')))
-//                $this->redirect(array('/site/login'));
-//        }
-//        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
-//            if (!(Yii::app()->user->checkAccess('paymentOutEdit')))
-//                $this->redirect(array('/site/login'));
-//        }
-//        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'memo' || $filterChain->action->id === 'view') {
-//            if (!(Yii::app()->user->checkAccess('paymentOutCreate') || Yii::app()->user->checkAccess('paymentOutEdit')))
-//                $this->redirect(array('/site/login'));
-//        }
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('workOrderExpenseCreate')))
+                $this->redirect(array('/site/login'));
+        }
+        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('workOrderExpenseEdit')))
+                $this->redirect(array('/site/login'));
+        }
+        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'memo' || $filterChain->action->id === 'view') {
+            if (!(Yii::app()->user->checkAccess('workOrderExpenseCreate') || Yii::app()->user->checkAccess('workOrderExpenseEdit')))
+                $this->redirect(array('/site/login'));
+        }
+
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('workOrderExpenseApproval')) || !(Yii::app()->user->checkAccess('workOrderExpenseSupervisor'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
 
         $filterChain->run();
     }

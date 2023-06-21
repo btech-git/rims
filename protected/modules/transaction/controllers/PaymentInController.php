@@ -30,7 +30,7 @@ class PaymentInController extends Controller {
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('paymentInApproval'))) {
+            if (!(Yii::app()->user->checkAccess('paymentInApproval')) || !(Yii::app()->user->checkAccess('paymentInSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }

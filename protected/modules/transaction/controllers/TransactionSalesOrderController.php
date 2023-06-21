@@ -31,7 +31,7 @@ class TransactionSalesOrderController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('saleOrderApproval'))) {
+            if (!(Yii::app()->user->checkAccess('saleOrderApproval')) || !(Yii::app()->user->checkAccess('saleOrderSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -44,7 +44,7 @@ class TransactionSalesOrderController extends Controller {
                 $filterChain->action->id === 'showProduct'
                 
         ) {
-            if (!(Yii::app()->user->checkAccess('saleOrderCreate')) || !(Yii::app()->user->checkAccess('saleOrderEdit')) || !(Yii::app()->user->checkAccess('saleOrderApproval'))) {
+            if (!(Yii::app()->user->checkAccess('saleOrderCreate')) || !(Yii::app()->user->checkAccess('saleOrderEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }

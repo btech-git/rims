@@ -31,7 +31,7 @@ class TransactionRequestOrderController extends Controller
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('requestOrderApproval'))) {
+            if (!(Yii::app()->user->checkAccess('requestOrderApproval')) || !(Yii::app()->user->checkAccess('requestOrderSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -44,8 +44,7 @@ class TransactionRequestOrderController extends Controller
         ) {
             if (
                 !(Yii::app()->user->checkAccess('requestOrderCreate')) || 
-                !(Yii::app()->user->checkAccess('requestOrderEdit')) || 
-                !(Yii::app()->user->checkAccess('requestOrderApproval'))
+                !(Yii::app()->user->checkAccess('requestOrderEdit'))
             ) {
                 $this->redirect(array('/site/login'));
             }

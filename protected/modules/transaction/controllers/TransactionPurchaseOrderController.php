@@ -31,26 +31,22 @@ class TransactionPurchaseOrderController extends Controller {
         }
 
         if (
-            $filterChain->action->id === 'outstanding' || 
             $filterChain->action->id === 'updateApproval'
         ) {
-            if (!(Yii::app()->user->checkAccess('purchaseOrderApproval'))) {
+            if (!(Yii::app()->user->checkAccess('purchaseOrderApproval')) || !(Yii::app()->user->checkAccess('purchaseOrderSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if (
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'outstanding' || 
-            $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'view'
         ) {
             if (
                 !(Yii::app()->user->checkAccess('purchaseOrderCreate')) || 
-                !(Yii::app()->user->checkAccess('purchaseOrderEdit')) ||
-                !(Yii::app()->user->checkAccess('purchaseOrderApproval'))
+                !(Yii::app()->user->checkAccess('purchaseOrderEdit'))
             ) {
                 $this->redirect(array('/site/login'));
             }

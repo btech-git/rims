@@ -22,7 +22,7 @@ class JournalAdjustmentController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalApproval')))
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalApproval')) || !(Yii::app()->user->checkAccess('adjustmentJournalSupervisor')))
                 $this->redirect(array('/site/login'));
         }
 
@@ -31,7 +31,7 @@ class JournalAdjustmentController extends Controller {
             $filterChain->action->id === 'admin' ||
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalCreate')) || !(Yii::app()->user->checkAccess('adjustmentJournalEdit')) || !(Yii::app()->user->checkAccess('adjustmentJournalApproval')))
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalCreate')) || !(Yii::app()->user->checkAccess('adjustmentJournalEdit')))
                 $this->redirect(array('/site/login'));
         }
 

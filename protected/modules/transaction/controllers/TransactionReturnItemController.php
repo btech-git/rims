@@ -29,7 +29,7 @@ class TransactionReturnItemController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('saleReturnApproval')))
+            if (!(Yii::app()->user->checkAccess('saleReturnApproval')) || !(Yii::app()->user->checkAccess('saleReturnSupervisor')))
                 $this->redirect(array('/site/login'));
         }
 
@@ -38,7 +38,7 @@ class TransactionReturnItemController extends Controller {
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('saleReturnCreate')) || !(Yii::app()->user->checkAccess('saleReturnEdit')) || !(Yii::app()->user->checkAccess('saleReturnApproval')))
+            if (!(Yii::app()->user->checkAccess('saleReturnCreate')) || !(Yii::app()->user->checkAccess('saleReturnEdit')))
                 $this->redirect(array('/site/login'));
         }
 

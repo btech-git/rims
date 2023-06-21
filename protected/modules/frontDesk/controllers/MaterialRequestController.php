@@ -25,7 +25,7 @@ class MaterialRequestController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('materialRequestApproval')))
+            if (!(Yii::app()->user->checkAccess('materialRequestApproval')) || !(Yii::app()->user->checkAccess('materialRequestSupervisor')))
                 $this->redirect(array('/site/login'));
         }
 
@@ -33,7 +33,7 @@ class MaterialRequestController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('materialRequestCreate')) || !(Yii::app()->user->checkAccess('materialRequestEdit')) || !(Yii::app()->user->checkAccess('materialRequestApproval')))
+            if (!(Yii::app()->user->checkAccess('materialRequestCreate')) || !(Yii::app()->user->checkAccess('materialRequestEdit')))
                 $this->redirect(array('/site/login'));
         }
 

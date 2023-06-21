@@ -22,7 +22,7 @@ class TransferRequestController extends Controller {
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!Yii::app()->user->checkAccess('transferRequestApproval'))
+            if (!(Yii::app()->user->checkAccess('transferRequestApproval')) || !(Yii::app()->user->checkAccess('transferRequestSupervisor')))
                 $this->redirect(array('/site/login'));
         }
         
@@ -30,7 +30,7 @@ class TransferRequestController extends Controller {
             || $filterChain->action->id === 'admin'
             || $filterChain->action->id === 'memo'
         ) {
-            if (!(Yii::app()->user->checkAccess('transferRequestCreate')) || !(Yii::app()->user->checkAccess('transferRequestEdit')) || !(Yii::app()->user->checkAccess('transferRequestEdit')))
+            if (!(Yii::app()->user->checkAccess('transferRequestCreate')) || !(Yii::app()->user->checkAccess('transferRequestEdit')))
                 $this->redirect(array('/site/login'));
         }
         
