@@ -92,8 +92,8 @@ $('.search-form form').submit(function(){
         array(
             'name' => 'transaction_number',
             'header' => 'Sub Pekerjaan Luar #',
-            'value' => '$data->',
             'value'=>'CHtml::link($data->transaction_number, array("/accounting/workOrderExpense/view", "id"=>$data->id), array("target" => "blank"))', 
+            'type'=>'raw',
         ),
         array(
             'header' => 'Tanggal Transaksi',
