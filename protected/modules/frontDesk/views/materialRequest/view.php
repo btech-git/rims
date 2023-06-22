@@ -39,10 +39,10 @@ $this->menu = array(
             )); ?>
         <?php //endif; ?>
 
-        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("materialRequestApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/materialRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("materialRequestSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/materialRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php if ($materialRequest->status_document == "Draft" && Yii::app()->user->checkAccess("materialRequestApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/materialRequest/updateApproval?headerId=' . $materialRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($materialRequest->status_document != "Draft" && Yii::app()->user->checkAccess("materialRequestSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/materialRequest/updateApproval?headerId=' . $materialRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
         <h1>View Permintaan Bahan #<?php echo $materialRequest->id; ?></h1>
