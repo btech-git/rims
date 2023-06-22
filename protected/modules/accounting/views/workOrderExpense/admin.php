@@ -92,7 +92,8 @@ $('.search-form form').submit(function(){
         array(
             'name' => 'transaction_number',
             'header' => 'Sub Pekerjaan Luar #',
-            'value' => '$data->transaction_number',
+            'value' => '$data->',
+            'value'=>'CHtml::link($data->transaction_number, array("/accounting/workOrderExpense/view", "id"=>$data->id), array("target" => "blank"))', 
         ),
         array(
             'header' => 'Tanggal Transaksi',
@@ -102,7 +103,7 @@ $('.search-form form').submit(function(){
         ),
         array(
             'header' => 'WO #',
-            'value'=>'CHTml::link($data->registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
+            'value'=>'CHtml::link($data->registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
             'type'=>'raw',
         ),
         array(
