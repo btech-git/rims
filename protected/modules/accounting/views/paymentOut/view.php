@@ -7,14 +7,14 @@
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px')); ?>
 
-    <?php if (Yii::app()->user->checkAccess("paymentOutEdit")): //!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/paymentOut/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+    <?php if (Yii::app()->user->checkAccess("paymentOutEdit")): //!($paymentOut->status == 'Approved' || $paymentOut->status == 'Rejected')): ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/paymentOut/update?id=' . $paymentOut->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
     <?php endif; ?>
 
-    <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("paymentOutApproval")): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-    <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+    <?php if ($paymentOut->status == "Draft" && Yii::app()->user->checkAccess("paymentOutApproval")): ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+    <?php elseif ($paymentOut->status != "Draft" && Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
     <?php endif; ?>
 
 </div>
