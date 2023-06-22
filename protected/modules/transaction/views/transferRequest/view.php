@@ -39,10 +39,10 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
 
-        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("transferRequestSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php if ($transferRequest->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php elseif ($transferRequest->status_document != "Draft" && Yii::app()->user->checkAccess("transferRequestSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
         <h1>View Transaction Transfer Request #<?php echo $transferRequest->id; ?></h1>
