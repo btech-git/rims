@@ -11,7 +11,7 @@ class CashTransactionController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 

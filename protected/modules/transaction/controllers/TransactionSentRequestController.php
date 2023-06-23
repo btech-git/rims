@@ -10,7 +10,7 @@ class TransactionSentRequestController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
