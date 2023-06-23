@@ -30,11 +30,11 @@ class TransactionRequestOrderController extends Controller
             }
         }
         
-        if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('requestOrderApproval')) || !(Yii::app()->user->checkAccess('requestOrderSupervisor'))) {
-                $this->redirect(array('/site/login'));
-            }
-        }
+//        if ($filterChain->action->id === 'updateApproval') {
+//            if (!(Yii::app()->user->checkAccess('requestOrderApproval')) || !(Yii::app()->user->checkAccess('requestOrderSupervisor'))) {
+//                $this->redirect(array('/site/login'));
+//            }
+//        }
         
         if (
             $filterChain->action->id === 'index' || 
