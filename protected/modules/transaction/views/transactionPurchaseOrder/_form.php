@@ -104,8 +104,7 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header,
-                                    'main_branch_id'); ?></label>
+                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'main_branch_id'); ?></label>
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($purchaseOrder->header, 'main_branch_id', array(
@@ -118,6 +117,18 @@
                             )); ?>
 
                             <?php echo $form->error($purchaseOrder->header, 'main_branch_id'); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'destination_branch_id'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeDropDownList($purchaseOrder->header, 'destination_branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih --')); ?>
+                            <?php echo $form->error($purchaseOrder->header, 'destination_branch_id'); ?>
                         </div>
                     </div>
                 </div>
@@ -321,18 +332,21 @@
                                 <?php echo $form->textField($purchaseOrder->header, 'payment_type', array('readonly' => true, 'value' => 'Cash')); ?>
                             </div>
                             <div id="payment_ddl">
-                                <?php echo $form->dropDownList($purchaseOrder->header, 'payment_type', array('Cash' => 'Cash', 'Credit' => 'Credit'), array(
-                                        'prompt' => '[--Select Payment type--]',
-                                        'onchange' => 'jQuery.ajax({
-                                            type: "POST",
-                                            url: "' . CController::createUrl('ajaxGetDate', array('type' => '')) . '" + $(this).val(),
-                                            data: jQuery("form").serialize(),
-                                            dataType: "json",
-                                            success: function(data){
-                                                jQuery("#TransactionPurchaseOrder_estimate_payment_date").val(data.tanggal);
-                                            },
-                                        });'
-                                    )); ?>
+                                <?php echo $form->dropDownList($purchaseOrder->header, 'payment_type', array(
+                                    'Cash' => 'Cash', 
+                                    'Credit' => 'Credit'
+                                ), array(
+                                    'prompt' => '[--Select Payment type--]',
+                                    'onchange' => 'jQuery.ajax({
+                                        type: "POST",
+                                        url: "' . CController::createUrl('ajaxGetDate', array('type' => '')) . '" + $(this).val(),
+                                        data: jQuery("form").serialize(),
+                                        dataType: "json",
+                                        success: function(data){
+                                            jQuery("#TransactionPurchaseOrder_estimate_payment_date").val(data.tanggal);
+                                        },
+                                    });'
+                                )); ?>
                             </div>
 
                             <?php echo $form->error($purchaseOrder->header, 'payment_type'); ?>
