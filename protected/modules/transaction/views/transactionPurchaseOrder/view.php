@@ -58,6 +58,7 @@ $this->menu=array(
                 'payment_type',
                 array('name' =>'requester_id','value'=> $model->user != null ? $model->user->username : null),
                 array('name' =>'main_branch_id','value'=>$model->mainBranch->name),
+                array('name' =>'destination_branch_id','value'=>$model->destinationBranch->name),
                 array('name' => 'approved_id', 'value'=> $model->approval != null ? $model->approval->username : null),
                 array('name'=>'supplier_name','value'=>empty($model->supplier_id) ? "" : $model->supplier->name),
                 'estimate_date_arrival',
