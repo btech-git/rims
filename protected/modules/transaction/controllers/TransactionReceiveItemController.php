@@ -335,7 +335,7 @@ class TransactionReceiveItemController extends Controller {
         }
         
         $purchaseDataProvider = $purchase->searchByReceive();
-        $purchaseDataProvider->criteria->addInCondition('t.main_branch_id', Yii::app()->user->branch_ids);
+        $purchaseDataProvider->criteria->addInCondition('t.destination_branch_id', Yii::app()->user->branch_ids);
 
         $consignment = new ConsignmentInHeader('search');
         $consignment->unsetAttributes();  // clear any default values
