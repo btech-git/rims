@@ -262,22 +262,6 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'skills'); ?></label>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->textArea($employee->header, 'skills', array('rows' => 6, 'cols' => 50)); ?>
-                                <?php echo $form->error($employee->header, 'skills'); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="small-12 medium-6 columns">
-                <div class="row">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
                                 <label class="prefix"><?php echo $form->labelEx($employee->header, 'mother_name'); ?></label>
                             </div>
                             <div class="small-8 columns">
@@ -302,6 +286,22 @@
                         </div>
                     </div>
 
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'skills'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->textArea($employee->header, 'skills', array('rows' => 6, 'cols' => 50)); ?>
+                                <?php echo $form->error($employee->header, 'skills'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="small-12 medium-6 columns">
+                <div class="row">
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
