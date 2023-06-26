@@ -26,125 +26,116 @@ $this->menu = array(
         <?php } ?>
         <h1>View Employee <?php echo $model->name; ?></h1>
 
-        <?php $this->widget('zii.widgets.CDetailView', array(
-            'data' => $model,
-            'attributes' => array(
-                'code',
-                'name',
-                'id_card',
-                'local_address',
-                array(
-                    'label' => 'Tanggal Join',
-                    'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($model, 'recruitment_date'))),
+        <fieldset>
+            <h3>Data Karyawan</h3>
+            <?php $this->widget('zii.widgets.CDetailView', array(
+                'data' => $model,
+                'attributes' => array(
+                    'code',
+                    array(
+                        'name' => 'recruitment_date',
+                        'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($model, 'recruitment_date'))),
+                    ),
+                    'name',
+                    'employment_type',
+                    array(
+                        'name' => 'branch_id', 
+                        'value' => $model->branch->name
+                    ),
+                    array(
+                        'name' => 'division_id', 
+                        'value' => $model->division->name
+                    ),
+                    array(
+                        'name' => 'position_id', 
+                        'value' => $model->position->name
+                    ),
+                    array(
+                        'name' => 'level_id', 
+                        'value' => $model->level->name
+                    ),
+                    array(
+                        'name' => 'employee_head_id', 
+                        'value' => $model->employeeHead->name
+                    ),
+                    'off_day',
                 ),
-                array('name' => 'province_name', 'value' => $model->province->name),
-                array('name' => 'city_name', 'value' => $model->city->name),
-                'home_address',
-                array('name' => 'home_province_name', 'value' => $model->homeProvince->name),
-                array('name' => 'home_city_name', 'value' => $model->homeProvince->name),
-                'sex',
-                'email',
-                'driving_license',
-                'status',
-            ),
-        ));
-        ?>
+            )); ?>
+        </fieldset>
+
+        <fieldset>
+            <h2>Information</h2>
+            <?php $this->widget('zii.widgets.CDetailView', array(
+                'data' => $model,
+                'attributes' => array(
+                    'birth_place',
+                    array(
+                        'name' => 'birth_date',
+                        'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($model, 'birth_date'))),
+                    ),
+                    'id_card',
+                    'family_card_number',
+                    'mother_name',
+                    'sex',
+                    'skills',
+                    'religion',
+                    'marriage_status',
+                    'home_address',
+                    'local_address',
+                ),
+            )); ?>
+        </fieldset>
+
+        <fieldset>
+            <h2>Information</h2>
+            <?php $this->widget('zii.widgets.CDetailView', array(
+                'data' => $model,
+                'attributes' => array(
+                    'birth_place',
+                    array(
+                        'name' => 'birth_date',
+                        'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($model, 'birth_date'))),
+                    ),
+                    'id_card',
+                    'family_card_number',
+                    'mother_name',
+                    'sex',
+                    'skills',
+                    'religion',
+                    'marriage_status',
+                    'home_address',
+                    'local_address',
+                ),
+            )); ?>
+        </fieldset>
+
+        <fieldset>
+            <h2>Contact Information</h2>
+            <?php $this->widget('zii.widgets.CDetailView', array(
+                'data' => $model,
+                'attributes' => array(
+                    'mobile_phone_number',
+                    'email',
+                    'school_degree',
+                    'school_subject',
+                    'bank_name',
+                    'bank_account_number',
+                    'tax_registration_number',
+                ),
+            )); ?>
+        </fieldset>
+
+        <fieldset>
+            <h2>Kontak Darurat</h2>
+            <?php $this->widget('zii.widgets.CDetailView', array(
+                'data' => $model,
+                'attributes' => array(
+                    'emergency_contact_name',
+                    'emergency_contact_relationship',
+                    'emergency_contact_mobile_phone',
+                    'emergency_contact_address',
+                ),
+            )); ?>
+        </fieldset>
     </div>
 </div>
-
-<br /><hr />
-
-<div class="row">
-    <div class="small-12 columns">
-        <h3>Branch - Division - Position - Level</h3>
-        <table >
-            <thead>
-                <tr>
-                    <td>Branch</td>
-                    <td>Division</td>
-                    <td>Position</td>
-                    <td>Level</td>
-                </tr>
-            </thead>
-            <?php foreach ($employeeDivisions as $key => $employeeDivision): ?>
-                <tr>
-                    <?php $branch = Branch::model()->findByPk($employeeDivision->branch_id); ?>
-                    <?php $division = Division::model()->findByPk($employeeDivision->division_id); ?>
-                    <?php $position = Position::model()->findByPk($employeeDivision->position_id); ?>
-                    <?php $level = Level::model()->findByPk($employeeDivision->level->id); ?>
-                    <td><?php echo $branch->name ?></td>
-                    <td><?php echo $division->name ?></td>
-                    <td><?php echo $position->name ?></td>
-                    <td><?php echo $level->name ?></td>
-
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
-</div>
-
-<!--<br /><hr />
-
-<div class="row">
-    <div class="small-12 columns">
-        <div class="grid-view">
-            <?php /*$this->widget('zii.widgets.grid.CGridView', array(
-                'id' => 'attendance-grid',
-                'dataProvider' => $dataProvider,
-                'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
-                'pager' => array(
-                    'cssFile' => false,
-                    'header' => '',
-                ),
-                'columns' => array(
-                    'date',
-                    'login_time',
-                    'logout_time',
-                    'total_hour',
-                    [
-                        'header' => 'notes',
-                        'name' => 'notes',
-                        'value' => 'CHtml::dropDownList("EmployeeAttendance[notes]", "$data->notes", array(
-                            ""=>"No overtime",
-                            "Overtime" => "Overtime",
-                            "Izin" => "Izin",
-                            "Alpha" => "Alpha",
-                        ))',
-                        'type' => 'raw'
-                    ],
-                    [
-                        'value' => 'CHtml::button("SAVE", array('
-                        . '"id"=>"btnsave",'
-                        . '"rel"=>"$data->id", '
-                        . '"class"=>"button cbutton secondary", '
-                        . '"style"=>"background-color:#767171; color:#fff;"'
-                        . '))',
-                        'type' => "raw"
-                    ],
-                ),
-            ));*/ ?>
-        </div>
-    </div>
-</div>-->
-
-<?php /*Yii::app()->clientScript->registerScript('myforecastingProduct', '
-    $("body").on("click","#btnsave",function(){
-        var id = $(this).attr("rel");
-
-        var sibs=$(this).parent().siblings();
-        data.model_id=id;
-        data.notes=$(sibs[4]).children().val();
-
-        $.ajax({
-            "url":"' . CHtml::normalizeUrl(array("employeeAttendance/saveData")) . '",
-            "data":data,
-            "type":"POST",
-            "success":function(data){
-                console.log(data);
-                $("#attendance-grid").yiiGridView("update",{});
-            },
-        })
-
-        return false;
-    });
-', CClientScript::POS_END); ?>
