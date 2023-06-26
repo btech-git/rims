@@ -812,7 +812,7 @@ class TransactionPurchaseOrderController extends Controller {
 
             if (isset($_POST['TransactionPurchaseOrderApproval'])) {
                 $model->attributes = $_POST['TransactionPurchaseOrderApproval'];
-                if ($purchaseOrder->status_document != $model->approval_type) {
+//                if ($purchaseOrder->status_document != $model->approval_type) {
                     if ($model->save()) {
                         $purchaseOrder->status_document = $model->approval_type;
                         if ($model->approval_type == 'Approved') {
@@ -855,7 +855,7 @@ class TransactionPurchaseOrderController extends Controller {
                         $purchaseOrder->save(false);
                         $this->redirect(array('view', 'id' => $headerId));
                     }
-                }
+//                }
             }
 //        } catch (Exception $e) {
 //            $dbTransaction->rollback();
