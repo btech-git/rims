@@ -206,7 +206,7 @@
                                 <label class="prefix"><?php echo $form->labelEx($employee->header, 'birth_place'); ?></label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->dropDownList($employee->header, 'birth_place', CHtml::listData(City::model()->findAll(array('order' => 'name ASC')), 'id', 'name')); ?>
+                                <?php echo $form->dropDownList($employee->header, 'birth_place', CHtml::listData(City::model()->findAll(array('order' => 'name ASC')), 'name', 'name')); ?>
                                 <?php echo $form->error($employee->header, 'home_city'); ?>
                             </div>
                         </div>

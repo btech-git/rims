@@ -87,29 +87,6 @@ $this->menu = array(
         </fieldset>
 
         <fieldset>
-            <h2>Information</h2>
-            <?php $this->widget('zii.widgets.CDetailView', array(
-                'data' => $model,
-                'attributes' => array(
-                    'birth_place',
-                    array(
-                        'name' => 'birth_date',
-                        'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($model, 'birth_date'))),
-                    ),
-                    'id_card',
-                    'family_card_number',
-                    'mother_name',
-                    'sex',
-                    'skills',
-                    'religion',
-                    'marriage_status',
-                    'home_address',
-                    'local_address',
-                ),
-            )); ?>
-        </fieldset>
-
-        <fieldset>
             <h2>Contact Information</h2>
             <?php $this->widget('zii.widgets.CDetailView', array(
                 'data' => $model,
