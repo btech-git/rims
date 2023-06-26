@@ -476,15 +476,14 @@
             <h2>Kontak Darurat</h2>
             <div class="small-12 medium-6 columns">
                 <div class="row">
-
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'tax_registration_number'); ?></label>
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'emergency_contact_name'); ?></label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->textField($employee->header, 'tax_registration_number', array('size' => 20, 'maxlength' => 60)); ?>
-                                <?php echo $form->error($employee->header, 'tax_registration_number'); ?>
+                                <?php echo $form->textField($employee->header, 'emergency_contact_name', array('size' => 20, 'maxlength' => 60)); ?>
+                                <?php echo $form->error($employee->header, 'emergency_contact_name'); ?>
                             </div>
                         </div>
                     </div>
