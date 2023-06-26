@@ -167,7 +167,7 @@
                                 <label class="prefix"><?php echo $form->labelEx($employee->header, 'employee_head_id'); ?></label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->dropDownList($employee->header, 'employee_head_id', CHtml::listData(Employee::model()->findAll(), 'id', 'name')); ?>
+                                <?php echo $form->dropDownList($employee->header, 'employee_head_id', CHtml::listData(Employee::model()->findAll(), 'id', 'name'), array('empty' => '-- Select Atasan --')); ?>
                                 <?php echo $form->error($employee->header, 'employee_head_id'); ?>
                             </div>
                         </div>
