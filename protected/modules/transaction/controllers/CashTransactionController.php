@@ -496,32 +496,32 @@ class CashTransactionController extends Controller {
                 $cashTransaction->save(false);
                 
                 if ($cashTransaction->status === 'Approved') {
-                    $jurnalUmum = new JurnalUmum;
-                    $jurnalUmum->kode_transaksi = $cashTransaction->transaction_number;
-                    $jurnalUmum->tanggal_transaksi = $cashTransaction->transaction_date;
-                    $jurnalUmum->coa_id = $cashTransaction->coa_id;
-                    $jurnalUmum->total = $cashTransaction->transaction_type == "In" ? $cashTransaction->credit_amount : $cashTransaction->debit_amount;
-                    $jurnalUmum->debet_kredit = $cashTransaction->transaction_type == "In" ? 'D' : 'K';
-                    $jurnalUmum->tanggal_posting = date('Y-m-d');
-                    $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                    $jurnalUmum->transaction_subject = $cashTransaction->note;
-                    $jurnalUmum->is_coa_category = 0;
-                    $jurnalUmum->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
-                    $jurnalUmum->save();
-
                     foreach ($cashTransaction->cashTransactionDetails as $key => $ctDetail) {
-                        $jurnalUmum = new JurnalUmum;
-                        $jurnalUmum->kode_transaksi = $cashTransaction->transaction_number;
-                        $jurnalUmum->tanggal_transaksi = $cashTransaction->transaction_date;
-                        $jurnalUmum->coa_id = $ctDetail->coa_id;
-                        $jurnalUmum->total = $ctDetail->amount;
-                        $jurnalUmum->debet_kredit = $cashTransaction->transaction_type == "In" ? 'K' : 'D';
-                        $jurnalUmum->tanggal_posting = date('Y-m-d');
-                        $jurnalUmum->branch_id = $cashTransaction->branch_id;
-                        $jurnalUmum->transaction_subject = $ctDetail->notes;
-                        $jurnalUmum->is_coa_category = 0;
-                        $jurnalUmum->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
-                        $jurnalUmum->save(false);
+                        $jurnalUmumHeader = new JurnalUmum;
+                        $jurnalUmumHeader->kode_transaksi = $cashTransaction->transaction_number;
+                        $jurnalUmumHeader->tanggal_transaksi = $cashTransaction->transaction_date;
+                        $jurnalUmumHeader->coa_id = $cashTransaction->coa_id;
+                        $jurnalUmumHeader->total = $ctDetail->amount;
+                        $jurnalUmumHeader->debet_kredit = $cashTransaction->transaction_type == "In" ? 'D' : 'K';
+                        $jurnalUmumHeader->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumHeader->branch_id = $cashTransaction->branch_id;
+                        $jurnalUmumHeader->transaction_subject = $ctDetail->notes;
+                        $jurnalUmumHeader->is_coa_category = 0;
+                        $jurnalUmumHeader->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
+                        $jurnalUmumHeader->save();
+
+                        $jurnalUmumDetail = new JurnalUmum;
+                        $jurnalUmumDetail->kode_transaksi = $cashTransaction->transaction_number;
+                        $jurnalUmumDetail->tanggal_transaksi = $cashTransaction->transaction_date;
+                        $jurnalUmumDetail->coa_id = $ctDetail->coa_id;
+                        $jurnalUmumDetail->total = $ctDetail->amount;
+                        $jurnalUmumDetail->debet_kredit = $cashTransaction->transaction_type == "In" ? 'K' : 'D';
+                        $jurnalUmumDetail->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumDetail->branch_id = $cashTransaction->branch_id;
+                        $jurnalUmumDetail->transaction_subject = $ctDetail->notes;
+                        $jurnalUmumDetail->is_coa_category = 0;
+                        $jurnalUmumDetail->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
+                        $jurnalUmumDetail->save();
                     }
                 }
                 
