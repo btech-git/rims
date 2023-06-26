@@ -35,6 +35,7 @@
  * @property string $payment_amount
  * @property string $payment_left
  * @property integer $tax_percentage
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property InvoiceDetail[] $invoiceDetails
@@ -88,7 +89,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 

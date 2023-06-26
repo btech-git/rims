@@ -48,6 +48,7 @@ class BodyRepairRegistrationController extends Controller {
 
         $bodyRepairRegistration->header->transaction_date = date('Y-m-d H:i:s');
         $bodyRepairRegistration->header->work_order_time = date('H:i:s');
+        $bodyRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
         $bodyRepairRegistration->header->user_id = Yii::app()->user->id;
         $bodyRepairRegistration->header->vehicle_id = $vehicleId;
         $bodyRepairRegistration->header->customer_id = $vehicle->customer_id;

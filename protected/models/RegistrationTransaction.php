@@ -55,6 +55,7 @@
  * @property string $transaction_time_out
  * @property integer $employee_id_assign_mechanic
  * @property integer $tax_percentage
+ * @property string $created_datetime
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
@@ -126,7 +127,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, tax_percentage', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, tax_percentage, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 

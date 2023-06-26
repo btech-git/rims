@@ -45,7 +45,7 @@ class JurnalUmum extends CActiveRecord {
             array('kode_transaksi, tanggal_transaksi, coa_id, total, debet_kredit, tanggal_posting, branch_id', 'required'),
             array('coa_id, branch_id, is_coa_category', 'numerical', 'integerOnly' => true),
             array('kode_transaksi', 'length', 'max' => 30),
-            array('transaction_subject', 'length', 'max' => 100),
+            array('transaction_subject', 'length', 'max' => 200),
             array('transaction_type', 'length', 'max' => 20),
             array('total', 'length', 'max' => 18),
             array('debet_kredit', 'length', 'max' => 5),

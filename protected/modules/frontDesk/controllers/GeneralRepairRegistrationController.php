@@ -47,6 +47,7 @@ class GeneralRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($vehicle->customer_id);
 
         $generalRepairRegistration->header->transaction_date = date('Y-m-d H:i:s');
+        $generalRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->user_id = Yii::app()->user->id;
         $generalRepairRegistration->header->vehicle_id = $vehicleId;
         $generalRepairRegistration->header->customer_id = $vehicle->customer_id;

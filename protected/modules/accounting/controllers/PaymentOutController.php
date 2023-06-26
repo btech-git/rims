@@ -300,6 +300,10 @@ class PaymentOutController extends Controller {
         $model = new PaymentOutApproval;
         $model->date = date('Y-m-d H:i:s');
         $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($paymentOut->purchase_order_id);
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $paymentOut->payment_number,
+            'branch_id' => $paymentOut->branch_id,
+        ));
 
         if (isset($_POST['PaymentOutApproval'])) {
             $model->attributes = $_POST['PaymentOutApproval'];
@@ -308,6 +312,41 @@ class PaymentOutController extends Controller {
                 $paymentOut->save(false);
 
                 if ($model->approval_type == 'Approved') {
+
+                    foreach ($paymentOut->payOutDetails as $detail) {
+                        $jurnalHutang = new JurnalUmum;
+                        $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
+                        $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
+                        $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
+                        $jurnalHutang->branch_id = $paymentOut->branch_id;
+                        $jurnalHutang->total = $detail->total_invoice;
+                        $jurnalHutang->debet_kredit = 'D';
+                        $jurnalHutang->tanggal_posting = date('Y-m-d');
+                        $jurnalHutang->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $detail->receiveItem->invoice_number;
+                        $jurnalHutang->is_coa_category = 0;
+                        $jurnalHutang->transaction_type = 'Pout';
+                        $jurnalHutang->save();
+
+                        if (!empty($paymentOut->paymentType->coa_id)) {
+                            $coaId = $paymentOut->paymentType->coa_id;
+                        } else {
+                            $coaId = $paymentOut->companyBank->coa_id;
+                        }
+
+                        $jurnalUmumKas = new JurnalUmum;
+                        $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
+                        $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
+                        $jurnalUmumKas->coa_id = $coaId;
+                        $jurnalUmumKas->branch_id = $paymentOut->branch_id;
+                        $jurnalUmumKas->total = $detail->total_invoice;
+                        $jurnalUmumKas->debet_kredit = 'K';
+                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $detail->receiveItem->invoice_number;
+                        $jurnalUmumKas->is_coa_category = 0;
+                        $jurnalUmumKas->transaction_type = 'Pout';
+                        $jurnalUmumKas->save();
+                    }
+
                     if (!empty($purchaseOrderHeader)) {
                         if ($purchaseOrderHeader->payment_amount == 0) {
                             $purchaseOrderHeader->payment_amount = $paymentOut->payment_amount;

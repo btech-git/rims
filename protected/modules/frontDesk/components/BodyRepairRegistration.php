@@ -607,6 +607,7 @@ class BodyRepairRegistration extends CComponent {
         $model->pph = $this->header->pph;
         $model->payment_date_estimate = date('Y-m-d');
         $model->coa_bank_id_estimate = 7;
+        $model->created_datetime = date('Y-m-d H:i:s');
         $valid = $model->save(false) && $valid;
 
         $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $this->header->id));
