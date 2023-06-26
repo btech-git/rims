@@ -34,6 +34,8 @@
         <?php echo $form->errorSummary($employee->phoneDetails); ?>
         <?php echo $form->errorSummary($employee->mobileDetails); ?>
 
+        <fieldset>
+            <head>Data Karyawan</head>
         <div class="row">
             <div class="small-12 medium-6 columns">
                 <div class="field">
@@ -122,6 +124,7 @@
                         </div>
                     </div>
                 </div>
+                </fieldset>
 
                 <div class="field">
                     <div class="row collapse">
