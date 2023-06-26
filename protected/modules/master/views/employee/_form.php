@@ -85,7 +85,41 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'employment_type'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->dropDownList($employee->header, 'employment_type', array(
+                                    'Tetap' => 'Tetap',
+                                    'Probation' => 'Probation',
+                                )); ?>
+                                <?php echo $form->error($employee->header, 'employment_type'); ?>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'branch_id'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->dropDownList($employee->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
+                                    'prompt' => '[--Select Branch--]',
+                                    'onchange' => ''
+                                )); ?>
+                                <?php echo $form->error($employee->header, 'branch_id'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="small-12 medium-6 columns">
+                <div class="row">
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
@@ -113,11 +147,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="small-12 medium-6 columns">
-                <div class="row">
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
@@ -128,36 +157,6 @@
                                     'prompt' => '[--Select Level--]',
                                 )); ?>
                                 <?php echo $form->error($employee->header, 'level_id'); ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'employment_type'); ?></label>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->dropDownList($employee->header, 'employment_type', array(
-                                    'Tetap' => 'Tetap',
-                                    'Probation' => 'Probation',
-                                )); ?>
-                                <?php echo $form->error($employee->header, 'employment_type'); ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'branch_id'); ?></label>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->dropDownList($employee->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                                    'prompt' => '[--Select Branch--]',
-                                    'onchange' => ''
-                                )); ?>
-                                <?php echo $form->error($employee->header, 'branch_id'); ?>
                             </div>
                         </div>
                     </div>
@@ -263,22 +262,17 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'marriage_status'); ?></label>
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'skills'); ?></label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->dropDownList($employee->header, 'marriage_status', array(
-                                    'TK' => 'TK',
-                                    'K0' => 'K0', 
-                                    'K1' => 'K1', 
-                                    'K2' => 'K2', 
-                                    'K3' => 'K3', 
-                                ), array('prompt' => '[--Select Status--]')); ?>
-                                <?php echo $form->error($employee->header, 'marriage_status'); ?>
+                                <?php echo $form->textArea($employee->header, 'skills', array('rows' => 6, 'cols' => 50)); ?>
+                                <?php echo $form->error($employee->header, 'skills'); ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
             <div class="small-12 medium-6 columns">
                 <div class="row">
                     <div class="field">
@@ -322,6 +316,24 @@
                                     'Budha' => 'Budha',
                                 )); ?>
                                 <?php echo $form->error($employee->header, 'religion'); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'marriage_status'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->dropDownList($employee->header, 'marriage_status', array(
+                                    'TK' => 'TK',
+                                    'K0' => 'K0', 
+                                    'K1' => 'K1', 
+                                    'K2' => 'K2', 
+                                    'K3' => 'K3', 
+                                ), array('prompt' => '[--Select Status--]')); ?>
+                                <?php echo $form->error($employee->header, 'marriage_status'); ?>
                             </div>
                         </div>
                     </div>
@@ -506,7 +518,11 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
+            </div>
+            
+            <div class="small-12 medium-6 columns">
+                <div class="row">
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
@@ -515,18 +531,6 @@
                             <div class="small-8 columns">
                                 <?php echo $form->textArea($employee->header, 'emergency_contact_address', array('rows' => 6, 'cols' => 50)); ?>
                                 <?php echo $form->error($employee->header, 'emergency_contact_address'); ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'skills'); ?></label>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->textArea($employee->header, 'skills', array('rows' => 6, 'cols' => 50)); ?>
-                                <?php echo $form->error($employee->header, 'skills'); ?>
                             </div>
                         </div>
                     </div>
