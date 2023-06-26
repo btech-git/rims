@@ -29,7 +29,28 @@
  * @property string $deleted_at
  * @property integer $deleted_by
  * @property string $recruitment_date
- *
+ * @property string $mobile_phone_number
+ * @property string $mother_name
+ * @property string $religion
+ * @property string $marriage_status
+ * @property string $family_card_number
+ * @property string $school_degree
+ * @property string $school_subject
+ * @property string $bank_name
+ * @property string $bank_account_number
+ * @property string $tax_registration_number
+ * @property string $employment_type
+ * @property integer $division_id
+ * @property integer $position_id
+ * @property integer $level_id
+ * @property integer $employee_head_id
+ * @property string $birth_date
+ * @property string $birth_place
+ * @property string $emergency_contact_name
+ * @property string $emergency_contact_relationship
+ * @property string $emergency_contact_mobile_phone
+ * @property string $emergency_contact_address
+ * 
  * The followings are the available model relations:
  * @property Province $province
  * @property City $city
@@ -70,17 +91,17 @@ class Employee extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, basic_salary, skills', 'required'),
-            array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by', 'numerical', 'integerOnly' => true),
-            array('name', 'length', 'max' => 100),
+            array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, division_id, position_id, level_id, employee_head_id', 'numerical', 'integerOnly' => true),
+            array('name, mother_name, bank_name, birth_place, emergency_contact_name', 'length', 'max' => 100),
             array('sex, status, basic_salary', 'length', 'max' => 10),
-            array('email', 'length', 'max' => 60),
-            array('id_card, driving_license, off_day', 'length', 'max' => 30),
-            array('salary_type, payment_type, code', 'length', 'max' => 50),
+            array('email, mobile_phone_number, marriage_status, emergency_contact_relationship', 'length', 'max' => 60),
+            array('id_card, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number', 'length', 'max' => 30),
+            array('salary_type, payment_type, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone', 'length', 'max' => 50),
             array('availability', 'length', 'max' => 5),
-            array('deleted_at, recruitment_date', 'safe'),
+            array('deleted_at, recruitment_date, birth_date, emergency_contact_address', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date', 'safe', 'on' => 'search'),
+            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date, mother_name, bank_name, birth_place, emergency_contact_name, mobile_phone_number, marriage_status, emergency_contact_relationship, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, division_id, position_id, level_id, employee_head_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -118,28 +139,48 @@ class Employee extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'name' => 'Name',
-            'local_address' => 'Local Address',
-            'home_address' => 'Home Address',
-            'province_id' => 'Province',
+            'name' => 'Nama Karyawan',
+            'local_address' => 'Alamat Domisili',
+            'home_address' => 'Alamat KTP',
+            'bank_name' => 'Nama Bank',
             'city_id' => 'City',
             'home_province' => 'Home Province',
             'home_city' => 'Home City',
-            'sex' => 'Sex',
+            'sex' => 'Jenis Kelamin',
             'email' => 'Email',
-            'id_card' => 'Id Card No',
-            'driving_licence' => 'Driving Licence No',
-            'branch_id' => 'Branch',
+            'id_card' => 'NIK',
+            'driving_licence' => 'SIM',
+            'branch_id' => 'Lokasi Cabang',
             'status' => 'Status',
             'salary_type' => 'Salary Type',
             'basic_salary' => 'Basic Salary',
             'payment_type' => 'Payment Type',
-            'code' => 'Code',
+            'code' => 'NIP',
             'availability' => 'Availability',
-            'recruitment_date' => 'Tanggal Join',
+            'recruitment_date' => 'Tanggal Mulai Kerja',
             'skills' => 'Skills',
             'registration_service_id' => 'Registration Service',
-            'off_day' => 'Off Day',
+            'off_day' => 'Hari Libur',
+            'mother_name' => 'Nama Ibu Kandung',
+            'birth_place' => 'Tempat Lahir',
+            'emergency_contact_name' => 'Nama',
+            'division_id' => 'Divisi',
+            'employee_head_id' => 'Atasan',
+            'position_id' => 'Posisi',
+            'level_id' => 'Level',
+            'mobile_phone_number' => 'No Telpon',
+            'marriage_status' => 'Status Perkawinan',
+            'emergency_contact_relationship' => 'Hubungan',
+            'religion' => 'Agama',
+            'family_card_number' => 'Kartu Keluarga',
+            'bank_account_number' => 'No. Rekening',
+            'tax_registration_number' => 'NPWP',
+            'school_degree' => 'Pendidikan',
+            'school_subject' => 'Jurusan',
+            'employment_type' => 'Status Karyawan',
+            'emergency_contact_mobile_phone' => 'No Telpon',
+            'birth_date' => 'Tanggal Lahir',
+            'emergency_contact_address' => 'Alamat',
         );
     }
 
