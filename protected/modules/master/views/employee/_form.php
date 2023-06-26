@@ -223,6 +223,7 @@
                                     'attribute' => "birth_date",
                                     'options'=>array(
                                         'dateFormat' => 'yy-mm-dd',
+                                        'yearRange'=>'-70:+0',
                                         'changeMonth'=>true,
                                         'changeYear'=>true,
                                     ),

@@ -84,24 +84,6 @@ class EmployeeController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        /* $model=new Employee;
-          $model2=new Position('search');
-          $model2->unsetAttributes(); */// clear any default values
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        /* if(isset($_POST['Employee']))
-          {
-          $model->attributes=$_POST['Employee'];
-          if($model->save())
-          $this->redirect(array('admin'));
-          //$this->redirect(array('view','id'=>$model->id));
-          }
-
-          $this->render('create',array(
-          'model'=>$model,'model2'=>$model2,
-          )); */
-
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
         if (isset($_GET['Bank']))
@@ -147,7 +129,6 @@ class EmployeeController extends Controller {
             $branch->attributes = $_GET['Division'];
 
         $branchCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $branchCriteria->compare('name', $branch->name, true);
 
         $branchDataProvider = new CActiveDataProvider('Branch', array(
@@ -156,16 +137,9 @@ class EmployeeController extends Controller {
 
         $employee = $this->instantiate(null);
         if (isset($_POST['Employee'])) {
-
             $this->loadState($employee);
             if ($employee->save(Yii::app()->db)) {
-                //echo 'hte'; print_r($_POST); exit;
                 $this->redirect(array('view', 'id' => $employee->header->id));
-            } else {
-                //echo 'else'; print_r($_POST); exit;
-                foreach ($employee->phoneDetails as $key => $phoneDetail) {
-                    //print_r(CJSON::encode($detail->employee_id));
-                }
             }
         }
 
