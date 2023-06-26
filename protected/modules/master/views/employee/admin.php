@@ -107,19 +107,19 @@ $('.search-form form').submit(function(){
                     ),
                     array(
                         'name' => 'branch_id', 
-                        'value' => '$data->branch->name',
+                        'value' => 'CHtml::encode(CHtml::value($data, "branch.name"))',
                     ),
                     array(
                         'name' => 'division_id', 
-                        'value' => '$data->division->name',
+                        'value' => 'CHtml::encode(CHtml::value($data, "division.name"))',
                     ),
                     array(
                         'name' => 'position_id', 
-                        'value' => '$data->position->name',
+                        'value' => 'CHtml::encode(CHtml::value($data, "position.name"))',
                     ),
                     array(
                         'name' => 'level_id', 
-                        'value' => '$data->level->name',
+                        'value' => 'CHtml::encode(CHtml::value($data, "level.name"))',
                     ),
                     array(
                         'class' => 'CButtonColumn',
