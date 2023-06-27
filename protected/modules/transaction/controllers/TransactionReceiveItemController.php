@@ -322,11 +322,8 @@ class TransactionReceiveItemController extends Controller {
         }
         
         $deliveryDataProvider = $delivery->searchByReceive();
-//        $deliveryDataProvider->criteria->addCondition('sender_branch_id IN (:branch_ids) OR destination_branch IN (:branch_ids)');
-//        $deliveryDataProvider->criteria->params = array(
-//            ':branch_ids' => implode(',', Yii::app()->user->branch_ids),
-//        );
-//        $deliveryDataProvider->criteria->addInCondition('destination_branch', Yii::app()->user->branch_ids);
+        $branchIdsString = implode(',', Yii::app()->user->branch_ids);
+        $deliveryDataProvider->criteria->addCondition("sender_branch_id IN ({$branchIdsString}) OR destination_branch IN ({$branchIdsString})");
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values
