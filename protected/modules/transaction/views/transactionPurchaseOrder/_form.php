@@ -124,18 +124,6 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'destination_branch_id'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::activeDropDownList($purchaseOrder->header, 'destination_branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih --')); ?>
-                            <?php echo $form->error($purchaseOrder->header, 'destination_branch_id'); ?>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
                             <label class="prefix"><?php echo $form->labelEx($purchaseOrder->header, 'purchase_type'); ?></label>
                         </div>
                         <div class="small-8 columns">
@@ -356,21 +344,21 @@
                 
                 <div class="field" style="padding-bottom: 10px;">
                     <div class="row collapse">
-                        <div class="small-12 columns">
+                        <div class="small-8 columns">
                             <?php echo CHtml::hiddenField('DetailIndex', ''); ?>
                             <?php echo CHtml::button('Add Details', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
                                 'onclick' => '$("#product-dialog").dialog("open"); return false;
-                                    jQuery.ajax({
-                                        type: "POST",
-                                        url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
-                                        data: jQuery("form").serialize(),
-                                        success: function(html) {
-                                            jQuery("#detail").html(html);
-                                        },
-                                    });'
+                                jQuery.ajax({
+                                    type: "POST",
+                                    url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
+                                    data: jQuery("form").serialize(),
+                                    success: function(html) {
+                                        jQuery("#detail").html(html);
+                                    },
+                                });'
                             )); ?>
 
                             <?php Yii::app()->clientScript->registerScript('updateGridView', '$.updateGridView = function(gridID, name, value) {
@@ -380,7 +368,23 @@
                                 )});
                             }', CClientScript::POS_READY); ?>
                         </div>
+                        <div class="small-4 columns">
+                            <?php echo CHtml::button('Add Destination Branch', array(
+                                'name' => 'Search', 
+                                'onclick' => '$("#destination-branch-dialog").dialog("open"); return false;', 
+                                'onkeypress' => 'if (event.keyCode == 13) { $("#destination-branch-dialog").dialog("open"); return false; }'
+                            )); ?>
+                            <?php echo CHtml::hiddenField('DestinationBranchId'); ?>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="small-12 medium-12 columns">
+                <div id="detail_branch_div">
+                    <?php $this->renderPartial('_destinationBranch', array(
+                        'purchaseOrder' => $purchaseOrder,
+                    )); ?>
                 </div>
             </div>
 
@@ -841,6 +845,51 @@
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'destination-branch-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Destination Branch',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+
+    <?php echo CHtml::beginForm('', 'post'); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'destination-branch-grid',
+        'dataProvider' => $destinationBranchDataProvider,
+        'filter' => null,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'columns' => array(
+            array(
+                'id' => 'selectedIds',
+                'class' => 'CCheckBoxColumn',
+                'selectableRows' => '50',
+            ),
+            'code',
+            'name',
+        ),
+    )); ?>
+
+    <?php echo CHtml::ajaxSubmitButton('Add', CController::createUrl('ajaxHtmlAddDestinationBranches', array('id' => $purchaseOrder->header->id)), array(
+        'type' => 'POST',
+        'data' => 'js:$("form").serialize()',
+        'success' => 'js:function(html) {
+            $("#detail_branch_div").html(html);
+            $("#destination-branch-dialog").dialog("close");
+        }'
+    )); ?>
+
+    <?php echo CHtml::endForm(); ?>
+
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    
     <?php
     Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
     Yii::app()->clientScript->registerScript('myjavascript', '

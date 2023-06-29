@@ -176,6 +176,9 @@ class TransactionPurchaseOrderController extends Controller {
         }
         $priceDataProvider = $price->search();
 
+        $destinationBranch = Search::bind(new Branch('search'), isset($_GET['Branch']) ? $_GET['Branch'] : array());
+        $destinationBranchDataProvider = $destinationBranch->search();
+
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
@@ -198,6 +201,7 @@ class TransactionPurchaseOrderController extends Controller {
             'productDataProvider' => $productDataProvider,
             'price' => $price,
             'priceDataProvider' => $priceDataProvider,
+            'destinationBranchDataProvider' => $destinationBranchDataProvider,
         ));
     }
 
@@ -911,10 +915,10 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function instantiate($id) {
         if (empty($id)) {
-            $purchaseOrder = new PurchaseOrders(new TransactionPurchaseOrder(), array());
+            $purchaseOrder = new PurchaseOrders(new TransactionPurchaseOrder(), array(), array());
         } else {
             $purchaseOrderModel = $this->loadModel($id);
-            $purchaseOrder = new PurchaseOrders($purchaseOrderModel, $purchaseOrderModel->transactionPurchaseOrderDetails);
+            $purchaseOrder = new PurchaseOrders($purchaseOrderModel, $purchaseOrderModel->transactionPurchaseOrderDetails, $purchaseOrderModel->transactionPurchaseOrderDestinationBranches);
         }
         return $purchaseOrder;
     }
@@ -939,6 +943,23 @@ class TransactionPurchaseOrderController extends Controller {
             }
         } else {
             $purchaseOrder->details = array();
+        }
+        
+        if (isset($_POST['TransactionPurchaseOrderDestinationBranch'])) {
+            foreach ($_POST['TransactionPurchaseOrderDestinationBranch'] as $i => $item) {
+                if (isset($purchaseOrder->detailBranches[$i])) {
+                    $purchaseOrder->detailBranches[$i]->attributes = $item;
+                } else {
+                    $detail = new TransactionPurchaseOrderDestinationBranch();
+                    $detail->attributes = $item;
+                    $purchaseOrder->detailBranches[] = $detail;
+                }
+            }
+            if (count($_POST['TransactionPurchaseOrderDestinationBranch']) < count($purchaseOrder->detailBranches)) {
+                array_splice($purchaseOrder->detailBranches, $i + 1);
+            }
+        } else {
+            $purchaseOrder->detailBranches = array();
         }
     }
 
@@ -1101,6 +1122,26 @@ class TransactionPurchaseOrderController extends Controller {
             );
 
             echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxHtmlAddDestinationBranches($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $purchaseOrder = $this->instantiate($id);
+            $this->loadState($purchaseOrder);
+
+            if (isset($_POST['selectedIds'])) {
+                $branches = array();
+                $branches = $_POST['selectedIds'];
+
+                foreach ($branches as $branch) {
+                    $purchaseOrder->addBranch($branch);
+                }
+            }
+
+            $this->renderPartial('_destinationBranch', array(
+                'purchaseOrder' => $purchaseOrder,
+            ));
         }
     }
 

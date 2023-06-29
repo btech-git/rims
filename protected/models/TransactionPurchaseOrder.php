@@ -13,7 +13,6 @@
  * @property string $estimate_date_arrival
  * @property integer $requester_id
  * @property integer $main_branch_id
- * @property integer $destination_branch_id
  * @property integer $approved_id
  * @property integer $total_quantity
  * @property string $price_before_discount
@@ -40,6 +39,7 @@
  * @property Coa $coa
  * @property TransactionPurchaseOrderApproval[] $transactionPurchaseOrderApprovals
  * @property TransactionPurchaseOrderDetail[] $transactionPurchaseOrderDetails
+ * @property TransactionPurchaseOrderDestinationBranch[] $transactionPurchaseOrderDestinationBranches
  * @property TransactionReceiveItem[] $transactionReceiveItems
  * @property TransactionReturnOrder[] $transactionReturnOrders
  * @property CoaBank $coaBankIdEstimate
@@ -83,8 +83,8 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage, supplier_id, requester_id, main_branch_id, destination_branch_id', 'required'),
-            array('supplier_id, requester_id, main_branch_id, destination_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage', 'numerical', 'integerOnly' => true),
+            array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage, supplier_id, requester_id, main_branch_id', 'required'),
+            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
@@ -93,7 +93,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, destination_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage', 'safe', 'on' => 'search'),
         );
     }
 
@@ -109,12 +109,12 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
             'transactionPurchaseOrderApprovals' => array(self::HAS_MANY, 'TransactionPurchaseOrderApproval', 'purchase_order_id'),
             'transactionPurchaseOrderDetails' => array(self::HAS_MANY, 'TransactionPurchaseOrderDetail', 'purchase_order_id'),
+            'transactionPurchaseOrderDestinationBranches' => array(self::HAS_MANY, 'TransactionPurchaseOrderDestinationBranch', 'purchase_order_id'),
             'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'purchase_order_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'purchase_order_id'),
             'user' => array(self::BELONGS_TO, 'User', 'requester_id'),
             'approval' => array(self::BELONGS_TO, 'User', 'approved_id'),
             'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
-            'destinationBranch' => array(self::BELONGS_TO, 'Branch', 'destination_branch_id'),
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'Coa', 'coa_bank_id_estimate'),
         );
     }
@@ -133,7 +133,6 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'estimate_date_arrival' => 'Estimate Date Arrival',
             'requester_id' => 'Requester',
             'main_branch_id' => 'Main Branch',
-            'destination_branch_id' => 'Destination Branch',
             'approved_id' => 'Approved',
             'total_quantity' => 'Total Quantity',
             'price_before_discount' => 'Price Before Discount',
@@ -179,7 +178,6 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.estimate_date_arrival', $this->estimate_date_arrival, true);
         $criteria->compare('t.requester_id', $this->requester_id);
         $criteria->compare('t.main_branch_id', $this->main_branch_id);
-        $criteria->compare('t.destination_branch_id', $this->destination_branch_id);
         $criteria->compare('t.approved_id', $this->approved_id);
         $criteria->compare('t.total_quantity', $this->total_quantity);
         $criteria->compare('t.price_before_discount', $this->price_before_discount, true);

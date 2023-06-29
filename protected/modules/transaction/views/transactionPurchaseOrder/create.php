@@ -23,6 +23,7 @@ $this->menu = array(
         'productDataProvider' => $productDataProvider,
         'price' => $price,
         'priceDataProvider' => $priceDataProvider,
+        'destinationBranchDataProvider' => $destinationBranchDataProvider,
     )); ?>
 </div>
 

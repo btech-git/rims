@@ -332,7 +332,11 @@ class TransactionReceiveItemController extends Controller {
         }
         
         $purchaseDataProvider = $purchase->searchByReceive();
-        $purchaseDataProvider->criteria->addInCondition('t.destination_branch_id', Yii::app()->user->branch_ids);
+//        $purchaseDataProvider->criteria->addInCondition('t.destination_branch_id', Yii::app()->user->branch_ids);
+        $purchaseDataProvider->criteria->addCondition("EXISTS (
+            SELECT d.branch_id FROM " . TransactionPurchaseOrderDestinationBranch::model()->tableName() . " d
+            WHERE t.id = d.purchase_order_id AND d.branch_id IN ($branchIdsString)
+        )");
 
         $consignment = new ConsignmentInHeader('search');
         $consignment->unsetAttributes();  // clear any default values

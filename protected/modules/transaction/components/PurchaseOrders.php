@@ -5,11 +5,13 @@ class PurchaseOrders extends CComponent {
     public $header;
     public $details;
     public $detailRequests;
+    public $detailBranches;
 
-    public function __construct($header, array $details) {
+    public function __construct($header, array $details, array $detailBranches) {
         $this->header = $header;
         $this->details = $details;
         $this->detailRequests = array();
+        $this->detailBranches = $detailBranches;
     }
 
     public function generateCodeNumber($currentMonth, $currentYear, $requesterBranchId) {
@@ -61,6 +63,30 @@ class PurchaseOrders extends CComponent {
 
     public function removeDetailSupplier() {
         $this->details = array();
+    }
+
+    public function addBranch($branchId) {
+
+        $exist = FALSE;
+        
+        $branch = Branch::model()->findByPk($branchId);
+
+        if ($branch != null) {
+            foreach ($this->detailBranches as $detail) {
+                if ($detail->branch_id == $branch->id) {
+                    $exist = TRUE;
+                    break;
+                }
+            }
+
+            if (!$exist) {
+                $detail = new TransactionPurchaseOrderDestinationBranch;
+                $detail->branch_id = $branchId;
+                $this->detailBranches[] = $detail;
+            }
+        } else {
+            $this->header->addError('error', 'Branch tidak ada di dalam detail');
+        }
     }
 
     public function updateTaxes() {
@@ -190,6 +216,11 @@ class PurchaseOrders extends CComponent {
             $product->update(array('hpp'));
         }
 
+        foreach ($this->detailBranches as $detailBranch) {
+            $detailBranch->purchase_order_id = $this->header->id;
+            $valid = $detail->save(false) && $valid;
+        }
+        
         //delete pricelist
         $delete_array = array_diff($detail_id, $new_detail);
         if ($delete_array != NULL) {

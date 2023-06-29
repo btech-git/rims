@@ -90,7 +90,7 @@ class Employee extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, basic_salary, skills', 'required'),
+            array('name, local_address, home_address, sex, email, id_card, branch_id, basic_salary, skills', 'required'),
             array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, division_id, position_id, level_id, employee_head_id', 'numerical', 'integerOnly' => true),
             array('name, mother_name, bank_name, birth_place, emergency_contact_name', 'length', 'max' => 100),
             array('sex, status, basic_salary', 'length', 'max' => 10),
