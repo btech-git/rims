@@ -218,7 +218,7 @@ class PurchaseOrders extends CComponent {
 
         foreach ($this->detailBranches as $detailBranch) {
             $detailBranch->purchase_order_id = $this->header->id;
-            $valid = $detail->save(false) && $valid;
+            $valid = $detailBranch->save(false) && $valid;
         }
         
         //delete pricelist
