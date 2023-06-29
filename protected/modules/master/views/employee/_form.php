@@ -180,13 +180,13 @@
                             </div>
                             <div class="small-8 columns">
                                 <?php echo $form->dropDownList($employee->header, 'off_day', array(
-                                    'Monday' => 'Monday',
-                                    'Tuesday' => 'Tuesday', 
-                                    'Wednesday' => 'Wednesday', 
-                                    'Thursday' => 'Thursday', 
-                                    'Friday' => 'Friday', 
-                                    'Saturday' => 'Saturday', 
-                                    'Sunday' => 'Sunday'
+                                    'Senin' => 'Senin',
+                                    'Selasa' => 'Selasa', 
+                                    'Rabu' => 'Rabu', 
+                                    'Kamis' => 'Kamis', 
+                                    'Jumat' => 'Jumat', 
+                                    'Sabtu' => 'Sabtu', 
+                                    'Minggu' => 'Minggu'
                                 ), array('prompt' => '[--Select Day Off--]')); ?>
                                 <?php echo $form->error($employee->header, 'off_day'); ?>
                             </div>
@@ -279,8 +279,8 @@
                             </div>
                             <div class="small-8 columns">
                                 <?php echo $form->dropDownList($employee->header, 'sex', array(
-                                    'Male' => 'Male',
-                                    'Female' => 'Female',
+                                    'Laki-laki' => 'Laki-laki',
+                                    'Perempuan' => 'Perempuan',
                                 )); ?>
                                 <?php echo $form->error($employee->header, 'sex'); ?>
                             </div>
