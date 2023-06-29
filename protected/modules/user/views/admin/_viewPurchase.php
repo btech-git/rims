@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][purchaseHead]", CHtml::resolveValue($model, "roles[purchaseHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'purchaseHead')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
@@ -15,30 +16,38 @@
         <tr>
             <td>Order Permintaan</td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][requestOrderCreate]", CHtml::resolveValue($model, "roles[requestOrderCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'requestOrderCreate')); ?>
             </td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][requestOrderEdit]", CHtml::resolveValue($model, "roles[requestOrderEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'requestOrderEdit')); ?>
             </td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][requestOrderApproval]", CHtml::resolveValue($model, "roles[requestOrderApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'requestOrderApproval')); ?>
             </td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][requestOrderSupervisor]", CHtml::resolveValue($model, "roles[requestOrderSupervisor]"), array('id' => 'User_roles_' . $counter++, 'value' => 'requestOrderSupervisor')); ?>
             </td>
         </tr>
         <tr>
             <td>Order Pembelian</td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][purchaseOrderCreate]", CHtml::resolveValue($model, "roles[purchaseOrderCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseOrderCreate')); ?>
             </td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][purchaseOrderEdit]", CHtml::resolveValue($model, "roles[purchaseOrderEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseOrderEdit')); ?>
             </td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][purchaseOrderApproval]", CHtml::resolveValue($model, "roles[purchaseOrderApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseOrderApproval')); ?>
             </td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][purchaseOrderSupervisor]", CHtml::resolveValue($model, "roles[purchaseOrderSupervisor]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseOrderSupervisor')); ?>
             </td>
         </tr>

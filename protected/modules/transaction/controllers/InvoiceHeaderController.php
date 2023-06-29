@@ -337,6 +337,21 @@ class InvoiceHeaderController extends Controller {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->total_price = 0; 
+        $model->payment_amount = 0;
+        $model->payment_left = 0;
+        $model->update(array('status', 'total_price', 'payment_amount', 'payment_left'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->invoice_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     /**
      * Lists all models.
      */

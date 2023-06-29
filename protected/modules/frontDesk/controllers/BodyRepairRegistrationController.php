@@ -573,6 +573,17 @@ class BodyRepairRegistrationController extends Controller {
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->payment_status = 'CANCELLED!!!';
+        $model->service_status = 'CANCELLED!!!';
+        $model->vehicle_status = 'CANCELLED!!!';
+        $model->update(array('status', 'payment_status', 'service_status', 'vehicle_status'));
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionAjaxHtmlAddDamageDetail($id, $serviceId) {
         if (Yii::app()->request->isAjaxRequest) {
             $bodyRepairRegistration = $this->instantiate($id);

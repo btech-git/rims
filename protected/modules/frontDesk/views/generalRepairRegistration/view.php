@@ -26,6 +26,7 @@ $this->breadcrumbs = array(
                         <?php if (Yii::app()->user->checkAccess("generalRepairEdit")): ?>
                             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
                         <?php endif; ?>
+                    
                         <?php if (count($invoices) == 0): ?>
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Product & Service', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/addProductService?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
                         <?php endif; ?>
@@ -106,6 +107,14 @@ $this->breadcrumbs = array(
                         <?php echo IdempotentManager::generate(); ?>
                     
                     <?php //endif; ?>
+                    
+                    <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>
+                        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
+                            'class' => 'button alert right', 
+                            'style' => 'margin-right:10px', 
+                        )); ?>
+                    <?php endif; ?>
+
                 </div>
             </div>
 

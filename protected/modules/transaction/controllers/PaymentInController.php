@@ -651,6 +651,11 @@ class PaymentInController extends Controller {
             $model = new PaymentInApproval;
             $model->date = date('Y-m-d H:i:s');
             
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $paymentIn->payment_number,
+                'branch_id' => $paymentIn->branch_id,
+            ));
+
             if (isset($_POST['PaymentInApproval'])) {
                 $model->attributes = $_POST['PaymentInApproval'];
                 if ($model->save()) {
@@ -674,13 +679,7 @@ class PaymentInController extends Controller {
 
                         $invoiceHeader->update(array('status'));
                         
-                        JurnalUmum::model()->deleteAllByAttributes(array(
-                            'kode_transaksi' => $paymentIn->payment_number,
-                            'branch_id' => $paymentIn->branch_id,
-                        ));
-
                         $totalKas = ($paymentIn->is_tax_service == 2) ? $paymentIn->payment_amount : $paymentIn->payment_amount + $paymentIn->tax_service_amount;
-
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
                         $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
