@@ -263,6 +263,9 @@ class TransactionPurchaseOrderController extends Controller {
         }
         $priceDataProvider = $price->search();
 
+        $destinationBranch = Search::bind(new Branch('search'), isset($_GET['Branch']) ? $_GET['Branch'] : array());
+        $destinationBranchDataProvider = $destinationBranch->search();
+
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
@@ -289,6 +292,7 @@ class TransactionPurchaseOrderController extends Controller {
             'productDataProvider' => $productDataProvider,
             'price' => $price,
             'priceDataProvider' => $priceDataProvider,
+            'destinationBranchDataProvider' => $destinationBranchDataProvider,
         ));
     }
 
