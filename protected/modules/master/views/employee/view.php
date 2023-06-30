@@ -40,23 +40,23 @@ $this->menu = array(
                     'employment_type',
                     array(
                         'name' => 'branch_id', 
-                        'value' => $model->branch->name
+                        'value' => CHtml::encode(CHtml::value($model, 'branch.name')),
                     ),
                     array(
                         'name' => 'division_id', 
-                        'value' => $model->division->name
+                        'value' => CHtml::encode(CHtml::value($model, 'division.name')),
                     ),
                     array(
                         'name' => 'position_id', 
-                        'value' => $model->position->name
+                        'value' => CHtml::encode(CHtml::value($model, 'position.name')),
                     ),
                     array(
                         'name' => 'level_id', 
-                        'value' => $model->level->name
+                        'value' => CHtml::encode(CHtml::value($model, 'level.name')),
                     ),
                     array(
                         'name' => 'employee_head_id', 
-                        'value' => $model->employeeHead->name
+                        'value' => CHtml::encode(CHtml::value($model, 'employeeHead.name')),
                     ),
                     'off_day',
                 ),
