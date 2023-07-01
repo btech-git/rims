@@ -137,6 +137,7 @@ class TransactionReturnOrderController extends Controller {
 
         $returnOrder = $this->instantiate(null);
         $returnOrder->header->created_datetime = date('Y-m-d H:i:s');
+        $returnOrder->header->status = 'Draft';
         $this->performAjaxValidation($returnOrder->header);
 
         if (isset($_POST['Cancel'])) {

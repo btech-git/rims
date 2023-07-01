@@ -95,7 +95,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => CHtml::activeDropDownList($model, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value' => '$data->recipientBranch->name'
                     ),
-                    'status_document',
+                    'status',
                     array(
                         'header' => 'Input',
                         'name' => 'created_datetime',
