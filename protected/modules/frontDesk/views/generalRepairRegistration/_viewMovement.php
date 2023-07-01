@@ -16,7 +16,7 @@
                 <?php foreach ($movementOutHeaders as $i => $movementOutHeader): ?>
                     <?php foreach ($movementOutHeader->movementOutDetails as $i => $movementOutDetail): ?>
                         <tr>
-                            <td><?php echo $movementOutHeader->movement_out_no; ?></td>
+                            <td><?php echo CHtml::link($movementOutHeader->movement_out_no, array("/transaction/movementOut/view", "id"=>$movementOutHeader->id)); ?></td>
                             <td><?php echo $movementOutHeader->date_posting; ?></td>
                             <td><?php echo $movementOutHeader->status; ?></td>
                             <td><?php echo $movementOutDetail->product->name; ?></td>
