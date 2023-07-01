@@ -49,6 +49,7 @@ $this->menu = array(
                 'receiveItem.receive_item_no',
                 'recipient.username',
                 'recipientBranch.name',
+                'status',
             ),
         )); ?>
     </div>

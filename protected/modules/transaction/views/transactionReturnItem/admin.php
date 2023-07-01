@@ -92,6 +92,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'name'=>'destination_branch',
                         'value'=>'$data->destinationBranch->name'
                     ),
+                    'status',
                     array(
                         'header' => 'Input',
                         'name' => 'created_datetime',

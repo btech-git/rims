@@ -52,6 +52,7 @@ $this->menu = array(
                 'recipientBranch.name',
                 'request_type',
                 'estimate_arrival_date',
+                'status',
             ),
         )); ?>
     </div>
