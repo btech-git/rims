@@ -73,6 +73,7 @@ $('.search-form form').submit(function(){
                     'header'		 => 'Selected',	
                     'value' => '$data->id',				
                     ),
+                'id',
                 array('name'=>'name', 'value'=>'CHTml::link($data->name, array("view", "id"=>$data->id))', 'type'=>'raw'),
                 array('header'=>'Province Name','name'=>'province_name', 'value'=>'$data->province->name'),
                 array('header'=>'City Name','name'=>'city_name', 'value'=>'$data->city->name'),

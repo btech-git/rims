@@ -41,18 +41,54 @@ $this->menu = array(
         <h1>View Invoice #<?php echo $model->invoice_number; ?></h1>
 
         <table>
+            <?php $registration = RegistrationTransaction::model()->findByPk($model->registration_transaction_id); ?>
             <tr>
                 <td>Invoice Number</td>
                 <td><?php echo $model->invoice_number; ?></td>
-                <td>Invoice Date</td>
-                <td><?php echo $model->invoice_date; ?></td>
+                <td width="10%">Status</td>
+                <td width="30%">
+                    <input type="text" id = "status" style="background-color:red;color:white" value="<?php echo $model->status; ?>">
+                </td>
             </tr>
             
             <tr>
+                <td>Invoice Date</td>
+                <td><?php echo $model->invoice_date; ?></td>
                 <td>Reference Type</td>
                 <td><?php echo $model->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></td>
+            </tr>
+            
+            <tr>
                 <td>Due Date</td>
                 <td><?php echo $model->due_date; ?></td>
+                <td>Branch</td>
+                <td><?php echo $model->branch->name; ?></td>
+            </tr>
+            
+            <tr>
+                <td width="10%">Payment Est Date</td>
+                <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
+                <td width="10%">Registration #</td>
+                <td width="30%"><?php echo empty($registration) ? '' :  $registration->transaction_number; ?></td>
+            </tr>
+            
+            <tr>
+                <td width="10%">Payment Bank</td>
+                <td width="30%">
+                    <?php echo CHtml::encode(CHtml::value($model, 'companyBankIdEstimate.bank.name')); ?>
+                </td>
+                <td width="10%">Plate #</td>
+                <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.plate_number')); ?>
+                </td>
+            </tr>
+            
+            <tr>
+                <td width="10%">SO #</td>
+                <td width="30%">
+                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
+                </td>
+                <td width="10%">Car Make</td>
+                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carMake.name')); ?></td>
             </tr>
             
             <tr>
@@ -61,34 +97,19 @@ $this->menu = array(
                         <?php echo $model->salesOrder->sale_order_no; ?>
                     <?php else : ?>
                         <?php echo $model->registration_transaction_id; ?>
-                    <?php endif ?></td>
-                <td>Branch</td>
-                <td><?php echo $model->branch->name; ?></td>
+                    <?php endif ?>
+                </td>
+                <td width="10%">Car Model</td>
+                <td width="30%">
+                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.carModel.name')); ?>
+                </td>
             </tr>
             
             <tr>
-                <td width="10%">Status</td>
-                <td width="30%"><input type="text" id = "status" style="background-color:red;color:white" value="<?php echo $model->status; ?>">
-                </td>
                 <td width="10%">User_id</td>
                 <td width="30%"><?php echo $model->user->username; ?></td>
-            </tr>
-            
-            <tr>
-                <td width="10%">Payment Bank</td>
-                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'companyBankIdEstimate.bank.name')); ?>
-                </td>
-                <td width="10%">Payment Est Date</td>
-                <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
-            </tr>
-            
-            <tr>
-                <?php $registration = RegistrationTransaction::model()->findByPk($model->registration_transaction_id); ?>
-                <td width="10%">SO #</td>
-                <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
-                </td>
-                <td width="10%">Registration #</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  $registration->transaction_number; ?></td>
+                <td width="10%">Car Detail</td>
+                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carSubModel.name')); ?></td>
             </tr>
         </table>
         

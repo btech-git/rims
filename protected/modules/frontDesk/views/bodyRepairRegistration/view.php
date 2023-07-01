@@ -203,6 +203,12 @@ $this->breadcrumbs = array(
                         'model' => $model
                     ), TRUE)
                 );
+                $tabsArray['Movement'] = array(
+                    'id' => 'movement',
+                    'content' => $this->renderPartial('_viewMovement', array(
+                        'model' => $model
+                    ), TRUE)
+                );
                 $tabsArray['History'] = array(
                     'id' => 'history',
                     'content' => $this->renderPartial('_viewHistory', array(

@@ -48,6 +48,26 @@ $this->menu=array(
                     'name' =>'purchase_type',
                     'value'=>$model->getPurchaseStatus($model->purchase_type),
                 ),
+                array(
+                    'name' =>'main_branch_id',
+                    'value'=>$model->mainBranch->name
+                ),
+                array(
+                    'name'=>'supplier_name',
+                    'value'=>empty($model->supplier_id) ? "" : $model->supplier->name
+                ),
+                'estimate_date_arrival',
+                'payment_date_estimate',
+                array(
+                    'name' =>'coa_bank_id_estimate',
+                    'label' => 'Akun Bank Estimasi',
+                    'value'=>empty($model->coa_bank_id_stimate) ? '' : $model->coaBankIdEstimate->name,
+                ),
+                array(
+                    'label' =>'Status Receive',
+                    'value'=>$model->totalRemainingQuantityReceived
+                ),
+                'payment_status',
                 'tax_percentage',
                 array(
                     'name' =>'ppn',
@@ -56,19 +76,16 @@ $this->menu=array(
                 ),
                 'status_document',
                 'payment_type',
-                array('name' =>'requester_id','value'=> $model->user != null ? $model->user->username : null),
-                array('name' =>'main_branch_id','value'=>$model->mainBranch->name),
-                array('name' => 'approved_id', 'value'=> $model->approval != null ? $model->approval->username : null),
-                array('name'=>'supplier_name','value'=>empty($model->supplier_id) ? "" : $model->supplier->name),
-                'estimate_date_arrival',
-                'payment_date_estimate',
                 array(
-                    'name' =>'coa_bank_id_estimate',
-                    'label' => 'Akun Bank Estimasi',
-                    'value'=>empty($model->coa_bank_id_stimate) ? '' : $model->coaBankIdEstimate->name,
+                    'label' => 'Created By',
+                    'name' =>'requester_id',
+                    'value'=> $model->user != null ? $model->user->username : null
                 ),
-                array('label' =>'Status Receive','value'=>$model->totalRemainingQuantityReceived),
-                'payment_status',
+                array(
+                    'label' => 'Approved By',
+                    'name' => 'approved_id', 
+                    'value'=> $model->approval != null ? $model->approval->username : null
+                ),
             ),
         )); ?>
     </div>
