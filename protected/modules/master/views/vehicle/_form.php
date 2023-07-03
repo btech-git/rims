@@ -94,8 +94,11 @@
                                     });
                                 }',
                                 'columns' => array(
+                                    'id',
                                     'name',
+                                    'customer_type',
                                     'email',
+                                    'address',
                                 ),
                             )); ?>
 
