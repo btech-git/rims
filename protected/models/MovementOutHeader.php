@@ -70,7 +70,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
             array('movement_out_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id', 'safe', 'on' => 'search'),
+            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -125,7 +125,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.movement_out_no', $this->movement_out_no, true);
         $criteria->compare('t.date_posting', $this->date_posting, true);
         $criteria->compare('t.delivery_order_id', $this->delivery_order_id);
@@ -139,9 +139,10 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.material_request_header_id', $this->material_request_header_id);
 
         $criteria->together = 'true';
-        $criteria->with = array('deliveryOrder', 'branch', 'returnOrder');
+        $criteria->with = array('deliveryOrder', 'branch', 'returnOrder', 'registrationTransaction');
         $criteria->addSearchCondition('deliveryOrder.delivery_order_no', $this->delivery_order_number, true);
         $criteria->addSearchCondition('returnOrder.return_order_no', $this->return_order_number, true);
+        $criteria->addSearchCondition('registrationTransaction.transaction_number', $this->registration_transaction_number, true);
         $criteria->addSearchCondition('branch.name', $this->branch_name, true);
 
         return new CActiveDataProvider($this, array(

@@ -282,7 +282,7 @@ class MovementOutHeaderController extends Controller {
             $model->attributes = $_GET['MovementOutHeader'];
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
 
         /* Delivery Order */
         $deliveryOrder = new TransactionDeliveryOrder('search');

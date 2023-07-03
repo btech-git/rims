@@ -117,6 +117,9 @@ class Cashs extends CComponent {
 
             $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashTransaction/' . $contentImage->filename;
             $file->saveAs($originalPath);
+//            $picture = Yii::app()->image->load($originalPath);
+//            $picture->resize(500, 800);
+//            $picture->save();
         }
 
         //delete details

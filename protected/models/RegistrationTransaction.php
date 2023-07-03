@@ -245,15 +245,15 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('t.transaction_number', $this->transaction_number, true);
+        $criteria->compare('t.transaction_date', $this->transaction_date, true);
         $criteria->compare('repair_type', $this->repair_type, true);
         $criteria->compare('problem', $this->problem, true);
         $criteria->compare('t.customer_id', $this->customer_id);
         $criteria->compare('pic_id', $this->pic_id);
-        $criteria->compare('vehicle_id', $this->vehicle_id);
-        $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('total_quickservice', $this->total_quickservice);
         $criteria->compare('total_quickservice_price', $this->total_quickservice_price, true);
         $criteria->compare('total_service', $this->total_service);
@@ -266,7 +266,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('total_product_price', $this->total_product_price, true);
         $criteria->compare('is_quick_service', $this->is_quick_service);
         $criteria->compare('is_insurance', $this->is_insurance);
-        $criteria->compare('insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
         $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('t.work_order_number', $this->work_order_number, true);
         $criteria->compare('t.work_order_date', $this->work_order_date, true);
