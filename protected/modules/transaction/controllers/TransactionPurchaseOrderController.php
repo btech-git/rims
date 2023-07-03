@@ -325,8 +325,8 @@ class TransactionPurchaseOrderController extends Controller {
         $supplier = Supplier::model()->find('id=:id', array(':id' => $po->supplier_id));
         $branch = Branch::model()->find('id=:id', array(':id' => $po->main_branch_id));
         $po_detail = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
-        $mPDF1 = Yii::app()->ePdf->mpdf();
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+//        $mPDF1 = Yii::app()->ePdf->mpdf();
+        $mPDF1 = Yii::app()->ePdf->mpdf('PO', 'A4');
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array('po' => $po, 'supplier' => $supplier, 'branch' => $branch, 'po_detail' => $po_detail), true));
