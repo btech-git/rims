@@ -329,6 +329,7 @@ class TransactionPurchaseOrderController extends Controller {
         $mPDF1 = Yii::app()->ePdf->mpdf('PO', 'A4');
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->SetTitle('PO ' . $po->supplier->name);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array('po' => $po, 'supplier' => $supplier, 'branch' => $branch, 'po_detail' => $po_detail), true));
         $mPDF1->Output();
     }
