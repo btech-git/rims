@@ -27,7 +27,7 @@ $this->menu=array(
         
         <?php if ($model->status_document == 'Approved'): ?>
             <?php //echo CHtml::link('<span class="fa fa-plus"></span>Payment', Yii::app()->baseUrl.'/transaction/paymentOut/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.create"))) ?>
-            <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
         <?php endif; ?>
         
         <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("purchaseOrderApproval")): ?>
