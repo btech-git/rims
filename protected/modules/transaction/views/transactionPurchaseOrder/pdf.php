@@ -81,8 +81,8 @@ function tanggal($date) {
                 <th style="width:10%">Disc</th>
                 <th style="width:10%">After Disc</th>
                 <th style="width:10%">Qty</th>
-                <th style="width:10%">Unit</th>
-                <th style="width:10%">Sub Total</th>
+                <th style="width:5%">Unit</th>
+                <th style="width:15%">Sub Total</th>
                 <th style="width:10%">Notes</th>
             </tr>
             <?php
