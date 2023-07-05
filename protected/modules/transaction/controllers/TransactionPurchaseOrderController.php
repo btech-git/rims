@@ -327,11 +327,19 @@ class TransactionPurchaseOrderController extends Controller {
         $po_detail = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
 //        $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('PO', 'A4');
+//        if (!function_exists("mb_check_encoding")) {
+//            die('mbstring extension is not enabled');
+//        }
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
-        $mPDF1->SetTitle('PO ' . $po->supplier->name);
-        $mPDF1->WriteHTML($this->renderPartial('pdf', array('po' => $po, 'supplier' => $supplier, 'branch' => $branch, 'po_detail' => $po_detail), true));
-        $mPDF1->Output('PO ' . $po->supplier->name . '.pdf', 'I');
+//        $mPDF1->SetTitle('PO ');
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'po' => $po, 
+            'supplier' => $supplier, 
+            'branch' => $branch, 
+            'po_detail' => $po_detail
+        ), true));
+        $mPDF1->Output();
     }
 
     /**

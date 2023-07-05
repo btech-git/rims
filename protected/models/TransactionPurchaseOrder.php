@@ -31,6 +31,7 @@
  * @property integer $purchase_type
  * @property string $created_datetime
  * @property integer $tax_percentage
+ * @property string $note
  *
  * The followings are the available model relations:
  * @property PaymentOut[] $paymentOuts
@@ -88,12 +89,12 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
-            array('estimate_date_arrival, payment_date_estimate', 'safe'),
+            array('estimate_date_arrival, payment_date_estimate, note', 'safe'),
             array('payment_status', 'length', 'max' => 50),
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note', 'safe', 'on' => 'search'),
         );
     }
 

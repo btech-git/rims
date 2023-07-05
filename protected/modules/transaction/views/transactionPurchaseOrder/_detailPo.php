@@ -6,6 +6,7 @@
             <th>Unit</th>
             <th>HPP</th>
             <th>Price List</th>
+            <th>Memo</th>
             <th></th>
         </tr>
     </thead>
@@ -129,6 +130,10 @@
                         });	
                     ',
                 )); ?>
+            </td>
+            <td>
+                <?php echo CHtml::activeTextField($detail, "[$i]memo"); ?>
+                <?php echo CHtml::error($detail, "memo"); ?>
             </td>
             
             <td width="5%">
@@ -651,7 +656,7 @@
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->price_before_tax)); ?>
                 </span>
             </td>
-            <td>&nbsp;</td>
+            <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
             <td colspan="2">&nbsp;</td>
@@ -662,7 +667,7 @@
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->total_before_tax)); ?>
                 </span>
             </td>
-            <td>&nbsp;</td>
+            <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
             <td style="text-align:right">Total Discount</td>
@@ -679,7 +684,7 @@
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->getTaxAmount($purchaseOrder->header->ppn, $purchaseOrder->header->tax_percentage))); ?>
                 </span>
             </td>
-            <td>&nbsp;</td>
+            <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
             <td style="text-align:right">Total Quantity</td>
@@ -696,7 +701,7 @@
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->total_price)); ?>
                 </span>
             </td>
-            <td>&nbsp;</td>
+            <td colspan="2">&nbsp;</td>
         </tr>
     </tfoot>
 </table>

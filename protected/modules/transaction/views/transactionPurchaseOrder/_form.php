@@ -175,6 +175,43 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field" style="padding-bottom: 10px;">
+                    <div class="row collapse">
+                        <div class="small-8 columns">
+                            <?php echo CHtml::hiddenField('DetailIndex', ''); ?>
+                            <?php echo CHtml::button('Add Details', array(
+                                'id' => 'detail-button',
+                                'name' => 'Detail',
+                                'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
+                                'onclick' => '$("#product-dialog").dialog("open"); return false;
+                                jQuery.ajax({
+                                    type: "POST",
+                                    url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
+                                    data: jQuery("form").serialize(),
+                                    success: function(html) {
+                                        jQuery("#detail").html(html);
+                                    },
+                                });'
+                            )); ?>
+
+                            <?php Yii::app()->clientScript->registerScript('updateGridView', '$.updateGridView = function(gridID, name, value) {
+                                $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
+                                $.fn.yiiGridView.update(gridID, {data: $.param(
+                                    $("#"+gridID+" .filters input, #"+gridID+" .filters select")
+                                )});
+                            }', CClientScript::POS_READY); ?>
+                        </div>
+                        <div class="small-4 columns">
+                            <?php echo CHtml::button('Add Destination Branch', array(
+                                'name' => 'Search', 
+                                'onclick' => '$("#destination-branch-dialog").dialog("open"); return false;', 
+                                'onkeypress' => 'if (event.keyCode == 13) { $("#destination-branch-dialog").dialog("open"); return false; }'
+                            )); ?>
+                            <?php echo CHtml::hiddenField('DestinationBranchId'); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="small-12 medium-6 columns">
@@ -341,40 +378,17 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="field" style="padding-bottom: 10px;">
-                    <div class="row collapse">
-                        <div class="small-8 columns">
-                            <?php echo CHtml::hiddenField('DetailIndex', ''); ?>
-                            <?php echo CHtml::button('Add Details', array(
-                                'id' => 'detail-button',
-                                'name' => 'Detail',
-                                'disabled' => $purchaseOrder->header->supplier_id == "" ? true : false,
-                                'onclick' => '$("#product-dialog").dialog("open"); return false;
-                                jQuery.ajax({
-                                    type: "POST",
-                                    url: "' . CController::createUrl('ajaxHtmlAddDetail', array('id' => $purchaseOrder->header->id)) . '",
-                                    data: jQuery("form").serialize(),
-                                    success: function(html) {
-                                        jQuery("#detail").html(html);
-                                    },
-                                });'
-                            )); ?>
 
-                            <?php Yii::app()->clientScript->registerScript('updateGridView', '$.updateGridView = function(gridID, name, value) {
-                                $("#"+gridID+" input[name=\""+name+"\"], #"+gridID+" select[name=\""+name+"\"]").val(value);
-                                $.fn.yiiGridView.update(gridID, {data: $.param(
-                                    $("#"+gridID+" .filters input, #"+gridID+" .filters select")
-                                )});
-                            }', CClientScript::POS_READY); ?>
-                        </div>
+                <div class="field">
+                    <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo CHtml::button('Add Destination Branch', array(
-                                'name' => 'Search', 
-                                'onclick' => '$("#destination-branch-dialog").dialog("open"); return false;', 
-                                'onkeypress' => 'if (event.keyCode == 13) { $("#destination-branch-dialog").dialog("open"); return false; }'
-                            )); ?>
-                            <?php echo CHtml::hiddenField('DestinationBranchId'); ?>
+                            <label class="prefix">
+                                <?php echo $form->labelEx($purchaseOrder->header, 'note'); ?>
+                            </label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textArea($purchaseOrder->header, 'note'); ?>
+                            <?php echo $form->error($purchaseOrder->header, 'note'); ?>
                         </div>
                     </div>
                 </div>

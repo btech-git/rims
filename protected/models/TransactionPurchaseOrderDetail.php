@@ -41,6 +41,7 @@
  * @property string $receive_quantity
  * @property string $purchase_order_quantity_left
  * @property string $last_buying_price
+ * @property string $memo
  *
  * The followings are the available model relations:
  * @property TransactionPurchaseOrder $purchaseOrder
@@ -81,9 +82,10 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             array('purchase_order_id, product_id, unit_id, discount_step, discount1_type, discount1_temp_quantity, discount2_type, discount2_temp_quantity, discount3_type, discount3_temp_quantity, discount4_type, discount4_temp_quantity, discount5_type, discount5_temp_quantity', 'numerical', 'integerOnly' => true),
             array('last_buying_price, retail_price, unit_price, discount1_temp_price, discount2_temp_price, discount3_temp_price, discount4_temp_price, discount5_temp_price, price_before_tax, total_before_tax, discount, total_price', 'length', 'max' => 18),
             array('quantity, total_quantity, receive_quantity, purchase_order_quantity_left, discount1_nominal, discount2_nominal, discount3_nominal, discount4_nominal, discount5_nominal, tax_amount', 'length', 'max' => 10),
+            array('memo', 'length', 'max' => 100),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, last_buying_price, purchase_order_id, product_id, unit_id, retail_price, quantity, unit_price, price_before_tax, total_before_tax, discount_step, discount1_type, discount1_nominal, discount1_temp_quantity, discount1_temp_price, discount2_type, discount2_nominal, discount2_temp_quantity, discount2_temp_price, discount3_type, discount3_nominal, discount3_temp_quantity, discount3_temp_price, discount4_type, discount4_nominal, discount4_temp_quantity, discount4_temp_price, discount5_type, discount5_nominal, discount5_temp_quantity, discount5_temp_price, total_quantity, subtotal, discount, total_price, receive_quantity, purchase_order_quantity_left, tax_amount', 'safe', 'on' => 'search'),
+            array('id, last_buying_price, purchase_order_id, product_id, unit_id, retail_price, quantity, unit_price, price_before_tax, total_before_tax, discount_step, discount1_type, discount1_nominal, discount1_temp_quantity, discount1_temp_price, discount2_type, discount2_nominal, discount2_temp_quantity, discount2_temp_price, discount3_type, discount3_nominal, discount3_temp_quantity, discount3_temp_price, discount4_type, discount4_nominal, discount4_temp_quantity, discount4_temp_price, discount5_type, discount5_nominal, discount5_temp_quantity, discount5_temp_price, total_quantity, subtotal, discount, total_price, receive_quantity, purchase_order_quantity_left, tax_amount, memo', 'safe', 'on' => 'search'),
         );
     }
 
