@@ -111,8 +111,9 @@ function tanggal($date) {
                 <?php $no++;
             } ?>
                 
-            <?php for ($j = 8, $i = $i % $j + 1; $j > $i; $j--): ?>
+            <?php for ($j = 5, $i = $i % $j + 1; $j > $i; $j--): ?>
                 <tr class="isi">
+                    <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -149,12 +150,12 @@ function tanggal($date) {
         </div>
     </div>
     
-    <div class="memosig">
-        <table>
+    <div class="purchase-order">
+        <table style="width: 100%">
             <tr>
-                <td>Dibuat,</td>
-                <td>Menyetujui,</td>
-                <td>Mengetahui,</td>
+                <td style="width: 30%">Dibuat,</td>
+                <td style="width: 30%">Menyetujui,</td>
+                <td style="width: 30%">Mengetahui,</td>
             </tr>
             <tr>
                 <td style="height: 100px">&nbsp;</td>
