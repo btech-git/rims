@@ -69,21 +69,21 @@ function tanggal($date) {
             <tr>
                 <th class="no">No</th>
                 <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
-                    <th class="code">Brand</th>
-                    <th class="item">Type</th>
-                    <th class="brand">Ukuran</th>
+                    <th style="width:10%">Brand</th>
+                    <th style="width:10%">Type</th>
+                    <th style="width:10%">Ukuran</th>
                 <?php else: ?>
-                    <th class="code">Code</th>
-                    <th class="item">Item Name</th>
-                    <th class="brand">Brand Name</th>
+                    <th style="width:10%">Code</th>
+                    <th style="width:10%">Item Name</th>
+                    <th style="width:10%">Brand Name</th>
                 <?php endif; ?>
-                <th class="price">Price</th>
-                <th class="discount">Disc</th>
-                <th class="after">After Disc</th>
-                <th class="qty">Qty</th>
-                <th class="unit">Unit</th>
-                <th class="subtotal">Sub Total</th>
-                <th class="note">Notes</th>
+                <th style="width:10%">Price</th>
+                <th style="width:10%">Disc</th>
+                <th style="width:10%">After Disc</th>
+                <th style="width:10%">Qty</th>
+                <th style="width:10%">Unit</th>
+                <th style="width:10%">Sub Total</th>
+                <th style="width:10%">Notes</th>
             </tr>
             <?php
             $no = 1;
