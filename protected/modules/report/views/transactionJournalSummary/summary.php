@@ -41,8 +41,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownlist('TransactionType', $transactionType, array(
                                             'PO' => 'PURCHASE',
-                                            'RG GR' => 'GENERAL REPAIR',
-                                            'RG BR' => 'BODY REPAIR',
+                                            'Invoice GR' => 'GENERAL REPAIR',
+                                            'Invoice BR' => 'BODY REPAIR',
                                             'DO' => 'DELIVERY',
                                             'TR' => 'TRANSFER REQUEST',
                                             'RCI' => 'RECEIVE',
