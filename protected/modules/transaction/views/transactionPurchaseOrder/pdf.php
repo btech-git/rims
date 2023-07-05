@@ -10,7 +10,7 @@ function tanggal($date) {
     return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
 }
 ?>
-<div>
+<div style="margin-top: 0px">
     <div class="header">
         <img src="images/rims po head.jpg" alt="">
     </div>
