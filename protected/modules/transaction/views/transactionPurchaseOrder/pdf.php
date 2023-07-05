@@ -33,6 +33,11 @@ function tanggal($date) {
                     <td>:</td>
                     <td><?php echo CHtml::encode(CHtml::value($supplier, 'tenor')); ?> Hari</td>
                 </tr>
+                <tr>
+                    <td>From</td>
+                    <td>:</td>
+                    <td><?php echo CHtml::encode(CHtml::value($po, 'mainBranch.name')); ?></td>
+                </tr>
             </table>
         </div>
         <div class="right">
@@ -47,11 +52,6 @@ function tanggal($date) {
                     <td>PO#</td>
                     <td>:</td>
                     <td><?php echo CHtml::encode(CHtml::value($po, 'purchase_order_no')); ?></td>
-                </tr>
-                <tr>
-                    <td>From</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($po, 'mainBranch.name')); ?></td>
                 </tr>
                 <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
                     <tr>
@@ -100,9 +100,9 @@ function tanggal($date) {
                         <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.name')); ?></td>
                         <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
                     <?php endif; ?>
-                    <td>&nbsp;  Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
-                    <td>&nbsp;  Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
-                    <td>&nbsp;  Rp. <?php echo number_format($x->price_before_tax, 2, ',', '.') ?></td>
+                    <td style="text-align:right">&nbsp;  Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
+                    <td style="text-align:right">&nbsp;  Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
+                    <td style="text-align:right">&nbsp;  Rp. <?php echo number_format($x->price_before_tax, 2, ',', '.') ?></td>
                     <td style="text-align:center"><?php echo $x->quantity ?></td>
                     <td style="text-align:center"><?php echo $x->unit->name ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
@@ -110,43 +110,63 @@ function tanggal($date) {
                 </tr>
                 <?php $no++;
             } ?>
+                
+            <?php for ($j = 8, $i = $i % $j + 1; $j > $i; $j--): ?>
+                <tr class="isi">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            <?php endfor; ?>
+                
             <tr class="r">
-                <td colspan="8" class="result">Sub Total</td>
+                <td colspan="9" style="text-align:right" class="result">Sub Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="8" class="result">PPN</td>
+                <td colspan="9" style="text-align:right" class="result">PPN</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="8" class="result">Total</td>
+                <td colspan="9" style="text-align:right" class="result">Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
         </table>
         
         <div class="row">
+            Catatan: 
             <?php echo CHtml::encode(CHtml::value($po, 'note')); ?>
         </div>
     </div>
     
     <div class="memosig">
-        <div class="divtable">
-            <div class="divtablecell sig1">
-                <div>Dibuat,</div>
-                <div>(Sausan)</div>
-            </div>
-            <div class="divtablecell sig2">
-                <div>Menyetujui,</div>
-                <div>(Grace)</div>
-            </div>
-            <div class="divtablecell sig2">
-                <div>Mengetahui,</div>
-                <div>(Newira)</div>
-            </div>
-        </div>
+        <table>
+            <tr>
+                <td>Dibuat,</td>
+                <td>Menyetujui,</td>
+                <td>Mengetahui,</td>
+            </tr>
+            <tr>
+                <td style="height: 100px">&nbsp;</td>
+                <td style="height: 100px">&nbsp;</td>
+                <td style="height: 100px">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>(Sausan)</td>
+                <td>(Grace)</td>
+                <td>(Newira)</td>
+            </tr>
+        </table>
     </div>
 
     <div class="footer">
