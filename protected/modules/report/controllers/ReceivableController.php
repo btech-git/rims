@@ -40,7 +40,7 @@ class ReceivableController extends Controller {
         $receivableSummary->setupFilter($customerId);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary);
+            $this->saveToExcel($receivableSummary, $endDate);
         }
 
         $this->render('summary', array(
@@ -69,7 +69,7 @@ class ReceivableController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary) {
+    protected function saveToExcel($receivableSummary, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -94,7 +94,7 @@ class ReceivableController extends Controller {
         $worksheet->getStyle('A1:G3')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
         $worksheet->setCellValue('A3', 'Laporan Piutang Customer');
-//        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A5:G5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:G6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -118,7 +118,7 @@ class ReceivableController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableReport();
+            $receivableData = $header->getReceivableReport($endDate);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;

@@ -41,7 +41,7 @@ class PayableController extends Controller {
         $payableSummary->setupFilter($supplierId);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($payableSummary);
+            $this->saveToExcel($payableSummary, $endDate);
         }
 
         $this->render('summary', array(
@@ -70,7 +70,7 @@ class PayableController extends Controller {
         }
     }
 
-    protected function saveToExcel($payableSummary) {
+    protected function saveToExcel($payableSummary, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -96,7 +96,7 @@ class PayableController extends Controller {
         
         $worksheet->setCellValue('A2', 'Raperind Motor');
         $worksheet->setCellValue('A3', 'Laporan Hutang Supplier');
-//        $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
+        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A5:E5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:E6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -121,7 +121,7 @@ class PayableController extends Controller {
             
             $counter++;
             
-            $payableData = $header->getPayableReport();
+            $payableData = $header->getPayableReport($endDate);
             $totalPurchase = 0.00;
             $totalPayment = 0.00;
             $totalPayable = 0.00;
