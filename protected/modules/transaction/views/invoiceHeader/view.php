@@ -313,7 +313,7 @@ $this->menu = array(
                 <?php $transactionRegistrations = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->registrationTransaction->transaction_number, 'is_coa_category' => 0)); ?>
                 <?php $transactions = empty($transactionInvoices) ? $transactionRegistrations : $transactionInvoices; ?>
                 
-                <?php /*if (!empty($transactions)): ?>
+                <?php if (!empty($transactions)): ?>
                 <?php foreach ($transactions as $i => $header): ?>
 
                     <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
@@ -331,7 +331,7 @@ $this->menu = array(
                     <?php $totalCredit += $amountCredit; ?>
 
                 <?php endforeach; ?>
-                <?php endif;*/ ?>
+                <?php endif; ?>
             </tbody>
 
             <tfoot>

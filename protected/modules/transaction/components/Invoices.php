@@ -24,7 +24,7 @@ class Invoices extends CComponent {
             $branchCode = Branch::model()->findByPk($branchId)->code;
         } else {
             $branchCode = $invoiceHeader->branch->code;
-            $this->invoice_number = $invoiceHeader->invoice_number;
+            $this->header->invoice_number = $invoiceHeader->invoice_number;
         }
 
         $this->header->setCodeNumberByNext('invoice_number', $branchCode, InvoiceHeader::CONSTANT, $currentMonth, $currentYear);
@@ -146,24 +146,32 @@ class Invoices extends CComponent {
         $valid = $registrationTransaction->update(array('payment_status'));
         
         JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->invoice_number,
+            'kode_transaksi' => $this->header->invoice_number,
         ));
 
         $transactionType = 'Invoice GR';
         $postingDate = date('Y-m-d');
-        $transactionCode = $model->invoice_number;
-        $transactionDate = $model->invoice_date;
+        $transactionCode = $this->header->invoice_number;
+        $transactionDate = $this->header->invoice_date;
         $branchId = $this->header->branch_id;
         $transactionSubject = $this->header->customer->name;
         
         $journalReferences = array();
+        $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $this->header->registration_transaction_id
+        ));
+        $registrationServices = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $this->header->registration_transaction_id,
+            'is_quick_service' => 0
+        ));
+//
         
         $jurnalUmumReceivable = new JurnalUmum;
         $jurnalUmumReceivable->kode_transaksi = $transactionCode;
         $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
         $jurnalUmumReceivable->coa_id = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
         $jurnalUmumReceivable->branch_id = $this->header->branch_id;
-        $jurnalUmumReceivable->total = $this->header->subtotal_product + $this->header->subtotal_service + $this->header->ppn_price;
+        $jurnalUmumReceivable->total = $this->header->registrationTransaction->subtotal_product + $this->header->registrationTransaction->subtotal_service + $this->header->registrationTransaction->ppn_price;
         $jurnalUmumReceivable->debet_kredit = 'D';
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $transactionSubject;
@@ -171,14 +179,14 @@ class Invoices extends CComponent {
         $jurnalUmumReceivable->transaction_type = $transactionType;
         $valid = $jurnalUmumReceivable->save() && $valid;
 
-        if ($this->header->ppn_price > 0.00) {
+        if ($this->header->registrationTransaction->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
             $jurnalUmumPpn = new JurnalUmum;
             $jurnalUmumPpn->kode_transaksi = $transactionCode;
             $jurnalUmumPpn->tanggal_transaksi = $transactionDate;
             $jurnalUmumPpn->coa_id = $coaPpn->id;
             $jurnalUmumPpn->branch_id = $this->header->branch_id;
-            $jurnalUmumPpn->total = $this->header->ppn_price;
+            $jurnalUmumPpn->total = $this->header->registrationTransaction->ppn_price;
             $jurnalUmumPpn->debet_kredit = 'K';
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
             $jurnalUmumPpn->transaction_subject = $transactionSubject;
@@ -187,8 +195,8 @@ class Invoices extends CComponent {
             $valid = $jurnalUmumPpn->save() && $valid;
         }
 
-        if (count($this->details) > 0) {
-            foreach ($this->details as $key => $rProduct) {
+        if (count($registrationProducts) > 0) {
+            foreach ($registrationProducts as $key => $rProduct) {
                 $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
                 $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
                 $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
@@ -213,6 +221,22 @@ class Invoices extends CComponent {
             }
         }
 
+        if ($registrationServices > 0) {
+            foreach ($registrationServices as $key => $rService) {
+                $jurnalUmumPendapatanJasa = $rService->service->serviceCategory->coa_id;
+                $journalReferences[$jurnalUmumPendapatanJasa]['debet_kredit'] = 'K';
+                $journalReferences[$jurnalUmumPendapatanJasa]['is_coa_category'] = 0;
+                $journalReferences[$jurnalUmumPendapatanJasa]['values'][] = $rService->total_price;
+
+//                if ($rService->discount_price > 0.00) {
+//                    $jurnalUmumDiscountPendapatanJasa = $rService->service->serviceCategory->coa_diskon_service;
+//                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
+//                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
+//                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
+//                }
+            }
+        }
+
         foreach ($journalReferences as $coaId => $journalReference) {
             $jurnalUmumPersediaan = new JurnalUmum();
             $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
@@ -234,7 +258,7 @@ class Invoices extends CComponent {
         $real->checked = 1;
         $real->checked_date = date('Y-m-d');
         $real->checked_by = Yii::app()->user->getId();
-        $real->detail = 'Generate Invoice with number #' . $model->invoice_number;
+        $real->detail = 'Generate Invoice with number #' . $this->header->invoice_number;
         $real->save();
         
         return $valid;
