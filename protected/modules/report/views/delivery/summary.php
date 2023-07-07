@@ -98,7 +98,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 

@@ -90,6 +90,21 @@ Yii::app()->clientScript->registerScript('report', '
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
@@ -120,6 +135,7 @@ Yii::app()->clientScript->registerScript('report', '
                     <?php $this->renderPartial('_summary', array(
                         'payableSummary' => $payableSummary,
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
                     )); ?>
                 </div>
                 <div class="clear"></div>

@@ -91,6 +91,43 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Insurance Company</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
+                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
@@ -116,6 +153,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php $this->renderPartial('_summary', array(
                         'receivableSummary' => $receivableSummary,
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
+                        'insuranceCompanyId' => $insuranceCompanyId,
                     )); ?>
                 </div>
                 <div class="clear"></div>
@@ -187,4 +226,49 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         )); ?>
         <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
     </div>
+</div>
+
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'insurance-company-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Insurance Company',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'insurance-company-grid',
+        'dataProvider' => $insuranceCompanyDataProvider,
+        'filter' => $insuranceCompany,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#InsuranceCompanyId").val($.fn.yiiGridView.getSelection(id));
+            $("#insurance-company-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#insurance_name").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonInsuranceCompany') . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#insurance_name").html(data.insurance_name);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'name',
+            'coa.name',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

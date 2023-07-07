@@ -273,25 +273,25 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $this->service_price + $this->product_price + $this->quick_service_price;
     }
 
-    public function generateCodeNumber($currentMonth, $currentYear, $requesterBranchId) {
-        $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
-        $cnYearCondition = "substring_index(substring_index(substring_index(invoice_number, '/', 2), '/', -1), '.', 1)";
-        $cnMonthCondition = "substring_index(substring_index(substring_index(invoice_number, '/', 2), '/', -1), '.', -1)";
-        $invoiceHeader = InvoiceHeader::model()->find(array(
-            'order' => ' id DESC',
-            'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
-            'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $requesterBranchId),
-        ));
-
-        if ($invoiceHeader == null) {
-            $branchCode = Branch::model()->findByPk($requesterBranchId)->code;
-        } else {
-            $branchCode = $invoiceHeader->branch->code;
-            $this->invoice_number = $invoiceHeader->invoice_number;
-        }
-
-        $this->setCodeNumberByNext('invoice_number', $branchCode, InvoiceHeader::CONSTANT, $currentMonth, $currentYear);
-    }
+//    public function generateCodeNumber($currentMonth, $currentYear, $requesterBranchId) {
+//        $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
+//        $cnYearCondition = "substring_index(substring_index(substring_index(invoice_number, '/', 2), '/', -1), '.', 1)";
+//        $cnMonthCondition = "substring_index(substring_index(substring_index(invoice_number, '/', 2), '/', -1), '.', -1)";
+//        $invoiceHeader = InvoiceHeader::model()->find(array(
+//            'order' => ' id DESC',
+//            'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
+//            'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $requesterBranchId),
+//        ));
+//
+//        if ($invoiceHeader == null) {
+//            $branchCode = Branch::model()->findByPk($requesterBranchId)->code;
+//        } else {
+//            $branchCode = $invoiceHeader->branch->code;
+//            $this->invoice_number = $invoiceHeader->invoice_number;
+//        }
+//
+//        $this->setCodeNumberByNext('invoice_number', $branchCode, InvoiceHeader::CONSTANT, $currentMonth, $currentYear);
+//    }
     
     public function getTotalPayment() {
         $total = 0.00;

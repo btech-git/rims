@@ -94,11 +94,18 @@
                                     });
                                 }',
                                 'columns' => array(
-                                    'id',
+                                    array(
+                                        'name' => 'id',
+                                        'value' => '$data->id',
+                                        'headerHtmlOptions'=>array('style'=>'width: 5em;'),
+                                    ),
                                     'name',
                                     'customer_type',
                                     'email',
-                                    'address',
+                                    array(
+                                        'name' => 'address',
+                                        'value' => 'substr($data->address, 0, 50)',
+                                    ),
                                 ),
                             )); ?>
 

@@ -255,34 +255,51 @@ class InvoiceHeaderController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
-        //$model=new InvoiceHeader;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+    public function actionCreate($registrationId) {
 
         $invoice = $this->instantiate(null);
-        $this->performAjaxValidation($invoice->header);
+//        $this->performAjaxValidation($invoice->header);
 
-        // if(isset($_POST['InvoiceHeader']))
-        // {
-        // 	$model->attributes=$_POST['InvoiceHeader'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-
-        if (isset($_POST['Cancel']))
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
+        $invoice->header->reference_type = 2;
+        $invoice->header->registration_transaction_id = $registrationId;
+        $invoice->header->customer_id = $registrationTransaction->customer_id;
+        $invoice->header->vehicle_id = $registrationTransaction->vehicle_id;
+        $invoice->header->branch_id = $registrationTransaction->branch_id;
+        $invoice->header->user_id = Yii::app()->user->getId();
+        $invoice->header->status = "INVOICING";
+        $invoice->header->total_product = $registrationTransaction->total_product;
+        $invoice->header->total_service = $registrationTransaction->total_service;
+        $invoice->header->total_quick_service = $registrationTransaction->total_quickservice;
+        $invoice->header->service_price = $registrationTransaction->total_service_price;
+        $invoice->header->product_price = $registrationTransaction->total_product_price;
+        $invoice->header->quick_service_price = $registrationTransaction->total_quickservice_price;
+        $invoice->header->total_price = $registrationTransaction->grand_total;
+        $invoice->header->payment_left = $registrationTransaction->grand_total;
+        $invoice->header->payment_amount = 0;
+        $invoice->header->ppn_total = $registrationTransaction->ppn_price;
+        $invoice->header->tax_percentage = $registrationTransaction->tax_percentage;
+        $invoice->header->payment_date_estimate = date('Y-m-d');
+        $invoice->header->coa_bank_id_estimate = null;
+        $invoice->header->created_datetime = date('Y-m-d H:i:s');
+        
+        $invoice->addDetails($invoice->header->reference_type, $registrationId);
+        
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
 
             $this->loadState($invoice);
+            $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $registrationTransaction->branch_id);
+        
             if ($invoice->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $invoice->header->id));
             }
         }
 
         $this->render('create', array(
-            //'model'=>$model,
             'invoice' => $invoice,
         ));
     }

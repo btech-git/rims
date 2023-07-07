@@ -231,6 +231,11 @@ $('.search-form form').submit(function(){
                 ),
                 'columns' => array(
                     array(
+                        'header' => 'ID',
+                        'name' => 'customer_id',
+                        'value' => 'CHtml::value($data, "customer_id")',
+                    ),
+                    array(
                         'header' => 'Customer',
                         'value' => 'CHtml::link($data->customer->name, array("/master/customer/view", "id"=>$data->customer_id), array("target" => "_blank"))',
                         'type'=>'raw',
@@ -262,14 +267,6 @@ $('.search-form form').submit(function(){
                         )),
                         'value' => 'CHtml::value($data, "carModel.name")',
                     ),
-//                    array(
-//                        'header' => 'Car Sub Model',
-//                        'name' => 'car_sub_model_id',
-//                        'filter' => CHtml::activeDropDownList($vehicle, 'car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
-//                            'empty' => ''
-//                        )),
-//                        'value' => 'CHtml::value($data, "carSubModel.name")',
-//                    ),
 //                    array(
 //                        'header' => 'Car Sub Model Detail',
 //                        'name' => 'car_sub_model_detail_id',

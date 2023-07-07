@@ -66,8 +66,9 @@ $this->breadcrumbs = array(
                                 'onclick' => ''
                             )); ?>
                         <?php else : */?>
-                            <?php if (empty($model->work_order_number) && (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"))): ?>
-                                <?php echo CHtml::button('Generate Work Order', array(
+                            <?php //if (empty($model->work_order_number) && (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"))): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/generateWorkOrder?id=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
+                                <?php /*echo CHtml::button('Generate Work Order', array(
                                     'id' => 'detail-button',
                                     'name' => 'Detail',
                                     'class' => 'button cbutton left',
@@ -85,8 +86,8 @@ $this->breadcrumbs = array(
                                             },
                                         })
                                     '
-                                )); ?>
-                            <?php endif; ?>
+                                ));*/ ?>
+                            <?php //endif; ?>
                         <?php //endif; ?>		
                     <?php endif; ?>
                     
@@ -99,9 +100,10 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
                     
-                    <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished' && Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
+                    <?php //if (!empty($model->sales_order_number) && $model->status !== 'Finished' && Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
                         <?php //if (count($invoices) == 0): ?>
-                            <?php echo CHtml::button('Generate Invoice', array(
+                            <?php /*echo CHtml::button('Generate Invoice', array(
                                 'id' => 'invoice-button',
                                 'name' => 'Invoice',
                                 'class' => 'button cbutton left',
@@ -121,9 +123,9 @@ $this->breadcrumbs = array(
                                 '
                             )); ?>
 
-                            <?php echo IdempotentManager::generate(); ?>
+                            <?php echo IdempotentManager::generate();*/ ?>
                         <?php //endif; ?>
-                    <?php endif; ?>
+                    <?php //endif; ?>
 
                     <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor")): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(

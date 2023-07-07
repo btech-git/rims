@@ -293,15 +293,15 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionGenerateInvoice($id) {
-        $registration = $this->instantiate($id);
-
-        if (IdempotentManager::check()) {
-            if ($registration->saveInvoice(Yii::app()->db, $id)) {
-                $this->redirect(array('view', 'id' => $id));
-            }
-        }
-    }
+//    public function actionGenerateInvoice($id) {
+//        $registration = $this->instantiate($id);
+//
+//        if (IdempotentManager::check()) {
+//            if ($registration->saveInvoice(Yii::app()->db, $id)) {
+//                $this->redirect(array('view', 'id' => $id));
+//            }
+//        }
+//    }
 
     public function actionGenerateSalesOrder($id) {
         $model = $this->instantiate($id);
@@ -326,25 +326,38 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionGenerateWorkOrder($id) {
-        $model = $this->instantiate($id);
+        $bodyRepairRegistration = $this->instantiate($id);
+        $customer = Customer::model()->findByPk($bodyRepairRegistration->header->customer_id);
+        $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
 
-        $model->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
-        $model->header->work_order_date = date('Y-m-d');
-        $model->header->work_order_time = date('H:i:s');
-        $model->header->status = 'Waitlist';
+        $bodyRepairRegistration->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);
+        $bodyRepairRegistration->header->work_order_date = isset($_POST['RegistrationTransaction']['work_order_date']) ? $_POST['RegistrationTransaction']['work_order_date'] : date('Y-m-d');
+        $bodyRepairRegistration->header->work_order_time = date('H:i:s');
+        $bodyRepairRegistration->header->status = 'Waitlist';
 
-        if ($model->header->update(array('work_order_number', 'work_order_date', 'work_order_time', 'status'))) {
-            if ($model->header->repair_type == 'BR') {
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('view', 'id' => $id));
+        }
+
+        if (isset($_POST['Submit'])) {
+            $bodyRepairRegistration->header->update(array('work_order_number', 'work_order_date', 'work_order_time', 'status'));
+            if ($bodyRepairRegistration->header->repair_type == 'GR') {
                 $real = new RegistrationRealizationProcess();
                 $real->checked = 1;
                 $real->checked_date = date('Y-m-d');
                 $real->checked_by = 1;
-                $real->detail = 'Add When Generate Work Order. WorkOrder#' . $model->header->work_order_number;
+                $real->detail = 'Add When Generate Work Order. WorkOrder#' . $bodyRepairRegistration->header->work_order_number;
                 $real->save();
             }
 
             $this->redirect(array('view', 'id' => $id));
         }
+        
+        $this->render('generateWorkOrder', array(
+            'bodyRepairRegistration' => $bodyRepairRegistration,
+            'vehicle' => $vehicle,
+            'customer' => $customer,
+        ));
     }
 
     public function actionShowRealization($id) {

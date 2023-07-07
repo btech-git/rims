@@ -31,6 +31,7 @@ class PayableController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -41,7 +42,7 @@ class PayableController extends Controller {
         $payableSummary->setupFilter($supplierId);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($payableSummary, $endDate);
+            $this->saveToExcel($payableSummary, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -49,6 +50,7 @@ class PayableController extends Controller {
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
             'supplierId' => $supplierId,
+            'branchId' => $branchId,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
@@ -70,7 +72,7 @@ class PayableController extends Controller {
         }
     }
 
-    protected function saveToExcel($payableSummary, $endDate) {
+    protected function saveToExcel($payableSummary, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -121,7 +123,7 @@ class PayableController extends Controller {
             
             $counter++;
             
-            $payableData = $header->getPayableReport($endDate);
+            $payableData = $header->getPayableReport($endDate, $branchId);
             $totalPurchase = 0.00;
             $totalPayment = 0.00;
             $totalPayable = 0.00;

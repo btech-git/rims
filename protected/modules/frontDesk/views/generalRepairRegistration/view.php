@@ -57,7 +57,8 @@ $this->breadcrumbs = array(
                         ?>
                     
                         <?php if (count($model->registrationServices) > 0 && $model->status !== 'Finished' && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
-                            <?php echo CHtml::button('Generate Work Order', array(
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/generateWorkOrder?id=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
+                            <?php /*echo CHtml::button('Generate Work Order', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'class' => 'button cbutton left',
@@ -74,7 +75,7 @@ $this->breadcrumbs = array(
                                         },
                                     })
                                 '
-                            )); ?>
+                            )); */?>
                         <?php endif; ?>
                     <?php endif; ?>
                     
@@ -88,7 +89,8 @@ $this->breadcrumbs = array(
                     <?php endif; ?>
                     
                     <?php //if (!empty($model->sales_order_number) && $model->status !== 'Finished' && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
-                        <?php echo CHtml::button('Generate Invoice', array(
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
+                        <?php /*echo CHtml::button('Generate Invoice', array(
                             'id' => 'invoice-button',
                             'name' => 'Invoice',
                             'class' => 'button cbutton left',
@@ -104,7 +106,7 @@ $this->breadcrumbs = array(
                                 },
                             })'
                         )); ?>
-                        <?php echo IdempotentManager::generate(); ?>
+                        <?php echo IdempotentManager::generate();*/ ?>
                     
                     <?php //endif; ?>
                     

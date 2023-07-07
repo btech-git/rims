@@ -366,16 +366,17 @@ class Supplier extends CActiveRecord {
         return $this->date_approval . " " . $this->time_approval;
     }
     
-    public function getPayableReport($endDate) {
+    public function getPayableReport($endDate, $branchId) {
         $sql = "
             SELECT purchase_order_no, purchase_order_date, COALESCE(p.total_price, 0) AS total_price, COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left 
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = :supplier_id AND payment_left > 10.00 AND purchase_order_date <= :end_date
+            WHERE p.supplier_id = :supplier_id AND payment_left > 100.00 AND purchase_order_date <= :end_date AND main_branch_id = :branch_id
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':supplier_id' => $this->id,
             ':end_date' => $endDate,
+            ':branch_id' => $branchId,
         ));
 
         return $resultSet;

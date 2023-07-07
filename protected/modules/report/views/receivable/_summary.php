@@ -9,6 +9,7 @@
     .width2-5 { width: 15% }
     .width2-6 { width: 15% }
     .width2-7 { width: 15% }
+    .width2-8 { width: 15% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -35,6 +36,7 @@
                     <th class="width2-5">Grand Total</th>
                     <th class="width2-6">Payment</th>
                     <th class="width2-7">Remaining</th>
+                    <th class="width2-8">Insurance</th>
                 </tr>
             </table>
         </td>
@@ -47,7 +49,7 @@
         <tr class="items2">
             <td colspan="2">
                 <table>
-                    <?php $receivableData = $header->getReceivableReport($endDate); ?>
+                    <?php $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId); ?>
                     <?php $totalRevenue = 0.00; ?>
                     <?php $totalPayment = 0.00; ?>
                     <?php $totalReceivable = 0.00; ?>
@@ -63,6 +65,7 @@
                             <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?></td>
                             <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
                             <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>
+                            <td class="width2-8"><?php echo CHtml::encode($receivableRow['insurance_name']); ?></td>
                         </tr>
                         <?php $totalRevenue += $revenue; ?>
                         <?php $totalPayment += $paymentAmount; ?>
@@ -73,6 +76,7 @@
                         <td class="width2-5" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?></td>
                         <td class="width2-6" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
                         <td class="width2-7" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?></td>
+                        <td class="width2-8"></td>
                     </tr>     
                 </table>
             </td>

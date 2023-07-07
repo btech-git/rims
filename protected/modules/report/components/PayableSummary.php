@@ -33,7 +33,5 @@ class PayableSummary extends CComponent {
         if (!empty($supplierId)) {
             $this->dataProvider->criteria->compare('t.id', $supplierId);
         }
-        
-        $this->dataProvider->criteria->addCondition('transactionPurchaseOrders.payment_left > 10.0');
     }
 }

@@ -106,8 +106,6 @@ class InsuranceCompanyController extends Controller {
         $this->performAjaxValidation($insurance->header);
 
         if (isset($_POST['InsuranceCompany'])) {
-
-
             $this->loadState($insurance);
             if ($insurance->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $insurance->header->id));

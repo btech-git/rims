@@ -27,10 +27,15 @@ class ReceivableController extends Controller {
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
+        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
+        $insuranceCompanyDataProvider = $insuranceCompany->search();
+
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $receivableSummary = new ReceivableSummary($customer->search());
@@ -40,13 +45,17 @@ class ReceivableController extends Controller {
         $receivableSummary->setupFilter($customerId);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate);
+            $this->saveToExcel($receivableSummary, $endDate, $branchId);
         }
 
         $this->render('summary', array(
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
             'customerId' => $customerId,
+            'branchId' => $branchId,
+            'insuranceCompany'=>$insuranceCompany,
+            'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
+            'insuranceCompanyId' => $insuranceCompanyId,
             'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
@@ -69,7 +78,19 @@ class ReceivableController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary, $endDate) {
+    public function actionAjaxJsonInsuranceCompany() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $insuranceCompanyId = (isset($_POST['InsuranceCompanyId'])) ? $_POST['InsuranceCompanyId'] : '';
+            $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId);
+
+            $object = array(
+                'insurance_name' => CHtml::value($insuranceCompany, 'name'),
+            );
+            echo CJSON::encode($object);
+        }
+    }
+
+    protected function saveToExcel($receivableSummary, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -110,6 +131,7 @@ class ReceivableController extends Controller {
         $worksheet->setCellValue('E6', 'Grand Total');
         $worksheet->setCellValue('F6', 'Payment');
         $worksheet->setCellValue('G6', 'Remaining');
+        $worksheet->setCellValue('H6', 'Insurance');
         $counter = 8;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
@@ -118,7 +140,7 @@ class ReceivableController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableReport($endDate);
+            $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
@@ -134,6 +156,7 @@ class ReceivableController extends Controller {
                 $worksheet->setCellValue("E{$counter}", CHtml::encode($revenue));
                 $worksheet->setCellValue("F{$counter}", CHtml::encode($paymentAmount));
                 $worksheet->setCellValue("G{$counter}", CHtml::encode($paymentLeft));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($receivableRow['insurance_name']));
                 
                 $counter++;
             
