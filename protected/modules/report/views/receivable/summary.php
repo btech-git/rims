@@ -23,51 +23,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-4 columns">
+                                    <div class="small-3 columns">
                                         <span class="prefix">Jumlah per Halaman</span>
                                     </div>
-                                    <div class="small-8 columns">
+                                    <div class="small-3 columns">
                                         <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
+                                    <div class="small-3 columns">
                                         <span class="prefix">Halaman saat ini</span>
                                     </div>
-                                    <div class="small-8 columns">
+                                    <div class="small-3 columns">
                                         <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Customer</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customerModel = Customer::model()->findByPk($customerId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customerModel, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -100,6 +71,46 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Type</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeDropDownlist($customer, 'customer_type', array(
+                                            'Company' => 'Company',
+                                            'Individual' => 'Individual',
+                                        ), array('empty' => '-- All --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Customer</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                                        <?php $customerModel = Customer::model()->findByPk($customerId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customerModel, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
                                     </div>
                                 </div>
                             </div>
