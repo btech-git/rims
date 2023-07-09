@@ -157,7 +157,7 @@ class AdminController extends Controller {
 
                 UserBranch::model()->deleteAllByAttributes(array('users_id' => $model->id,));
                 
-                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : $_POST['BranchId'];
+                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : '';
                 foreach($branches as $i=>$branch) {
                     $userBranch = new UserBranch;
                     $userBranch->users_id = $model->id;
