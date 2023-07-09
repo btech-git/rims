@@ -42,7 +42,7 @@ class ReceivableController extends Controller {
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
-        $receivableSummary->setupFilter($customerId);
+        $receivableSummary->setupFilter();
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($receivableSummary, $endDate, $branchId);
