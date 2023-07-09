@@ -1,18 +1,18 @@
 <?php
 
-class ReceivableController extends Controller {
+class ReceivableInsuranceCompanyController extends Controller {
 
     public $layout = '//layouts/column1';
     
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('customerReceivableReport')))
+            if (!(Yii::app()->user->checkAccess('insuranceCompanyReceivableReport')))
                 $this->redirect(array('/site/login'));
         }
 
@@ -27,38 +27,36 @@ class ReceivableController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+//        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
-        $customerDataProvider->pagination->pageVar = 'page_dialog';
+//        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+//        $customerDataProvider = $customer->search();
+//        $customerDataProvider->pagination->pageVar = 'page_dialog';
 
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
 
-        $receivableSummary = new ReceivableSummary($customer->searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType));
+        $receivableSummary = new ReceivableSummary($insuranceCompany->searchByReceivableReport($endDate, $branchId));
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
-        $receivableSummary->setupFilter($customerId);
+        $receivableSummary->setupFilter($insuranceCompanyId);
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($receivableSummary, $endDate, $branchId);
         }
 
         $this->render('summary', array(
-            'customer'=>$customer,
-            'customerDataProvider'=>$customerDataProvider,
-            'customerId' => $customerId,
+//            'customer'=>$customer,
+//            'customerDataProvider'=>$customerDataProvider,
+//            'customerId' => $customerId,
             'branchId' => $branchId,
             'insuranceCompany'=>$insuranceCompany,
             'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
             'insuranceCompanyId' => $insuranceCompanyId,
             'endDate' => $endDate,
-            'customerType' => $customerType,
             'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,

@@ -158,9 +158,14 @@
                                     'visible' => Yii::app()->user->checkAccess('receivableJournalReport')
                                 ),
                                 array(
-                                    'label' => 'Faktur Belum Lunas', 
+                                    'label' => 'Faktur Belum Lunas Customer', 
                                     'url' => array('/report/receivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
+                                array(
+                                    'label' => 'Faktur Belum Lunas Asuransi', 
+                                    'url' => array('/report/receivableInsuranceCompany/summary'), 
+//                                    'visible' => Yii::app()->user->checkAccess('insuranceCompanyReceivableReport')
                                 ),
                                 array(
                                     'label' => 'Rincian Penerimaan Penjualan', 

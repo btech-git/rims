@@ -70,6 +70,7 @@ class Customer extends CActiveRecord {
             array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
             array('name, email, phone, mobile_phone', 'length', 'max' => 100),
             array('email', 'email'),
+            array('email, mobile_phone', 'unique'),
             array('note, date_approval', 'safe'),
             array('email', 'filter', 'filter' => 'strtolower'),
             array('zipcode, customer_type, status, flat_rate', 'length', 'max' => 10),

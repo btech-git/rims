@@ -1,6 +1,6 @@
 <?php
 
-class ReceivableSummary extends CComponent {
+class ReceivableInsuranceCompanySummary extends CComponent {
 
     public $dataProvider;
 
@@ -29,9 +29,9 @@ class ReceivableSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($customerId) {
-        if (!empty($customerId)) {
-            $this->dataProvider->criteria->compare('t.id', $customerId);
+    public function setupFilter($insuranceCompanyId) {
+        if (!empty($insuranceCompanyId)) {
+            $this->dataProvider->criteria->compare('t.id', $insuranceCompanyId);
         }
     }
 }

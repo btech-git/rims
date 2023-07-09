@@ -14,7 +14,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
-    <div style="font-size: larger">Laporan Piutang Customer</div>
+    <div style="font-size: larger">Laporan Piutang Asuransi</div>
     <div><?php echo 'Per tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime(date('Y-m-d')))); ?></div>
 </div>
 
@@ -23,7 +23,7 @@
 <table class="report">
     <tr id="header1">
         <th class="width1-1">Name</th>
-        <th class="width1-2">Type</th>
+        <th class="width1-2">COA</th>
     </tr>
     <tr id="header2">
         <td colspan="2">
@@ -36,7 +36,7 @@
                     <th class="width2-5">Grand Total</th>
                     <th class="width2-6">Payment</th>
                     <th class="width2-7">Remaining</th>
-                    <th class="width2-8">Insurance</th>
+                    <th class="width2-8">Customer</th>
                 </tr>
             </table>
         </td>
@@ -44,12 +44,12 @@
     <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
         <tr class="items1">
             <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
-            <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
+            <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></th>
         </tr>
         <tr class="items2">
             <td colspan="2">
                 <table>
-                    <?php $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId); ?>
+                    <?php $receivableData = $header->getReceivableReport($endDate, $insuranceCompanyId, $branchId); ?>
                     <?php $totalRevenue = 0.00; ?>
                     <?php $totalPayment = 0.00; ?>
                     <?php $totalReceivable = 0.00; ?>
@@ -65,7 +65,7 @@
                             <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?></td>
                             <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
                             <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>
-                            <td class="width2-8"><?php echo CHtml::encode($receivableRow['insurance_name']); ?></td>
+                            <td class="width2-8"><?php echo CHtml::encode($receivableRow['customer_name']); ?></td>
                         </tr>
                         <?php $totalRevenue += $revenue; ?>
                         <?php $totalPayment += $paymentAmount; ?>
