@@ -58,6 +58,7 @@ class ReceivableController extends Controller {
             'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
             'insuranceCompanyId' => $insuranceCompanyId,
             'endDate' => $endDate,
+            'customerType' => $customerType,
             'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
