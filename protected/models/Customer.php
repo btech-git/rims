@@ -209,7 +209,7 @@ class Customer extends CActiveRecord {
         ));
     }
 
-    public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId) {
+    public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType) {
         $branchConditionSql = '';
         $insuranceConditionSql = '';
         
@@ -232,13 +232,18 @@ class Customer extends CActiveRecord {
             $criteria->params[':insurance_company_id'] = $insuranceCompanyId;
         }
 
+        if (!empty($customerType)) {
+            $typeConditionSql = ' AND t.customer_type = :customer_type';
+            $criteria->params[':customer_type'] = $customerType;
+        }
+
         $criteria->addCondition("EXISTS (
             SELECT p.customer_id
             FROM " . InvoiceHeader::model()->tableName() . " p 
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
             WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date " . $branchConditionSql . $insuranceConditionSql . " 
-        )");
+        )" . $typeConditionSql);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
