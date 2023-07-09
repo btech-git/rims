@@ -23,13 +23,6 @@ class ReceivableController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
-        $customerDataProvider->pagination->pageVar = 'page_dialog';
-
-        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
-        $insuranceCompanyDataProvider = $insuranceCompany->search();
-
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -38,7 +31,14 @@ class ReceivableController extends Controller {
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $receivableSummary = new ReceivableSummary($customer->search());
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
+
+        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
+        $insuranceCompanyDataProvider = $insuranceCompany->search();
+
+        $receivableSummary = new ReceivableSummary($customer->searchByReceivableReport($endDate, $branchId, $insuranceCompanyId));
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
