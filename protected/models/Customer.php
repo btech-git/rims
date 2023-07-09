@@ -209,49 +209,40 @@ class Customer extends CActiveRecord {
         ));
     }
 
-//    public function searchByReceivable($startDate) {
-//        // @todo Please modify the following code to remove attributes that should not be searched.
-//
-//        $criteria = new CDbCriteria;
-//
-//        $criteria->addCondition("EXISTS (
-//            SELECT COALESCE(SUM(payment_left), 0) AS beginning_balance 
-//            FROM " . InvoiceHeader::model()->tableName() . " 
-//            WHERE t.id = customer_id AND invoice_date < :start_date
-//            GROUP BY customer_id
-//            HAVING SUM(payment_left) > 0
-//        )");
-//        
-//        $criteria->params = array(
-//            ':start_date' => $startDate
-//        );
-//
-//        $criteria->compare('t.id', $this->id);
-//        $criteria->compare('t.name', $this->name, true);
-//        $criteria->compare('t.address', $this->address, true);
-//        $criteria->compare('t.zipcode', $this->zipcode, true);
-//        $criteria->compare('t.province_id', $this->province_id);
-//        $criteria->compare('t.city_id', $this->city_id);
-//        $criteria->compare('fax', $this->fax, true);
-//        $criteria->compare('t.email', $this->email, true);
-//        $criteria->compare('t.note', $this->note, true);
-//        $criteria->compare('t.default_payment_type', $this->default_payment_type);
-//        $criteria->compare('t.tcustomer_type', $this->customer_type, true);
-//        $criteria->compare('tenor', $this->tenor);
-//        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
-//        $criteria->compare('birthdate', $this->birthdate, true);
-//        $criteria->compare('flat_rate', $this->flat_rate, true);
-//        $criteria->compare('mobile_phone', $this->mobile_phone, true);
-//        $criteria->compare('phone', $this->phone, true);
-//        $criteria->compare('t.coa_id', $this->coa_id);
-//        $criteria->compare('t.is_approved', 1);
-//        $criteria->compare('t.date_approval', $this->date_approval);
-//        $criteria->compare('t.user_id', $this->user_id);
-//
-//        return new CActiveDataProvider($this, array(
-//            'criteria' => $criteria,
-//        ));
-//    }
+    public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId) {
+        $branchConditionSql = '';
+        $insuranceConditionSql = '';
+        
+        $criteria = new CDbCriteria;
+        
+        $criteria->compare('t.id', $this->id);
+        
+        $criteria->params = array(
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($insuranceCompanyId)) {
+            $insuranceConditionSql = ' AND r.insurance_company_id = :insurance_company_id';
+            $criteria->params[':insurance_company_id'] = $insuranceCompanyId;
+        }
+
+        $criteria->addCondition("EXISTS (
+            SELECT p.customer_id
+            FROM " . InvoiceHeader::model()->tableName() . " p 
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
+            WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date " . $branchConditionSql . $insuranceConditionSql . " 
+        )");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
 
     /**
      * Returns the static model of the specified AR class.
@@ -353,7 +344,7 @@ class Customer extends CActiveRecord {
             SELECT invoice_number, invoice_date, due_date, v.plate_number AS vehicle, COALESCE(p.total_price, 0) AS total_price, COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left, i.name as insurance_name 
             FROM " . InvoiceHeader::model()->tableName() . " p 
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
-            LEFT OUTER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
             WHERE p.customer_id = :customer_id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date " . $branchConditionSql . $insuranceConditionSql . "
         ";
