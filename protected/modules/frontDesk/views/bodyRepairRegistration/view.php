@@ -19,7 +19,7 @@ $this->breadcrumbs = array(
                 <div class="large-12 columns">
                     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.bodyRepairRegistration.admin"))) ?>
 
-                    <?php if ($model->status !== 'Finished' || $model->status !== 'CANCELLED!!!'): ?>
+                    <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
                         <?php if (Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
                             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.bodyRepairRegistration.update"))) ?>
                         <?php endif; ?>
