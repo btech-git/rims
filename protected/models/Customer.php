@@ -212,6 +212,7 @@ class Customer extends CActiveRecord {
     public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType) {
         $branchConditionSql = '';
         $insuranceConditionSql = '';
+        $typeConditionSql = '';
         
         $criteria = new CDbCriteria;
         
