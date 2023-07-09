@@ -83,7 +83,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Type</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownlist($customer, 'customer_type', array(
+                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
                                             'Company' => 'Company',
                                             'Individual' => 'Individual',
                                         ), array('empty' => '-- All --')); ?>
