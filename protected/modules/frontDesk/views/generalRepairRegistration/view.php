@@ -19,7 +19,7 @@ $this->breadcrumbs = array(
                 <div class="large-12 columns">
                     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Registration', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
              
-                    <?php if ($model->status != 'Finished'): ?>
+                    <?php if ($model->status != 'Finished' && $model->status !== 'Cancelled'): ?>
                         <?php echo CHtml::submitButton('Finish Transaction', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning right', 'style' => 'margin-right:10px')); ?>
                         <?php echo CHtml::submitButton('Vehicle Off Premise', array('name' => 'SubmitOffPremise', 'confirm' => 'Are you sure you want to set this vehice off-premise?', 'class' => 'button success right', 'style' => 'margin-right:10px')); ?>
                         
@@ -31,13 +31,12 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Product & Service', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/addProductService?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
                         <?php endif; ?>
 
-                        <?php if (Yii::app()->user->checkAccess("generalRepairCreate")  && $model->status !== 'Finished'): ?>
+                        <?php if (empty($model->sales_order_number)): ?>
                             <?php echo CHtml::button('Generate Sales Order', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'class' => 'button cbutton left',
                                 'style' => 'margin-right:10px',
-//                                'disabled' => $model->sales_order_number == null ? false : true,
                                 'onclick' => '$.ajax({
                                     type: "POST",
                                     //dataType: "JSON",
@@ -56,27 +55,20 @@ $this->breadcrumbs = array(
                         $quickServicesReg = RegistrationQuickService::model()->findByAttributes(array('registration_transaction_id' => $model->id));
                         ?>
                     
-                        <?php if (count($model->registrationServices) > 0 && $model->status !== 'Finished' && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
-                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/generateWorkOrder?id=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
-                            <?php /*echo CHtml::button('Generate Work Order', array(
-                                'id' => 'detail-button',
-                                'name' => 'Detail',
-                                'class' => 'button cbutton left',
-                                'style' => 'margin-right:10px',
-                                'onclick' => ' 
-                                    $.ajax({
-                                        type: "POST",
-                                        //dataType: "JSON",
-                                        url: "' . CController::createUrl('generateWorkOrder', array('id' => $model->id)) . '",
-                                        data: $("form").serialize(),
-                                        success: function(html) {
-                                            alert("Work Order Succesfully Generated");
-                                            location.reload();
-                                        },
-                                    })
-                                '
-                            )); */?>
+                        <?php if (count($model->registrationServices) > 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/generateWorkOrder?id=' . $model->id, array(
+                                'class' => 'button success left', 
+                                'style' => 'margin-right:10px'
+                            )); ?>
                         <?php endif; ?>
+                    
+                        <?php //if (!empty($model->sales_order_number)): ?>
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                'class' => 'button success left', 
+                                'style' => 'margin-right:10px'
+                            )); ?>
+                        <?php //endif; ?>
+
                     <?php endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
@@ -87,28 +79,6 @@ $this->breadcrumbs = array(
                             'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
                         )); ?>
                     <?php endif; ?>
-                    
-                    <?php //if (!empty($model->sales_order_number) && $model->status !== 'Finished' && (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))): ?>
-                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
-                        <?php /*echo CHtml::button('Generate Invoice', array(
-                            'id' => 'invoice-button',
-                            'name' => 'Invoice',
-                            'class' => 'button cbutton left',
-                            'style' => 'margin-left:10px',
-                            'onclick' => '$.ajax({
-                                type: "POST",
-                                //dataType: "JSON",
-                                url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-                                data: $("form").serialize(),
-                                success: function(html) {
-                                    alert("Invoice Succesfully Generated");
-                                    location.reload();
-                                },
-                            })'
-                        )); ?>
-                        <?php echo IdempotentManager::generate();*/ ?>
-                    
-                    <?php //endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(

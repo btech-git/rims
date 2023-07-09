@@ -19,7 +19,7 @@ $this->breadcrumbs = array(
                 <div class="large-12 columns">
                     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.bodyRepairRegistration.admin"))) ?>
 
-                    <?php if ($model->status != 'Finished'): ?>
+                    <?php if ($model->status != 'Finished' && $model->status !== 'Cancelled'): ?>
                         <?php if (Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
                             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.bodyRepairRegistration.update"))) ?>
                         <?php endif; ?>
@@ -30,7 +30,7 @@ $this->breadcrumbs = array(
                             <?php endif;*/ ?>
                         <?php endif; ?>
 
-                        <?php if ((Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")) && empty($model->sales_order_number)): ?>
+                        <?php if (empty($model->sales_order_number)): ?>
                             <?php echo CHtml::button('Generate Sales Order', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
@@ -56,39 +56,13 @@ $this->breadcrumbs = array(
                         $servicesReg = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
                         $quickServicesReg = RegistrationQuickService::model()->findByAttributes(array('registration_transaction_id' => $model->id));
                         ?>
-                        <?php /*if (empty($servicesReg) && empty($quickServicesReg) && empty($model->sales_order_number)) : ?>
-                            <?php echo CHtml::button('Generate Work Order', array(
-                                'id' => 'detail-button',
-                                'name' => 'Detail',
-                                'class' => 'button cbutton left',
-                                'style' => 'margin-right:10px',
-                                'disabled' => true,
-                                'onclick' => ''
+                    
+                        <?php if (count($model->registrationServices) > 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/generateWorkOrder?id=' . $model->id, array(
+                                'class' => 'button success left', 
+                                'style' => 'margin-right:10px'
                             )); ?>
-                        <?php else : */?>
-                            <?php //if (empty($model->work_order_number) && (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"))): ?>
-                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/generateWorkOrder?id=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
-                                <?php /*echo CHtml::button('Generate Work Order', array(
-                                    'id' => 'detail-button',
-                                    'name' => 'Detail',
-                                    'class' => 'button cbutton left',
-                                    'style' => 'margin-right:10px',
-                                    'disabled' => $model->work_order_number == null ? false : true,
-                                    'onclick' => ' 
-                                        $.ajax({
-                                            type: "POST",
-                                            //dataType: "JSON",
-                                            url: "' . CController::createUrl('generateWorkOrder', array('id' => $model->id)) . '",
-                                            data: $("form").serialize(),
-                                            success: function(html) {
-                                                alert("Work Order Succesfully Generated");
-                                                location.reload();
-                                            },
-                                        })
-                                    '
-                                ));*/ ?>
-                            <?php //endif; ?>
-                        <?php //endif; ?>		
+                        <?php endif; ?>		
                     <?php endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
@@ -100,31 +74,8 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
                     
-                    <?php //if (!empty($model->sales_order_number) && $model->status !== 'Finished' && Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
+                    <?php //if (!empty($model->sales_order_number)): ?>
                         <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
-                        <?php //if (count($invoices) == 0): ?>
-                            <?php /*echo CHtml::button('Generate Invoice', array(
-                                'id' => 'invoice-button',
-                                'name' => 'Invoice',
-                                'class' => 'button cbutton left',
-                                'style' => 'margin-left:10px',
-                                //'disabled'=>$model->sales_order_number == "" ? true : false,
-                                'onclick' => ' 
-                                    $.ajax({
-                                        type: "POST",
-                                        //dataType: "JSON",
-                                        url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-                                        data: $("form").serialize(),
-                                        success: function(html) {
-                                            alert("Invoice Succesfully Generated");
-                                            location.reload();
-                                        },
-                                    })
-                                '
-                            )); ?>
-
-                            <?php echo IdempotentManager::generate();*/ ?>
-                        <?php //endif; ?>
                     <?php //endif; ?>
 
                     <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor")): ?>
