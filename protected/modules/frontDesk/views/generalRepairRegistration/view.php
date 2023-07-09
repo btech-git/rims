@@ -69,15 +69,15 @@ $this->breadcrumbs = array(
                             )); ?>
                         <?php //endif; ?>
 
-                    <?php endif; ?>
-                    
-                    <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
-                        <?php echo CHtml::button('Show Realization', array(
-                            'id' => 'real-button',
-                            'name' => 'Real',
-                            'class' => 'button cbutton left',
-                            'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
-                        )); ?>
+                        <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
+                            <?php echo CHtml::button('Show Realization', array(
+                                'id' => 'real-button',
+                                'name' => 'Real',
+                                'class' => 'button cbutton left',
+                                'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
+                            )); ?>
+                        <?php endif; ?>
+
                     <?php endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>

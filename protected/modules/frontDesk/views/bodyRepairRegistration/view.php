@@ -62,22 +62,23 @@ $this->breadcrumbs = array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px'
                             )); ?>
-                        <?php endif; ?>		
-                    <?php endif; ?>
-                    
-                    <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
-                        <?php echo CHtml::button('Show Realization', array(
-                            'id' => 'real-button',
-                            'name' => 'Real',
-                            'class' => 'button cbutton left',
-                            'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
-                        )); ?>
-                    <?php endif; ?>
-                    
-                    <?php //if (!empty($model->sales_order_number)): ?>
-                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
-                    <?php //endif; ?>
+                        <?php endif; ?>
 
+                        <?php //if (!empty($model->sales_order_number)): ?>
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
+                        <?php //endif; ?>
+
+                        <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
+                            <?php echo CHtml::button('Show Realization', array(
+                                'id' => 'real-button',
+                                'name' => 'Real',
+                                'class' => 'button cbutton left',
+                                'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
+                            )); ?>
+                        <?php endif; ?>
+                    
+                    <?php endif; ?>
+                    
                     <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor")): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(
                             'class' => 'button alert right', 
