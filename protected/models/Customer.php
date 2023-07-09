@@ -217,7 +217,6 @@ class Customer extends CActiveRecord {
         $criteria = new CDbCriteria;
         
         $criteria->compare('t.id', $this->id);
-        $criteria->compare('t.customer_type', $this->customer_type);
         
         $criteria->params = array(
             ':end_date' => $endDate,
