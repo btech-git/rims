@@ -30,6 +30,7 @@ class ReceivableController extends Controller {
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
@@ -38,7 +39,7 @@ class ReceivableController extends Controller {
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
 
-        $receivableSummary = new ReceivableSummary($customer->searchByReceivableReport($endDate, $branchId, $insuranceCompanyId));
+        $receivableSummary = new ReceivableSummary($customer->searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType));
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
