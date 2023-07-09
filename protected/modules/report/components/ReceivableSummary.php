@@ -29,7 +29,7 @@ class ReceivableSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($customerId) {
+    public function setupFilter() {
 //        if (!empty($customerId)) {
 //            $this->dataProvider->criteria->compare('t.id', $customerId);
 //        }
