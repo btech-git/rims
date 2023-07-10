@@ -17,7 +17,7 @@ function tanggal($date) {
 
     <div class="supplier" style="margin-top: 0px; font-size: 12px">
         <div class="left">
-            <table>
+            <table style="margin-top: 0px; font-size: 12px">
                 <tr>
                     <td>To</td>
                     <td>:</td>
