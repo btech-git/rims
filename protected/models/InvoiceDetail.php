@@ -10,6 +10,7 @@
  * @property integer $product_id
  * @property integer $quick_service_id
  * @property string $quantity
+ * @property string $discount
  * @property string $unit_price
  * @property string $total_price
  *
@@ -46,11 +47,11 @@ class InvoiceDetail extends CActiveRecord {
         return array(
             array('invoice_id, unit_price, total_price', 'required'),
             array('invoice_id, service_id, product_id, quick_service_id', 'numerical', 'integerOnly' => true),
-            array('unit_price, total_price', 'length', 'max' => 18),
+            array('unit_price, total_price, discount', 'length', 'max' => 18),
             array('quantity', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_id, service_id, product_id, quick_service_id, quantity, unit_price, total_price', 'safe', 'on' => 'search'),
+            array('id, invoice_id, service_id, product_id, quick_service_id, quantity, unit_price, total_price, discount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -100,6 +101,7 @@ class InvoiceDetail extends CActiveRecord {
         $criteria->compare('product_id', $this->product_id);
         $criteria->compare('quick_service_id', $this->quick_service_id);
         $criteria->compare('quantity', $this->quantity);
+        $criteria->compare('discount', $this->discount, true);
         $criteria->compare('unit_price', $this->unit_price, true);
         $criteria->compare('total_price', $this->total_price, true);
 

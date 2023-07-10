@@ -39,7 +39,8 @@ class Invoices extends CComponent {
                 $detail->product_id = $saleOrder->product_id;
                 $detail->quantity = $saleOrder->quantity;
                 $detail->unit_price = $saleOrder->unit_price;
-                $detai->total_price = $saleOrder->total_price;
+                $detail->total_price = $saleOrder->total_price;
+                $detail->discount = 0.00;
                 $this->details[] = $detail;
             } //endforeach
         }//end if
@@ -52,6 +53,7 @@ class Invoices extends CComponent {
                     $detail->product_id = $registrationProduct->product_id;
                     $detail->quantity = $registrationProduct->quantity;
                     $detail->unit_price = $registrationProduct->sale_price;
+                    $detail->discount = $registrationProduct->discountAmount;
                     $detail->total_price = $registrationProduct->total_price;
                     $this->details[] = $detail;
                 }
@@ -63,6 +65,7 @@ class Invoices extends CComponent {
                     $detail->service_id = $registrationService->service_id;
                     $detail->quantity = 1;
                     $detail->unit_price = $registrationService->price;
+                    $detail->discount = $registrationProduct->discountAmount;
                     $detail->total_price = $registrationService->total_price;
                     $this->details[] = $detail;
                 }
@@ -212,7 +215,7 @@ class Invoices extends CComponent {
                 $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
                 $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $rProduct->quantity * $rProduct->hpp;
 
-                if ($rProduct->discount > 0) {
+                if ($rProduct->discount > 0.00) {
                     $jurnalUmumDiskon = $rProduct->product->productSubMasterCategory->coa_diskon_penjualan;
                     $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
                     $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
@@ -228,12 +231,12 @@ class Invoices extends CComponent {
                 $journalReferences[$jurnalUmumPendapatanJasa]['is_coa_category'] = 0;
                 $journalReferences[$jurnalUmumPendapatanJasa]['values'][] = $rService->total_price;
 
-//                if ($rService->discount_price > 0.00) {
-//                    $jurnalUmumDiscountPendapatanJasa = $rService->service->serviceCategory->coa_diskon_service;
-//                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
-//                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
-//                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
-//                }
+                if ($rService->discount_price > 0.00) {
+                    $jurnalUmumDiscountPendapatanJasa = $rService->service->serviceCategory->coa_diskon_service;
+                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
+                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
+                    $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
+                }
             }
         }
 

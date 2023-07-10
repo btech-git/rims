@@ -210,14 +210,14 @@
                     </div>
 
                     <div class="large-6 columns">
-                        <div class="field">
+<!--                        <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
                                     <label for="" class="prefix">COA Debit Amount</label>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo $form->textField($cashTransaction->header, 'coa_debit', array(
+                                    <?php /*echo $form->textField($cashTransaction->header, 'coa_debit', array(
                                         'size' => 20,
                                         'maxlength' => 20,
                                         'readonly' => true,
@@ -239,10 +239,10 @@
                                         'maxlength' => 20,
                                         'readonly' => true,
                                         'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->credit : ''
-                                    )); ?>
+                                    ));*/ ?>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="field">
                             <div class="row collapse">
@@ -263,38 +263,6 @@
     </div>
 
     <div class="row">
-        <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'debit_amount', array('class' => 'prefix')); ?>
-                    </div>
-                    
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction->header, 'debit_amount', array('size' => 18, 'maxlength' => 18, 'readonly' => true)); ?>
-                        <?php echo $form->error($cashTransaction->header, 'debit_amount'); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'credit_amount', array('class' => 'prefix')); ?>
-                    </div>
-                    
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($cashTransaction->header, 'credit_amount', array('size' => 18, 'maxlength' => 18, 'readonly' => true)); ?>
-                        <?php echo $form->error($cashTransaction->header, 'credit_amount'); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="row">
         <div class="large-12 columns">
             <fieldset>
                 <legend>Details</legend>
@@ -310,7 +278,7 @@
                             }
                         '
                     )); ?>
-                    <?php echo CHtml::button('Count Total', array(
+                    <?php /*echo CHtml::button('Count Total', array(
                         'id' => 'total-button',
                         'name' => 'Total',
                         'style' => 'display:none',
@@ -331,7 +299,7 @@
                                 },
                             });
                         ',
-                    )); ?>
+                    ));*/ ?>
                 </p>
                 <div class="row">
                     <div class="large-12 columns">

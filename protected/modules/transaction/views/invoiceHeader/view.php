@@ -141,7 +141,8 @@ $this->menu = array(
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Unit Price</th>
-                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>Total</th>
                     </thead>
                     
                     <tbody>
@@ -150,6 +151,7 @@ $this->menu = array(
                                 <tr>
                                     <td><?php echo $detail->product->name; ?></td>
                                     <td><?php echo $detail->quantity; ?></td>
+                                    <td><?php echo number_format($detail->unit_price, 2); ?></td>
                                     <td><?php echo number_format($detail->unit_price, 2); ?></td>
                                     <td><?php echo number_format($detail->total_price, 2); ?></td>
                                 </tr>

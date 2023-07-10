@@ -3,7 +3,7 @@
         <tr>
             <th style="text-align: center; width: 50%">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][areaManager]", CHtml::resolveValue($model, "roles[areaManager]"), array('id' => 'User_roles_' . $counter, 'value' => 'areaManager')); ?>
+                <?php echo CHtml::checkBox("User[roles][financeManager]", CHtml::resolveValue($model, "roles[financeManager]"), array('id' => 'User_roles_' . $counter, 'value' => 'financeManager')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">View</th>

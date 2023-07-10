@@ -138,12 +138,13 @@ class InvoiceHeaderController extends Controller {
                         $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
                         $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $detail->quantity * $detail->product->hpp;
 
-//                        if ($detail->discount > 0) {
-//                            $jurnalUmumDiskon = $detail->product->productSubMasterCategory->coa_diskon_penjualan;
-//                            $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
-//                            $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
-//                            $journalReferences[$jurnalUmumDiskon]['values'][] = $detail->discountAmount;
-//                        }
+                        $registrationProduct = RegistrationProduct::model()->findByAttributes(array('registration_transaction_id' => $model->registration_transaction_id, 'product_id' => $detail->product_id));
+                        if (!empty($registrationProduct) && $registrationProduct->discount > 0) {
+                            $jurnalUmumDiskon = $detail->product->productSubMasterCategory->coa_diskon_penjualan;
+                            $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
+                            $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
+                            $journalReferences[$jurnalUmumDiskon]['values'][] = $registrationProduct->discountAmount;
+                        }
                     } elseif (!empty($detail->service_id)) { 
 //                        $price = $detail->is_quick_service == 1 ? $rService->price : $rService->price;
 
@@ -152,12 +153,13 @@ class InvoiceHeaderController extends Controller {
                         $journalReferences[$jurnalUmumPendapatanJasa]['is_coa_category'] = 0;
                         $journalReferences[$jurnalUmumPendapatanJasa]['values'][] = $detail->unit_price;
 
-//                        if ($rService->discount_price > 0.00) {
-//                            $jurnalUmumDiscountPendapatanJasa = $rService->service->serviceCategory->coa_diskon_service;
-//                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
-//                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
-//                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
-//                        }
+                        $registrationService = RegistrationService::model()->findByAttributes(array('registration_transaction_id' => $model->registration_transaction_id, 'service_id' => $detail->service_id));
+                        if (!empty($registrationService) && $registrationService->discount_price > 0.00) {
+                            $jurnalUmumDiscountPendapatanJasa = $detail->service->serviceCategory->coa_diskon_service;
+                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
+                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
+                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $registrationService->discount_price;
+                        }
                     } else {
                         continue;
                     }

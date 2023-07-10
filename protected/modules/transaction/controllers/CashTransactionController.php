@@ -463,17 +463,37 @@ class CashTransactionController extends Controller {
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
-    public function actionAjaxGetTotal($id) {
+    public function actionAjaxJsonTotal($id, $index, $type) {
         if (Yii::app()->request->isAjaxRequest) {
             $cashTransaction = $this->instantiate($id);
             $this->loadState($cashTransaction);
-            $total = 0;
+            
+            $amountCredit = 0.00;
+            $amountDebit = 0.00;
+            $totalCredit = 0.00;
+            $totalDebit = 0.00;
+            $totalCreditFormatted = 0.00;
+            $totalDebitFormatted = 0.00;
 
-            foreach ($cashTransaction->details as $key => $detail) {
-                $total += $detail->amount;
+            if ($type == "In") {
+                $amountCredit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cashTransaction->details[$index]->amount));
+                $totalCreditFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cashTransaction->totalDetails));
+                $totalCredit = $cashTransaction->totalDetails;
+            } else {
+                $amountDebit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cashTransaction->details[$index]->amount));
+                $totalDebitFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cashTransaction->totalDetails));
+                $totalDebit = $cashTransaction->totalDetails;
             }
             
-            $object = array('total' => $total);
+            $object = array(
+                'amountCredit' => $amountCredit,
+                'amountDebit' => $amountDebit,
+                'totalCredit' => $totalCredit,
+                'totalDebit' => $totalDebit,
+                'totalDebitFormatted' => $totalDebitFormatted,
+                'totalCreditFormatted' => $totalCreditFormatted,
+            );
+            
             echo CJSON::encode($object);
         }
     }

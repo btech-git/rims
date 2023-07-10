@@ -4,8 +4,8 @@
             <tr>
                 <th>COA</th>
                 <th>Normal Balance</th>
-                <th>COA Debit Amount</th>
-                <th>COA Credit Amount</th>
+                <th>Debit Amount</th>
+                <th>Credit Amount</th>
                 <th>Amount</th>
                 <th>Notes</th>
                 <th></th>
@@ -21,7 +21,6 @@
                             'size' => 15,
                             'maxlength' => 10,
                             'readonly' => true,
-                            //'onclick' => '$("#product'.$i.'-dialog").dialog("open"); return false;',
                             'value' => $detail->coa_id == "" ? '' : Coa::model()->findByPk($detail->coa_id)->name
                         )); ?>
                     </td>
@@ -30,37 +29,65 @@
                             'size' => 15,
                             'maxlength' => 10,
                             'readonly' => true,
-                            //'onclick' => '$("#product'.$i.'-dialog").dialog("open"); return false;',
                             'value' => $detail->coa_id == "" ? '' : Coa::model()->findByPk($detail->coa_id)->normal_balance
                         )); ?>
                     </td>
-                    <td>
-                        <?php echo CHtml::activeTextField($detail, "[$i]coa_debit", array(
-                            'size' => 15,
-                            'maxlength' => 10,
-                            'readonly' => true,
-                            //'onclick' => '$("#product'.$i.'-dialog").dialog("open"); return false;',
-                            'value' => $detail->coa_id == "" ? '' : Coa::model()->findByPk($detail->coa_id)->debit
-                        )); ?>
+                    <td style="text-align: right">
+                        <span id="amount_debit_<?php echo $i; ?>">
+                            <?php echo CHtml::encode(CHtml::value($detail, 'coa_debit')); ?>
+                            <?php /*echo CHtml::activeTextField($detail, "[$i]coa_debit", array(
+                                'size' => 15,
+                                'maxlength' => 10,
+                                'readonly' => true,
+                            ));*/ ?>
+                        </span>
+                    </td>
+                    <td style="text-align: right">
+                        <span id="amount_credit_<?php echo $i; ?>">
+                            <?php echo CHtml::encode(CHtml::value($detail, 'coa_credit')); ?>
+                            <?php /*echo CHtml::activeTextField($detail, "[$i]coa_credit", array(
+                                'size' => 15,
+                                'maxlength' => 10,
+                                'readonly' => true,
+                            ));*/ ?>
+                        </span>
                     </td>
                     <td>
-                        <?php echo CHtml::activeTextField($detail, "[$i]coa_credit", array(
-                            'size' => 15,
-                            'maxlength' => 10,
-                            'readonly' => true,
-                            //'onclick' => '$("#product'.$i.'-dialog").dialog("open"); return false;',
-                            'value' => $detail->coa_id == "" ? '' : Coa::model()->findByPk($detail->coa_id)->credit
+                        <?php echo CHtml::activeTextField($detail, "[$i]amount", array(
+                            'size' => 7, 
+                            'maxLength' => 20,
+                            'onchange' => '
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "JSON",
+                                    url: "' . CController::createUrl('ajaxJsonTotal', array(
+                                        'id' => $cashTransaction->header->id, 
+                                        'index' => $i, 
+                                        'type' => $cashTransaction->header->transaction_type, 
+                                    )) . '", 
+                                    data: $("form").serialize(), 
+                                    success: function(data) {
+                                        $("#amount_debit_' . $i . '").html(data.amountDebit);
+                                        $("#amount_credit_' . $i . '").html(data.amountCredit);
+                                        $("#debit_amount").html(data.totalDebitFormatted);
+                                        $("#credit_amount").html(data.totalCreditFormatted);
+                                        $("#' . CHtml::activeId($cashTransaction->header, "debit_amount") . '").val(data.totalDebit);
+                                        $("#' . CHtml::activeId($cashTransaction->header, "credit_amount") . '").val(data.totalCredit);
+                                    },
+                                });	
+                            ',
                         )); ?>
-                    </td>
-                    <td>
-                        <?php echo CHtml::activeTextField($detail, "[$i]amount"); ?>
-                        <?php echo CHtml::button('Count', array(
+                        <?php /*echo CHtml::button('Count', array(
                             'id' => 'count_' . $i,
                             'style' => 'display:none',
                             'onclick' => '
                             $.ajax({
                               type: "POST",
-                              url: "' . CController::createUrl('ajaxGetCount', array('coaId' => $detail->coa_id, 'type' => $cashTransaction->header->transaction_type, 'amount' => '')) . '"+$("#CashTransactionDetail_' . $i . '_amount").val(),
+                              url: "' . CController::createUrl('ajaxGetCount', array(
+                                  'coaId' => $detail->coa_id, 
+                                  'type' => $cashTransaction->header->transaction_type, 
+                                  'amount' => ''
+                              )) . '"+$("#CashTransactionDetail_' . $i . '_amount").val(),
                               data: $("form").serialize(),
                               dataType: "json",
                               success: function(data) {
@@ -72,14 +99,17 @@
                                     $("#CashTransactionDetail_' . $i . '_coa_debit").val(data.total);
                               },
                             });',
-                        )); ?>
+                        ));*/ ?>
                     </td>
                     <td><?php echo CHtml::activeTextArea($detail, "[$i]notes"); ?></td>
                     <td>
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
                                 'type' => 'POST',
-                                'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $cashTransaction->header->id, 'index' => $i)),
+                                'url' => CController::createUrl('ajaxHtmlRemoveDetail', array(
+                                    'id' => $cashTransaction->header->id, 
+                                    'index' => $i
+                                )),
                                 'update' => '.detail',
                             )),
                         )); ?>
@@ -93,6 +123,34 @@
                 '); ?>
             <?php endforeach ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">Total</td>
+                <td style="text-align: right">
+                    <span id="debit_amount">
+                        <?php echo CHtml::encode(CHtml::value($cashTransaction->header, 'debit_amount')); ?>
+                        <?php echo CHtml::activeHiddenField($cashTransaction->header, 'debit_amount', array(
+                            'size' => 18, 
+                            'maxlength' => 18, 
+                            'readonly' => true
+                        )); ?>
+                    </span>
+                    <?php echo CHtml::error($cashTransaction->header, 'debit_amount'); ?>
+                </td>
+                <td style="text-align: right">
+                    <span id="credit_amount">
+                        <?php echo CHtml::encode(CHtml::value($cashTransaction->header, 'credit_amount')); ?>
+                        <?php echo CHtml::activeHiddenField($cashTransaction->header, 'credit_amount', array(
+                            'size' => 18, 
+                            'maxlength' => 18, 
+                            'readonly' => true
+                        )); ?>
+                    </span>
+                    <?php echo CHtml::error($cashTransaction->header, 'credit_amount'); ?>
+                </td>
+                <td colspan="3"></td>
+            </tr>
+        </tfoot>
     </table>
 <?php endif ?>
 

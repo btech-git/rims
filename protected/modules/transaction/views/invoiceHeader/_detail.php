@@ -4,6 +4,7 @@
             <th>Product/Service</th>
             <th>Quantity</th>
             <th>Unit Price</th>
+            <th>Discount</th>
             <th>Price</th>
         </thead>
         <tbody>
@@ -28,6 +29,10 @@
                     <td style="text-align: right">
                         <?php echo CHtml::activeHiddenField($detail, "[$i]unit_price"); ?>
                         <span class="numbers"><?php echo number_format($detail->unit_price, 2); ?></span>
+                    </td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::activeHiddenField($detail, "[$i]discount"); ?>
+                        <span class="numbers"><?php echo number_format($detail->discount, 2); ?></span>
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::activeHiddenField($detail, "[$i]total_price"); ?>

@@ -100,7 +100,7 @@ class AdminController extends Controller {
         $model = new User;
         $model->create_at = date('Y-m-d H:i:s');
         $model->lastvisit_at = date('Y-m-d H:i:s');
-        $employees = Employee::model()->findAll();
+        $employees = Employee::model()->findAll(array('order' => 't.name'));
         
         $this->performAjaxValidation(array($model));
         if (isset($_POST['User'])) {
@@ -144,7 +144,7 @@ class AdminController extends Controller {
      */
     public function actionUpdate() {
         $model = $this->loadModel();
-        $employees = Employee::model()->findAll();
+        $employees = Employee::model()->findAll(array('order' => 't.name'));
         $this->performAjaxValidation(array($model));
         
         if (isset($_POST['User'])) {
