@@ -89,20 +89,20 @@ function tanggal($date) {
             $no = 1;
             foreach ($po_detail as $x) {
                 ?>
-                <tr class="isi" style="margin-top: 0px; font-size: 9px">
+                <tr class="isi">
                     <td class="noo"><?php echo $no; ?></td>
                     <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
-                        <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
-                        <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.subBrandSeries.name')); ?></td>
-                        <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.manufacturer_code')); ?></td>
+                        <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
+                        <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.subBrandSeries.name')); ?></td>
+                        <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.manufacturer_code')); ?></td>
                     <?php else: ?>
-                        <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.manufacturer_code')); ?></td>
-                        <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.name')); ?></td>
-                        <td>&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
+                        <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.manufacturer_code')); ?></td>
+                        <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.name')); ?></td>
+                        <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
                     <?php endif; ?>
-                    <td style="text-align:right">&nbsp;  Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
-                    <td style="text-align:right">&nbsp;  Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
-                    <td style="text-align:right">&nbsp;  Rp. <?php echo number_format($x->price_before_tax, 2, ',', '.') ?></td>
+                    <td style="text-align:right">Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
+                    <td style="text-align:right">Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
+                    <td style="text-align:right">Rp. <?php echo number_format($x->price_before_tax, 2, ',', '.') ?></td>
                     <td style="text-align:center"><?php echo $x->quantity ?></td>
                     <td style="text-align:center"><?php echo $x->unit->name ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
