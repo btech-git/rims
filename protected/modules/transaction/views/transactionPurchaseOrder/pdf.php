@@ -100,13 +100,13 @@ function tanggal($date) {
                         <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.name')); ?></td>
                         <td style="margin-top: 0px; font-size: 9px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
                     <?php endif; ?>
-                    <td style="text-align:right">Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
-                    <td style="text-align:right">Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
-                    <td style="text-align:right">Rp. <?php echo number_format($x->price_before_tax, 2, ',', '.') ?></td>
-                    <td style="text-align:center"><?php echo $x->quantity ?></td>
-                    <td style="text-align:center"><?php echo $x->unit->name ?></td>
-                    <td style="text-align:right">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
-                    <td style="text-align:center"><?php echo $x->memo ?></td>
+                    <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
+                    <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
+                    <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($x->price_before_tax, 2, ',', '.') ?></td>
+                    <td style="text-align:center; font-size: 9px"><?php echo $x->quantity ?></td>
+                    <td style="text-align:center; font-size: 9px"><?php echo $x->unit->name ?></td>
+                    <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
+                    <td style="text-align:center; font-size: 9px"><?php echo $x->memo ?></td>
                 </tr>
                 <?php $no++;
             } ?>
@@ -128,23 +128,23 @@ function tanggal($date) {
             <?php endfor; ?>
                 
             <tr class="r">
-                <td colspan="9" style="text-align:right" class="result">Sub Total</td>
-                <td style="text-align:right">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
+                <td colspan="9" style="text-align:right; font-size: 9px" class="result">Sub Total</td>
+                <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="9" style="text-align:right" class="result">PPN</td>
-                <td style="text-align:right">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
+                <td colspan="9" style="text-align:right; font-size: 9px" class="result">PPN</td>
+                <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="9" style="text-align:right" class="result">Total</td>
-                <td style="text-align:right">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
+                <td colspan="9" style="text-align:right; font-size: 9px" class="result">Total</td>
+                <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
         </table>
         
-        <div class="row">
+        <div class="row" style="font-size: 9px">
             Catatan: 
             <?php echo CHtml::encode(CHtml::value($po, 'note')); ?>
         </div>
