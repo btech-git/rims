@@ -15,7 +15,7 @@ function tanggal($date) {
         <img src="images/rims po head.jpg" alt="">
     </div>
 
-    <div class="supplier" style="margin-top: 0px; font-size: 9px">
+    <div class="supplier">
         <div class="left">
             <table style="margin-top: 0px; font-size: 9px">
                 <tr>
@@ -42,7 +42,7 @@ function tanggal($date) {
         </div>
         <div class="right">
             <h3 style="margin-top: 0px; font-size: 12px">Purchase Order</h3>
-            <table>
+            <table style="margin-top: 0px; font-size: 9px">
                 <tr>
                     <td>Date</td>
                     <td>:</td>
