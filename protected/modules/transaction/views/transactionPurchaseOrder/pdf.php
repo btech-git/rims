@@ -153,9 +153,9 @@ function tanggal($date) {
     <div class="purchase-order">
         <table style="width: 100%">
             <tr>
-                <td style="width: 30%">Dibuat,</td>
-                <td style="width: 30%">Menyetujui,</td>
-                <td style="width: 30%">Mengetahui,</td>
+                <td style="width: 30%; font-size: 9px">Dibuat,</td>
+                <td style="width: 30%; font-size: 9px">Menyetujui,</td>
+                <td style="width: 30%; font-size: 9px">Mengetahui,</td>
             </tr>
             <tr>
                 <td style="height: 100px">&nbsp;</td>
@@ -163,9 +163,9 @@ function tanggal($date) {
                 <td style="height: 100px">&nbsp;</td>
             </tr>
             <tr>
-                <td>(Sausan)</td>
-                <td>(Grace)</td>
-                <td>(Newira)</td>
+                <td style="font-size: 9px">(Sausan)</td>
+                <td style="font-size: 9px">(Grace)</td>
+                <td style="font-size: 9px">(Newira)</td>
             </tr>
         </table>
     </div>
