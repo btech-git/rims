@@ -15,7 +15,7 @@ function tanggal($date) {
         <img src="images/rims po head.jpg" alt="">
     </div>
 
-    <div class="supplier">
+    <div class="supplier" style="margin-top: 0px; font-size: 12px">
         <div class="left">
             <table>
                 <tr>
