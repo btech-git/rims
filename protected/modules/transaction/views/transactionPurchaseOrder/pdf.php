@@ -10,12 +10,12 @@ function tanggal($date) {
     return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
 }
 ?>
-<div style="margin-top: 0px; font-size: 12px">
+<div style="margin-top: 0px; font-size: 9px">
     <div class="header">
         <img src="images/rims po head.jpg" alt="">
     </div>
 
-    <div class="supplier" style="margin-top: 0px; font-size: 12px">
+    <div class="supplier" style="margin-top: 0px; font-size: 9px">
         <div class="left">
             <table style="margin-top: 0px; font-size: 12px">
                 <tr>
@@ -41,7 +41,7 @@ function tanggal($date) {
             </table>
         </div>
         <div class="right">
-            <h3>Purchase Order</h3>
+            <h3 style="margin-top: 0px; font-size: 12px">Purchase Order</h3>
             <table>
                 <tr>
                     <td>Date</td>
