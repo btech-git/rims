@@ -65,7 +65,7 @@ class Invoices extends CComponent {
                     $detail->service_id = $registrationService->service_id;
                     $detail->quantity = 1;
                     $detail->unit_price = $registrationService->price;
-                    $detail->discount = $registrationProduct->discountAmount;
+                    $detail->discount = $registrationService->discountAmount;
                     $detail->total_price = $registrationService->total_price;
                     $this->details[] = $detail;
                 }
