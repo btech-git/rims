@@ -152,8 +152,8 @@ class AdminController extends Controller {
 
             if ($model->validate()) {
                 $model->save();
-                $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
-                $authorizer->authManager->assign('Authenticated', $model->id);
+//                $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
+//                $authorizer->authManager->assign('Authenticated', $model->id);
 
                 UserBranch::model()->deleteAllByAttributes(array('users_id' => $model->id,));
                 
