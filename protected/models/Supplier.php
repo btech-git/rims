@@ -219,42 +219,27 @@ class Supplier extends CActiveRecord {
         ));
     }
 
-    public function searchByPayableReport() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
+    public function searchByPayableReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
         $criteria = new CDbCriteria;
-
+        
         $criteria->compare('t.id', $this->id);
-        $criteria->compare('t.date', $this->date, true);
-        $criteria->compare('.code', $this->code, true);
-        $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('t.company', $this->company, true);
-        $criteria->compare('t.position', $this->position, true);
-        $criteria->compare('t.address', $this->address, true);
-        $criteria->compare('t.province_id', $this->province_id);
-        $criteria->compare('t.city_id', $this->city_id);
-        $criteria->compare('t.zipcode', $this->zipcode, true);
-        $criteria->compare('t.email_personal', $this->email_personal, true);
-        $criteria->compare('email_company', $this->email_company, true);
-        $criteria->compare('npwp', $this->npwp, true);
-        $criteria->compare('tenor', $this->tenor);
-        $criteria->compare('company_attribute', $this->company_attribute, true);
-        $criteria->compare('t.coa_id', $this->coa_id);
-        $criteria->compare('t.coa_outstanding_order', $this->coa_outstanding_order);
-        $criteria->compare('t.description', $this->description);
-        $criteria->compare('person_in_charge', $this->person_in_charge);
-        $criteria->compare('phone', $this->phone);
-        $criteria->compare('mobile_phone', $this->mobile_phone);
-        $criteria->compare('t.is_approved', $this->is_approved);
-        $criteria->compare('t.date_approval', $this->date_approval);
-        $criteria->compare('t.user_id', $this->user_id);
-
-        $criteria->together = true;
-        $criteria->with = array('coa', 'coaOutstandingOrder');
-        $criteria->compare('coa.name', $this->coa_name, true);
-        $criteria->compare('coa.code', $this->coa_code, true);
-        $criteria->compare('coaOutstandingOrder.name', $this->coa_outstanding_name, true);
-        $criteria->compare('coaOutstandingOrder.code', $this->coa_outstanding_code, true);
+        
+        $criteria->params = array(
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        $criteria->addCondition("EXISTS (
+            SELECT p.supplier_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            WHERE p.supplier_id = t.id AND p.payment_left > 100.00 AND p.purchase_order_date <= :end_date " . $branchConditionSql . " 
+        )");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -367,17 +352,23 @@ class Supplier extends CActiveRecord {
     }
     
     public function getPayableReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
         $sql = "
             SELECT purchase_order_no, purchase_order_date, COALESCE(p.total_price, 0) AS total_price, COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left 
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = :supplier_id AND payment_left > 100.00 AND purchase_order_date <= :end_date AND main_branch_id = :branch_id
-        ";
+            WHERE p.supplier_id = :supplier_id AND payment_left > 100.00 AND purchase_order_date <= :end_date " . $branchConditionSql;
 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':supplier_id' => $this->id,
-            ':end_date' => $endDate,
-            ':branch_id' => $branchId,
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
     }

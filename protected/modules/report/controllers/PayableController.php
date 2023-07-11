@@ -24,10 +24,6 @@ class PayableController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
-        $supplierDataProvider = $supplier->search();
-        $supplierDataProvider->pagination->pageVar = 'page_dialog';
-
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -35,7 +31,11 @@ class PayableController extends Controller {
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $payableSummary = new PayableSummary($supplier->search());
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+        $supplierDataProvider->pagination->pageVar = 'page_dialog';
+
+        $payableSummary = new PayableSummary($supplier->searchByReceivableReport($endDate, $branchId));
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();

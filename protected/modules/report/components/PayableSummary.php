@@ -9,14 +9,14 @@ class PayableSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = TRUE;
-        $this->dataProvider->criteria->with = array(
-            'transactionPurchaseOrders',
-        );
+//        $this->dataProvider->criteria->together = TRUE;
+//        $this->dataProvider->criteria->with = array(
+//            'transactionPurchaseOrders',
+//        );
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 5000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 100 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
