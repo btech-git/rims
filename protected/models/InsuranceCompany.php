@@ -202,7 +202,7 @@ class InsuranceCompany extends CActiveRecord {
         $branchConditionSql = '';
         
         $params = array(
-            ':insurance_company_id' => $insuranceCompanyId,
+            ':insurance_company_id' => $this->id,
             ':end_date' => $endDate,
         );
         
