@@ -54,7 +54,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, debit_amount, credit_amount, branch_id, user_id', 'required'),
+            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, branch_id, user_id', 'required'),
             array('coa_id, branch_id, user_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('transaction_type', 'length', 'max' => 20),
