@@ -45,7 +45,7 @@ class ReceivableInsuranceCompanyController extends Controller {
         $receivableSummary->setupFilter($insuranceCompanyId);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate, $branchId);
+            $this->saveToExcel($receivableSummary, $endDate, $insuranceCompanyId, $branchId);
         }
 
         $this->render('summary', array(
@@ -90,7 +90,7 @@ class ReceivableInsuranceCompanyController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary, $endDate, $branchId) {
+    protected function saveToExcel($receivableSummary, $endDate, $insuranceCompanyId, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -131,7 +131,7 @@ class ReceivableInsuranceCompanyController extends Controller {
         $worksheet->setCellValue('E6', 'Grand Total');
         $worksheet->setCellValue('F6', 'Payment');
         $worksheet->setCellValue('G6', 'Remaining');
-        $worksheet->setCellValue('H6', 'Insurance');
+        $worksheet->setCellValue('H6', 'Customer');
         $counter = 8;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
@@ -140,7 +140,7 @@ class ReceivableInsuranceCompanyController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId);
+            $receivableData = $header->getReceivableReport($endDate, $insuranceCompanyId, $branchId);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
@@ -156,7 +156,7 @@ class ReceivableInsuranceCompanyController extends Controller {
                 $worksheet->setCellValue("E{$counter}", CHtml::encode($revenue));
                 $worksheet->setCellValue("F{$counter}", CHtml::encode($paymentAmount));
                 $worksheet->setCellValue("G{$counter}", CHtml::encode($paymentLeft));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode($receivableRow['insurance_name']));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($receivableRow['customer_name']));
                 
                 $counter++;
             
