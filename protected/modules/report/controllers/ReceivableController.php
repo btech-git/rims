@@ -109,20 +109,20 @@ class ReceivableController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Piutang Customer');
 
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A1:H1');
+        $worksheet->mergeCells('A2:H2');
+        $worksheet->mergeCells('A3:H3');
         
-        $worksheet->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
         $worksheet->setCellValue('A3', 'Laporan Piutang Customer');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:G5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:G6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:G6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Name');
         $worksheet->setCellValue('B5', 'Type');
 
@@ -167,10 +167,10 @@ class ReceivableController extends Controller {
                 $totalReceivable += $paymentLeft;
             }
             
-            $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
 
-            $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $worksheet->mergeCells("A{$counter}:D{$counter}");
             $worksheet->setCellValue("A{$counter}", 'Total');
             $worksheet->setCellValue("E{$counter}", $totalRevenue);
@@ -180,7 +180,7 @@ class ReceivableController extends Controller {
             $counter++;$counter++;
         }
 
-        for ($col = 'A'; $col !== 'H'; $col++) {
+        for ($col = 'A'; $col !== 'J'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
