@@ -35,7 +35,7 @@ class PayableController extends Controller {
         $supplierDataProvider = $supplier->search();
         $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
-        $payableSummary = new PayableSummary($supplier->searchByReceivableReport($endDate, $branchId));
+        $payableSummary = new PayableSummary($supplier->searchByPayableReport($endDate, $branchId));
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();
