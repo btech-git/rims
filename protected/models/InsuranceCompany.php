@@ -190,7 +190,7 @@ class InsuranceCompany extends CActiveRecord {
             SELECT r.insurance_company_id
             FROM " . RegistrationTransaction::model()->tableName() . " r 
             INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
-            WHERE r.insurance_company_id = t.id AND i.payment_left > 100.00 AND i.invoice_date <= :end_date " . $branchConditionSql .
+            WHERE r.insurance_company_id = t.id AND r.insurance_company_id IS NOT NULL AND i.payment_left > 100.00 AND i.invoice_date <= :end_date " . $branchConditionSql .
         ")");
 
         return new CActiveDataProvider($this, array(
