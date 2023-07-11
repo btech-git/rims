@@ -314,6 +314,7 @@ class PaymentOutController extends Controller {
                 if ($model->approval_type == 'Approved') {
 
                     foreach ($paymentOut->payOutDetails as $detail) {
+                        $invoiceNumber = empty($detail->receive_item_id) ? '' : $detail->receiveItem->invoice_number;
                         $jurnalHutang = new JurnalUmum;
                         $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
                         $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
@@ -322,7 +323,7 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->total = $detail->total_invoice;
                         $jurnalHutang->debet_kredit = 'D';
                         $jurnalHutang->tanggal_posting = date('Y-m-d');
-                        $jurnalHutang->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $detail->receiveItem->invoice_number;
+                        $jurnalHutang->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
                         $jurnalHutang->is_coa_category = 0;
                         $jurnalHutang->transaction_type = 'Pout';
                         $jurnalHutang->save();
@@ -341,7 +342,7 @@ class PaymentOutController extends Controller {
                         $jurnalUmumKas->total = $detail->total_invoice;
                         $jurnalUmumKas->debet_kredit = 'K';
                         $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $detail->receiveItem->invoice_number;
+                        $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
                         $jurnalUmumKas->is_coa_category = 0;
                         $jurnalUmumKas->transaction_type = 'Pout';
                         $jurnalUmumKas->save();
