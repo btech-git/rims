@@ -46,7 +46,7 @@ class ReceivableController extends Controller {
         $receivableSummary->setupFilter($customerId);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate, $branchId);
+            $this->saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId);
         }
 
         $this->render('summary', array(
