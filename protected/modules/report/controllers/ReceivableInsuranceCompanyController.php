@@ -136,7 +136,7 @@ class ReceivableInsuranceCompanyController extends Controller {
 
         foreach ($receivableSummary->dataProvider->data as $header) {
             $worksheet->setCellValue("A{$counter}", $header->name);
-            $worksheet->setCellValue("B{$counter}", $header->customer_type);
+            $worksheet->setCellValue("B{$counter}", $header->coa->name);
 
             $counter++;
             
