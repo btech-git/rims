@@ -24,8 +24,9 @@ class PendingApprovalController extends Controller {
             $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('accountingHead')) || !(Yii::app()->user->checkAccess('financeHead')))
+            if (!(Yii::app()->user->checkAccess('masterApprovalView'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

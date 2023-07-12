@@ -16,7 +16,7 @@ class PendingTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'index') {
-            if (!(Yii::app()->user->checkAccess('purchaseHead'))) {
+            if (!(Yii::app()->user->checkAccess('pendingTransactionView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

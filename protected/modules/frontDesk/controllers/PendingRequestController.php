@@ -16,11 +16,9 @@ class PendingRequestController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'viewSent' || 
-            $filterChain->action->id === 'viewTransfer'
+            $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('operationHead'))) {
+            if (!(Yii::app()->user->checkAccess('masterApprovalView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
