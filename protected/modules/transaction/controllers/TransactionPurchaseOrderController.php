@@ -830,6 +830,7 @@ class TransactionPurchaseOrderController extends Controller {
             if (isset($_POST['TransactionPurchaseOrderApproval'])) {
                 $model->attributes = $_POST['TransactionPurchaseOrderApproval'];
 //                if ($purchaseOrder->status_document != $model->approval_type) {
+                
                     if ($model->save()) {
                         $purchaseOrder->status_document = $model->approval_type;
                         if ($model->approval_type == 'Approved') {
@@ -870,6 +871,49 @@ class TransactionPurchaseOrderController extends Controller {
                             }
                         }
                         $purchaseOrder->save(false);
+                        
+                        $jurnalUmumHutang = new JurnalUmum;
+                        $jurnalUmumHutang->kode_transaksi = $purchaseOrder->purchase_order_no;
+                        $jurnalUmumHutang->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                        $jurnalUmumHutang->coa_id = $purchaseOrder->supplier->coa_id;
+                        $jurnalUmumHutang->branch_id = $purchaseOrder->main_branch_id;
+                        $jurnalUmumHutang->total = $purchaseOrder->total_price;
+                        $jurnalUmumHutang->debet_kredit = 'K';
+                        $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumHutang->transaction_subject = $purchaseOrder->supplier->name;
+                        $jurnalUmumHutang->is_coa_category = 0;
+                        $jurnalUmumHutang->transaction_type = 'PO';
+                        $jurnalUmumHutang->save();
+
+                        if ($purchaseOrder->ppn_price > 0.00) {
+                            $coaPpn = Coa::model()->findByAttributes(array('code' => '143.00.001'));
+                            $jurnalUmumPpn = new JurnalUmum;
+                            $jurnalUmumPpn->kode_transaksi = $purchaseOrder->purchase_order_no;
+                            $jurnalUmumPpn->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                            $jurnalUmumPpn->coa_id = $coaPpn->id;
+                            $jurnalUmumPpn->branch_id = $purchaseOrder->main_branch_id;
+                            $jurnalUmumPpn->total = $purchaseOrder->ppn_price;
+                            $jurnalUmumPpn->debet_kredit = 'D';
+                            $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+                            $jurnalUmumPpn->transaction_subject = $purchaseOrder->supplier->name;
+                            $jurnalUmumPpn->is_coa_category = 0;
+                            $jurnalUmumPpn->transaction_type = 'PO';
+                            $jurnalUmumPpn->save();
+                        }
+
+                        $jurnalUmumOutstanding = new JurnalUmum;
+                        $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
+                        $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                        $jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coa_outstanding_order;
+                        $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
+                        $jurnalUmumOutstanding->total = $purchaseOrder->subtotal;
+                        $jurnalUmumOutstanding->debet_kredit = 'D';
+                        $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumOutstanding->transaction_subject = $purchaseOrder->supplier->name;
+                        $jurnalUmumOutstanding->is_coa_category = 0;
+                        $jurnalUmumOutstanding->transaction_type = 'PO';
+                        $jurnalUmumOutstanding->save();
+
                         $this->redirect(array('view', 'id' => $headerId));
                     }
 //                }
