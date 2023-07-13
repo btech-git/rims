@@ -1,9 +1,18 @@
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
+
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Transaction Detail</div>
     <div style="font-size: larger"><?php echo CHtml::encode(CHtml::value($coa, 'codeName')); ?></div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
+<div class="clear"></div>
+
+<div class="row buttons">
+    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
+</div>
+
+<?php echo CHtml::endForm(); ?>
 <br />
 
 <div class="grid-view">
@@ -40,11 +49,6 @@
                 'value'=>'$data->debet_kredit == "K" ? AppHelper::formatMoney($data->total) : 0', 
                 'htmlOptions' => array('style' => 'text-align: right'),
             ),
-//            array(
-//                'header'=>'Saldo', 
-//                'value'=>'$data->currentSaldo', 
-//                'htmlOptions' => array('style' => 'text-align: right'),
-//            ),
         ),
     )); ?>
 </div>

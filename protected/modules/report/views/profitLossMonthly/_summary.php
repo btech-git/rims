@@ -115,14 +115,14 @@
                             <?php $elementsTotalSums[$elementNumber][$yearMonth] += $categoryTotalSums[$yearMonth]; ?>
                         <?php endforeach; ?>
                     <?php endforeach; ?>
-                    <tr>
-                        <td style="text-align: right; font-weight: bold; font-size: 18px;">Total <?php echo $elementNames[$elementNumber]; ?></td>
+<!--                    <tr>
+                        <td style="text-align: right; font-weight: bold; font-size: 18px;">Total <?php /*echo $elementNames[$elementNumber]; ?></td>
                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                             <td style="text-align: right; font-weight: bold; font-size: 18px;">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $elementsTotalSums[$elementNumber][$yearMonth])); ?>
                             </td>
-                        <?php endforeach; ?>
-                    </tr>
+                        <?php endforeach;*/ ?>
+                    </tr>-->
                 <?php endif; ?>
             <?php endforeach; ?>
         </tbody>

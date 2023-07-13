@@ -171,6 +171,35 @@ class Coa extends CActiveRecord {
         ));
     }
 
+    public function searchByTransactionJournal() {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.coa_category_id', $this->coa_category_id);
+        $criteria->compare('t.coa_sub_category_id', $this->coa_sub_category_id);
+        $criteria->compare('normal_balance', $this->normal_balance, true);
+        $criteria->compare('opening_balance', $this->opening_balance, true);
+        $criteria->compare('closing_balance', $this->closing_balance, true);
+        $criteria->compare('debit', $this->debit, true);
+        $criteria->compare('credit', $this->credit, true);
+        $criteria->compare('t.is_approved', 1);
+        $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.code ASC, t.name ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+            ),
+        ));
+    }
+
     public function searchByPendingApproval() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -472,11 +501,7 @@ class Coa extends CActiveRecord {
             WHERE j.coa_id = :coa_id AND j.tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql .
             " GROUP BY j.coa_id
         ";
-//        $sql = "SELECT SUM(total) AS balance
-//                FROM " . JurnalUmum::model()->tableName() . "
-//                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql .
-//                " GROUP BY coa_id";
-
+        
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
         return ($value === false) ? 0 : $value;

@@ -13,18 +13,26 @@ Yii::app()->clientScript->registerCss('_report', '
 ');
 ?>
 
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
+
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Transaction Detail</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
+<div class="clear"></div>
+
+<div class="row buttons">
+    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
+</div>
+
+<?php echo CHtml::endForm(); ?>
 <br />
 
 <table class="report">
     <tr id="coa1">
         <th class="width1-1">Kode</th>
         <th class="width1-2">Nama Akun</th>
-
     </tr>
     <tr id="coa2">
         <td colspan="2">

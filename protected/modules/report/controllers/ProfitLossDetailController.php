@@ -28,8 +28,9 @@ class ProfitLossDetailController extends Controller {
 
         $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
-        if (isset($_GET['SaveExcel']))
+        if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
+        }
 
         $this->render('summary', array(
             'accountCategoryTypes' => $accountCategoryTypes,
@@ -50,7 +51,7 @@ class ProfitLossDetailController extends Controller {
             $jurnalUmum->attributes = $_GET['JurnalUmum'];
         }
 
-        $jurnalUmumDataProvider = $jurnalUmum->search();
+        $jurnalUmumDataProvider = $jurnalUmum->searchByTransactionJournal();
         $jurnalUmumDataProvider->criteria->addCondition("t.coa_id = :coa_id AND t.tanggal_transaksi BETWEEN :start_date AND :end_date");
         $jurnalUmumDataProvider->criteria->params = array(
             ':coa_id' => $coaId, 
@@ -64,6 +65,10 @@ class ProfitLossDetailController extends Controller {
         
         $coa = Coa::model()->findByPk($coaId);
         
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelTransactionJournal($jurnalUmumDataProvider, $coa, $startDate, $endDate);
+        }
+
         $this->render('jurnalTransaction', array(
             'jurnalUmumDataProvider' => $jurnalUmumDataProvider,
             'startDate' => $startDate,
@@ -195,6 +200,68 @@ class ProfitLossDetailController extends Controller {
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Laporan Profit Loss Standar.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
+    protected function saveToExcelTransactionJournal($jurnalUmumDataProvider, $coa, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
+        $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Profit Loss Journal Transaction');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Profit Loss Journal Transaction');
+
+        $worksheet->mergeCells('A1:B1');
+        $worksheet->mergeCells('A2:B2');
+        $worksheet->mergeCells('A3:B3');
+        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Profit Loss Journal Transaction');
+        $worksheet->setCellValue('A2', CHtml::encode(CHtml::value($coa, 'codeName')));
+        $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
+
+        $counter = 5;
+
+        foreach ($jurnalUmumDataProvider->data as $header) {
+            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'kode_transaksi')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'tanggal_transaksi')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_subject')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'transaction_type')));
+            $worksheet->setCellValue("E{$counter}", $header->debet_kredit == "D" ? CHtml::encode(CHtml::value($header, 'transaction_subject')) : 0);
+            $worksheet->setCellValue("F{$counter}", $header->debet_kredit == "K" ? CHtml::encode(CHtml::value($header, 'transaction_subject')) : 0);
+
+            $counter++;
+        }
+
+        for ($col = 'A'; $col !== 'J'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Profit Loss Journal Transaction.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -112,12 +112,13 @@ class PayableLedgerController extends Controller {
         $counter = 7;
 
         foreach ($payableLedgerSummary->data as $header) {
-            $saldo = $header->getBeginningBalancePayable($startDate);
-            if ($saldo > 0.00) {
+            $payableAmount = $header->getPayableAmount();
+            if ($payableAmount !== 0) {
                 $worksheet->mergeCells("A{$counter}:B{$counter}");
                 $worksheet->mergeCells("C{$counter}:E{$counter}");
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+                $saldo = $header->getBeginningBalancePayable($startDate);
                 $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
                 
                 $counter++;

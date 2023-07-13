@@ -131,6 +131,27 @@ class JurnalUmum extends CActiveRecord {
         ));
     }
 
+    public function searchByTransactionJournal() {
+
+        $criteria = new CDbCriteria;
+        $criteria->compare('id', $this->id);
+        $criteria->compare('kode_transaksi', $this->kode_transaksi, true);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('total', $this->total, true);
+        $criteria->compare('debet_kredit', $this->debet_kredit, true);
+        $criteria->compare('tanggal_posting', $this->tanggal_posting, true);
+        $criteria->compare('transaction_subject', $this->transaction_subject, true);
+        $criteria->compare('transaction_type', $this->transaction_type);
+        $criteria->compare('is_coa_category', $this->is_coa_category);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 500,
+            ),
+        ));
+    }
+
     public function searchByDailyCashReport() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
