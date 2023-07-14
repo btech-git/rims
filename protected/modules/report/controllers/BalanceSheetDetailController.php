@@ -38,7 +38,7 @@ class BalanceSheetDetailController extends Controller {
         $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId);
+            $this->saveToExcel($startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -53,11 +53,16 @@ class BalanceSheetDetailController extends Controller {
         ));
     }
 
-    public function actionJurnalTransaction($coaId, $startDate, $endDate, $branchId) {
+    public function actionJurnalTransaction() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $balanceSheetSummary = new BalanceSheetSummary($coa->searchByTransactionJournal());
         $balanceSheetSummary->setupLoading();
@@ -79,7 +84,7 @@ class BalanceSheetDetailController extends Controller {
         ));
     }
 
-    protected function saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -412,34 +417,41 @@ class BalanceSheetDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Balance Sheet Journal Transaction');
+        $documentProperties->setTitle('Balance Sheet Journal');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Balance Sheet Journal Transaction');
+        $worksheet->setTitle('Balance Sheet Journal');
 
-        $worksheet->mergeCells('A1:B1');
-        $worksheet->mergeCells('A2:B2');
-        $worksheet->mergeCells('A3:B3');
-        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
+        $worksheet->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F5')->getFont()->setBold(true);
 
         $coa = Coa::model()->findByPk($coaId);
-        $worksheet->setCellValue('A1', 'Balance Sheet Journal Transaction');
+        $worksheet->setCellValue('A1', 'Balance Sheet Journal');
         $worksheet->setCellValue('A2', CHtml::encode(CHtml::value($coa, 'codeName')));
         $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
+        
+        $worksheet->setCellValue('A5', 'Transaksi #');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Description');
+        $worksheet->setCellValue('D5', 'Memo');
+        $worksheet->setCellValue('E5', 'Debet');
+        $worksheet->setCellValue('F5', 'Kredit');
+        $counter = 7;
 
-        $counter = 5;
+        foreach ($balanceSheetSummary->dataProvider->data as $header) {
+            foreach ($header->jurnalUmums as $i=>$detail) {
+                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detail, 'kode_transaksi')));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($detail, 'tanggal_transaksi')));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_subject')));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_type')));
+                $worksheet->setCellValue("E{$counter}", $detail->debet_kredit == "D" ? CHtml::encode(CHtml::value($detail, 'total')) : 0);
+                $worksheet->setCellValue("F{$counter}", $detail->debet_kredit == "K" ? CHtml::encode(CHtml::value($detail, 'total')) : 0);
 
-        foreach ($balanceSheetSummary->data as $header) {
-            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'kode_transaksi')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'tanggal_transaksi')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_subject')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'transaction_type')));
-            $worksheet->setCellValue("E{$counter}", $header->debet_kredit == "D" ? CHtml::encode(CHtml::value($header, 'transaction_subject')) : 0);
-            $worksheet->setCellValue("F{$counter}", $header->debet_kredit == "K" ? CHtml::encode(CHtml::value($header, 'transaction_subject')) : 0);
-
-            $counter++;
+                $counter++;
+            }
         }
 
         for ($col = 'A'; $col !== 'J'; $col++) {
@@ -451,7 +463,7 @@ class BalanceSheetDetailController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Balance Sheet Journal Transaction.xls"');
+        header('Content-Disposition: attachment;filename="Balance Sheet Journal.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

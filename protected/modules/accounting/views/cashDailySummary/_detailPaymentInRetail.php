@@ -44,7 +44,12 @@
                         )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                     )); ?>
                 </td>
-                <td><?php echo CHtml::htmlButton('Approve', array('type' => 'submit', 'name' => 'Approve', 'value' => $paymentInRetailBranchId)) ?></td>
+                <td>
+                    <?php echo CHtml::link('Approve', Yii::app()->createUrl("accounting/cashDailySummary/approval", array(
+                        "branchId" => $paymentInRetailBranchId,
+                        "transactionDate" => $transactionDate,
+                    )), array('target' => '_blank', 'class'=>'button warning')); ?>
+                </td>
             </tr>
             <?php $dailyTotal += $totalPerBranch; ?>
         <?php endforeach; ?>

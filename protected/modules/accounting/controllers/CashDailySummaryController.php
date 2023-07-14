@@ -127,6 +127,7 @@ class CashDailySummaryController extends Controller {
 
         $existingDate = CashDailyApproval::model()->findByAttributes(array('transaction_date' => $transactionDate));
         if (isset($_GET['Approve'])) {
+            $branchId = $_GET['Approve'];
             $cashDailyApproval = new CashDailyApproval;
             $cashDailyApproval->transaction_date = $transactionDate;
             $cashDailyApproval->amount = $totalDaily;
@@ -166,6 +167,21 @@ class CashDailySummaryController extends Controller {
             'transactionJournalDataProvider' => $transactionJournalDataProvider,
         ));
     }
+    
+//    public function actionApprovalBranch($branchId, $transactionDate, $totalPerBranch) {
+//        
+//        $cashDailyApproval = new CashDailyApproval;
+//        $cashDailyApproval->transaction_date = $transactionDate;
+//        $cashDailyApproval->amount = $totalPerBranch;
+//        $cashDailyApproval->user_id = Yii::app()->user->id;
+//        $cashDailyApproval->approval_date = date('Y-m-d');
+//        $cashDailyApproval->approval_time = date('H:i:s');
+//        $cashDailyApproval->branch_id = $branchId;
+//
+//        if ($cashDailyApproval->save(Yii::app()->db)) {                
+//            $this->redirect(array('summary'));
+//        }
+//    }
 
     protected function reportGrandTotalRetailTransaction($dataProvider) {
         $grandTotal = 0.00;
@@ -182,23 +198,23 @@ class CashDailySummaryController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionCreate($transactionDate, $branchId, $paymentTypeId) {
+    public function actionCreate($transactionDate) {
         
         $cashDaily = new CashDailySummary();
         $cashDaily->transaction_date = $transactionDate;
-        $cashDaily->branch_id = $branchId;
-        $cashDaily->payment_type_id = $paymentTypeId;
+//        $cashDaily->branch_id = $branchId;
+//        $cashDaily->payment_type_id = $paymentTypeId;
         $cashDaily->user_id = Yii::app()->user->id;
 
         $sql = "SELECT COALESCE(SUM(p.payment_amount), 0) as total_amount
                 FROM " . PaymentIn::model()->tableName() . " p 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
-                WHERE p.payment_date = :payment_date AND p.branch_id = :branch_id AND p.payment_type_id = :payment_type_id AND c.customer_type = 'Individual'";
+                WHERE p.payment_date = :payment_date AND c.customer_type = 'Individual'";
         
         $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
             ':payment_date' => $transactionDate,
-            ':branch_id' => $branchId,
-            ':payment_type_id' => $paymentTypeId,
+//            ':branch_id' => $branchId,
+//            ':payment_type_id' => $paymentTypeId,
         ));
         
         $cashDaily->amount = $paymentInRetailAmount;
@@ -206,12 +222,12 @@ class CashDailySummaryController extends Controller {
         $model = new PaymentIn('search');
         $model->unsetAttributes();  // clear any default values
 
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchByRetailCashDailyReport();
         $dataProvider->criteria->with = array('customer');
         $dataProvider->criteria->compare('customer.customer_type', 'Individual');   
         $dataProvider->criteria->compare('t.payment_date', $transactionDate, true);
-        $dataProvider->criteria->compare('t.branch_id', $branchId);
-        $dataProvider->criteria->compare('t.payment_type_id', $paymentTypeId);
+//        $dataProvider->criteria->compare('t.branch_id', $branchId);
+//        $dataProvider->criteria->compare('t.payment_type_id', $paymentTypeId);
             
         if (isset($_POST['CashDailySummary'])) {
             $cashDaily->attributes = $_POST['CashDailySummary'];

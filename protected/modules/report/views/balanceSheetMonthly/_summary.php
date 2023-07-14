@@ -63,16 +63,26 @@
                                 <?php $subCategoryTotalSums[$yearMonth] = '0.00'; ?>
                             <?php endforeach; ?>
                             <?php foreach ($subCategoryInfo['accounts'] as $accountInfo): ?>
-                                <tr>
-                                    <td style="padding-left: 50px;"><?php echo $accountInfo['code']; ?> - <?php echo $accountInfo['name']; ?></td>
-                                    <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
-                                        <?php $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : ''; ?>
-                                        <td style="text-align: right">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)); ?>
-                                        </td>
-                                        <?php $subCategoryTotalSums[$yearMonth] += $balance; ?>
-                                    <?php endforeach; ?>
-                                </tr>
+                                <?php $nonZeroValueExists = false; ?>
+                                <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
+                                    <?php $value = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '0.00'; ?>
+                                    <?php if ($value > 0): ?>
+                                        <?php $nonZeroValueExists = true; ?>
+                                        <?php break; ?>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                                <?php if ($nonZeroValueExists): ?>
+                                    <tr>
+                                        <td style="padding-left: 50px;"><?php echo $accountInfo['code']; ?> - <?php echo $accountInfo['name']; ?></td>
+                                        <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
+                                            <?php $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : ''; ?>
+                                            <td style="text-align: right">
+                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)); ?>
+                                            </td>
+                                            <?php $subCategoryTotalSums[$yearMonth] += $balance; ?>
+                                        <?php endforeach; ?>
+                                    </tr>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                             <tr>
                                 <td style="text-align: right; font-weight: bold; font-size: 14px;">Total <?php echo $subCategoryInfo['name']; ?></td>

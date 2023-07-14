@@ -40,9 +40,14 @@ class ProfitLossDetailController extends Controller {
         ));
     }
 
-    public function actionJurnalTransaction($coaId, $startDate, $endDate, $branchId) {
+    public function actionJurnalTransaction() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
+
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $jurnalUmum = new JurnalUmum('search');
         $jurnalUmum->unsetAttributes();
@@ -228,11 +233,11 @@ class ProfitLossDetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Profit Loss Journal Transaction');
 
-        $worksheet->mergeCells('A1:B1');
-        $worksheet->mergeCells('A2:B2');
-        $worksheet->mergeCells('A3:B3');
-        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
+        $worksheet->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F3')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Profit Loss Journal Transaction');
         $worksheet->setCellValue('A2', CHtml::encode(CHtml::value($coa, 'codeName')));
@@ -241,7 +246,6 @@ class ProfitLossDetailController extends Controller {
         $counter = 5;
 
         foreach ($jurnalUmumDataProvider->data as $header) {
-            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'kode_transaksi')));
             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'tanggal_transaksi')));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_subject')));

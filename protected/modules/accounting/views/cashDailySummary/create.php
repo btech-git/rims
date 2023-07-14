@@ -2,36 +2,24 @@
     <h2>KAS HARIAN</h2>
     <?php echo CHtml::beginForm(array(), 'POST', array('enctype' => 'multipart/form-data')); ?>
     <?php echo CHtml::errorSummary($cashDaily); ?>
-    <?php $branch = Branch::model()->findByPk($cashDaily->branch_id); ?>
-    <?php $paymentType = PaymentType::model()->findByPk($cashDaily->payment_type_id); ?>
+    <?php //$branch = Branch::model()->findByPk($cashDaily->branch_id); ?>
+    <?php //$paymentType = PaymentType::model()->findByPk($cashDaily->payment_type_id); ?>
     
     <div class="row">
         <table>
             <thead>
                 <tr>
                     <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Branch', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
                         <?php echo CHtml::label('Tanggal', ''); ?>
                     </td>
                     <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Payment Type', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Amount', ''); ?>
+                        <?php echo CHtml::label('Total Daily', ''); ?>
                     </td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
-                    </td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($cashDaily, 'transaction_date'))); ?></td>
-                    <td>
-                        <?php echo CHtml::encode(CHtml::value($paymentType, 'name')); ?>
-                    </td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($cashDaily, 'amount'))); ?></td>
                 </tr>
             </tbody>

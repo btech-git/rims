@@ -294,6 +294,30 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         ));
     }
     
+    public function searchByRetailCashDailyReport() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_id', $this->invoice_id);
+        $criteria->compare('payment_number', $this->payment_number, true);
+        $criteria->compare('payment_amount', $this->payment_amount, true);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.payment_type', $this->payment_type, true);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('cash_payment_type', $this->cash_payment_type);
+        $criteria->compare('payment_type_id', $this->payment_type_id);
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+    
     public function getTaxServiceAmount($serviceTax) {
         
         switch ($serviceTax) {

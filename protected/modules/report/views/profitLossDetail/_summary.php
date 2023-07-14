@@ -37,10 +37,10 @@
                             <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
                             <?php if (empty($coa->coaIds)): ?>
                                 <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array(
-                                    "coaId" => $coa->id, 
-                                    "startDate" => $startDate, 
-                                    "endDate" => $endDate, 
-                                    "branchId" => $branchId
+                                    "CoaId" => $coa->id, 
+                                    "StartDate" => $startDate, 
+                                    "EndDate" => $endDate, 
+                                    "BranchId" => $branchId
                                 )), array('target' => '_blank')); ?>
                             <?php else: ?>
                                 <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?>
@@ -61,10 +61,10 @@
                                     <td style="padding-left: 75px; font-size: 10px">
                                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
                                         <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array(
-                                            "coaId" => $account->id, 
-                                            "startDate" => $startDate, 
-                                            "endDate" => $endDate, 
-                                            "branchId" => $branchId
+                                            "CoaId" => $account->id, 
+                                            "StartDate" => $startDate, 
+                                            "EndDate" => $endDate, 
+                                            "BranchId" => $branchId
                                         )), array('target' => '_blank')); ?>
                                     </td>
                                     <td style="text-align: right; font-size: 10px">
