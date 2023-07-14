@@ -12,18 +12,10 @@ class AssetManagementController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-                $filterChain->action->id === 'create' || 
-                $filterChain->action->id === 'delete' || 
-                $filterChain->action->id === 'update' || 
-                $filterChain->action->id === 'admin' || 
-                $filterChain->action->id === 'ajaxHtmlResetPayment' || 
-                $filterChain->action->id === 'ajaxHtmlRemovePayment' || 
-                $filterChain->action->id === 'ajaxHtmlAddAccount' || 
-                $filterChain->action->id === 'ajaxJsonTotal' || 
-                $filterChain->action->id === 'ajaxJsonSaleReceipt' || 
-                $filterChain->action->id === 'memo' || 
-                $filterChain->action->id === 'view'
-            ) {
+            $filterChain->action->id === 'createPurchase' || 
+            $filterChain->action->id === 'delete' || 
+            $filterChain->action->id === 'update' 
+        ) {
             if (!(Yii::app()->user->checkAccess('assetManagement'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -82,7 +74,6 @@ class AssetManagementController extends Controller {
                 $jurnalInventory->transaction_type = 'PFA';
                 $jurnalInventory->save();
 
-//                $companyBank = CompanyBank::model()->findByAttributes(array('company_id' => 1, 'bank_id' => $model->bank_id));
                 $jurnalBanking = new JurnalUmum;
                 $jurnalBanking->kode_transaksi = $model->transaction_number;
                 $jurnalBanking->tanggal_transaksi = $model->transaction_date;

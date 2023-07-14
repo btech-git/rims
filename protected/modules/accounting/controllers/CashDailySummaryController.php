@@ -127,7 +127,6 @@ class CashDailySummaryController extends Controller {
 
         $existingDate = CashDailyApproval::model()->findByAttributes(array('transaction_date' => $transactionDate));
         if (isset($_GET['Approve'])) {
-            $branchId = $_GET['Approve'];
             $cashDailyApproval = new CashDailyApproval;
             $cashDailyApproval->transaction_date = $transactionDate;
             $cashDailyApproval->amount = $totalDaily;
