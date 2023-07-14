@@ -158,7 +158,13 @@ class Invoices extends CComponent {
         $transactionDate = $this->header->invoice_date;
         $branchId = $this->header->branch_id;
         $transactionSubject = $this->header->customer->name;
-        
+
+        if ($this->header->registrationTransaction->repair_type == 'GR') {
+            $coaReceivableId = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
+        } else {
+            $coaReceivableId = (empty($this->header->registrationTransaction->insurance_company_id)) ? $this->header->customer->coa_id : $this->header->registrationTransaction->insuranceCompany->coa_id;
+        }
+
         $journalReferences = array();
         $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array(
             'registration_transaction_id' => $this->header->registration_transaction_id
@@ -167,12 +173,11 @@ class Invoices extends CComponent {
             'registration_transaction_id' => $this->header->registration_transaction_id,
             'is_quick_service' => 0
         ));
-//
         
         $jurnalUmumReceivable = new JurnalUmum;
         $jurnalUmumReceivable->kode_transaksi = $transactionCode;
         $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
-        $jurnalUmumReceivable->coa_id = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
+        $jurnalUmumReceivable->coa_id = $coaReceivableId;
         $jurnalUmumReceivable->branch_id = $this->header->branch_id;
         $jurnalUmumReceivable->total = $this->header->registrationTransaction->subtotal_product + $this->header->registrationTransaction->subtotal_service + $this->header->registrationTransaction->ppn_price;
         $jurnalUmumReceivable->debet_kredit = 'D';

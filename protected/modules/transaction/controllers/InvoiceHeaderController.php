@@ -71,7 +71,7 @@ class InvoiceHeaderController extends Controller {
                 if ($model->registrationTransaction->repair_type == 'GR') {
                     $coaReceivableId = ($model->customer->customer_type == 'Company') ? $model->customer->coa_id : 1449;
                 } else {
-                    $coaReceivableId = (empty($model->insurance_company_id)) ? $model->customer->coa_id : $model->insuranceCompany->coa_id;
+                    $coaReceivableId = (empty($model->registrationTransaction->insurance_company_id)) ? $model->customer->coa_id : $model->registrationTransaction->insuranceCompany->coa_id;
                 }
 
                 $journalReferences = array();
