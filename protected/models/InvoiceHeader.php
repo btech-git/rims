@@ -333,4 +333,54 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
+    
+    public function searchByPendingJournal() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_number', $this->invoice_number, true);
+        $criteria->compare('t.reference_type', $this->reference_type);
+        $criteria->compare('t.sales_order_id', $this->sales_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('t.ppn', $this->ppn);
+        $criteria->compare('t.pph', $this->pph);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.service_price', $this->service_price, true);
+        $criteria->compare('t.product_price', $this->product_price, true);
+        $criteria->compare('t.quick_service_price', $this->quick_service_price, true);
+        $criteria->compare('t.total_product', $this->total_product);
+        $criteria->compare('t.total_service', $this->total_service);
+        $criteria->compare('t.total_quick_service', $this->total_quick_service);
+        $criteria->compare('t.pph_total', $this->pph_total, true);
+        $criteria->compare('t.ppn_total', $this->ppn_total, true);
+        $criteria->compare('t.total_price', $this->total_price, true);
+        $criteria->compare('t.in_words', $this->in_words, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
+
+        $criteria->addCondition("substring(t.invoice_number, 1, (length(t.invoice_number) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+
 }

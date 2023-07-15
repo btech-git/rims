@@ -7,7 +7,7 @@ Yii::app()->clientScript->registerScript('report', '
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 <div style="text-align: center; text-decoration: underline">
-    <h2><?php echo 'Pending Journal Registration Transaction'; ?></h2>
+    <h2><?php echo 'Pending Journal Invoice'; ?></h2>
     <br />
 </div>
 
@@ -18,10 +18,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div class="field">
                 <div class="row collapse">
                     <div class="small-6 columns">
-                        <span class="prefix">Registration # </span>
+                        <span class="prefix">Invoice # </span>
                     </div>
                     <div class="small-6 columns">
-                        <?php echo CHtml::activeTextField($model, 'transaction_number'); ?>
+                        <?php echo CHtml::activeTextField($model, 'invoice_number'); ?>
                     </div>
                 </div>
             </div>
@@ -95,14 +95,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     
     <br />
     
-    <?php echo ReportHelper::summaryText($registrationTransactionDataProvider); ?>
+    <?php echo ReportHelper::summaryText($saleInvoiceDataProvider); ?>
 </div>
 
 <div>
     <?php echo CHtml::beginForm('', 'post'); ?>
     <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'cash-transaction-grid',
-        'dataProvider' => $registrationTransactionDataProvider,
+        'id' => 'sale-invoice-grid',
+        'dataProvider' => $saleInvoiceDataProvider,
         'filter' => null,
         // 'summaryText'=>'',
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -117,11 +117,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 'selectableRows' => '100',
             ),
             array( 
-                'name' => 'transaction_number', 
-                'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/generalRepairRegistration/view", "id"=>$data->id), array("target" => "blank"))', 
+                'name' => 'invoice_number', 
+                'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->id), array("target" => "blank"))', 
                 'type' => 'raw'
             ),
-            'transaction_date',
+            'invoice_date',
             array(
                 'header' => 'Customer',
                 'name' => 'customer_id', 
@@ -132,12 +132,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 'name' => 'branch_id', 
                 'value' => '$data->branch->name'
             ),
-            'repair_type',
             'status', 
         )
     )); ?>
     
-    <?php echo CHtml::ajaxSubmitButton('Posting All', CController::createUrl('ajaxHtmlPostingJournalRegistration'), array(
+    <?php echo CHtml::ajaxSubmitButton('Posting All', CController::createUrl('ajaxHtmlPostingJournaInvoice'), array(
         'type' => 'POST',
         'data' => 'js:$("form").serialize()',
     )); ?>
