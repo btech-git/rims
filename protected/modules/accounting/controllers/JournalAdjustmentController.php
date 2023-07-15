@@ -168,11 +168,12 @@ class JournalAdjustmentController extends Controller {
                 $journalVoucher->status = $model->approval_type;
                 $journalVoucher->save(false);
                 
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $journalVoucher->transaction_number,
+                    'branch_id' => $journalVoucher->branch_id,
+                ));
+                
                 if ($model->approval_type == "Approved") {
-                    JurnalUmum::model()->deleteAllByAttributes(array(
-                        'kode_transaksi' => $journalVoucher->transaction_number,
-                        'branch_id' => $journalVoucher->branch_id,
-                    ));
 
                     foreach ($journalVoucher->journalAdjustmentDetails as $detail) {
                         $jurnalUmum = new JurnalUmum;
