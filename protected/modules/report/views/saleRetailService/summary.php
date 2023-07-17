@@ -239,6 +239,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
+                <div class="right"><?php echo ReportHelper::summaryText($saleRetailServiceSummary->dataProvider); ?></div>
+                <br />
+                <div class="right"><?php echo ReportHelper::sortText($saleRetailServiceSummary->dataProvider->sort, array('Name')); ?></div>
+                <div class="clear"></div>
+
+                <br />
+        
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'saleRetailServiceSummary' => $saleRetailServiceSummary,

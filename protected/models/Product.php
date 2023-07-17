@@ -475,7 +475,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(p.quantity), 0) AS sales_quantity 
             FROM " . RegistrationProduct::model()->tableName() . " p
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = p.registration_transaction_id
-            WHERE p.product_id = :product_id AND h.transaction_date BETWEEN :start_date AND :end_date
+            WHERE p.product_id = :product_id AND substr(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date
             GROUP BY p.product_id
         ";
 
@@ -541,7 +541,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(p.total_price), 0) AS total 
             FROM " . RegistrationProduct::model()->tableName() . " p 
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
-            WHERE p.product_id = :product_id AND r.transaction_date BETWEEN :start_date AND :end_date
+            WHERE p.product_id = :product_id AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date
             GROUP BY product_id
         ";
 
@@ -561,7 +561,7 @@ class Product extends CActiveRecord {
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-                WHERE r.transaction_date BETWEEN :start_date AND :end_date AND product_id = :product_id
+                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND product_id = :product_id
                 ORDER BY r.transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(

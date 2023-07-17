@@ -36,6 +36,6 @@ class SaleRetailProductSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addBetweenCondition('registrationTransaction.transaction_date', $startDate, $endDate);
+        $this->dataProvider->criteria->addBetweenCondition('substr(registrationTransaction.transaction_date, 1, 10)', $startDate, $endDate);
     }
 }

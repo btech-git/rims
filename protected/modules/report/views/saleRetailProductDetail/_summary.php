@@ -88,9 +88,8 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php $totalSale += $total; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td style="text-align: right" colspan="6">Total</td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
-                            <td>&nbsp;</td>
+                            <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
+                            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
                         </tr>
                     </table>
                 </td>

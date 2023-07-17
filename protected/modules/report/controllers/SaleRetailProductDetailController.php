@@ -171,10 +171,14 @@ class SaleRetailProductDetailController extends Controller {
         foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->code));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'serviceCategory.name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'serviceType.name')));
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'productMasterCategory.name')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'productSubCategory.name')));
 
             $counter++;
             

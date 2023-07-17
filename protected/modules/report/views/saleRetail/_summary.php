@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <table>
                         <?php $totalSale = 0.00; ?>
                         <?php $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-                            'condition' => 'customer_id = :customer_id AND transaction_date BETWEEN :start_date AND :end_date', 
+                            'condition' => 'customer_id = :customer_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date', 
                             'params' => array(
                                 ':customer_id' => $header->id,
                                 ':start_date' => $startDate,
