@@ -126,26 +126,25 @@ class JournalAdjustmentController extends Controller {
 
         $detailsDataProvider->criteria->with = array('coa');
 
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $journalVoucher->transaction_number,
-            'branch_id' => $journalVoucher->branch_id,
-        ));
-
-        foreach ($journalVoucher->journalAdjustmentDetails as $detail) {
-            $jurnalUmum = new JurnalUmum;
-            $jurnalUmum->kode_transaksi = $journalVoucher->transaction_number;
-            $jurnalUmum->tanggal_transaksi = $journalVoucher->date;
-            $jurnalUmum->coa_id = $detail->coa_id;
-            $jurnalUmum->branch_id = $journalVoucher->branch_id;
-            $jurnalUmum->total = ($detail->debit == 0.00) ? $detail->credit : $detail->debit;
-            $jurnalUmum->debet_kredit = ($detail->debit == 0.00) ? 'K' : 'D';
-            $jurnalUmum->tanggal_posting = date('Y-m-d');
-            $jurnalUmum->transaction_subject = $journalVoucher->note;
-            $jurnalUmum->is_coa_category = 0;
-            $jurnalUmum->transaction_type = 'JP';
-
-            $jurnalUmum->save(false);
-        }
+//        JurnalUmum::model()->deleteAllByAttributes(array(
+//            'kode_transaksi' => $journalVoucher->transaction_number,
+//        ));
+//
+//        foreach ($journalVoucher->journalAdjustmentDetails as $detail) {
+//            $jurnalUmum = new JurnalUmum;
+//            $jurnalUmum->kode_transaksi = $journalVoucher->transaction_number;
+//            $jurnalUmum->tanggal_transaksi = $journalVoucher->date;
+//            $jurnalUmum->coa_id = $detail->coa_id;
+//            $jurnalUmum->branch_id = $journalVoucher->branch_id;
+//            $jurnalUmum->total = ($detail->debit == 0.00) ? $detail->credit : $detail->debit;
+//            $jurnalUmum->debet_kredit = ($detail->debit == 0.00) ? 'K' : 'D';
+//            $jurnalUmum->tanggal_posting = date('Y-m-d');
+//            $jurnalUmum->transaction_subject = $journalVoucher->note;
+//            $jurnalUmum->is_coa_category = 0;
+//            $jurnalUmum->transaction_type = 'JP';
+//
+//            $jurnalUmum->save(false);
+//        }
         
         $this->render('view', array(
             'journalVoucher' => $journalVoucher,
@@ -162,18 +161,18 @@ class JournalAdjustmentController extends Controller {
         $model->date = date('Y-m-d');
         $model->time = date('H:i:s');
 
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $journalVoucher->transaction_number,
+        ));
+
         if (isset($_POST['JournalAdjustmentApproval'])) {
             $model->attributes = $_POST['JournalAdjustmentApproval'];
+            
             if ($model->save()) {
                 $journalVoucher->status = $model->approval_type;
-                $journalVoucher->save(false);
-                
-                JurnalUmum::model()->deleteAllByAttributes(array(
-                    'kode_transaksi' => $journalVoucher->transaction_number,
-                ));
+                $journalVoucher->update(array('status'));
                 
                 if ($model->approval_type === "Approved") {
-
                     foreach ($journalVoucher->journalAdjustmentDetails as $detail) {
                         $jurnalUmum = new JurnalUmum;
                         $jurnalUmum->kode_transaksi = $journalVoucher->transaction_number;
@@ -190,6 +189,7 @@ class JournalAdjustmentController extends Controller {
                         $jurnalUmum->save(false);
                     }
                 }
+                
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
