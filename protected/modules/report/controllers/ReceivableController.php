@@ -45,6 +45,10 @@ class ReceivableController extends Controller {
         $receivableSummary->setupSorting();
         $receivableSummary->setupFilter($customerId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId);
         }

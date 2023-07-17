@@ -9,10 +9,10 @@ class GeneralLedgerSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = true;
-        $this->dataProvider->criteria->with = array(
-            'jurnalUmums',
-        );
+//        $this->dataProvider->criteria->together = true;
+//        $this->dataProvider->criteria->with = array(
+//            'jurnalUmums',
+//        );
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -25,36 +25,36 @@ class GeneralLedgerSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->defaultOrder = 't.code ASC, jurnalUmums.tanggal_transaksi ASC';
+        $this->dataProvider->sort->defaultOrder = 't.code ASC';
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branchId) {
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
-        $this->dataProvider->criteria->addCondition("t.is_approved = 1");
-
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->compare('jurnalUmums.branch_id', $branchId);
-        }
+    public function setupFilter() {
+//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
+//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+//        $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
+//        $this->dataProvider->criteria->addCondition("t.is_approved = 1");
+//
+//        if (!empty($branchId)) {
+//            $this->dataProvider->criteria->compare('jurnalUmums.branch_id', $branchId);
+//        }
     }
 
-    public function getSaldo($startDate) {
-        foreach ($this->dataProvider->data as $data) {
-            $saldo = $data->getBeginningBalanceLedger($startDate);
-
-            foreach ($data->jurnalUmums as $detail) {
-                $debitAmount = ($detail->debet_kredit === 'D') ? $detail->total : 0 ;
-                $creditAmount = ($detail->debet_kredit === 'K') ? $detail->total : 0 ;
-                
-                if ($data->normal_balance = 'Debit') {
-                    $saldo += $debitAmount - $creditAmount;
-                } elseif ($data->normal_balance = 'KREDIT') {
-                    $saldo += $creditAmount - $debitAmount;
-                }
-                $detail->currentSaldo = $saldo;
-            }
-        }
-    }
+//    public function getSaldo($startDate) {
+//        foreach ($this->dataProvider->data as $data) {
+//            $saldo = $data->getBeginningBalanceLedger($startDate);
+//
+//            foreach ($data->jurnalUmums as $detail) {
+//                $debitAmount = ($detail->debet_kredit === 'D') ? $detail->total : 0 ;
+//                $creditAmount = ($detail->debet_kredit === 'K') ? $detail->total : 0 ;
+//                
+//                if ($data->normal_balance = 'Debit') {
+//                    $saldo += $debitAmount - $creditAmount;
+//                } elseif ($data->normal_balance = 'KREDIT') {
+//                    $saldo += $creditAmount - $debitAmount;
+//                }
+//                $detail->currentSaldo = $saldo;
+//            }
+//        }
+//    }
 }

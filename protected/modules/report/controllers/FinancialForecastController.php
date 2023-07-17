@@ -64,6 +64,10 @@ class FinancialForecastController extends Controller {
             $valid = $financialForecastApproval->save();
         }
         
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         $this->render('summary', array(
             'companyBanks' => $companyBanks,
             'companyId' => $companyId,

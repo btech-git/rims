@@ -58,6 +58,10 @@ class BalanceSheetMonthlyController extends Controller {
             $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] += $amount;
         }
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($balanceSheetInfo, $startYearMonth, $endYearMonth, $branchId);
         }

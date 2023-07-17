@@ -38,6 +38,10 @@ class SaleOrderController extends Controller {
         $saleOrderSummary->setupSorting();
         $saleOrderSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleOrderSummary, $branchId, $saleOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

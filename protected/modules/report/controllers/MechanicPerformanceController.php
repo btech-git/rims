@@ -44,6 +44,10 @@ class MechanicPerformanceController extends Controller {
         );
         $mechanicPerformanceSummary->setupFilter($filters);
         
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($mechanicPerformanceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

@@ -39,6 +39,10 @@ class PaymentOutController extends Controller {
         $paymentOutSummary->setupSorting();
         $paymentOutSummary->setupFilter($startDate, $endDate, $branchId, $paymentType);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($paymentOutSummary->dataProvider, $branchId, array('startDate' => $startDate, 'endDate' => $endDate));
         }

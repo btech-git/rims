@@ -39,6 +39,10 @@ class StockAnalysisController extends Controller {
         
         $dataProvider = $inventoryDetail->search();
         
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($dataProvider, array(
                 'startDate' => $startDate, 

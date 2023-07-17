@@ -37,6 +37,10 @@ class TransactionJournalSummaryController extends Controller {
 //        $accountProfitLoss = Coa::model()->findByPk(1476);
 //        $accountCategoryTypes = CoaCategory::model()->findAll(array('condition' => 't.id BETWEEN 6 AND 10'));
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
         }

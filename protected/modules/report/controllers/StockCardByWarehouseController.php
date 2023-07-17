@@ -52,6 +52,10 @@ class StockCardByWarehouseController extends Controller {
 
         $productDataProvider = $product->search();
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($stockCardSummary, $startDate, $endDate);
         }

@@ -43,6 +43,10 @@ class SaleRetailProductDetailController extends Controller {
         );
         $saleRetailProductSummary->setupFilter($filters);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleRetailProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

@@ -38,6 +38,10 @@ class MovementInController extends Controller {
         $movementInSummary->setupSorting();
         $movementInSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($movementInSummary, $branchId, $movementInSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

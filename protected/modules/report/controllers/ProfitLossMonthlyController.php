@@ -61,6 +61,10 @@ class ProfitLossMonthlyController extends Controller {
             $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] += $amount;
         }
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($profitLossInfo, $startYearMonth, $endYearMonth, $branchId);
         }

@@ -38,6 +38,10 @@ class SentRequestController extends Controller {
         $sentRequestSummary->setupSorting();
         $sentRequestSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($sentRequestSummary, $branchId, $startDate, $endDate);
         }

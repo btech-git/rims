@@ -40,6 +40,10 @@ class PurchaseOrderController extends Controller {
         $purchaseOrderSummary->setupSorting();
         $purchaseOrderSummary->setupFilter($startDate, $endDate);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($purchaseOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

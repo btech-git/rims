@@ -41,6 +41,10 @@ class PayableController extends Controller {
         $payableSummary->setupSorting();
         $payableSummary->setupFilter($supplierId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($payableSummary, $endDate, $branchId);
         }

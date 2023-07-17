@@ -43,6 +43,10 @@ class PaymentInController extends Controller {
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
         
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
         }

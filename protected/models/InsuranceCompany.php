@@ -198,7 +198,7 @@ class InsuranceCompany extends CActiveRecord {
         ));
     }
 
-    public function getReceivableReport($endDate, $insuranceCompanyId, $branchId) {
+    public function getReceivableReport($endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(

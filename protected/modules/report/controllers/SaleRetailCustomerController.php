@@ -43,6 +43,10 @@ class SaleRetailCustomerController extends Controller {
         );
         $saleRetailCustomerSummary->setupFilter($filters);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleRetailCustomerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
@@ -91,50 +95,52 @@ class SaleRetailCustomerController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan per Pelanggan');
 
-        $worksheet->mergeCells('A1:C1');
-        $worksheet->mergeCells('A2:C2');
-        $worksheet->mergeCells('A3:C3');
+        $worksheet->mergeCells('A1:D1');
+        $worksheet->mergeCells('A2:D2');
+        $worksheet->mergeCells('A3:D3');
 
-        $worksheet->getStyle('A1:C6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:C6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:D6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:D6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Penjualan per Pelanggan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:C5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:D5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'Customer');
-        $worksheet->setCellValue('B5', 'Type');
-        $worksheet->setCellValue('C5', 'Total Sales');
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Customer');
+        $worksheet->setCellValue('C5', 'Type');
+        $worksheet->setCellValue('D5', 'Total Sales');
 
-        $worksheet->getStyle('A6:C6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:D6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         $totalSale = 0.00;
         foreach ($dataProvider->data as $header) {
             $grandTotal = $header->getTotalSales($startDate, $endDate);
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'customer_type')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode($grandTotal));
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'customer_type')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode($grandTotal));
 
             $counter++;
             
             $totalSale += $grandTotal;
         }
 
-        $worksheet->getStyle("A{$counter}:C{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:D{$counter}")->getFont()->setBold(true);
 
-        $worksheet->getStyle("A{$counter}:C{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->setCellValue("A{$counter}", 'Total');
-        $worksheet->setCellValue("B{$counter}", 'Rp');
-        $worksheet->setCellValue("C{$counter}", $totalSale);
+        $worksheet->getStyle("A{$counter}:D{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->setCellValue("B{$counter}", 'Total');
+        $worksheet->setCellValue("C{$counter}", 'Rp');
+        $worksheet->setCellValue("D{$counter}", $totalSale);
 
         $counter++;
 
-        for ($col = 'A'; $col !== 'D'; $col++) {
+        for ($col = 'A'; $col !== 'F'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

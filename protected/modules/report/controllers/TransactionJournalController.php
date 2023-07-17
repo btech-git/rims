@@ -43,6 +43,10 @@ class TransactionJournalController extends Controller {
         $accountDataProvider = $account->search();
         $accountDataProvider->criteria->compare('t.is_approved', 1);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
           $this->saveToExcel($jurnalUmumSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

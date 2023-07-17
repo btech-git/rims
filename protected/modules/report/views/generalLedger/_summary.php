@@ -25,10 +25,6 @@ Yii::app()->clientScript->registerCss('_report', '
 <table class="report">
     <tr id="header1">
         <th class="width1-1" style ="text-align: left;">Akun</th>
-<!--        <th class="width1-2" style ="text-align: right;">Total Debit</th>
-        <th class="width1-3" style ="text-align: right;">Total Kredit</th>
-        <th class="width1-4" style ="text-align: right;">Saldo Akhir</th>-->
-
     </tr>
     <tr id="header2">
         <td colspan="4">
@@ -46,74 +42,75 @@ Yii::app()->clientScript->registerCss('_report', '
         </td>
     </tr>
     <?php foreach ($generalLedgerSummary->dataProvider->data as $header): ?>
-        <tr class="items1">
-            <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-<!--            <td style ="text-align: right;">
-                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndDebitLedger($header->id, $startDate, $endDate))); ?>
-            </td>
-            <td style ="text-align: right;">
-                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndCreditLedger($header->id, $startDate, $endDate))); ?>
-            </td>
-            <td style ="text-align: right;">
-                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getEndBalanceLedger($header->id, $endDate))); ?>
-            </td>-->
-        </tr>
-        
-        <tr class="items2">
-            <td colspan="4">
-                <table>
-                    <tr>
-                        <td colspan="6" style="text-align: right; font-weight: bold">Saldo awal</td>
-                        <td class="width2-7" style="text-align: right; font-weight: bold">
-                            <?php //if ($header->coa_category_id > 5 && $header->coa_category_id < 11): ?>
-                                <?php //echo '0'; ?>
-                            <?php //else: ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getBeginningBalanceLedger($startDate))); ?>
-                            <?php //endif; ?>
-                        </td>
-                    </tr>
-                    <?php $totalDebit = 0; $totalCredit = 0; ?>
-                    <?php foreach ($header->jurnalUmums as $detail): ?>
+        <?php $beginningBalance = $header->getBeginningBalanceLedger($startDate); ?>
+        <?php /*$nonZeroValueExists = false; ?>
+        <?php if ((int)$beginningBalance > 0): ?>
+            <?php $nonZeroValueExists = true; ?>
+            <?php break; ?>
+        <?php endif; ?>
+        <?php if ($nonZeroValueExists):*/ ?>
+            <tr class="items1">
+                <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+            </tr>
+
+            <tr class="items2">
+                <td colspan="4">
+                    <table>
                         <tr>
-                            <td class="width2-1">
-                                <?php echo CHtml::link($detail->kode_transaksi, Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $detail->kode_transaksi)), array('target' => '_blank')); ?>
-                            </td>
-                            <td class="width2-2">
-                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->tanggal_transaksi))); ?>
-                            </td>
-                            <td class="width2-3">
-                                <?php echo CHtml::encode(CHtml::value($detail, 'transaction_subject')); ?>
-                            </td>
-                            <td class="width2-4">
-                                <?php echo CHtml::encode(CHtml::value($detail, 'transaction_type')); ?>
-                            </td>
-                            <td class="width2-5" style="text-align: right">
-                                <?php $debitAmount = $detail->debet_kredit == 'D' ? $detail->total : 0 ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?>
-                            </td>
-                            <td class="width2-6" style="text-align: right">
-                                <?php $creditAmount = $detail->debet_kredit == 'K' ? $detail->total : 0 ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
-                            </td>
-                            <td class="width2-7" style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detail->currentSaldo)); ?>
+                            <td colspan="6" style="text-align: right; font-weight: bold">Saldo awal</td>
+                            <td class="width2-7" style="text-align: right; font-weight: bold">
+                                <?php //if ($header->coa_category_id > 5 && $header->coa_category_id < 11): ?>
+                                    <?php //echo '0'; ?>
+                                <?php //else: ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $beginningBalance)); ?>
+                                <?php //endif; ?>
                             </td>
                         </tr>
-                        <?php $totalDebit += $debitAmount; ?>
-                        <?php $totalCredit += $creditAmount; ?>
-                    <?php endforeach; ?>
-                    <tr>
-                        <td colspan="4" style="text-align: right">Total</td>
-                        <td class="width2-6" style="text-align: right; border-top: 2px solid">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
-                        </td>
-                        <td class="width2-7" style="text-align: right; border-top: 2px solid">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
-                        </td>
-                        <td>&nbsp;</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+                        <?php $generalLedgerData = $header->getGeneralLedgerReport($startDate, $endDate, $branchId); ?>
+                        <?php $totalDebit = 0; $totalCredit = 0; ?>
+                        <?php foreach ($generalLedgerData as $generalLedgerRow): ?>
+                            <?php $debitAmount = $generalLedgerRow['debet_kredit'] == 'D' ? $generalLedgerRow['total'] : 0 ?>
+                            <?php $creditAmount = $generalLedgerRow['debet_kredit'] == 'K' ? $generalLedgerRow['total'] : 0 ?>
+                            <?php $accountBalance = $beginningBalance + $debitAmount - $creditAmount; ?>
+                            <tr>
+                                <td class="width2-1">
+                                    <?php echo CHtml::link($generalLedgerRow['kode_transaksi'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $generalLedgerRow['kode_transaksi'])), array('target' => '_blank')); ?>
+                                </td>
+                                <td class="width2-2">
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($generalLedgerRow['tanggal_transaksi']))); ?>
+                                </td>
+                                <td class="width2-3">
+                                    <?php echo CHtml::encode($generalLedgerRow['transaction_subject']); ?>
+                                </td>
+                                <td class="width2-4">
+                                    <?php echo CHtml::encode($generalLedgerRow['transaction_type']); ?>
+                                </td>
+                                <td class="width2-5" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?>
+                                </td>
+                                <td class="width2-6" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
+                                </td>
+                                <td class="width2-7" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?>
+                                </td>
+                            </tr>
+                            <?php $totalDebit += $debitAmount; ?>
+                            <?php $totalCredit += $creditAmount; ?>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td colspan="4" style="text-align: right">Total</td>
+                            <td class="width2-6" style="text-align: right; border-top: 2px solid">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                            </td>
+                            <td class="width2-7" style="text-align: right; border-top: 2px solid">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+                            </td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        <?php //endif; ?>
     <?php endforeach; ?>
 </table>

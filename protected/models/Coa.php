@@ -938,21 +938,26 @@ class Coa extends CActiveRecord {
         return $this->date_approval . " " . $this->time_approval;
     }
     
-    public function getGeneralLedgerReport($coaId, $pageNumber) {
-        $coaConditionSql = '';
+    public function getGeneralLedgerReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
         
-        $params = array();
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
         
-        if (!empty($coaId)) {
-            $coaConditionSql = ' WHERE id = :coa_id AND is_approved = 1';
-            $params[':coa_id'] = $coaId;
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
         }
         
-        $pageSize = 50;
-        $pageOffset = ($pageNumber - 1) * $pageSize;
-        
-        $sql = "SELECT * FROM " . Coa::model()->tableName() . "{$coaConditionSql} LIMIT {$pageSize} OFFSET {$pageOffset}";
-        
+        $sql = "
+            SELECT kode_transaksi, tanggal_transaksi, transaction_subject, transaction_type, total, debet_kredit
+            FROM " . JurnalUmum::model()->tableName() . " 
+            WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date
+        " . $branchConditionSql;
+
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;

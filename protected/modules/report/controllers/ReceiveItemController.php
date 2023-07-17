@@ -39,6 +39,10 @@ class ReceiveItemController extends Controller {
         $receiveItemSummary->setupSorting();
         $receiveItemSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($receiveItemSummary, $branchId, $receiveItemSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

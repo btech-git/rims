@@ -32,6 +32,10 @@ class InventoryValueController extends Controller {
             $productSubCategory->unsetAttributes();
         }
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($productSubCategoryDataProvider, array());
         }

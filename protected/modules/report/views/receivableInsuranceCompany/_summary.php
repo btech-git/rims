@@ -49,7 +49,7 @@
         <tr class="items2">
             <td colspan="2">
                 <table>
-                    <?php $receivableData = $header->getReceivableReport($endDate, $insuranceCompanyId, $branchId); ?>
+                    <?php $receivableData = $header->getReceivableReport($endDate, $branchId); ?>
                     <?php $totalRevenue = 0.00; ?>
                     <?php $totalPayment = 0.00; ?>
                     <?php $totalReceivable = 0.00; ?>

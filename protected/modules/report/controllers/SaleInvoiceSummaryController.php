@@ -50,6 +50,10 @@ class SaleInvoiceSummaryController extends Controller {
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveToExcel'])) {
             $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate);
         }

@@ -37,6 +37,10 @@ class PayableLedgerController extends Controller {
         $payableLedgerSummary->setupSorting();
         $payableLedgerSummary->setupFilter();
         
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($payableLedgerSummary->dataProvider, array(
                 'startDate' => $startDate, 

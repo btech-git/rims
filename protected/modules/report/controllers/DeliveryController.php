@@ -38,6 +38,10 @@ class DeliveryController extends Controller {
         $deliveryOrderSummary->setupSorting();
         $deliveryOrderSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($deliveryOrderSummary, $branchId, $deliveryOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

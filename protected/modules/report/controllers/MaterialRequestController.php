@@ -38,6 +38,10 @@ class MaterialRequestController extends Controller {
         $materialRequestSummary->setupSorting();
         $materialRequestSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($materialRequestSummary, $branchId, $materialRequestSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

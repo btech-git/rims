@@ -40,6 +40,10 @@ class PurchasePerProductController extends Controller {
         $purchasePerProductSummary->setupSorting();
         $purchasePerProductSummary->setupFilter($startDate, $endDate);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($purchasePerProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

@@ -38,6 +38,10 @@ class TransferRequestController extends Controller {
         $transferRequestSummary->setupSorting();
         $transferRequestSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($transferRequestSummary, $branchId, $transferRequestSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

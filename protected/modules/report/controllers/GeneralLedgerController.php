@@ -36,8 +36,8 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupLoading();
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
-        $generalLedgerSummary->setupFilter($startDate, $endDate, $branchId);
-        $generalLedgerSummary->getSaldo($startDate);
+        $generalLedgerSummary->setupFilter();
+//        $generalLedgerSummary->getSaldo($startDate);
 
         $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $coaDataProvider = $coa->search();
@@ -54,6 +54,10 @@ class GeneralLedgerController extends Controller {
 //            'criteria' => $coaCriteria,
 //        ));
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

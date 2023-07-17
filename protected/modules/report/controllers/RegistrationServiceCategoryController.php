@@ -34,6 +34,10 @@ class RegistrationServiceCategoryController extends Controller {
             $registrationServiceInfo[$registrationServiceItem['service_category_id']]['totals'][$registrationServiceItem['transaction_date']] = $registrationServiceItem['total_quantity_service_category'];
         }
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($registrationServiceInfo, $yearMonth);
         }

@@ -40,6 +40,10 @@ class StockCardController extends Controller {
         );
         $stockCardSummary->setupFilter($filters);
         
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($stockCardSummary, $startDate, $endDate);
         }

@@ -38,6 +38,10 @@ class MovementOutController extends Controller {
         $movementOutSummary->setupSorting();
         $movementOutSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($movementOutSummary, $branchId, $movementOutSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

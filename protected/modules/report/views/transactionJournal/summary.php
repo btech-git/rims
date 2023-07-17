@@ -42,8 +42,8 @@ Yii::app()->clientScript->registerScript('report', '
                                 <div class="small-8 columns">
                                     <?php echo CHtml::activeDropDownlist($jurnalUmum, 'transaction_type', array(
                                         'PO' => 'PURCHASE',
-                                        'RG GR' => 'GENERAL REPAIR',
-                                        'RG BR' => 'BODY REPAIR',
+                                        'Invoice GR' => 'GENERAL REPAIR',
+                                        'Invoice BR' => 'BODY REPAIR',
                                         'DO' => 'DELIVERY',
                                         'TR' => 'TRANSFER REQUEST',
                                         'RCI' => 'RECEIVE',
@@ -154,7 +154,7 @@ Yii::app()->clientScript->registerScript('report', '
                 
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                    <?php echo CHtml::resetButton('Hapus');  ?>
+                    <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
                     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
                 </div>
 

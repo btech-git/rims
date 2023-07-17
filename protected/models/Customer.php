@@ -315,7 +315,7 @@ class Customer extends CActiveRecord {
         $sql = "
             SELECT COALESCE(SUM(grand_total), 0) AS total 
             FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE customer_id = :customer_id AND transaction_date BETWEEN :start_date AND :end_date
+            WHERE customer_id = :customer_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date
             GROUP BY customer_id
         ";
 

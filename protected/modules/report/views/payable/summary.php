@@ -108,7 +108,7 @@ Yii::app()->clientScript->registerScript('report', '
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                        <?php echo CHtml::resetButton('Hapus');  ?>
+                        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
                         <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 

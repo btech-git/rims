@@ -38,6 +38,10 @@ class ConsignmentOutController extends Controller {
         $consignmentOutSummary->setupSorting();
         $consignmentOutSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($consignmentOutSummary, $branchId, $consignmentOutSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

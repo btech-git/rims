@@ -183,7 +183,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                        <?php echo CHtml::resetButton('Hapus');  ?>
+                        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
                         <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
@@ -194,6 +194,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
+                <div class="right"><?php echo ReportHelper::summaryText($saleRetailCustomerSummary->dataProvider); ?></div>
+                <br />
+                <div class="right"><?php echo ReportHelper::sortText($saleRetailCustomerSummary->dataProvider->sort, array('Name')); ?></div>
+                <div class="clear"></div>
+
+                <br />
+        
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'customer' => $customer,

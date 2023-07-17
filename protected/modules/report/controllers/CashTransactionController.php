@@ -37,6 +37,10 @@ class CashTransactionController extends Controller {
         $cashTransactionSummary->setupSorting();
         $cashTransactionSummary->setupFilter($startDate, $endDate, $branchId);
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($cashTransactionSummary, $branchId, $cashTransactionSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }

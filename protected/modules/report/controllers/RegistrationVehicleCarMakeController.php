@@ -35,6 +35,10 @@ class RegistrationVehicleCarMakeController extends Controller {
             $registrationVehicleInfo[$registrationVehicleItem['car_make_id']]['car_models'][$registrationVehicleItem['car_model_id']]['totals'][$registrationVehicleItem['transaction_date']] = $registrationVehicleItem['total_quantity_vehicle'];
         }
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
 //        if (isset($_GET['SaveExcel'])) {
 //            $this->saveToExcel($registrationServiceInfo, $yearMonth);
 //        }
