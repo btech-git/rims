@@ -172,7 +172,7 @@ class JournalAdjustmentController extends Controller {
                     'kode_transaksi' => $journalVoucher->transaction_number,
                 ));
                 
-                if ($model->approval_type == "Approved") {
+                if ($model->approval_type === "Approved") {
 
                     foreach ($journalVoucher->journalAdjustmentDetails as $detail) {
                         $jurnalUmum = new JurnalUmum;
