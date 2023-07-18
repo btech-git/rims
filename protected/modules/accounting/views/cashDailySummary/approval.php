@@ -125,44 +125,45 @@
     </div>
     
     <hr />
+    
     <?php if (empty($cashDailyApproval)): ?>
-    <div class="field">
-        <div class="row collapse">
-            <div class="small-4 columns">
-                <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
-            </div>
-            <div class="small-8 columns">
-                <?php $this->widget('CMultiFileUpload', array(
-                    'model' => $cashDaily,
-                    'attribute' => 'images',
-                    'accept' => 'jpg|jpeg|png|gif',
-                    'denied' => 'Only jpg, jpeg, png and gif are allowed',
-                    'max' => 10,
-                    'remove' => '[x]',
-                    'duplicate' => 'Already Selected',
-                    'options' => array(
-                        'afterFileSelect' => 'function(e ,v ,m){
-                            var fileSize = e.files[0].size;
-                            if (fileSize > 2*1024*1024){
-                                alert("Exceeds file upload limit 2MB");
-                                $(".MultiFile-remove").click();
-                            }                      
-                            return true;
-                        }',
-                    ),
-                )); ?>
+        <div class="field">
+            <div class="row collapse">
+                <div class="small-4 columns">
+                    <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
+                </div>
+                <div class="small-8 columns">
+                    <?php $this->widget('CMultiFileUpload', array(
+                        'model' => $cashDaily,
+                        'attribute' => 'images',
+                        'accept' => 'jpg|jpeg|png|gif',
+                        'denied' => 'Only jpg, jpeg, png and gif are allowed',
+                        'max' => 10,
+                        'remove' => '[x]',
+                        'duplicate' => 'Already Selected',
+                        'options' => array(
+                            'afterFileSelect' => 'function(e ,v ,m){
+                                var fileSize = e.files[0].size;
+                                if (fileSize > 2*1024*1024){
+                                    alert("Exceeds file upload limit 2MB");
+                                    $(".MultiFile-remove").click();
+                                }                      
+                                return true;
+                            }',
+                        ),
+                    )); ?>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="row buttons">
-        <?php echo CHtml::submitButton('Approve', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
-    </div>
+
+        <div class="row buttons">
+            <?php echo CHtml::submitButton('Approve', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
+        </div>
     <?php else: ?>
-    <?php $cashDailyImages = CashDailyImages::model()->findAllByAttributes(array('cash_daily_summary_id' => $cashDailyApproval->id)); ?>
-    <?php foreach($cashDailyImages as $cashDailyImage): ?>
-    <div><?php echo CHtml::image(Yii::app()->baseUrl . '/images/uploads/cashDaily/' . $cashDailyImage->id . '-realization.' . $cashDailyImage->extension, '', array( 'style' => 'width: 300px' )); ?></div>
-    <?php endforeach; ?>
+        <?php $cashDailyImages = CashDailyImages::model()->findAllByAttributes(array('cash_daily_summary_id' => $cashDailyApproval->id)); ?>
+        <?php foreach($cashDailyImages as $cashDailyImage): ?>
+        <div><?php echo CHtml::image(Yii::app()->baseUrl . '/images/uploads/cashDaily/' . $cashDailyImage->id . '-realization.' . $cashDailyImage->extension, '', array( 'style' => 'width: 300px' )); ?></div>
+        <?php endforeach; ?>
     <?php endif; ?>
 
     <?php echo CHtml::endForm(); ?>

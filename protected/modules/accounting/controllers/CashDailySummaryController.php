@@ -244,8 +244,9 @@ class CashDailySummaryController extends Controller {
                     $file->saveAs($originalPath);
                 }
 
-                echo CHtml::script('window.opener.location.reload(false); window.close();');
-                Yii::app()->end();
+//                echo CHtml::script('window.opener.location.reload(false); window.close();');
+//                Yii::app()->end();
+                $this->redirect(array('summary'));
             } 
         }
 
@@ -261,6 +262,7 @@ class CashDailySummaryController extends Controller {
         $cashDaily->transaction_date = $transactionDate;
         $cashDaily->branch_id = $branchId;
         $cashDaily->user_id = Yii::app()->user->id;
+        $cashDaily->input_datetime = date('Y-m-d H:i:s');
 
         $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
                 FROM " . PaymentIn::model()->tableName() . " p
@@ -294,12 +296,16 @@ class CashDailySummaryController extends Controller {
                     $file->saveAs($originalPath);
                 }
 
-                echo CHtml::script('window.opener.location.reload(false); window.close();');
-                Yii::app()->end();
+//                echo CHtml::script('window.opener.location.reload(false); window.close();');
+//                Yii::app()->end();
+                $this->redirect(array('summary'));
             } 
         }
         
-        $cashDailyApproval = CashDailySummary::model()->findByAttributes(array('transaction_date' => $transactionDate, 'branch_id' => $branchId));
+        $cashDailyApproval = CashDailySummary::model()->findByAttributes(array(
+            'transaction_date' => $transactionDate, 
+            'branch_id' => $branchId
+        ));
 
         $this->render('approval', array(
             'cashDaily' => $cashDaily,

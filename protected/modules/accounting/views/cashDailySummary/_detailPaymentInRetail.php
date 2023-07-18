@@ -45,10 +45,18 @@
                     )); ?>
                 </td>
                 <td>
-                    <?php echo CHtml::link('Approve', Yii::app()->createUrl("accounting/cashDailySummary/approval", array(
-                        "branchId" => $paymentInRetailBranchId,
-                        "transactionDate" => $transactionDate,
-                    )), array('target' => '_blank', 'class'=>'button warning')); ?>
+                    <?php $cashDailyApproval = CashDailySummary::model()->findByAttributes(array(
+                        'transaction_date' => $transactionDate, 
+                        'branch_id' => $paymentInRetailBranchId,
+                    )); ?>
+                    <?php if (empty($cashDailyApproval)): ?>
+                        <?php echo CHtml::link('Approve', Yii::app()->createUrl("accounting/cashDailySummary/approval", array(
+                            "branchId" => $paymentInRetailBranchId,
+                            "transactionDate" => $transactionDate,
+                        )), array('target' => '_blank', 'class'=>'button warning')); ?>
+                    <?php else: ?> 
+                        <?php echo 'Approved'; ?>
+                    <?php endif; ?>
                 </td>
             </tr>
             <?php $dailyTotal += $totalPerBranch; ?>
