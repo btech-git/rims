@@ -218,19 +218,19 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('invoice_number', $this->invoice_number, true);
-        $criteria->compare('reference_type', $this->reference_type);
-        $criteria->compare('sales_order_id', $this->sales_order_id);
-        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
-        $criteria->compare('customer_id', $this->customer_id);
-        $criteria->compare('vehicle_id', $this->vehicle_id);
-        $criteria->compare('coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.invoice_number', $this->invoice_number, true);
+        $criteria->compare('t.reference_type', $this->reference_type);
+        $criteria->compare('t.sales_order_id', $this->sales_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
         $criteria->compare('payment_date_estimate', $this->payment_date_estimate);
         $criteria->compare('ppn', $this->ppn);
         $criteria->compare('pph', $this->pph);
-        $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('supervisor_id', $this->supervisor_id);
         $criteria->compare('t.status', $this->status, FALSE);
         $criteria->compare('service_price', $this->service_price, true);

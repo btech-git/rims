@@ -388,8 +388,9 @@ class InvoiceHeaderController extends Controller {
     public function actionAdmin() {
         $model = new InvoiceHeader('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['InvoiceHeader']))
+        if (isset($_GET['InvoiceHeader'])) {
             $model->attributes = $_GET['InvoiceHeader'];
+        }
         
         $dataProvider = $model->searchByAdmin();
         $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
