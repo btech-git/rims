@@ -295,6 +295,9 @@ class TransactionJournalController extends Controller {
         } else if ($codeNumberConstant === 'WOE') {
             $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/workOrderExpense/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'INV') {
+            $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
+            $this->redirect(array('/transaction/invoiceHeader/view', 'id' => $model->id));
         }
     }
 }

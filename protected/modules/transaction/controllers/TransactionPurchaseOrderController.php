@@ -332,7 +332,7 @@ class TransactionPurchaseOrderController extends Controller {
 //        }
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
-//        $mPDF1->SetTitle('PO ');
+        $mPDF1->SetTitle('PO Raperind');
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
             'po' => $po, 
             'supplier' => $supplier, 
