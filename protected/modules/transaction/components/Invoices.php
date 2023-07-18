@@ -234,7 +234,7 @@ class Invoices extends CComponent {
                 $jurnalUmumPendapatanJasa = $rService->service->serviceCategory->coa_id;
                 $journalReferences[$jurnalUmumPendapatanJasa]['debet_kredit'] = 'K';
                 $journalReferences[$jurnalUmumPendapatanJasa]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumPendapatanJasa]['values'][] = $rService->total_price;
+                $journalReferences[$jurnalUmumPendapatanJasa]['values'][] = $rService->unit_price;
 
                 if ($rService->discount_price > 0.00) {
                     $jurnalUmumDiscountPendapatanJasa = $rService->service->serviceCategory->coa_diskon_service;

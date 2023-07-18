@@ -158,7 +158,7 @@ class InvoiceHeaderController extends Controller {
                             $jurnalUmumDiscountPendapatanJasa = $detail->service->serviceCategory->coa_diskon_service;
                             $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
                             $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
-                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $registrationService->discount_price;
+                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $registrationService->discountAmount;
                         }
                     } else {
                         continue;
