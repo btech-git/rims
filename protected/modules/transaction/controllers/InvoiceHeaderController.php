@@ -61,7 +61,7 @@ class InvoiceHeaderController extends Controller {
                     'kode_transaksi' => $model->invoice_number,
                 ));
 
-                $transactionType = $model->registrationTransaction->repair_type == 'GR' ? 'Invoice GR' : 'Invoice BR';
+                $transactionType = 'Invoice'; //$model->registrationTransaction->repair_type == 'GR' ? 'Invoice GR' : 'Invoice BR';
                 $postingDate = date('Y-m-d');
                 $transactionCode = $model->invoice_number;
                 $transactionDate = $model->invoice_date;

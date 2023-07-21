@@ -41,21 +41,21 @@ Yii::app()->clientScript->registerScript('report', '
                                 
                                 <div class="small-8 columns">
                                     <?php echo CHtml::activeDropDownlist($jurnalUmum, 'transaction_type', array(
-                                        'PO' => 'PURCHASE',
-                                        'Invoice GR' => 'GENERAL REPAIR',
-                                        'Invoice BR' => 'BODY REPAIR',
-                                        'DO' => 'DELIVERY',
-                                        'TR' => 'TRANSFER REQUEST',
-                                        'RCI' => 'RECEIVE',
-                                        'CSI' => 'CONSIGNMENT IN',
-                                        'CSO' => 'CONSIGNMENT OUT',
-                                        'MI' => 'MOVEMENT IN',
-                                        'MO' => 'MOVEMENT OUT',
-                                        'Pin' => 'PAYMENT IN',
-                                        'Pout' => 'PAYMENT OUT',
-                                        'SO' => 'SALES',
-                                        'CASH' => 'CASH TRANSACTION',
-                                        'JP' => 'JURNAL UMUM',
+                                        'Invoice' => 'Sales',
+                                        'CASH' => 'Cash',
+                                        'Pout' => 'Purchase Payment',
+                                        'Pin' => 'Sales Receipt',
+                                        'MI' => 'Movement In',
+                                        'MO' => 'Movement Out',
+                                        'MR' => 'Material',
+//                                        'Invoice GR' => 'GENERAL REPAIR',
+//                                        'Invoice BR' => 'BODY REPAIR',
+//                                        'DO' => 'DELIVERY',
+//                                        'TR' => 'TRANSFER REQUEST',
+//                                        'RCI' => 'RECEIVE',
+//                                        'CSI' => 'CONSIGNMENT IN',
+//                                        'CSO' => 'CONSIGNMENT OUT',
+//                                        'JP' => 'JURNAL UMUM',
                                     ), array('empty' => '-- All Transaction --')); ?>
                                 </div>
                             </div>

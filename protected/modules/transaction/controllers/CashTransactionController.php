@@ -78,7 +78,7 @@ class CashTransactionController extends Controller {
                 $jurnalUmumHeader->branch_id = $cashTransaction->branch_id;
                 $jurnalUmumHeader->transaction_subject = $ctDetail->notes;
                 $jurnalUmumHeader->is_coa_category = 0;
-                $jurnalUmumHeader->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
+                $jurnalUmumHeader->transaction_type = 'CASH'; //$cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
                 $jurnalUmumHeader->save();
 
                 $jurnalUmumDetail = new JurnalUmum;
@@ -91,7 +91,7 @@ class CashTransactionController extends Controller {
                 $jurnalUmumDetail->branch_id = $cashTransaction->branch_id;
                 $jurnalUmumDetail->transaction_subject = $ctDetail->notes;
                 $jurnalUmumDetail->is_coa_category = 0;
-                $jurnalUmumDetail->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
+                $jurnalUmumDetail->transaction_type = 'CASH'; //$cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
                 $jurnalUmumDetail->save(false);
             }
         }
@@ -527,7 +527,7 @@ class CashTransactionController extends Controller {
                         $jurnalUmumHeader->branch_id = $cashTransaction->branch_id;
                         $jurnalUmumHeader->transaction_subject = $ctDetail->notes;
                         $jurnalUmumHeader->is_coa_category = 0;
-                        $jurnalUmumHeader->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
+                        $jurnalUmumHeader->transaction_type = 'CASH'; //$cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
                         $jurnalUmumHeader->save();
 
                         $jurnalUmumDetail = new JurnalUmum;
@@ -540,7 +540,7 @@ class CashTransactionController extends Controller {
                         $jurnalUmumDetail->branch_id = $cashTransaction->branch_id;
                         $jurnalUmumDetail->transaction_subject = $ctDetail->notes;
                         $jurnalUmumDetail->is_coa_category = 0;
-                        $jurnalUmumDetail->transaction_type = $cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
+                        $jurnalUmumDetail->transaction_type = 'CASH'; //$cashTransaction->transaction_type == "In" ? 'CASH IN' : 'CASH OUT';
                         $jurnalUmumDetail->save();
                     }
                 }

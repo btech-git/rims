@@ -152,7 +152,7 @@ class Invoices extends CComponent {
             'kode_transaksi' => $this->header->invoice_number,
         ));
 
-        $transactionType = $this->header->registrationTransaction->repair_type == 'GR' ? 'Invoice GR' : 'Invoice BR';
+        $transactionType = 'Invoice'; //$this->header->registrationTransaction->repair_type == 'GR' ? 'Invoice GR' : 'Invoice BR';
         $postingDate = date('Y-m-d');
         $transactionCode = $this->header->invoice_number;
         $transactionDate = $this->header->invoice_date;
