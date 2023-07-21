@@ -95,7 +95,7 @@
                                     array(
                                         'label' => 'Employee', 
                                         'url' => array('/master/employee/admin'), 
-                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || Yii::app()->user->checkAccess('masterEmployeeApproval')
                                     ),
                                     array(
@@ -126,7 +126,7 @@
                                     array(
                                         'label' => 'Unit', 
                                         'url' => array('/master/unit/admin'), 
-                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitApproval')
                                     ),
                                     array(
@@ -241,7 +241,7 @@
                                     array(
                                         'label' => 'Product', 
                                         'url' => array('/master/product/admin'), 
-                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterProductCreate') || Yii::app()->user->checkAccess('masterProductEdit') || Yii::app()->user->checkAccess('masterProductApproval')
                                     ),
                                     array(
@@ -277,7 +277,7 @@
                                     array(
                                         'label' => 'Equipments', 
                                         'url' => array('/master/equipments/admin'), 
-                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterEquipmentCreate') || Yii::app()->user->checkAccess('masterEquipmentEdit') || Yii::app()->user->checkAccess('masterEquipmentApproval')
                                     ),
                                     array(
@@ -346,7 +346,7 @@
                                 array(
                                     'label' => 'Service', 
                                     'url' => array('/master/service/admin'), 
-                                    'linkOptions' => array('class' => 'titleNav'), 
+//                                    'linkOptions' => array('class' => 'titleNav'), 
                                     'visible' => Yii::app()->user->checkAccess('masterServiceCreate') || Yii::app()->user->checkAccess('masterServiceEdit') || Yii::app()->user->checkAccess('masterServiceApproval')
                                 ),
                                 array(
@@ -392,7 +392,7 @@
                                 array(
                                     'label' => 'Inspection', 
                                     'url' => array('/master/inspection/admin'), 
-                                    'linkOptions' => array('class' => 'titleNav'), 
+//                                    'linkOptions' => array('class' => 'titleNav'), 
                                     'visible' => Yii::app()->user->checkAccess('masterInspectionCreate') || Yii::app()->user->checkAccess('masterInspectionEdit') || Yii::app()->user->checkAccess('masterInspectionApproval')
                                 ),
                                 array(
@@ -449,13 +449,13 @@
                                     array(
                                         'label' => 'Customer Vehicle', 
                                         'url' => array('/master/vehicle/admin'), 
-                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterVehicleCreate') || Yii::app()->user->checkAccess('masterVehicleEdit') || Yii::app()->user->checkAccess('masterVehicleApproval')
                                     ),
                                     array(
                                         'label' => 'Customer', 
                                         'url' => array('/master/customer/admin'), 
-                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterCustomerCreate') || Yii::app()->user->checkAccess('masterCustomerEdit') || Yii::app()->user->checkAccess('masterCustomerApproval')
                                     ),
                                     array(
@@ -506,7 +506,7 @@
                                     array(
                                         'label' => 'Warehouse', 
                                         'url' => array('/master/warehouse/admin'), 
-                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterWarehouseCreate') || Yii::app()->user->checkAccess('masterWarehouseEdit') || Yii::app()->user->checkAccess('masterWarehouseApproval')
                                     ),
                                 ),

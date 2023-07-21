@@ -16,29 +16,51 @@ $this->menu=array(
 );
 ?>
 
-<!--<h1>View EmployeeDayoff #<?php echo $model->id; ?></h1>-->
+<h1>View Pengajuan Cuti Karyawan #<?php echo $model->id; ?></h1>
 <div id="maincontent">
-	<div class="clearfix page-action">
-		<?php $ccontroller = Yii::app()->controller->id; ?>
-		<?php $ccaction = Yii::app()->controller->action->id; ?>
-		<a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl.'/master/employeeDayoff/admin';?>"><span class="fa fa-th-list"></span>Manage EmployeeDayoff</a>
-		<a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/'.$ccontroller.'/update',array('id'=>$model->id));?>"><span class="fa fa-edit"></span>Edit</a>
-		<?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/master/employeeDayoff/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("master.employeeDayoff.updateApproval"))) ?>
-		<h1>View Employee Day off Request #<?php echo $model->id; ?></h1>
+    <div class="clearfix page-action">
+        <?php $ccontroller = Yii::app()->controller->id; ?>
+        <?php $ccaction = Yii::app()->controller->action->id; ?>
+        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl.'/master/employeeDayoff/admin';?>"><span class="fa fa-th-list"></span>Manage EmployeeDayoff</a>
+        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/'.$ccontroller.'/update',array('id'=>$model->id));?>"><span class="fa fa-edit"></span>Edit</a>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/master/employeeDayoff/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("master.employeeDayoff.updateApproval"))) ?>
+        <!--<h1>View Employee Day off Request #<?php //echo $model->id; ?></h1>-->
 
-		<?php $this->widget('zii.widgets.CDetailView', array(
-			'data'=>$model,
-			'attributes'=>array(
-				// 'id',
-				// 'employee_id',
-				array('name'=>'employee_name','value'=>$model->employee->name),
-				'off_type',
-				'day',
-				'notes',
-				'date_from',
-				'date_to',
-				'status',
-			),
-		)); ?>
-	</div>
+        <?php $this->widget('zii.widgets.CDetailView', array(
+            'data'=>$model,
+            'attributes'=>array(
+                array(
+                    'name'=>'employee_name',
+                    'value'=>$model->employee->name
+                ),
+                array(
+                    'label' => 'Jenis Cuti',
+                    'name'=>'employee_onleave_category_id',
+                    'value'=>$model->employeeOnleaveCategory->name
+                ),
+                array(
+                    'label' => 'Paid/Unpaid',
+                    'name'=>'off_type',
+                    'value'=>$model->off_type
+                ),
+                array(
+                    'label' => 'Jumlah Hari',
+                    'name'=>'day',
+                    'value'=>$model->day
+                ),
+                array(
+                    'label' => 'Mulai Tanggal',
+                    'name'=>'date_from',
+                    'value'=>$model->date_from
+                ),
+                array(
+                    'label' => 'Sampai Tanggal',
+                    'name'=>'date_to',
+                    'value'=>$model->date_to
+                ),
+                'notes',
+                'status',
+            ),
+        )); ?>
+    </div>
 </div>

@@ -15,9 +15,11 @@
  * @property string $user_id
  * @property string $status
  * @property string $off_type
+ * @property integer $employee_onleave_category_id
  *
  * The followings are the available model relations:
  * @property Employee $employee
+ * @property EmployeeOnleaveCategory $employeeOnleaveCategory
  * @property EmployeeDayoffApproval[] $employeeDayoffApprovals
  */
 class EmployeeDayoff extends CActiveRecord {
@@ -38,13 +40,13 @@ class EmployeeDayoff extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('employee_id, day, notes, date_from, date_to, off_type, date_created, time_created, user_id', 'required'),
-            array('employee_id, user_id', 'numerical', 'integerOnly' => true),
+            array('employee_id, employee_onleave_category_id, day, notes, date_from, date_to, off_type, date_created, time_created, user_id', 'required'),
+            array('employee_id, employee_onleave_category_id, user_id', 'numerical', 'integerOnly' => true),
             array('day', 'numerical'),
             array('status, off_type', 'length', 'max' => 30),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, employee_id, day, notes, date_from, date_to, status, off_type,employee_name, date_created, time_created, user_id', 'safe', 'on' => 'search'),
+            array('id, employee_id, employee_onleave_category_id, day, notes, date_from, date_to, status, off_type,employee_name, date_created, time_created, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -56,6 +58,7 @@ class EmployeeDayoff extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'employee' => array(self::BELONGS_TO, 'Employee', 'employee_id'),
+            'employeeOnleaveCategory' => array(self::BELONGS_TO, 'EmployeeOnleaveCategory', 'employee_onleave_category_id'),
             'employeeDayoffApprovals' => array(self::HAS_MANY, 'EmployeeDayoffApproval', 'employee_dayoff_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );

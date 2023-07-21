@@ -13,11 +13,12 @@ $this->breadcrumbs=array(
 );*/
 ?>
 
-<!--<h1>Create EmployeeDayoff</h1>-->
+<h1>Pengajuan Cuti Karyawan</h1>
 
 <div id="maincontent">
-	<?php $this->renderPartial('_form', array(
-			'model'=>$model,
-			'employee'=>$employee,
-			'employeeDataProvider'=>$employeeDataProvider,
-	)); ?></div>
+    <?php $this->renderPartial('_form', array(
+        'model'=>$model,
+        'employee'=>$employee,
+        'employeeDataProvider'=>$employeeDataProvider,
+    )); ?>
+</div>

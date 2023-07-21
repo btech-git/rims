@@ -16,11 +16,12 @@ $this->breadcrumbs=array(
 );*/
 ?>
 
-<!--<h1>Update EmployeeDayoff <?php echo $model->id; ?></h1>-->
+<h1>Update Pengajuan Cuti Karyawan <?php echo $model->id; ?></h1>
 
 <div id="maincontent">
-	<?php $this->renderPartial('_form', array(
-		'model'=>$model,
-		'employee'=>$employee,
-		'employeeDataProvider'=>$employeeDataProvider,
-		)); ?></div>
+    <?php $this->renderPartial('_form', array(
+        'model'=>$model,
+        'employee'=>$employee,
+        'employeeDataProvider'=>$employeeDataProvider,
+    )); ?>
+</div>
