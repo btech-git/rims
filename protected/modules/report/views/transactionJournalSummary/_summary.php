@@ -21,7 +21,7 @@
             <?php foreach ($coas as $coa): ?>
                 <?php $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType); ?>
                 <?php $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType); ?>
-                <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0)): // && $journalDebitBalance !== $journalCreditBalance): ?>
+                <?php if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0): // && $journalDebitBalance !== $journalCreditBalance): ?>
                     <tr>
                         <td>
                             <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 

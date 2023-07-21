@@ -133,7 +133,7 @@ class TransactionJournalSummaryController extends Controller {
             foreach ($coas as $coa) {
                 $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
                 $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-                if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
+                if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0) { //&& $journalDebitBalance !== $journalCreditBalance) {
                     $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
                     if (empty($coa->coaIds)) {
                         $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
