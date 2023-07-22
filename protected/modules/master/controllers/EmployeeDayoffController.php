@@ -99,6 +99,8 @@ class EmployeeDayoffController extends Controller {
      */
     public function actionCreate() {
         $model = new EmployeeDayoff;
+        $model->date_from = date('Y-m-d');
+        $model->date_to = date('Y-m-d');
         $model->date_created = date('Y-m-d');
         $model->time_created = date('H:i:s');
         $model->user_id = Yii::app()->user->id;

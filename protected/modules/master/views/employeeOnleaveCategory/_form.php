@@ -22,20 +22,26 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'number_of_days'); ?>
+		<?php echo $form->labelEx($model,'Jumlah Hari'); ?>
 		<?php echo $form->textField($model,'number_of_days'); ?>
 		<?php echo $form->error($model,'number_of_days'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'is_using_quota'); ?>
-		<?php echo $form->textField($model,'is_using_quota'); ?>
+		<?php echo $form->labelEx($model,'Potong Cuti'); ?>
+                <?php echo  $form->dropDownList($model, 'is_using_quota', array(
+                    0 => 'Tidak',
+                    1 => 'Potong', 
+                )); ?>
 		<?php echo $form->error($model,'is_using_quota'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'is_inactive'); ?>
-		<?php echo $form->textField($model,'is_inactive'); ?>
+                <?php echo  $form->dropDownList($model, 'is_inactive', array(
+                    0 => 'Active',
+                    1 => 'Inactive', 
+                )); ?>
 		<?php echo $form->error($model,'is_inactive'); ?>
 	</div>
 

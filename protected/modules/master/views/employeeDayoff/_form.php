@@ -27,7 +27,24 @@
                         <?php echo $form->labelEx($model, 'employee_id'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->hiddenField($model, 'employee_id'); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+                            'model' => $model,
+                            'attribute' => 'employee_id',
+                            'sourceUrl' => CController::createUrl('employeeCompletion'),
+                            //additional javascript options for the autocomplete plugin
+                            'options' => array(
+                                'minLength' => '2',
+                                'select' => 'js:function(event, ui) {
+                                    $("#employee_name").html(ui.item.id);
+                                }',
+                            ),
+                        )); ?>
+                        
+                        <?php echo CHtml::openTag('span', array('id' => 'employee_name')); ?>
+                            <?php echo CHtml::encode(CHtml::value($model, 'employee.name')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                        
+                        <?php /*echo $form->hiddenField($model, 'employee_id'); ?>
                         <?php echo $form->textField($model, 'employee_name', array(
                             'onclick' => 'jQuery("#employee-dialog").dialog("open"); return false;',
                             'value' => $model->employee_id != Null ? $model->employee->name : '',
@@ -58,13 +75,13 @@
                                 $("#EmployeeDayoff_employee_id").val($.fn.yiiGridView.getSelection(id));
                                 $("#employee-dialog").dialog("close");
                                 $.ajax({
-                                        type: "POST",
-                                        dataType: "JSON",
-                                        url: "' . CController::createUrl('ajaxEmployee', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-                                        data: $("form").serialize(),
-                                        success: function(data) {
-                                                $("#EmployeeDayoff_employee_name").val(data.name);
-                                        },
+                                    type: "POST",
+                                    dataType: "JSON",
+                                    url: "' . CController::createUrl('ajaxEmployee', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                                    data: $("form").serialize(),
+                                    success: function(data) {
+                                        $("#EmployeeDayoff_employee_name").val(data.name);
+                                    },
                                 });
 
                                 $("#employee-grid").find("tr.selected").each(function(){
@@ -72,13 +89,13 @@
                                 });
                             }',
                             'columns' => array(
-                                //'id',
-                                //'code',
+                                'id',
+                                'code',
                                 'name',
                             //'email',
                             ),
                         )); ?>
-                        <?php $this->endWidget(); ?>
+                        <?php $this->endWidget();*/ ?>
 
                         <?php echo $form->error($model, 'employee_id'); ?>
                     </div>
@@ -91,7 +108,7 @@
                         <?php echo $form->labelEx($model,'Jenis Cuti'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model,'employee_onleave_category_id',CHtml::listData(EmployeeOnleaveCategory::model()->findAll(),'id','name'), array('empty' => '-- Pilih --')); ?>
+                        <?php echo $form->dropDownlist($model,'employee_onleave_category_id', CHtml::listData(EmployeeOnleaveCategory::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih --')); ?>
                         <?php echo $form->error($model,'employee_onleave_category_id'); ?>
                     </div>
                 </div>
@@ -122,7 +139,6 @@
                         <?php echo $form->labelEx($model, 'Mulai Tanggal'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php //echo $form->textField($model,'date_from'); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model' => $model,
                             'attribute' => "date_from",
@@ -133,8 +149,16 @@
                                 'changeYear' => true,
                             ),
                             'htmlOptions' => array(
-                                'onchange' => '$("#EmployeeDayoff_day").val("");$("#EmployeeDayoff_date_to").val("");'
-                            //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
+                                'onchange' => '
+//                                    $("#EmployeeDayoff_day").val("");$("#EmployeeDayoff_date_to").val("");
+                                    var strDateFrom = $("#EmployeeDayoff_date_from").val();
+                                    var strDateTo = $("#EmployeeDayoff_date_to").val();
+                                    var dateFrom = new Date(strDateFrom);
+                                    var dateTo = new Date(strDateTo);
+                                    var diff_in_time = dateTo.getTime() - dateFrom.getTime();
+                                    var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+                                    $("#EmployeeDayoff_day").val(diff_in_days);
+                                '
                             ),
                         )); ?>
                         <?php echo $form->error($model, 'date_from'); ?>
@@ -145,14 +169,46 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'Sampai Tanggal'); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php //echo $form->textField($model, 'date_to', array('readonly' => true)); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $model,
+                            'attribute' => "date_to",
+                            // additional javascript options for the date picker plugin
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                            ),
+                            'htmlOptions' => array(
+                                'onchange' => '
+                                    var strDateFrom = $("#EmployeeDayoff_date_from").val();
+                                    var strDateTo = $("#EmployeeDayoff_date_to").val();
+                                    var dateFrom = new Date(strDateFrom);
+                                    var dateTo = new Date(strDateTo);
+                                    var diff_in_time = dateTo.getTime() - dateFrom.getTime();
+                                    var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+                                    $("#EmployeeDayoff_day").val(diff_in_days);
+                                '
+                            ),
+                        )); ?>
+                        <?php echo $form->error($model, 'date_to'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <?php echo $form->labelEx($model, 'Jumlah Hari'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php $range = range(1, 20); ?>
+                        <?php /*$range = range(1, 20); ?>
                         <?php echo $form->dropDownList($model, 'day', array_combine($range, $range), array(
                             'prompt' => '[--Select Days--]',
-                            'onchange' =>
-                            '
+                            'onchange' => '
                                 var strDate = $("#EmployeeDayoff_date_from").val();
                                 var datepo = new Date(strDate);
                                 var days = +$(this).val();
@@ -161,21 +217,9 @@
                                 //console.log(strDate);
                                 $("#EmployeeDayoff_date_to").val(strFormatedPODate);
                             '
-                        )); ?>
-                        <?php //echo $form->textField($model,'day');  ?>
+                        ));*/ ?>
+                        <?php echo $form->textField($model, 'day', array('readonly' => true));  ?>
                         <?php echo $form->error($model, 'day'); ?>
-                    </div>
-                </div>
-            </div>		
-
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->labelEx($model, 'Sampai Tanggal'); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'date_to', array('readonly' => true)); ?>
-                        <?php echo $form->error($model, 'date_to'); ?>
                     </div>
                 </div>
             </div>
