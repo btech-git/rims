@@ -36,10 +36,9 @@ $('.search-form form').submit(function(){
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php if (Yii::app()->user->checkAccess("masterEmployeeCreate")) { ?>
-            <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employee/create'; ?>"><span class="fa fa-plus"></span>New Employee</a>
-        <?php } ?>
-        <a class="button primary center" href="<?php echo Yii::app()->baseUrl . '/master/employee/admin'; ?>"><span></span>Manage Employees</a>
+        <a class="button primary right" href="<?php echo Yii::app()->baseUrl . '/master/employee/admin'; ?>">
+            Manage Employees
+        </a>
         <h1>Resigned Employees</h1>
 
         <!-- BEGIN aSearch -->
@@ -67,12 +66,6 @@ $('.search-form form').submit(function(){
                 ),
                 'rowCssClassExpression' => '($data->is_deleted == 1)?"undelete":""',
                 'columns' => array(
-                    array(
-                        'class' => 'CCheckBoxColumn',
-                        'selectableRows' => '2',
-                        'header' => 'Selected',
-                        'value' => '$data->id',
-                    ),
                     'id',
                     'code',
                     array(

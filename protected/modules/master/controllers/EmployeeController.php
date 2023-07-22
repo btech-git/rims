@@ -345,14 +345,12 @@ class EmployeeController extends Controller {
         }
     }
 
-    public function actionRestore($id) {
-        // var_dump($id); die("S");
-        $this->loadModel($id)->restore();
-
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-    }
+//    public function actionRestore($id) {
+//        $this->loadModel($id)->restore();
+//
+//        if (!isset($_GET['ajax']))
+//            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+//    }
 
     /**
      * Lists all models.

@@ -38,9 +38,13 @@ $('.search-form form').submit(function(){
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php if (Yii::app()->user->checkAccess("masterEmployeeCreate")) { ?>
-            <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employee/create'; ?>"><span class="fa fa-plus"></span>New Employee</a>
+            <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employee/create'; ?>">
+                <span class="fa fa-plus"></span>New Employee
+            </a>
         <?php } ?>
-        <a class="button primary center" href="<?php echo Yii::app()->baseUrl . '/master/employee/adminResigned'; ?>"><span></span>Resigned Employees</a>
+        <a class="button primary center" href="<?php echo Yii::app()->baseUrl . '/master/employee/adminResigned'; ?>">
+            Resigned Employees
+        </a>
         <h1>Manage Employees</h1>
 
         <div class="search-bar">
@@ -60,7 +64,6 @@ $('.search-form form').submit(function(){
                 'id' => 'employee-grid',
                 'dataProvider' => $dataProvider,
                 'filter' => $model,
-                // 'summaryText' => '',
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
                     'cssFile' => false,
@@ -120,15 +123,6 @@ $('.search-form form').submit(function(){
                                     'onclick' => 'return confirm("Are you sure this Employee is resigned?");',
                                 )
                             ),
-//                            'restore' => array(
-//                                'label' => 'UNDELETE',
-//                                'visible' => '($data->is_deleted == 1)? TRUE:FALSE',
-//                                'url' => 'Yii::app()->createUrl("master/employee/restore", array("id" => $data->id))',
-//                                'options' => array(
-//                                    // 'class'=>'btn red delete',
-//                                    'onclick' => 'return confirm("Are you sure want to undelete this Employee?");',
-//                                )
-//                            ),
                         ),
                     ),
                 ),
