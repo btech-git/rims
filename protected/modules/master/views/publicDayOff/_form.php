@@ -72,7 +72,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'type'); ?></label>
+                        <?php echo $form->labelEx($model, 'type'); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->dropDownList($model, 'type', array(
