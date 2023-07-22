@@ -72,14 +72,14 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($employee->header, 'type'); ?></label>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'type'); ?></label>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownList($employee->header, 'type', array(
+                        <?php echo $form->dropDownList($model, 'type', array(
                             'Libur' => 'Libur',
                             'Cuti Bersama' => 'Cuti Bersama',
                         )); ?>
-                        <?php echo $form->error($employee->header, 'type'); ?>
+                        <?php echo $form->error($model, 'type'); ?>
                     </div>
                 </div>
             </div>
