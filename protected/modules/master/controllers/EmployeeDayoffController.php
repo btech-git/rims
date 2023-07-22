@@ -119,7 +119,17 @@ class EmployeeDayoffController extends Controller {
         ));
         if (isset($_POST['EmployeeDayoff'])) {
             $model->attributes = $_POST['EmployeeDayoff'];
-            if ($model->save()) {
+            
+            $valid = true;
+            if ($model->employeeOnleaveCategory->number_of_days > 0) {
+                $valid = $model->day == $model->employeeOnleaveCategory->number_of_days ? true : false;
+                
+                if ($valid == false) {
+                    $model->addError('error', 'Jumlah hari cuti melebihi ketentuan.');
+                }
+            } 
+            
+            if ($valid && $model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
