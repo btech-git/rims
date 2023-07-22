@@ -36,7 +36,7 @@ $this->menu=array(
         array(
             'label' => 'Status',
             'name' => 'is_inactive', 
-            'value' => $model->is_inactive == 1 ? "YES" : "NO",
+            'value' => $model->is_inactive == 1 ? "Inactive" : "Active",
         ),
     ),
 )); ?>

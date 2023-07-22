@@ -60,7 +60,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         array(
             'header'=>'Status',
             'name'=>'is_inactive', 
-            'value'=>'$data->is_inactive == 1 ? "YES" : "NO"'
+            'value'=>'$data->is_inactive == 1 ? "Inactive" : "Active"'
         ),
         array(
             'class'=>'CButtonColumn',
