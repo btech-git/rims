@@ -37,7 +37,7 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'is_inactive'); ?>
+		<?php echo $form->labelEx($model,'Active / Inactive'); ?>
                 <?php echo  $form->dropDownList($model, 'is_inactive', array(
                     0 => 'Active',
                     1 => 'Inactive', 

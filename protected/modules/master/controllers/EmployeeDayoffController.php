@@ -204,6 +204,10 @@ class EmployeeDayoffController extends Controller {
         ));
     }
 
+    public function actionEmployeeCompletion() {
+        echo CJSON::encode(Completion::employee($_GET['term']));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
