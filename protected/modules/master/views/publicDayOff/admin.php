@@ -33,7 +33,7 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/publicDayOff/create'; ?>"><span class="fa fa-plus"></span>Create Public Day Offs</a>
+                <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/publicDayOff/create'; ?>"><span class="fa fa-plus"></span>Create Libur Nasional</a>
                 <h2>Manage Hari Libur Nasional</h2>
             </div>
 
