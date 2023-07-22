@@ -40,7 +40,7 @@ $('.search-form form').submit(function(){
         <?php if (Yii::app()->user->checkAccess("masterEmployeeCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employee/create'; ?>"><span class="fa fa-plus"></span>New Employee</a>
         <?php } ?>
-        <a class="button success right" href="<?php echo Yii::app()->baseUrl . 'adminResigned'; ?>"><span></span>Resigned Employees</a>
+        <a class="button primary center" href="<?php echo Yii::app()->baseUrl . '/master/employee/adminResigned'; ?>"><span></span>Resigned Employees</a>
         <h1>Manage Employees</h1>
 
         <div class="search-bar">
@@ -103,17 +103,15 @@ $('.search-form form').submit(function(){
                     ),
                     array(
                         'class' => 'CButtonColumn',
-                        'template' => '{edit} {hapus} {restore}',
-                        'buttons' => array
-                            (
-                            'edit' => array
-                                (
+                        'template' => '{edit} {resign}',
+                        'buttons' => array(
+                            'edit' => array(
                                 'label' => 'edit',
                                 // 'visible'=>'($data->is_deleted == 0)? TRUE:FALSE',
                                 'visible' => '(Yii::app()->user->checkAccess("master.employee.update"))',
                                 'url' => 'Yii::app()->createUrl("master/employee/update", array("id"=>$data->id))',
                             ),
-                            'hapus' => array(
+                            'resign' => array(
                                 'label' => 'resign',
                                 'visible' => '($data->is_deleted == 0)? TRUE:FALSE',
                                 'url' => 'Yii::app()->createUrl("/master/employee/delete", array("id" => $data->id))',

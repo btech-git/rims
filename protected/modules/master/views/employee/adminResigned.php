@@ -39,7 +39,7 @@ $('.search-form form').submit(function(){
         <?php if (Yii::app()->user->checkAccess("masterEmployeeCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employee/create'; ?>"><span class="fa fa-plus"></span>New Employee</a>
         <?php } ?>
-        <a class="button success right" href="<?php echo Yii::app()->baseUrl . 'admin'; ?>"><span></span>Manage Employees</a>
+        <a class="button primary center" href="<?php echo Yii::app()->baseUrl . '/master/employee/admin'; ?>"><span></span>Manage Employees</a>
         <h1>Resigned Employees</h1>
 
         <!-- BEGIN aSearch -->
