@@ -41,17 +41,29 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 </div><!-- search-form -->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'employee-onleave-category-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'id',
-		'name',
-		'number_of_days: Jumlah Hari',
-		'is_using_quota',
-		'is_inactive',
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
+    'id'=>'employee-onleave-category-grid',
+    'dataProvider'=>$model->search(),
+    'filter'=>$model,
+    'columns'=>array(
+        'id',
+        'name',
+        array(
+            'header'=>'Jumlah Hari',
+            'name'=>'number_of_days', 
+            'value'=>'$data->number_of_days'
+        ),
+        array(
+            'header'=>'Potong Cuti',
+            'name'=>'is_using_quota', 
+            'value'=>'$data->is_using_quota == 1 ? "YES" : "NO"'
+        ),
+        array(
+            'header'=>'Status',
+            'name'=>'is_inactive', 
+            'value'=>'$data->is_inactive == 1 ? "YES" : "NO"'
+        ),
+        array(
+            'class'=>'CButtonColumn',
+        ),
+    ),
 )); ?>

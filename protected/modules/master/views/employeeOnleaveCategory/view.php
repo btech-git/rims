@@ -19,12 +19,24 @@ $this->menu=array(
 <h1>View Kategori Cuti Karyawan #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'name',
-		'number_of_days: Jumlah Hari',
-		'is_using_quota',
-		'is_inactive',
-	),
+    'data'=>$model,
+    'attributes'=>array(
+        'id',
+        'name',
+        array(
+            'label' => 'Jumlah Hari',
+            'name' => 'number_of_days', 
+            'value' => CHtml::encode(CHtml::value($model, 'number_of_days')),
+        ),
+        array(
+            'label' => 'Potong Cuti',
+            'name' => 'is_using_quota', 
+            'value' => $model->is_using_quota == 1 ? "YES" : "NO",
+        ),
+        array(
+            'label' => 'Status',
+            'name' => 'is_inactive', 
+            'value' => $model->is_inactive == 1 ? "YES" : "NO",
+        ),
+    ),
 )); ?>
