@@ -40,8 +40,8 @@ $('.search-form form').submit(function(){
 	<div class="row">
 		<div class="small-12 columns">
 			<div class="clearfix page-action">
-				<a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/EmployeeDayoff/create';?>"><span class="fa fa-plus"></span>Create Employee Dayoffs</a>
-				<h2>Manage Employee Dayoffs</h2>
+				<a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/EmployeeDayoff/create';?>"><span class="fa fa-plus"></span>Create Pengajuan Cuti Karyawan</a>
+				<h2>Manage Pengajuan Cuti Karyawan</h2>
 			</div>
 
 			<div class="search-bar">
