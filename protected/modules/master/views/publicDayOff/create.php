@@ -16,4 +16,5 @@ $this->breadcrumbs=array(
 <!--<h1>Create PublicDayOff</h1>-->
 
 <div id="maincontent">
-	<?php $this->renderPartial('_form', array('model'=>$model,'offs'=>$offs)); ?></div>
+    <?php $this->renderPartial('_form', array('model'=>$model,'offs'=>$offs)); ?>
+</div>
