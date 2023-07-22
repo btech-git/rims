@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create EmployeeOnleaveCategory</h1>
+<h1>Create Kategori Cuti Karyawan</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

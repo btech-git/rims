@@ -16,14 +16,14 @@ $this->menu=array(
 );
 ?>
 
-<h1>View EmployeeOnleaveCategory #<?php echo $model->id; ?></h1>
+<h1>View Kategori Cuti Karyawan #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
 		'name',
-		'number_of_days',
+		'number_of_days: Jumlah Hari',
 		'is_using_quota',
 		'is_inactive',
 	),
