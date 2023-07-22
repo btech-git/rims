@@ -108,7 +108,7 @@
                         <?php echo $form->labelEx($model,'Jenis Cuti'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model,'employee_onleave_category_id', CHtml::listData(EmployeeOnleaveCategory::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih --')); ?>
+                        <?php echo $form->dropDownlist($model,'employee_onleave_category_id', CHtml::listData(EmployeeOnleaveCategory::model()->findAll(), 'id', 'nameAndDays'), array('empty' => '-- Pilih --')); ?>
                         <?php echo $form->error($model,'employee_onleave_category_id'); ?>
                     </div>
                 </div>
