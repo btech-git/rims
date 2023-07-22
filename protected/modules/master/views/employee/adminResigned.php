@@ -34,15 +34,15 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<!-- BEGIN maincontent -->
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php if (Yii::app()->user->checkAccess("masterEmployeeCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employee/create'; ?>"><span class="fa fa-plus"></span>New Employee</a>
         <?php } ?>
-        <a class="button success right" href="<?php echo Yii::app()->baseUrl . 'adminResigned'; ?>"><span></span>Resigned Employees</a>
-        <h1>Manage Employees</h1>
+        <a class="button success right" href="<?php echo Yii::app()->baseUrl . 'admin'; ?>"><span></span>Manage Employees</a>
+        <h1>Resigned Employees</h1>
 
+        <!-- BEGIN aSearch -->
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>	
@@ -60,7 +60,6 @@ $('.search-form form').submit(function(){
                 'id' => 'employee-grid',
                 'dataProvider' => $dataProvider,
                 'filter' => $model,
-                // 'summaryText' => '',
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
                     'cssFile' => false,
@@ -77,61 +76,29 @@ $('.search-form form').submit(function(){
                     'id',
                     'code',
                     array(
-                        'name' => 'recruitment_date',
-                        'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->recruitment_date)'
-                    ),
-                    array(
                         'name' => 'name', 
                         'value' => 'CHtml::link($data->name, array("view", "id"=>$data->id))', 
                         'type' => 'raw'
                     ),
                     array(
-                        'name' => 'branch_id', 
-                        'value' => 'CHtml::encode(CHtml::value($data, "branch.name"))',
+                        'header' => 'Resign Date',
+                        'name' => 'deleted_at',
+                        'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->deleted_at)'
                     ),
                     array(
-                        'name' => 'division_id', 
-                        'value' => 'CHtml::encode(CHtml::value($data, "division.name"))',
+                        'header' => 'KTP',
+                        'name' => 'id_card', 
+                        'value' => 'CHtml::encode(CHtml::value($data, "id_card"))',
                     ),
                     array(
-                        'name' => 'position_id', 
-                        'value' => 'CHtml::encode(CHtml::value($data, "position.name"))',
+                        'header' => 'SIM',
+                        'name' => 'driving_license', 
+                        'value' => 'CHtml::encode(CHtml::value($data, "driving_license"))',
                     ),
                     array(
-                        'name' => 'level_id', 
-                        'value' => 'CHtml::encode(CHtml::value($data, "level.name"))',
-                    ),
-                    array(
-                        'class' => 'CButtonColumn',
-                        'template' => '{edit} {hapus} {restore}',
-                        'buttons' => array
-                            (
-                            'edit' => array
-                                (
-                                'label' => 'edit',
-                                // 'visible'=>'($data->is_deleted == 0)? TRUE:FALSE',
-                                'visible' => '(Yii::app()->user->checkAccess("master.employee.update"))',
-                                'url' => 'Yii::app()->createUrl("master/employee/update", array("id"=>$data->id))',
-                            ),
-                            'hapus' => array(
-                                'label' => 'resign',
-                                'visible' => '($data->is_deleted == 0)? TRUE:FALSE',
-                                'url' => 'Yii::app()->createUrl("/master/employee/delete", array("id" => $data->id))',
-                                'options' => array(
-                                    // 'class'=>'btn red delete',
-                                    'onclick' => 'return confirm("Are you sure this Employee is resigned?");',
-                                )
-                            ),
-//                            'restore' => array(
-//                                'label' => 'UNDELETE',
-//                                'visible' => '($data->is_deleted == 1)? TRUE:FALSE',
-//                                'url' => 'Yii::app()->createUrl("master/employee/restore", array("id" => $data->id))',
-//                                'options' => array(
-//                                    // 'class'=>'btn red delete',
-//                                    'onclick' => 'return confirm("Are you sure want to undelete this Employee?");',
-//                                )
-//                            ),
-                        ),
+                        'header' => 'HP',
+                        'name' => 'mobile_phone_number', 
+                        'value' => 'CHtml::encode(CHtml::value($data, "mobile_phone_number"))',
                     ),
                 ),
             )); ?>

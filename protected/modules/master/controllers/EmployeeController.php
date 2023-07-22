@@ -206,10 +206,6 @@ class EmployeeController extends Controller {
             'criteria' => $bankCriteria,
         ));
 
-
-
-
-
         $employee = $this->instantiate($empId);
 
         // $this->performAjaxValidation($customer->header);
@@ -337,11 +333,16 @@ class EmployeeController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->deleted_by = Yii::app()->user->id;
+        $model->deleted_at = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'deleted_by', 'deleted_at'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     public function actionRestore($id) {
@@ -375,12 +376,30 @@ class EmployeeController extends Controller {
     public function actionAdmin() {
         $model = new Employee('search');
         $model->unsetAttributes();  // clear any default values
-        //$model->disableBehavior('SoftDelete');
-        if (isset($_GET['Employee']))
+        if (isset($_GET['Employee'])) {
             $model->attributes = $_GET['Employee'];
+        }
+        
+        $dataProvider = $model->search();
 
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    public function actionAdminResigned() {
+        $model = new Employee('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Employee'])) {
+            $model->attributes = $_GET['Employee'];
+        }
+        
+        $dataProvider = $model->searchResigned();
+
+        $this->render('adminResigned', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 
@@ -430,7 +449,6 @@ class EmployeeController extends Controller {
         $positioncriteria->addInCondition('id', $positionId);
 
         $data = Position::model()->findAll($positioncriteria);
-        //print_r($levelId);
 
         if (count($data) > 0) {
 
@@ -457,7 +475,6 @@ class EmployeeController extends Controller {
         $levelcriteria->addInCondition('id', $levelId);
 
         $data = Level::model()->findAll($levelcriteria);
-        //print_r($levelId);
 
         if (count($data) > 0) {
 
@@ -516,7 +533,6 @@ class EmployeeController extends Controller {
 
             $employee = $this->instantiate($id);
             $this->loadState($employee);
-            //print_r(CJSON::encode($employee->details));exit;
             $employee->removeDetailAt($index);
 
             $this->renderPartial('_detailPhone', array('employee' => $employee), false, true);
@@ -570,7 +586,6 @@ class EmployeeController extends Controller {
 
             $employee = $this->instantiate($id);
             $this->loadState($employee);
-            //print_r(CJSON::encode($salesOrder->details));
             $employee->removeBankDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
@@ -584,9 +599,7 @@ class EmployeeController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $employee = $this->instantiate($id);
             $this->loadState($employee);
-            //echo'here1'; exit;
             $employee->addIncentiveDetail($incentiveId);
-            //echo'here2'; exit;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
 
@@ -600,7 +613,6 @@ class EmployeeController extends Controller {
 
             $employee = $this->instantiate($id);
             $this->loadState($employee);
-            //print_r(CJSON::encode($salesOrder->details));
             $employee->removeIncentiveDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
@@ -615,8 +627,6 @@ class EmployeeController extends Controller {
             $this->loadState($employee);
 
             $employee->addDeductionDetail($deductionId);
-            //echo 'hrere' ; exit;
-            //print_r(CJSON::encode($employee->deductionDetails));exit;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $this->renderPartial('_detail_deduction', array('employee' => $employee), false, true);
@@ -645,12 +655,9 @@ class EmployeeController extends Controller {
             $this->loadState($employee);
 
             $employee->addDivisionDetail($branchId);
-            //echo 'hrere' ; exit;
-            //print_r(CJSON::encode($employee->deductionDetails));exit;
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $this->renderPartial('_detailDivision', array('employee' => $employee), false, true);
-            //echo 'here'; exit;
         }
     }
 
@@ -671,26 +678,16 @@ class EmployeeController extends Controller {
     public function instantiate($id) {
 
         if (empty($id)) {
-
             $employee = new Employees(new Employee(), array(), array(), array(), array(), array(), array());
-            //print_r("test");echo 'here1'; 
         } else {
-            //echo 'here2'; 
             $employeeModel = $this->loadModel($id);
             $employee = new Employees($employeeModel, $employeeModel->employeePhones, $employeeModel->employeeMobiles, $employeeModel->employeeBanks, $employeeModel->employeeIncentives, $employeeModel->employeeDeductions, $employeeModel->employeeBranchDivisionPositionLevels);
-
-            //print_r($employee); exit;
         }
-        //print_r($employee); exit;
         return $employee;
     }
 
     // Get the details
     public function loadState($employee) {
-
-        //echo '<pre>';
-        //print_r($_POST); exit;
-
 
         if (isset($_POST['Employee'])) {
             $employee->header->attributes = $_POST['Employee'];
@@ -793,14 +790,4 @@ class EmployeeController extends Controller {
         } else
             $employee->divisionDetails = array();
     }
-
-    public function actionAjaxUpdate($id) {
-        echo 'here';
-        exit;
-        if (Yii::app()->request->isAjaxRequest) {
-            echo 'here';
-            exit;
-        }
-    }
-
 }

@@ -236,9 +236,44 @@ class Employee extends CActiveRecord {
         $criteria->compare('skills', $this->skills, true);
         $criteria->compare('off_day', $this->off_day, true);
         $criteria->compare('recruitment_date', $this->recruitment_date);
+        $criteria->compare('is_deleted', 0);
 
-        $tampilkan = ($this->is_deleted == 1) ? array(0, 1) : array(0);
-        $criteria->addInCondition('is_deleted', $tampilkan);
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.status ASC, t.name ASC',
+            ),
+        ));
+    }
+    
+    public function searchResigned() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('name', $this->name, true);
+        $criteria->compare('local_address', $this->local_address, true);
+        $criteria->compare('home_address', $this->home_address, true);
+        $criteria->compare('province_id', $this->province_id);
+        $criteria->compare('city_id', $this->city_id);
+        $criteria->compare('home_province', $this->home_province);
+        $criteria->compare('home_city', $this->home_city);
+        $criteria->compare('sex', $this->sex, true);
+        $criteria->compare('email', $this->email, true);
+        $criteria->compare('id_card', $this->id_card, true);
+        $criteria->compare('driving_license', $this->driving_license, true);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('salary_type', $this->salary_type, true);
+        $criteria->compare('basic_salary', $this->basic_salary, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('code', $this->code, true);
+        $criteria->compare('availability', $this->availability, true);
+        $criteria->compare('skills', $this->skills, true);
+        $criteria->compare('off_day', $this->off_day, true);
+        $criteria->compare('recruitment_date', $this->recruitment_date);
+        $criteria->compare('is_deleted', 1);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
