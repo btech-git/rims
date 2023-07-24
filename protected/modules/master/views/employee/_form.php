@@ -89,6 +89,18 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'employee_head_id'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->dropDownList($employee->header, 'employee_head_id', CHtml::listData(Employee::model()->findAll(), 'id', 'name'), array('empty' => '-- Select Atasan --')); ?>
+                                <?php echo $form->error($employee->header, 'employee_head_id'); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
                                 <label class="prefix"><?php echo $form->labelEx($employee->header, 'employment_type'); ?></label>
                             </div>
                             <div class="small-8 columns">
@@ -157,18 +169,6 @@
                                     'prompt' => '[--Select Level--]',
                                 )); ?>
                                 <?php echo $form->error($employee->header, 'level_id'); ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'employee_head_id'); ?></label>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->dropDownList($employee->header, 'employee_head_id', CHtml::listData(Employee::model()->findAll(), 'id', 'name'), array('empty' => '-- Select Atasan --')); ?>
-                                <?php echo $form->error($employee->header, 'employee_head_id'); ?>
                             </div>
                         </div>
                     </div>
