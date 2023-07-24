@@ -176,6 +176,18 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'Kuota Cuti'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->textField($employee->header, 'onleave_allocation'); ?>
+                                <?php echo $form->error($employee->header, 'onleave_allocation'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
                                 <label class="prefix"><?php echo $form->labelEx($employee->header, 'off_day'); ?></label>
                             </div>
                             <div class="small-8 columns">

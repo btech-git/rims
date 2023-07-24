@@ -58,6 +58,11 @@ $this->menu = array(
                         'name' => 'employee_head_id', 
                         'value' => CHtml::encode(CHtml::value($model, 'employeeHead.name')),
                     ),
+                    array(
+                        'header' => 'Kuota Cuti',
+                        'name' => 'onleave_allocation', 
+                        'value' => CHtml::encode(CHtml::value($model, 'onleave_allocation')),
+                    ),
                     'off_day',
                 ),
             )); ?>
