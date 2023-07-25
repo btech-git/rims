@@ -515,7 +515,7 @@ class Product extends CActiveRecord {
             $quantity += ($detail->quantity == 0) ? 1 : $detail->quantity;
         }
         
-        return empty ($this->transactionPurchaseOrderDetails ) ? 0.00 : $unitPrice / $quantity;
+        return empty($this->transactionPurchaseOrderDetails ) ? 0.00 : $unitPrice / $quantity;
     }
     
     public function getPurchasePriceReport($startDate, $endDate) {

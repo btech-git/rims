@@ -42,6 +42,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php echo CHtml::dropDownlist('TransactionType', $transactionType, array(
                                             'Invoice' => 'Sales',
                                             'CASH' => 'Cash',
+                                            'JP' => 'Penyesuaian',
                                             'Pout' => 'Purchase Payment',
                                             'Pin' => 'Sales Receipt',
                                             'MI' => 'Movement In',

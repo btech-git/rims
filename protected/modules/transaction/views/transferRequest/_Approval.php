@@ -3,19 +3,13 @@
 /* @var $model TransaksiORderPembelian */
 /* @var $form CActiveForm */
 ?>
-<script>
-
-</script>
 <div class="form">
 
-    <?php
-    $form = $this->beginWidget('CActiveForm', array(
+    <?php $form = $this->beginWidget('CActiveForm', array(
         'id' => 'transaction-request-order-form',
         'enableAjaxValidation' => false,
-    ));
-    ?>
+    )); ?>
 
-        <!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
     <div class="row">
         <div class="large-12 columns">
             <div class="field">
@@ -29,8 +23,10 @@
                         <label class="prefix">Transfer Request No</label>
                     </div>
                     <div class="small-8 columns">
-<?php echo $form->textField($transferRequest, 'transfer_request_no', array('value' => $transferRequest->transfer_request_no, 'readonly' => true)); ?>
-
+                        <?php echo $form->textField($transferRequest, 'transfer_request_no', array(
+                            'value' => $transferRequest->transfer_request_no, 
+                            'readonly' => true
+                        )); ?>
                     </div>
                 </div>
             </div>
@@ -40,7 +36,10 @@
                         <label class="prefix">Date Posting</label>
                     </div>
                     <div class="small-8 columns">
-<?php echo $form->textField($transferRequest, 'transfer_request_date', array('value' => $transferRequest->transfer_request_date, 'readonly' => true)); ?>
+                        <?php echo $form->textField($transferRequest, 'transfer_request_date', array(
+                            'value' => $transferRequest->transfer_request_date, 
+                            'readonly' => true
+                        )); ?>
 
                     </div>
                 </div>
@@ -51,7 +50,10 @@
                         <label class="prefix">Status Document</label>
                     </div>
                     <div class="small-8 columns">
-<?php echo $form->textField($transferRequest, 'status_document', array('value' => $transferRequest->status_document, 'readonly' => true)); ?>
+                        <?php echo $form->textField($transferRequest, 'status_document', array(
+                            'value' => $transferRequest->status_document, 
+                            'readonly' => true
+                        )); ?>
                     </div>
                 </div>
             </div>
@@ -64,7 +66,7 @@
                 </div>
             </div>
             <div class="field">
-<?php $details = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $transferRequest->id)); ?>
+                <?php $details = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $transferRequest->id)); ?>
                 <table>
                     <thead>
                         <tr>
@@ -76,7 +78,7 @@
                         </tr>
                     </thead>
                     <tbody>
-<?php foreach ($details as $key => $transferDetail): ?>
+                        <?php foreach ($details as $key => $transferDetail): ?>
                             <tr>
                                 <td><?php echo $transferDetail->product_id != "" ? $transferDetail->product->name : '-'; ?></td>
                                 <td><?php echo $transferDetail->quantity; ?></td>
@@ -85,7 +87,7 @@
                                 <td><?php echo $transferDetail->amount; ?></td>
 
                             </tr>
-<?php endforeach ?>
+                        <?php endforeach ?>
                     </tbody>
                 </table>
             </div>
@@ -103,7 +105,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-12 columns">
-<?php if ($historis != null): ?>
+                        <?php if ($historis != null): ?>
                             <table>
                                 <thead>
                                     <tr>
@@ -115,31 +117,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-    <?php foreach ($historis as $key => $history): ?>
-
-
+                                    <?php foreach ($historis as $key => $history): ?>
                                         <tr>
                                             <td><?php echo $history->approval_type; ?></td>
                                             <td><?php echo $history->revision; ?></td>
                                             <td><?php echo $history->date; ?></td>
                                             <td><?php echo $history->note; ?></td>
-                                            <td><?php echo $history->supervisor_id; ?></td>
+                                            <td><?php echo $history->supervisor_name; ?></td>
                                         </tr>
-    <?php endforeach ?>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
 
-                        <?php
+                            <?php
                         else:
                             echo "No Revision History";
                             ?>		
-<?php endif ?>			 
+                        <?php endif ?>			 
                     </div>
                 </div>
             </div>
 
             <hr />
-            
+
             <div class="field">
                 <table>
                     <tr>
@@ -149,34 +149,34 @@
                         <td style="font-weight: bold; text-align: center">Note</td>
                         <td style="font-weight: bold; text-align: center">Supervisor</td>
                     </tr>
-                    
+
                     <tr>
                         <td>
                             <?php echo $form->hiddenField($model, 'transfer_request_id', array('value' => $transferRequest->id)); ?>		
                             <?php echo $form->dropDownList($model, 'approval_type', array(
-                                'Revised' => 'Need Revision', 
-                                'Rejected' => 'Rejected', 
+                                'Revised' => 'Need Revision',
+                                'Rejected' => 'Rejected',
                                 'Approved' => 'Approved'
                             ), array('prompt' => '[--Select Approval Status--]')); ?>
                             <?php echo $form->error($model, 'approval_type'); ?>
                         </td>
-                        
+
                         <td>
                             <?php $revisions = TransactionTransferRequestApproval::model()->findAllByAttributes(array('transfer_request_id' => $transferRequest->id)); ?>
                             <?php echo $form->textField($model, 'revision', array('value' => count($revisions) != 0 ? count($revisions) : 0, 'readonly' => true)); ?>		
                             <?php echo $form->error($model, 'revision'); ?>
                         </td>
-                        
+
                         <td>
                             <?php echo $form->textField($model, 'date', array('readonly' => true)); ?>
                             <?php echo $form->error($model, 'date'); ?>
                         </td>
-                        
+
                         <td>
                             <?php echo $form->textArea($model, 'note', array('rows' => 5, 'cols' => 30)); ?>
                             <?php echo $form->error($model, 'note'); ?>
                         </td>
-                        
+
                         <td>
                             <?php echo $form->hiddenField($model, 'supervisor_id', array('readonly' => true, 'value' => Yii::app()->user->getId())); ?>
                             <?php echo $form->textField($model, 'supervisor_name', array('readonly' => true, 'value' => Yii::app()->user->getName())); ?>
@@ -184,14 +184,14 @@
                         </td>
                     </tr>
                 </table>
-                
+
                 <hr/>
-                
+
                 <div class="field buttons text-center">
                     <?php echo CHtml::submitButton('Save', array('class' => 'button cbutton')); ?>
                 </div>
             </div>
         </div>
-<?php $this->endWidget(); ?>
-
-    </div><!-- form -->
+        <?php $this->endWidget(); ?>
+    </div>
+</div><!-- form -->

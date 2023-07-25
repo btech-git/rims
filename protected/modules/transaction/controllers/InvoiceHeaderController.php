@@ -126,7 +126,7 @@ class InvoiceHeaderController extends Controller {
                         $jurnalUmumHpp = $detail->product->productSubMasterCategory->coa_hpp;
                         $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
                         $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
-                        $journalReferences[$jurnalUmumHpp]['values'][] = $detail->quantity * $detail->product->hpp;
+                        $journalReferences[$jurnalUmumHpp]['values'][] = $detail->product->averageCogs;
 
                         $jurnalUmumPenjualan = $detail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
                         $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
@@ -136,7 +136,7 @@ class InvoiceHeaderController extends Controller {
                         $jurnalUmumOutstandingPart = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
                         $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
                         $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
-                        $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $detail->quantity * $detail->product->hpp;
+                        $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $detail->product->averageCogs;
 
                         $registrationProduct = RegistrationProduct::model()->findByAttributes(array('registration_transaction_id' => $model->registration_transaction_id, 'product_id' => $detail->product_id));
                         if (!empty($registrationProduct) && $registrationProduct->discount > 0) {

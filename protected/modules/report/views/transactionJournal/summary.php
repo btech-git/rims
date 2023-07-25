@@ -43,6 +43,7 @@ Yii::app()->clientScript->registerScript('report', '
                                     <?php echo CHtml::activeDropDownlist($jurnalUmum, 'transaction_type', array(
                                         'Invoice' => 'Sales',
                                         'CASH' => 'Cash',
+                                        'JP' => 'Penyesuaian',
                                         'Pout' => 'Purchase Payment',
                                         'Pin' => 'Sales Receipt',
                                         'MI' => 'Movement In',
