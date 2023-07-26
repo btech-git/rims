@@ -39,7 +39,7 @@ function tanggal($date) {
 
     <div class="supplier">
         <div class="left">
-            <table style="margin-top: 0px; font-size: 9px">
+            <table style="margin-top: 0px; font-size: 11px">
                 <tr>
                     <td>To</td>
                     <td>:</td>
@@ -64,7 +64,7 @@ function tanggal($date) {
         </div>
         <div class="right">
             <h3 style="margin-top: 0px; font-size: 12px">Purchase Order</h3>
-            <table style="margin-top: 0px; font-size: 9px">
+            <table style="margin-top: 0px; font-size: 11px">
                 <tr>
                     <td>Date</td>
                     <td>:</td>
@@ -87,7 +87,7 @@ function tanggal($date) {
     </div>
 
     <div class="purchase-order">
-        <table style="margin-top: 0px; font-size: 9px">
+        <table style="margin-top: 0px; font-size: 11px">
             <tr>
                 <th class="no">No</th>
                 <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
@@ -150,23 +150,23 @@ function tanggal($date) {
             <?php endfor; ?>
                 
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 9px" class="result">Sub Total</td>
+                <td colspan="9" style="text-align:right; font-size: 11px" class="result">Sub Total</td>
                 <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 9px" class="result">PPN</td>
+                <td colspan="9" style="text-align:right; font-size: 11px" class="result">PPN</td>
                 <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 9px" class="result">Total</td>
+                <td colspan="9" style="text-align:right; font-size: 11px" class="result">Total</td>
                 <td style="text-align:right; font-size: 9px">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
         </table>
         
-        <div class="row" style="font-size: 9px">
+        <div class="row" style="font-size: 11px">
             Catatan: 
             <?php echo CHtml::encode(CHtml::value($po, 'note')); ?>
         </div>
