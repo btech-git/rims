@@ -133,7 +133,7 @@ function tanggal($date) {
                 <?php $no++;
             } ?>
                 
-            <?php for ($j = 3, $i = $i % $j + 1; $j > $i; $j--): ?>
+            <?php for ($j = 5, $i = $i % $j + 1; $j > $i; $j--): ?>
                 <tr class="isi">
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -150,17 +150,17 @@ function tanggal($date) {
             <?php endfor; ?>
                 
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 11px" class="result">Sub Total</td>
+                <td colspan="9" style="text-align:right; font-size: 11px">Sub Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 11px" class="result">PPN</td>
+                <td colspan="9" style="text-align:right; font-size: 11px">PPN</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 11px" class="result">Total</td>
+                <td colspan="9" style="text-align:right; font-size: 11px">Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
                 <td></td>
             </tr>
