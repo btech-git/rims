@@ -165,7 +165,8 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        <?php echo $form->textField($model, 'date', array('readonly' => true, 'value' => date('Y-m-d'))); ?>
+                        <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model' => $model,
                             'attribute' => "date",
                             // additional javascript options for the date picker plugin
@@ -178,7 +179,7 @@
                             'htmlOptions' => array(
                                 'value' => date('Y-m-d'),
                             ),
-                        )); ?>
+                        ));*/ ?>
                         <?php echo $form->error($model, 'date'); ?>
                     </div>
                 </div>
@@ -203,7 +204,8 @@
                         </div>
                         
                         <div class="small-8 columns">
-                            <?php echo $form->textField($model, 'supervisor_id', array('readonly' => true, 'value' => Yii::app()->user->getName())); ?>
+                            <?php echo $form->hiddenField($model, 'supervisor_id', array('readonly' => true, 'value' => Yii::app()->user->getId())); ?>
+                            <?php echo $form->textField($model, 'supervisor_name', array('readonly' => true, 'value' => Yii::app()->user->getName())); ?>
                             <?php echo $form->error($model, 'supervisor_id'); ?>
                         </div>
                     </div>
