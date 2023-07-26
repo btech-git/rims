@@ -180,9 +180,9 @@ function tanggal($date) {
                 <td style="width: 30%">Mengetahui,</td>
             </tr>
             <tr>
-                <td style="height: 60px">&nbsp;</td>
-                <td style="height: 60px">&nbsp;</td>
-                <td style="height: 60px">&nbsp;</td>
+                <td style="height: 80px">&nbsp;</td>
+                <td style="height: 80px">&nbsp;</td>
+                <td style="height: 80px">&nbsp;</td>
             </tr>
             <tr>
                 <td style="font-size: 9px">(Sausan)</td>
