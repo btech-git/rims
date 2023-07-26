@@ -87,7 +87,7 @@ function tanggal($date) {
     </div>
 
     <div class="purchase-order">
-        <table style="margin-top: 0px; font-size: 11px">
+        <table style="margin-top: 0px; font-size: 10px">
             <tr>
                 <th class="no">No</th>
                 <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
