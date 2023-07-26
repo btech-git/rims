@@ -111,7 +111,7 @@ function tanggal($date) {
             $no = 1;
             foreach ($po_detail as $x) {
                 ?>
-                <tr class="isi">
+                <tr>
                     <td class="noo"><?php echo $no; ?></td>
                     <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
                         <td style="margin-top: 0px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
@@ -185,9 +185,9 @@ function tanggal($date) {
                 <td style="height: 80px">&nbsp;</td>
             </tr>
             <tr>
-                <td style="font-size: 9px">(Sausan)</td>
-                <td style="font-size: 9px">(Grace)</td>
-                <td style="font-size: 9px">(Newira)</td>
+                <td>(Sausan)</td>
+                <td>(Grace)</td>
+                <td>(Newira)</td>
             </tr>
         </table>
     </div>
