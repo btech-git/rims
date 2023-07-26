@@ -12,7 +12,28 @@ function tanggal($date) {
 ?>
 <div style="margin-top: 0px; font-size: 9px">
     <div class="header">
-        <img src="images/rims po head.jpg" alt="">
+        <table>
+            <tr>
+                <td rowspan="6" style="width: 60%"><img src="images/rims po head.png" alt=""></td>
+                <td>Jl. Raya Jati Asih/Jati Kramat . 84993984/77 Fax. 84993989</td>
+            </tr>
+            <tr>
+                <td>Jl. Raya Kalimalang no. 8, Kp. Dua . 8843656 Fax. 88966753</td>
+            </tr>
+            <tr>
+                <td>Jl. Raya Kalimalang Q/2D . 8643594/95 Fax. 8645008</td>
+            </tr>
+            <tr>
+                <td>Jl. Raya Radin Inten II no. 9 . 8629545/46 Fax. 8627313</td>
+            </tr>
+            <tr>
+                <td>Jl. Celebration Boulevard blok AA 9/35 . 8261594</td>
+            </tr>
+            <tr>
+                <td>EMAIL info@raperind.com</td>
+            </tr>
+        </table>
+        
     </div>
 
     <div class="supplier">
@@ -168,9 +189,5 @@ function tanggal($date) {
                 <td style="font-size: 9px">(Newira)</td>
             </tr>
         </table>
-    </div>
-
-    <div class="footer">
-        <img src="images/rims po foot.jpg" alt="">
     </div>
 </div>
