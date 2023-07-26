@@ -14,7 +14,7 @@ function tanggal($date) {
     <div class="header">
         <table style="font-size: 8px">
             <tr>
-                <td rowspan="6" style="width: 60%"><img src="images/rims po head.png" alt=""></td>
+                <td rowspan="6" style="width: 60%"><img src="images/rims po head.png" alt="logo" height="200"></td>
                 <td>Jl. Raya Jati Asih/Jati Kramat . 84993984/77 Fax. 84993989</td>
             </tr>
             <tr>
