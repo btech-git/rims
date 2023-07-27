@@ -118,7 +118,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumOutstandingPart->save();
 
                 } else if ($model->request_type == 'Sent Request') {
-                    $hppPrice = $detail->product->hpp * $detail->quantity_delivery;
+                    $hppPrice = $detail->sentRequestDetail->unit_price * $detail->quantity_delivery;
 
                     //save coa persediaan product master
                     $jurnalUmumMasterOutstandingPart = new JurnalUmum;
