@@ -241,7 +241,7 @@ class TransactionDeliveryOrderController extends Controller {
                     $jurnalUmumInventoryInTransit->save();
 
                 } else if ($model->request_type == 'Transfer Request') {
-                    $hppPrice = $detail->product->hpp * $detail->quantity_delivery;
+                    $hppPrice = $detail->transferRequestDetail->unit_price * $detail->quantity_delivery;
 
                     //save coa persediaan product master
                     $jurnalUmumMasterOutstandingPart = new JurnalUmum;
