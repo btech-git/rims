@@ -288,8 +288,9 @@ class DeliveryOrders extends CComponent {
                 $deliveryItemDetails = TransactionDeliveryOrderDetail::model()->findAll($criteria);
 
                 $quantity = 0;
-                foreach ($deliveryItemDetails as $deliveryItemDetail)
+                foreach ($deliveryItemDetails as $deliveryItemDetail) {
                     $quantity += $deliveryItemDetail->quantity_delivery;
+                }
 
                 $sentRequestDetail = TransactionSentRequestDetail::model()->findByAttributes(array('id' => $detail->sent_request_detail_id, 'sent_request_id' => $this->header->sent_request_id));
                 $sentRequestDetail->sent_request_quantity_left = $detail->quantity_request - ($detail->quantity_delivery + $quantity);
@@ -301,7 +302,7 @@ class DeliveryOrders extends CComponent {
                 
                 $transfer = TransactionTransferRequest::model()->findByPk($this->header->transfer_request_id);
                 $branch = Branch::model()->findByPk($this->header->sender_branch_id);
-                $hppPrice = $detail->product->hpp * $detail->quantity_delivery;
+                $hppPrice = $sentRequestDetail->amount; //$detail->product->hpp * $detail->quantity_delivery;
 
                 //save coa persediaan product master
                 $jurnalUmumMasterOutstandingPart = new JurnalUmum;

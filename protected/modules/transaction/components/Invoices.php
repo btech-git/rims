@@ -208,7 +208,7 @@ class Invoices extends CComponent {
                 $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
                 $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
                 $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumHpp]['values'][] = $rProduct->product->averageCogs;
+                $journalReferences[$jurnalUmumHpp]['values'][] = $rProduct->product->averageCogs * $rProduct->quantity;
 
                 $jurnalUmumPenjualan = $rProduct->product->productSubMasterCategory->coa_penjualan_barang_dagang;
                 $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
@@ -218,7 +218,7 @@ class Invoices extends CComponent {
                 $jurnalUmumOutstandingPart = $rProduct->product->productSubMasterCategory->coa_outstanding_part_id;
                 $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
                 $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $rProduct->product->averageCogs;
+                $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $rProduct->product->averageCogs * $rProduct->quantity;
 
                 if ($rProduct->discount > 0.00) {
                     $jurnalUmumDiskon = $rProduct->product->productSubMasterCategory->coa_diskon_penjualan;
