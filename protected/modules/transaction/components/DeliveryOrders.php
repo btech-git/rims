@@ -302,7 +302,7 @@ class DeliveryOrders extends CComponent {
                 
                 $transfer = TransactionTransferRequest::model()->findByPk($this->header->transfer_request_id);
                 $branch = Branch::model()->findByPk($this->header->sender_branch_id);
-                $hppPrice = $sentRequestDetail->amount; //$detail->product->hpp * $detail->quantity_delivery;
+                $hppPrice = $sentRequestDetail->unit_price * $detail->quantity_delivery;
 
                 //save coa persediaan product master
                 $jurnalUmumMasterOutstandingPart = new JurnalUmum;
