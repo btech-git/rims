@@ -66,7 +66,8 @@ class TransactionReceiveItemController extends Controller {
 
             foreach($recieveDetails as $detail) {
                 if ($detail->qty_received > 0) {
-                    $value = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
+                    $referenceData = empty($detail->purchase_order_detail_id) ? $detail->deliveryOrderDetail->transferRequestDetail : $detail->purchaseOrderDetail;
+                    $value = $detail->qty_received * $referenceData->unit_price;
                     $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
                     $journalReferences[$coaId]['debet_kredit'] = 'D';
                     $journalReferences[$coaId]['is_coa_category'] = 0;
