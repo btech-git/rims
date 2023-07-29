@@ -58,22 +58,31 @@ class TransactionSentRequestController extends Controller {
                 'kode_transaksi' => $model->sent_request_no,
             ));
             
+            $transactionType = 'SR';
+            $postingDate = date('Y-m-d');
+            $transactionCode = $model->sent_request_no;
+            $transactionDate = $model->sent_request_date;
+            $branchId = $model->requester_branch_id;
+            $transactionSubject = 'Sent Request Main';
+
+            $journalReferences = array();
+        
             $coaInterbranchRequester = BranchCoaInterbranch::model()->findByAttributes(array(
                 'branch_id_from' => $model->requester_branch_id, 
                 'branch_id_to' => $model->destination_branch_id,
             ));
 
             $jurnalUmumInterbranchRequester = new JurnalUmum;
-            $jurnalUmumInterbranchRequester->kode_transaksi = $model->sent_request_no;
-            $jurnalUmumInterbranchRequester->tanggal_transaksi = $model->sent_request_date;
+            $jurnalUmumInterbranchRequester->kode_transaksi = $transactionCode;
+            $jurnalUmumInterbranchRequester->tanggal_transaksi = $transactionDate;
             $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
-            $jurnalUmumInterbranchRequester->branch_id = $model->requester_branch_id;
+            $jurnalUmumInterbranchRequester->branch_id = $branchId;
             $jurnalUmumInterbranchRequester->total = $model->total_price;
             $jurnalUmumInterbranchRequester->debet_kredit = 'D';
-            $jurnalUmumInterbranchRequester->tanggal_posting = date('Y-m-d');
-            $jurnalUmumInterbranchRequester->transaction_subject = 'Sent Request Main';
+            $jurnalUmumInterbranchRequester->tanggal_posting = $postingDate;
+            $jurnalUmumInterbranchRequester->transaction_subject = $transactionSubject;
             $jurnalUmumInterbranchRequester->is_coa_category = 0;
-            $jurnalUmumInterbranchRequester->transaction_type = 'SR';
+            $jurnalUmumInterbranchRequester->transaction_type = $transactionType;
             $jurnalUmumInterbranchRequester->save();
 
             foreach ($model->transactionSentRequestDetails as $detail) {
@@ -81,34 +90,55 @@ class TransactionSentRequestController extends Controller {
                 //save coa persediaan product master
                 $hppPrice = $detail->unit_price * $detail->quantity;
 
-                $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
-                $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $model->sent_request_no;
-                $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $model->sent_request_date;
-                $jurnalUmumMasterOutstandingPartRequester->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
-                $jurnalUmumMasterOutstandingPartRequester->branch_id = $model->requester_branch_id;
-                $jurnalUmumMasterOutstandingPartRequester->total = $hppPrice;
-                $jurnalUmumMasterOutstandingPartRequester->debet_kredit = 'K';
-                $jurnalUmumMasterOutstandingPartRequester->tanggal_posting = date('Y-m-d');
-                $jurnalUmumMasterOutstandingPartRequester->transaction_subject = 'Sent Request Main';
-                $jurnalUmumMasterOutstandingPartRequester->is_coa_category = 1;
-                $jurnalUmumMasterOutstandingPartRequester->transaction_type = 'SR';
-                $jurnalUmumMasterOutstandingPartRequester->save();
-//
-//                    //save coa persedian product sub master
-                $jurnalUmumOutstandingPartRequester = new JurnalUmum;
-                $jurnalUmumOutstandingPartRequester->kode_transaksi = $model->sent_request_no;
-                $jurnalUmumOutstandingPartRequester->tanggal_transaksi = $model->sent_request_date;
-                $jurnalUmumOutstandingPartRequester->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
-                $jurnalUmumOutstandingPartRequester->branch_id = $model->requester_branch_id;
-                $jurnalUmumOutstandingPartRequester->total = $hppPrice;
-                $jurnalUmumOutstandingPartRequester->debet_kredit = 'K';
-                $jurnalUmumOutstandingPartRequester->tanggal_posting = date('Y-m-d');
-                $jurnalUmumOutstandingPartRequester->transaction_subject = 'Sent Request Main';
-                $jurnalUmumOutstandingPartRequester->is_coa_category = 0;
-                $jurnalUmumOutstandingPartRequester->transaction_type = 'SR';
-                $jurnalUmumOutstandingPartRequester->save();
+                $coaOutstandingPartId = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+                $journalReferences[$coaOutstandingPartId]['debet_kredit'] = 'K';
+                $journalReferences[$coaOutstandingPartId]['is_coa_category'] = 0;
+                $journalReferences[$coaOutstandingPartId]['values'][] = $hppPrice;
+
+//                $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
+//                $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $model->sent_request_no;
+//                $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $model->sent_request_date;
+//                $jurnalUmumMasterOutstandingPartRequester->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
+//                $jurnalUmumMasterOutstandingPartRequester->branch_id = $model->requester_branch_id;
+//                $jurnalUmumMasterOutstandingPartRequester->total = $hppPrice;
+//                $jurnalUmumMasterOutstandingPartRequester->debet_kredit = 'K';
+//                $jurnalUmumMasterOutstandingPartRequester->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumMasterOutstandingPartRequester->transaction_subject = 'Sent Request Main';
+//                $jurnalUmumMasterOutstandingPartRequester->is_coa_category = 1;
+//                $jurnalUmumMasterOutstandingPartRequester->transaction_type = 'SR';
+//                $jurnalUmumMasterOutstandingPartRequester->save();
+
+                    //save coa persedian product sub master
+//                $jurnalUmumOutstandingPartRequester = new JurnalUmum;
+//                $jurnalUmumOutstandingPartRequester->kode_transaksi = $model->sent_request_no;
+//                $jurnalUmumOutstandingPartRequester->tanggal_transaksi = $model->sent_request_date;
+//                $jurnalUmumOutstandingPartRequester->coa_id = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+//                $jurnalUmumOutstandingPartRequester->branch_id = $model->requester_branch_id;
+//                $jurnalUmumOutstandingPartRequester->total = $hppPrice;
+//                $jurnalUmumOutstandingPartRequester->debet_kredit = 'K';
+//                $jurnalUmumOutstandingPartRequester->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumOutstandingPartRequester->transaction_subject = 'Sent Request Main';
+//                $jurnalUmumOutstandingPartRequester->is_coa_category = 0;
+//                $jurnalUmumOutstandingPartRequester->transaction_type = 'SR';
+//                $jurnalUmumOutstandingPartRequester->save();
             }
 
+                   
+            foreach ($journalReferences as $coaId => $journalReference) {
+                $jurnalUmumOutstandingPartRequester = new JurnalUmum();
+                $jurnalUmumOutstandingPartRequester->kode_transaksi = $transactionCode;
+                $jurnalUmumOutstandingPartRequester->tanggal_transaksi = $transactionDate;
+                $jurnalUmumOutstandingPartRequester->coa_id = $coaId;
+                $jurnalUmumOutstandingPartRequester->branch_id = $branchId;
+                $jurnalUmumOutstandingPartRequester->total = array_sum($journalReference['values']);
+                $jurnalUmumOutstandingPartRequester->debet_kredit = $journalReference['debet_kredit'];
+                $jurnalUmumOutstandingPartRequester->tanggal_posting = $postingDate;
+                $jurnalUmumOutstandingPartRequester->transaction_subject = $transactionSubject;
+                $jurnalUmumOutstandingPartRequester->is_coa_category = $journalReference['is_coa_category'];
+                $jurnalUmumOutstandingPartRequester->transaction_type = $transactionType;
+                $jurnalUmumOutstandingPartRequester->save();
+            }
+            
             $this->redirect(array('view', 'id' => $id));
         }
 
