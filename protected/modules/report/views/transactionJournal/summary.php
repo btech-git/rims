@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerScript('report', '
                                         'MR' => 'Material',
 //                                        'Invoice GR' => 'GENERAL REPAIR',
 //                                        'Invoice BR' => 'BODY REPAIR',
-//                                        'DO' => 'DELIVERY',
+                                        'DO' => 'DELIVERY',
 //                                        'TR' => 'TRANSFER REQUEST',
 //                                        'RCI' => 'RECEIVE',
 //                                        'CSI' => 'CONSIGNMENT IN',
