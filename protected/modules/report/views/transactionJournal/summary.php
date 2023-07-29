@@ -57,6 +57,7 @@ Yii::app()->clientScript->registerScript('report', '
 //                                        'CSI' => 'CONSIGNMENT IN',
 //                                        'CSO' => 'CONSIGNMENT OUT',
 //                                        'JP' => 'JURNAL UMUM',
+                                        'SR' => 'SALES RETURN',
                                     ), array('empty' => '-- All Transaction --')); ?>
                                 </div>
                             </div>
