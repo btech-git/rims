@@ -298,6 +298,9 @@ class TransactionJournalController extends Controller {
         } else if ($codeNumberConstant === 'INV') {
             $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
             $this->redirect(array('/transaction/invoiceHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'RTO') {
+            $model = TransactionReturnOrder::model()->findByAttributes(array('return_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionReturnOrder/view', 'id' => $model->id));
         }
     }
 }
