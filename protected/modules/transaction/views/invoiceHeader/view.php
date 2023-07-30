@@ -138,11 +138,11 @@ $this->menu = array(
             <?php if (count($products) > 0) : ?>
                 <table>
                     <thead>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Discount</th>
-                        <th>Total</th>
+                        <th style="text-align: center">Product</th>
+                        <th style="text-align: center">Quantity</th>
+                        <th style="text-align: center">Unit Price</th>
+                        <th style="text-align: center">Discount</th>
+                        <th style="text-align: center">Total</th>
                     </thead>
                     
                     <tbody>
@@ -150,10 +150,10 @@ $this->menu = array(
                             <?php if ($detail->product_id != ""): ?>
                                 <tr>
                                     <td><?php echo $detail->product->name; ?></td>
-                                    <td><?php echo $detail->quantity; ?></td>
-                                    <td><?php echo number_format($detail->unit_price, 2); ?></td>
-                                    <td><?php echo number_format($detail->unit_price, 2); ?></td>
-                                    <td><?php echo number_format($detail->total_price, 2); ?></td>
+                                    <td style="text-align: center"><?php echo $detail->quantity; ?></td>
+                                    <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
+                                    <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
+                                    <td style="text-align: right"><?php echo number_format($detail->total_price, 2); ?></td>
                                 </tr>
                             <?php endif; ?>
                         <?php endforeach; ?>
@@ -165,8 +165,8 @@ $this->menu = array(
                 <table>
                     <thead>
                         <tr>
-                            <th>Service</th>
-                            <th>Price</th>
+                            <th style="text-align: center">Service</th>
+                            <th style="text-align: center">Price</th>
                         </tr>
                     </thead>
                     
@@ -174,8 +174,8 @@ $this->menu = array(
                         <?php foreach ($details as $i => $detail): ?>
                             <?php if ($detail->service_id != ""): ?>
                                 <tr>
-                                    <td ><?php echo $detail->service->name; ?></td>
-                                    <td><?php echo number_format($detail->total_price, 2); ?></td>
+                                    <td><?php echo $detail->service->name; ?></td>
+                                    <td style="text-align: right"><?php echo number_format($detail->total_price, 2); ?></td>
                                 </tr>
                             <?php endif ?>
                         <?php endforeach; ?>
