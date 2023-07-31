@@ -127,7 +127,7 @@
                                     $("#DateTo").show();
                                     var dateFromString = $("#' . CHtml::activeId($model, 'date_from') . '").val();
                                     var dateTo = new Date(dateFromString);
-                                    dateTo.setDate(dateTo.getDate() + parseInt(numberOfLeaveDayString) + 1);
+                                    dateTo.setDate(dateTo.getDate() + parseInt(numberOfLeaveDayString));
                                     var dateToString = dateTo.toISOString().slice(0, 10);
                                     $("#' . CHtml::activeId($model, 'date_to') . '").val(dateToString);
                                     $("#DateTo").val(dateToString);
