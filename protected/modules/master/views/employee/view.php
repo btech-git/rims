@@ -22,8 +22,8 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/employee/admin'; ?>"><span class="fa fa-list"></span>Manage Employees</a>
         <?php if (Yii::app()->user->checkAccess("masterEmployeeEdit")) { ?>
-            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>
-            <a class="button alert right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/delete', array('id' => $model->id)); ?>"><span class="fa fa-ban"></span>Resign</a>
+            <a class="button cbutton warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>
+            <a class="button cbutton alert right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/delete', array('id' => $model->id)); ?>"><span class="fa fa-ban"></span>Resign</a>
         <?php } ?>
         <h1>View Employee <?php echo $model->name; ?></h1>
 
