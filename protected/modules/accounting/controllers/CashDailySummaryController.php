@@ -52,7 +52,7 @@ class CashDailySummaryController extends Controller {
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = pi.customer_id
-                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual'" . $branchConditionSql . "
+                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual' AND pi.status IN ('CLEAR', 'Approved')" . $branchConditionSql . "
                 GROUP BY pi.branch_id, pi.payment_type_id
                 ORDER BY pi.branch_id, pi.payment_type_id";
         
