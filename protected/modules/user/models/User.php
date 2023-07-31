@@ -173,7 +173,36 @@ class User extends CActiveRecord {
         $criteria->compare('create_at', $this->create_at);
         $criteria->compare('lastvisit_at', $this->lastvisit_at);
         $criteria->compare('superuser', $this->superuser);
-        $criteria->compare('status', $this->status);
+        $criteria->compare('status', 1);
+        $criteria->compare('employee_id', $this->employee_id);
+        $criteria->compare('branch_id', $this->branch_id);
+
+        return new CActiveDataProvider(get_class($this), array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => Yii::app()->getModule('user')->user_page_size,
+            ),
+            'sort' => array(
+                'defaultOrder' => 'status DESC, username ASC',
+            ),
+        ));
+    }
+
+    public function searchResigned() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('username', $this->username, true);
+        $criteria->compare('password', $this->password);
+        $criteria->compare('email', $this->email, true);
+        $criteria->compare('activkey', $this->activkey);
+        $criteria->compare('create_at', $this->create_at);
+        $criteria->compare('lastvisit_at', $this->lastvisit_at);
+        $criteria->compare('superuser', $this->superuser);
+        $criteria->compare('status', 0);
         $criteria->compare('employee_id', $this->employee_id);
         $criteria->compare('branch_id', $this->branch_id);
 

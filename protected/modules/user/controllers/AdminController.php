@@ -63,6 +63,21 @@ class AdminController extends Controller {
           ));// */
     }
 
+    public function actionAdminResigned() {
+        $model = new User('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['User'])) {
+            $model->attributes = $_GET['User'];
+        }
+        
+        $dataProvider = $model->searchResigned();
+
+        $this->render('adminResigned', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     /**
      * Displays a particular model.
      */
