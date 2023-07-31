@@ -51,6 +51,11 @@ $('.search-form form').submit(function(){
             'id'=>'employee-onleave-category-grid',
             'dataProvider'=>$model->search(),
             'filter'=>$model,
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager' => array(
+                'cssFile' => false,
+                'header' => '',
+            ),
             'columns'=>array(
                 'id',
                 'name',
