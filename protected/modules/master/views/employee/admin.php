@@ -42,7 +42,7 @@ $('.search-form form').submit(function(){
                 <span class="fa fa-plus"></span>New Employee
             </a>
         <?php } ?>
-        <a class="button primary center" href="<?php echo Yii::app()->baseUrl . '/master/employee/adminResigned'; ?>">
+        <a class="button cbutton danger right" href="<?php echo Yii::app()->baseUrl . '/master/employee/adminResigned'; ?>">
             Resigned Employees
         </a>
         <h1>Manage Employees</h1>
