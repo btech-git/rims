@@ -335,13 +335,14 @@ class EmployeeController extends Controller {
     public function actionDelete($id) {
         $model = $this->loadModel($id);
         $model->is_deleted = 1;
+        $model->status = 'Inactive';
         $model->deleted_by = Yii::app()->user->id;
         $model->deleted_at = date('Y-m-d H:i:s');
-        $model->update(array('is_deleted', 'deleted_by', 'deleted_at'));
+        $model->update(array('is_deleted', 'deleted_by', 'deleted_at', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            $this->redirect(array('admin'));
         }
     }
 

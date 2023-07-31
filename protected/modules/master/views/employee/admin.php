@@ -104,25 +104,26 @@ $('.search-form form').submit(function(){
                         'name' => 'level_id', 
                         'value' => 'CHtml::encode(CHtml::value($data, "level.name"))',
                     ),
+                    'status',
                     array(
                         'class' => 'CButtonColumn',
-                        'template' => '{edit} {resign}',
+                        'template' => '{edit}',
                         'buttons' => array(
                             'edit' => array(
                                 'label' => 'edit',
                                 // 'visible'=>'($data->is_deleted == 0)? TRUE:FALSE',
-                                'visible' => '(Yii::app()->user->checkAccess("master.employee.update"))',
+                                'visible' => '(Yii::app()->user->checkAccess("masterEmployeeEdit"))',
                                 'url' => 'Yii::app()->createUrl("master/employee/update", array("id"=>$data->id))',
                             ),
-                            'resign' => array(
-                                'label' => 'resign',
-                                'visible' => '($data->is_deleted == 0)? TRUE:FALSE',
-                                'url' => 'Yii::app()->createUrl("/master/employee/delete", array("id" => $data->id))',
-                                'options' => array(
-                                    // 'class'=>'btn red delete',
-                                    'onclick' => 'return confirm("Are you sure this Employee is resigned?");',
-                                )
-                            ),
+//                            'resign' => array(
+//                                'label' => 'resign',
+//                                'visible' => '($data->is_deleted == 0)? TRUE:FALSE',
+//                                'url' => 'Yii::app()->createUrl("/master/employee/delete", array("id" => $data->id))',
+//                                'options' => array(
+//                                    // 'class'=>'btn red delete',
+//                                    'onclick' => 'return confirm("Are you sure this Employee is resigned?");',
+//                                )
+//                            ),
                         ),
                     ),
                 ),

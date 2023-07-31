@@ -25,7 +25,7 @@ class PublicDayOffController extends Controller {
             $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('generalManager')))
+            if (!(Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit')))
                 $this->redirect(array('/site/login'));
         }
 
