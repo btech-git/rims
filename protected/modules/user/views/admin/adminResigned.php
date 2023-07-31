@@ -36,10 +36,10 @@ $('.search-form form').submit(function(){
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button primary right" href="<?php echo Yii::app()->baseUrl . '/master/employee/admin'; ?>">
-            Manage Employees
+        <a class="button primary right" href="<?php echo Yii::app()->baseUrl . '/user/admin/admin'; ?>">
+            Manage Users
         </a>
-        <h1>Resigned Employees</h1>
+        <h1>Inactive Users</h1>
 
         <!-- BEGIN aSearch -->
         <div class="search-bar">

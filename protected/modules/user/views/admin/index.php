@@ -38,12 +38,12 @@ $('.search-form form').submit(function(){
         <div class="small-12 columns">
             <div class="clearfix page-action">
                 <div class="button-group right">
-                    <a class="button success" href="<?php echo Yii::app()->baseUrl . '/user/admin/create'; ?>"><span class="fa fa-plus"></span>New User</a>&nbsp;
 <!--                    <a class="button success" href="<?php //echo Yii::app()->baseUrl.'/user/profileField/admin'; ?>"><span class="fa fa-plus"></span>Manage Profile Fields</a>&nbsp;
                     <a class="button success" href="<?php //echo Yii::app()->baseUrl.'/rights'; ?>"><span class="fa fa-plus"></span>Manage Access Control</a>-->
-                    <a class="button cbutton alert right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/master/employee/adminResigned'; ?>">
-                        <span class="fa fa-ban"></span>Resigned Employees
+                    <a class="button cbutton alert right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/user/admin/adminResigned'; ?>">
+                        <span class="fa fa-ban"></span>Inactive Users
                     </a>
+                    <a class="button success" href="<?php echo Yii::app()->baseUrl . '/user/admin/create'; ?>"><span class="fa fa-plus"></span>New User</a>&nbsp;
                 </div>
                 <h2>Manage Users</h2>
             </div>
