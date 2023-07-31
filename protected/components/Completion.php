@@ -13,8 +13,8 @@ class Completion extends CComponent {
         foreach ($items as $item) {
             $rows[] = array(
                 'label' => $item->code . ' - ' . $item->name, // label for dropdown list
-                'value' => $item->id, // value for input field
-                'id' => $item->name, // return value from autocomplete
+                'value' => $item->name, // value for input field
+                'id' => $item->id, // return value from autocomplete
             );
         }
 

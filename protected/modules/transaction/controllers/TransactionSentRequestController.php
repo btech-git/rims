@@ -123,7 +123,6 @@ class TransactionSentRequestController extends Controller {
 //                $jurnalUmumOutstandingPartRequester->save();
             }
 
-                   
             foreach ($journalReferences as $coaId => $journalReference) {
                 $jurnalUmumOutstandingPartRequester = new JurnalUmum();
                 $jurnalUmumOutstandingPartRequester->kode_transaksi = $transactionCode;

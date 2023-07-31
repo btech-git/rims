@@ -27,22 +27,19 @@
                         <?php echo $form->labelEx($model, 'employee_id'); ?>
                     </div>
                     <div class="small-8 columns">
+                        <?php echo $form->hiddenField($model, 'employee_id'); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-                            'model' => $model,
-                            'attribute' => 'employee_id',
+                            'name' => 'EmployeeName',
+                            'value' => CHtml::value($model, 'employee.name'),
                             'sourceUrl' => CController::createUrl('employeeCompletion'),
                             //additional javascript options for the autocomplete plugin
                             'options' => array(
                                 'minLength' => '2',
                                 'select' => 'js:function(event, ui) {
-                                    $("#employee_name").html(ui.item.id);
+                                    $("#' . CHtml::activeId($model, 'employee_id') . '").val(ui.item.id);
                                 }',
                             ),
                         )); ?>
-                        
-                        <?php echo CHtml::openTag('span', array('id' => 'employee_name')); ?>
-                            <?php echo CHtml::encode(CHtml::value($model, 'employee.name')); ?>
-                        <?php echo CHtml::closeTag('span'); ?>
                         
                         <?php /*echo $form->hiddenField($model, 'employee_id'); ?>
                         <?php echo $form->textField($model, 'employee_name', array(
@@ -108,7 +105,35 @@
                         <?php echo $form->labelEx($model,'Jenis Cuti'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model,'employee_onleave_category_id', CHtml::listData(EmployeeOnleaveCategory::model()->findAll(), 'id', 'nameAndDays'), array('empty' => '-- Pilih --')); ?>
+                        <?php $employeeOnleaveCategories = EmployeeOnleaveCategory::model()->findAll(); ?>
+                        <?php $employeeOnleaveCategoryChoiceOptions = array(); ?>
+                        <?php foreach ($employeeOnleaveCategories as $employeeOnleaveCategory): ?>
+                            <?php $employeeOnleaveCategoryChoiceOptions[$employeeOnleaveCategory->id] = array('data-number-of-leave-day' => $employeeOnleaveCategory->number_of_days); ?>
+                        <?php endforeach; ?>
+                        
+                        <?php echo $form->dropDownlist($model, 'employee_onleave_category_id', CHtml::listData($employeeOnleaveCategories, 'id', 'nameAndDays'), array(
+                            'empty' => '-- Pilih --',
+                            'options' => $employeeOnleaveCategoryChoiceOptions,
+                            'onchange' => '
+                                var numberOfLeaveDayString = $("option[value=" + $(this).val() + "]", this).attr("data-number-of-leave-day");
+                                $("#' . CHtml::activeId($model, 'day') . '").val(numberOfLeaveDayString);
+                                if (numberOfLeaveDayString === "0") {
+                                    $("#' . CHtml::activeId($model, 'date_to') . '").prop("readonly", false);
+                                    $("#' . CHtml::activeId($model, 'date_to') . '").show();
+                                    $("#DateTo").hide();
+                                } else {
+                                    $("#' . CHtml::activeId($model, 'date_to') . '").prop("readonly", true);
+                                    $("#' . CHtml::activeId($model, 'date_to') . '").hide();
+                                    $("#DateTo").show();
+                                    var dateFromString = $("#' . CHtml::activeId($model, 'date_from') . '").val();
+                                    var dateTo = new Date(dateFromString);
+                                    dateTo.setDate(dateTo.getDate() + parseInt(numberOfLeaveDayString) + 1);
+                                    var dateToString = dateTo.toISOString().slice(0, 10);
+                                    $("#' . CHtml::activeId($model, 'date_to') . '").val(dateToString);
+                                    $("#DateTo").val(dateToString);
+                                }
+                            '
+                        )); ?>
                         <?php echo $form->error($model,'employee_onleave_category_id'); ?>
                     </div>
                 </div>
@@ -172,7 +197,7 @@
                         <?php echo $form->labelEx($model, 'Sampai Tanggal'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php //echo $form->textField($model, 'date_to', array('readonly' => true)); ?>
+                        <?php echo CHtml::textField('DateTo', $model->date_to, array('readonly' => true, 'style' => 'display: ' . ($model->employeeOnleaveCategory !== null && (int) $model->employeeOnleaveCategory->number_of_days > 0 ? 'block' : 'none'))); ?>
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model' => $model,
                             'attribute' => "date_to",
@@ -189,9 +214,10 @@
                                     var dateFrom = new Date(strDateFrom);
                                     var dateTo = new Date(strDateTo);
                                     var diff_in_time = dateTo.getTime() - dateFrom.getTime();
-                                    var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+                                    var diff_in_days = diff_in_time / (1000 * 3600 * 24) + 1;
                                     $("#EmployeeDayoff_day").val(diff_in_days);
-                                '
+                                ',
+                                'style' => 'display: ' . ($model->employeeOnleaveCategory !== null && (int) $model->employeeOnleaveCategory->number_of_days === 0 ? 'block' : 'none'),
                             ),
                         )); ?>
                         <?php echo $form->error($model, 'date_to'); ?>
