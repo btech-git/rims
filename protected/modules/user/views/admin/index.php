@@ -42,8 +42,8 @@ $('.search-form form').submit(function(){
                     <a class="button success" href="<?php //echo Yii::app()->baseUrl.'/rights'; ?>"><span class="fa fa-plus"></span>Manage Access Control</a>-->
                     <a class="button cbutton alert right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/user/admin/adminResigned'; ?>">
                         <span class="fa fa-ban"></span>Inactive Users
-                    </a>
-                    <a class="button success" href="<?php echo Yii::app()->baseUrl . '/user/admin/create'; ?>"><span class="fa fa-plus"></span>New User</a>&nbsp;
+                    </a>&nbsp;
+                    <a class="button cbutton success right" href="<?php echo Yii::app()->baseUrl . '/user/admin/create'; ?>"><span class="fa fa-plus"></span>New User</a>
                 </div>
                 <h2>Manage Users</h2>
             </div>
