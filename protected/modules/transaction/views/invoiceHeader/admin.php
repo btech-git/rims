@@ -234,6 +234,7 @@ $('#invoiceSearch').submit(function(){
                                                 'NOT PAID' => 'NOT PAID',
                                                 'CLEAR' => 'CLEAR',
                                                 'INVOICING' => 'INVOICING',
+                                                'CANCELLED!!!' => 'CANCEL',
                                             ), array('prompt' => 'Select',)); ?>
                                         </div>
                                     </div>
