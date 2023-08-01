@@ -78,14 +78,16 @@
                     </td>
                 </tr>	
                 <tr>
-                    <?php foreach ($warehouses as $key => $warehouse):
-                        $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
-                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
-                    ?>
-                        <?php if ($stock < 0): ?>
-                            <td colspan="12"><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                    <td colspan="12">
+                        <?php foreach ($warehouses as $key => $warehouse):
+                            $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
+                            $stock = !empty($inventory) ? $inventory->total_stock : 0;
+                        ?>
+                            <?php if ($stock < 0): ?>
+                                <?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
