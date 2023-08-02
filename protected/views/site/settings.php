@@ -144,6 +144,11 @@
                                         'url' => array('/master/employeeOnleaveCategory/admin'), 
 //                                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || Yii::app()->user->checkAccess('masterHolidayApproval')
                                     ),
+                                    array(
+                                        'label' => 'Absensi Karyawan', 
+                                        'url' => array('/master/employeeTimesheet/admin'), 
+//                                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || Yii::app()->user->checkAccess('masterHolidayApproval')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

@@ -175,14 +175,25 @@
                             ),
                             'htmlOptions' => array(
                                 'onchange' => '
-//                                    $("#EmployeeDayoff_day").val("");$("#EmployeeDayoff_date_to").val("");
-                                    var strDateFrom = $("#EmployeeDayoff_date_from").val();
-                                    var strDateTo = $("#EmployeeDayoff_date_to").val();
-                                    var dateFrom = new Date(strDateFrom);
-                                    var dateTo = new Date(strDateTo);
-                                    var diff_in_time = dateTo.getTime() - dateFrom.getTime();
-                                    var diff_in_days = diff_in_time / (1000 * 3600 * 24);
-                                    $("#EmployeeDayoff_day").val(diff_in_days);
+                                    var employeeOnleaveCategoryElement = $("#' . CHtml::activeId($model, 'employee_onleave_category_id') . '");
+                                    var categoryId = employeeOnleaveCategoryElement.val();
+                                    var numberOfLeaveDayString = $("option[value=\'" + categoryId + "\']", employeeOnleaveCategoryElement).attr("data-number-of-leave-day");
+                                    if (numberOfLeaveDayString === "0") {
+                                        var strDateFrom = $(this).val();
+                                        var strDateTo = $("#' . CHtml::activeId($model, 'date_to') . '").val();
+                                        var dateFrom = new Date(strDateFrom);
+                                        var dateTo = new Date(strDateTo);
+                                        var diffInTime = dateTo.getTime() - dateFrom.getTime();
+                                        var diffInDays = diffInTime / (1000 * 3600 * 24) + 1;
+                                        $("#EmployeeDayoff_day").val(diffInDays);
+                                    } else {
+                                        var dateFromString = $("#' . CHtml::activeId($model, 'date_from') . '").val();
+                                        var dateTo = new Date(dateFromString);
+                                        dateTo.setDate(dateTo.getDate() + parseInt(numberOfLeaveDayString) - 1);
+                                        var dateToString = dateTo.toISOString().slice(0, 10);
+                                        $("#' . CHtml::activeId($model, 'date_to') . '").val(dateToString);
+                                        $("#DateTo").val(dateToString);
+                                    }
                                 '
                             ),
                         )); ?>
@@ -209,13 +220,13 @@
                             ),
                             'htmlOptions' => array(
                                 'onchange' => '
-                                    var strDateFrom = $("#EmployeeDayoff_date_from").val();
-                                    var strDateTo = $("#EmployeeDayoff_date_to").val();
+                                    var strDateFrom = $("#' . CHtml::activeId($model, 'date_from') . '").val();
+                                    var strDateTo = $(this).val();
                                     var dateFrom = new Date(strDateFrom);
                                     var dateTo = new Date(strDateTo);
-                                    var diff_in_time = dateTo.getTime() - dateFrom.getTime();
-                                    var diff_in_days = diff_in_time / (1000 * 3600 * 24) + 1;
-                                    $("#EmployeeDayoff_day").val(diff_in_days);
+                                    var diffInTime = dateTo.getTime() - dateFrom.getTime();
+                                    var diffInDays = diffInTime / (1000 * 3600 * 24) + 1;
+                                    $("#EmployeeDayoff_day").val(diffInDays);
                                 ',
                                 'style' => 'display: ' . ($model->employeeOnleaveCategory !== null && (int) $model->employeeOnleaveCategory->number_of_days === 0 ? 'block' : 'none'),
                             ),

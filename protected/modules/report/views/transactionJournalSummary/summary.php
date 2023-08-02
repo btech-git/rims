@@ -71,25 +71,25 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                        <div class="medium-12 columns">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Periode:</span>
                                     </div>
 
-                                <div class="small-4 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'StartDate',
-                                        'options' => array(
-                                            'dateFormat' => 'yy-mm-dd',
-                                        ),
-                                        'htmlOptions' => array(
-                                            'readonly' => true,
-                                            'placeholder' => 'Mulai',
-                                        ),
-                                    )); ?>
-                                </div>
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
+                                    </div>
 
                                     <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -102,6 +102,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 'placeholder' => 'Sampai',
                                             ),
                                         )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">COA Category:</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('CoaCategory', $coaCategory, CHtml::listData(CoaCategory::model()->findAll(array(
+                                            'condition' => 'coa_category_id IS NOT null', 
+                                            'order' => 'code ASC'
+                                        )), 'id', 'name'), array('empty' => '-- All Category --')); ?>
                                     </div>
                                 </div>
                             </div>

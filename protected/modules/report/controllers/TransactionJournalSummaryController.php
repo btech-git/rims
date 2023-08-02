@@ -30,6 +30,7 @@ class TransactionJournalSummaryController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $coaCategory = (isset($_GET['CoaCategory'])) ? $_GET['CoaCategory'] : '';
 
         $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11)', 'order' => 't.code ASC'));
 //        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
@@ -54,6 +55,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'coaCategory' => $coaCategory,
         ));
     }
 
