@@ -32,7 +32,16 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $coaCategoryId = (isset($_GET['CoaCategoryId'])) ? $_GET['CoaCategoryId'] : '';
 
-        $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11)', 'order' => 't.code ASC'));
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('t.coa_category_id = :coa_category_id');
+        $criteria->params = array(':coa_category_id' => $coaCategoryId);
+        $criteria->order = 't.code ASC';
+
+        if (empty($coaCategoryId)) {
+            $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11)', 'order' => 't.code ASC'));
+        } else {
+            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
+        }
 //        $accountCategoryLiabilitiesEquities = CoaCategory::model()->findAll(array('condition' => 't.id = 13'));
 //        $accountProfitLossPrevious = Coa::model()->findByPk(1475);
 //        $accountProfitLoss = Coa::model()->findByPk(1476);

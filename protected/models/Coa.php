@@ -540,47 +540,9 @@ class Coa extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType, $coaCategoryId) {
+    public function getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType) {
         $branchConditionSql = '';
         $transactionTypeConditionSql = '';
-        $coaCategoryConditionSql = '';
-        
-        $params = array(
-            ':coa_id' => $this->id,
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($transactionType)) {
-            $transactionTypeConditionSql = ' AND j.transaction_type = :transaction_type';
-            $params[':transaction_type'] = $transactionType;
-        }
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND j.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($coaCategoryId)) {
-            $coaCategoryConditionSql = ' AND c.coa_category_id = :coa_category_id';
-            $params[':coa_category_id'] = $coaCategoryId;
-        }
-        
-        $sql = "SELECT COALESCE(SUM(j.total), 0) AS balance_debit
-                FROM " . JurnalUmum::model()->tableName() . " j
-                INNER JOIN " . Coa::model()->tableName() . " c
-                WHERE j.coa_id = :coa_id AND j.debet_kredit = 'D' AND j.is_coa_category = 0 AND j.tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . $transactionTypeConditionSql . $coaCategoryConditionSql .
-                " GROUP BY j.coa_id";
-
-        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
-
-        return ($value === false) ? 0 : $value;
-    }
-    
-    public function getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType, $coaCategoryId) {
-        $branchConditionSql = '';
-        $transactionTypeConditionSql = '';
-        $coaCategoryConditionSql = '';
         
         $params = array(
             ':coa_id' => $this->id,
@@ -598,16 +560,40 @@ class Coa extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        if (!empty($coaCategoryId)) {
-            $coaCategoryConditionSql = ' AND c.coa_category_id = :coa_category_id';
-            $params[':coa_category_id'] = $coaCategoryId;
+        $sql = "SELECT COALESCE(SUM(total), 0) AS balance_debit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE coa_id = :coa_id AND debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . $transactionTypeConditionSql .
+                " GROUP BY coa_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType) {
+        $branchConditionSql = '';
+        $transactionTypeConditionSql = '';
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($transactionType)) {
+            $transactionTypeConditionSql = ' AND transaction_type = :transaction_type';
+            $params[':transaction_type'] = $transactionType;
         }
         
-        $sql = "SELECT COALESCE(SUM(j.total), 0) AS balance_credit
-                FROM " . JurnalUmum::model()->tableName() . " j
-                INNER JOIN " . Coa::model()->tableName() . " c
-                WHERE j.coa_id = :coa_id AND j.debet_kredit = 'K' AND j.is_coa_category = 0 AND j.tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . $transactionTypeConditionSql . $coaCategoryConditionSql .
-                " GROUP BY j.coa_id";
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT COALESCE(SUM(total), 0) AS balance_credit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE coa_id = :coa_id AND debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . $transactionTypeConditionSql .
+                " GROUP BY coa_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
