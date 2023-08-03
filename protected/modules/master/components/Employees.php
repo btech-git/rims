@@ -188,8 +188,8 @@ class Employees extends CComponent {
 
         //Update code after saving header
 //        $employee = Employee::model()->findByPk($this->header->id);
-        $this->header->code = 'E-' . $this->header->id;
-        $this->header->update(array('code'));
+//        $this->header->code = 'E-' . $this->header->id;
+//        $this->header->update(array('code'));
 
         $employee_phones = EmployeePhone::model()->findAllByAttributes(array('employee_id' => $this->header->id));
         $phoneId = array();
