@@ -570,7 +570,7 @@ class Coa extends CActiveRecord {
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c
                 WHERE j.coa_id = :coa_id AND j.debet_kredit = 'D' AND j.is_coa_category = 0 AND j.tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . $transactionTypeConditionSql . $coaCategoryConditionSql .
-                " GROUP BY coa_id";
+                " GROUP BY j.coa_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
@@ -607,7 +607,7 @@ class Coa extends CActiveRecord {
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c
                 WHERE j.coa_id = :coa_id AND j.debet_kredit = 'K' AND j.is_coa_category = 0 AND j.tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . $transactionTypeConditionSql . $coaCategoryConditionSql .
-                " GROUP BY coa_id";
+                " GROUP BY j.coa_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
