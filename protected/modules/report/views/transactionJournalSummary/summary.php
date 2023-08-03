@@ -144,6 +144,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'transactionType' => $transactionType,
+                        'coaCategory' => $coaCategory,
                     )); ?>
                 </div>
                 <div class="clear"></div>
