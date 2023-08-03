@@ -540,7 +540,7 @@ class Coa extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType, $coaCategory) {
+    public function getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType, $coaCategoryId) {
         $branchConditionSql = '';
         $transactionTypeConditionSql = '';
         $coaCategoryConditionSql = '';
@@ -561,9 +561,9 @@ class Coa extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        if (!empty($coaCategory)) {
+        if (!empty($coaCategoryId)) {
             $coaCategoryConditionSql = ' AND c.coa_category_id = :coa_category_id';
-            $params[':coa_category_id'] = $coaCategory;
+            $params[':coa_category_id'] = $coaCategoryId;
         }
         
         $sql = "SELECT COALESCE(SUM(j.total), 0) AS balance_debit
@@ -577,7 +577,7 @@ class Coa extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType, $coaCategory) {
+    public function getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType, $coaCategoryId) {
         $branchConditionSql = '';
         $transactionTypeConditionSql = '';
         $coaCategoryConditionSql = '';
@@ -598,9 +598,9 @@ class Coa extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        if (!empty($coaCategory)) {
+        if (!empty($coaCategoryId)) {
             $coaCategoryConditionSql = ' AND c.coa_category_id = :coa_category_id';
-            $params[':coa_category_id'] = $coaCategory;
+            $params[':coa_category_id'] = $coaCategoryId;
         }
         
         $sql = "SELECT COALESCE(SUM(j.total), 0) AS balance_credit

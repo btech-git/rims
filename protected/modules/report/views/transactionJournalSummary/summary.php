@@ -113,7 +113,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">COA Category:</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CoaCategory', $coaCategory, CHtml::listData(CoaCategory::model()->findAll(array(
+                                        <?php echo CHtml::dropDownlist('CoaCategoryId', $coaCategoryId, CHtml::listData(CoaCategory::model()->findAll(array(
                                             'condition' => 'coa_category_id IS NOT null', 
                                             'order' => 'code ASC'
                                         )), 'id', 'name'), array('empty' => '-- All Category --')); ?>
