@@ -87,7 +87,7 @@ $this->menu = array(
                     'religion',
                     'marriage_status',
                     array(
-                        'header' => 'Jumlah Anak',
+                        'label' => 'Jumlah Anak',
                         'name' => 'children_quantity',
                         'value' => CHtml::encode(CHtml::value($model, 'children_quantity')),
                     ),
