@@ -340,13 +340,24 @@
                             </div>
                             <div class="small-8 columns">
                                 <?php echo $form->dropDownList($employee->header, 'marriage_status', array(
-                                    'TK' => 'TK',
-                                    'K0' => 'K0', 
-                                    'K1' => 'K1', 
-                                    'K2' => 'K2', 
-                                    'K3' => 'K3', 
+                                    'Menikah' => 'Menikah',
+                                    'Belum Menikah' => 'Belum Menikah', 
+                                    'Cerai Hidup' => 'Cerai Hidup', 
+                                    'Cerai Mati' => 'Cerai Mati', 
                                 ), array('prompt' => '[--Select Status--]')); ?>
                                 <?php echo $form->error($employee->header, 'marriage_status'); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'Jumlah Anak'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->textField($employee->header, 'children_quantity'); ?>
+                                <?php echo $form->error($employee->header, 'children_quantity'); ?>
                             </div>
                         </div>
                     </div>

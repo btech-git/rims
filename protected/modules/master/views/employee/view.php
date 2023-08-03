@@ -86,6 +86,11 @@ $this->menu = array(
                     'skills',
                     'religion',
                     'marriage_status',
+                    array(
+                        'header' => 'Jumlah Anak',
+                        'name' => 'children_quantity',
+                        'value' => CHtml::encode(CHtml::value($model, 'children_quantity')),
+                    ),
                     'home_address',
                     'local_address',
                 ),
