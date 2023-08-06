@@ -147,8 +147,8 @@
                                                 <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'branch_id'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), "id", "name"), array("empty" => "--all--")); ?>
-                                                <?php //echo $form->textField($generalRepairRegistration->header,'branch_name',array('value'=>$generalRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $generalRepairRegistration->header->branch->name,'readonly'=>true)); ?>
+                                                <?php //echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), "id", "name"), array("empty" => "--all--")); ?>
+                                                <?php echo $form->textField($generalRepairRegistration->header,'branch_name',array('value'=>$generalRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $generalRepairRegistration->header->branch->name,'readonly'=>true)); ?>
                                                 <?php echo $form->error($generalRepairRegistration->header,'branch_id'); ?>
                                             </div>
                                         </div>
