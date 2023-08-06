@@ -92,16 +92,16 @@
                                 <label class="prefix"><?php echo $form->labelEx($employee->header, 'employee_head_id'); ?></label>
                             </div>
                             <div class="small-8 columns">
-                            <?php echo $form->hiddenField($model, 'employee_head_id'); ?>
+                            <?php echo $form->hiddenField($employee->header, 'employee_head_id'); ?>
                             <?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
                                 'name' => 'EmployeeName',
-                                'value' => CHtml::value($model, 'employee.name'),
+                                'value' => CHtml::value($employee->header, 'employee.name'),
                                 'sourceUrl' => CController::createUrl('employeeCompletion'),
                                 //additional javascript options for the autocomplete plugin
                                 'options' => array(
                                     'minLength' => '2',
                                     'select' => 'js:function(event, ui) {
-                                        $("#' . CHtml::activeId($model, 'employee_head_id') . '").val(ui.item.id);
+                                        $("#' . CHtml::activeId($employee->header, 'employee_head_id') . '").val(ui.item.id);
                                     }',
                                 ),
                             )); ?>
