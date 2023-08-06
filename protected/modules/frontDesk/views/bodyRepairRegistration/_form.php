@@ -155,7 +155,7 @@
                                                 <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'employee_id_assign_mechanic'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::activeDropDownlist($bodyRepairRegistration->header, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
+                                                <?php echo CHtml::activeDropDownlist($bodyRepairRegistration->header, 'employee_id_assign_mechanic', CHtml::listData(Employee::model()->findAllByAttributes(array(
                                                     "branch_id" => $bodyRepairRegistration->header->branch_id,
                                                     "division_id" => array(2),
                                                     "position_id" => 1,
