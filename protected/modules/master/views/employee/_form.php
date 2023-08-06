@@ -95,7 +95,7 @@
                             <?php echo $form->hiddenField($employee->header, 'employee_head_id'); ?>
                             <?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
                                 'name' => 'EmployeeName',
-                                'value' => CHtml::value($employee->header, 'employee.name'),
+                                'value' => CHtml::value($employee->header, 'employeeHead.name'),
                                 'sourceUrl' => CController::createUrl('employeeCompletion'),
                                 //additional javascript options for the autocomplete plugin
                                 'options' => array(
