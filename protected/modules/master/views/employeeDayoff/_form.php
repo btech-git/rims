@@ -41,59 +41,6 @@
                             ),
                         )); ?>
                         
-                        <?php /*echo $form->hiddenField($model, 'employee_id'); ?>
-                        <?php echo $form->textField($model, 'employee_name', array(
-                            'onclick' => 'jQuery("#employee-dialog").dialog("open"); return false;',
-                            'value' => $model->employee_id != Null ? $model->employee->name : '',
-                        )); ?>
-
-                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                            'id' => 'employee-dialog',
-                            // additional javascript options for the dialog plugin
-                            'options' => array(
-                                'title' => 'Employee',
-                                'autoOpen' => false,
-                                'width' => 'auto',
-                                'modal' => true,
-                            ),
-                        )); ?>
-
-                        <?php $this->widget('zii.widgets.grid.CGridView', array(
-                            'id' => 'employee-grid',
-                            'dataProvider' => $employeeDataProvider,
-                            'filter' => $employee,
-                            // 'summaryText'=>'',
-                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                            'pager' => array(
-                                'cssFile' => false,
-                                'header' => '',
-                            ),
-                            'selectionChanged' => 'js:function(id){
-                                $("#EmployeeDayoff_employee_id").val($.fn.yiiGridView.getSelection(id));
-                                $("#employee-dialog").dialog("close");
-                                $.ajax({
-                                    type: "POST",
-                                    dataType: "JSON",
-                                    url: "' . CController::createUrl('ajaxEmployee', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-                                    data: $("form").serialize(),
-                                    success: function(data) {
-                                        $("#EmployeeDayoff_employee_name").val(data.name);
-                                    },
-                                });
-
-                                $("#employee-grid").find("tr.selected").each(function(){
-                                    $(this).removeClass( "selected" );
-                                });
-                            }',
-                            'columns' => array(
-                                'id',
-                                'code',
-                                'name',
-                            //'email',
-                            ),
-                        )); ?>
-                        <?php $this->endWidget();*/ ?>
-
                         <?php echo $form->error($model, 'employee_id'); ?>
                     </div>
                 </div>

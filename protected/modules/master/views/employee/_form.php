@@ -92,7 +92,19 @@
                                 <label class="prefix"><?php echo $form->labelEx($employee->header, 'employee_head_id'); ?></label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->dropDownList($employee->header, 'employee_head_id', CHtml::listData(Employee::model()->findAll(), 'id', 'name'), array('empty' => '-- Select Atasan --')); ?>
+                            <?php echo $form->hiddenField($model, 'employee_head_id'); ?>
+                            <?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+                                'name' => 'EmployeeName',
+                                'value' => CHtml::value($model, 'employee.name'),
+                                'sourceUrl' => CController::createUrl('employeeCompletion'),
+                                //additional javascript options for the autocomplete plugin
+                                'options' => array(
+                                    'minLength' => '2',
+                                    'select' => 'js:function(event, ui) {
+                                        $("#' . CHtml::activeId($model, 'employee_head_id') . '").val(ui.item.id);
+                                    }',
+                                ),
+                            )); ?>
                                 <?php echo $form->error($employee->header, 'employee_head_id'); ?>
                             </div>
                         </div>

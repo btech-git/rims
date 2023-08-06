@@ -288,6 +288,10 @@ class EmployeeController extends Controller {
         ));
     }
 
+    public function actionEmployeeCompletion() {
+        echo CJSON::encode(Completion::employee($_GET['term']));
+    }
+
     public function actionAjaxBank($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $bank = Bank::model()->findByPk($id);
