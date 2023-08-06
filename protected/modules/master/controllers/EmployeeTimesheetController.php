@@ -71,6 +71,8 @@ class EmployeeTimesheetController extends Controller {
                             $model->clock_in = $lineFields[3];
                             $model->clock_out = $lineFields[4];
                             $model->save();
+                            
+                            $this->redirect(array('admin'));
                         }
                     }
                 }
