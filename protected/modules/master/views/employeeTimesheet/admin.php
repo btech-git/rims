@@ -53,7 +53,7 @@ $('.search-form form').submit(function(){
             'dataProvider' => $model->search(),
             'filter' => $model,
             'columns' => array(
-                'id',
+                'employee.code',
                 'employee.name',
                 'date',
                 'clock_in',
