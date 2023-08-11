@@ -227,12 +227,12 @@ class Employees extends CComponent {
         }
         $new_deduction = array();
 
-        $employee_divisions = EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array('employee_id' => $this->header->id));
+        /*$employee_divisions = EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array('employee_id' => $this->header->id));
         $divisionId = array();
         foreach ($employee_divisions as $employee_division) {
             $divisionId[] = $employee_division->id;
         }
-        $new_division = array();
+        $new_division = array();*/
 
         //phone
         foreach ($this->phoneDetails as $phoneDetail) {
@@ -325,12 +325,12 @@ class Employees extends CComponent {
         }
 
         //delete Divisions
-        $delete_division = array_diff($divisionId, $new_division);
+        /*$delete_division = array_diff($divisionId, $new_division);
         if ($delete_division != NULL) {
             $division_criteria = new CDbCriteria;
             $division_criteria->addInCondition('id', $delete_division);
             EmployeeBranchDivisionPositionLevel::model()->deleteAll($division_criteria);
-        }
+        }*/
 
         return $valid;
     }

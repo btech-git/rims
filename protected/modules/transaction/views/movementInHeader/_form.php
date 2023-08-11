@@ -61,14 +61,16 @@
                             <?php echo $form->labelEx($movementIn->header, 'branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownlist($movementIn->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
+                            <?php echo $form->hiddenField($movementIn->header, 'branch_id'); ?>
+                            <?php echo CHtml::encode(CHtml::value($movementIn->header, 'branch.name')); ?>
+                            <?php /*echo $form->dropDownlist($movementIn->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
                                 'prompt' => '[--Select Branch--]', 
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'POST',
                                     'url' => CController::createUrl('ajaxHtmlUpdateAllWarehouse', array('id' => $movementIn->header->id)),
                                     'update' => '#detail_div',
                                 )),
-                            )); ?>
+                            ));*/ ?>
                             <?php echo $form->error($movementIn->header, 'branch_id'); ?>
                         </div>
                     </div>

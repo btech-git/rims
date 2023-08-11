@@ -282,6 +282,7 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->payment_left = $registrationTransaction->grand_total;
         $invoice->header->payment_amount = 0;
         $invoice->header->ppn_total = $registrationTransaction->ppn_price;
+        $invoice->header->ppn = ($registrationTransaction->tax_percentage > 0) ? 1 : 0;
         $invoice->header->tax_percentage = $registrationTransaction->tax_percentage;
         $invoice->header->payment_date_estimate = date('Y-m-d');
         $invoice->header->coa_bank_id_estimate = null;

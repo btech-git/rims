@@ -27,7 +27,7 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($receiveItem->header, 'receive_item_date', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($receiveItem->header, 'Tanggal Doc Penerimaan', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -52,7 +52,7 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($receiveItem->header, 'arrival_date', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($receiveItem->header, 'Tanggal Penerimaan Barang', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->textField($receiveItem->header, 'arrival_date', array('readonly' => true)); ?>
@@ -64,7 +64,7 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($receiveItem->header, 'recipient_id', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($receiveItem->header, 'Penerima', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($receiveItem->header, 'recipient_id', array('value' => $receiveItem->header->isNewRecord ? Yii::app()->user->getId() : $receiveItem->header->recipient_id, 'readonly' => true)); ?>
@@ -77,9 +77,13 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($receiveItem->header, 'recipient_branch_id', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($receiveItem->header, 'Cabang Penerima', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
+                            <?php /*echo $form->hiddenField($receiveItem->header, 'recipient_branch_id', array(
+                                'readonly' => true,
+                            )); ?>
+                            <?php echo CHtml::encode(CHtml::value($receiveItem->header, 'recipientBranch.name'));*/ ?>
                             <?php echo $form->dropDownlist($receiveItem->header, 'recipient_branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]')); ?>
                             <?php echo $form->error($receiveItem->header, 'recipient_branch_id'); ?>
                         </div>
