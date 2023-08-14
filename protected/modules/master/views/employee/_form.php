@@ -335,10 +335,11 @@
                             <div class="small-8 columns">
                                 <?php echo $form->dropDownList($employee->header, 'religion', array(
                                     'Islam' => 'Islam',
-                                    'Kristen' => 'Kristen',
+                                    'Protestan' => 'Protestan',
                                     'Katolik' => 'Katolik',
                                     'Hindu' => 'Hindu',
                                     'Budha' => 'Budha',
+                                    'Konghucu' => 'Konghucu',
                                 )); ?>
                                 <?php echo $form->error($employee->header, 'religion'); ?>
                             </div>
@@ -439,6 +440,7 @@
                                     'SD' => 'SD',
                                     'SMP' => 'SMP',
                                     'SMA' => 'SMA',
+                                    'SMK' => 'SMK',
                                     'D1' => 'D1',
                                     'D2' => 'D2',
                                     'D3' => 'D3',

@@ -46,8 +46,16 @@ $this->menu = array(
             'attributes' => array(
                 'id',
                 'receive_item_no',
-                'receive_item_date',
-                'arrival_date',
+                array(
+                    'name' => 'receive_item_date',
+                    'label' => 'Tanggal Doc Penerimaan',
+                    'value' => $model->receive_item_date,
+                ),
+                array(
+                    'name' => 'arrival_date',
+                    'label' => 'Tanggal Penerimaan Barang',
+                    'value' => $model->arrival_date,
+                ),
                 array(
                     'name' => 'recipient_id',
                     'label' => 'Penerima',
@@ -55,7 +63,7 @@ $this->menu = array(
                 ),
                 array(
                     'name' => 'recipient_branch_id',
-                    'label' => 'Branch',
+                    'label' => 'Cabang Penerima',
                     'value' => $model->recipientBranch->name,
                 ),
                 'request_type',
