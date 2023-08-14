@@ -1,8 +1,8 @@
-assets/*
-!assets/.gitignore
-protected/config/database.php
-protected/runtime/*
-!protected/runtime/.gitignore
-protected/data/*.db
-themes/classic/views/
+/assets/
+!/assets/.gitignore
+/protected/config/
+/protected/runtime/
+!/protected/runtime/.gitignore
+/protected/data/*.db
+/themes/classic/views/
 /images/
