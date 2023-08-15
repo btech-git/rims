@@ -314,6 +314,44 @@ class CashDailySummaryController extends Controller {
         ));
     }
 
+    public function actionShowTransactionDetailByTypeBranchDate($transactionDate, $branchId, $paymentTypeId) {
+        
+        $cashDaily = new CashDailySummary();
+        $cashDaily->transaction_date = $transactionDate;
+        $cashDaily->branch_id = $branchId;
+        $cashDaily->payment_type_id = $paymentTypeId;
+        $cashDaily->user_id = Yii::app()->user->id;
+        $cashDaily->input_datetime = date('Y-m-d H:i:s');
+
+        $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
+                FROM " . PaymentIn::model()->tableName() . " p
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
+                WHERE payment_date = :payment_date AND branch_id = :branch_id AND payment_type_id = :payment_type_id AND c.customer_type = 'Individual'";
+        
+        $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':payment_date' => $transactionDate,
+            ':branch_id' => $branchId,
+            ':payment_type_id' => $paymentTypeId,
+        ));
+        
+        $cashDaily->amount = $paymentInRetailAmount;
+        
+        $model = new PaymentIn('search');
+        $model->unsetAttributes();  // clear any default values
+
+        $dataProvider = $model->searchByRetailCashDailyReport();
+        $dataProvider->criteria->with = array('customer');
+        $dataProvider->criteria->compare('customer.customer_type', 'Individual');   
+        $dataProvider->criteria->compare('t.payment_date', $transactionDate, true);
+        $dataProvider->criteria->compare('t.branch_id', $branchId);
+        $dataProvider->criteria->compare('t.payment_type_id', $paymentTypeId);
+            
+        $this->render('show', array(
+            'cashDaily' => $cashDaily,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     public function actionView($id) {
         
         $model = CashDailySummary::model()->findByPk($id);

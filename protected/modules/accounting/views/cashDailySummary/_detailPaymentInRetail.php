@@ -21,7 +21,7 @@
                     <td style="text-align: right">
                         <?php if ($paymentTypeId > 0): ?>
                             <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail), array('javascript:;'), array(
-                                'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/create', array(
+                                'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/showTransactionDetailByTypeBranchDate', array(
                                     "transactionDate" => $transactionDate, 
                                     "branchId" => $paymentInRetailBranchId, 
                                     "paymentTypeId" => $paymentTypeId
