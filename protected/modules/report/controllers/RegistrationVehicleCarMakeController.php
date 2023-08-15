@@ -124,7 +124,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         }
         $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($grandTotal));
 
-        for ($col = 'A'; $col !== 'AI'; $col++) {
+        for ($col = 'A'; $col !== 'CC'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
