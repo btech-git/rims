@@ -49,6 +49,7 @@ class RegistrationVehicleCarMakeController extends Controller {
             'registrationVehicleInfo' => $registrationVehicleInfo,
         ));
     }
+    
     protected function saveToExcel($registrationServiceInfo, $yearMonth) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -61,10 +62,10 @@ class RegistrationVehicleCarMakeController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penyelesaian Pesanan per Pekerjaan');
+        $documentProperties->setTitle('Laporan Penyelesaian Pesanan per Kendaraan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penyelesaian per Pekerjaan');
+        $worksheet->setTitle('Penyelesaian per Kendaraan');
 
         $worksheet->mergeCells('A2:AI2');
         $worksheet->mergeCells('A3:AI3');
@@ -73,7 +74,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         $worksheet->getStyle('A1:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G4')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Laporan Penyelesaian Pesanan per Pekerjaan');
+        $worksheet->setCellValue('A3', 'Laporan Penyelesaian Pesanan per Kendaraan');
         $worksheet->setCellValue('A4', Yii::app()->dateFormatter->format('MMMM yyyy', $yearMonth));
 
         $worksheet->getStyle("A6:G6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -132,7 +133,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penyelesaian per Pekerjaan.xls"');
+        header('Content-Disposition: attachment;filename="Penyelesaian per Kendaraan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

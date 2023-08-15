@@ -82,12 +82,12 @@ Yii::app()->clientScript->registerCss('_report', '
 
                     <tr>
                         <td colspan="5" style="text-align: right; font-weight: bold">Total Penambahan</td>
-                        <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
+                        <td style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo Yii::app()->numberFormatter->format('#,##0', $negativeAmount); ?></td>
                     </tr>
 
                     <tr>
                         <td colspan="5" style="text-align: right; font-weight: bold">Total Penurunan</td>
-                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $negativeAmount); ?></td>
+                        <td style="text-align: right; font-weight: bold"><?php echo Yii::app()->numberFormatter->format('#,##0', $positiveAmount); ?></td>
                     </tr>
 
                     <tr>

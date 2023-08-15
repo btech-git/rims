@@ -55,7 +55,7 @@
                         ), array('order' => 't.code ASC')); ?> 
                         <?php foreach ($coas as $coa): ?>
                             <?php $accountGroupBalance = (empty($coa->coaIds)) ? $coa->getBalanceSheetBalance($startDate, $endDate, $branchId): 1; ?>
-                            <?php if ((int) $accountGroupBalance !== 0): ?>
+                            <?php //if ((int) $accountGroupBalance !== 0): ?>
                                 <tr>
                                     <td style="padding-left: 90px">
                                         <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
@@ -78,7 +78,7 @@
                                     <?php $accountGroupBalance = 0; ?> 
                                     <?php foreach ($coaSubs as $account): ?>
                                         <?php $accountBalance = $account->getBalanceSheetBalance($startDate, $endDate, $branchId); ?>
-                                        <?php if ((int)$accountBalance !== 0): ?>
+                                        <?php //if ((int)$accountBalance !== 0): ?>
                                             <tr>
                                                 <td style="padding-left: 125px; font-size: 10px">
                                                     <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
@@ -94,7 +94,7 @@
                                                 </td>
                                             </tr>
                                             <?php $accountGroupBalance += $accountBalance; ?>
-                                        <?php endif; ?>
+                                        <?php //endif; ?>
                                     <?php endforeach; ?>
                                     <tr>
                                         <td style="border-top: 1px solid; text-align: right">Total <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> </td>
@@ -103,7 +103,7 @@
                                         </td>
                                     </tr>
                                 <?php endif; ?>
-                            <?php endif; ?>
+                            <?php //endif; ?>
                             <?php $accountCategoryBalance += $accountGroupBalance; ?>
                         <?php endforeach; ?>
                         <tr>
