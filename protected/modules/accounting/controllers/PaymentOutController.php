@@ -56,13 +56,20 @@ class PaymentOutController extends Controller {
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
 
+        $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
+        $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
+
         if (!empty($supplierId)) {
             $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
             $receiveItemDataProvider->criteria->params[':supplier_id'] = $supplierId;
+            
+            $workOrderExpenseDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
+            $workOrderExpenseDataProvider->criteria->params[':supplier_id'] = $supplierId;
         }
         
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentOut);
@@ -88,6 +95,8 @@ class PaymentOutController extends Controller {
             'supplier' => $supplier,
             'receiveItem' => $receiveItem,
             'receiveItemDataProvider' => $receiveItemDataProvider,
+            'workOrderExpense' => $workOrderExpense,
+            'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
             'movementType' => $movementType,
         ));
     }

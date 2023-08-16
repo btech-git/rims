@@ -15,6 +15,7 @@ class PaymentOutComponent extends CComponent {
     public function addInvoice($transactionId, $movementType) {
 
         $exist = FALSE;
+        $this->header->movement_type = $movementType;
         
         if ($movementType == 1) {
             $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
@@ -148,13 +149,20 @@ class PaymentOutComponent extends CComponent {
         $detailsCount = count($this->details);
         for ($i = 0; $i < $detailsCount; $i++) {
             for ($j = $i; $j < $detailsCount; $j++) {
-                if ($i === $j)
+                if ($i === $j) {
                     continue;
+                }
 
-                if ($this->details[$i]->receive_item_id === $this->details[$j]->receive_item_id) {
+                if ($this->header->movement_type == 1 && $this->details[$i]->receive_item_id === $this->details[$j]->receive_item_id) {
                     $valid = false;
                     $this->header->addError('error', 'Invoice tidak boleh sama.');
                     break;
+                } elseif ($this->header->movement_type == 2 && $this->details[$i]->work_order_expense_header_id === $this->details[$j]->work_order_expense_header_id) {
+                    $valid = false;
+                    $this->header->addError('error', 'Invoice tidak boleh sama.');
+                    break;
+                } else {
+                    $valid = true;
                 }
             }
         }

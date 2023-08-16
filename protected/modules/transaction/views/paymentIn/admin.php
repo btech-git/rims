@@ -54,6 +54,13 @@ $('.search-form form').submit(function(){
                 <h2>Manage Payment In</h2>
             </div>
 
+            <div id="link">
+                <?php /*echo CHtml::link('<span class="fa fa-plus"></span>New Payment In', Yii::app()->baseUrl . '/transaction/paymentIn/customerList', array(
+                    'class' => 'button success right',
+                    'visible' => Yii::app()->user->checkAccess("paymentInCreate")
+                ));*/ ?>
+            </div>
+
             <div class="search-bar">
                 <div class="clearfix button-bar">
                     <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>

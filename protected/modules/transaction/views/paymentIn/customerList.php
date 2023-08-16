@@ -1,15 +1,15 @@
-<h1>List Supplier</h1>
+<h1>List Customer</h1>
    
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment Out', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array(
+    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment In', Yii::app()->baseUrl.'/transaction/paymentIn/admin' , array(
         'class'=>'button cbutton',
     )); ?>
 </div>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'supplier-grid',
-    'dataProvider' => $supplierDataProvider,
-    'filter' => $supplier,
+    'id' => 'customer-grid',
+    'dataProvider' => $customerDataProvider,
+    'filter' => $customer,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager' => array(
         'cssFile' => false,
@@ -30,17 +30,9 @@
         ),
         'tenor',
         array(
-            'header' => 'PO',
+            'header' => '',
             'type' => 'raw',
-            'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id, "movementType" => 1))',
-            'htmlOptions' => array(
-                'style' => 'text-align: center;'
-            ),
-        ),
-        array(
-            'header' => 'Sub Pekerjaan',
-            'type' => 'raw',
-            'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id, "movementType" => 2))',
+            'value' => 'CHtml::link("CreateMultiple", array("create", "customerId" => $data->id))',
             'htmlOptions' => array(
                 'style' => 'text-align: center;'
             ),

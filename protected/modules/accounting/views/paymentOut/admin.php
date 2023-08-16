@@ -36,7 +36,7 @@ $('.search-form form').submit(function(){
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-plus"></span>New Payment Out', Yii::app()->baseUrl . '/accounting/paymentOut/supplierList', array(
         'class' => 'button success right',
-        'visible' => Yii::app()->user->checkAccess("transaction.paymentOut.create")
+        'visible' => Yii::app()->user->checkAccess("paymentOutCreate")
     )); ?>
 </div>
 
