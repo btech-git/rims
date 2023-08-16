@@ -76,6 +76,7 @@ $this->menu = array(
                     <h5>Customer</h5>
                     <table class="detail">
                         <tr>
+                            <td>ID</td>
                             <td>Name</td>
                             <td>Address</td>
                             <td>Province</td>
@@ -89,7 +90,8 @@ $this->menu = array(
                         
                         <?php foreach ($customers as $key => $customer): ?>
                             <tr>
-                                <td><?php echo $customer->name; ?></td>
+                                <td><?php echo CHtml::link($customer->id, array("/master/customer/view", "id"=>$customer->id), array('target' => '_blank')) ?></td>
+                                <td><?php echo CHtml::link($customer->name, array("/master/customer/view", "id"=>$customer->id), array('target' => '_blank')) ?></td>
                                 <td><?php echo $customer->address; ?></td>
                                 <td><?php echo $customer->province_id != "" ? $customer->province->name : '-'; ?></td>
                                 <td><?php echo $customer->city_id != "" ? $customer->city->name : '-'; ?></td>

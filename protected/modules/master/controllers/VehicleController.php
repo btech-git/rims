@@ -270,8 +270,15 @@ class VehicleController extends Controller {
             'customer',
         );
 
+        $customerId = isset($_GET['CustomerId']) ? $_GET['CustomerId'] : '';
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
         $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '';
+        
+        if (!empty($customerId)) {
+            $dataProvider->criteria->addCondition('t.customer_id LIKE :customer_id');
+            $dataProvider->criteria->params[':customer_id'] = "%{$customerId}%";
+        }
+
         if (!empty($customerName)) {
             $dataProvider->criteria->addCondition('customer.name LIKE :customer_name');
             $dataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
@@ -288,6 +295,7 @@ class VehicleController extends Controller {
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'customerId' => $customerId,
             'customerName' => $customerName,
             'customerType' => $customerType,
         ));

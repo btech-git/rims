@@ -79,7 +79,13 @@ $('.search-form form').submit(function(){
                 ),
                 array(
                     'name'=>'customer_id',
-                    'header' => 'Customer',
+                    'header' => 'Customer ID',
+                    'filter' => CHtml::textField('CustomerId', $customerId),
+                    'value'=>'CHtml::encode(CHtml::value($data, "customer_id"))'
+                ),
+                array(
+                    'name'=>'customer_name',
+                    'header' => 'Customer Name',
                     'filter' => CHtml::textField('CustomerName', $customerName),
                     'value'=>'CHtml::encode(CHtml::value($data, "customer.name"))'
                 ),
