@@ -107,6 +107,8 @@ $('.search-form form').submit(function(){
                 array('name'=>'coa_name','value'=>'$data->coa!="" ? $data->coa->name : ""'),
                 array('name'=>'coa_code','value'=>'$data->coa!="" ? $data->coa->code : ""'),
                 'date_created',
+                'user.username',
+                array('name'=>'user_id', 'value'=>'$data->user->username'),
                 array(
                     'class'=>'CButtonColumn',
                     'template'=>'{edit} {export}',

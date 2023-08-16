@@ -58,6 +58,11 @@ $this->breadcrumbs = array(
                 'price_luxury',
                 'status',
                 array(
+                    'label' => 'Created by',
+                    'name' => 'user_id', 
+                    'value' => $model->user->username
+                ),
+                array(
                     'label' => 'Created',
                     'value' => $model->created_datetime,
                 ),

@@ -112,6 +112,7 @@ Yii::app()->clientScript->registerScript('search', "
                             'Inactive' => 'Inactive',
                         )),
                     ),
+                    array('name'=>'user_id', 'value'=>'$data->user->username'),
                     array(
                         'header' => 'Input', 
                         'value' => '$data->created_datetime', 

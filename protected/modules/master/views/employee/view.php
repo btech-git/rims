@@ -65,6 +65,11 @@ $this->menu = array(
                         'value' => CHtml::encode(CHtml::value($model, 'onleave_allocation')),
                     ),
                     'off_day',
+                    array(
+                        'label' => 'Created by',
+                        'name' => 'user_id', 
+                        'value' => $model->user->username
+                    ),
                 ),
             )); ?>
         </fieldset>

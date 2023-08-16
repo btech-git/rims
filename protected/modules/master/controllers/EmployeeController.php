@@ -142,6 +142,8 @@ class EmployeeController extends Controller {
                 $this->redirect(array('view', 'id' => $employee->header->id));
             }
         }
+        
+        $employee->header->user_id = Yii::app()->user->id;
 
         $this->render('create', array(
             'employee' => $employee,
@@ -165,6 +167,8 @@ class EmployeeController extends Controller {
         
         $employee = $this->instantiate($id);
         $this->performAjaxValidation($employee->header);
+
+        $employee->header->user_id = Yii::app()->user->id;
 
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values

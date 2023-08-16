@@ -105,6 +105,7 @@ $('.search-form form').submit(function(){
                         'value' => 'CHtml::encode(CHtml::value($data, "level.name"))',
                     ),
                     'status',
+                    array('name'=>'user_id', 'value'=>'$data->user->username'),
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit}',

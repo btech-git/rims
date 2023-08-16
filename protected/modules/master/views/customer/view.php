@@ -59,6 +59,11 @@ $this->breadcrumbs = array(
                 'date_created',
                 'date_approval',
                 'status',
+                array(
+                    'label' => 'Created by',
+                    'name' => 'user_id', 
+                    'value' => $model->user->username
+                ),
             ),
         )); ?>
     </div>

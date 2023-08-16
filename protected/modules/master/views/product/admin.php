@@ -260,6 +260,7 @@ $('form').submit(function(){
                     'filter' => false,
                 ),
                 'date_posting',
+                array('name'=>'user_id', 'value'=>'$data->user->username'),
                 array(
                     'class' => 'CButtonColumn',
                     'template' => '{price} {edit}',

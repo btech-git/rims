@@ -77,6 +77,11 @@ $this->menu=array(
                 'minimum_stock',
                 'date_posting',
                 array(
+                    'label' => 'Created by',
+                    'name' => 'user_id', 
+                    'value' => $model->user->username
+                ),
+                array(
                     'name' => 'user_id_approval',
                     'value' => empty($model->user_id_approval) ? "N/A" : $model->userIdApproval->username,
                 ),

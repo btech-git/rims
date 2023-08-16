@@ -62,6 +62,7 @@ $('.search-form form').submit(function(){
                     array('name' => 'coa_code', 'value' => '$data->coa!=""?$data->coa->code : ""'),
                     array('name' => 'coa_outstanding_name', 'value' => '$data->coaOutstandingOrder!=""?$data->coaOutstandingOrder->name : ""'),
                     array('name' => 'coa_outstanding_code', 'value' => '$data->coaOutstandingOrder!=""?$data->coaOutstandingOrder->code : ""'),
+                    array('name'=>'user_id', 'value'=>'$data->user->username'),
                     array('header' => 'Input', 'value' => '$data->createdDatetime'),
                     array(
                         'class' => 'CButtonColumn',

@@ -52,6 +52,11 @@ $this->breadcrumbs = array(
                 array('name' => 'coa_outstanding_name', 'value' => $model->coaOutstandingOrder != "" ? $model->coaOutstandingOrder->name : ''),
                 array('name' => 'coa_outstanding_code', 'value' => $model->coaOutstandingOrder != "" ? $model->coaOutstandingOrder->code : ''),
                 'status',
+                array(
+                    'label' => 'Created by',
+                    'name' => 'user_id', 
+                    'value' => $model->user->username
+                ),
                 'createdDatetime',
                 'approvedDatetime',
             ),
