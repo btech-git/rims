@@ -92,32 +92,50 @@ class RegistrationVehicleCarMakeController extends Controller {
         $counter = 8;
 
         $footerTotalSums = array();
-        foreach ($registrationVehicleInfo as $registrationVehicleItem) {
-            $worksheet->setCellValue("A{$counter}", $registrationVehicleItem['name']);
-            $totalSum = 0;
-            $columnCounter = 'B';
+        foreach ($registrationVehicleInfo as $registrationVehicleCarMakeInfo) {
+            $groupTotalSums = array();
+            $worksheet->setCellValue("A{$counter}", $registrationVehicleCarMakeInfo['name']);
+            $counter++;
+            foreach ($registrationVehicleCarMakeInfo['car_models'] as $registrationVehicleCarModelInfo) {
+                $worksheet->setCellValue("A{$counter}", $registrationVehicleCarModelInfo['name']);
+                $totalSum = 0;
+                $columnCounter = 'B';
+                foreach ($dateNumList as $dateNum) {
+                    $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
+                    $total = isset($registrationVehicleCarModelInfo['totals'][$transactionDate]) ? $registrationVehicleCarModelInfo['totals'][$transactionDate] : '';
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
+                    $totalSum += $total; 
+                    if (!isset($groupTotalSums[$dateNum])) {
+                        $groupTotalSums[$dateNum] = 0;
+                    }
+                    $groupTotalSums[$dateNum] += $total;
+                    $columnCounter++;
+                }
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $totalSum);
+                $counter++;
+            }
+            
+            $worksheet->setCellValue("A{$counter}", 'Total');
+            $groupSubTotal = 0;
+            $footerCounter = 'B';
             foreach ($dateNumList as $dateNum) {
-                $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
-                $total = isset($registrationVehicleItem['totals'][$transactionDate]) ? $registrationVehicleItem['totals'][$transactionDate] : '';
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
-                $totalSum += $total; 
                 if (!isset($footerTotalSums[$dateNum])) {
                     $footerTotalSums[$dateNum] = 0;
                 }
-                $footerTotalSums[$dateNum] += $total;
-                $columnCounter++;
+                $footerTotalSums[$dateNum] += $groupTotalSums[$dateNum];
+                $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($groupTotalSums[$dateNum]));
+                $groupSubTotal += $groupTotalSums[$dateNum];
+                $footerCounter++;
             }
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $totalSum);
+            $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($groupSubTotal));
             $counter++;
+
         }
         
-        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("A{$counter}", 'Grand Total');
         $grandTotal = 0;
         $footerCounter = 'B';
         foreach ($dateNumList as $dateNum) {
-            if (!isset($footerTotalSums[$dateNum])) {
-                $footerTotalSums[$dateNum] = 0;
-            }
             $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($footerTotalSums[$dateNum]));
             $grandTotal += $footerTotalSums[$dateNum];
             $footerCounter++;
