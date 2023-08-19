@@ -1078,7 +1078,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = c.car_make_id
                 WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 2) = :year_month
                 GROUP BY c.id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3)
-                ORDER BY m.name ASC, c.name ASC, t.transaction_date ASC";
+                ORDER BY m.name ASC, c.name ASC, transaction_date ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

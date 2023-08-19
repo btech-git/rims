@@ -39,9 +39,9 @@ class RegistrationVehicleCarMakeController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($registrationServiceInfo, $yearMonth);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($registrationVehicleInfo, $yearMonth);
+        }
 
         $this->render('summary', array(
             'yearMonthNow' => $yearMonthNow,
@@ -50,7 +50,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         ));
     }
     
-    protected function saveToExcel($registrationServiceInfo, $yearMonth) {
+    protected function saveToExcel($registrationVehicleInfo, $yearMonth) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -92,13 +92,13 @@ class RegistrationVehicleCarMakeController extends Controller {
         $counter = 8;
 
         $footerTotalSums = array();
-        foreach ($registrationServiceInfo as $registrationServiceItem) {
-            $worksheet->setCellValue("A{$counter}", $registrationServiceItem['code']);
+        foreach ($registrationVehicleInfo as $registrationVehicleItem) {
+            $worksheet->setCellValue("A{$counter}", $registrationVehicleItem['name']);
             $totalSum = 0;
             $columnCounter = 'B';
             foreach ($dateNumList as $dateNum) {
                 $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
-                $total = isset($registrationServiceItem['totals'][$transactionDate]) ? $registrationServiceItem['totals'][$transactionDate] : '';
+                $total = isset($registrationVehicleItem['totals'][$transactionDate]) ? $registrationVehicleItem['totals'][$transactionDate] : '';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
                 $totalSum += $total; 
                 if (!isset($footerTotalSums[$dateNum])) {

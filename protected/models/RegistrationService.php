@@ -568,13 +568,13 @@ class RegistrationService extends CActiveRecord {
             ':year_month' => $yearMonth,
         );
         
-        $sql = "SELECT c.id AS service_category_id, SUBSTRING_INDEX(SUBSTRING_INDEX(transaction_date, ' ', 1), '-', 3) AS transaction_date, c.code AS service_category_code, COUNT(*) AS total_quantity_service_category
+        $sql = "SELECT c.id AS service_category_id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3) AS transaction_date, c.code AS service_category_code, COUNT(*) AS total_quantity_service_category
                 FROM " . RegistrationService::model()->tableName() . " r
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = r.registration_transaction_id
                 INNER JOIN " . Service::model()->tableName() . " s ON s.id = r.service_id
                 INNER JOIN " . ServiceCategory::model()->tableName() . " c ON c.id = s.service_category_id
-                WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(transaction_date, ' ', 1), '-', 2) = :year_month
-                GROUP BY c.id, SUBSTRING_INDEX(SUBSTRING_INDEX(transaction_date, ' ', 1), '-', 3)
+                WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 2) = :year_month
+                GROUP BY c.id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3)
                 ORDER BY c.code ASC, transaction_date ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
