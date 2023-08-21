@@ -159,14 +159,14 @@ class Employees extends CComponent {
             $valid = true;
         }
 
-        if (count($this->divisionDetails) > 0) {
-            foreach ($this->divisionDetails as $divisionDetail) {
-                $fields = array('position_id');
-                $valid = $divisionDetail->validate($fields) && $valid;
-            }
-        } else {
-            $valid = true;
-        }
+//        if (count($this->divisionDetails) > 0) {
+//            foreach ($this->divisionDetails as $divisionDetail) {
+//                $fields = array('position_id');
+//                $valid = $divisionDetail->validate($fields) && $valid;
+//            }
+//        } else {
+//            $valid = true;
+//        }
 
         //print_r($valid);
         return $valid;
@@ -277,12 +277,12 @@ class Employees extends CComponent {
         }
 
         //Division
-        foreach ($this->divisionDetails as $divisionDetail) {
-            $divisionDetail->employee_id = $this->header->id;
-            $divisionDetail->branch_id = $_POST['Employee']['branch_id'];
-            $valid = $divisionDetail->save(false) && $valid;
-            $new_division[] = $divisionDetail->id;
-        }
+//        foreach ($this->divisionDetails as $divisionDetail) {
+//            $divisionDetail->employee_id = $this->header->id;
+//            $divisionDetail->branch_id = $_POST['Employee']['branch_id'];
+//            $valid = $divisionDetail->save(false) && $valid;
+//            $new_division[] = $divisionDetail->id;
+//        }
         //var_dump(CJSON::encode($this->phoneDetails));
         //delete phone
         $delete_array = array_diff($phoneId, $new_detail);

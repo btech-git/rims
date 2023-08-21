@@ -136,6 +136,8 @@ class EmployeeController extends Controller {
         ));
 
         $employee = $this->instantiate(null);
+        $employee->header->user_id = Yii::app()->user->id;
+        
         if (isset($_POST['Employee'])) {
             $this->loadState($employee);
             if ($employee->save(Yii::app()->db)) {
