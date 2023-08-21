@@ -2,16 +2,16 @@
     <thead>
         <tr style="background-color: skyblue">
             <?php if ($movementType == 2): ?>
-                <th style="text-align: center; width: 12%">Sub Pekerjaan #</th>
+                <th style="text-align: center; width: 17%">Sub Pekerjaan #</th>
                 <th style="text-align: center; width: 12%">Tanggal</th>
-                <th style="text-align: center; width: 12%">RG #</th>
+                <th style="text-align: center; width: 17%">RG #</th>
             <?php else: ?>
                 <th style="text-align: center; width: 12%">Invoice #</th>
                 <th style="text-align: center; width: 12%">Tanggal</th>
                 <th style="text-align: center; width: 12%">SJ #</th>
                 <th style="text-align: center; width: 12%">Jatuh Tempo</th>
             <?php endif; ?>
-            <th style="text-align: center; width: 12%">Total</th>
+            <th style="text-align: center; width: 12%">Invoice</th>
             <th style="text-align: center; width: 12%">Payment</th>
             <th colspan="2" style="text-align: center">Memo</th>
             <th style="width: 5%"></th>
@@ -92,7 +92,7 @@
                     <?php echo CHtml::error($detail, 'amount'); ?>
                 </td>
                 
-                <td style="text-align: right" colspan="2" >
+                <td style="text-align: right">
                     <?php echo CHtml::activeTextField($detail, "[$i]memo", array('size'=>20, 'maxlength'=>60)); ?>
                     <?php echo CHtml::error($detail, 'memo'); ?>
                 </td>
@@ -111,8 +111,7 @@
     </tbody>
     <tfoot>
 	<tr style="background-color: aquamarine">
-            <?php $colspan = $movementType == 2 ? 4 : 5; ?>
-            <td colspan=<?php echo $colspan; ?> style="text-align: right; font-weight: bold">Total</td>
+            <td colspan=<?php echo $movementType == 2 ? 3 : 4; ?> style="text-align: right; font-weight: bold">Total</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>
