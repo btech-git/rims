@@ -94,6 +94,11 @@
                                         'url' => array('/report/generalLedger/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('generalLedgerReport')
                                     ),
+                                    array(
+                                        'label' => 'Ringkasan Buku Besar II', 
+                                        'url' => array('/report/accountingJournalSummary/summary'), 
+                                        'visible' => Yii::app()->user->id == 1,
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

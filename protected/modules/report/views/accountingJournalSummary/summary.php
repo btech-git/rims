@@ -48,21 +48,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'MI' => 'Movement In',
                                             'MO' => 'Movement Out',
                                             'MR' => 'Material',
-//                                            'PO' => 'PURCHASE',
-//                                            'Invoice GR' => 'GENERAL REPAIR',
-//                                            'Invoice BR' => 'BODY REPAIR',
+                                            'PO' => 'PURCHASE',
 //                                            'DO' => 'DELIVERY',
 //                                            'TR' => 'TRANSFER REQUEST',
 //                                            'RCI' => 'RECEIVE',
-//                                            'CSI' => 'CONSIGNMENT IN',
-//                                            'CSO' => 'CONSIGNMENT OUT',
-//                                            'MI' => 'MOVEMENT IN',
-//                                            'MO' => 'MOVEMENT OUT',
 //                                            'Pin' => 'PAYMENT IN',
 //                                            'Pout' => 'PAYMENT OUT',
 //                                            'SO' => 'SALES',
-//                                            'CASH' => 'CASH TRANSACTION',
-//                                            'JP' => 'JURNAL UMUM',
                                         ), array('empty' => '-- All Transaction --')); ?>
                                     </div>
                                 </div>
