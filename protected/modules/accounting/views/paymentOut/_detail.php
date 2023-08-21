@@ -13,7 +13,7 @@
             <?php endif; ?>
             <th style="text-align: center; width: 12%">Invoice</th>
             <th style="text-align: center; width: 12%">Payment</th>
-            <th colspan="2" style="text-align: center">Memo</th>
+            <th style="text-align: center">Memo</th>
             <th style="width: 5%"></th>
         </tr>
     </thead>
