@@ -43,22 +43,6 @@
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_due_date)'
         ),
         array(
-            'name' => 'user_id_invoice',
-            'filter' => CHtml::activeDropDownList($receiveItem, 'user_id_invoice', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
-            'header' => 'Created By',
-            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
-        ),
-        array(
-            'name' => 'recipient_branch_id',
-            'header' => 'Branch',
-            'filter' => CHtml::activeDropDownList($receiveItem, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-            'value' => '$data->recipientBranch->name',
-        ),
-        array(
-            'header' => 'Tanggal Input',
-            'value' => '$data->dateTimeCreated',
-        ),
-        array(
             'header' => 'Total',
             'filter' => false,
             'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
@@ -75,6 +59,22 @@
             'filter' => false,
             'value' => 'number_format(CHtml::value($data, "purchaseOrder.payment_left"), 2)',
             'htmlOptions' => array('style' => 'text-align: right'),
+        ),
+        array(
+            'name' => 'user_id_invoice',
+            'filter' => CHtml::activeDropDownList($receiveItem, 'user_id_invoice', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
+            'header' => 'Created By',
+            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
+        ),
+        array(
+            'name' => 'recipient_branch_id',
+            'header' => 'Branch',
+            'filter' => CHtml::activeDropDownList($receiveItem, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+            'value' => '$data->recipientBranch->name',
+        ),
+        array(
+            'header' => 'Tanggal Input',
+            'value' => '$data->dateTimeCreated',
         ),
         array(
             'header' => '',
