@@ -68,7 +68,7 @@ $this->menu = array(
                     array(
                         'label' => 'Created by',
                         'name' => 'user_id', 
-                        'value' => $model->user->username
+                        'value' => empty($model->user_id) ? 'N/A' : $model->user->username
                     ),
                 ),
             )); ?>
