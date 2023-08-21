@@ -12,8 +12,8 @@
                 <th style="text-align: center; width: 12%">Jatuh Tempo</th>
             <?php endif; ?>
             <th style="text-align: center; width: 12%">Total</th>
-            <th colspan="2" style="text-align: center">Memo</th>
             <th style="text-align: center; width: 12%">Payment</th>
+            <th colspan="2" style="text-align: center">Memo</th>
             <th style="width: 5%"></th>
         </tr>
     </thead>
@@ -71,11 +71,6 @@
                     </td>
 
                 <?php endif; ?>
-                <td style="text-align: right" colspan="2" >
-                    <?php echo CHtml::activeTextField($detail, "[$i]memo", array('size'=>20, 'maxlength'=>60)); ?>
-                    <?php echo CHtml::error($detail, 'memo'); ?>
-                </td>
-
                 <td style="text-align: right">
                     <?php echo CHtml::activeTextField($detail, "[$i]amount", array(
                         'onchange' => '
@@ -96,6 +91,11 @@
                     )); ?>
                     <?php echo CHtml::error($detail, 'amount'); ?>
                 </td>
+                
+                <td style="text-align: right" colspan="2" >
+                    <?php echo CHtml::activeTextField($detail, "[$i]memo", array('size'=>20, 'maxlength'=>60)); ?>
+                    <?php echo CHtml::error($detail, 'memo'); ?>
+                </td>
 
                 <td>
                     <?php echo CHtml::button('X', array(
@@ -111,7 +111,7 @@
     </tbody>
     <tfoot>
 	<tr style="background-color: aquamarine">
-            <?php $colspan = $movementType == 2 ? 5 : 6; ?>
+            <?php $colspan = $movementType == 2 ? 4 : 5; ?>
             <td colspan=<?php echo $colspan; ?> style="text-align: right; font-weight: bold">Total</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOut, 'totalInvoice'))); ?>
@@ -123,7 +123,7 @@
                 </span>
                 <?php echo CHtml::error($paymentOut->header, 'payment_amount'); ?>
             </td>
-            <td></td>
+            <td colspan="2"></td>
 	</tr>
     </tfoot>
 </table>
