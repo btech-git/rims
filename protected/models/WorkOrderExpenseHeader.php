@@ -158,7 +158,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $total = 0.00;
         
         foreach($this->payOutDetails as $detail) {
-            $total += $detail->total_invoice;
+            $total += $detail->amount;
         }
         
         return $total;

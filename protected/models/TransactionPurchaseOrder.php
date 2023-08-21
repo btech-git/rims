@@ -387,7 +387,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         
         foreach ($this->transactionReceiveItems as $transactionReceiveItem) {
             foreach ($transactionReceiveItem->payOutDetails as $payOutDetail) {
-                $total += $payOutDetail->total_invoice;
+                $total += $payOutDetail->amount;
             }
         }
         

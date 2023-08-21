@@ -198,37 +198,72 @@ class PaymentOutController extends Controller {
                 'branch_id' => $paymentOut->branch_id,
             ));
 
-            $jurnalHutang = new JurnalUmum;
-            $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
-            $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
-            $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
-            $jurnalHutang->branch_id = $paymentOut->branch_id;
-            $jurnalHutang->total = $paymentOut->payment_amount;
-            $jurnalHutang->debet_kredit = 'D';
-            $jurnalHutang->tanggal_posting = date('Y-m-d');
-            $jurnalHutang->transaction_subject = $paymentOut->notes;
-            $jurnalHutang->is_coa_category = 0;
-            $jurnalHutang->transaction_type = 'Pout';
-            $jurnalHutang->save();
+            foreach ($paymentOut->payOutDetails as $detail) {
+                $invoiceNumber = empty($detail->receive_item_id) ? '' : $detail->receiveItem->invoice_number;
+                $jurnalHutang = new JurnalUmum;
+                $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
+                $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
+                $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
+                $jurnalHutang->branch_id = $paymentOut->branch_id;
+                $jurnalHutang->total = $detail->amount;
+                $jurnalHutang->debet_kredit = 'D';
+                $jurnalHutang->tanggal_posting = date('Y-m-d');
+                $jurnalHutang->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
+                $jurnalHutang->is_coa_category = 0;
+                $jurnalHutang->transaction_type = 'Pout';
+                $jurnalHutang->save();
 
-            if (!empty($paymentOut->paymentType->coa_id)) {
-                $coaId = $paymentOut->paymentType->coa_id;
-            } else {
-                $coaId = $paymentOut->companyBank->coa_id;
+                if (!empty($paymentOut->paymentType->coa_id)) {
+                    $coaId = $paymentOut->paymentType->coa_id;
+                } else {
+                    $coaId = $paymentOut->companyBank->coa_id;
+                }
+
+                $jurnalUmumKas = new JurnalUmum;
+                $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
+                $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
+                $jurnalUmumKas->coa_id = $coaId;
+                $jurnalUmumKas->branch_id = $paymentOut->branch_id;
+                $jurnalUmumKas->total = $detail->amount;
+                $jurnalUmumKas->debet_kredit = 'K';
+                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
+                $jurnalUmumKas->is_coa_category = 0;
+                $jurnalUmumKas->transaction_type = 'Pout';
+                $jurnalUmumKas->save();
             }
 
-            $jurnalUmumKas = new JurnalUmum;
-            $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
-            $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
-            $jurnalUmumKas->coa_id = $coaId;
-            $jurnalUmumKas->branch_id = $paymentOut->branch_id;
-            $jurnalUmumKas->total = $paymentOut->payment_amount;
-            $jurnalUmumKas->debet_kredit = 'K';
-            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-            $jurnalUmumKas->transaction_subject = $paymentOut->notes;
-            $jurnalUmumKas->is_coa_category = 0;
-            $jurnalUmumKas->transaction_type = 'Pout';
-            $jurnalUmumKas->save();
+//            $jurnalHutang = new JurnalUmum;
+//            $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
+//            $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
+//            $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
+//            $jurnalHutang->branch_id = $paymentOut->branch_id;
+//            $jurnalHutang->total = $paymentOut->payment_amount;
+//            $jurnalHutang->debet_kredit = 'D';
+//            $jurnalHutang->tanggal_posting = date('Y-m-d');
+//            $jurnalHutang->transaction_subject = $paymentOut->notes;
+//            $jurnalHutang->is_coa_category = 0;
+//            $jurnalHutang->transaction_type = 'Pout';
+//            $jurnalHutang->save();
+//
+//            if (!empty($paymentOut->paymentType->coa_id)) {
+//                $coaId = $paymentOut->paymentType->coa_id;
+//            } else {
+//                $coaId = $paymentOut->companyBank->coa_id;
+//            }
+//
+//            $jurnalUmumKas = new JurnalUmum;
+//            $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
+//            $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
+//            $jurnalUmumKas->coa_id = $coaId;
+//            $jurnalUmumKas->branch_id = $paymentOut->branch_id;
+//            $jurnalUmumKas->total = $paymentOut->payment_amount;
+//            $jurnalUmumKas->debet_kredit = 'K';
+//            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+//            $jurnalUmumKas->transaction_subject = $paymentOut->notes;
+//            $jurnalUmumKas->is_coa_category = 0;
+//            $jurnalUmumKas->transaction_type = 'Pout';
+//            $jurnalUmumKas->save();
         }
         
         $this->render('view', array(
@@ -329,7 +364,7 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
                         $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
                         $jurnalHutang->branch_id = $paymentOut->branch_id;
-                        $jurnalHutang->total = $detail->total_invoice;
+                        $jurnalHutang->total = $detail->amount;
                         $jurnalHutang->debet_kredit = 'D';
                         $jurnalHutang->tanggal_posting = date('Y-m-d');
                         $jurnalHutang->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
@@ -348,7 +383,7 @@ class PaymentOutController extends Controller {
                         $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
                         $jurnalUmumKas->coa_id = $coaId;
                         $jurnalUmumKas->branch_id = $paymentOut->branch_id;
-                        $jurnalUmumKas->total = $detail->total_invoice;
+                        $jurnalUmumKas->total = $detail->amount;
                         $jurnalUmumKas->debet_kredit = 'K';
                         $jurnalUmumKas->tanggal_posting = date('Y-m-d');
                         $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
@@ -357,22 +392,22 @@ class PaymentOutController extends Controller {
                         $jurnalUmumKas->save();
                     }
 
-                    if (!empty($purchaseOrderHeader)) {
-                        if ($purchaseOrderHeader->payment_amount == 0) {
-                            $purchaseOrderHeader->payment_amount = $paymentOut->payment_amount;
-                        } else {
-                            $purchaseOrderHeader->payment_amount += $paymentOut->payment_amount;
-                        }
-
-                        $purchaseOrderHeader->payment_left -= $paymentOut->payment_amount;
-                        if ($purchaseOrderHeader->payment_left > 0.00) {
-                            $purchaseOrderHeader->payment_status = 'PARTIALLY PAID';
-                        } else {
-                            $purchaseOrderHeader->payment_status = 'PAID';
-                        }
-
-                        $purchaseOrderHeader->update(array('payment_amount', 'payment_left', 'payment_status'));
-                    }
+//                    if (!empty($purchaseOrderHeader)) {
+//                        if ($purchaseOrderHeader->payment_amount == 0) {
+//                            $purchaseOrderHeader->payment_amount = $paymentOut->payment_amount;
+//                        } else {
+//                            $purchaseOrderHeader->payment_amount += $paymentOut->payment_amount;
+//                        }
+//
+//                        $purchaseOrderHeader->payment_left -= $paymentOut->payment_amount;
+//                        if ($purchaseOrderHeader->payment_left > 0.00) {
+//                            $purchaseOrderHeader->payment_status = 'PARTIALLY PAID';
+//                        } else {
+//                            $purchaseOrderHeader->payment_status = 'PAID';
+//                        }
+//
+//                        $purchaseOrderHeader->update(array('payment_amount', 'payment_left', 'payment_status'));
+//                    }
                 }
 
                 $this->redirect(array('view', 'id' => $headerId));
@@ -421,6 +456,24 @@ class PaymentOutController extends Controller {
         }
     }
     
+    public function actionAjaxJsonTotal($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $paymentOut = $this->instantiate($id);
+            $this->loadState($paymentOut);
+            
+            $totalPayment = $paymentOut->totalPayment;
+            $paymentAmountFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPayment));
+            $paymentAmount = $totalPayment;
+            
+            $object = array(
+                'paymentAmount' => $paymentAmount,
+                'paymentAmountFormatted' => $paymentAmountFormatted,
+            );
+            
+            echo CJSON::encode($object);
+        }
+    }
+
     public function actionRedirectTransaction($codeNumber) {
 
         list($leftPart,, ) = explode('/', $codeNumber);

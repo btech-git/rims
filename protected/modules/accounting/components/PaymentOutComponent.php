@@ -183,7 +183,7 @@ class PaymentOutComponent extends CComponent {
         $new_invoice = array();
 
         foreach ($this->details as $detail) {
-            if ($detail->total_invoice <= 0.00)
+            if ($detail->amount <= 0.00)
                 continue;
 
             if ($detail->isNewRecord) {
@@ -195,15 +195,15 @@ class PaymentOutComponent extends CComponent {
             $valid = $detail->save(false) && $valid;
             $new_invoice[] = $detail->id;
 
-            if (!empty($detail->work_order_expense_header_id)) {
-//                $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
-//                $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
-//                $purchaseOrder->payment_amount = $detail->receiveItem->getGrandTotal();
-//                $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-//                $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
-//            } else {
+            if (empty($detail->work_order_expense_header_id)) {
+                $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
+                $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
+                $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+                $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
+                $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+            } else {
                 $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
-                $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->grand_total;
+                $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();
                 $workOrderExpenseHeader->payment_remaining = $workOrderExpenseHeader->getRemainingPayment();
                 $valid = $workOrderExpenseHeader->update(array('total_payment', 'payment_remaining')) && $valid;
             }
@@ -254,6 +254,16 @@ class PaymentOutComponent extends CComponent {
         
         foreach ($this->details as $detail) {
             $total += empty($detail->receiveItem) ? $detail->workOrderExpenseHeader->grand_total : $detail->receiveItem->grandTotal;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalPayment() {
+        $total = 0.00;
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->amount;
         }
         
         return $total;

@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{pay_out_detail}}':
  * @property integer $id
  * @property string $total_invoice
+ * @property string $amount
  * @property string $memo
  * @property integer $payment_out_id
  * @property integer $receive_item_id
@@ -43,11 +44,11 @@ class PayOutDetail extends CActiveRecord {
         return array(
             array('payment_out_id', 'required'),
             array('payment_out_id, receive_item_id, work_order_expense_header_id', 'numerical', 'integerOnly' => true),
-            array('total_invoice', 'length', 'max' => 18),
+            array('total_invoice, amount', 'length', 'max' => 18),
             array('memo', 'length', 'max' => 100),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, total_invoice, memo, payment_out_id, receive_item_id, work_order_expense_header_id', 'safe', 'on' => 'search'),
+            array('id, total_invoice, memo, payment_out_id, receive_item_id, work_order_expense_header_id, amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -71,6 +72,7 @@ class PayOutDetail extends CActiveRecord {
         return array(
             'id' => 'ID',
             'total_invoice' => 'Total Invoice',
+            'amount' => 'Amount',
             'memo' => 'Memo',
             'payment_out_id' => 'Payment Out',
             'receive_item_id' => 'Receive Item',
@@ -90,6 +92,7 @@ class PayOutDetail extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('total_invoice', $this->total_invoice, true);
+        $criteria->compare('amount', $this->amount, true);
         $criteria->compare('memo', $this->memo, true);
         $criteria->compare('payment_out_id', $this->payment_out_id);
         $criteria->compare('receive_item_id', $this->receive_item_id);

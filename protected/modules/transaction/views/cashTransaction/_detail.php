@@ -127,24 +127,16 @@
             <tr>
                 <td colspan="2">Total</td>
                 <td style="text-align: right">
+                    <?php echo CHtml::activeHiddenField($cashTransaction->header, 'debit_amount'); ?>
                     <span id="debit_amount">
                         <?php echo CHtml::encode(CHtml::value($cashTransaction->header, 'debit_amount')); ?>
-                        <?php echo CHtml::activeHiddenField($cashTransaction->header, 'debit_amount', array(
-                            'size' => 18, 
-                            'maxlength' => 18, 
-                            'readonly' => true
-                        )); ?>
                     </span>
                     <?php echo CHtml::error($cashTransaction->header, 'debit_amount'); ?>
                 </td>
                 <td style="text-align: right">
+                    <?php echo CHtml::activeHiddenField($cashTransaction->header, 'credit_amount'); ?>
                     <span id="credit_amount">
                         <?php echo CHtml::encode(CHtml::value($cashTransaction->header, 'credit_amount')); ?>
-                        <?php echo CHtml::activeHiddenField($cashTransaction->header, 'credit_amount', array(
-                            'size' => 18, 
-                            'maxlength' => 18, 
-                            'readonly' => true
-                        )); ?>
                     </span>
                     <?php echo CHtml::error($cashTransaction->header, 'credit_amount'); ?>
                 </td>
