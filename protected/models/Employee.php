@@ -136,6 +136,7 @@ class Employee extends CActiveRecord {
             'position' => array(self::BELONGS_TO, 'Position', 'position_id'),
             'level' => array(self::BELONGS_TO, 'Level', 'level_id'),
             'employeeHead' => array(self::BELONGS_TO, 'Employee', 'employee_head_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 
