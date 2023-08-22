@@ -153,7 +153,7 @@ class TransactionReceiveItemController extends Controller {
         $receiveItem->header->created_datetime = date('Y-m-d H:i:s');
         $receiveItem->header->user_id_receive = Yii::app()->user->id;
         $receiveItem->header->user_id_invoice = null;
-        $receiveItem->header->recipient_branch_id = $receiveItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $receiveItem->header->recipient_branch_id;
+//        $receiveItem->header->recipient_branch_id = $receiveItem->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $receiveItem->header->recipient_branch_id;
         $this->performAjaxValidation($receiveItem->header);
 
         $branches = Branch::model()->findAll();
@@ -254,7 +254,6 @@ class TransactionReceiveItemController extends Controller {
             $this->loadState($receiveItem);
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $receiveItem->header->receive_item_no,
-                'branch_id' => $receiveItem->header->recipient_branch_id,
             ));
 
             $receiveItem->header->setCodeNumberByRevision('receive_item_no');

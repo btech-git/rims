@@ -80,10 +80,6 @@
                             <?php echo $form->labelEx($receiveItem->header, 'Cabang Penerima', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php /*echo $form->hiddenField($receiveItem->header, 'recipient_branch_id', array(
-                                'readonly' => true,
-                            )); ?>
-                            <?php echo CHtml::encode(CHtml::value($receiveItem->header, 'recipientBranch.name'));*/ ?>
                             <?php echo $form->dropDownlist($receiveItem->header, 'recipient_branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]')); ?>
                             <?php echo $form->error($receiveItem->header, 'recipient_branch_id'); ?>
                         </div>
