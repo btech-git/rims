@@ -123,7 +123,7 @@
                                             <td><?php echo $history->revision; ?></td>
                                             <td><?php echo $history->date; ?></td>
                                             <td><?php echo $history->note; ?></td>
-                                            <td><?php echo $history->supervisor_name; ?></td>
+                                            <td><?php echo $history->supervisor->username; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
