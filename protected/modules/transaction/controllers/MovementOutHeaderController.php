@@ -58,7 +58,7 @@ class MovementOutHeaderController extends Controller {
         $historis = MovementOutApproval::model()->findAllByAttributes(array('movement_out_id' => $id));
         $shippings = MovementOutShipping::model()->findAllByAttributes(array('movement_out_id' => $id));
         
-        if (isset($_POST['Process'])) {
+        if (isset($_POST['Process']) && IdempotentManager::check() && IdempotentManager::build()->save()) {
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $model->movement_out_no,
                 'branch_id' => $model->branch_id,
@@ -499,7 +499,7 @@ class MovementOutHeaderController extends Controller {
         $model->date = date('Y-m-d H:i:s');
         $details = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $headerId));
 
-        if (isset($_POST['MovementOutApproval'])) {
+        if (isset($_POST['MovementOutApproval']) && IdempotentManager::check() && IdempotentManager::build()->save()) {
             $model->attributes = $_POST['MovementOutApproval'];
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $movement->movement_out_no,
@@ -619,7 +619,7 @@ class MovementOutHeaderController extends Controller {
     }
 
     public function actionUpdateDelivered($id) {
-        
+        IdempotentManager::generate();
         $movementOut = $this->instantiate($id);
         
         $delivered = new MovementOutShipping();
@@ -628,108 +628,107 @@ class MovementOutHeaderController extends Controller {
         $delivered->date = date('Y-m-d');
         $delivered->supervisor_id = Yii::app()->user->getId();
 
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $movementOut->header->movement_out_no,
-            'branch_id' => $movementOut->header->branch_id,
-        ));
+        if (isset($_POST['MovementOutShipping']) && IdempotentManager::check() && IdempotentManager::build()->save()) {
+            InventoryDetail::model()->deleteAllByAttributes(array(
+                'transaction_number' => $movementOut->header->movement_out_no,
+            ));
 
-        $transactionType = 'MO';
-        $postingDate = date('Y-m-d');
-        $transactionCode = $movementOut->header->movement_out_no;
-        $transactionDate = $movementOut->header->date_posting;
-        $branchId = $movementOut->header->branch_id;
-        $transactionSubject = $movementOut->header->getMovementType($movementOut->header->movement_type);
-        
-        $journalReferences = array();
-        
-        if ($delivered->save()) {
+    //        $transactionType = 'MO';
+    //        $postingDate = date('Y-m-d');
+    //        $transactionCode = $movementOut->header->movement_out_no;
+    //        $transactionDate = $movementOut->header->date_posting;
+    //        $branchId = $movementOut->header->branch_id;
+    //        $transactionSubject = $movementOut->header->getMovementType($movementOut->header->movement_type);
+    //        
+    //        $journalReferences = array();
+
+            if ($delivered->save()) {
+                foreach ($movementOut->details as $movementDetail) {
+                    $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementDetail->product_id, 'warehouse_id' => $movementDetail->warehouse_id));
+
+                    if (empty($inventory)) {
+                        $insertInventory = new Inventory();
+                        $insertInventory->product_id = $movementDetail->product_id;
+                        $insertInventory->warehouse_id = $movementDetail->warehouse_id;
+                        $insertInventory->minimal_stock = 0;
+                        $insertInventory->total_stock = $movementDetail->quantity * -1;
+                        $insertInventory->status = 'Active';
+                        $insertInventory->save();
+
+                        $inventoryId = $insertInventory->id;
+                    } else {
+                        $inventory->total_stock -= $movementDetail->quantity;
+                        $inventory->update(array('total_stock'));
+
+                        $inventoryId = $inventory->id;
+
+                    }
+
+                    if (!empty($inventoryId)) {
+                        $inventoryDetail = new InventoryDetail();
+                        $inventoryDetail->inventory_id = $inventoryId;
+                        $inventoryDetail->product_id = $movementDetail->product_id;
+                        $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
+                        $inventoryDetail->transaction_type = 'MVO';
+                        $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
+                        $inventoryDetail->transaction_date = $movementOut->header->date_posting;
+                        $inventoryDetail->stock_out = $movementDetail->quantity * -1;
+                        $inventoryDetail->notes = "Data from Movement Out";
+                        $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
+                        $inventoryDetail->save(false);
+                    }
+
+    //                $value = $movementDetail->quantity * $movementDetail->product->hpp;
+    //
+    //                if ((int)$movementOut->header->movement_type == 3) {
+    //                    $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
+    //                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+    //                    $journalReferences[$coaId]['is_coa_category'] = 1;
+    //                    $journalReferences[$coaId]['values'][] = $value;
+    //                    $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+    //                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+    //                    $journalReferences[$coaId]['is_coa_category'] = 0;
+    //                    $journalReferences[$coaId]['values'][] = $value;
+    //                    
+    //                } else {
+    //                    $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+    //                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+    //                    $journalReferences[$coaId]['is_coa_category'] = 1;
+    //                    $journalReferences[$coaId]['values'][] = $value;
+    //                    $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
+    //                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+    //                    $journalReferences[$coaId]['is_coa_category'] = 0;
+    //                    $journalReferences[$coaId]['values'][] = $value;
+    //                    
+    //                }
+    //
+    //                $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+    //                $journalReferences[$coaId]['debet_kredit'] = 'K';
+    //                $journalReferences[$coaId]['is_coa_category'] = 1;
+    //                $journalReferences[$coaId]['values'][] = $value;
+    //                $coaId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+    //                $journalReferences[$coaId]['debet_kredit'] = 'K';
+    //                $journalReferences[$coaId]['is_coa_category'] = 0;
+    //                $journalReferences[$coaId]['values'][] = $value;
+
+                }
+
+                $movementOut->header->status = "Finished";
+                $movementOut->header->save(false);
             
-            foreach ($movementOut->details as $movementDetail) {
-                $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementDetail->product_id, 'warehouse_id' => $movementDetail->warehouse_id));
-                
-                if (empty($inventory)) {
-                    $insertInventory = new Inventory();
-                    $insertInventory->product_id = $movementDetail->product_id;
-                    $insertInventory->warehouse_id = $movementDetail->warehouse_id;
-                    $insertInventory->minimal_stock = 0;
-                    $insertInventory->total_stock = $movementDetail->quantity * -1;
-                    $insertInventory->status = 'Active';
-                    $insertInventory->save();
-                    
-                    $inventoryId = $insertInventory->id;
-                } else {
-                    $inventory->total_stock -= $movementDetail->quantity;
-                    $inventory->update(array('total_stock'));
-                    
-                    $inventoryId = $inventory->id;
-                    
-                }
-
-                if (!empty($inventoryId)) {
-                    $inventoryDetail = new InventoryDetail();
-                    $inventoryDetail->inventory_id = $inventoryId;
-                    $inventoryDetail->product_id = $movementDetail->product_id;
-                    $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
-                    $inventoryDetail->transaction_type = 'MVO';
-                    $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
-                    $inventoryDetail->transaction_date = $movementOut->header->date_posting;
-                    $inventoryDetail->stock_out = $movementDetail->quantity * -1;
-                    $inventoryDetail->notes = "Data from Movement Out";
-                    $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
-                    $inventoryDetail->save(false);
-                }
-
-                $value = $movementDetail->quantity * $movementDetail->product->hpp;
-
-                if ((int)$movementOut->header->movement_type == 3) {
-                    $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 1;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    
-                } else {
-                    $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 1;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 0;
-                    $journalReferences[$coaId]['values'][] = $value;
-                    
-                }
-
-                $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-                $journalReferences[$coaId]['debet_kredit'] = 'K';
-                $journalReferences[$coaId]['is_coa_category'] = 1;
-                $journalReferences[$coaId]['values'][] = $value;
-                $coaId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
-                $journalReferences[$coaId]['debet_kredit'] = 'K';
-                $journalReferences[$coaId]['is_coa_category'] = 0;
-                $journalReferences[$coaId]['values'][] = $value;
-
-            }
-
-            $movementOut->header->status = "Finished";
-            $movementOut->header->save(false);
-            
-            foreach ($journalReferences as $coaId => $journalReference) {
-                $jurnalUmumPersediaan = new JurnalUmum();
-                $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
-                $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
-                $jurnalUmumPersediaan->coa_id = $coaId;
-                $jurnalUmumPersediaan->branch_id = $branchId;
-                $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
-                $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
-                $jurnalUmumPersediaan->tanggal_posting = $postingDate;
-                $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
-                $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
-                $jurnalUmumPersediaan->transaction_type = $transactionType;
-                $jurnalUmumPersediaan->save();
+//            foreach ($journalReferences as $coaId => $journalReference) {
+//                $jurnalUmumPersediaan = new JurnalUmum();
+//                $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+//                $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+//                $jurnalUmumPersediaan->coa_id = $coaId;
+//                $jurnalUmumPersediaan->branch_id = $branchId;
+//                $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+//                $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+//                $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+//                $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+//                $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+//                $jurnalUmumPersediaan->transaction_type = $transactionType;
+//                $jurnalUmumPersediaan->save();
             }
         }
     } 

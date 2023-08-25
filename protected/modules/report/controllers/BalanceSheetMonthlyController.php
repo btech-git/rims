@@ -173,7 +173,7 @@ class BalanceSheetMonthlyController extends Controller {
                                 $column = 'B'; 
                                 $worksheet->setCellValue("A{$counter}", $accountInfo['code'] . " - " . $accountInfo['name']);
                                 foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                                    $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '';
+                                    $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : 0;
                                     $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($balance));
                                     $column++;
                                     $subCategoryTotalSums[$yearMonth] += $balance;

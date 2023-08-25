@@ -34,28 +34,30 @@ class PurchaseSummaryController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchaseSummary = new PurchaseSummary($supplier->search());
-        $purchaseSummary->setupLoading();
-        $purchaseSummary->setupPaging($pageSize, $currentPage);
-        $purchaseSummary->setupSorting();
-        $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        );
-        $purchaseSummary->setupFilter($filters);
+//        $purchaseSummary = new PurchaseSummary($supplier->search());
+//        $purchaseSummary->setupLoading();
+//        $purchaseSummary->setupPaging($pageSize, $currentPage);
+//        $purchaseSummary->setupSorting();
+//        $filters = array(
+//            'startDate' => $startDate,
+//            'endDate' => $endDate,
+//        );
+//        $purchaseSummary->setupFilter($filters);
+        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseSummary->dataProvider, $startDate, $endDate);
-        }
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($purchaseSummary->dataProvider, $startDate, $endDate);
+//        }
 
         $this->render('summary', array(
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
-            'purchaseSummary' => $purchaseSummary,
+//            'purchaseSummary' => $purchaseSummary,
+            'purchaseReport' => $purchaseReport,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentPage' => $currentPage,

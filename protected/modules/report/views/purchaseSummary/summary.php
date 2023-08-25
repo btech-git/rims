@@ -2,8 +2,6 @@
 Yii::app()->clientScript->registerScript('report', '
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $purchaseSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($purchaseSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -122,12 +120,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <div class="reportDisplay">
-                        <?php echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?>
+                        <?php //echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?>
                         <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                     </div>
 
                     <?php $this->renderPartial('_summary', array(
-                        'purchaseSummary' => $purchaseSummary,
+//                        'purchaseSummary' => $purchaseSummary,
+                        'purchaseReport' => $purchaseReport,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>

@@ -223,14 +223,14 @@ class ProfitLossMonthlyController extends Controller {
                             $elementsTotalSums[$elementNumber][$yearMonth] += $categoryTotalSums[$yearMonth];
                         }
                     }
-                    $column = 'B'; 
-                    $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-                    $worksheet->setCellValue("A{$counter}", "Total " . $elementNames[$elementNumber]);
-                    foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                        $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($elementsTotalSums[$elementNumber][$yearMonth]));
-                        $column++;
-                    }
-                    $counter++;
+//                    $column = 'B'; 
+//                    $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//                    $worksheet->setCellValue("A{$counter}", "Total " . $elementNames[$elementNumber]);
+//                    foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
+//                        $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($elementsTotalSums[$elementNumber][$yearMonth]));
+//                        $column++;
+//                    }
+//                    $counter++;
                 }
             }
         }

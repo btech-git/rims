@@ -25,15 +25,14 @@
     
     <tbody>
         <?php $totalPurchase = 0.00; ?>
-        <?php foreach ($purchaseSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = $header->getTotalPurchase($startDate, $endDate); ?>
+        <?php foreach ($purchaseReport as $purchaseItem): ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode($header->company); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', ($grandTotal))); ?></td>
+                <td class="width1-1"><?php echo CHtml::encode($purchaseItem['code']); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode($purchaseItem['company']); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode($purchaseItem['name']); ?></td>
+                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseItem['purchase_total'])); ?></td>
             </tr>
-            <?php $totalPurchase += $grandTotal; ?>
+            <?php $totalPurchase += $purchaseItem['purchase_total']; ?>
         <?php endforeach; ?>
     </tbody>
     

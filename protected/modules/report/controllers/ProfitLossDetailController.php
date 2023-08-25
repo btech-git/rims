@@ -254,8 +254,8 @@ class ProfitLossDetailController extends Controller {
             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'tanggal_transaksi')));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_subject')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'transaction_type')));
-            $worksheet->setCellValue("E{$counter}", $header->debet_kredit == "D" ? CHtml::encode(CHtml::value($header, 'transaction_subject')) : 0);
-            $worksheet->setCellValue("F{$counter}", $header->debet_kredit == "K" ? CHtml::encode(CHtml::value($header, 'transaction_subject')) : 0);
+            $worksheet->setCellValue("E{$counter}", $header->debet_kredit == "D" ? CHtml::encode(CHtml::value($header, 'total')) : 0);
+            $worksheet->setCellValue("F{$counter}", $header->debet_kredit == "K" ? CHtml::encode(CHtml::value($header, 'total')) : 0);
 
             $counter++;
         }

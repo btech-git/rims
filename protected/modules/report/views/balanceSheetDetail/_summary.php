@@ -55,7 +55,7 @@
                         ), array('order' => 't.code ASC')); ?> 
                         <?php foreach ($coas as $coa): ?>
                             <?php $accountGroupBalance = (empty($coa->coaIds)) ? $coa->getBalanceSheetBalance($startDate, $endDate, $branchId): 1; ?>
-                            <?php //if ((int) $accountGroupBalance !== 0): ?>
+                            <?php if ((int) $accountGroupBalance !== 0): ?>
                                 <tr>
                                     <td style="padding-left: 90px">
                                         <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
@@ -103,7 +103,7 @@
                                         </td>
                                     </tr>
                                 <?php endif; ?>
-                            <?php //endif; ?>
+                            <?php endif; ?>
                             <?php $accountCategoryBalance += $accountGroupBalance; ?>
                         <?php endforeach; ?>
                         <tr>

@@ -200,6 +200,7 @@
             <div class="field buttons text-center">
                 <?php echo CHtml::submitButton('Save', array('class' => 'button cbutton')); ?>
             </div>
+            <?php echo IdempotentManager::generate(); ?>
         </div>
     </div>
 <?php $this->endWidget(); ?>
