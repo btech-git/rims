@@ -17,7 +17,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div>
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
-                    <div class="row">
+<!--                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -25,7 +25,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Jumlah per Halaman</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
+                                        <?php //echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
@@ -38,22 +38,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php //echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="row">
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
+                                        <?php /*echo CHtml::activeTextField($supplier, 'id', array(
                                             'readonly' => true,
                                             'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
@@ -61,19 +61,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                         <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
                                         <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
+                                        <?php echo CHtml::closeTag('span'); */?>    
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         
-                        <div class="medium-6 columns">
+                        <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
@@ -86,7 +86,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -108,7 +108,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                        <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>

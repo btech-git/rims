@@ -45,40 +45,46 @@ Yii::app()->clientScript->registerCss('_report', '
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($saleRetailServiceSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = $header->getTotalSales($startDate, $endDate); ?>
-            <?php if ($grandTotal > 0.00): ?>
-                <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                    <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'serviceCategory.name')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'serviceType.name')); ?></td>
-                </tr>
-                <tr class="items2">
-                    <td colspan="8">
-                        <table>
-                            <?php $saleRetailData = $header->getSaleRetailReport($startDate, $endDate); ?>
-                            <?php $totalSale = 0.00; ?>
-                            <?php foreach ($saleRetailData as $saleRetailRow): ?>
-                                <?php $total = $saleRetailRow['total_price']; ?>
-                                <tr>
-                                    <td class="width2-1"><?php echo CHtml::encode($saleRetailRow['transaction_number']); ?></td>
-                                    <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleRetailRow['transaction_date']))); ?></td>
-                                    <td class="width2-3"><?php echo CHtml::encode($saleRetailRow['repair_type']); ?></td>
-                                    <td class="width2-4"><?php echo CHtml::encode($saleRetailRow['customer']); ?></td>
-                                    <td class="width2-5"><?php echo CHtml::encode($saleRetailRow['vehicle']); ?></td>
-                                    <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $total)); ?></td>
-                                </tr>
-                                <?php $totalSale += $total; ?>
-                            <?php endforeach; ?>
+        <?php foreach ($saleRetailServiceReport as $saleRetailServiceItem): ?>
+        <?php $grandTotal = $saleRetailServiceItem['total']; ?>
+            <tr class="items1">
+                <td class="width1-1"><?php echo CHtml::encode($saleRetailServiceItem['code']); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode($saleRetailServiceItem['name']); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode($saleRetailServiceItem['category']); ?></td>
+                <td class="width1-4"><?php echo CHtml::encode($saleRetailServiceItem['type']); ?></td>
+            </tr>
+            <tr class="items2">
+                <td colspan="8">
+                    <table>
+                        <?php //$saleRetailData = $header->getSaleRetailReport($startDate, $endDate); ?>
+                        <?php $totalSale = 0.00; ?>
+                        <?php $registrationServices = RegistrationService::model()->with('registrationTransaction')->findAll(array(
+                            'condition' => 't.service_id = :service_id AND registrationTransaction.transaction_date BETWEEN :start_date AND :end_date', 
+                            'params' => array(
+                                ':service_id' => $saleRetailServiceItem['id'],
+                                ':start_date' => $startDate,
+                                ':end_date' => $endDate,
+                            )
+                        )); ?>
+                        <?php foreach ($registrationServices as $registrationService): ?>
+                            <?php $total = $registrationService->total_price; ?>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="5">Total</td>
-                                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
+                                <td class="width2-1"><?php echo CHtml::encode($registrationService->registrationTransaction->transaction_number); ?></td>
+                                <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', $registrationService->registrationTransaction->transaction_date)); ?></td>
+                                <td class="width2-3"><?php echo CHtml::encode($registrationService->registrationTransaction->repair_type); ?></td>
+                                <td class="width2-4"><?php echo CHtml::encode($registrationService->registrationTransaction->customer->name); ?></td>
+                                <td class="width2-5"><?php echo CHtml::encode($registrationService->registrationTransaction->vehicle->plate_number); ?></td>
+                                <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $total)); ?></td>
                             </tr>
-                        </table>
-                    </td>
-                </tr>
-            <?php endif; ?>
+                            <?php $totalSale += $total; ?>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td style="text-align: right; font-weight: bold" colspan="5">Total</td>
+                            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         <?php endforeach; ?>
     </tbody>
 </table>

@@ -30,26 +30,27 @@ class PurchaseOrderController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchaseOrderSummary = new PurchaseOrderSummary($supplier->search());
-        $purchaseOrderSummary->setupLoading();
-        $purchaseOrderSummary->setupPaging($pageSize, $currentPage);
-        $purchaseOrderSummary->setupSorting();
-        $purchaseOrderSummary->setupFilter($startDate, $endDate);
+//        $purchaseOrderSummary = new PurchaseOrderSummary($supplier->search());
+//        $purchaseOrderSummary->setupLoading();
+//        $purchaseOrderSummary->setupPaging($pageSize, $currentPage);
+//        $purchaseOrderSummary->setupSorting();
+//        $purchaseOrderSummary->setupFilter($startDate, $endDate);
+        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
-        }
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($purchaseOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+//        }
 
         $this->render('summary', array(
-            'purchaseOrderSummary' => $purchaseOrderSummary,
+            'purchaseReport' => $purchaseReport,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
             'startDate' => $startDate,

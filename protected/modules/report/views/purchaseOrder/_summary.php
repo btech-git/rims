@@ -42,11 +42,11 @@ Yii::app()->clientScript->registerCss('_report', '
     </thead>
     
     <tbody>
-        <?php foreach ($purchaseOrderSummary->dataProvider->data as $header): ?>
+        <?php foreach ($purchaseReport as $purchaseItem): ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode($header->company); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <td class="width1-1"><?php echo CHtml::encode($purchaseItem['code']); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode($purchaseItem['company']); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode($purchaseItem['name']); ?></td>
             </tr>
 
             <tr class="items2">
@@ -56,7 +56,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $purchaseOrders = TransactionPurchaseOrder::model()->findAll(array(
                             'condition' => 'supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date', 
                             'params' => array(
-                                ':supplier_id' => $header->id,
+                                ':supplier_id' => $purchaseItem['id'],
                                 ':start_date' => $startDate,
                                 ':end_date' => $endDate,
                             )

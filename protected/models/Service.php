@@ -317,7 +317,7 @@ class Service extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getSaleRetailReport($startDate, $endDate) {
+    public function getSaleRetailReport($startDate, $endDate, $serviceId) {
         
         $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, t.name as type, p.total_price
                 FROM " . RegistrationService::model()->tableName() . " p 
@@ -331,10 +331,36 @@ class Service extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':start_date' => $startDate,
             ':end_date' => $endDate,
-            ':service_id' => $this->id,
+            ':service_id' => $serviceId,
         ));
         
         return $resultSet;
     }
     
+    public function getSaleRetailServiceReport($startDate, $endDate) {
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        $sql = "
+            SELECT s.id, s.code, s.name, c.name as category, t.name as type, po.sale_total as total
+            FROM " . Service::model()->tableName() . " s
+            INNER JOIN " . ServiceCategory::model()->tableName() . " c ON c.id = s.service_category_id
+            INNER JOIN " . ServiceType::model()->tableName() . " t ON t.id = s.service_type_id
+            INNER JOIN (
+                SELECT p.service_id, SUM(p.total_price) AS sale_total
+                FROM " . RegistrationService::model()->tableName() . " p
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = p.registration_transaction_id
+                WHERE h.transaction_date BETWEEN :start_date AND :end_date
+                GROUP BY p.service_id
+            ) po ON s.id = po.service_id
+            ORDER BY c.name ASC, s.name ASC
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

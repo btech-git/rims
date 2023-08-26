@@ -398,7 +398,7 @@ class Supplier extends CActiveRecord {
         );
         
         $sql = "
-            SELECT s.code, s.company, s.name, po.purchase_total
+            SELECT s.id, s.code, s.company, s.name, po.purchase_total
             FROM " . Supplier::model()->tableName() . " s
             INNER JOIN (
                 SELECT p.supplier_id, SUM(p.total_price) AS purchase_total
@@ -406,6 +406,7 @@ class Supplier extends CActiveRecord {
                 WHERE p.purchase_order_date BETWEEN :start_date AND :end_date
                 GROUP BY p.supplier_id
             ) po ON s.id = po.supplier_id
+            ORDER BY s.company ASC
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
