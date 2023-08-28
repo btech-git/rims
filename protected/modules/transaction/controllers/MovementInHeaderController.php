@@ -609,7 +609,7 @@ class MovementInHeaderController extends Controller {
     }
 
     public function actionUpdateReceived($id) {
-//        IdempotentManager::generate();
+        IdempotentManager::generate();
         $movementIn = $this->instantiate($id);
         
         $movementInShipping = new MovementInShipping();
@@ -623,12 +623,6 @@ class MovementInHeaderController extends Controller {
 //            'branch_id' => $movementIn->header->branch_id,
 //        ));
 
-//        if ($movementInShipping->save()) { // && IdempotentManager::check() && IdempotentManager::build()->save()) {
-
-            InventoryDetail::model()->deleteAllByAttributes(array(
-                'transaction_number' => $movementIn->header->movement_in_number,
-            ));
-
 //        $transactionType = 'MI';
 //        $postingDate = date('Y-m-d');
 //        $transactionCode = $movementIn->header->movement_in_number;
@@ -638,7 +632,11 @@ class MovementInHeaderController extends Controller {
 //        
 //        $journalReferences = array();
         
-            if ($movementInShipping->save()) {
+            if ($movementInShipping->save() && IdempotentManager::check() && IdempotentManager::build()->save()) {
+
+                InventoryDetail::model()->deleteAllByAttributes(array(
+                    'transaction_number' => $movementIn->header->movement_in_number,
+                ));
 
                 foreach ($movementIn->details as $movementDetail) {
                     $inventory = Inventory::model()->findByAttributes(array(
@@ -723,6 +721,5 @@ class MovementInHeaderController extends Controller {
 //                $jurnalUmumPersediaan->transaction_type = $transactionType;
 //                $jurnalUmumPersediaan->save();
 //            }
-//        }
     }
 }
