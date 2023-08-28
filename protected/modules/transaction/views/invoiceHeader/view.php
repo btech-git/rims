@@ -25,7 +25,7 @@ $this->menu = array(
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Invoices', Yii::app()->baseUrl . '/transaction/invoiceHeader/admin', array(
             'class' => 'button cbutton right', 
         )); ?>
-        <?php if ($model->payment_left > 0.00): ?>
+        <?php if ($model->payment_left > 0.00 && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment', array("/transaction/paymentIn/create", "invoiceId" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px', 
@@ -316,23 +316,23 @@ $this->menu = array(
                 <?php $transactions = empty($transactionInvoices) ? $transactionRegistrations : $transactionInvoices; ?>
                 
                 <?php if (!empty($transactions)): ?>
-                <?php foreach ($transactions as $i => $header): ?>
+                    <?php foreach ($transactions as $i => $header): ?>
 
-                    <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
-                    <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
+                        <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
+                        <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
 
-                    <tr>
-                        <td style="text-align: center"><?php echo $i + 1; ?></td>
-                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
-                        <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                        <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
-                        <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
-                    </tr>
+                        <tr>
+                            <td style="text-align: center"><?php echo $i + 1; ?></td>
+                            <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
+                            <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
+                            <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
+                            <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
+                        </tr>
 
-                    <?php $totalDebit += $amountDebit; ?>
-                    <?php $totalCredit += $amountCredit; ?>
+                        <?php $totalDebit += $amountDebit; ?>
+                        <?php $totalCredit += $amountCredit; ?>
 
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
 
@@ -350,9 +350,11 @@ $this->menu = array(
         </table>
     </div>
     
-    <div>
-        <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
-    </div>
+    <?php if ($model->status !== 'CANCELLED!!!'): ?>
+        <div>
+            <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php echo IdempotentManager::generate(); ?>

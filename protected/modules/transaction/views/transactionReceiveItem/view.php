@@ -25,20 +25,29 @@ $this->menu = array(
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Receive Item', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.admin"))) ?>
 
         <?php
-        /*$movements = MovementInHeader::model()->findAllByAttributes(array('receive_item_id' => $model->id));
-        if (count($movements)== 0 && $model->request_type != 'Retail Sales'):*/
+        $movements = MovementInHeader::model()->findAllByAttributes(array('receive_item_id' => $model->id));
+        if (count($movements)== 0):// && $model->request_type != 'Retail Sales'):*/
         ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/update?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("receiveItemEdit")
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
 
         <?php if (empty($model->invoice_number) && !empty($model->purchase_order_id)): ?>
             <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
         <?php endif; ?>
 
+        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionReceiveItem/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php //endif; ?>
+        
+        <br />
+        
         <h1>View Transaction Receive Item #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
@@ -68,6 +77,7 @@ $this->menu = array(
                 ),
                 'request_type',
                 'estimate_arrival_date',
+                'note', 
             ),
         )); ?>
     </div>
@@ -265,7 +275,7 @@ $this->menu = array(
                         <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrandSeries.name')); ?></td>
                         <td><?php echo $recieveDetail->qty_request; ?></td>
                         <td><?php echo $recieveDetail->qty_received; ?></td>
-                        <?php if ($recieveDetail->delivery_order_detail_id != ""): ?>
+                        <?php if ($model->delivery_order_id != ""): ?>
                             <td><?php echo $recieveDetail->quantity_delivered; ?></td>
                             <td><?php echo $recieveDetail->quantity_delivered_left; ?></td>
                         <?php endif; ?>
@@ -416,7 +426,10 @@ $this->menu = array(
         </table>
     <?php endif; ?>
 </div>
-<?php echo CHtml::beginForm(); ?>
-<?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process')); //, 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
-
-<?php echo CHtml::endForm(); ?>
+<?php if ($model->note != 'CANCELLED!!!'): //Yii::app()->user->checkAccess("purchaseHead")): ?>
+    <div class="field buttons text-center">
+        <?php echo CHtml::beginForm(); ?>
+        <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process')); //, 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
+        <?php echo CHtml::endForm(); ?>
+    </div>
+<?php endif; ?>

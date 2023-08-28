@@ -342,6 +342,20 @@ class MovementInHeaderController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->return_item_id = null; 
+        $model->receive_item_id = null;
+        $model->update(array('status', 'return_item_id', 'receive_item_id'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->movement_in_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

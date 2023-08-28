@@ -405,6 +405,28 @@ class TransactionReceiveItemController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->note = 'CANCELLED!!!';
+        $model->purchase_order_id = null; 
+        $model->transfer_request_id = null; 
+        $model->consignment_in_id = null; 
+        $model->delivery_order_id = null; 
+        $model->movement_out_id = null; 
+        $model->invoice_number = 'CANCELLED!!!';
+        $model->invoice_sub_total = 0; 
+        $model->invoice_grand_total = 0; 
+        $model->invoice_rounding_nominal = 0; 
+        $model->invoice_grand_total_rounded = 0; 
+        $model->update(array('note', 'purchase_order_id', 'transfer_request_id', 'consignment_in_id', 'delivery_order_id', 'movement_out_id', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->receive_item_no,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

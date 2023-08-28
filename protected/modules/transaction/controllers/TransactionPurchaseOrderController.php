@@ -930,6 +930,24 @@ class TransactionPurchaseOrderController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status_document = 'CANCELLED!!!';
+        $model->total_quantity = 0; 
+        $model->subtotal = 0;
+        $model->total_price = 0;
+        $model->payment_amount = 0;
+        $model->payment_left = 0;
+        $model->payment_status = 'CANCELLED!!!';
+        $model->update(array('status_document', 'total_quantity', 'subtotal', 'total_price', 'payment_amount', 'payment_left', 'payment_status'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->purchase_order_no,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;

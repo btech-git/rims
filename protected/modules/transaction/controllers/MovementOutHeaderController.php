@@ -335,6 +335,24 @@ class MovementOutHeaderController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->delivery_order_id = null; 
+        $model->return_order_id = null; 
+        $model->delivery_order_id = null; 
+        $model->material_request_header_id = null; 
+        $model->registration_service_id = null; 
+        $model->registration_transaction_id = null; 
+        $model->update(array('status', 'delivery_order_id', 'return_order_id', 'delivery_order_id', 'material_request_header_id', 'registration_service_id', 'registration_transaction_id'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->movement_out_no,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

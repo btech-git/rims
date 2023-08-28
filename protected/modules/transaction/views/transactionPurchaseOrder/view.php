@@ -21,22 +21,31 @@ $this->menu=array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/admin', array('class'=>'button cbutton right','style'=>'margin-left:10px')) ?>
         
-        <?php if (Yii::app()->user->checkAccess("purchaseOrderEdit")): ?>
+        <?php if (Yii::app()->user->checkAccess("purchaseOrderEdit") && $model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
         <?php endif; ?>
         
-        <?php //if ($model->status_document == 'Approved'): ?>
+        <?php if ($model->status_document != 'CANCELLED!!!'): //$model->status_document == 'Approved'): ?>
             <?php //echo CHtml::link('<span class="fa fa-plus"></span>Payment', Yii::app()->baseUrl.'/transaction/paymentOut/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.create"))) ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
-        <?php //endif; ?>
+        <?php endif; ?>
         
-        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("purchaseOrderApproval")): ?>
+        <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("purchaseOrderApproval") && $model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
-        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("purchaseOrderSupervisor")): ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("purchaseOrderSupervisor") && $model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
         <?php endif; ?>
         
-        <h1>View Transaction Purchase Order #<?php echo $model->id; ?></h1>
+        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionPurchaseOrder/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php //endif; ?>
+        
+        <br />
+        
+        <h1>View Purchase Order #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data'=>$model,
@@ -163,10 +172,10 @@ $this->menu=array(
 
 <br />
 
-<?php //if (Yii::app()->user->checkAccess("purchaseHead") && $model->status_document === 'Approved'): ?>
+<?php if ($model->status_document !== 'CANCELLED!!!'): // && Yii::app()->user->checkAccess("purchaseHead") && $model->status_document === 'Approved'): ?>
     <div class="field buttons text-center">
         <?php echo CHtml::beginForm(); ?>
         <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
         <?php echo CHtml::endForm(); ?>
     </div>
-<?php //endif; ?>
+<?php endif; ?>

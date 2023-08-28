@@ -22,21 +22,21 @@ $this->menu = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
-        <?php //if (($model->status != 'Approved') && ($model->status != 'Delivered') && ($model->status != 'Finished') && $model->status != 'Rejected'): ?>
+        <?php if ($model->status !== 'CANCELLED!!!'): //(($model->status != 'Approved') && ($model->status != 'Delivered') && ($model->status != 'Finished') && $model->status != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("movementOutEdit")
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
 
-        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("movementOutApproval")): ?>
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("movementOutApproval") && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("movementOutSupervisor")): ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("movementOutSupervisor") && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
-        <?php if ($model->status != 'Finished'): ?>
+        <?php if ($model->status != 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::button('Update Delivered', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',
@@ -57,7 +57,15 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
 
+        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php //endif; ?>
+        
         <br />
+        
         <h1>View Movement Out Header #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
@@ -222,9 +230,11 @@ $this->menu = array(
 
 <br />
 
-<div class="field buttons text-center">
-    <?php echo CHtml::beginForm(); ?>
-    <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
-    <?php echo IdempotentManager::generate(); ?>
-    <?php echo CHtml::endForm(); ?>
-</div>
+<?php if ($model->status !== 'CANCELLED!!!'): ?>
+    <div class="field buttons text-center">
+        <?php echo CHtml::beginForm(); ?>
+        <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
+        <?php echo IdempotentManager::generate(); ?>
+        <?php echo CHtml::endForm(); ?>
+    </div>
+<?php endif; ?>
