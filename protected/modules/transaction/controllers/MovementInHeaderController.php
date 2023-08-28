@@ -612,18 +612,18 @@ class MovementInHeaderController extends Controller {
 //        IdempotentManager::generate();
         $movementIn = $this->instantiate($id);
         
-        $received = new MovementInShipping();
-        $received->movement_in_id = $id;
-        $received->status = "Received";
-        $received->date = date('Y-m-d');
-        $received->supervisor_id = Yii::app()->user->getId();
+        $movementInShipping = new MovementInShipping();
+        $movementInShipping->movement_in_id = $id;
+        $movementInShipping->status = "Received";
+        $movementInShipping->date = date('Y-m-d');
+        $movementInShipping->supervisor_id = Yii::app()->user->getId();
 
 //        JurnalUmum::model()->deleteAllByAttributes(array(
 //            'kode_transaksi' => $movementIn->header->movement_in_number,
 //            'branch_id' => $movementIn->header->branch_id,
 //        ));
 
-        if (isset($_POST['MovementInShipping'])) { // && IdempotentManager::check() && IdempotentManager::build()->save()) {
+//        if ($movementInShipping->save()) { // && IdempotentManager::check() && IdempotentManager::build()->save()) {
 
             InventoryDetail::model()->deleteAllByAttributes(array(
                 'transaction_number' => $movementIn->header->movement_in_number,
@@ -638,7 +638,7 @@ class MovementInHeaderController extends Controller {
 //        
 //        $journalReferences = array();
         
-            if ($received->save()) {
+            if ($movementInShipping->save()) {
 
                 foreach ($movementIn->details as $movementDetail) {
                     $inventory = Inventory::model()->findByAttributes(array(
@@ -723,6 +723,6 @@ class MovementInHeaderController extends Controller {
 //                $jurnalUmumPersediaan->transaction_type = $transactionType;
 //                $jurnalUmumPersediaan->save();
 //            }
-        }
+//        }
     }
 }
