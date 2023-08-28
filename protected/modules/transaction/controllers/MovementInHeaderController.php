@@ -609,7 +609,7 @@ class MovementInHeaderController extends Controller {
     }
 
     public function actionUpdateReceived($id) {
-        IdempotentManager::generate();
+//        IdempotentManager::generate();
         $movementIn = $this->instantiate($id);
         
         $received = new MovementInShipping();
@@ -623,7 +623,7 @@ class MovementInHeaderController extends Controller {
 //            'branch_id' => $movementIn->header->branch_id,
 //        ));
 
-        if (isset($_POST['MovementInShipping']) && IdempotentManager::check() && IdempotentManager::build()->save()) {
+        if (isset($_POST['MovementInShipping'])) { // && IdempotentManager::check() && IdempotentManager::build()->save()) {
 
             InventoryDetail::model()->deleteAllByAttributes(array(
                 'transaction_number' => $movementIn->header->movement_in_number,
