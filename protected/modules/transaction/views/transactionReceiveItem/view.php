@@ -345,15 +345,17 @@ $this->menu = array(
     <hr />
     
     <?php
-    if ($model->request_type == 'Purchase Order') {
+    if ($model->request_type == 'Purchase Order' && !empty($model->purchase_order_id)) {
         $itemHeaders = TransactionReceiveItem::model()->findAllByAttributes(array('purchase_order_id' => $model->purchase_order_id));
-    } elseif ($model->request_type == 'Transfer Request') {
+    } elseif ($model->request_type == 'Transfer Request' && !empty($model->transfer_request_id)) {
         ?>
         <?php $itemHeaders = TransactionReceiveItem::model()->findAllByAttributes(array('transfer_request_id' => $model->transfer_request_id)); ?>
-    <?php }else
-        $itemHeaders = array(); ?>
+    <?php } else {
+        $itemHeaders = array(); 
+    } ?>
 
-    <?php if (count($itemHeaders) != 0): ?>
+
+    <?php if (count($itemHeaders) > 0): ?>
         <table>
             <caption>History</caption>
             <thead>
