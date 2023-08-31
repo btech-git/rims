@@ -9,7 +9,7 @@
 <?php $currentMonth = $currentStartMonth; ?>
 <?php while ($currentYear < $currentEndYear || $currentYear === $currentEndYear && $currentMonth <= $currentEndMonth): ?>
     <?php $month = str_pad($currentMonth, 2, '0', STR_PAD_LEFT); ?>
-    <?php $yearMonthList[$currentYear . '-' . $month] = date('M', mktime(null, null, null, $currentMonth)) . ' ' . date('y', mktime(null, null, null, $currentMonth, 1, $currentYear)); ?>
+    <?php $yearMonthList[$currentYear . '-' . $month] = date('M', mktime(null, null, null, $currentMonth, 1)) . ' ' . date('y', mktime(null, null, null, $currentMonth, 1, $currentYear)); ?>
     <?php $currentMonth++; ?>
     <?php if ($currentMonth === 13): ?>
         <?php $currentMonth = 1; ?>
@@ -62,7 +62,7 @@
                             <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                                 <?php $subCategoryTotalSums[$yearMonth] = '0.00'; ?>
                             <?php endforeach; ?>
-                            <?php foreach ($subCategoryInfo['accounts'] as $accountInfo): ?>
+                            <?php foreach ($subCategoryInfo['accounts'] as $coaId => $accountInfo): ?>
                                 <?php $nonZeroValueExists = false; ?>
                                 <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                                     <?php $value = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '0.00'; ?>
@@ -77,7 +77,11 @@
                                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                                             <?php $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : ''; ?>
                                             <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)); ?>
+                                                <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)), Yii::app()->createUrl("report/profitLossMonthly/jurnalTransaction", array(
+                                                    "CoaId" => $coaId, 
+                                                    "YearMonth" => $yearMonth, 
+                                                    "BranchId" => $branchId
+                                                )), array('target' => '_blank')); ?>
                                             </td>
                                             <?php $subCategoryTotalSums[$yearMonth] += $balance; ?>
                                         <?php endforeach; ?>

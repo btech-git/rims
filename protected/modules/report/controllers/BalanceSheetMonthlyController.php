@@ -75,6 +75,35 @@ class BalanceSheetMonthlyController extends Controller {
         ));
     }
 
+    public function actionJurnalTransaction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $jurnalUmum = new JurnalUmum('search');
+
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : date('Y-m');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+
+        $balanceSheetSummary = new BalanceSheetSummary($jurnalUmum->search());
+        $balanceSheetSummary->setupLoading();
+        $balanceSheetSummary->setupPaging(1000, 1);
+        $balanceSheetSummary->setupSorting();
+        $balanceSheetSummary->setupFilter($yearMonth, $coaId, $branchId);
+
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $startDate, $endDate, $branchId);
+//        }
+
+        $this->render('jurnalTransaction', array(
+            'jurnalUmum' => $jurnalUmum,
+            'balanceSheetSummary' => $balanceSheetSummary,
+            'yearMonth' => $yearMonth,
+            'coaId' => $coaId,
+            'branchId' => $branchId,
+        ));
+    }
+
     protected function saveToExcel($balanceSheetInfo, $startYearMonth, $endYearMonth, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

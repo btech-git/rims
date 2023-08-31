@@ -82,28 +82,26 @@ class ProfitLossMonthlyController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $jurnalUmum = new JurnalUmum('search');
 
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : date('Y-m');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $profitLossSummary = new ProfitLossSummary($coa->searchByTransactionJournal());
+        $profitLossSummary = new ProfitLossSummary($jurnalUmum->search());
         $profitLossSummary->setupLoading();
         $profitLossSummary->setupPaging(1000, 1);
         $profitLossSummary->setupSorting();
-        $profitLossSummary->setupFilter($startDate, $endDate, $coaId, $branchId);
+        $profitLossSummary->setupFilter($yearMonth, $coaId, $branchId);
 
-        if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcelTransactionJournal($profitLossSummary, $coaId, $startDate, $endDate, $branchId);
-        }
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionJournal($profitLossSummary, $coaId, $startDate, $endDate, $branchId);
+//        }
 
         $this->render('jurnalTransaction', array(
-            'coa' => $coa,
+            'jurnalUmum' => $jurnalUmum,
             'profitLossSummary' => $profitLossSummary,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'yearMonth' => $yearMonth,
             'coaId' => $coaId,
             'branchId' => $branchId,
         ));

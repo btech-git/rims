@@ -9,10 +9,7 @@ class BalanceSheetSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = true;
-        $this->dataProvider->criteria->with = array(
-            'jurnalUmums',
-        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -25,19 +22,14 @@ class BalanceSheetSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->defaultOrder = 'jurnalUmums.tanggal_transaksi DESC';
+        $this->dataProvider->sort->defaultOrder = 't.kode_transaksi ASC, t.tanggal_transaksi ASC';
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $accountId, $branchId) {
-//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
-	$this->dataProvider->criteria->addCondition('t.id = :account_id');
-	$this->dataProvider->criteria->params[':account_id'] = $accountId;
-
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->compare('jurnalUmums.branch_id', $branchId);
-        }
+    public function setupFilter($yearMonth, $accountId, $branchId) {
+        $this->dataProvider->criteria->addCondition("SUBSTRING_INDEX(t.tanggal_transaksi, '-', 2) = :year_month");
+        $this->dataProvider->criteria->params[':year_month'] = $yearMonth;
+        $this->dataProvider->criteria->compare('t.coa_id', $accountId);
+        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
     }
 }

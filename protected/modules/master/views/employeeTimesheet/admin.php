@@ -51,13 +51,26 @@ $('.search-form form').submit(function(){
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'employee-timesheet-grid',
             'dataProvider' => $model->search(),
-            'filter' => $model,
+            'filter' => null,
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager' => array(
+                'cssFile' => false,
+                'header' => '',
+            ),
             'columns' => array(
                 'employee.code',
                 'employee.name',
                 'date',
                 'clock_in',
                 'clock_out',
+                array(
+                    'header' => 'Telat',
+                    'value' => '$data->lateTimeDiff',
+                ),
+                array(
+                    'header' => 'Lama Kerja',
+                    'value' => '$data->workTimeDiff',
+                ),
                 array(
                     'class' => 'CButtonColumn',
                 ),

@@ -52,6 +52,8 @@
  * @property string $emergency_contact_address
  * @property integer $onleave_allocation
  * @property integer $children_quantity
+ * @property string $clock_in_time
+ * @property string $clock_out_time
  * 
  * The followings are the available model relations:
  * @property Province $province
@@ -92,7 +94,7 @@ class Employee extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, local_address, home_address, sex, email, id_card, branch_id, basic_salary, skills, onleave_allocation', 'required'),
+            array('name, local_address, home_address, sex, email, id_card, branch_id, basic_salary, skills, onleave_allocation, clock_in_time, clock_out_time', 'required'),
             array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity', 'numerical', 'integerOnly' => true),
             array('name, mother_name, bank_name, birth_place, emergency_contact_name', 'length', 'max' => 100),
             array('sex, status, basic_salary', 'length', 'max' => 10),
@@ -103,7 +105,7 @@ class Employee extends CActiveRecord {
             array('deleted_at, recruitment_date, birth_date, emergency_contact_address', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date, mother_name, bank_name, birth_place, emergency_contact_name, mobile_phone_number, marriage_status, emergency_contact_relationship, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity', 'safe', 'on' => 'search'),
+            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date, mother_name, bank_name, birth_place, emergency_contact_name, mobile_phone_number, marriage_status, emergency_contact_relationship, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity, clock_in_time, clock_out_time', 'safe', 'on' => 'search'),
         );
     }
 
@@ -238,6 +240,8 @@ class Employee extends CActiveRecord {
         $criteria->compare('availability', $this->availability, true);
         $criteria->compare('skills', $this->skills, true);
         $criteria->compare('off_day', $this->off_day, true);
+        $criteria->compare('clock_in_time', $this->clock_in_time, true);
+        $criteria->compare('clock_out_time', $this->clock_out_time, true);
         $criteria->compare('recruitment_date', $this->recruitment_date);
         $criteria->compare('is_deleted', 0);
 

@@ -45,7 +45,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <?php $yearMonthRange = array(); ?>
                                     <?php for ($i = 0; $i < 36; $i++): ?>
                                         <?php $month = str_pad($currentMonth, 2, '0', STR_PAD_LEFT); ?>
-                                        <?php $yearMonthRange[$currentYear . '-' . $month] = date('F', mktime(null, null, null, $currentMonth)) . ' ' . $currentYear; ?>
+                                        <?php $yearMonthRange[$currentYear . '-' . $month] = date('F', mktime(null, null, null, $currentMonth, 1)) . ' ' . $currentYear; ?>
                                         <?php $currentMonth--; ?>
                                         <?php if ($currentMonth === 0): ?>
                                             <?php $currentMonth = 12; ?>

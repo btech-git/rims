@@ -9,10 +9,7 @@ class ProfitLossSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = true;
-        $this->dataProvider->criteria->with = array(
-            'jurnalUmums',
-        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -25,31 +22,14 @@ class ProfitLossSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->defaultOrder = 't.code ASC, jurnalUmums.tanggal_transaksi ASC';
+        $this->dataProvider->sort->defaultOrder = 't.kode_transaksi ASC, t.tanggal_transaksi ASC';
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $accountId, $branchId) {
-//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-        $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('t.id', $accountId);
-        
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->compare('jurnalUmums.branch_id', $branchId);
-        }
-    }
-
-    public function getSaldo($startDate) {
-        foreach ($this->dataProvider->data as $data) {
-            $saldo = 0; //$data->getBeginningBalanceLedger($startDate);
-
-            foreach ($data->jurnalUmums as $detail) {
-                $debitAmount = ($detail->debet_kredit === 'D') ? $detail->total : 0 ;
-                $creditAmount = ($detail->debet_kredit === 'K') ? $detail->total : 0 ;
-                $saldo += $debitAmount - $creditAmount;
-                $detail->currentSaldo = $saldo;
-            }
-        }
+    public function setupFilter($yearMonth, $accountId, $branchId) {
+        $this->dataProvider->criteria->addCondition("SUBSTRING_INDEX(t.tanggal_transaksi, '-', 2) = :year_month");
+        $this->dataProvider->criteria->params[':year_month'] = $yearMonth;
+        $this->dataProvider->criteria->compare('t.coa_id', $accountId);
+        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
     }
 }
