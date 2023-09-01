@@ -9,15 +9,7 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = true;
-        $this->dataProvider->criteria->with = array(
-            'coa',
-            'branch' => array(
-                'with' => array(
-                    'company',
-                ),
-            ),
-        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -30,22 +22,14 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupSorting() {
-//        $this->dataProvider->sort->attributes = array('t.tanggal_transaksi DESC', 't.kode_transaksi ASC', 't.coa_id ASC');
-//        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
-        $this->dataProvider->criteria->order = 't.tanggal_transaksi DESC, t.kode_transaksi ASC, t.coa_id ASC';
+        $this->dataProvider->sort->defaultOrder = 't.kode_transaksi ASC, t.tanggal_transaksi ASC';
+        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branchId, $companyId) {
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+    public function setupFilter($startDate, $endDate, $coaId, $branchId) {
         $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
-        $this->dataProvider->criteria->addCondition("is_coa_category = 0");
-        
-        if (!empty($branchId) && empty($companyId) || !empty($branchId) && !empty($companyId)) {
-            $this->dataProvider->criteria->addColumnCondition(array('t.branch_id' => $branchId));
-        } else if (empty($branchId) && !empty($companyId)) {
-            $this->dataProvider->criteria->addCondition("t.branch_id IN (SELECT id FROM " . Branch::model()->tableName() . " WHERE company_id = :company_id)");
-            $this->dataProvider->criteria->params[':company_id'] = $companyId;
-        }
+        $this->dataProvider->criteria->addCondition("t.is_coa_category = 0");
+        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
+        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
     }
 }

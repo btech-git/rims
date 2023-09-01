@@ -25,7 +25,7 @@
                     <tr>
                         <td>
                             <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
-                            <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array(
+                            <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/transactionJournalSummary/jurnalTransaction", array(
                                 "CoaId" => $coa->id, 
                                 "StartDate" => $startDate, 
                                 "EndDate" => $endDate, 
@@ -54,7 +54,7 @@
                                 <tr>
                                     <td style="font-size: 10px">
                                         <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/balanceSheetDetail/jurnalTransaction", array(
+                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/transactionJournalSummary/jurnalTransaction", array(
                                             "CoaId" => $account->id, 
                                             "StartDate" => $startDate, 
                                             "EndDate" => $endDate, 

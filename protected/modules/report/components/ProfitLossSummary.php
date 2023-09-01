@@ -27,7 +27,7 @@ class ProfitLossSummary extends CComponent {
     }
 
     public function setupFilter($yearMonth, $accountId, $branchId) {
-        $this->dataProvider->criteria->addCondition("SUBSTRING_INDEX(t.tanggal_transaksi, '-', 2) = :year_month");
+        $this->dataProvider->criteria->addCondition("SUBSTRING_INDEX(t.tanggal_transaksi, '-', 2) = :year_month AND t.is_coa_category = 0");
         $this->dataProvider->criteria->params[':year_month'] = $yearMonth;
         $this->dataProvider->criteria->compare('t.coa_id', $accountId);
         $this->dataProvider->criteria->compare('t.branch_id', $branchId);
