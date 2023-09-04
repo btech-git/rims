@@ -646,7 +646,7 @@ class MovementOutHeaderController extends Controller {
         $delivered->date = date('Y-m-d');
         $delivered->supervisor_id = Yii::app()->user->getId();
 
-        if (isset($_POST['MovementOutShipping']) && IdempotentManager::check() && IdempotentManager::build()->save()) {
+        if (IdempotentManager::check() && IdempotentManager::build()->save()) {
             InventoryDetail::model()->deleteAllByAttributes(array(
                 'transaction_number' => $movementOut->header->movement_out_no,
             ));
