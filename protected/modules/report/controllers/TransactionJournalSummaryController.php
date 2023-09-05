@@ -30,15 +30,26 @@ class TransactionJournalSummaryController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $coaCategoryId = (isset($_GET['CoaCategoryId'])) ? $_GET['CoaCategoryId'] : '';
+//        $coaCategoryId = (isset($_GET['CoaCategoryId'])) ? $_GET['CoaCategoryId'] : '';
+        $coaCategoryList = (isset($_GET['CoaCategoryList'])) ? $_GET['CoaCategoryList'] : array();
 
+//        $criteria = new CDbCriteria();
+//        $criteria->addCondition('t.coa_category_id = :coa_category_id');
+//        $criteria->params = array(':coa_category_id' => $coaCategoryId);
+//        $criteria->order = 't.code ASC';
+//
+//        if (empty($coaCategoryId)) {
+//            $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11, 12, 13, 22, 1, 2, 3)', 'order' => 't.code ASC'));
+//        } else {
+//            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
+//        }
+        
         $criteria = new CDbCriteria();
-        $criteria->addCondition('t.coa_category_id = :coa_category_id');
-        $criteria->params = array(':coa_category_id' => $coaCategoryId);
+        $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ')');
         $criteria->order = 't.code ASC';
 
-        if (empty($coaCategoryId)) {
-            $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11)', 'order' => 't.code ASC'));
+        if (empty($coaCategoryList)) {
+            $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11, 12, 13, 22, 1, 2, 3)', 'order' => 't.code ASC'));
         } else {
             $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
         }
@@ -64,7 +75,8 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'coaCategoryId' => $coaCategoryId,
+//            'coaCategoryId' => $coaCategoryId,
+            'coaCategoryList' => $coaCategoryList,
         ));
     }
 

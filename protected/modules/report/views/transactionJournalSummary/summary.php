@@ -113,10 +113,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">COA Category:</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CoaCategoryId', $coaCategoryId, CHtml::listData(CoaCategory::model()->findAll(array(
+                                        <?php /*echo CHtml::dropDownlist('CoaCategoryId', $coaCategoryId, CHtml::listData(CoaCategory::model()->findAll(array(
                                             'condition' => 'id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
                                             'order' => 'code ASC'
-                                        )), 'id', 'name'), array('empty' => '-- All Category --')); ?>
+                                        )), 'id', 'name'), array('empty' => '-- All Category --'));*/ ?>
+                                        <?php echo CHtml::checkBoxList('CoaCategoryList', $coaCategoryList, CHtml::listData(CoaCategory::model()->findAll(array(
+                                            'condition' => 'id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
+                                            'order' => 'code ASC'
+                                        )), 'id', 'name')); ?>
                                     </div>
                                 </div>
                             </div>

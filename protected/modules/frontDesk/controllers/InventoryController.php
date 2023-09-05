@@ -158,4 +158,23 @@ class InventoryController extends Controller {
         
         return $inventoryDetailDataProvider;
     }
+    
+    public function actionScript() {
+        $sql = "SELECT GROUP_CONCAT(id SEPARATOR ',') AS ids
+                FROM rims_inventory_detail
+                WHERE transaction_number NOT IN ('Beginning Stock', 'Adjustment Stock')
+                GROUP BY transaction_number, product_id
+                HAVING COUNT(*) > 1";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        
+        $str = '';
+        foreach ($resultSet as $row) {
+            $str .= strstr($row['ids'], ',');
+        }
+        
+        $deleteSql = "DELETE FROM rims_inventory_detail WHERE id IN (" . ltrim($str, ',') . ")";
+        
+        echo $deleteSql;
+    }
 }
