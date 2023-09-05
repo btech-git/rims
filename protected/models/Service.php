@@ -353,7 +353,7 @@ class Service extends CActiveRecord {
                 SELECT p.service_id, SUM(p.total_price) AS sale_total
                 FROM " . RegistrationService::model()->tableName() . " p
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = p.registration_transaction_id
-                WHERE h.transaction_date BETWEEN :start_date AND :end_date
+                WHERE substr(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date
                 GROUP BY p.service_id
             ) po ON s.id = po.service_id
             ORDER BY c.name ASC, s.name ASC

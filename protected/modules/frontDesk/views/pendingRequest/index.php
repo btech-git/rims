@@ -56,8 +56,6 @@ Yii::app()->clientScript->registerScript('report', '
                          </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="medium-6 columns">
                     <div class="field">
                         <div class="row collapse">
@@ -71,24 +69,6 @@ Yii::app()->clientScript->registerScript('report', '
 //                                    'Revised' => 'Revised',
 //                                    'Rejected'=>'Rejected'
                                 ), array('empty'=>'-- All Status Document --')); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="medium-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Approval Status</span>
-                            </div>
-                             <div class="small-8 columns">
-                                <?php echo CHtml::dropDownlist('destination_approval_status', $destination_approval_status, array(
-                                    '0' => 'Pending',
-                                    '1' => 'Approved',
-//                                    '2' => 'Rejected',
-                                ), array('empty'=>'-- All Approval Status --')); ?>
                             </div>
                         </div>
                     </div>
@@ -113,6 +93,22 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                              <div class="small-8 columns">
                                 <?php echo CHtml::dropDownlist('MainBranch', $mainBranch, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Main Branch --')); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="medium-6 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Approval Status</span>
+                            </div>
+                             <div class="small-8 columns">
+                                <?php echo CHtml::dropDownlist('destination_approval_status', $destination_approval_status, array(
+                                    '0' => 'Pending',
+                                    '1' => 'Approved',
+//                                    '2' => 'Rejected',
+                                ), array('empty'=>'-- All Approval Status --')); ?>
                             </div>
                         </div>
                     </div>

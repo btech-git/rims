@@ -30,7 +30,7 @@ class MechanicPerformanceController extends Controller {
     public function actionIndex() {
         $model = Search::bind(new EmployeeBranchDivisionPositionLevel('search'), isset($_GET['EmployeeBranchDivisionPositionLevel']) ? $_GET['EmployeeBranchDivisionPositionLevel'] : '');
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('position_id', array(1, 16));
+        $dataProvider->criteria->addInCondition('t.position_id', array(1, 16));
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'employee',
