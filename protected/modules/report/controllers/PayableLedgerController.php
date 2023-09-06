@@ -156,12 +156,12 @@ class PayableLedgerController extends Controller {
                 
                 $worksheet->mergeCells("A{$counter}:E{$counter}");
                 $worksheet->setCellValue("A{$counter}", "Total Penambahan");
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($positiveAmount));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($negativeAmount));
                 $counter++;
                 
                 $worksheet->mergeCells("A{$counter}:E{$counter}");
                 $worksheet->setCellValue("A{$counter}", "Total Penurunan");
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($negativeAmount));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($positiveAmount));
                 $counter++;
                 
                 $worksheet->mergeCells("A{$counter}:E{$counter}");
