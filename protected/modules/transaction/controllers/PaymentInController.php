@@ -743,6 +743,23 @@ class PaymentInController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->payment_amount = 0; 
+        $model->invoice_id = null;
+        $model->customer_id = null;
+        $model->vehicle_id = null;
+        $model->notes = '';
+        $model->update(array('status', 'invoice_id', 'payment_amount', 'customer_id', 'vehicle_id', 'notes'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->payment_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionAjaxGetCompanyBank() {
         $branch = Branch::model()->findByPk($_POST['PaymentIn']['branch_id']);
         $company = Company::model()->findByPk($branch->company_id);

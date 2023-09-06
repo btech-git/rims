@@ -35,6 +35,12 @@ $this->menu = array(
         <?php if ($model->invoice->registrationTransaction->status != 'Finished'): ?>
             <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning')); ?>
         <?php endif; ?>
+        <?php if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/paymentIn/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php endif; ?>
         
         <h1>View Payment In #<?php echo $model->id; ?></h1>
     </div>

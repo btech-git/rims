@@ -465,6 +465,22 @@ class PaymentOutController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->purchase_order_id = null; 
+        $model->supplier_id = null;
+        $model->payment_amount = 0;
+        $model->notes = '';
+        $model->update(array('status', 'purchase_order_id', 'payment_amount', 'supplier_id', 'notes'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->payment_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionAjaxPurchase($id) {
         $payment = PaymentOut::model()->findAllByAttributes(array('purchase_order_id' => $id));
         if (count($payment) == 0) {
