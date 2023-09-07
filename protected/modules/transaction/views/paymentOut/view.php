@@ -25,14 +25,14 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentOut/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.update"))) ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentOut/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.paymentOut.updateApproval"))) ?>
         <?php endif; ?>
-        <?php if (Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
+        <?php //if (Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/paymentOut/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
             )); ?>
-        <?php endif; ?>
+        <?php //endif; ?>
         
-        <h1>View PaymentOut #<?php echo $model->id; ?></h1>
+        <h1>View Payment Out #<?php echo $model->id; ?></h1>
     </div>
     
     <div class="row">
