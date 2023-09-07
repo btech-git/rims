@@ -80,7 +80,10 @@ $('.search-form form').submit(function(){
                     'columns' => array(
                         //'id',
                         //'purchase_order_id',
-                        array('name' => 'purchase_order_number', 'value' => '$data->purchaseOrder->purchase_order_no'),
+                        array(
+                            'name' => 'purchase_order_number', 
+                            'value' => 'empty($data->purchase_order_id) ? "N/A" : $data->purchaseOrder->purchase_order_no'
+                        ),
                         array(
                             'name' => 'payment_number',
                             'value' => 'CHTml::link($data->payment_number, array("view", "id"=>$data->id))',
@@ -89,7 +92,10 @@ $('.search-form form').submit(function(){
                         //'payment_number',
                         'payment_type',
                         'payment_date',
-                        array('name' => 'supplier_name', 'value' => '$data->supplier->name'),
+                        array(
+                            'name' => 'supplier_name', 
+                            'value' => 'empty($data->supplier_id) ? "N/A" : $data->supplier->name'
+                        ),
                         array(
                             'name' => 'payment_amount', 
                             'value' => 'AppHelper::formatMoney($data->payment_amount)',
