@@ -90,12 +90,12 @@ $('.search-form form').submit(function(){
                     'columns' => array(
                         array(
                             'name' => 'invoice_id', 
-                            'value' => 'empty($data->invoice_id) ? "" : CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
+                            'value' => 'empty($data->invoice_id) ? "N/A" : CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
                             'type' => 'raw'
                         ),
                         array(
                             'name' => 'customer_name', 
-                            'value' => 'empty($data->customer_id) ? "" : $data->customer->name'
+                            'value' => 'empty($data->customer_id) ? "N/A" : $data->customer->name'
                         ),
                         array(
                             'header' => 'Plate #', 
@@ -116,11 +116,11 @@ $('.search-form form').submit(function(){
                         array(
                             'header' => 'Invoice Status',
                             'name' => 'invoice_status',
-                            'value' => '$data->invoice->status',
+                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->status',
                         ),
                         array(
                             'header' => 'Type',
-                            'value' => '$data->invoice->referenceTypeLiteral',
+                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->referenceTypeLiteral',
                         ),
                         array(
                             'header' => 'Created By',
