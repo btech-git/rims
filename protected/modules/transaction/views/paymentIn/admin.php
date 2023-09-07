@@ -90,12 +90,12 @@ $('.search-form form').submit(function(){
                     'columns' => array(
                         array(
                             'name' => 'invoice_id', 
-                            'value' => 'CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
+                            'value' => 'empty($data->invoice_id) ? "" : CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
                             'type' => 'raw'
                         ),
                         array(
                             'name' => 'customer_name', 
-                            'value' => '$data->customer->name'
+                            'value' => 'empty($data->customer_id) ? "" : $data->customer->name'
                         ),
                         array(
                             'header' => 'Plate #', 
