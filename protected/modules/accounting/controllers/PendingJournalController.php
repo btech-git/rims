@@ -125,8 +125,8 @@ class PendingJournalController extends Controller {
         
         $receiveItemSql = TransactionReceiveItem::pendingJournal();
         $receiveItemDataProvider = new CSqlDataProvider($receiveItemSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($receiveItemSql))->queryScalar(),
+            'db' => Yii::app()->db,
+            'totalItemCount' => Yii::app()->db->createCommand(SqlViewGenerator::count($receiveItemSql))->queryScalar(),
             'pagination' => array(
                 'pageVar' => 'CurrentPage',
                 'pageSize' => ($pageSize > 0) ? $pageSize : 1,
@@ -685,8 +685,8 @@ class PendingJournalController extends Controller {
         
         $deliveryOrderSql = TransactionDeliveryOrder::pendingJournal();
         $deliveryOrderDataProvider = new CSqlDataProvider($deliveryOrderSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($deliveryOrderSql))->queryScalar(),
+            'db' => Yii::app()->db,
+            'totalItemCount' => Yii::app()->db->createCommand(SqlViewGenerator::count($deliveryOrderSql))->queryScalar(),
             'pagination' => array(
                 'pageVar' => 'CurrentPage',
                 'pageSize' => ($pageSize > 0) ? $pageSize : 1,
@@ -813,8 +813,8 @@ class PendingJournalController extends Controller {
         
         $saleOrderSql = TransactionSalesOrder::pendingJournal();
         $saleOrderDataProvider = new CSqlDataProvider($saleOrderSql, array(
-            'db' => CActiveRecord::$db,
-            'totalItemCount' => CActiveRecord::$db->createCommand(SqlViewGenerator::count($saleOrderSql))->queryScalar(),
+            'db' => Yii::app()->db,
+            'totalItemCount' => Yii::app()->db->createCommand(SqlViewGenerator::count($saleOrderSql))->queryScalar(),
             'pagination' => array(
                 'pageVar' => 'CurrentPage',
                 'pageSize' => ($pageSize > 0) ? $pageSize : 1,
