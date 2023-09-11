@@ -69,8 +69,8 @@
 //                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
                     ),
                     array(
-                        'label' => 'Pending Journal Registration Transaction', 
-                        'url' => array('/accounting/pendingJournal/indexRegistration'), 
+                        'label' => 'Pending Journal Invoice', 
+                        'url' => array('/accounting/pendingJournal/indexInvoice'), 
 //                        'visible' => Yii::app()->user->checkAccess('masterApprovalView')
                     ),
                     array(
