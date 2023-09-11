@@ -414,7 +414,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->addCondition("substring(t.invoice_number, 1, (length(t.invoice_number) - 2)) NOT IN (
             SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
             FROM " . JurnalUmum::model()->tableName() . "
-        )");
+        ) AND t.status <> 'CANCELLED!!!'");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
