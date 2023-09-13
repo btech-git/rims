@@ -269,6 +269,124 @@ class PaymentInController extends Controller {
         ));
     }
 
+    public function actionCustomerList() {
+
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+        $customerDataProvider->criteria->order = 't.name ASC';
+
+        $this->render('customerList', array(
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
+        ));
+    }
+
+    public function actionCreateMultiple($customerId) {
+        $customer = Customer::model()->findByPk($customerId);
+        $paymentIn = $this->instantiate();
+        
+        $paymentIn->header->customer_id = $customerId;
+        $paymentIn->header->payment_time = date('H:i:s');
+        $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
+        $paymentIn->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+        $paymentIn->header->status = 'Draft';
+        $paymentIn->header->user_id = Yii::app()->user->id;
+
+        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
+        $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
+
+        if (!empty($customerId)) {
+            $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
+            $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $customerId;
+        }
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($paymentIn);
+            
+            if ($paymentIn->save(Yii::app()->db)) {
+                $this->redirect(array('admin'));
+            }
+        }
+
+        $this->render('createMultiple', array(
+            'paymentIn' => $paymentIn,
+            'customer' => $customer,
+            'invoiceHeader' => $invoiceHeader,
+            'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
+         ));
+    }
+   
+    public function actionAjaxHtmlAddInvoices() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $paymentIn = $this->instantiate();
+            $this->loadState($paymentIn);
+
+            if (isset($_POST['InvoiceIds'])) {
+                foreach ($_POST['InvoiceIds'] as $invoiceId) {
+                    $paymentIn->addInvoice($invoiceId);
+                }
+            }
+
+            $this->renderPartial('_detail', array(
+                'paymentIn' => $paymentIn,
+            ));
+        }
+    }
+ 
+    public function actionAjaxHtmlRemoveDetail($index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $paymentIn = $this->instantiate();
+            $this->loadState($paymentIn);
+
+            $paymentIn->removeDetailAt($index);
+
+            $this->renderPartial('_detail', array(
+                'paymentIn' => $paymentIn,
+            ));
+        }
+    }
+    
+    public function instantiate() {
+        
+//        if (empty($id)) {
+            $paymentIn = new PaymentInComponent(new PaymentIn(), array());
+//        } else {
+//            $paymentInModel = $this->loadModel($id);
+//            $paymentIn = new PaymentInComponent($cashTransactionModel, $cashTransactionModel->cashTransactionDetails);
+//        }
+        
+        return $paymentIn;
+    }
+
+    public function loadState($paymentIn) {
+        if (isset($_POST['PaymentDate'], $_POST['BranchId'], $_POST['CompanyBankId'], $_POST['PaymentTypeId'])) {
+            $paymentIn->header->payment_date = $_POST['PaymentDate'];
+            $paymentIn->header->branch_id = $_POST['BranchId'];
+            $paymentIn->header->company_bank_id = $_POST['CompanyBankId'];
+            $paymentIn->header->payment_type_id = $_POST['PaymentTypeId'];
+        }
+
+        if (isset($_POST['PaymentIn'])) {
+            foreach ($_POST['PaymentIn'] as $i => $item) {
+                if (isset($paymentIn->details[$i])) {
+                    $paymentIn->details[$i]->attributes = $item;
+                } else {
+                    $detail = new PaymentIn();
+                    $detail->attributes = $item;
+                    $paymentIn->details[] = $detail;
+                }
+            }
+            if (count($_POST['PaymentIn']) < count($paymentIn->details))
+                array_splice($paymentIn->details, $i + 1);
+        } else {
+            $paymentIn->details = array();
+        }
+    }
+
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -788,21 +906,6 @@ class PaymentInController extends Controller {
         }
     }
 
-//    public function actionAjaxJsonTaxService($id, $invoiceId) {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $model = new PaymentIn;
-//            $model->attributes = $_POST['PaymentIn'];
-//
-//            $taxServiceAmount = $model->taxServiceAmount;
-//
-//            $object = array(
-//                'taxServiceAmount' => $taxServiceAmount,
-//                'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
-//            );
-//            echo CJSON::encode($object);
-//        }
-//    }
-    
     public function actionAjaxJsonAmount($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $model = new PaymentIn;

@@ -1,17 +1,14 @@
 <?php $this->breadcrumbs = array(
-    'Payment Out'=>array('admin'),
+    'Payment In'=>array('admin'),
     'Create',
 ); ?>
 
-<h1>Payment Out</h1>
+<h1>Payment In</h1>
 
-<?php echo $this->renderPartial('_form', array(
-    'paymentOut' => $paymentOut,
-    'supplier' => $supplier,
-    'receiveItem' => $receiveItem,
-    'receiveItemDataProvider' => $receiveItemDataProvider,
-    'workOrderExpense' => $workOrderExpense,
-    'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
-    'movementType' => $movementType,
+<?php echo $this->renderPartial('_formMultiple', array(
+    'paymentIn' => $paymentIn,
+    'customer' => $customer,
+    'invoiceHeader' => $invoiceHeader,
+    'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
 )); ?>
 

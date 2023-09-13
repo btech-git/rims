@@ -1,6 +1,5 @@
 <div class="form">
-    <?php echo CHtml::beginForm(array(), 'POST', array('enctype' => 'multipart/form-data')); ?>
-    <?php echo CHtml::errorSummary($paymentOut->header); ?>
+    <?php echo CHtml::beginForm(array(), 'POST'); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
             <div class="field">
@@ -10,8 +9,8 @@
                     </div>
                     <div class="small-8 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                            'model' => $paymentOut->header,
-                            'attribute' => "payment_date",
+                            'name' => 'PaymentDate',
+                            'value' => $paymentIn->header->payment_date,
                             'options'=>array(
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
@@ -22,7 +21,18 @@
                                 'readonly' => true,
                             ),
                         )); ?>
-                        <?php echo CHtml::error($paymentOut->header, 'payment_date'); ?>
+                        <?php echo CHtml::error($paymentIn->header, 'payment_date'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Customer', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
                     </div>
                 </div>
             </div>
@@ -33,7 +43,7 @@
                         <?php echo CHtml::label('Status', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'status')); ?>
+                        <?php echo CHtml::encode(CHtml::value($paymentIn->header, 'status')); ?>
                     </div>
                 </div>
             </div>		
@@ -44,127 +54,30 @@
                         <?php echo CHtml::label('User', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'user.username')); ?>
+                        <?php echo CHtml::encode(CHtml::value($paymentIn->header, 'user.username')); ?>
                     </div>
                 </div>
             </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Branch', false); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php if ($paymentOut->header->isNewRecord): ?>
-                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                                'empty' => '-- Select Branch --'
-                            )); ?>
-                            <?php echo CHtml::error($paymentOut->header, 'branch_id'); ?>
-                        <?php else: ?>
-                            <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'branch.name'));?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Payment Type', false); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
-                            'empty' => '-- Select Payment Type --',
-                            'onchange' => '
-                                if ($(this).val() == 1) {
-                                    $(".giro").hide();
-                                    $(".bank").hide();
-                                } else {
-                                    $(".bank").show();
-                                    $(".giro").show();
-                                }
-                            '
-                        )); ?>
-                        <?php echo CHtml::error($paymentOut->header, 'payment_type_id'); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="giro">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo CHtml::label('Giro #', ''); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::activeTextField($paymentOut->header, 'nomor_giro'); ?>
-                            <?php echo CHtml::error($paymentOut->header, 'nomor_giro'); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bank">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo CHtml::label('Bank', false); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'bank_id', CHtml::listData(Bank::model()->findAll(), 'id', 'name'), array(
-                                'empty' => '-- Select Bank --'
-                            )); ?>
-                            <?php echo CHtml::error($paymentOut->header, 'bank_id'); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>            
         </div>
         
         <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Supplier Company', ''); ?>
+                        <?php echo CHtml::label('Branch', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($supplier, 'company')); ?>
+                        <?php if ($paymentIn->header->isNewRecord): ?>
+                            <?php echo CHtml::dropDownList('BranchId', $paymentIn->header->branch_id, CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
+                                'empty' => '-- Select Branch --'
+                            )); ?>
+                            <?php echo CHtml::error($paymentIn->header, 'branch_id'); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($paymentIn->header, 'branch.name'));?>
+                        <?php endif; ?>
                     </div>
                 </div>
-            </div>	
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Name', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
-                    </div>
-                </div>
-            </div>	
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Address', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($supplier, 'address')); ?>
-                    </div>
-                </div>
-            </div>	
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Phone', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($supplier, 'phone')); ?>
-                    </div>
-                </div>
-            </div>	
+            </div>
             
             <div class="field" >
                 <div class="row collapse">
@@ -176,10 +89,10 @@
                             $userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
                             $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => $userBranch->branch_id));
                         ?>
-                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyBranch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
+                        <?php echo CHtml::dropDownList('CompanyBankId', $paymentIn->header->company_bank_id, CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyBranch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
                             'empty' => '-- Select Company Bank --'
                         )); ?>
-                        <?php echo CHtml::error($paymentOut->header, 'company_bank_id'); ?>
+                        <?php echo CHtml::error($paymentIn->header, 'company_bank_id'); ?>
                     </div>
                 </div>
             </div>
@@ -187,28 +100,32 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Catatan', ''); ?>
+                        <?php echo CHtml::label('Payment Type', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeTextArea($paymentOut->header, 'notes', array('rows' => 5, 'cols' => 30)); ?>
-                        <?php echo CHtml::error($paymentOut->header, 'notes'); ?>
+                        <?php echo CHtml::dropDownList('PaymentTypeId', $paymentIn->header->payment_type_id, CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
+                            'empty' => '-- Select Payment Type --',
+                            'onchange' => '
+                                if ($(this).val() == 1) {
+                                    $(".giro").hide();
+                                    $(".bank").hide();
+                                } else {
+                                    $(".bank").show();
+                                    $(".giro").show();
+                                }
+                            '
+                        )); ?>
+                        <?php echo CHtml::error($paymentIn->header, 'payment_type_id'); ?>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <hr />
 
     <div class="row">
-        <?php if ($paymentOut->header->isNewRecord): ?>
-            <?php if ($movementType == 1): ?>
-                <?php echo CHtml::button('Tambah Invoice PO', array('name' => 'Search', 'onclick' => '$("#purchase-invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#purchase-invoice-dialog").dialog("open"); return false; }')); ?>
-            <?php else: ?>
-                <?php echo CHtml::button('Tambah Invoice Sub Pekerjaan', array('name' => 'Search', 'onclick' => '$("#work-order-expense-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#work-order-expense-dialog").dialog("open"); return false; }')); ?>
-            <?php endif; ?>
-        <?php endif; ?>
+        <?php echo CHtml::button('Tambah Invoice', array('name' => 'Search', 'onclick' => '$("#invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#invoice-dialog").dialog("open"); return false; }')); ?>
         <?php echo CHtml::hiddenField('PurchaseInvoiceId'); ?>
     </div>
 
@@ -216,40 +133,10 @@
     
     <div id="detail_div">
         <?php $this->renderPartial('_detail', array(
-            'paymentOut' => $paymentOut,
-            'movementType' => $movementType,
+            'paymentIn' => $paymentIn,
         )); ?>
     </div>
 	
-    <div class="field">
-        <div class="row collapse">
-            <div class="small-4 columns">
-                <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
-            </div>
-            <div class="small-8 columns">
-                <?php $this->widget('CMultiFileUpload', array(
-                    'model' => $paymentOut->header,
-                    'attribute' => 'images',
-                    'accept' => 'jpg|jpeg|png|gif',
-                    'denied' => 'Only jpg, jpeg, png and gif are allowed',
-                    'max' => 10,
-                    'remove' => '[x]',
-                    'duplicate' => 'Already Selected',
-                    'options' => array(
-                        'afterFileSelect' => 'function(e ,v ,m){
-                            var fileSize = e.files[0].size;
-                            if (fileSize > 2*1024*1024){
-                                alert("Exceeds file upload limit 2MB");
-                                $(".MultiFile-remove").click();
-                            }                      
-                            return true;
-                        }',
-                    ),
-                )); ?>
-            </div>
-        </div>
-    </div>
-    
     <div class="row buttons">
         <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
     </div>
@@ -259,12 +146,12 @@
 
 </div><!-- form -->
 
-<?php if ($paymentOut->header->isNewRecord): ?>
+<?php if ($paymentIn->header->isNewRecord): ?>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'purchase-invoice-dialog',
+        'id' => 'invoice-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(
-            'title' => 'Purchase Invoice',
+            'title' => 'Invoice',
             'autoOpen' => false,
             'width' => 'auto',
             'modal' => true,
@@ -273,9 +160,9 @@
 
     <?php echo CHtml::beginForm('', 'post'); ?>
     <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'purchase-invoice-grid',
-        'dataProvider' => $receiveItemDataProvider,
-        'filter' => $receiveItem,
+        'id' => 'invoice-grid',
+        'dataProvider' => $invoiceHeaderDataProvider,
+        'filter' => $invoiceHeader,
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager' => array(
             'cssFile' => false,
@@ -283,14 +170,9 @@
         ),
         'columns' => array(
             array(
-                'id' => 'selectedIds',
+                'id' => 'InvoiceIds',
                 'class' => 'CCheckBoxColumn',
                 'selectableRows' => '50',
-            ),
-            array(
-                'name' => 'purchase_order_no',
-                'header' => 'PO #',
-                'value' => '$data->purchaseOrder->purchase_order_no',
             ),
             array(
                 'name' => 'invoice_number',
@@ -302,41 +184,18 @@
                 'name' => 'invoice_date',
                 'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
             ),
-            array(
-                'name' => 'supplier_delivery_number',
-                'header' => 'Supplier SJ #',
-                'value' => '$data->supplier_delivery_number',
-            ),
-            array(
-                'header' => 'Jatuh Tempo',
-                'name' => 'invoice_due_date',
-                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_due_date)'
-            ),
-            array(
-                'header' => 'Total',
-                'filter' => false,
-                'value' => 'number_format(CHtml::value($data, "grandTotal"), 2)',
-                'htmlOptions' => array('style' => 'text-align: right'),
-            ),
-            array(
-                'name' => 'user_id_invoice',
-                'filter' => false,
-                'header' => 'Admin',
-                'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
-            ),
-            array(
-                'header' => 'Tanggal Input',
-                'value' => '$data->dateTimeCreated',
-            ),
+            'total_price',
+            'payment_amount',
+            'payment_left',
         ),
     )); ?>
 
-    <?php echo CHtml::ajaxSubmitButton('Add Invoice', CController::createUrl('ajaxHtmlAddInvoices', array('id' => $paymentOut->header->id, 'movementType' => 1)), array(
+    <?php echo CHtml::ajaxSubmitButton('Add Invoice', CController::createUrl('ajaxHtmlAddInvoices'), array(
         'type' => 'POST',
         'data' => 'js:$("form").serialize()',
         'success' => 'js:function(html) {
             $("#detail_div").html(html);
-            $("#purchase-invoice-dialog").dialog("close");
+            $("#invoice-dialog").dialog("close");
         }'
     )); ?>
 
@@ -344,69 +203,4 @@
 
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'work-order-expense-dialog',
-        // additional javascript options for the dialog plugin
-        'options' => array(
-            'title' => 'Sub Pekerjaan Invoice',
-            'autoOpen' => false,
-            'width' => 'auto',
-            'modal' => true,
-        ),
-    )); ?>
-
-    <?php echo CHtml::beginForm('', 'post'); ?>
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'work-order-expense-grid',
-        'dataProvider' => $workOrderExpenseDataProvider,
-        'filter' => $workOrderExpense,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
-        'columns' => array(
-            array(
-                'id' => 'selectedIds',
-                'class' => 'CCheckBoxColumn',
-                'selectableRows' => '50',
-            ),
-            array(
-                'name'=>'transaction_number', 
-                'header' => 'Invoice #',
-                'value'=>'CHtml::link($data->transaction_number, array("/accounting/workOrderExpense/view", "id"=>$data->id))', 
-                'type'=>'raw'
-            ),
-            array(
-                'name'=>'transaction_date', 
-                'header' => 'Tanggal',
-                'value'=>'$data->transaction_date',
-            ),
-            array(
-                'header'=>'WO #', 
-                'value'=>'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->work_order_number', 
-            ),
-            array(
-                'header' => 'Customer',
-                'value' => 'CHtml::value($data, "registrationTransaction.customer.name")',
-            ),
-            array(
-                'header' => 'Plate #',
-                'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
-            ),
-        ),
-    )); ?>
-
-    <?php echo CHtml::ajaxSubmitButton('Add Invoice', CController::createUrl('ajaxHtmlAddInvoices', array('id' => $paymentOut->header->id, 'movementType' => 2)), array(
-        'type' => 'POST',
-        'data' => 'js:$("form").serialize()',
-        'success' => 'js:function(html) {
-            $("#detail_div").html(html);
-            $("#work-order-expense-dialog").dialog("close");
-        }'
-    )); ?>
-
-    <?php echo CHtml::endForm(); ?>
-
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 <?php endif; ?>
