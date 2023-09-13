@@ -61,14 +61,14 @@ class BalanceSheetDetailController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $jurnalUmum = new JurnalUmum('search');
 
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $balanceSheetSummary = new BalanceSheetSummary($coa->searchByTransactionJournal());
+        $balanceSheetSummary = new BalanceSheetSummary($jurnalUmum->searchByTransactionJournal());
         $balanceSheetSummary->setupLoading();
         $balanceSheetSummary->setupPaging(1000, 1);
         $balanceSheetSummary->setupSorting();
