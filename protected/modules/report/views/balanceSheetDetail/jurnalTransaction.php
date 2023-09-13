@@ -47,7 +47,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tr>
     <?php $totalDebet = '0.00'; ?>
     <?php $totalCredit = '0.00'; ?>
-    <?php foreach ($balanceSheetSummary->dataProvider->data as $header): ?>
+    <?php foreach ($balanceSheetSummary->dataProvider->data as $i => $header): ?>
         <tr>
             <td class="width2-1" style="text-align: center">
                 <?php echo $i+1; ?>
