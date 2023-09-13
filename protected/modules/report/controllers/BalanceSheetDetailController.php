@@ -68,7 +68,7 @@ class BalanceSheetDetailController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $balanceSheetSummary = new BalanceSheetSummary($jurnalUmum->searchByTransactionJournal());
+        $balanceSheetSummary = new BalanceSheetDetailSummary($jurnalUmum->search());
         $balanceSheetSummary->setupLoading();
         $balanceSheetSummary->setupPaging(1000, 1);
         $balanceSheetSummary->setupSorting();
