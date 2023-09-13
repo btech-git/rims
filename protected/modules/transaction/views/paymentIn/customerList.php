@@ -17,22 +17,22 @@
     ),
     'columns' => array(
         array(
-            'name' => 'company',
-            'value' => '$data->company',
-        ),
-        array(
             'name' => 'name',
             'value' => '$data->name',
         ),
         array(
-            'name' => 'code',
-            'value' => '$data->code',
+            'name' => 'customer_type',
+            'value' => '$data->customer_type',
+        ),
+        array(
+            'name' => 'address',
+            'value' => '$data->address',
         ),
         'tenor',
         array(
             'header' => '',
             'type' => 'raw',
-            'value' => 'CHtml::link("CreateMultiple", array("create", "customerId" => $data->id))',
+            'value' => 'CHtml::link("create", array("createMultiple", "customerId" => $data->id))',
             'htmlOptions' => array(
                 'style' => 'text-align: center;'
             ),

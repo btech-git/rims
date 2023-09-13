@@ -343,7 +343,7 @@ class PaymentOutController extends Controller {
         $historis = PaymentOutApproval::model()->findAllByAttributes(array('payment_out_id' => $headerId));
         $model = new PaymentOutApproval;
         $model->date = date('Y-m-d H:i:s');
-        $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($paymentOut->purchase_order_id);
+//        $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($paymentOut->purchase_order_id);
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $paymentOut->payment_number,
             'branch_id' => $paymentOut->branch_id,
@@ -356,7 +356,6 @@ class PaymentOutController extends Controller {
                 $paymentOut->save(false);
 
                 if ($model->approval_type == 'Approved') {
-
                     foreach ($paymentOut->payOutDetails as $detail) {
                         $invoiceNumber = empty($detail->receive_item_id) ? '' : $detail->receiveItem->invoice_number;
                         $jurnalHutang = new JurnalUmum;

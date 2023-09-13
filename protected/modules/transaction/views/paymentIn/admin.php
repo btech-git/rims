@@ -52,13 +52,11 @@ $('.search-form form').submit(function(){
                         'visible' => Yii::app()->user->checkAccess("paymentInCreate")
                     ));*/ ?>
                 <h2>Manage Payment In</h2>
-            </div>
-
-            <div id="link">
-                <?php /*echo CHtml::link('<span class="fa fa-plus"></span>New Payment In', Yii::app()->baseUrl . '/transaction/paymentIn/customerList', array(
+                
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>New Payment In', Yii::app()->baseUrl . '/transaction/paymentIn/customerList', array(
                     'class' => 'button success right',
                     'visible' => Yii::app()->user->checkAccess("paymentInCreate")
-                ));*/ ?>
+                )); ?>
             </div>
 
             <div class="search-bar">

@@ -118,7 +118,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             ),
             array( 
                 'name' => 'payment_number', 
-                'value' => 'CHtml::link($data->payment_number, array("/transaction/paymentOut/view", "id"=>$data->id), array("target" => "blank"))', 
+                'value' => 'CHtml::link($data->payment_number, array("/accounting/paymentOut/view", "id"=>$data->id), array("target" => "blank"))', 
                 'type' => 'raw'
             ),
             'payment_date',
