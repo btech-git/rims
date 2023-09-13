@@ -53,23 +53,23 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php echo $i+1; ?>
             </td>
             <td class="width2-2">
-                <?php echo CHtml::link($detail->kode_transaksi, Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $detail->kode_transaksi)), array('target' => '_blank')); ?>
+                <?php echo CHtml::link($header->kode_transaksi, Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $header->kode_transaksi)), array('target' => '_blank')); ?>
             </td>
             <td class="width2-3">
-                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->tanggal_transaksi))); ?>
+                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?>
             </td>
             <td class="width2-4">
-                <?php echo CHtml::encode(CHtml::value($detail, 'transaction_subject')); ?>
+                <?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?>
             </td>
             <td class="width2-5">
-                <?php echo CHtml::encode(CHtml::value($detail, 'transaction_type')); ?>
+                <?php echo CHtml::encode(CHtml::value($header, 'transaction_type')); ?>
             </td>
             <td class="width2-6" style="text-align: right">
-                <?php $debitAmount = $detail->debet_kredit == 'D' ? $detail->total : 0 ?>
+                <?php $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0 ?>
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?>
             </td>
             <td class="width2-7" style="text-align: right">
-                <?php $creditAmount = $detail->debet_kredit == 'K' ? $detail->total : 0 ?>
+                <?php $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0 ?>
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
             </td>
         </tr>
