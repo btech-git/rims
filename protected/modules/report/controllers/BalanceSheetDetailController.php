@@ -79,7 +79,6 @@ class BalanceSheetDetailController extends Controller {
         }
 
         $this->render('jurnalTransaction', array(
-            'coa' => $coa,
             'balanceSheetSummary' => $balanceSheetSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
