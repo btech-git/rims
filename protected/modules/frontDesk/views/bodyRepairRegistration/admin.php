@@ -152,7 +152,7 @@ $('.search-form form').submit(function(){
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {edit} {hapus}',
+                'template' => '{views} {edit}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
@@ -163,11 +163,6 @@ $('.search-form form').submit(function(){
                         'label' => 'edit',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/update", array("id"=>$data->id))',
                         'visible' => 'Yii::app()->user->checkAccess("bodyRepairEdit")', //'$data->status != "Finished" && empty($data->invoiceHeaders) && ',
-                    ),
-                    'hapus' => array(
-                        'label' => 'delete',
-                        'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/delete", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("bodyRepairEdit")'
                     ),
                 ),
             ),

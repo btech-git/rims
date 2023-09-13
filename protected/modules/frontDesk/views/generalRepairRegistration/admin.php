@@ -131,7 +131,7 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {edit} {hapus} {finish}',
+                'template' => '{views} {edit} {finish}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
@@ -142,14 +142,6 @@ Yii::app()->clientScript->registerScript('search', "
                         'label' => 'edit',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/update", array("id"=>$data->id))',
                         'visible' => 'Yii::app()->user->checkAccess("generalRepairEdit")', //' && $data->status != "Finished" && empty($data->invoiceHeaders)',
-                    ),
-                    'hapus' => array(
-                        'label' => 'delete',
-                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/delete", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
-                        'options' => array(
-                            'confirm' => 'Are you sure to delete this transaction?',
-                        ),
                     ),
                     'finish' => array(
                         'label' => 'finish',
