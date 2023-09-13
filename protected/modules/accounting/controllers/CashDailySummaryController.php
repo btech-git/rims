@@ -309,7 +309,7 @@ class CashDailySummaryController extends Controller {
 
         $this->render('approval', array(
             'cashDaily' => $cashDaily,
-            'paymentIns' => $paymentIns,
+//            'paymentIns' => $paymentIns,
             'cashDailyApproval' => $cashDailyApproval,
         ));
     }
