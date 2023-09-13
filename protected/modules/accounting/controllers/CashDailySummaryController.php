@@ -267,7 +267,7 @@ class CashDailySummaryController extends Controller {
         $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
                 FROM " . PaymentIn::model()->tableName() . " p
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
-                WHERE payment_date = :payment_date AND branch_id = :branch_id AND c.customer_type = 'Individual' AND p.status IN ('CLEAR', 'Approved') AND p.customer_id IS NOT NULL";
+                WHERE payment_date = :payment_date AND branch_id = :branch_id AND c.customer_type = 'Individual' AND p.status IN ('CLEAR', 'Approved')";
         
         $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
             ':payment_date' => $transactionDate,
@@ -276,9 +276,12 @@ class CashDailySummaryController extends Controller {
         
         $cashDaily->amount = $paymentInRetailAmount;
         
-        $paymentIns = PaymentIn::model()->findAllByAttributes(array(
-            'payment_date' => $transactionDate, 
-            'branch_id' => $branchId, 
+        $paymentIns = PaymentIn::model()->findAll(array(
+            'condition' => "payment_date = :transaction_date AND branch_id = :branch_id AND status IN ('CLEAR', 'Approved')",
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId, 
+            )
         ));
         
         if (isset($_POST['CashDailySummary'])) {
@@ -296,8 +299,6 @@ class CashDailySummaryController extends Controller {
                     $file->saveAs($originalPath);
                 }
 
-//                echo CHtml::script('window.opener.location.reload(false); window.close();');
-//                Yii::app()->end();
                 $this->redirect(array('summary'));
             } 
         }
@@ -309,7 +310,7 @@ class CashDailySummaryController extends Controller {
 
         $this->render('approval', array(
             'cashDaily' => $cashDaily,
-//            'paymentIns' => $paymentIns,
+            'paymentIns' => $paymentIns,
             'cashDailyApproval' => $cashDailyApproval,
         ));
     }
