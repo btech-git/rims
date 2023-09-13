@@ -169,6 +169,23 @@
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'employee_id_sales_person'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::activeDropDownlist($bodyRepairRegistration->header, 'employee_id_sales_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
+//                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
+//                                                    "division_id" => array(2),
+                                                    "position_id" => 2,
+//                                                    "level_id" => array(1, 2, 3, 4),
+                                                )), "id", "name"), array("empty" => "--Assign Sales--")); ?>
+                                                <?php echo $form->error($bodyRepairRegistration->header,'employee_id_sales_person'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
                                                 <label class="prefix">Insurance Company</label>
                                             </div>
                                             <div class="small-8 columns">

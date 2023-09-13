@@ -189,6 +189,29 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Assigned Mechanic</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_assign_mechanic) ? $model->employeeIdAssignMechanic->name : ''; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Sales</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_sales_person) ? $model->employeeIdSalesPerson->name : ''; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
             </div><!-- end div large -->
         </div>
     </div>
