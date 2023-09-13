@@ -267,7 +267,7 @@ class CashDailySummaryController extends Controller {
         $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
                 FROM " . PaymentIn::model()->tableName() . " p
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
-                WHERE payment_date = :payment_date AND branch_id = :branch_id AND c.customer_type = 'Individual'";
+                WHERE payment_date = :payment_date AND branch_id = :branch_id AND c.customer_type = 'Individual' AND p.status IN ('CLEAR', 'Approved')";
         
         $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
             ':payment_date' => $transactionDate,
