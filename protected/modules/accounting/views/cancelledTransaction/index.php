@@ -75,14 +75,14 @@ Yii::app()->clientScript->registerScript('report', '
             <?php echo CHtml::endForm(); ?>
             <br />
             <div>
-                <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                <?php /*$this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => array(
                         'General Repair' => array(
                             'content' => $this->renderPartial('_viewGeneralRepair', array(
                                 'generalRepairDataProvider' => $generalRepairDataProvider, 
                             ), true)
                         ),
-                        'Sent Request' => array(
+                        'Body Repair' => array(
                             'content' => $this->renderPartial('_viewBodyRepair', array(
                                 'bodyRepairDataProvider' => $bodyRepairDataProvider, 
                             ), true)
@@ -94,7 +94,7 @@ Yii::app()->clientScript->registerScript('report', '
                     ),
                     // set id for this widgets
                     'id' => 'view_tab',
-                )); ?>
+                ));*/ ?>
             </div>
         </fieldset>
      </div>
