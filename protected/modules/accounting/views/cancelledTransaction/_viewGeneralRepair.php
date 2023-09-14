@@ -23,15 +23,15 @@
 //        array('name'=>'customer_id','value'=>'$data->customer->name'),
 //        array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
 //        array('name'=>'branch_id','value'=> '$data->branch->name'),
-        array(
-            'class'=>'CButtonColumn',
-            'template'=>'{views}',
-            'buttons'=>array(
-                'views' => array(
-                    'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id"=>$data->id))',
-                ),
-            ),
-        ),
+//        array(
+//            'class'=>'CButtonColumn',
+//            'template'=>'{views}',
+//            'buttons'=>array(
+//                'views' => array(
+//                    'label'=>'view',
+//                    'url'=>'Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id"=>$data->id))',
+//                ),
+//            ),
+//        ),
     ),
 )); ?>
