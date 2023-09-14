@@ -17,6 +17,8 @@
  * @property string $status
  * @property string $note
  * @property string $created_datetime
+ * @property string $cancelled_datetime
+ * @property integer $user_id_cancelled
  *
  * The followings are the available model relations:
  * @property Coa $coa
@@ -55,7 +57,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, branch_id, user_id', 'required'),
-            array('coa_id, branch_id, user_id', 'numerical', 'integerOnly' => true),
+            array('coa_id, branch_id, user_id, user_id_cancelled', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('transaction_type', 'length', 'max' => 20),
             array('debit_amount, credit_amount', 'length', 'max' => 18),
@@ -64,7 +66,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, note, coa_id, debit_amount, credit_amount, branch_id, user_id, status', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, note, coa_id, debit_amount, credit_amount, branch_id, user_id, status, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 
