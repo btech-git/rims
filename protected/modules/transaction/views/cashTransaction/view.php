@@ -33,6 +33,13 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/cashTransaction/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
+        <?php //if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/cashTransaction/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php //endif; ?>
+        
         <h1>View Cash Transaction #<?php echo $model->id; ?></h1>
         <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->transaction_number, 'is_coa_category' => 0)); ?>
 

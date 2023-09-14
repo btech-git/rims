@@ -420,6 +420,25 @@ class PaymentOutController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->payment_amount = 0; 
+        $model->purchase_order_id = null;
+        $model->supplier_id = null;
+        $model->ppn = 0;
+        $model->notes = '';
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'purchase_order_id', 'payment_amount', 'supplier_id', 'ppn', 'notes', 'cancelled_datetime', 'user_id_cancelled'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->payment_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionAjaxHtmlAddInvoices($id, $movementType) {
         if (Yii::app()->request->isAjaxRequest) {
             $paymentOut = $this->instantiate($id);

@@ -939,7 +939,9 @@ class TransactionPurchaseOrderController extends Controller {
         $model->payment_amount = 0;
         $model->payment_left = 0;
         $model->payment_status = 'CANCELLED!!!';
-        $model->update(array('status_document', 'total_quantity', 'subtotal', 'total_price', 'payment_amount', 'payment_left', 'payment_status'));
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status_document', 'total_quantity', 'subtotal', 'total_price', 'payment_amount', 'payment_left', 'payment_status', 'cancelled_datetime', 'user_id_cancelled'));
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->purchase_order_no,

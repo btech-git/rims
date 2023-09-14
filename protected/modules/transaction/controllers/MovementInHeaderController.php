@@ -347,7 +347,9 @@ class MovementInHeaderController extends Controller {
         $model->status = 'CANCELLED!!!';
         $model->return_item_id = null; 
         $model->receive_item_id = null;
-        $model->update(array('status', 'return_item_id', 'receive_item_id'));
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'return_item_id', 'receive_item_id', 'cancelled_datetime', 'user_id_cancelled'));
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->movement_in_number,

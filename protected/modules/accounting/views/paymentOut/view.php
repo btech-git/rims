@@ -16,7 +16,13 @@
     <?php elseif ($paymentOut->status != "Draft" && Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
     <?php endif; ?>
-
+    
+    <?php //if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
+        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/accounting/paymentOut/cancel", "id" => $model->id), array(
+            'class' => 'button alert right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php //endif; ?>
 </div>
 
 <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>

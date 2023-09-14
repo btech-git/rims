@@ -592,7 +592,9 @@ class BodyRepairRegistrationController extends Controller {
         $model->payment_status = 'CANCELLED!!!';
         $model->service_status = 'CANCELLED!!!';
         $model->vehicle_status = 'CANCELLED!!!';
-        $model->update(array('status', 'payment_status', 'service_status', 'vehicle_status'));
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'payment_status', 'service_status', 'vehicle_status', 'cancelled_datetime', 'user_id_cancelled'));
 
         $this->redirect(array('admin'));
     }

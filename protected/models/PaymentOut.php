@@ -19,6 +19,8 @@
  * @property string $nomor_giro
  * @property integer $payment_type_id
  * @property string $created_datetime
+ * @property string $cancelled_datetime
+ * @property integer $user_id_cancelled
  *
  * The followings are the available model relations:
  * @property TransactionPurchaseOrder $purchaseOrder
@@ -57,7 +59,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status, payment_type_id', 'required'),
-            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id', 'numerical', 'integerOnly' => true),
+            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, user_id_cancelled', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount', 'length', 'max' => 18),
             array('nomor_giro', 'length', 'max' => 20),
@@ -65,7 +67,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images', 'safe', 'on' => 'search'),
+            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 

@@ -317,6 +317,24 @@ class CashTransactionController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->debit_amount = 0; 
+        $model->credit_amount = null;
+        $model->payment_type_id = null;
+        $model->note = '';
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'debit_amount', 'credit_amount', 'payment_type_id', 'note', 'cancelled_datetime', 'user_id_cancelled'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->transaction_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionAjaxHtmlUpdateSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $categoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;

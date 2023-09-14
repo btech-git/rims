@@ -344,7 +344,9 @@ class MovementOutHeaderController extends Controller {
         $model->material_request_header_id = null; 
         $model->registration_service_id = null; 
         $model->registration_transaction_id = null; 
-        $model->update(array('status', 'delivery_order_id', 'return_order_id', 'delivery_order_id', 'material_request_header_id', 'registration_service_id', 'registration_transaction_id'));
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'delivery_order_id', 'return_order_id', 'delivery_order_id', 'material_request_header_id', 'registration_service_id', 'registration_transaction_id', 'cancelled_datetime', 'user_id_cancelled'));
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->movement_out_no,

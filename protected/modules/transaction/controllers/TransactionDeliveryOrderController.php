@@ -573,6 +573,28 @@ class TransactionDeliveryOrderController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->is_cancelled = 1;
+        $model->request_type = null; 
+        $model->sales_order_id = null; 
+        $model->sent_request_id = null; 
+        $model->consignment_out_id = null; 
+        $model->request_date = null; 
+        $model->estimate_arrival_date = null;
+        $model->customer_id = null; 
+        $model->transfer_request_id = null; 
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('is_cancelled', 'request_type', 'sales_order_id', 'sent_request_id', 'consignment_out_id', 'request_date', 'estimate_arrival_date', 'customer_id', 'transfer_request_id', 'cancelled_datetime', 'user_id_cancelled'));
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->delivery_order_no,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

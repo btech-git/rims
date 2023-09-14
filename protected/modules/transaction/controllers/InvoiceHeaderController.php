@@ -365,7 +365,9 @@ class InvoiceHeaderController extends Controller {
         $model->total_price = 0; 
         $model->payment_amount = 0;
         $model->payment_left = 0;
-        $model->update(array('status', 'total_price', 'payment_amount', 'payment_left'));
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'total_price', 'payment_amount', 'payment_left', 'cancelled_datetime', 'user_id_cancelled'));
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->invoice_number,

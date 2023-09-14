@@ -18,6 +18,8 @@
  * @property integer $material_request_header_id
  * @property string $status
  * @property string $created_datetime
+ * @property string $cancelled_datetime
+ * @property integer $user_id_cancelled
  *
  * The followings are the available model relations:
  * @property MovementOutApproval[] $movementOutApprovals
@@ -64,13 +66,13 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('movement_out_no, date_posting, branch_id, movement_type, user_id, status', 'required'),
-            array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id', 'numerical', 'integerOnly' => true),
+            array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id, user_id_cancelled', 'numerical', 'integerOnly' => true),
             array('movement_out_no', 'length', 'max' => 30),
             array('status', 'length', 'max' => 20),
             array('movement_out_no', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id', 'safe', 'on' => 'search'),
+            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 

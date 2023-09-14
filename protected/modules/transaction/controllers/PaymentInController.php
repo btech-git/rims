@@ -869,7 +869,9 @@ class PaymentInController extends Controller {
         $model->customer_id = null;
         $model->vehicle_id = null;
         $model->notes = '';
-        $model->update(array('status', 'invoice_id', 'payment_amount', 'customer_id', 'vehicle_id', 'notes'));
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'invoice_id', 'payment_amount', 'customer_id', 'vehicle_id', 'notes', 'cancelled_datetime', 'user_id_cancelled'));
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->payment_number,

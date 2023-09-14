@@ -20,6 +20,9 @@
  * @property integer $customer_id
  * @property integer $transfer_request_id
  * @property string $created_datetime
+ * @property string $cancelled_datetime
+ * @property integer $user_id_cancelled
+ * @property integer $is_cancelled
  *
  * The followings are the available model relations:
  * @property MovementOutHeader[] $movementOutHeaders
@@ -71,13 +74,13 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('delivery_order_no, delivery_date, posting_date, sender_id, sender_branch_id', 'required'),
-            array('sender_id, sender_branch_id, sales_order_id, sent_request_id, consignment_out_id, destination_branch, customer_id, transfer_request_id', 'numerical', 'integerOnly' => true),
+            array('sender_id, sender_branch_id, sales_order_id, sent_request_id, consignment_out_id, destination_branch, customer_id, transfer_request_id, user_id_cancelled, is_cancelled', 'numerical', 'integerOnly' => true),
             array('delivery_order_no, request_type', 'length', 'max' => 30),
             array('delivery_order_no', 'unique'),
             array('delivery_date, posting_date, request_date, estimate_arrival_date, sent_request_no, consignment_out_no, transfer_request_no', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, delivery_order_no, delivery_date, posting_date, created_datetime, sender_id, sender_branch_id, request_type, sales_order_id, sent_request_id, consignment_out_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name,customer_name,sales_order_no, transfer_request_detail_id, sent_request_no, consignment_out_no, transfer_request_no', 'safe', 'on' => 'search'),
+            array('id, delivery_order_no, delivery_date, posting_date, created_datetime, sender_id, sender_branch_id, request_type, sales_order_id, sent_request_id, consignment_out_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name,customer_name,sales_order_no, transfer_request_detail_id, sent_request_no, consignment_out_no, transfer_request_no, cancelled_datetime, user_id_cancelled, is_cancelled', 'safe', 'on' => 'search'),
         );
     }
 

@@ -15,6 +15,8 @@
  * @property integer $supervisor_id
  * @property string $status
  * @property string $created_datetime
+ * @property string $cancelled_datetime
+ * @property integer $user_id_cancelled
  *
  * The followings are the available model relations:
  * @property MovementInApproval[] $movementInApprovals
@@ -56,7 +58,7 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('movement_in_number, date_posting, branch_id, movement_type, user_id, status', 'required'),
-            array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id', 'numerical', 'integerOnly' => true),
+            array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, user_id_cancelled', 'numerical', 'integerOnly' => true),
             array('movement_in_number, status', 'length', 'max' => 30),
             array('movement_in_number', 'unique'),
             // The following rule is used by search().

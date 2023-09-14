@@ -418,7 +418,9 @@ class TransactionReceiveItemController extends Controller {
         $model->invoice_grand_total = 0; 
         $model->invoice_rounding_nominal = 0; 
         $model->invoice_grand_total_rounded = 0; 
-        $model->update(array('note', 'purchase_order_id', 'transfer_request_id', 'consignment_in_id', 'delivery_order_id', 'movement_out_id', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded'));
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('note', 'purchase_order_id', 'transfer_request_id', 'consignment_in_id', 'delivery_order_id', 'movement_out_id', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded', 'cancelled_datetime', 'user_id_cancelled'));
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->receive_item_no,
