@@ -34,8 +34,8 @@ class CancelledTransactionController extends Controller {
         $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $generalRepairDataProvider = $registrationTransaction->search();
         $generalRepairDataProvider->criteria->order = 't.transaction_date DESC';
-        $generalRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $generalRepairDataProvider->criteria->addCondition('t.repair_type = "GR" AND t.status = "CANCELLED!!!"');
+//        $generalRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+//        $generalRepairDataProvider->criteria->addCondition('t.repair_type = "GR" AND t.status = "CANCELLED!!!"');
 
         $bodyRepairDataProvider = $registrationTransaction->search();
         $bodyRepairDataProvider->criteria->order = 't.transaction_date DESC';
