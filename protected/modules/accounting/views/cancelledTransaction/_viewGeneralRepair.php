@@ -7,7 +7,6 @@
         'cssFile'=>false,
         'header'=>'',
         ),
-    //'summaryText'=>'',
     'columns'=>array(
 //        array(
 //            'name'=>'transaction_number', 

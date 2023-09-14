@@ -35,12 +35,12 @@ class CancelledTransactionController extends Controller {
         $generalRepairDataProvider = $registrationTransaction->search();
         $generalRepairDataProvider->criteria->order = 't.transaction_date DESC';
         $generalRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $generalRepairDataProvider->criteria->addCondition('t.repair_type = "GR" AND t.user_id_cancelled IS NOT null AND t.status = "CANCELLED!!!"');
+        $generalRepairDataProvider->criteria->addCondition('t.repair_type = "GR" AND t.status = "CANCELLED!!!"');
 
         $bodyRepairDataProvider = $registrationTransaction->search();
         $bodyRepairDataProvider->criteria->order = 't.transaction_date DESC';
         $bodyRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $bodyRepairDataProvider->criteria->addCondition('t.repair_type = "BR" AND t.user_id_cancelled IS NOT null AND t.status = "CANCELLED!!!"');
+        $bodyRepairDataProvider->criteria->addCondition('t.repair_type = "BR" AND t.status = "CANCELLED!!!"');
 
         if (!empty($branchId)) {
             $generalRepairDataProvider->criteria->addCondition('t.branch_id = :branch_id');
