@@ -9,11 +9,11 @@
         ),
     //'summaryText'=>'',
     'columns'=>array(
-//        array(
-//            'name'=>'transaction_number', 
-//            'value'=>'$data->transaction_number', 
-//            'type'=>'raw'
-//        ),
+        array(
+            'name'=>'transaction_number', 
+            'value'=>'$data->transaction_number', 
+            'type'=>'raw'
+        ),
 //        array(
 //            'header' => 'Tanggal',
 //            'name' => 'transaction_date',
