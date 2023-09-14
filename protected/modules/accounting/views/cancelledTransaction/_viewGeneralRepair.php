@@ -9,17 +9,17 @@
         ),
     //'summaryText'=>'',
     'columns'=>array(
-        array(
-            'name'=>'transaction_number', 
-            'value'=>'$data->transaction_number', 
-            'type'=>'raw'
-        ),
+//        array(
+//            'name'=>'transaction_number', 
+//            'value'=>'$data->transaction_number', 
+//            'type'=>'raw'
+//        ),
 //        array(
 //            'header' => 'Tanggal',
 //            'name' => 'transaction_date',
 //            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
 //        ),
-//        'problem',
+        'problem',
 //        array('name'=>'customer_id','value'=>'$data->customer->name'),
 //        array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
 //        array('name'=>'branch_id','value'=> '$data->branch->name'),
