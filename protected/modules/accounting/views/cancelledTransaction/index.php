@@ -65,7 +65,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 <span class="prefix">Branch</span>
                             </div>
                              <div class="small-8 columns">
-                                <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Requester Branch --')); ?>
+                                <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Branch --')); ?>
                             </div>
                         </div>
                     </div>
@@ -79,14 +79,16 @@ Yii::app()->clientScript->registerScript('report', '
                     'tabs' => array(
                         'General Repair' => array(
                             'content' => $this->renderPartial('_viewGeneralRepair', array(
+                                'registrationTransaction' => $registrationTransaction,
                                 'generalRepairDataProvider' => $generalRepairDataProvider, 
                             ), true)
                         ),
-//                        'Body Repair' => array(
-//                            'content' => $this->renderPartial('_viewBodyRepair', array(
-//                                'bodyRepairDataProvider' => $bodyRepairDataProvider, 
-//                            ), true)
-//                        ),
+                        'Body Repair' => array(
+                            'content' => $this->renderPartial('_viewBodyRepair', array(
+                                'registrationTransaction' => $registrationTransaction,
+                                'bodyRepairDataProvider' => $bodyRepairDataProvider, 
+                            ), true)
+                        ),
                     ),
                     // additional javascript options for the tabs plugin
                     'options' => array(

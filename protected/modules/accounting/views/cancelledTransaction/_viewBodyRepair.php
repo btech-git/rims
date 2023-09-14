@@ -1,7 +1,7 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'body-repair-grid',
     'dataProvider'=>$bodyRepairDataProvider,
-    'filter'=>false,
+    'filter'=>$registrationTransaction,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager'=>array(
         'cssFile'=>false,
@@ -23,14 +23,14 @@
         'problem',
         array('name'=>'customer_id','value'=>'$data->customer->name'),
         array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
-        array('name'=>'branch_id','value'=> '$data->branch->name'),
+        'status',
         array(
             'class'=>'CButtonColumn',
             'template'=>'{views}',
             'buttons'=>array(
                 'views' => array(
                     'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id"=>$data->id))',
+                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array("id"=>$data->id))',
                 ),
             ),
         ),

@@ -34,26 +34,27 @@ class CancelledTransactionController extends Controller {
         $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $generalRepairDataProvider = $registrationTransaction->search();
         $generalRepairDataProvider->criteria->order = 't.transaction_date DESC';
-//        $generalRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-//        $generalRepairDataProvider->criteria->addCondition('t.repair_type = "GR" AND t.status = "CANCELLED!!!"');
+        $generalRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $generalRepairDataProvider->criteria->addCondition('t.repair_type = "GR" AND t.status = "CANCELLED!!!"');
 
         $bodyRepairDataProvider = $registrationTransaction->search();
-//        $bodyRepairDataProvider->criteria->order = 't.transaction_date DESC';
-//        $bodyRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-//        $bodyRepairDataProvider->criteria->addCondition('t.repair_type = "BR" AND t.status = "CANCELLED!!!"');
+        $bodyRepairDataProvider->criteria->order = 't.transaction_date DESC';
+        $bodyRepairDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $bodyRepairDataProvider->criteria->addCondition('t.repair_type = "BR" AND t.status = "CANCELLED!!!"');
 
-//        if (!empty($branchId)) {
-//            $generalRepairDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-//            $generalRepairDataProvider->criteria->params[':branch_id'] = $branchId;
-//
-//            $bodyRepairDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-//            $bodyRepairDataProvider->criteria->params[':branch_id'] = $branchId;
-//        }
+        if (!empty($branchId)) {
+            $generalRepairDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $generalRepairDataProvider->criteria->params[':branch_id'] = $branchId;
+
+            $bodyRepairDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $bodyRepairDataProvider->criteria->params[':branch_id'] = $branchId;
+        }
 
         $this->render('index', array(
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'registrationTransaction' => $registrationTransaction,
             'generalRepairDataProvider' => $generalRepairDataProvider,
             'bodyRepairDataProvider' => $bodyRepairDataProvider,
         ));
