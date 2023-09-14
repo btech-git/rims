@@ -18,7 +18,7 @@
     <?php endif; ?>
     
     <?php //if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
-        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/accounting/paymentOut/cancel", "id" => $model->id), array(
+        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/accounting/paymentOut/cancel", "id" => $paymentOut->id), array(
             'class' => 'button alert right', 
             'style' => 'margin-right:10px', 
         )); ?>
