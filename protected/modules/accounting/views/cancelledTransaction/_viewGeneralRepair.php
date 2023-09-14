@@ -21,9 +21,9 @@
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
         ),
         'problem',
-        array('name'=>'customer_id','value'=>'$data->customer->name'),
-        array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
-        array('name'=>'branch_id','value'=> '$data->branch->name'),
+//        array('name'=>'customer_id','value'=>'$data->customer->name'),
+//        array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
+//        array('name'=>'branch_id','value'=> '$data->branch->name'),
         array(
             'class'=>'CButtonColumn',
             'template'=>'{views}',
