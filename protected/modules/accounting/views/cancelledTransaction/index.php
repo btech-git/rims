@@ -89,6 +89,54 @@ Yii::app()->clientScript->registerScript('report', '
                                 'bodyRepairDataProvider' => $bodyRepairDataProvider, 
                             ), true)
                         ),
+                        'Cash Transaction' => array(
+                            'content' => $this->renderPartial('_viewCashTransaction', array(
+                                'cashTransaction' => $cashTransaction,
+                                'cashTransactionDataProvider' => $cashTransactionDataProvider,
+                            ), true)
+                        ),
+                        'Sales Invoice' => array(
+                            'content' => $this->renderPartial('_viewInvoiceHeader', array(
+                                'invoiceHeader' => $invoiceHeader,
+                                'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
+                            ), true)
+                        ),
+                        'Movement In' => array(
+                            'content' => $this->renderPartial('_viewMovementIn', array(
+                                'movementIn' => $movementIn,
+                                'movementInDataProvider' => $movementInDataProvider,
+                            ), true)
+                        ),
+                        'Movement Out' => array(
+                            'content' => $this->renderPartial('_viewMovementOut', array(
+                                'movementOut' => $movementOut,
+                                'movementOutDataProvider' => $movementOutDataProvider,
+                            ), true)
+                        ),
+                        'Payment In' => array(
+                            'content' => $this->renderPartial('_viewPaymentIn', array(
+                                'paymentIn' => $paymentIn,
+                                'paymentInDataProvider' => $paymentInDataProvider,
+                            ), true)
+                        ),
+                        'Payment Out' => array(
+                            'content' => $this->renderPartial('_viewPaymentOut', array(
+                                'paymentOut' => $paymentOut,
+                                'paymentOutDataProvider' => $paymentOutDataProvider,
+                            ), true)
+                        ),
+                        'Purchase' => array(
+                            'content' => $this->renderPartial('_viewPurchaseOrder', array(
+                                'purchaseOrder' => $purchaseOrder,
+                                'purchaseOrderDataProvider' => $purchaseOrderDataProvider, 
+                            ), true)
+                        ),
+                        'Receive Item' => array(
+                            'content' => $this->renderPartial('_viewReceiveItem', array(
+                                'receiveItem' => $receiveItem,
+                                'receiveItemDataProvider' => $receiveItemDataProvider,
+                            ), true)
+                        ),
                     ),
                     // additional javascript options for the tabs plugin
                     'options' => array(

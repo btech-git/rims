@@ -137,6 +137,14 @@ class CancelledTransactionController extends Controller {
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'movementOutDataProvider' => $movementOutDataProvider,
             'movementInDataProvider' => $movementInDataProvider,
+            'purchaseOrder' => $purchaseOrder,
+            'invoiceHeader' => $invoiceHeader,
+            'paymentIn' => $paymentIn,
+            'paymentOut' => $paymentOut,
+            'cashTransaction' => $cashTransaction,
+            'receiveItem' => $receiveItem,
+            'movementOut' => $movementOut,
+            'movementIn' => $movementIn,
         ));
     }
 }
