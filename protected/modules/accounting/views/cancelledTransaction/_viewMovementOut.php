@@ -10,8 +10,8 @@
     //'summaryText'=>'',
     'columns'=>array(
         array(
-            'name'=>'movement_out_number', 
-            'value'=>'$data->movement_out_number', 
+            'name'=>'movement_out_no', 
+            'value'=>'$data->movement_out_no', 
             'type'=>'raw'
         ),
         array(
