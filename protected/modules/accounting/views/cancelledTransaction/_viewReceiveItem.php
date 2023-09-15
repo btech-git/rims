@@ -1,7 +1,7 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'body-repair-grid',
-    'dataProvider'=>$bodyRepairDataProvider,
-    'filter'=>$registrationTransaction,
+    'dataProvider'=>$receiveItemDataProvider,
+    'filter'=>$receiveItem,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager'=>array(
         'cssFile'=>false,
@@ -10,20 +10,19 @@
     //'summaryText'=>'',
     'columns'=>array(
         array(
-            'name'=>'transaction_number', 
-            'value'=>'$data->transaction_number', 
+            'name'=>'receive_item_no', 
+            'value'=>'$data->receive_item_no', 
             'type'=>'raw'
         ),
         array(
             'header' => 'Tanggal',
-            'name' => 'transaction_date',
+            'name' => 'receive_item_date',
             'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->receive_item_date)'
         ),
-        'problem',
-        array('name'=>'customer_id','value'=>'$data->customer->name'),
-        array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
-        'status',
+        'request_type',
+        array('name'=>'supplier_id','value'=>'empty($data->supplier_id) ? "" :$data->supplier->company'),
+        'note',
         array(
             'class'=>'CButtonColumn',
             'template'=>'{views}',
