@@ -421,6 +421,11 @@
                         'url' => array('/accounting/financialForecast/summary'), 
                         'visible' => Yii::app()->user->checkAccess('financialSummary')
                     ),
+                    array(
+                        'label' => 'Cancelled Transactions', 
+                        'url' => array('/accounting/cancelledTransaction/index'), 
+                        'visible' => Yii::app()->user->checkAccess('director')
+                    ),
                 ),
             )); ?>
         </li>
