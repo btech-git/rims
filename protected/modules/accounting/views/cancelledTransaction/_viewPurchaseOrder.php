@@ -1,7 +1,7 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'body-repair-grid',
-    'dataProvider'=>$bodyRepairDataProvider,
-    'filter'=>$registrationTransaction,
+    'dataProvider'=>$purchaseOrderDataProvider,
+    'filter'=>$purchaseOrder,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager'=>array(
         'cssFile'=>false,
@@ -10,27 +10,27 @@
     //'summaryText'=>'',
     'columns'=>array(
         array(
-            'name'=>'transaction_number', 
-            'value'=>'$data->transaction_number', 
+            'name'=>'purchase_order_no', 
+            'value'=>'$data->purchase_order_no', 
             'type'=>'raw'
         ),
         array(
             'header' => 'Tanggal',
-            'name' => 'transaction_date',
+            'name' => 'purchase_order_date',
             'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->purchase_order_date)'
         ),
-        'problem',
-        array('name'=>'customer_id','value'=>'$data->customer->name'),
-        array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
-        'status',
+        'total_price',
+        array('name'=>'supplier_id','value'=>'$data->supplier->company'),
+        'note',
+        'status_document',
         array(
             'class'=>'CButtonColumn',
             'template'=>'{views}',
             'buttons'=>array(
                 'views' => array(
                     'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array("id"=>$data->id))',
+                    'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/view", array("id"=>$data->id))',
                 ),
             ),
         ),
