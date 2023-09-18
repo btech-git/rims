@@ -73,6 +73,7 @@ class EmployeeTimesheetController extends Controller {
                             $model->clock_out = $lineFields[4];
                             $model->duration_late = strtotime($lineFields[3]) - strtotime($employee->clock_in_time);
                             $model->duration_work = strtotime($lineFields[4]) - strtotime($lineFields[3]);
+                            $model->employee_onleave_category_id = 16;
                             
                             $records[] = $model->getAttributes();
 //                        }

@@ -130,6 +130,24 @@ class EmployeeDayoffController extends Controller {
             } 
             
             if ($valid && $model->save()) {
+
+                $start_date = $model->date_from;
+                $end_date = date('Y-m-d', strtotime($model->date_to . " +1 days"));
+                $interval = new DateInterval('P1D');
+                $date_range = new DatePeriod(new DateTime($start_date), $interval, new DateTime($end_date));
+
+                foreach ($date_range as $date) {
+                    $employeeTimesheet = new EmployeeTimesheet();
+                    $employeeTimesheet->date = date_format($date, 'Y-m-d');
+                    $employeeTimesheet->clock_in = '00:00:00';
+                    $employeeTimesheet->clock_out = '00:00:00';
+                    $employeeTimesheet->employee_id = $model->employee_id;
+                    $employeeTimesheet->duration_late = 0;
+                    $employeeTimesheet->duration_work = 0;
+                    $employeeTimesheet->employee_onleave_category_id = $model->employee_onleave_category_id;
+                    $employeeTimesheet->save();
+                }
+                
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -140,6 +158,20 @@ class EmployeeDayoffController extends Controller {
             'employeeDataProvider' => $employeeDataProvider,
         ));
     }
+    
+//    public function actionDateRange($id) {
+//        $model = $this->loadModel($id);
+//        $start_date = $model->date_from;
+//        $end_date = date('Y-m-d', strtotime($model->date_from . " +2 days"));
+//        
+//        $interval = new DateInterval('P1D');
+// 
+//        $date_range = new DatePeriod(new DateTime($start_date), $interval, new DateTime($end_date));
+//        
+//        foreach ($date_range as $date) {
+//            echo $date->format('Y-m-d') . "\n";
+//        }
+//    }
 
     /**
      * Updates a particular model.
@@ -206,8 +238,9 @@ class EmployeeDayoffController extends Controller {
     public function actionAdmin() {
         $model = new EmployeeDayoff('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['EmployeeDayoff']))
+        if (isset($_GET['EmployeeDayoff'])) {
             $model->attributes = $_GET['EmployeeDayoff'];
+        }
 
         $this->render('admin', array(
             'model' => $model,

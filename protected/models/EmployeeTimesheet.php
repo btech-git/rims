@@ -11,6 +11,7 @@
  * @property string $duration_late
  * @property string $duration_work
  * @property integer $employee_id
+ * @property integer $employee_onleave_category_id
  *
  * The followings are the available model relations:
  * @property Employee $employee
@@ -40,13 +41,13 @@ class EmployeeTimesheet extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('date, clock_in, employee_id, duration_late, duration_work', 'required'),
-            array('employee_id', 'numerical', 'integerOnly' => true),
+            array('date, clock_in, employee_id, duration_late, duration_work,employee_onleave_category_id', 'required'),
+            array('employee_id, employee_onleave_category_id', 'numerical', 'integerOnly' => true),
             array('duration_late, duration_work', 'length', 'max' => 18),
             array('clock_out', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work', 'safe', 'on' => 'search'),
+            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work, employee_onleave_category_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -58,6 +59,7 @@ class EmployeeTimesheet extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'employee' => array(self::BELONGS_TO, 'Employee', 'employee_id'),
+            'employeeOnleaveCategory' => array(self::BELONGS_TO, 'EmployeeOnleaveCategory', 'employee_onleave_category_id'),
         );
     }
 

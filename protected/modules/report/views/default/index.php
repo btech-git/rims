@@ -400,6 +400,25 @@
                             )); ?>
                         <?php endif; ?>
                     </div>
+
+                    <div class="small-4 columns">
+                        <?php /*if (
+                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
+                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
+                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                        ): */?>
+                            <h2>HRD</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Rekap Daftar Hadir Karyawan', 
+                                        'url' => array('/report/employeeAttendance/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('workOrderServiceReport')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php //endif; ?>
+                    </div>
                 </div>
             </div>
         </div>

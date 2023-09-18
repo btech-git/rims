@@ -63,7 +63,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                        <div class="medium-6 columns">
+                        <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -98,17 +98,20 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                        <div class="medium-6 columns">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-4 columns">
+                                    <div class="small-2 columns">
                                         <span class="prefix">COA Category:</span>
                                     </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CoaCategoryId', $coaCategoryId, CHtml::listData(CoaCategory::model()->findAll(array(
+                                    <div class="small-10 columns">
+                                        <?php echo CHtml::checkBoxList('CoaCategoryList', $coaCategoryList, CHtml::listData(CoaCategory::model()->findAll(array(
                                             'condition' => 'id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
                                             'order' => 'code ASC'
-                                        )), 'id', 'name'), array('empty' => '-- All Category --')); ?>
+                                        )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +139,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'transactionType' => $transactionType,
-//                        'coaCategoryId' => $coaCategoryId,
                     )); ?>
                 </div>
                 <div class="clear"></div>

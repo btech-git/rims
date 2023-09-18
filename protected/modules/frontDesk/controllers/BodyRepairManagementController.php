@@ -46,7 +46,7 @@ class BodyRepairManagementController extends Controller {
             'level',
         );
         $employeeDataProvider->criteria->order = 'employee.name ASC';
-        $employeeDataProvider->criteria->addCondition("position_id IN (1, 3, 4) AND division_id = 2");
+        $employeeDataProvider->criteria->addCondition("t.position_id IN (1, 3, 4) AND t.division_id = 2");
 
         $waitlistDataProvider = $model->search();
         $waitlistDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.repair_type = 'BR' AND t.service_status = 'Bongkar - Pending' AND t.status = 'Waitlist'");

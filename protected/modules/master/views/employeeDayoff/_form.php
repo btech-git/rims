@@ -52,7 +52,7 @@
                         <?php echo $form->labelEx($model,'Jenis Cuti'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php $employeeOnleaveCategories = EmployeeOnleaveCategory::model()->findAll(); ?>
+                        <?php $employeeOnleaveCategories = EmployeeOnleaveCategory::model()->findAllByAttributes(array('is_inactive' => 0)); ?>
                         <?php $employeeOnleaveCategoryChoiceOptions = array(); ?>
                         <?php foreach ($employeeOnleaveCategories as $employeeOnleaveCategory): ?>
                             <?php $employeeOnleaveCategoryChoiceOptions[$employeeOnleaveCategory->id] = array('data-number-of-leave-day' => $employeeOnleaveCategory->number_of_days); ?>

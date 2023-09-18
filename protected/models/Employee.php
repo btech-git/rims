@@ -323,4 +323,138 @@ class Employee extends CActiveRecord {
         ));
     }
 
+    public function getTotalWorkingDay($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND duration_late <= 0 AND employee_onleave_category_id = 16
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalLateDay($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND duration_late > 0 AND employee_onleave_category_id = 16
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalDayOff($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 14
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalHalfDayLeave($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 1
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalFullDayLeave($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 2
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalPaidLeave($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 3
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalSdsd($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 11
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalStsd($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 12
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalMissing($yearMonth) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 13
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':yearMonth' => $yearMonth,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
 }
