@@ -365,33 +365,23 @@
                         'url' => array('/frontDesk/bodyRepairManagement/index'), 
                         'visible' => (Yii::app()->user->checkAccess('idleManagement'))
                     ),
-    //				array('label'=>'Idle Management', 'url'=>array('/frontDesk/registrationTransaction/idleManagement'), 'visible'=>Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.IdleManagement')),
-                    array('label' => 'HRD', 'url' => array('#'), 'itemOptions' => array('class' => 'title', 'style' => 'text-decoration: underline')),
-                    array(
-                        'label' => 'Daftar Kehadiran', 
-                        'url' => array('/master/employeeAttendance/index'), 
+//                    array('label'=>'Idle Management', 'url'=>array('/frontDesk/registrationTransaction/idleManagement'), 'visible'=>Yii::app()->user->checkAccess('FrontDesk.RegistrationTransaction.IdleManagement')),
+//                    array('label' => 'HRD', 'url' => array('#'), 'itemOptions' => array('class' => 'title', 'style' => 'text-decoration: underline')),
+//                    array(
+//                        'label' => 'Daftar Kehadiran', 
+//                        'url' => array('/master/employeeAttendance/index'), 
 //                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Index')
-                    ),
-                    array(
-                        'label' => 'Absensi', 
-                        'url' => array('/master/employeeAttendance/attendance'), 
+//                    ),
+//                    array(
+//                        'label' => 'Absensi', 
+//                        'url' => array('/master/employeeAttendance/attendance'), 
 //                        'visible' => (Yii::app()->user->checkAccess('frontOfficeStaff') || Yii::app()->user->checkAccess('serviceAdvisorStaff'))
-                    ),
-                    array(
-                        'label' => 'Gaji', 
-                        'url' => array('/master/employeeAttendance/salary'), 
+//                    ),
+//                    array(
+//                        'label' => 'Gaji', 
+//                        'url' => array('/master/employeeAttendance/salary'), 
 //                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeAttendance.Salary')
-                    ),
-                    array(
-                        'label' => 'Cuti Karyawan', 
-                        'url' => array('/master/employeeDayoff/admin'), 
-//                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
-                    ),
-                    array(
-                        'label' => 'Mechanic Report', 
-                        'url' => array('/frontDesk/mechanicPerformance/index'), 
-//                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
-                    ),
+//                    ),
                 ),
             )); ?>
         </li>
@@ -426,6 +416,57 @@
                         'url' => array('/accounting/cancelledTransaction/index'), 
                         'visible' => Yii::app()->user->checkAccess('director')
                     ),
+                ),
+            )); ?>
+        </li>
+    <?php endif; ?>
+    
+    <?php if (
+        Yii::app()->user->checkAccess('frontOfficeHead')
+    ): ?>
+        <li class="mdropdown"><a href="#">HRD</a>
+            <?php $this->widget('zii.widgets.CMenu', array(
+                'items' => array(
+                    array(
+                        'label' => 'Employee', 
+                        'url' => array('/master/employee/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('frontOfficeHead')
+                    ),
+                    array(
+                        'label' => 'Rekap Daftar Hadir Karyawan', 
+                        'url' => array('/report/employeeAttendance/summary'), 
+                        'visible' => Yii::app()->user->checkAccess('frontOfficeHead')
+                    ),
+                    array(
+                        'label' => 'Cuti Karyawan', 
+                        'url' => array('/master/employeeDayoff/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('frontOfficeHead')
+                    ),
+                    array(
+                        'label' => 'Employee Payroll', 
+                        'url' => array('/master/employeePayroll/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('frontOfficeHead')
+                    ),
+                    array(
+                        'label' => 'Public Holiday', 
+                        'url' => array('/master/publicDayOff/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('frontOfficeHead')
+                    ),
+                    array(
+                        'label' => 'Kategori Cuti Karyawan', 
+                        'url' => array('/master/employeeOnleaveCategory/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('frontOfficeHead')
+                    ),
+                    array(
+                        'label' => 'Absensi Karyawan', 
+                        'url' => array('/master/employeeTimesheet/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('frontOfficeHead')
+                    ),
+//                    array(
+//                        'label' => 'Mechanic Report', 
+//                        'url' => array('/frontDesk/mechanicPerformance/index'), 
+//                        'visible' => Yii::app()->user->checkAccess('Master.EmployeeDayoff.Admin')
+//                    ),
                 ),
             )); ?>
         </li>

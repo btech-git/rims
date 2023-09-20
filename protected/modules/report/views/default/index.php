@@ -402,11 +402,11 @@
                     </div>
 
                     <div class="small-4 columns">
-                        <?php /*if (
-                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
-                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
-                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
-                        ): */?>
+                        <?php if (
+//                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
+//                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
+                            Yii::app()->user->checkAccess('director')
+                        ): ?>
                             <h2>HRD</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
@@ -417,7 +417,7 @@
                                     ),
                                 ),
                             )); ?>
-                        <?php //endif; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

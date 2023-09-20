@@ -93,12 +93,6 @@
                                         'visible' => Yii::app()->user->checkAccess('masterSupplierCreate') || Yii::app()->user->checkAccess('masterSupplierEdit') || Yii::app()->user->checkAccess('masterSupplierApproval')
                                     ),
                                     array(
-                                        'label' => 'Employee', 
-                                        'url' => array('/master/employee/admin'), 
-//                                        'linkOptions' => array('class' => 'titleNav'), 
-                                        'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || Yii::app()->user->checkAccess('masterEmployeeApproval')
-                                    ),
-                                    array(
                                         'label' => 'Deduction', 
                                         'url' => array('/master/deduction/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterDeductionCreate') || Yii::app()->user->checkAccess('masterDeductionEdit') || Yii::app()->user->checkAccess('masterDeductionApproval')
@@ -133,21 +127,6 @@
                                         'label' => 'Unit Conversion', 
                                         'url' => array('/master/unitConversion/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterConversionCreate') || Yii::app()->user->checkAccess('masterConversionEdit') || Yii::app()->user->checkAccess('masterConversionApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Public Holiday', 
-                                        'url' => array('/master/publicDayOff/admin'), 
-                                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || Yii::app()->user->checkAccess('masterHolidayApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Kategori Cuti Karyawan', 
-                                        'url' => array('/master/employeeOnleaveCategory/admin'), 
-//                                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || Yii::app()->user->checkAccess('masterHolidayApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Absensi Karyawan', 
-                                        'url' => array('/master/employeeTimesheet/admin'), 
-//                                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || Yii::app()->user->checkAccess('masterHolidayApproval')
                                     ),
                                 ),
                             )); ?>
@@ -200,11 +179,6 @@
                                         'label' => 'Payment Type', 
                                         'url' => array('/master/paymentType/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterPaymentTypeCreate') || Yii::app()->user->checkAccess('masterPaymentTypeEdit') || Yii::app()->user->checkAccess('masterPaymentTypeApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Employee Payroll', 
-                                        'url' => array('/master/employeePayroll/admin'), 
-//                                        'visible' => Yii::app()->user->checkAccess('masterPaymentTypeCreate') || Yii::app()->user->checkAccess('masterPaymentTypeEdit') || Yii::app()->user->checkAccess('masterPaymentTypeApproval')
                                     ),
                                 ),
                             )); ?>
@@ -415,11 +389,11 @@
                                     'url' => array('/master/inspectionModule/admin'), 
                                     'visible' => Yii::app()->user->checkAccess('masterInspectionModuleCreate') || Yii::app()->user->checkAccess('masterInspectionModuleEdit') || Yii::app()->user->checkAccess('masterInspectionModuleApproval')
                                 ),
-                                array(
-                                    'label' => 'Employee Branch Division Position Level', 
-                                    'url' => array('/master/employeeBranchDivisionPositionLevel/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || Yii::app()->user->checkAccess('masterEmployeeApproval')
-                                ),
+//                                array(
+//                                    'label' => 'Employee Branch Division Position Level', 
+//                                    'url' => array('/master/employeeBranchDivisionPositionLevel/admin'), 
+//                                    'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || Yii::app()->user->checkAccess('masterEmployeeApproval')
+//                                ),
                             ),
                         )); ?>
                         <?php endif; ?>
