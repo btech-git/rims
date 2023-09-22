@@ -25,7 +25,7 @@ class EmployeeAttendanceController extends Controller {
         $yearMonthNow = date('Y-m');
         $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
         
-        $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active'));
+        $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0), array('order' => 't.name ASC'));
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
