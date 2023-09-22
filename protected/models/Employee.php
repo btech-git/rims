@@ -402,7 +402,7 @@ class Employee extends CActiveRecord {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 3
+                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id BETWEEN 3 AND 10
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
