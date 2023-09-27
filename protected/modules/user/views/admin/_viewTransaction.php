@@ -14,7 +14,12 @@
     </thead>
     <tbody>
         <tr>
-            <td colspan="5" style="text-align: center; font-weight: bold; background-color: greenyellow">Pembelian</td>
+            <td style="text-align: center; background-color: greenyellow">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][purchaseHead]", CHtml::resolveValue($model, "roles[purchaseHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'purchaseHead')); ?>
+                <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+            </td>
+            <td colspan="4" style="text-align: center; font-weight: bold; background-color: greenyellow">Pembelian</td>
         </tr>
         <tr>
             <td>Order Permintaan</td>
@@ -55,7 +60,12 @@
             </td>
         </tr>
         <tr>
-            <td colspan="5" style="text-align: center; font-weight: bold; background-color: greenyellow">Penjualan</td>
+            <td style="text-align: center; background-color: greenyellow">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][salesHead]", CHtml::resolveValue($model, "roles[salesHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'salesHead')); ?>
+                <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+            </td>
+            <td colspan="4" style="text-align: center; font-weight: bold; background-color: greenyellow">Penjualan</td>
         </tr>
         <tr>
             <td>Order Penjualan</td>
@@ -112,6 +122,11 @@
             </td>
         </tr>
         <tr>
+            <td style="text-align: center; background-color: greenyellow">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][paymentHead]", CHtml::resolveValue($model, "roles[paymentHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'paymentHead')); ?>
+                <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+            </td>
             <td colspan="5" style="text-align: center; font-weight: bold; background-color: greenyellow">Pelunasan</td>
         </tr>
         <tr>
@@ -153,6 +168,11 @@
             </td>
         </tr>
         <tr>
+            <td style="text-align: center; background-color: greenyellow">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][cashierHead]", CHtml::resolveValue($model, "roles[cashierHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'cashierHead')); ?>
+                <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+            </td>
             <td colspan="5" style="text-align: center; font-weight: bold; background-color: greenyellow">Tunai</td>
         </tr>
         <tr>
