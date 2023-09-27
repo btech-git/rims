@@ -1,11 +1,7 @@
 <table>
     <thead>
         <tr>
-            <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][purchaseHead]", CHtml::resolveValue($model, "roles[purchaseHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'purchaseHead')); ?>
-                <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
-            </th>
+            <th style="text-align: center; width: 50%">&nbsp;</th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
             <th style="text-align: center">Approval</th>

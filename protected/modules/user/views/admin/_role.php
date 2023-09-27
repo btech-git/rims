@@ -38,35 +38,35 @@
             'Operasional' => array(
                 'content' => $this->renderPartial(
                     '_viewOperational',
-                    array('model' => $model, 'counter' => $counter+57),
+                    array('model' => $model, 'counter' => $counter+60),
                     true
                 )
             ),
             'Gudang' => array(
                 'content' => $this->renderPartial(
                     '_viewInventory',
-                    array('model' => $model, 'counter' => $counter+88),
+                    array('model' => $model, 'counter' => $counter+91),
                     true
                 )
             ),
             'Management' => array(
                 'content' => $this->renderPartial(
                     '_viewIdleManagement',
-                    array('model' => $model, 'counter' => $counter+111),
+                    array('model' => $model, 'counter' => $counter+114),
                     true
                 )
             ),
             'Accounting/Finance' => array(
                 'content' => $this->renderPartial(
                     '_viewFinance',
-                    array('model' => $model, 'counter' => $counter+125),
+                    array('model' => $model, 'counter' => $counter+127),
                     true
                 )
             ),
             'HRD' => array(
                 'content' => $this->renderPartial(
                     '_viewHumanResource',
-                    array('model' => $model, 'counter' => $counter+131),
+                    array('model' => $model, 'counter' => $counter+133),
                     true
                 )
             ),
