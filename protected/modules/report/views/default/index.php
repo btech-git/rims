@@ -29,8 +29,10 @@
                         <?php if (
                             Yii::app()->user->checkAccess('summaryProfitLossReport') ||
                             Yii::app()->user->checkAccess('standardProfitLossReport') || 
+                            Yii::app()->user->checkAccess('multiProfitLossReport') || 
                             Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
-                            Yii::app()->user->checkAccess('standardBalanceSheetReport')
+                            Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
+                            Yii::app()->user->checkAccess('multiBalanceSheetReport')
                         ): ?>
                             <h2>Keuangan</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -48,7 +50,7 @@
                                     array(
                                         'label' => 'Laba Rugi (Multi Periode)', 
                                         'url' => array('/report/profitLossMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')
+                                        'visible' => Yii::app()->user->checkAccess('multiProfitLossReport')
                                     ),
                                     array(
                                         'label' => 'Neraca (induk)', 
@@ -63,7 +65,7 @@
                                     array(
                                         'label' => 'Neraca (Multi Periode)', 
                                         'url' => array('/report/balanceSheetMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('standardBalanceSheetReport')
+                                        'visible' => Yii::app()->user->checkAccess('multiBalanceSheetReport')
                                     ),
                                 ),
                             )); ?>
@@ -97,7 +99,7 @@
                                     array(
                                         'label' => 'Ringkasan Buku Besar II', 
                                         'url' => array('/report/accountingJournalSummary/summary'), 
-                                        'visible' => Yii::app()->user->id == 1,
+                                        'visible' => Yii::app()->user->checkAccess('generalManager'),
                                     ),
                                 ),
                             )); ?>
@@ -152,6 +154,7 @@
                         <?php if (
                             Yii::app()->user->checkAccess('receivableJournalReport') || 
                             Yii::app()->user->checkAccess('customerReceivableReport') || 
+                            Yii::app()->user->checkAccess('insuranceReceivableReport') || 
                             Yii::app()->user->checkAccess('paymentInReport')
                         ): ?>
                         <h2>Piutang</h2>
@@ -170,7 +173,7 @@
                                 array(
                                     'label' => 'Faktur Belum Lunas Asuransi', 
                                     'url' => array('/report/receivableInsuranceCompany/summary'), 
-//                                    'visible' => Yii::app()->user->checkAccess('insuranceCompanyReceivableReport')
+                                    'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport')
                                 ),
                                 array(
                                     'label' => 'Rincian Penerimaan Penjualan', 
@@ -186,8 +189,9 @@
                         <?php if (
                             Yii::app()->user->checkAccess('saleCustomerSummaryReport') || 
                             Yii::app()->user->checkAccess('saleCustomerReport') || 
-                            Yii::app()->user->checkAccess('saleSummaryReport') || 
+                            Yii::app()->user->checkAccess('saleProductSummaryReport') || 
                             Yii::app()->user->checkAccess('saleProductReport') || 
+                            Yii::app()->user->checkAccess('saleServiceSummaryReport') || 
                             Yii::app()->user->checkAccess('saleServiceReport')
                         ): ?>
                             <h2>Penjualan</h2>
@@ -196,12 +200,12 @@
                                     array(
                                         'label' => 'Penjualan per Pelanggan', 
                                         'url' => array('/report/saleRetailCustomer/summary'), 
-//                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Pelanggan', 
                                         'url' => array('/report/saleRetail/summary'), 
-//                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                     array(
                                         'label' => 'Penjualan per Barang', 
@@ -216,7 +220,7 @@
                                     array(
                                         'label' => 'Penjualan per Jasa', 
                                         'url' => array('/report/saleRetailService/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
+                                        'visible' => (Yii::app()->user->checkAccess('saleServiceReport'))
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Jasa', 
@@ -395,25 +399,6 @@
                                         'label' => 'Laporan Mekanik', 
                                         'url' => array('/report/mechanicPerformance/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('mechanicPerformanceReport')
-                                    ),
-                                ),
-                            )); ?>
-                        <?php endif; ?>
-                    </div>
-
-                    <div class="small-4 columns">
-                        <?php if (
-//                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
-//                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
-                            Yii::app()->user->checkAccess('director')
-                        ): ?>
-                            <h2>HRD</h2>
-                            <?php $this->widget('zii.widgets.CMenu', array(
-                                'items' => array(
-                                    array(
-                                        'label' => 'Rekap Daftar Hadir Karyawan', 
-                                        'url' => array('/report/employeeAttendance/summary'), 
-//                                        'visible' => Yii::app()->user->checkAccess('workOrderServiceReport')
                                     ),
                                 ),
                             )); ?>

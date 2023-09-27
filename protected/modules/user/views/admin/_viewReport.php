@@ -2,8 +2,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][financeManager]", CHtml::resolveValue($model, "roles[financeManager]"), array('id' => 'User_roles_' . $counter, 'value' => 'financeManager')); ?>
+                <?php echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][reportHead]", CHtml::resolveValue($model, "roles[reportHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'reportHead')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">View</th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Keuangan</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Keuangan</td>
         </tr>
         <tr>
             <td>Laba/Rugi (induk)</td>
@@ -25,6 +25,13 @@
             <td style="text-align: center">
                 <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][standardProfitLossReport]", CHtml::resolveValue($model, "roles[standardProfitLossReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'standardProfitLossReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Laba/Rugi (Multi Periode)</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][multiProfitLossReport]", CHtml::resolveValue($model, "roles[multiProfitLossReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'multiProfitLossReport')); ?>
             </td>
         </tr>
         <tr>
@@ -42,7 +49,14 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Buku Besar</td>
+            <td>Neraca (Standard)</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][multiBalanceSheetReport]", CHtml::resolveValue($model, "roles[multiBalanceSheetReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'multiBalanceSheetReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Buku Besar</td>
         </tr>
         <tr>
             <td>Jurnal Umum</td>
@@ -66,7 +80,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Kas</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Kas</td>
         </tr>
         <tr>
             <td>Approval Kas Harian</td>
@@ -97,20 +111,27 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Piutang</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Piutang</td>
         </tr>
         <tr>
-            <td>Rincian Buku Besar Pembantu Piutang</td>
+            <td>Buku Besar Pembantu Piutang</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][receivableJournalReport]", CHtml::resolveValue($model, "roles[receivableJournalReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'receivableJournalReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Faktur Penjualan Belum Lunas</td>
+            <td>Faktur Belum Lunas Customer</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][customerReceivableReport]", CHtml::resolveValue($model, "roles[customerReceivableReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'customerReceivableReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Faktur Belum Lunas Asuransi</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][insuranceReceivableReport]", CHtml::resolveValue($model, "roles[insuranceReceivableReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'insuranceReceivableReport')); ?>
             </td>
         </tr>
         <tr>
@@ -121,7 +142,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Penjualan</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Penjualan</td>
         </tr>
         <tr>
             <td>Penjualan per Pelanggan</td>
@@ -138,10 +159,10 @@
             </td>
         </tr>
         <tr>
-            <td>Penjualan per Barang / Jasa</td>
+            <td>Penjualan per Barang</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][saleSummaryReport]", CHtml::resolveValue($model, "roles[saleSummaryReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleSummaryReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][saleProductSummaryReport]", CHtml::resolveValue($model, "roles[saleProductSummaryReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleProductSummaryReport')); ?>
             </td>
         </tr>
         <tr>
@@ -152,6 +173,13 @@
             </td>
         </tr>
         <tr>
+            <td>Penjualan per Jasa</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][saleServiceSummaryReport]", CHtml::resolveValue($model, "roles[saleServiceSummaryReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleServiceSummaryReport')); ?>
+            </td>
+        </tr>
+        <tr>
             <td>Rincian Penjualan per Jasa</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
@@ -159,7 +187,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Aset Tetap</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Aset Tetap</td>
         </tr>
         <tr>
             <td>Daftar Aset Tetap</td>
@@ -169,7 +197,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Hutang</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Hutang</td>
         </tr>
         <tr>
             <td>Rincian Buku Besar Pembantu Hutang</td>
@@ -193,7 +221,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Pembelian</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Pembelian</td>
         </tr>
         <tr>
             <td>Pembelian per Pemasok</td>
@@ -224,7 +252,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Persediaan</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Persediaan</td>
         </tr>
         <tr>
             <td>Kartu Stok Persediaan</td>
@@ -234,7 +262,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Gudang</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Gudang</td>
         </tr>
         <tr>
             <td>Kuantitas Barang per Gudang</td>
@@ -258,7 +286,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold" colspan="2">Pekerjaan Pesanan</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Pekerjaan Pesanan</td>
         </tr>
         <tr>
             <td>Penyelesaian Pesanan per Pekerjaan</td>
@@ -277,7 +305,7 @@
         <tr>
             <td>Laporan Mekanik</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
+                <?php echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][mechanicPerformanceReport]", CHtml::resolveValue($model, "roles[mechanicPerformanceReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'mechanicPerformanceReport')); ?>
             </td>
         </tr>

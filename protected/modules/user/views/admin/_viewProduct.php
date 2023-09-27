@@ -2,8 +2,8 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductInventory]", CHtml::resolveValue($model, "roles[masterProductInventory]"), array('id' => 'User_roles_' . $counter, 'value' => 'masterProductInventory')); ?>
+                <?php echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][productHead]", CHtml::resolveValue($model, "roles[productHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'productHead')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
@@ -163,6 +163,21 @@
             </td>
         </tr>
         <tr>
+            <td>Permintaan Maintenance</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][maintenanceRequestCreate]", CHtml::resolveValue($model, "roles[maintenanceRequestCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'maintenanceRequestCreate')); ?>
+            </td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][maintenanceRequestEdit]", CHtml::resolveValue($model, "roles[maintenanceRequestEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'maintenanceRequestEdit')); ?>
+            </td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][maintenanceRequestApproval]", CHtml::resolveValue($model, "roles[maintenanceRequestApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'maintenanceRequestApproval')); ?>
+            </td>
+        </tr>
+        <tr>
             <td>Warehouse</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
@@ -173,7 +188,7 @@
                 <?php echo CHtml::checkBox("User[roles][masterWarehouseEdit]", CHtml::resolveValue($model, "roles[masterWarehouseEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterWarehouseEdit')); ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
+                <?php echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterWarehouseApproval]", CHtml::resolveValue($model, "roles[masterWarehouseApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterWarehouseApproval')); ?>
             </td>
         </tr>

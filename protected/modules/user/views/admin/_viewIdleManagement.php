@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
+                <?php echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][idleManagement]", CHtml::resolveValue($model, "roles[idleManagement]"), array('id' => 'User_roles_' . $counter, 'value' => 'idleManagement')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
@@ -27,6 +27,20 @@
             </td>
         </tr>
         <tr>
+            <td>BR Head POV</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][brHeadCreate]", CHtml::resolveValue($model, "roles[brHeadCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'brHeadCreate')); ?>
+            </td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][brHeadEdit]", CHtml::resolveValue($model, "roles[brHeadEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'brHeadEdit')); ?>
+            </td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][brHeadApproval]", CHtml::resolveValue($model, "roles[brHeadApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'brHeadApproval')); ?>
+            </td>
+        </tr>
+        <tr>
             <td>GR Mechanic POV</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
@@ -42,54 +56,18 @@
             </td>
         </tr>
         <tr>
-            <td>Cuti Karyawan</td>
+            <td>GR Head POV</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][employeeDayoffCreate]", CHtml::resolveValue($model, "roles[employeeDayoffCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeDayoffCreate')); ?>
+                <?php echo CHtml::checkBox("User[roles][grHeadCreate]", CHtml::resolveValue($model, "roles[grHeadCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'grHeadCreate')); ?>
             </td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][employeeDayoffEdit]", CHtml::resolveValue($model, "roles[employeeDayoffEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeDayoffEdit')); ?>
+                <?php echo CHtml::checkBox("User[roles][grHeadEdit]", CHtml::resolveValue($model, "roles[grHeadEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'grHeadEdit')); ?>
             </td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][employeeDayoffApproval]", CHtml::resolveValue($model, "roles[employeeDayoffApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeDayoffApproval')); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Daftar Kehadiran</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][attendanceReport]", CHtml::resolveValue($model, "roles[attendanceReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'attendanceReport')); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Absensi</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][absencyReport]", CHtml::resolveValue($model, "roles[absencyReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'absencyReport')); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Gaji</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][payrollReport]", CHtml::resolveValue($model, "roles[payrollReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'payrollReport')); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Mechanic Report</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][mechanicPerformanceReport]", CHtml::resolveValue($model, "roles[mechanicPerformanceReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'mechanicPerformanceReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][grHeadApproval]", CHtml::resolveValue($model, "roles[grHeadApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'grHeadApproval')); ?>
             </td>
         </tr>
     </tbody>

@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
+                <?php echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][pendingHead]", CHtml::resolveValue($model, "roles[pendingHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'pendingHead')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
@@ -36,6 +36,13 @@
             <td style="text-align: center">
                 <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterApprovalView]", CHtml::resolveValue($model, "roles[masterApprovalView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterApprovalView')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Pending Jurnal</td>
+            <td style="text-align: center">
+                <?php echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][pendingJournalView]", CHtml::resolveValue($model, "roles[pendingJournalView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'pendingJournalView')); ?>
             </td>
         </tr>
     </tbody>

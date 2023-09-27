@@ -24,35 +24,14 @@
             'Resepsionis' => array(
                 'content' => $this->renderPartial(
                     '_viewFrontDesk',
-                    array('model' => $model, 'counter' => $counter+5),
+                    array('model' => $model, 'counter' => $counter+6),
                     true
                 )
             ),
-            'Pembelian' => array(
+            'Transaksi' => array(
                 'content' => $this->renderPartial(
-                    '_viewPurchase',
-                    array('model' => $model, 'counter' => $counter+18),
-                    true
-                )
-            ),
-            'Penjualan' => array(
-                'content' => $this->renderPartial(
-                    '_viewSale',
-                    array('model' => $model, 'counter' => $counter+27),
-                    true
-                )
-            ),
-            'Pelunasan' => array(
-                'content' => $this->renderPartial(
-                    '_viewPayment',
-                    array('model' => $model, 'counter' => $counter+39),
-                    true
-                )
-            ),
-            'Tunai' => array(
-                'content' => $this->renderPartial(
-                    '_viewCash',
-                    array('model' => $model, 'counter' => $counter+48),
+                    '_viewTransaction',
+                    array('model' => $model, 'counter' => $counter+21),
                     true
                 )
             ),
@@ -70,10 +49,24 @@
                     true
                 )
             ),
-            'Idle Management' => array(
+            'Management' => array(
                 'content' => $this->renderPartial(
                     '_viewIdleManagement',
                     array('model' => $model, 'counter' => $counter+111),
+                    true
+                )
+            ),
+            'Accounting/Finance' => array(
+                'content' => $this->renderPartial(
+                    '_viewFinance',
+                    array('model' => $model, 'counter' => $counter+125),
+                    true
+                )
+            ),
+            'HRD' => array(
+                'content' => $this->renderPartial(
+                    '_viewHumanResource',
+                    array('model' => $model, 'counter' => $counter+131),
                     true
                 )
             ),
@@ -92,52 +85,45 @@
 <div>
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(
-            'Accounting/Finance' => array(
-                'content' => $this->renderPartial(
-                    '_viewFinance',
-                    array('model' => $model, 'counter' => $counter+125),
-                    true
-                )
-            ),
             'Laporan' => array(
                 'content' => $this->renderPartial(
                     '_viewReport',
-                    array('model' => $model, 'counter' => $counter+131),
+                    array('model' => $model, 'counter' => $counter+149),
                     true
                 )
             ),
             'Setting Company' => array(
                 'content' => $this->renderPartial(
                     '_viewCompany',
-                    array('model' => $model, 'counter' => $counter+166),
+                    array('model' => $model, 'counter' => $counter+188),
                     true
                 )
             ),
             'Setting Accounting' => array(
                 'content' => $this->renderPartial(
                     '_viewAccounting',
-                    array('model' => $model, 'counter' => $counter+209),
+                    array('model' => $model, 'counter' => $counter+222),
                     true
                 )
             ),
             'Setting Product' => array(
                 'content' => $this->renderPartial(
                     '_viewProduct',
-                    array('model' => $model, 'counter' => $counter+225),
+                    array('model' => $model, 'counter' => $counter+238),
                     true
                 )
             ),
             'Setting Service' => array(
                 'content' => $this->renderPartial(
                     '_viewService',
-                    array('model' => $model, 'counter' => $counter+259),
+                    array('model' => $model, 'counter' => $counter+275),
                     true
                 )
             ),
             'Setting Vehicle' => array(
                 'content' => $this->renderPartial(
                     '_viewVehicle',
-                    array('model' => $model, 'counter' => $counter+296),
+                    array('model' => $model, 'counter' => $counter+312),
                     true
                 )
             ),
