@@ -59,7 +59,7 @@ class GeneralLedgerController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($generalLedgerSummary->dataProvider, $startDate, $endDate);
+            $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
         
         $this->render('summary', array(
@@ -134,12 +134,12 @@ class GeneralLedgerController extends Controller {
 //        }
 //    }
 
-    protected function saveToExcel($dataProvider,  $startDate, $endDate) {
+    protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-//        $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
-//        $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
+        $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
+        $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
         
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -185,6 +185,7 @@ class GeneralLedgerController extends Controller {
         $counter = 7;
 
         foreach ($dataProvider->data as $header) {
+            $beginningBalance = $header->getBeginningBalanceLedger($startDate);
             $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
             $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -197,24 +198,26 @@ class GeneralLedgerController extends Controller {
 
             $worksheet->mergeCells("A{$counter}:F{$counter}");
             $worksheet->setCellValue("A{$counter}", 'SALDO AWAL');
-            $worksheet->setCellValue("G{$counter}", CHtml::encode($header->getBeginningBalanceLedger($startDate)));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode($beginningBalance));
             $counter++;$counter++;
 
+            $generalLedgerData = $header->getGeneralLedgerReport($startDate, $endDate, $branchId);
             $totalDebit = 0; 
             $totalCredit = 0;
-            foreach ($header->jurnalUmums as $detail) {
+            foreach ($generalLedgerData as $generalLedgerRow) {
                 $worksheet->getStyle("A{$counter}:D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
                 $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $debitAmount = $detail->debet_kredit == 'D' ? $detail->total : 0;
-                $creditAmount = $detail->debet_kredit == 'K' ? $detail->total : 0;
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detail, 'kode_transaksi')));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($detail->tanggal_transaksi))));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_subject')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($detail, 'transaction_type')));
+                $debitAmount = $generalLedgerRow['debet_kredit'] == 'D' ? $generalLedgerRow['total'] : 0;
+                $creditAmount = $generalLedgerRow['debet_kredit'] == 'K' ? $generalLedgerRow['total'] : 0;
+                $accountBalance = $beginningBalance + $debitAmount - $creditAmount;
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($generalLedgerRow['kode_transaksi']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($generalLedgerRow['tanggal_transaksi']))));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($generalLedgerRow['transaction_subject']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($generalLedgerRow['transaction_type']));
                 $worksheet->setCellValue("E{$counter}", CHtml::encode($debitAmount));
                 $worksheet->setCellValue("F{$counter}", CHtml::encode($creditAmount));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($detail->currentSaldo));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($accountBalance));
 
                 $totalDebit += $debitAmount;
                 $totalCredit += $creditAmount;
@@ -231,7 +234,7 @@ class GeneralLedgerController extends Controller {
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'H'; $col++) {
+        for ($col = 'A'; $col !== 'P'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
