@@ -59,7 +59,11 @@ class GeneralLedgerController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($generalLedgerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($generalLedgerSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate, 
+                'branchId' => $branchId,
+            ));
         }
         
         $this->render('summary', array(
@@ -140,6 +144,7 @@ class GeneralLedgerController extends Controller {
         
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
+        $branchId = (empty($options['branchId'])) ? '' : $options['branchId'];
         
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
