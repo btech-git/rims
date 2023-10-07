@@ -155,7 +155,7 @@ $('.search-form form').submit(function(){
                 'filter' => CHtml::activeDropDownlist($model, 'employee_id_sales_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
                     "position_id" => 2,
                 )), "id", "name"), array("empty" => "--Salesman--")),
-                'value' => 'empty($data->employeeIdAssignMechanic) ? "" : $data->employeeIdAssignMechanic->name'
+                'value' => 'empty($data->employeeIdSalesPerson) ? "" : $data->employeeIdSalesPerson->name'
             ),
             array(
                 'class' => 'CButtonColumn',
