@@ -29,8 +29,8 @@ class GeneralLedgerController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-//        $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+//        $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
 
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
         $generalLedgerSummary->setupLoading();

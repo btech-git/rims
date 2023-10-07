@@ -121,12 +121,19 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             'problem',
             array(
+                'header' => 'Mekanik',
                 'name' => 'employee_id_assign_mechanic',
-                'filter' => CHtml::activeDropDownlist($model, 'employee_id_assign_mechanic', CHtml::listData(EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array(
-                    "division_id" => array(2),
+                'filter' => CHtml::activeDropDownlist($model, 'employee_id_assign_mechanic', CHtml::listData(Employee::model()->findAllByAttributes(array(
                     "position_id" => 1,
-                    "level_id" => array(1, 2, 3),
-                )), "employee_id", "employee.name"), array("empty" => "--Assign Mechanic--")),
+                )), "id", "name"), array("empty" => "--Assign Mechanic--")),
+                'value' => 'empty($data->employeeIdAssignMechanic) ? "" : $data->employeeIdAssignMechanic->name'
+            ),
+            array(
+                'header' => 'Salesman',
+                'name' => 'employee_id_sales_person',
+                'filter' => CHtml::activeDropDownlist($model, 'employee_id_sales_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
+                    "position_id" => 2,
+                )), "id", "name"), array("empty" => "--Salesman--")),
                 'value' => 'empty($data->employeeIdAssignMechanic) ? "" : $data->employeeIdAssignMechanic->name'
             ),
             array(

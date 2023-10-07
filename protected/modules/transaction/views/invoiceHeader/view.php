@@ -52,6 +52,13 @@ $this->menu = array(
             </tr>
             
             <tr>
+                <td>Customer</td>
+                <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
+                <td width="10%">Repair Type</td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.repair_type')); ?></td>
+            </tr>
+            
+            <tr>
                 <td>Invoice Date</td>
                 <td><?php echo $model->invoice_date; ?></td>
                 <td>Reference Type</td>
