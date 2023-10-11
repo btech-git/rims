@@ -404,6 +404,25 @@
                             )); ?>
                         <?php endif; ?>
                     </div>
+
+                    <div class="small-4 columns">
+                        <?php /*if (
+                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
+                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
+                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                        ):*/ ?>
+                            <h2>Salesman</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Laporan Salesman', 
+                                        'url' => array('/report/salesmanPerformance/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php //endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
