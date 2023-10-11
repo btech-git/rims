@@ -58,9 +58,9 @@ Yii::app()->clientScript->registerCss('_report', '
                     <table>
                         <?php $totalSale = 0.00; ?>
                         <?php $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-                            'condition' => 'employee_id_sales_person = :employee_id_sales_person AND sales_order_date BETWEEN :start_date AND :end_date', 
+                            'condition' => 'employee_id_assign_mechanic = :employee_id_assign_mechanic AND transaction_date BETWEEN :start_date AND :end_date', 
                             'params' => array(
-                                ':employee_id_sales_person' => $header->id,
+                                ':employee_id_assign_mechanic' => $header->id,
                                 ':start_date' => $startDate,
                                 ':end_date' => $endDate,
                             )
