@@ -34,6 +34,6 @@ class SalesmanPerformanceSummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $this->dataProvider->criteria->addBetweenCondition('registrationTransactions.transaction_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.id', $filters['employeeId']);
-        $this->dataProvider->criteria->compare('t.position_id', 2);
+//        $this->dataProvider->criteria->compare('t.position_id', 2);
     }
 }
