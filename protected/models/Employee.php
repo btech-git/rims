@@ -134,6 +134,7 @@ class Employee extends CActiveRecord {
             'registrationServicesFinish' => array(self::HAS_MANY, 'RegistrationService', 'finish_mechanic_id'),
             'workOrderDetails' => array(self::HAS_MANY, 'WorkOrderDetail', 'employee_id'),
             'registrationTransactions' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_assign_mechanic'),
+            'registrationTransactionSalesmans' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_sales_person'),
             'division' => array(self::BELONGS_TO, 'Division', 'division_id'),
             'position' => array(self::BELONGS_TO, 'Position', 'position_id'),
             'level' => array(self::BELONGS_TO, 'Level', 'level_id'),

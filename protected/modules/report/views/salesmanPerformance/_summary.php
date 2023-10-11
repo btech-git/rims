@@ -26,7 +26,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tr id="header1">
             <th class="width1-1">Name</th>
             <th class="width1-2">ID Card #</th>
-            <th class="width1-3">Position</th>
+            <th class="width1-3">Divisi</th>
+            <th class="width1-4">Position</th>
+            <th class="width1-5">Level</th>
         </tr>
         <tr id="header2">
             <td colspan="5">

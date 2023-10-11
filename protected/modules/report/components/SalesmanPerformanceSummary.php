@@ -11,7 +11,7 @@ class SalesmanPerformanceSummary extends CComponent {
     public function setupLoading() {
         $this->dataProvider->criteria->together = TRUE;
         $this->dataProvider->criteria->with = array(
-            'registrationTransactions',
+            'registrationTransactionSalesmans',
         );
     }
 
@@ -32,8 +32,8 @@ class SalesmanPerformanceSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addBetweenCondition('registrationTransactions.transaction_date', $startDate, $endDate);
+        $this->dataProvider->criteria->addBetweenCondition('registrationTransactionSalesmans.transaction_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.id', $filters['employeeId']);
-//        $this->dataProvider->criteria->compare('t.position_id', 2);
+        $this->dataProvider->criteria->compare('t.position_id', 2);
     }
 }
