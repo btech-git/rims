@@ -29,7 +29,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-3">Position</th>
         </tr>
         <tr id="header2">
-            <td colspan="3">
+            <td colspan="5">
                 <table>
                     <tr>
                         <th class="width2-1">SO #</th>
@@ -54,13 +54,13 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'level.name')); ?></td>
             </tr>
             <tr class="items2">
-                <td colspan="3">
+                <td colspan="5">
                     <table>
                         <?php $totalSale = 0.00; ?>
                         <?php $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-                            'condition' => 'employee_id_assign_mechanic = :employee_id_assign_mechanic AND transaction_date BETWEEN :start_date AND :end_date', 
+                            'condition' => 'employee_id_sales_person = :employee_id_sales_person AND transaction_date BETWEEN :start_date AND :end_date', 
                             'params' => array(
-                                ':employee_id_assign_mechanic' => $header->id,
+                                ':employee_id_sales_person' => $header->id,
                                 ':start_date' => $startDate,
                                 ':end_date' => $endDate,
                             )
