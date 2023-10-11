@@ -56,13 +56,12 @@ Yii::app()->clientScript->registerCss('_report', '
     </thead>
     <tbody>
         <?php foreach ($mechanicPerformanceSummary->dataProvider->data as $header): ?>
-            <?php $employeeBranchDivisionPositionLevel = EmployeeBranchDivisionPositionLevel::model()->findByAttributes(array('employee_id' => $header->id)); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'id_card')); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($employeeBranchDivisionPositionLevel, 'division.name')); ?></td>
-                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($employeeBranchDivisionPositionLevel, 'position.name')); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($employeeBranchDivisionPositionLevel, 'level.name')); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'division.name')); ?></td>
+                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'position.name')); ?></td>
+                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'level.name')); ?></td>
             </tr>
             <tr class="items2">
                 <td colspan="5">
