@@ -1,6 +1,6 @@
 <?php
 
-class MechanicPerformanceSummary extends CComponent {
+class SalesmanPerformanceSummary extends CComponent {
 
     public $dataProvider;
 
@@ -34,6 +34,6 @@ class MechanicPerformanceSummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $this->dataProvider->criteria->addBetweenCondition('registrationTransactions.transaction_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.id', $filters['employeeId']);
-        $this->dataProvider->criteria->compare('t.position_id', 1);
+        $this->dataProvider->criteria->compare('t.position_id', 2);
     }
 }

@@ -2,8 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $mechanicPerformanceSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($mechanicPerformanceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+    $("#PageSize").val("' . $salesmanPerformanceSummary->dataProvider->pagination->pageSize . '");
+    $("#CurrentPage").val("' . ($salesmanPerformanceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -52,12 +52,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Mechanic</span>
+                                        <span class="prefix">Salesman</span>
                                     </div>
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownlist('EmployeeId', $employeeId, CHtml::listData(Employee::model()->findAllByAttributes(array(
-                                            "position_id" => 1,
-                                        )), "id", "name"), array("empty" => "--All Mechanic--")); ?>
+                                            "position_id" => 2,
+                                        )), "id", "name"), array("empty" => "--All Salesman--")); ?>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'employee' => $employee,
-                        'mechanicPerformanceSummary' => $mechanicPerformanceSummary,
+                        'salesmanPerformanceSummary' => $salesmanPerformanceSummary,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>
@@ -131,9 +131,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
 <div class="right">
     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'itemCount' => $mechanicPerformanceSummary->dataProvider->pagination->itemCount,
-        'pageSize' => $mechanicPerformanceSummary->dataProvider->pagination->pageSize,
-        'currentPage' => $mechanicPerformanceSummary->dataProvider->pagination->getCurrentPage(false),
+        'itemCount' => $salesmanPerformanceSummary->dataProvider->pagination->itemCount,
+        'pageSize' => $salesmanPerformanceSummary->dataProvider->pagination->pageSize,
+        'currentPage' => $salesmanPerformanceSummary->dataProvider->pagination->getCurrentPage(false),
     )); ?>
 </div>
 <div class="clear"></div>
