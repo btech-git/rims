@@ -137,6 +137,8 @@ class EmployeeController extends Controller {
 
         $employee = $this->instantiate(null);
         $employee->header->user_id = Yii::app()->user->id;
+        $employee->header->clock_in_time = '08:30:00';
+        $employee->header->clock_out_time = '17:00:00';
         
         if (isset($_POST['Employee'])) {
             $this->loadState($employee);
