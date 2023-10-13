@@ -115,7 +115,7 @@ class AdminController extends Controller {
         $model = new User;
         $model->create_at = date('Y-m-d H:i:s');
         $model->lastvisit_at = date('Y-m-d H:i:s');
-        $employees = Employee::model()->findAll(array('order' => 't.name'));
+        $employees = Employee::model()->findAll(array('condition' => 'status = "Active"', 'order' => 't.name'));
         
         $this->performAjaxValidation(array($model));
         if (isset($_POST['User'])) {
