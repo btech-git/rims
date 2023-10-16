@@ -28,7 +28,7 @@
                             <?php echo $form->labelEx($model,'code'); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($model,'code',array('readOnly' => true)); ?>
+                            <?php echo $form->textField($model,'code'); ?>
                             <?php echo $form->error($model,'code'); ?>
                         </div>
                     </div>
