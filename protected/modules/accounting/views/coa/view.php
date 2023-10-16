@@ -76,19 +76,12 @@ $this->menu = array(
             </thead>
 
             <tbody>
-                <?php foreach (array_reverse($coaDetails) as $key => $coaDetail): ?>
-                    <?php if ($key <= 50): ?>
-                        <tr>
-                            <td><?php echo $coaDetail->kode_transaksi; ?></td>
-                            <td><?php echo $coaDetail->tanggal_transaksi; ?></td>
-                            <td><?php echo $coaDetail->transaction_type; ?></td>
-                            <td><?php echo $coaDetail->debet_kredit == "D" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $coaDetail->total)) : 0 ?></td>
-                            <td><?php echo $coaDetail->debet_kredit == "K" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $coaDetail->total)) : 0 ?></td>
-                        </tr>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+                <tr>
+                    <td><?php echo $customer->id; ?></td>
+                    <td><?php echo $customer->name; ?></td>
+                    <td><?php echo $customer->customer_type; ?></td>
+                </tr>
             </tbody>
-
         </table>
     </fieldset>
 
