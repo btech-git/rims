@@ -196,10 +196,23 @@ Yii::app()->clientScript->registerScript('userRoles', "
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo CHtml::activeHiddenField($model, 'employee_id'); ?>
                         <?php echo $form->labelEx($model, 'employee_id', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($model, 'employee_id', CHtml::listData($employees, 'id', 'name'), array('empty' => '-- Pilih Employee --')); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+                            'name' => 'EmployeeName',
+                            'value' => CHtml::value($model, 'employee.name'),
+                            'sourceUrl' => CController::createUrl('employeeCompletion'),
+                            //additional javascript options for the autocomplete plugin
+                            'options' => array(
+                                'minLength' => '2',
+                                'select' => 'js:function(event, ui) {
+                                    $("#' . CHtml::activeId($model, 'employee_id') . '").val(ui.item.id);
+                                }',
+                            ),
+                        )); ?>
+                        <?php //echo CHtml::activeDropDownList($model, 'employee_id', CHtml::listData($employees, 'id', 'name'), array('empty' => '-- Pilih Employee --')); ?>
                         <?php echo CHtml::error($model, 'employee_id'); ?>
                     </div>
                 </div>
