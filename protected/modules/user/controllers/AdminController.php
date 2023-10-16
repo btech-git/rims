@@ -245,6 +245,10 @@ class AdminController extends Controller {
         }
     }
 
+    public function actionEmployeeCompletion() {
+        echo CJSON::encode(Completion::employee($_GET['term']));
+    }
+
     public function actionAjaxHtmlUpdateEmployeeSelect() {
         if (Yii::app()->request->isAjaxRequest) {
 //            $employeeId = '';
