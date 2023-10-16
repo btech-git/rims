@@ -40,7 +40,6 @@
                                 }',
                             ),
                         )); ?>
-                        
                         <?php echo $form->error($model, 'employee_id'); ?>
                     </div>
                 </div>
