@@ -4,7 +4,7 @@ class Completion extends CComponent {
 
     public static function employee($term) {
         $items = Employee::model()->findAll(array(
-            'condition' => 'name LIKE :name', 
+            'condition' => 'name LIKE :name AND status = "Active"', 
             'params' => array(':name' => '%' . $term . '%'), 
             'limit' => 30
         ));
