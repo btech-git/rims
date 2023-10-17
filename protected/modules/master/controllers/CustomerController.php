@@ -229,8 +229,6 @@ class CustomerController extends Controller {
             $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
         }
 
-        //$serviceCriteria->compare('rate',$service->rate,true);
-
         $serviceDataProvider = new CActiveDataProvider('Service', array(
             'criteria' => $serviceCriteria,
         ));
@@ -238,8 +236,6 @@ class CustomerController extends Controller {
         $this->performAjaxValidation($customer->header);
 
         if (isset($_POST['Customer'])) {
-
-
             $this->loadState($customer);
             if ($customer->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $customer->header->id));
