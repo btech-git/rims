@@ -129,33 +129,35 @@ class Customers extends CComponent {
 
     public function flush() {
 
-        if ($this->header->customer_type == 'Individual') {
-            $this->header->coa_id = 1449;
-        } else {
-            $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => null), array('order' => 'id DESC'));
-            $ordinal = substr($existingCoa->code, -3);
-            $newOrdinal = $ordinal + 1;
-            
-            $coa = new Coa;
-            $coa->name = 'Piutang ' . $this->header->name;
-            $coa->code = '121.00.' . sprintf('%03d', $newOrdinal);
-            $coa->coa_category_id = 1;
-            $coa->coa_sub_category_id = 8;
-            $coa->coa_id = null;
-            $coa->normal_balance = 'DEBIT';
-            $coa->cash_transaction = 'NO';
-            $coa->opening_balance = 0.00;
-            $coa->closing_balance = 0.00;
-            $coa->debit = 0.00;
-            $coa->credit = 0.00;
-            $coa->status = null;
-            $coa->date = date('Y-m-d');
-            $coa->date_approval = date('Y-m-d');
-            $coa->is_approved = 1;
-            $coa->user_id = Yii::app()->user->id;
-            $coa->save();
-            
-            $this->header->coa_id = $coa->id;
+        if ($this->header->isNewRecord) {
+            if ($this->header->customer_type == 'Individual') {
+                $this->header->coa_id = 1449;
+            } else {
+                $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => null), array('order' => 'id DESC'));
+                $ordinal = substr($existingCoa->code, -3);
+                $newOrdinal = $ordinal + 1;
+
+                $coa = new Coa;
+                $coa->name = 'Piutang ' . $this->header->name;
+                $coa->code = '121.00.' . sprintf('%03d', $newOrdinal);
+                $coa->coa_category_id = 1;
+                $coa->coa_sub_category_id = 8;
+                $coa->coa_id = null;
+                $coa->normal_balance = 'DEBIT';
+                $coa->cash_transaction = 'NO';
+                $coa->opening_balance = 0.00;
+                $coa->closing_balance = 0.00;
+                $coa->debit = 0.00;
+                $coa->credit = 0.00;
+                $coa->status = null;
+                $coa->date = date('Y-m-d');
+                $coa->date_approval = date('Y-m-d');
+                $coa->is_approved = 1;
+                $coa->user_id = Yii::app()->user->id;
+                $coa->save();
+
+                $this->header->coa_id = $coa->id;
+            }
         }
 
         $valid = $this->header->save();
