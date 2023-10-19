@@ -34,6 +34,13 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Print', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/pdf?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.pdf"))) ?>
         <?php //endif; ?>
 
+        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionDeliveryOrder/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php //endif; ?>
+        
         <h1>View Transaction Delivery Order #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
