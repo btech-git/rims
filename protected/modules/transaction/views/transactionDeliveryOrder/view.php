@@ -25,7 +25,7 @@ $this->menu = array(
 //        $movements = MovementOutHeader::model()->findAllByAttributes(array('delivery_order_id' => $model->id));
 //        if (count($movements) == 0):
         ?>
-        <?php if ($model->status_document != 'CANCELLED!!!'): ?>
+        <?php if ($model->is_cancelled == 1): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/update?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px', 
