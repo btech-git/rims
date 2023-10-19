@@ -95,7 +95,7 @@ $this->menu = array(
                         </div>
 
                         <div class="small-8 columns">
-                            <label for="label"><?php echo empty($model->user_id_cancelled) ? $model->userIdCancelled->username : ''; ?></label>
+                            <label for="label"><?php echo empty($model->user_id_cancelled) ? '' : $model->userIdCancelled->username; ?></label>
                         </div>
                     </div>
                 </div>
