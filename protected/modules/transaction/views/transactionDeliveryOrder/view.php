@@ -81,7 +81,7 @@ $this->menu = array(
     </div>
 </div>
 
-<?php if ($model->is_cancelled === 1): ?>
+<?php if ($model->is_cancelled == 1): ?>
     <div class="detail">
         <hr />
 
