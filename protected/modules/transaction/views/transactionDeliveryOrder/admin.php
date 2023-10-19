@@ -71,8 +71,8 @@ Yii::app()->clientScript->registerScript('search', "
                         'value' => '(!empty($data->user->username) ? $data->user->username : "")'
                     ),
                     array(
-                        'name' => 'branch_name',
-                        'value' => '$data->senderBranch->code'
+                        'name' => 'request_type',
+                        'value' => '$data->request_type',
                     ),
                     array(
                         'header' => 'Movement Out',

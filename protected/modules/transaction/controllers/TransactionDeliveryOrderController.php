@@ -576,7 +576,7 @@ class TransactionDeliveryOrderController extends Controller {
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         $model->is_cancelled = 1;
-        $model->request_type = null; 
+        $model->request_type = 'Cancelled!!!'; 
         $model->sales_order_id = null; 
         $model->sent_request_id = null; 
         $model->consignment_out_id = null; 

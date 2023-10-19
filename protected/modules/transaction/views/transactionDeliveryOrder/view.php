@@ -25,6 +25,7 @@ $this->menu = array(
 //        $movements = MovementOutHeader::model()->findAllByAttributes(array('delivery_order_id' => $model->id));
 //        if (count($movements) == 0):
         ?>
+        <?php if ($model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/update?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px', 
@@ -39,7 +40,7 @@ $this->menu = array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
         
         <h1>View Transaction Delivery Order #<?php echo $model->id; ?></h1>
 
@@ -79,273 +80,309 @@ $this->menu = array(
         )); ?>
     </div>
 </div>
-<div class="detail">
-    <hr />
-    
-    <h3>Details</h3>
 
-    <?php if ($model->request_type == 'Sales Order'): ?>
-        <div class="row">
-            <div class="small-12 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">SO no</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->salesOrder != "" ? $model->salesOrder->sale_order_no : ''; ?></label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">Customer</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->customer_id == NULL ? '-' : $model->customer->name; ?></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php elseif ($model->request_type == 'Sent Request'): ?>
-        <div class="row">
-            <div class="small-12 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">Sent Request no</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->sentRequest != NULL ? $model->sentRequest->sent_request_no : ''; ?></label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">Destination Branch</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->destination_branch == NULL ? '-' : $model->destinationBranch->name; ?></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php elseif ($model->request_type == 'Consignment Out') : ?>
-        <div class="row">
-            <div class="small-12 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">Consignment Out</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->consignmentOut != NULL ? $model->consignmentOut->consignment_out_no : ''; ?></label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">Customer</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->customer_id == NULL ? '-' : $model->customer->name; ?></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php elseif ($model->request_type == 'Transfer Request') : ?>
-        <div class="row">
-            <div class="small-12 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">Transfer Request</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->transferRequest != NULL ? $model->transferRequest->transfer_request_no : ''; ?></label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="label">Destination Branch</label>
-                        </div>
-                        
-                        <div class="small-8 columns">
-                            <label for="label"><?php echo $model->destination_branch == NULL ? '-' : $model->destinationBranch->name; ?></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
-    
-    <br /><br />
-    
-    <?php if (count($deliveryDetails) > 0): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <td>Code</td>
-                    <td>Kategori</td>
-                    <td>Brand</td>
-                    <td>Sub Brand</td>
-                    <td>Sub Brand Series</td>
-                    <th>Quantity</th>
-                    <th>QTY Delivery</th>
-                    <th>QTY Left</th>
-                    <th>QTY Movement</th>
-                    <th>QTY Movement Left</th>
-                    <th>HPP</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                    <th>Note</th>
-                    <!--<th>Barcode Product</th>-->
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($deliveryDetails as $key => $deliveryDetail): ?>
-                    <tr>
-                        <td><?php echo $deliveryDetail->product->name == '' ? '-' : $deliveryDetail->product->name; ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.manufacturer_code')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.masterSubCategoryCode')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.brand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.subBrand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.subBrandSeries.name')); ?></td>
-                        <td><?php echo $deliveryDetail->quantity_request == '' ? '-' : $deliveryDetail->quantity_request; ?></td>
-                        <td><?php echo $deliveryDetail->quantity_delivery == '' ? '-' : $deliveryDetail->quantity_delivery; ?></td>
-                        <td><?php echo $deliveryDetail->quantity_request_left == '' ? '-' : $deliveryDetail->quantity_request_left; ?></td>
-                        <td><?php echo $deliveryDetail->quantity_movement == '' ? '-' : $deliveryDetail->quantity_movement; ?></td>
-                        <td><?php echo $deliveryDetail->quantity_movement_left == '' ? '-' : $deliveryDetail->quantity_movement_left; ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->product->hpp)); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->unitPrice)); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->totalSaleDelivered)); ?></td>
-                        <td><?php echo $deliveryDetail->note == '' ? '-' : $deliveryDetail->note; ?></td>
-                        <!--<td><?php //echo $deliveryDetail->barcode_product == '' ? '-' : $deliveryDetail->barcode_product; ?></td>-->
-                    </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>	
-    <?php else: ?>
-        <?php echo 'No Details Available'; ?>
-    <?php endif; ?>
-    
-    <br />
+<?php if ($model->is_cancelled === 1): ?>
+    <div class="detail">
+        <hr />
 
-    <?php if (Yii::app()->user->checkAccess("generalManager")): ?>
-        <fieldset>
-            <legend>Journal Transactions</legend>
-            <table class="report">
+        <h3>Transaction Cancelled!!!</h3>
+        <div class="row">
+            <div class="small-12 columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label for="label">User Cancel</label>
+                        </div>
+
+                        <div class="small-8 columns">
+                            <label for="label"><?php echo empty($model->user_id_cancelled) ? $model->userIdCancelled->username : ''; ?></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label for="label">Cancel Date</label>
+                        </div>
+
+                        <div class="small-8 columns">
+                            <label for="label"><?php echo empty($model->cancelled_datetime) ? '' : $model->cancelled_datetime; ?></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="detail">
+        <hr />
+
+        <h3>Details</h3>
+
+        <?php if ($model->request_type == 'Sales Order'): ?>
+            <div class="row">
+                <div class="small-12 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">SO no</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->salesOrder != "" ? $model->salesOrder->sale_order_no : ''; ?></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">Customer</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->customer_id == NULL ? '-' : $model->customer->name; ?></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php elseif ($model->request_type == 'Sent Request'): ?>
+            <div class="row">
+                <div class="small-12 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">Sent Request no</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->sentRequest != NULL ? $model->sentRequest->sent_request_no : ''; ?></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">Destination Branch</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->destination_branch == NULL ? '-' : $model->destinationBranch->name; ?></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php elseif ($model->request_type == 'Consignment Out') : ?>
+            <div class="row">
+                <div class="small-12 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">Consignment Out</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->consignmentOut != NULL ? $model->consignmentOut->consignment_out_no : ''; ?></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">Customer</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->customer_id == NULL ? '-' : $model->customer->name; ?></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php elseif ($model->request_type == 'Transfer Request') : ?>
+            <div class="row">
+                <div class="small-12 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">Transfer Request</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->transferRequest != NULL ? $model->transferRequest->transfer_request_no : ''; ?></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label for="label">Destination Branch</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <label for="label"><?php echo $model->destination_branch == NULL ? '-' : $model->destinationBranch->name; ?></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <br /><br />
+
+        <?php if (count($deliveryDetails) > 0): ?>
+            <table>
                 <thead>
-                    <tr id="header1">
-                        <th style="width: 5%">No</th>
-                        <th style="width: 15%">Kode COA</th>
-                        <th>Nama COA</th>
-                        <th style="width: 15%">Debit</th>
-                        <th style="width: 15%">Kredit</th>
+                    <tr>
+                        <th>Product</th>
+                        <td>Code</td>
+                        <td>Kategori</td>
+                        <td>Brand</td>
+                        <td>Sub Brand</td>
+                        <td>Sub Brand Series</td>
+                        <th>Quantity</th>
+                        <th>QTY Delivery</th>
+                        <th>QTY Left</th>
+                        <th>QTY Movement</th>
+                        <th>QTY Movement Left</th>
+                        <th>HPP</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Note</th>
+                        <!--<th>Barcode Product</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($deliveryDetails as $key => $deliveryDetail): ?>
+                        <tr>
+                            <td><?php echo $deliveryDetail->product->name == '' ? '-' : $deliveryDetail->product->name; ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.manufacturer_code')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.masterSubCategoryCode')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.brand.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.subBrand.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.subBrandSeries.name')); ?></td>
+                            <td><?php echo $deliveryDetail->quantity_request == '' ? '-' : $deliveryDetail->quantity_request; ?></td>
+                            <td><?php echo $deliveryDetail->quantity_delivery == '' ? '-' : $deliveryDetail->quantity_delivery; ?></td>
+                            <td><?php echo $deliveryDetail->quantity_request_left == '' ? '-' : $deliveryDetail->quantity_request_left; ?></td>
+                            <td><?php echo $deliveryDetail->quantity_movement == '' ? '-' : $deliveryDetail->quantity_movement; ?></td>
+                            <td><?php echo $deliveryDetail->quantity_movement_left == '' ? '-' : $deliveryDetail->quantity_movement_left; ?></td>
+                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->product->hpp)); ?></td>
+                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->unitPrice)); ?></td>
+                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->totalSaleDelivered)); ?></td>
+                            <td><?php echo $deliveryDetail->note == '' ? '-' : $deliveryDetail->note; ?></td>
+                            <!--<td><?php //echo $deliveryDetail->barcode_product == '' ? '-' : $deliveryDetail->barcode_product; ?></td>-->
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>	
+        <?php else: ?>
+            <?php echo 'No Details Available'; ?>
+        <?php endif; ?>
+
+        <br />
+
+        <?php if (Yii::app()->user->checkAccess("generalManager")): ?>
+            <fieldset>
+                <legend>Journal Transactions</legend>
+                <table class="report">
+                    <thead>
+                        <tr id="header1">
+                            <th style="width: 5%">No</th>
+                            <th style="width: 15%">Kode COA</th>
+                            <th>Nama COA</th>
+                            <th style="width: 15%">Debit</th>
+                            <th style="width: 15%">Kredit</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php $totalDebit = 0; $totalCredit = 0; ?>
+                        <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->delivery_order_no, 'is_coa_category' => 0)); ?>
+                        <?php foreach ($transactions as $i => $header): ?>
+
+                            <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
+                            <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
+
+                            <tr>
+                                <td style="text-align: center"><?php echo $i + 1; ?></td>
+                                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
+                                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
+                                <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
+                                <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
+                            </tr>
+
+                            <?php $totalDebit += $amountDebit; ?>
+                            <?php $totalCredit += $amountCredit; ?>
+
+                        <?php endforeach; ?>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
+                            <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?></td>
+                            <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?></td>
+                        </tr>        
+                    </tfoot>
+                </table>
+            </fieldset>
+        <?php endif; ?>
+
+        <br />
+
+        <hr />
+
+        <?php
+        if ($model->request_type == 'Sales Order') {
+            $itemHeaders = TransactionDeliveryOrder::model()->findAllByAttributes(array('sales_order_id' => $model->sales_order_id));
+        } elseif ($model->request_type == 'Sent Request') {
+        ?>
+
+        <?php $itemHeaders = TransactionDeliveryOrder::model()->findAllByAttributes(array('sent_request_id' => $model->sent_request_id)); ?>
+        <?php } else $itemHeaders = array(); ?>
+
+        <?php if (count($itemHeaders) != 0): ?>
+            <table>
+                <caption>History</caption>
+                <thead>
+                    <tr>
+                        <td>Request No</td>
+                        <td>Product</td>
+                        <td>Qty Request</td>
+                        <td>Qty Delivery</td>
+
+                        <td>Qty Request Left</td>
+                        <td>Note</td>
+                        <td>Barcode</td>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php $totalDebit = 0; $totalCredit = 0; ?>
-                    <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->delivery_order_no, 'is_coa_category' => 0)); ?>
-                    <?php foreach ($transactions as $i => $header): ?>
-
-                        <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
-                        <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
-
-                        <tr>
-                            <td style="text-align: center"><?php echo $i + 1; ?></td>
-                            <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
-                            <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                            <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?></td>
-                            <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?></td>
-                        </tr>
-
-                        <?php $totalDebit += $amountDebit; ?>
-                        <?php $totalCredit += $amountCredit; ?>
-
+                    <?php foreach ($itemHeaders as $key => $itemHeader): ?>
+                        <?php $deliveryDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $itemHeader->id)); ?>
+                        <?php foreach ($deliveryDetails as $key => $deliveryDetail): ?>
+                            <tr>
+                                <td><?php echo $deliveryDetail->deliveryOrder->delivery_order_no; ?></td>
+                                <td><?php echo $deliveryDetail->product->name; ?></td>
+                                <td><?php echo $deliveryDetail->quantity_request; ?></td>
+                                <td><?php echo $deliveryDetail->quantity_delivery; ?></td>
+                                <td><?php echo $deliveryDetail->quantity_request_left; ?></td>
+                                <td><?php echo $deliveryDetail->note; ?></td>
+                                <td><?php echo $deliveryDetail->barcode_product; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     <?php endforeach; ?>
                 </tbody>
-
-                <tfoot>
-                    <tr>
-                        <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
-                        <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?></td>
-                        <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?></td>
-                    </tr>        
-                </tfoot>
             </table>
-        </fieldset>
-    <?php endif; ?>
-
-    <br />
-
-    <hr />
-
-    <?php
-    if ($model->request_type == 'Sales Order') {
-        $itemHeaders = TransactionDeliveryOrder::model()->findAllByAttributes(array('sales_order_id' => $model->sales_order_id));
-    } elseif ($model->request_type == 'Sent Request') {
-    ?>
-    
-    <?php $itemHeaders = TransactionDeliveryOrder::model()->findAllByAttributes(array('sent_request_id' => $model->sent_request_id)); ?>
-    <?php } else $itemHeaders = array(); ?>
-
-    <?php if (count($itemHeaders) != 0): ?>
-        <table>
-            <caption>History</caption>
-            <thead>
-                <tr>
-                    <td>Request No</td>
-                    <td>Product</td>
-                    <td>Qty Request</td>
-                    <td>Qty Delivery</td>
-
-                    <td>Qty Request Left</td>
-                    <td>Note</td>
-                    <td>Barcode</td>
-                </tr>
-            </thead>
-            
-            <tbody>
-                <?php foreach ($itemHeaders as $key => $itemHeader): ?>
-                    <?php $deliveryDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $itemHeader->id)); ?>
-                    <?php foreach ($deliveryDetails as $key => $deliveryDetail): ?>
-                        <tr>
-                            <td><?php echo $deliveryDetail->deliveryOrder->delivery_order_no; ?></td>
-                            <td><?php echo $deliveryDetail->product->name; ?></td>
-                            <td><?php echo $deliveryDetail->quantity_request; ?></td>
-                            <td><?php echo $deliveryDetail->quantity_delivery; ?></td>
-                            <td><?php echo $deliveryDetail->quantity_request_left; ?></td>
-                            <td><?php echo $deliveryDetail->note; ?></td>
-                            <td><?php echo $deliveryDetail->barcode_product; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
-</div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
 
 <hr />
     
