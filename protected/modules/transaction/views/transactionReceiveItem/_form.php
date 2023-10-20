@@ -68,7 +68,7 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($receiveItem->header, 'recipient_id', array('value' => $receiveItem->header->isNewRecord ? Yii::app()->user->getId() : $receiveItem->header->recipient_id, 'readonly' => true)); ?>
-                            <?php echo $receiveItem->header->isNewRecord ? Yii::app()->user->getName() : CHtml::encode(CHtml::value($receiveItem->header, 'user.name')); ?>
+                            <?php echo $receiveItem->header->isNewRecord ? Yii::app()->user->getName() : CHtml::encode(CHtml::value($receiveItem->header, 'user.username')); ?>
                             <?php echo $form->error($receiveItem->header, 'recipient_id'); ?>
                         </div>
                     </div>
