@@ -458,4 +458,10 @@ class Employee extends CActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
+    
+    public function getUsername() {
+        $user = User::model()->findByAttributes(array('employee_id' => $this->id));
+        
+        return $user->username;
+    }
 }
