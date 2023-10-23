@@ -22,21 +22,23 @@ class AccountingJournalSummaryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $dateNow = date('Y-m-d');
-        list($yearNow, , ) = explode('-', $dateNow);
-        $dateStart = $yearNow . '-01-01';
+//        $dateNow = date('Y-m-d');
+//        list($yearNow, , ) = explode('-', $dateNow);
+//        $dateStart = $yearNow . '-01-01';
 
         $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $coaCategoryList = (isset($_GET['CoaCategoryList'])) ? $_GET['CoaCategoryList'] : array();
+//        $coaCategoryList = (isset($_GET['CoaCategoryList'])) ? $_GET['CoaCategoryList'] : array();
+        $coaSubCategoryList = (isset($_GET['CoaSubCategoryList'])) ? $_GET['CoaSubCategoryList'] : array();
 
         $criteria = new CDbCriteria();
-        $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ')');
+//        $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ')');
+        $criteria->addCondition('t.id IN (' . implode(',', $coaSubCategoryList) . ')');
         $criteria->order = 't.code ASC';
 
-        if (empty($coaCategoryList)) {
+        if (empty($coaSubCategoryList)) {
             $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11, 12, 13, 22, 1, 2, 3)', 'order' => 't.code ASC'));
         } else {
             $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
@@ -55,7 +57,8 @@ class AccountingJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'coaCategoryList' => $coaCategoryList,
+//            'coaCategoryList' => $coaCategoryList,
+            'coaSubCategoryList' => $coaSubCategoryList,
         ));
     }
 

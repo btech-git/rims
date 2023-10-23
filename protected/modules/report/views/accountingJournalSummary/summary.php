@@ -1,8 +1,22 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
-	$("#StartDate").val("' . $startDate . '");
-	$("#EndDate").val("' . $endDate . '");
+    $("#StartDate").val("' . $startDate . '");
+    $("#EndDate").val("' . $endDate . '");
 ');
+
+Yii::app()->clientScript->registerScript('search', "
+    $('.search-button').click(function(){
+        $('.search-form').slideToggle(600);
+        $('.bulk-action').toggle();
+        $(this).toggleClass('active');
+        if ($(this).hasClass('active')) {
+            $(this).text('');
+        } else {
+            $(this).text('Advanced Search');
+        }
+        return false;
+    });
+");
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -13,136 +27,38 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     
     <div class="tabBody">
         <div id="detail_div">
-            <div>
-                <div class="myForm">
-                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
-                    
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Transaction Type</span>
-                                    </div>
-
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('TransactionType', $transactionType, array(
-                                            'Invoice' => 'Sales',
-                                            'CASH' => 'Cash',
-                                            'JP' => 'Penyesuaian',
-                                            'Pout' => 'Purchase Payment',
-                                            'Pin' => 'Sales Receipt',
-                                            'MI' => 'Movement In',
-                                            'MO' => 'Movement Out',
-                                            'MR' => 'Material',
-                                            'PO' => 'PURCHASE',
-//                                            'DO' => 'DELIVERY',
-//                                            'TR' => 'TRANSFER REQUEST',
-//                                            'RCI' => 'RECEIVE',
-//                                            'Pin' => 'PAYMENT IN',
-//                                            'Pout' => 'PAYMENT OUT',
-//                                            'SO' => 'SALES',
-                                        ), array('empty' => '-- All Transaction --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="myForm">
+                <div class="search-bar">
+                    <div class="clearfix button-bar">
+                        <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					
+                        <div class="clearfix"></div>
+                        <div class="search-form" style="display:none">
+                            <?php $this->renderPartial('_search', array(
+                                'coaSubCategories' => $coaSubCategories,
+                                'transactionType' => $transactionType,
+                                'startDate' => $startDate,
+                                'endDate' => $endDate,
+                                'branchId' => $branchId,
+                    //            'coaCategoryList' => $coaCategoryList,
+                                'coaSubCategoryList' => $coaSubCategoryList,
+                            )); ?>
+                        </div><!-- search-form -->
                     </div>
-                    
-                    <div class="row">
-                        <div class="medium-12 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Periode:</span>
-                                    </div>
-
-                                    <div class="small-4 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'StartDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Mulai',
-                                            ),
-                                        )); ?>
-                                    </div>
-
-                                    <div class="small-4 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'EndDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Sampai',
-                                            ),
-                                        )); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="medium-12 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <span class="prefix">COA Category:</span>
-                                    </div>
-                                    <div class="small-10 columns">
-                                        <?php echo CHtml::checkBoxList('CoaCategoryList', $coaCategoryList, CHtml::listData(CoaCategory::model()->findAll(array(
-                                            'condition' => 'id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
-                                            'order' => 'code ASC'
-                                        )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="clear"></div>
-                    <div class="row buttons">
-                        <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
-                    </div>
-
-                    <?php echo CHtml::endForm(); ?>
-                    <div class="clear"></div>
-
                 </div>
-
-                <hr />
-
-                <div class="relative">
-                    <?php $this->renderPartial('_summary', array(
-                        'coaSubCategories' => $coaSubCategories,
-                        'startDate' => $startDate,
-                        'endDate' => $endDate,
-                        'branchId' => $branchId,
-                        'transactionType' => $transactionType,
-                    )); ?>
-                </div>
-                <div class="clear"></div>
             </div>
+
+            <hr />
+
+            <div class="relative">
+                <?php $this->renderPartial('_summary', array(
+                    'coaSubCategories' => $coaSubCategories,
+                    'startDate' => $startDate,
+                    'endDate' => $endDate,
+                    'branchId' => $branchId,
+                    'transactionType' => $transactionType,
+                )); ?>
+            </div>
+            <div class="clear"></div>
         </div>
     </div>
 </div>
