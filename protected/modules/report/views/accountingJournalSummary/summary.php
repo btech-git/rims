@@ -39,7 +39,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 'startDate' => $startDate,
                                 'endDate' => $endDate,
                                 'branchId' => $branchId,
-                    //            'coaCategoryList' => $coaCategoryList,
+                                'coaCategoryList' => $coaCategoryList,
                                 'coaSubCategoryList' => $coaSubCategoryList,
                             )); ?>
                         </div><!-- search-form -->

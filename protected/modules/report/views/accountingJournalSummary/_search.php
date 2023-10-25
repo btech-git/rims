@@ -83,7 +83,7 @@
     </div>
 </div>
 
-<!--                    <div class="row">
+                    <div class="row">
     <div class="medium-12 columns">
         <div class="field">
             <div class="row collapse">
@@ -91,15 +91,15 @@
                     <span class="prefix">COA Category:</span>
                 </div>
                 <div class="small-10 columns">
-                    <?php /*echo CHtml::checkBoxList('CoaCategoryList', $coaCategoryList, CHtml::listData(CoaCategory::model()->findAll(array(
+                    <?php echo CHtml::checkBoxList('CoaCategoryList', $coaCategoryList, CHtml::listData(CoaCategory::model()->findAll(array(
                         'condition' => 'id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
                         'order' => 'code ASC'
-                    )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline')));*/ ?>
+                    )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
                 </div>
             </div>
         </div>
     </div>
-</div>-->
+</div>
 
 <div class="row">
     <div class="medium-12 columns">
@@ -109,7 +109,10 @@
                     <span class="prefix">COA Sub Category:</span>
                 </div>
                 <div class="small-10 columns">
-                    <?php echo CHtml::checkBoxList('CoaSubCategoryList', $coaSubCategoryList, CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'code ASC')), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
+                    <?php echo CHtml::checkBoxList('CoaSubCategoryList', $coaSubCategoryList, CHtml::listData(CoaSubCategory::model()->findAll(array(
+                        'condition' => 'coa_category_id IN (16)', 
+                        'order' => 'code ASC'
+                    )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
                 </div>
             </div>
         </div>

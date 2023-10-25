@@ -30,19 +30,22 @@ class AccountingJournalSummaryController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-//        $coaCategoryList = (isset($_GET['CoaCategoryList'])) ? $_GET['CoaCategoryList'] : array();
+        $coaCategoryList = (isset($_GET['CoaCategoryList'])) ? $_GET['CoaCategoryList'] : array();
         $coaSubCategoryList = (isset($_GET['CoaSubCategoryList'])) ? $_GET['CoaSubCategoryList'] : array();
 
         $criteria = new CDbCriteria();
-//        $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ')');
-        $criteria->addCondition('t.id IN (' . implode(',', $coaSubCategoryList) . ')');
         $criteria->order = 't.code ASC';
 
-        if (empty($coaSubCategoryList)) {
-            $coaSubCategories = CoaSubCategory::model()->findAll(array('condition' => 't.coa_category_id NOT IN (11, 12, 13, 22, 1, 2, 3)', 'order' => 't.code ASC'));
-        } else {
+        if (!empty($coaCategoryList) || !empty($coaSubCategoryList)) {
+            $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ') OR t.id IN (' . implode(',', $coaSubCategoryList) . ')');
             $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
+        } else {
+            $coaSubCategories = CoaSubCategory::model()->findAll(array(
+                'condition' => 't.coa_category_id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
+                'order' => 't.code ASC'
+            ));
         }
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
@@ -57,7 +60,7 @@ class AccountingJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
-//            'coaCategoryList' => $coaCategoryList,
+            'coaCategoryList' => $coaCategoryList,
             'coaSubCategoryList' => $coaSubCategoryList,
         ));
     }
