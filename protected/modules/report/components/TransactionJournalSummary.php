@@ -22,7 +22,7 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->defaultOrder = 't.kode_transaksi ASC, t.tanggal_transaksi ASC';
+        $this->dataProvider->sort->defaultOrder = 't.tanggal_transaksi ASC, t.kode_transaksi ASC';
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
