@@ -25,8 +25,8 @@ class EmployeeAttendanceController extends Controller {
 //        $yearMonthNow = date('Y-m');
 //        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0), array('order' => 't.name ASC'));
         
