@@ -18,12 +18,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     
                     <div class="row">
                         <div class="medium-6 columns">
-                            <div class="field">
+<!--                            <div class="field">
                                 <div class="row collapse">
                                     <div class="small-8 columns">
                                         <span class="prefix">Periode:</span>
                                     </div>
-                                    <?php list($yearNow, $monthNow) = explode('-', $yearMonthNow); ?>
+                                    <?php /*list($yearNow, $monthNow) = explode('-', $yearMonthNow); ?>
                                     <?php $currentYear = intval($yearNow); ?>
                                     <?php $currentMonth = intval($monthNow); ?>
                                     <?php $yearMonthRange = array(); ?>
@@ -38,7 +38,49 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <?php endfor; ?>
 
                                     <div class="small-4 columns">
-                                        <?php echo CHtml::dropDownList('YearMonth', $yearMonth, $yearMonthRange); ?>
+                                        <?php echo CHtml::dropDownList('YearMonth', $yearMonth, $yearMonthRange);*/ ?>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Periode:</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <div class="medium-5 columns">
+                                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                                'name' => 'StartDate',
+                                                'attribute' => $startDate,
+                                                'options' => array(
+                                                    'dateFormat' => 'yy-mm-dd',
+                                                    'changeMonth'=>true,
+                                                    'changeYear'=>true,
+                                                ),
+                                                'htmlOptions' => array(
+                                                    'readonly' => true,
+                                                    'placeholder' => 'Transaction Date From'
+                                                ),
+                                            )); ?>
+                                        </div>
+                                        <div class="medium-2 columns" style="text-align: center; vertical-align: middle">
+                                            S/D
+                                        </div>
+                                        <div class="medium-5 columns">
+                                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                                'name' => 'EndDate',
+                                                'attribute' => $endDate,
+                                                'options' => array(
+                                                    'dateFormat' => 'yy-mm-dd',
+                                                    'changeMonth'=>true,
+                                                    'changeYear'=>true,
+                                                ),
+                                                'htmlOptions' => array(
+                                                    'readonly' => true,
+                                                    'placeholder' => 'Transaction Date To'
+                                                ),
+                                            )); ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +104,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'employeeData' => $employeeData,
-                        'yearMonth' => $yearMonth,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
+//                        'yearMonth' => $yearMonth,
                     )); ?>
                 </div>
                 <div class="clear"></div>

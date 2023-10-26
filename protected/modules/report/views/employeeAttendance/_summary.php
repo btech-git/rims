@@ -1,6 +1,9 @@
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Laporan Rekap Daftar Hadir Karyawan</div>
-    <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($yearMonth))); ?></div>
+    <div>
+        <?php //echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($yearMonth))); ?>
+        <?php echo 'Tanggal Mulai:' . Yii::app()->dateFormatter->format("d MMMM yyyy", $startDate) . ' Sampai ' . Yii::app()->dateFormatter->format("d MMMM yyyy", $endDate); ?>
+    </div>
 </div>
 
 <br />
@@ -31,15 +34,15 @@
                 <td><?php echo CHtml::encode(CHtml::value($employee, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($employee, 'code')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalWorkingDay($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalLateDay($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalDayOff($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalHalfDayLeave($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalFullDayLeave($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalPaidLeave($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalSdsd($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalStsd($yearMonth)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalMissing($yearMonth)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalWorkingDay($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalLateDay($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalDayOff($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalHalfDayLeave($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalFullDayLeave($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalPaidLeave($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalSdsd($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalStsd($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalMissing($startDate, $endDate)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

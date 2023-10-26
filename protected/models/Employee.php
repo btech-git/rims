@@ -324,140 +324,164 @@ class Employee extends CActiveRecord {
         ));
     }
 
-    public function getTotalWorkingDay($yearMonth) {
+    public function getTotalWorkingDay($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND duration_late <= 0 AND employee_onleave_category_id = 16
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND duration_late <= 0 AND employee_onleave_category_id = 16
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalLateDay($yearMonth) {
+    public function getTotalLateDay($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND duration_late > 0 AND employee_onleave_category_id = 16
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND duration_late > 0 AND employee_onleave_category_id = 16
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalDayOff($yearMonth) {
+    public function getTotalDayOff($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 14
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 14
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalHalfDayLeave($yearMonth) {
+    public function getTotalHalfDayLeave($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 1
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 1
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalFullDayLeave($yearMonth) {
+    public function getTotalFullDayLeave($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 2
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 2
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalPaidLeave($yearMonth) {
+    public function getTotalPaidLeave($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id BETWEEN 3 AND 10
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id BETWEEN 3 AND 10
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalSdsd($yearMonth) {
+    public function getTotalSdsd($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 11
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 11
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalStsd($yearMonth) {
+    public function getTotalStsd($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 12
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 12
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
 
-    public function getTotalMissing($yearMonth) {
+    public function getTotalMissing($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 13
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 13
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':yearMonth' => $yearMonth,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':employee_id' => $this->id,
         ));
 
         return ($value === false) ? 0 : $value;
     }
+    
+//    public function getTotalMissing($yearMonth) {
+//        
+//        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+//                FROM " . EmployeeTimesheet::model()->tableName() . "
+//                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 13
+//                GROUP BY employee_id";
+//
+//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+//            ':yearMonth' => $yearMonth,
+//            ':employee_id' => $this->id,
+//        ));
+//
+//        return ($value === false) ? 0 : $value;
+//    }
     
     public function getUsername() {
         $user = Users::model()->findByAttributes(array('employee_id' => $this->id));

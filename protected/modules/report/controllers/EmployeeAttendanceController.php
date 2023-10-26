@@ -22,8 +22,11 @@ class EmployeeAttendanceController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $yearMonthNow = date('Y-m');
-        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
+//        $yearMonthNow = date('Y-m');
+//        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
+        
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         
         $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0), array('order' => 't.name ASC'));
         
@@ -37,8 +40,10 @@ class EmployeeAttendanceController extends Controller {
 
         $this->render('summary', array(
             'employeeData' => $employeeData,
-            'yearMonth' => $yearMonth,
-            'yearMonthNow' => $yearMonthNow,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+//            'yearMonth' => $yearMonth,
+//            'yearMonthNow' => $yearMonthNow,
         ));
     }
 
