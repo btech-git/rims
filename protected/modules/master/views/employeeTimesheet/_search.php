@@ -38,6 +38,9 @@
         <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model, 'date', array('class' => 'prefix')); ?>
+                    </div>
                     <div class="small-8 columns">
                         <div class="medium-5 columns">
                             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
