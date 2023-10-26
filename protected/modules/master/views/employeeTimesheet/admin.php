@@ -50,7 +50,7 @@ $('.search-form form').submit(function(){
 
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'employee-timesheet-grid',
-            'dataProvider' => $model->search(),
+            'dataProvider' => $dataProvider,
             'filter' => null,
             'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
             'pager' => array(

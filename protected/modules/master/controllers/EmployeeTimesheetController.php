@@ -160,11 +160,21 @@ class EmployeeTimesheetController extends Controller {
     public function actionAdmin() {
         $model = new EmployeeTimesheet('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['EmployeeTimesheet']))
+        if (isset($_GET['EmployeeTimesheet'])) {
             $model->attributes = $_GET['EmployeeTimesheet'];
+        }
+
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addBetweenCondition('t.date', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 
