@@ -1,6 +1,7 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
-	$("#YearMonth").val("' . $yearMonth . '");
+	$("#StartDate").val("' . $startDate . '");
+	$("#EndDate").val("' . $endDate . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
