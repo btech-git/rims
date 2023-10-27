@@ -75,14 +75,11 @@ $this->breadcrumbs = array(
         <thead>
             <tr>
                 <td>Plat Number</td>
-                <td>Machine Number</td>
-                <td>Frame Number</td>
                 <td>Car Make</td>
                 <td>Car Model</td>
                 <td>Car Sub Model</td>
                 <td>Color</td>
                 <td>Year</td>
-                <td>Chasis Code</td>
                 <td>Power CC</td>
                 <td>Notes</td>
                 <td colspan="3" style="text-align:center">Action</td>
@@ -91,15 +88,12 @@ $this->breadcrumbs = array(
         <?php foreach ($vehicleDetails as $key => $vehicleDetail): ?>
             <tr>
                 <td><?php echo CHtml::link($vehicleDetail->plate_number, Yii::app()->createUrl("master/vehicle/view", array("id" => $vehicleDetail->id)), array('target' => '_blank')); ?></td>
-                <td><?php echo $vehicleDetail->machine_number; ?></td>
-                <td><?php echo $vehicleDetail->frame_number; ?></td>
                 <td><?php echo $vehicleDetail->carMake ? CHtml::encode(CHtml::value($vehicleDetail, 'carMake.name')) : ''; ?></td>
                 <td><?php echo $vehicleDetail->carModel ? CHtml::encode(CHtml::value($vehicleDetail, 'carModel.name')) : ''; ?></td>
                 <td><?php echo $vehicleDetail->carSubModel ? CHtml::encode(CHtml::value($vehicleDetail, 'carSubModel.name')) : ''; ?></td>
                 <?php $color = Colors::model()->findByPk($vehicleDetail->color_id); ?>
                 <td><?php echo empty($color) ? '' : CHtml::encode(CHtml::value($color, 'name')); ?></td>
                 <td><?php echo $vehicleDetail->year; ?></td>
-                <td><?php echo $vehicleDetail->chasis_code; ?></td>
                 <td><?php echo $vehicleDetail->power; ?></td>
                 <td><?php echo $vehicleDetail->notes; ?></td>
                 <td>

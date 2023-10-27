@@ -51,7 +51,7 @@ class CustomerController extends Controller {
     public function actionView($id) {
         $model = $this->loadModel($id);
         $picDetails = CustomerPic::model()->findAllByAttributes(array('customer_id' => $id));
-        $vehicleDetails = Vehicle::model()->findAllByAttributes(array('customer_id' => $id));
+        $vehicleDetails = Vehicle::model()->findAllByAttributes(array('customer_id' => $id), array('limit' => 100, 'order' => 'id DESC'));
         $rateDetails = CustomerServiceRate::model()->findAllByAttributes(array('customer_id' => $id));
         $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array('customer_id' => $id));
         
