@@ -125,8 +125,20 @@ class CoaController extends Controller {
             $model->attributes = $_POST['Coa'];
 //            $model->coa_category_id = $model->coaSubCategory->coa_category_id;
 
-            if ($model->save())
+            if ($model->save()) {
+                $coaLog = new CoaLog();
+                $coaLog->name = $model->name;
+                $coaLog->code = $model->code;
+                $coaLog->coa_category_id = $model->coa_category_id;
+                $coaLog->coa_sub_category_id = $model->coa_sub_category_id;
+                $coaLog->date_updated = date('Y-m-d');
+                $coaLog->time_updated = date('H:i:s');
+                $coaLog->user_updated_id = Yii::app()->user->id;
+                $coaLog->coa_id = $model->id;
+                $coaLog->save();
+                
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(

@@ -238,6 +238,16 @@ class CustomerController extends Controller {
         if (isset($_POST['Customer'])) {
             $this->loadState($customer);
             if ($customer->save(Yii::app()->db)) {
+                $customerLog = new CustomerLog();
+                $customerLog->name = $customer->header->name;
+                $customerLog->customer_type = $customer->header->customer_type;
+                $customerLog->coa_id = $customer->header->coa_id;
+                $customerLog->customer_id = $customer->header->id;
+                $customerLog->date_updated = date('Y-m-d');
+                $customerLog->time_updated = date('H:i:s');
+                $customerLog->user_updated_id =  Yii::app()->user->id;
+                $customerLog->save();
+                
                 $this->redirect(array('view', 'id' => $customer->header->id));
             } else {
                 foreach ($customer->phoneDetails as $key => $detail) {
