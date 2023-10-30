@@ -27,11 +27,11 @@ $this->menu=array(
         'clock_in',
         'clock_out',
         array(
-            'header' => 'duration_late',
+            'name' => 'duration_late',
             'value' => CHtml::encode(CHtml::value($model, 'lateTimeDiff')),
         ),
         array(
-            'header' => 'duration_work',
+            'name' => 'duration_work',
             'value' => CHtml::encode(CHtml::value($model, 'workTimeDiff')),
         ),
         array(
