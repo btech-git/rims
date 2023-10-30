@@ -28,6 +28,9 @@ $this->menu=array(
         'clock_out',
         'duration_late',
         'duration_work',
-        'employeeOnleaveCategory.name: Status',
+        array(
+            'label' => 'Status',
+            'value' => '$data->employeeOnleaveCategory->name',
+        ),
     ),
 )); ?>
