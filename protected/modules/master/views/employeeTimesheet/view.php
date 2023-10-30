@@ -30,7 +30,7 @@ $this->menu=array(
         'duration_work',
         array(
             'label' => 'Status',
-            'value' => '$data->employeeOnleaveCategory->name',
+            'value' => CHtml::encode(CHtml::value($model, 'employeeOnleaveCategory.name')),
         ),
     ),
 )); ?>
