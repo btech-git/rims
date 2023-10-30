@@ -36,8 +36,14 @@ class AccountingJournalSummaryController extends Controller {
         $criteria = new CDbCriteria();
         $criteria->order = 't.code ASC';
 
-        if (!empty($coaCategoryList) || !empty($coaSubCategoryList)) {
+        if (!empty($coaCategoryList) && !empty($coaSubCategoryList)) {
             $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ') OR t.id IN (' . implode(',', $coaSubCategoryList) . ')');
+            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
+        } elseif (!empty($coaCategoryList) && empty($coaSubCategoryList)) {
+            $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ')');
+            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
+        } elseif (empty($coaCategoryList) && !empty($coaSubCategoryList)) {
+            $criteria->addCondition('t.id IN (' . implode(',', $coaSubCategoryList) . ')');
             $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
         } else {
             $coaSubCategories = CoaSubCategory::model()->findAll(array(
