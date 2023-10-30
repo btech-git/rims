@@ -26,8 +26,14 @@ $this->menu=array(
         'date',
         'clock_in',
         'clock_out',
-        'duration_late',
-        'duration_work',
+        array(
+            'header' => 'duration_late',
+            'value' => CHtml::encode(CHtml::value($model, 'lateTimeDiff')),
+        ),
+        array(
+            'header' => 'duration_work',
+            'value' => CHtml::encode(CHtml::value($model, 'workTimeDiff')),
+        ),
         array(
             'label' => 'Status',
             'value' => CHtml::encode(CHtml::value($model, 'employeeOnleaveCategory.name')),
