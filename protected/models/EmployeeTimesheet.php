@@ -99,6 +99,12 @@ class EmployeeTimesheet extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.id DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
         ));
     }
 

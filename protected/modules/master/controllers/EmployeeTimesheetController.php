@@ -54,6 +54,25 @@ class EmployeeTimesheetController extends Controller {
         ));
     }
     
+    public function actionViewEmployeeDetail($employeeId) {
+        $employee = Employee::model()->findByPk($employeeId);
+        
+        $employeeTimesheet = new EmployeeTimesheet('search');
+        $employeeTimesheet->unsetAttributes();  // clear any default values
+        if (isset($_GET['EmployeeTimesheet'])) {
+            $employeeTimesheet->attributes = $_GET['EmployeeTimesheet'];
+        }
+
+        $dataProvider = $employeeTimesheet->search();
+        $dataProvider->criteria->compare('employee_id', $employeeId);
+
+        $this->render('viewEmployeeDetail', array(
+            'employee' => $employee,
+//            'employeeTimesheet' => $employeeTimesheet,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+    
     public function actionImport() {
         if (isset($_POST['Submit'])) {
             if ($_FILES['TimesheetImportFile']['error'] === UPLOAD_ERR_OK && is_uploaded_file($_FILES['TimesheetImportFile']['tmp_name'])) {

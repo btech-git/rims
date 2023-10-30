@@ -3,7 +3,7 @@
 /* @var $model EmployeeTimesheet */
 
 $this->breadcrumbs=array(
-	'Employee Timesheets'=>array('index'),
+	'Employee Timesheets'=>array('admin'),
 	$model->id,
 );
 
@@ -23,7 +23,10 @@ $this->menu=array(
     'attributes'=>array(
         'id',
         'employee.name',
-        'date',
+        array(
+            'name' => 'date',
+            'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::encode(CHtml::value($model, 'date'))),
+        ),
         'clock_in',
         'clock_out',
         array(

@@ -61,7 +61,11 @@ $('.search-form form').submit(function(){
             ),
             'columns' => array(
                 'employee.code',
-                'employee.name',
+                array(
+                    'name'=>'employee.name', 
+                    'value'=>'CHtml::link($data->employee->name, array("viewEmployeeDetail", "employeeId"=>$data->employee_id))', 
+                    'type'=>'raw'
+                ),
                 'date',
                 'clock_in',
                 'clock_out',
