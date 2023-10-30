@@ -16,15 +16,18 @@ $this->menu=array(
 );
 ?>
 
-<h1>View EmployeeTimesheet #<?php echo $model->id; ?></h1>
+<h1>View Employee Timesheet #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'date',
-		'clock_in',
-		'clock_out',
-		'employee_id',
-	),
+    'data'=>$model,
+    'attributes'=>array(
+        'id',
+        'employee.name',
+        'date',
+        'clock_in',
+        'clock_out',
+        'duration_late',
+        'duration_work',
+        'employeeOnleaveCategory.name',
+    ),
 )); ?>
