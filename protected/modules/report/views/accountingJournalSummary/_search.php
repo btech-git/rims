@@ -92,7 +92,7 @@
                 </div>
                 <div class="small-10 columns">
                     <?php echo CHtml::checkBoxList('CoaCategoryList', $coaCategoryList, CHtml::listData(CoaCategory::model()->findAll(array(
-                        'condition' => 'id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
+                        'condition' => 'id NOT IN (11, 12, 13, 18, 19, 20, 22, 1, 3)', 
                         'order' => 'code ASC'
                     )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
                 </div>
