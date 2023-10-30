@@ -328,7 +328,7 @@ class Employee extends CActiveRecord {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
                 FROM " . EmployeeTimesheet::model()->tableName() . "
-                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND duration_late <= 0 AND employee_onleave_category_id = 16
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 16
                 GROUP BY employee_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
