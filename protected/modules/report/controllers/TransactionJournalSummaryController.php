@@ -93,7 +93,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionJournalSummary = new TransactionJournalSummary($jurnalUmum->search());
         $transactionJournalSummary->setupLoading();
-        $transactionJournalSummary->setupPaging(1000, 1);
+        $transactionJournalSummary->setupPaging(10000, 1);
         $transactionJournalSummary->setupSorting();
         $transactionJournalSummary->setupFilter($startDate, $endDate, $coaId, $branchId);
 
