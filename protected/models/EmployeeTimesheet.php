@@ -75,6 +75,7 @@ class EmployeeTimesheet extends CActiveRecord {
             'employee_id' => 'Employee',
             'duration_late' => 'Durasi Telat',
             'duration_work' => 'Durasi Kerja',
+            'employee_onleave_category_id' => 'Status',
         );
     }
 
