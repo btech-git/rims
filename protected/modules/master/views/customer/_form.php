@@ -66,8 +66,18 @@
                         </div>			
                     </div>
                 </div>
-                <?php endif; ?>
 
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($customer->header, 'name'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($customer->header, 'name')); ?>
+                        </div>
+                    </div>			
+                </div>
+                <?php else: ?>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -79,6 +89,7 @@
                         </div>
                     </div>			
                 </div>
+                <?php endif; ?>
 
                 <div class="field">
                     <div class="row collapse">
