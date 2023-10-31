@@ -178,8 +178,21 @@ class VehicleController extends Controller {
 
         if (isset($_POST['Vehicle'])) {
             $model->attributes = $_POST['Vehicle'];
-            if ($model->save())
+            if ($model->save()) {
+                $vehicleLog = new VehicleLog();
+                $vehicleLog->vehicle_id = $model->id;
+                $vehicleLog->plate_number = $model->plate_number;
+                $vehicleLog->car_make_id = $model->car_make_id;
+                $vehicleLog->car_model_id = $model->car_model_id;
+                $vehicleLog->car_sub_model_id = $model->car_sub_model_id;
+                $vehicleLog->customer_id = $model->customer_id;
+                $vehicleLog->date_updated = date('Y-m-d');
+                $vehicleLog->time_updated = date('H:i:s');
+                $vehicleLog->user_updated_id =  Yii::app()->user->id;
+                $vehicleLog->save();
+                
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
