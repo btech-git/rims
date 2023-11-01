@@ -10,6 +10,7 @@
  * @property string $clock_out
  * @property string $duration_late
  * @property string $duration_work
+ * @property string $remarks
  * @property integer $employee_id
  * @property integer $employee_onleave_category_id
  *
@@ -44,10 +45,11 @@ class EmployeeTimesheet extends CActiveRecord {
             array('date, clock_in, employee_id, duration_late, duration_work,employee_onleave_category_id', 'required'),
             array('employee_id, employee_onleave_category_id', 'numerical', 'integerOnly' => true),
             array('duration_late, duration_work', 'length', 'max' => 18),
+            array('remarks', 'length', 'max' => 50),
             array('clock_out', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work, employee_onleave_category_id', 'safe', 'on' => 'search'),
+            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work, employee_onleave_category_id, remarks', 'safe', 'on' => 'search'),
         );
     }
 
@@ -100,7 +102,7 @@ class EmployeeTimesheet extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 't.id DESC',
+                'defaultOrder' => 't.date DESC',
             ),
             'pagination' => array(
                 'pageSize' => 50,

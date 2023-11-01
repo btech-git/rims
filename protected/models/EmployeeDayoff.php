@@ -15,6 +15,7 @@
  * @property string $user_id
  * @property string $status
  * @property string $off_type
+ * @property string $transaction_number
  * @property integer $employee_onleave_category_id
  *
  * The followings are the available model relations:
@@ -22,8 +23,9 @@
  * @property EmployeeOnleaveCategory $employeeOnleaveCategory
  * @property EmployeeDayoffApproval[] $employeeDayoffApprovals
  */
-class EmployeeDayoff extends CActiveRecord {
+class EmployeeDayoff extends MonthlyTransactionActiveRecord {
 
+    const CONSTANT = 'EDO';
     /**
      * @return string the associated database table name
      */
@@ -40,13 +42,14 @@ class EmployeeDayoff extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('employee_id, employee_onleave_category_id, day, notes, date_from, date_to, off_type, date_created, time_created, user_id', 'required'),
+            array('employee_id, employee_onleave_category_id, day, notes, date_from, date_to, off_type, date_created, time_created, user_id, transaction_number', 'required'),
             array('employee_id, employee_onleave_category_id, user_id', 'numerical', 'integerOnly' => true),
             array('day', 'numerical'),
             array('status, off_type', 'length', 'max' => 30),
+            array('transaction_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, employee_id, employee_onleave_category_id, day, notes, date_from, date_to, status, off_type,employee_name, date_created, time_created, user_id', 'safe', 'on' => 'search'),
+            array('id, employee_id, employee_onleave_category_id, day, notes, date_from, date_to, status, off_type,employee_name, date_created, time_created, user_id, transaction_number', 'safe', 'on' => 'search'),
         );
     }
 
@@ -126,6 +129,27 @@ class EmployeeDayoff extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    public function generateCodeNumber($currentMonth, $currentYear) {
+        $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
+        $cnYearCondition = "substring_index(substring_index(substring_index(transaction_number, '/', 2), '/', -1), '.', 1)";
+        $cnMonthCondition = "substring_index(substring_index(substring_index(transaction_number, '/', 2), '/', -1), '.', -1)";
+        $employeeDayoff = EmployeeDayoff::model()->find(array(
+            'order' => ' id DESC',
+            'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month",
+            'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth]),
+        ));
+
+        if ($employeeDayoff == null) {
+//            $branchCode = Branch::model()->findByPk(6)->code;
+        } else {
+//            $branchCode = Branch::model()->findByPk(6)->code;
+//            $branchCode = $employeeDayoff->branch->code;
+            $this->transaction_number = $employeeDayoff->transaction_number;
+        }
+
+        $this->setCodeNumberByNext('transaction_number', 'R-0', self::CONSTANT, $currentMonth, $currentYear);
     }
 
 }

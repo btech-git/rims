@@ -119,6 +119,7 @@ class EmployeeDayoffController extends Controller {
         ));
         if (isset($_POST['EmployeeDayoff'])) {
             $model->attributes = $_POST['EmployeeDayoff'];
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->date_created)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->date_created)));
             
             $valid = true;
             if ($model->employeeOnleaveCategory->number_of_days > 0) {
@@ -131,22 +132,22 @@ class EmployeeDayoffController extends Controller {
             
             if ($valid && $model->save()) {
 
-                $start_date = $model->date_from;
-                $end_date = date('Y-m-d', strtotime($model->date_to . " +1 days"));
-                $interval = new DateInterval('P1D');
-                $date_range = new DatePeriod(new DateTime($start_date), $interval, new DateTime($end_date));
-
-                foreach ($date_range as $date) {
-                    $employeeTimesheet = new EmployeeTimesheet();
-                    $employeeTimesheet->date = date_format($date, 'Y-m-d');
-                    $employeeTimesheet->clock_in = '00:00:00';
-                    $employeeTimesheet->clock_out = '00:00:00';
-                    $employeeTimesheet->employee_id = $model->employee_id;
-                    $employeeTimesheet->duration_late = 0;
-                    $employeeTimesheet->duration_work = 0;
-                    $employeeTimesheet->employee_onleave_category_id = $model->employee_onleave_category_id;
-                    $employeeTimesheet->save();
-                }
+//                $start_date = $model->date_from;
+//                $end_date = date('Y-m-d', strtotime($model->date_to . " +1 days"));
+//                $interval = new DateInterval('P1D');
+//                $date_range = new DatePeriod(new DateTime($start_date), $interval, new DateTime($end_date));
+//
+//                foreach ($date_range as $date) {
+//                    $employeeTimesheet = new EmployeeTimesheet();
+//                    $employeeTimesheet->date = date_format($date, 'Y-m-d');
+//                    $employeeTimesheet->clock_in = '00:00:00';
+//                    $employeeTimesheet->clock_out = '00:00:00';
+//                    $employeeTimesheet->employee_id = $model->employee_id;
+//                    $employeeTimesheet->duration_late = 0;
+//                    $employeeTimesheet->duration_work = 0;
+//                    $employeeTimesheet->employee_onleave_category_id = $model->employee_onleave_category_id;
+//                    $employeeTimesheet->save();
+//                }
                 
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -197,6 +198,8 @@ class EmployeeDayoffController extends Controller {
         ));
         if (isset($_POST['EmployeeDayoff'])) {
             $model->attributes = $_POST['EmployeeDayoff'];
+            $model->status = 'Draft';
+            
             if ($model->save()) {
                 $start_date = $model->date_from;
                 $end_date = date('Y-m-d', strtotime($model->date_to . " +1 days"));
@@ -206,19 +209,9 @@ class EmployeeDayoffController extends Controller {
                 foreach ($date_range as $date) {
                     EmployeeTimesheet::model()->deleteAllByAttributes(array(
                         'employee_id' => $model->employee_id,
-                        'date' => date_format($date, 'Y-m-d'),
+                        'remarks' => $model->transaction_number,
                         'employee_onleave_category_id' => $model->employee_onleave_category_id,
                     ));
-
-                    $employeeTimesheet = new EmployeeTimesheet();
-                    $employeeTimesheet->date = date_format($date, 'Y-m-d');
-                    $employeeTimesheet->clock_in = '00:00:00';
-                    $employeeTimesheet->clock_out = '00:00:00';
-                    $employeeTimesheet->employee_id = $model->employee_id;
-                    $employeeTimesheet->duration_late = 0;
-                    $employeeTimesheet->duration_work = 0;
-                    $employeeTimesheet->employee_onleave_category_id = $model->employee_onleave_category_id;
-                    $employeeTimesheet->save();
                 }
                 
                 $this->redirect(array('view', 'id' => $model->id));
@@ -327,6 +320,24 @@ class EmployeeDayoffController extends Controller {
                 $dayOff->status = $model->approval_type;
                 $dayOff->save();
 
+                $start_date = $dayOff->date_from;
+                $end_date = date('Y-m-d', strtotime($dayOff->date_to . " +1 days"));
+                $interval = new DateInterval('P1D');
+                $date_range = new DatePeriod(new DateTime($start_date), $interval, new DateTime($end_date));
+
+                foreach ($date_range as $date) {
+                    $employeeTimesheet = new EmployeeTimesheet();
+                    $employeeTimesheet->date = date_format($date, 'Y-m-d');
+                    $employeeTimesheet->clock_in = '00:00:00';
+                    $employeeTimesheet->clock_out = '00:00:00';
+                    $employeeTimesheet->employee_id = $dayOff->employee_id;
+                    $employeeTimesheet->duration_late = 0;
+                    $employeeTimesheet->duration_work = 0;
+                    $employeeTimesheet->remarks = $dayOff->transaction_number;
+                    $employeeTimesheet->employee_onleave_category_id = $dayOff->employee_onleave_category_id;
+                    $employeeTimesheet->save();
+                }
+                
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
