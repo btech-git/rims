@@ -164,9 +164,9 @@ class JournalAdjustmentController extends Controller {
         $model->date = date('Y-m-d');
         $model->time = date('H:i:s');
 
-//        JurnalUmum::model()->deleteAllByAttributes(array(
-//            'kode_transaksi' => $journalVoucher->transaction_number,
-//        ));
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $journalVoucher->transaction_number,
+        ));
 
         if (isset($_POST['JournalAdjustmentApproval'])) {
             $model->attributes = $_POST['JournalAdjustmentApproval'];
