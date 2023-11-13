@@ -964,5 +964,4 @@ class Coa extends CActiveRecord {
         
         return $resultSet;
     }
-    
 }

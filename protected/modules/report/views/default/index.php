@@ -198,6 +198,11 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
+                                        'label' => 'Penjualan Summary', 
+                                        'url' => array('/report/saleInvoiceSummary/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
+                                    array(
                                         'label' => 'Penjualan per Pelanggan', 
                                         'url' => array('/report/saleRetailCustomer/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
@@ -297,6 +302,11 @@
                             <h2>Pembelian</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
+                                    array(
+                                        'label' => 'Pembelian Summary', 
+                                        'url' => array('/report/purchaseInvoiceSummary/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('purchaseSupplierSummaryReport'))
+                                    ),
                                     array(
                                         'label' => 'Pembelian per Pemasok', 
                                         'url' => array('/report/purchaseSummary/summary'), 

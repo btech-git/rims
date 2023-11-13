@@ -28,7 +28,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
     <br />
 
-    <table style="width: 80%; margin: 0 auto; border-spacing: 0pt">
+    <table style="width: 95%; margin: 0 auto; border-spacing: 0pt">
         <thead>
             <tr>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Tanggal</th>
@@ -44,57 +44,59 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <tbody>
             <?php foreach ($stockCardSummary->dataProvider->data as $header): ?>
-                <tr class="items1">
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?></td>
-                    <td style="text-align: right; font-weight: bold">
-                        <?php $stock = $header->getBeginningStockReport($startDate); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
-                    </td>
-                    
-                    <td>&nbsp;</td>
-                </tr>
-                
-                <?php $stockData = $header->getInventoryStockReport($startDate, $endDate); ?>
-                <?php $totalStockIn = 0; ?>
-                <?php $totalStockOut = 0; ?>
-                <?php foreach ($stockData as $stockRow): ?>
-                    <?php $transactionNumber = $stockRow['transaction_number']; ?>
-                    <?php $stockIn = $stockRow['stock_in']; ?>
-                    <?php $stockOut = $stockRow['stock_out']; ?>
-                    <?php $stock += $stockIn + $stockOut; ?>
-                    <?php $inventoryValue = $stockRow['purchase_price'] * $stock; ?>
-                    <tr class="items2">
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
-                        <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
-                        <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
-                        <td><?php echo CHtml::encode($stockRow['name']); ?></td>
-                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
-                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
+                <?php $stock = $header->getBeginningStockReport($startDate, $branchId); ?>
+                <?php if ($stock > 0): ?>
+                    <tr class="items1">
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?></td>
+                        <td style="text-align: right; font-weight: bold">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
+                        </td>
+
+                        <td>&nbsp;</td>
                     </tr>
-                    <?php $totalStockIn += $stockIn; ?>
-                    <?php $totalStockOut += $stockOut; ?>
-                <?php endforeach; ?>
-                    
-                <tr>
-                    <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
-                    <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                        <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockIn); ?>
-                    </td>
-                    <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                        <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockOut); ?>
-                    </td>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="8">&nbsp;</td>
-                </tr>
+
+                    <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); ?>
+                    <?php $totalStockIn = 0; ?>
+                    <?php $totalStockOut = 0; ?>
+                    <?php foreach ($stockData as $stockRow): ?>
+                        <?php $transactionNumber = $stockRow['transaction_number']; ?>
+                        <?php $stockIn = $stockRow['stock_in']; ?>
+                        <?php $stockOut = $stockRow['stock_out']; ?>
+                        <?php $stock += $stockIn + $stockOut; ?>
+                        <?php $inventoryValue = $stockRow['purchase_price'] * $stock; ?>
+                        <tr class="items2">
+                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
+                            <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
+                            <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
+                            <td><?php echo CHtml::encode($stockRow['name']); ?></td>
+                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
+                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
+                        </tr>
+                        <?php $totalStockIn += $stockIn; ?>
+                        <?php $totalStockOut += $stockOut; ?>
+                    <?php endforeach; ?>
+
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
+                        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+                            <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockIn); ?>
+                        </td>
+                        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+                            <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockOut); ?>
+                        </td>
+                        <td colspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">&nbsp;</td>
+                    </tr>
+                <?php endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

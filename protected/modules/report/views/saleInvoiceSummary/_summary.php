@@ -27,7 +27,6 @@
         <th class="width1-4">Customer</th>
         <th class="width1-5">Type</th>
         <th class="width1-6">Vehicle</th>
-        <th class="width1-7">Branch</th>
         <th class="width1-8">Grand Total</th>
         <th class="width1-9">Payment</th>
         <th class="width1-10">Remaining</th>
@@ -45,18 +44,17 @@
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
             <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'customer.customer_type')); ?></td>
             <td class="width1-6" style="text-align: right"><?php echo CHtml::encode($header->vehicle->plate_number); ?></td>
-            <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'branch.code')); ?></td>
             <td class="width1-8" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->total_price))); ?></td>
             <td class="width1-9" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->payment_amount))); ?></td>
             <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->payment_left))); ?></td>
             <td class="width1-11" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
         </tr>
         <tr class="items2">
-            <td colspan="11">&nbsp;</td>
+            <td colspan="10">&nbsp;</td>
         </tr>
     <?php endforeach; ?>
     <tr id="header1">
-        <td colspan="7" style="text-align: right; font-weight: bold">TOTAL</td>
+        <td colspan="6" style="text-align: right; font-weight: bold">TOTAL</td>
         <td class="width1-8" style="text-align: right; font-weight: bold"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $this->reportGrandTotal($saleInvoiceSummary->dataProvider))); ?></td>
         <td class="width1-9" style="text-align: right; font-weight: bold"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $this->reportTotalPayment($saleInvoiceSummary->dataProvider))); ?></td>
         <td class="width1-10" style="text-align: right; font-weight: bold"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $this->reportTotalRemaining($saleInvoiceSummary->dataProvider))); ?></td>

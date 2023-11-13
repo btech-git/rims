@@ -72,6 +72,7 @@ $('.search-form form').submit(function(){
                     'header' => 'Selected',	
                     'value' => '$data->id',				
                 ),
+                'id',
                 array(
                     'name'=>'plate_number', 
                     'value'=>'CHTml::link($data->plate_number, array("view", "id"=>$data->id))', 

@@ -29,6 +29,7 @@ class StockCardController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $stockCardSummary = new StockCardSummary($product->search());
         $stockCardSummary->setupLoading();
@@ -54,6 +55,7 @@ class StockCardController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'branchId' => $branchId,
         ));
     }
 

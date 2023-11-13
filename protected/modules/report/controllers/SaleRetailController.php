@@ -29,6 +29,7 @@ class SaleRetailController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -40,6 +41,7 @@ class SaleRetailController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'branchId' => $branchId,
         );
         $saleRetailSummary->setupFilter($filters);
 
@@ -57,6 +59,7 @@ class SaleRetailController extends Controller {
             'customerDataProvider' => $customerDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'branchId' => $branchId,
             'currentSort' => $currentSort,
         ));
     }
