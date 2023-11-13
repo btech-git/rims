@@ -375,7 +375,7 @@ class TransactionSentRequestController extends Controller {
 
         foreach ($sentRequest->transactionSentRequestDetails as $detail) {
 //            $hppPrice = $detail->product->hpp * $detail->quantity;
-            $hppPrice = $sentRequest->total_price;
+            $hppPrice = $detail->unit_price * $detail->quantity;
 
             //save coa persediaan product master
             $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
