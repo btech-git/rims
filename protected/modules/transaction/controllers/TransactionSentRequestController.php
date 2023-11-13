@@ -374,7 +374,8 @@ class TransactionSentRequestController extends Controller {
         $jurnalUmumInterbranchDestination->save();
 
         foreach ($sentRequest->transactionSentRequestDetails as $detail) {
-            $hppPrice = $detail->product->hpp * $detail->quantity;
+//            $hppPrice = $detail->product->hpp * $detail->quantity;
+            $hppPrice = $sentRequest->total_price;
 
             //save coa persediaan product master
             $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;

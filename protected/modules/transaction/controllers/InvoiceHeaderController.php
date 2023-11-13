@@ -66,7 +66,7 @@ class InvoiceHeaderController extends Controller {
                 $transactionCode = $model->invoice_number;
                 $transactionDate = $model->invoice_date;
                 $branchId = $model->branch_id;
-                $transactionSubject = $model->note;
+                $transactionSubject = $model->customer->name;
                 
                 if ($model->registrationTransaction->repair_type == 'GR') {
                     $coaReceivableId = ($model->customer->customer_type == 'Company') ? $model->customer->coa_id : 1449;
