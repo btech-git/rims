@@ -284,7 +284,7 @@ class TransactionJournalController extends Controller {
             $model = StockAdjustmentHeader::model()->findByAttributes(array('stock_adjustment_number' => $codeNumber));
             $this->redirect(array('/frontDest/adjustment/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'DAS') {
-            $model = AssetDepreciation::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $model = AssetDepreciationHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->asset_purchase_id));
         } else if ($codeNumberConstant === 'SAS') {
             $model = AssetSale::model()->findByAttributes(array('transaction_number' => $codeNumber));
