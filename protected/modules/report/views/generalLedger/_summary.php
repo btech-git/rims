@@ -1,9 +1,8 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-	.width1-1 { width: 50% }
-	.width1-2 { width: 15% }
-	.width1-3 { width: 15% }
-	.width1-4 { width: 20% }
+	.width1-1 { width: 5% }
+	.width1-2 { width: 50% }
+	.width1-3 { width: 20% }
 
 	.width2-1 { width: 17% }
 	.width2-2 { width: 12% }
@@ -24,10 +23,12 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <table class="report">
     <tr id="header1">
-        <th class="width1-1" style ="text-align: left;">Akun</th>
+        <th class="width1-1"></th>
+        <th class="width1-2">Akun</th>
+        <th class="width1-3" style ="text-align: right;">Saldo Awal</th>
     </tr>
     <tr id="header2">
-        <td colspan="4">
+        <td colspan="3">
             <table>
                 <tr>
                     <th class="width2-1">Transaksi</th>
@@ -41,7 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </table>
         </td>
     </tr>
-    <?php foreach ($generalLedgerSummary->dataProvider->data as $header): ?>
+    <?php foreach ($generalLedgerSummary->dataProvider->data as $i => $header): ?>
         <?php $beginningBalance = $header->getBeginningBalanceLedger($startDate); ?>
         <?php /*$nonZeroValueExists = false; ?>
         <?php if ((int)$beginningBalance > 0): ?>
@@ -50,22 +51,20 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php endif; */?>
         <?php if ((int)$beginningBalance !== 0): ?>
             <tr class="items1">
+                <td><?php echo $i + 1; ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <td style="text-align: right; font-weight: bold">
+                    <?php //if ($header->coa_category_id > 5 && $header->coa_category_id < 11): ?>
+                        <?php //echo '0'; ?>
+                    <?php //else: ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $beginningBalance)); ?>
+                    <?php //endif; ?>
+                </td>
             </tr>
 
             <tr class="items2">
-                <td colspan="4">
+                <td colspan="3">
                     <table>
-                        <tr>
-                            <td colspan="6" style="text-align: right; font-weight: bold">Saldo awal</td>
-                            <td class="width2-7" style="text-align: right; font-weight: bold">
-                                <?php //if ($header->coa_category_id > 5 && $header->coa_category_id < 11): ?>
-                                    <?php //echo '0'; ?>
-                                <?php //else: ?>
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $beginningBalance)); ?>
-                                <?php //endif; ?>
-                            </td>
-                        </tr>
                         <?php $generalLedgerData = $header->getGeneralLedgerReport($startDate, $endDate, $branchId); ?>
                         <?php $totalDebit = 0; $totalCredit = 0; ?>
                         <?php foreach ($generalLedgerData as $generalLedgerRow): ?>

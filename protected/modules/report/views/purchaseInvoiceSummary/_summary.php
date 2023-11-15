@@ -43,9 +43,6 @@
             <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->payment_left))); ?></td>
             <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
         </tr>
-        <tr class="items2">
-            <td colspan="8">&nbsp;</td>
-        </tr>
     <?php endforeach; ?>
     <tr id="header1">
         <td colspan="4" style="text-align: right; font-weight: bold">TOTAL</td>
