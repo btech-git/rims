@@ -46,7 +46,7 @@ class StockCardController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($stockCardSummary, $startDate, $endDate);
+            $this->saveToExcel($stockCardSummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -125,7 +125,7 @@ class StockCardController extends Controller {
             $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
         }
     }
-    protected function saveToExcel($stockCardSummary, $startDate, $endDate) {
+    protected function saveToExcel($stockCardSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -179,10 +179,10 @@ class StockCardController extends Controller {
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'subBrand.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'subBrandSeries.name'));
             $worksheet->getStyle("G{$counter}")->getFont()->setBold(true);
-            $saldo = $header->getBeginningStockReport($startDate); 
-            $worksheet->setCellValue("G{$counter}", $header->getBeginningStockReport($startDate));
+            $saldo = $header->getBeginningStockReport($startDate, $branchId); 
+            $worksheet->setCellValue("G{$counter}", $saldo);
             
-            $stockData = $header->getInventoryStockReport($startDate, $endDate); 
+            $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); 
             $totalStockIn = 0;
             $totalStockOut = 0;
             

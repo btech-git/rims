@@ -54,7 +54,7 @@ class SaleInvoiceSummaryController extends Controller {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveToExcel'])) {
+        if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate);
         }
 

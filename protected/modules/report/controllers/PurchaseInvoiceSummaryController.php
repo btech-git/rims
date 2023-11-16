@@ -50,7 +50,7 @@ class PurchaseInvoiceSummaryController extends Controller {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveToExcel'])) {
+        if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($purchaseInvoiceSummary, $startDate, $endDate);
         }
 
@@ -122,10 +122,10 @@ class PurchaseInvoiceSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penjualan Summary');
+        $documentProperties->setTitle('Laporan Faktur Pembelian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Penjualan Summary');
+        $worksheet->setTitle('Laporan Faktur Pembelian');
 
         $worksheet->mergeCells('A1:K1');
         $worksheet->mergeCells('A2:K2');
@@ -135,50 +135,47 @@ class PurchaseInvoiceSummaryController extends Controller {
         $worksheet->getStyle('A1:K3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:K3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Summary');
+        $worksheet->setCellValue('A2', 'Laporan Faktur Pembelian');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A6:K6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:K6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->getStyle('A6:K6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Jatuh Tempo');
+        $worksheet->setCellValue('A6', 'Faktur #');
+        $worksheet->setCellValue('B6', 'Tanggal');
+        $worksheet->setCellValue('C6', 'Type');
         $worksheet->setCellValue('D6', 'Supplier');
-        $worksheet->setCellValue('E6', 'Type');
-        $worksheet->setCellValue('F6', 'Vehicle');
-        $worksheet->setCellValue('G6', 'Branch');
-        $worksheet->setCellValue('H6', 'Grand Total');
-        $worksheet->setCellValue('I6', 'Payment');
-        $worksheet->setCellValue('J6', 'Remaining');
-        $worksheet->setCellValue('K6', 'Status');
+        $worksheet->setCellValue('E6', 'Grand Total');
+        $worksheet->setCellValue('F6', 'Payment');
+        $worksheet->setCellValue('G6', 'Remaining');
+        $worksheet->setCellValue('H6', 'Status');
 
         $counter = 7;
 
         foreach ($purchaseInvoiceSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->invoice_date);
-            $worksheet->setCellValue("B{$counter}", $header->invoice_number);
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
+            $worksheet->setCellValue("A{$counter}", $header->purchase_order_no);
+            $worksheet->setCellValue("B{$counter}", $header->purchase_order_date);
+            $worksheet->setCellValue("C{$counter}", $header->getPurchaseStatus($header->purchase_type));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'supplier.company')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'supplier.supplier_type'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'branch.code')));
-            $worksheet->setCellValue("H{$counter}", $header->total_price);
-            $worksheet->setCellValue("I{$counter}", $header->payment_amount);
-            $worksheet->setCellValue("J{$counter}", $header->payment_left);
-            $worksheet->setCellValue("K{$counter}", $header->status);
+            $worksheet->setCellValue("E{$counter}", $header->total_price);
+            $worksheet->setCellValue("F{$counter}", $header->payment_amount);
+            $worksheet->setCellValue("G{$counter}", $header->payment_left);
+            $worksheet->setCellValue("H{$counter}", $header->status_document);
 
             $counter++;
         }
 
         $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
 
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("H{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->setCellValue("F{$counter}", 'Total Penjualan');
-        $worksheet->setCellValue("G{$counter}", 'Rp');
-        $worksheet->setCellValue("H{$counter}", $this->reportGrandTotal($purchaseInvoiceSummary->dataProvider));
+        $worksheet->mergeCells("A{$counter}:C{$counter}");
+        $worksheet->setCellValue("A{$counter}", 'Total Pembelian');
+        $worksheet->setCellValue("D{$counter}", 'Rp');
+        $worksheet->setCellValue("E{$counter}", $this->reportGrandTotal($purchaseInvoiceSummary->dataProvider));
+        $worksheet->setCellValue("F{$counter}", $this->reportTotalPayment($purchaseInvoiceSummary->dataProvider));
+        $worksheet->setCellValue("G{$counter}", $this->reportTotalRemaining($purchaseInvoiceSummary->dataProvider));
 
         $counter++;
 
@@ -191,7 +188,7 @@ class PurchaseInvoiceSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Faktur Penjualan.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Faktur Pembelian.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
