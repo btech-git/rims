@@ -102,7 +102,7 @@ class CoaController extends Controller {
         if (isset($_POST['Coa'])) {
             $model->attributes = $_POST['Coa'];
             $model->coa_category_id = $model->coaSubCategory->coa_category_id;
-            $model->getCodeNumber($model->coa_sub_category_id);
+            $model->getCodeNumber($model->coa_sub_category_id, $model->coaSubCategory->code, $model->coaCategory->code);
 
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
