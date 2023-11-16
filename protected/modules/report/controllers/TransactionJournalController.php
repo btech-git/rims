@@ -37,7 +37,7 @@ class TransactionJournalController extends Controller {
         $jurnalUmumSummary->setupLoading();
         $jurnalUmumSummary->setupPaging($pageSize, $currentPage);
         $jurnalUmumSummary->setupSorting();
-        $jurnalUmumSummary->setupFilter($startDate, $endDate, $branchId, $companyId);
+        $jurnalUmumSummary->setupFilter($startDate, $endDate, $branchId);
 
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $accountDataProvider = $account->search();
