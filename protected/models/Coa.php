@@ -284,16 +284,17 @@ class Coa extends CActiveRecord {
             'condition' => 'coa_sub_category_id = :coa_sub_category_id AND is_approved = 1',
             'params' => array(':coa_sub_category_id' => $coaSubCategory),
         ));
- 
-            
+
         if (empty($lastCode)) {
-            $currentCode = 0;
-            $subCategoryCode = $this->coaSubCategory->code;
-        } else {
-            list($subCategoryCode, $currentCode) = explode('.', $lastCode->code);
+            $lastCode = CoaSubCategory::model()->find(array(
+                'condition' => 'id = :id',
+                'params' => array(':id' => $coaSubCategory),
+            ));
         }
         
-        $this->code = sprintf('%s.%03d', $subCategoryCode, $currentCode + 1);
+        list($categoryCode, $subCategoryCode, $currentCode) = explode('.', $lastCode->code);
+        
+        $this->code = sprintf('%s.%s.%03d', $categoryCode, $subCategoryCode, $currentCode + 1);
     }
 
     public function searchByDailyTransaction($pageNumber) {
