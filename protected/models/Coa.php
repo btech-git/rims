@@ -285,10 +285,10 @@ class Coa extends CActiveRecord {
             'params' => array(':coa_sub_category_id' => $coaSubCategory),
         ));
 
-        list($categoryCode, $subCategoryCode, $currentCode) = explode('.', $lastCode->code);
-
         if (empty($lastCode)) {
             $currentCode = 0;
+        } else {
+            list($categoryCode, $subCategoryCode, $currentCode) = explode('.', $lastCode->code);            
         }
         
         $this->code = sprintf('%s.%s.%03d', $categoryCode, $subCategoryCode, $currentCode + 1);

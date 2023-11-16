@@ -83,20 +83,20 @@
                 </div>
             </div>
 
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($model,'status'); ?>
+                        <?php /*echo $form->labelEx($model,'status'); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->dropDownlist($model,'status',array(
                             'Approved'=>'Approved',
                             'Not Approved'=>'Not Approved'
                         )); ?>
-                        <?php echo $form->error($model,'status'); ?>
+                        <?php echo $form->error($model,'status');*/ ?>
                     </div>
                 </div>
-            </div>	
+            </div>-->
 
             <div class="field buttons text-center">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class'=>'button cbutton')); ?>

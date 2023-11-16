@@ -93,6 +93,7 @@ class CoaController extends Controller {
         $model->time_created = date('H:i:s');
         $model->date_approval = null;
         $model->time_approval = null;
+        $model->status = 'Not Approved';
         $model->user_id = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
