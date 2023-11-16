@@ -288,13 +288,12 @@ class Coa extends CActiveRecord {
             
         if (empty($lastCode)) {
             $currentCode = 0;
-            $categoryCode = $this->coaCategory->code;
             $subCategoryCode = $this->coaSubCategory->code;
         } else {
-            list($categoryCode, $subCategoryCode, $currentCode) = explode('.', $lastCode->code);
+            list($subCategoryCode, $currentCode) = explode('.', $lastCode->code);
         }
         
-        $this->code = sprintf('%s.%s.%03d', $categoryCode, $subCategoryCode, $currentCode + 1);
+        $this->code = sprintf('%s.%03d', $subCategoryCode, $currentCode + 1);
     }
 
     public function searchByDailyTransaction($pageNumber) {
