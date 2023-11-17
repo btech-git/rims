@@ -20,7 +20,7 @@ class GeneralLedgerController extends Controller {
 
     public function actionSummary() {
         set_time_limit(0);
-        ini_set('memory_limit', '10240M');
+        ini_set('memory_limit', '102400M');
         
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
 
