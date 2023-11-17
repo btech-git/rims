@@ -66,11 +66,13 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td colspan="3">
                     <table>
                         <?php $generalLedgerData = $header->getGeneralLedgerReport($startDate, $endDate, $branchId); ?>
-                        <?php $totalDebit = 0; $totalCredit = 0; ?>
+                        <?php $totalDebit = 0; ?>
+                        <?php $totalCredit = 0; ?>
+                        <?php $currentBalance = $beginningBalance; ?>
                         <?php foreach ($generalLedgerData as $generalLedgerRow): ?>
                             <?php $debitAmount = $generalLedgerRow['debet_kredit'] == 'D' ? $generalLedgerRow['total'] : 0 ?>
                             <?php $creditAmount = $generalLedgerRow['debet_kredit'] == 'K' ? $generalLedgerRow['total'] : 0 ?>
-                            <?php $accountBalance = $beginningBalance + $debitAmount - $creditAmount; ?>
+                            <?php $currentBalance += $debitAmount - $creditAmount; ?>
                             <tr>
                                 <td class="width2-1">
                                     <?php echo CHtml::link($generalLedgerRow['kode_transaksi'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $generalLedgerRow['kode_transaksi'])), array('target' => '_blank')); ?>
@@ -91,7 +93,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
                                 </td>
                                 <td class="width2-7" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountBalance)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $currentBalance)); ?>
                                 </td>
                             </tr>
                             <?php $totalDebit += $debitAmount; ?>
