@@ -209,13 +209,14 @@ class GeneralLedgerController extends Controller {
             $generalLedgerData = $header->getGeneralLedgerReport($startDate, $endDate, $branchId);
             $totalDebit = 0; 
             $totalCredit = 0;
+            $accountBalance = $beginningBalance;
             foreach ($generalLedgerData as $generalLedgerRow) {
                 $worksheet->getStyle("A{$counter}:D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
                 $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
                 $debitAmount = $generalLedgerRow['debet_kredit'] == 'D' ? $generalLedgerRow['total'] : 0;
                 $creditAmount = $generalLedgerRow['debet_kredit'] == 'K' ? $generalLedgerRow['total'] : 0;
-                $accountBalance = $beginningBalance + $debitAmount - $creditAmount;
+                $accountBalance += $debitAmount - $creditAmount;
                 $worksheet->setCellValue("A{$counter}", CHtml::encode($generalLedgerRow['kode_transaksi']));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($generalLedgerRow['tanggal_transaksi']))));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode($generalLedgerRow['transaction_subject']));
