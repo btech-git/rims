@@ -86,7 +86,7 @@ class TransactionJournalSummaryController extends Controller {
         $transactionJournalSummary->setupLoading();
         $transactionJournalSummary->setupPaging(10000, 1);
         $transactionJournalSummary->setupSorting();
-        $transactionJournalSummary->setupFilter($startDate, $endDate, $coaId, $branchId);
+        $transactionJournalSummary->setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId);
 
         if (isset($_GET['SaveToExcel'])) {
             $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId);

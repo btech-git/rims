@@ -53,13 +53,13 @@
                             <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance): ?>
                                 <tr>
                                     <td style="font-size: 10px">
-                                        <?php echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
+                                        <?php /*echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
                                         <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/transactionJournalSummary/jurnalTransaction", array(
                                             "CoaId" => $account->id, 
                                             "StartDate" => $startDate, 
                                             "EndDate" => $endDate, 
                                             "BranchId" => $branchId
-                                        )), array('target' => '_blank')); ?>
+                                        )), array('target' => '_blank'));*/ ?>
                                     </td>
                                     <td style="text-align: right; font-size: 10px">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalDebitBalance)); ?>
