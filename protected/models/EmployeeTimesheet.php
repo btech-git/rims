@@ -110,6 +110,31 @@ class EmployeeTimesheet extends CActiveRecord {
         ));
     }
 
+    public function searchByReport() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('date', $this->date, true);
+        $criteria->compare('clock_in', $this->clock_in, true);
+        $criteria->compare('clock_out', $this->clock_out, true);
+        $criteria->compare('employee_id', $this->employee_id);
+        $criteria->compare('duration_late', $this->clock_in, true);
+        $criteria->compare('duration_work', $this->clock_out, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+
     public function getLateTimeDiff() {
         $durationLate = $this->duration_late;
         $hours = $durationLate > 0 ? floor($durationLate / 3600) : 00;

@@ -2,7 +2,6 @@
 
 class GeneralLedgerController extends Controller {
 
-    public $layout = '//layouts/column1';
     public function filters() {
         return array(
             'access',
@@ -20,7 +19,7 @@ class GeneralLedgerController extends Controller {
 
     public function actionSummary() {
         set_time_limit(0);
-        ini_set('memory_limit', '102400M');
+        ini_set('memory_limit', '1024M');
         
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
 

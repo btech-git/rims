@@ -2,7 +2,7 @@
     <div style="font-size: larger">Laporan Rekap Daftar Hadir Karyawan</div>
     <div>
         <?php //echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($yearMonth))); ?>
-        <?php echo 'Tanggal Mulai:' . Yii::app()->dateFormatter->format("d MMMM yyyy", $startDate) . ' Sampai ' . Yii::app()->dateFormatter->format("d MMMM yyyy", $endDate); ?>
+        <?php echo 'Tanggal: ' . Yii::app()->dateFormatter->format("d MMMM yyyy", $startDate) . ' - ' . Yii::app()->dateFormatter->format("d MMMM yyyy", $endDate); ?>
     </div>
 </div>
 
@@ -33,7 +33,13 @@
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($employee, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($employee, 'code')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></td>
+                <td>
+                    <?php echo CHtml::link($employee->name, Yii::app()->createUrl("report/employeeAttendance/attendanceDetail", array(
+                        "EmployeeId" => $employee->id, 
+                        "StartDate" => $startDate, 
+                        "EndDate" => $endDate, 
+                    )), array('target' => '_blank')); ?>
+                </td>
                 <td><?php echo CHtml::encode($employee->getTotalWorkingDay($startDate, $endDate)); ?></td>
                 <td><?php echo CHtml::encode($employee->getTotalLateDay($startDate, $endDate)); ?></td>
                 <td><?php echo CHtml::encode($employee->getTotalDayOff($startDate, $endDate)); ?></td>

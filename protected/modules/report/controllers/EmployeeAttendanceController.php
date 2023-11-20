@@ -47,34 +47,41 @@ class EmployeeAttendanceController extends Controller {
         ));
     }
 
-    public function actionJurnalTransaction() {
+    public function actionAttendanceDetail() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $jurnalUmum = new JurnalUmum('search');
-
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $employeeId = (isset($_GET['EmployeeId'])) ? $_GET['EmployeeId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $transactionJournalSummary = new TransactionJournalSummary($jurnalUmum->search());
-        $transactionJournalSummary->setupLoading();
-        $transactionJournalSummary->setupPaging(1000, 1);
-        $transactionJournalSummary->setupSorting();
-        $transactionJournalSummary->setupFilter($startDate, $endDate, $coaId, $branchId);
-
-        if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId);
+        $employeeTimesheet = new EmployeeTimesheet('search');
+        $employeeTimesheet->unsetAttributes();
+        
+        if (isset($_GET['EmployeeTimesheet'])) {
+            $employeeTimesheet->attributes = $_GET['EmployeeTimesheet'];
         }
 
-        $this->render('jurnalTransaction', array(
-            'jurnalUmum' => $jurnalUmum,
-            'transactionJournalSummary' => $transactionJournalSummary,
+        $employeeTimesheetDataProvider = $employeeTimesheet->searchByReport();
+        $employeeTimesheetDataProvider->criteria->addCondition("t.employee_id = :employee_id AND t.date BETWEEN :start_date AND :end_date");
+        $employeeTimesheetDataProvider->criteria->params = array(
+            ':employee_id' => $employeeId, 
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        $employee = Employee::model()->findByPk($employeeId);
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId);
+//        }
+
+        $this->render('attendanceDetail', array(
+            'employeeTimesheet' => $employeeTimesheet,
+            'employeeTimesheetDataProvider' => $employeeTimesheetDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'coaId' => $coaId,
-            'branchId' => $branchId,
+            'employeeId' => $employeeId,
+            'employee' => $employee,
         ));
     }
 
