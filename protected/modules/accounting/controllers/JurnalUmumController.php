@@ -1342,4 +1342,18 @@ class JurnalUmumController extends Controller {
         }
     }
 
+    public function actionApi($startDate, $endDate) {
+        $sql = "SELECT j.kode_transaksi, j.tanggal_transaksi, c.name AS coa_name, b.name AS branch_name, j.total, j.debet_kredit AS account_type, j.transaction_subject, j.transaction_type, j.remark
+                FROM " . JurnalUmum::model()->tableName() . " j
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = j.branch_id
+                WHERE tanggal_transaksi BETWEEN :start_date AND :end_date";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        echo CJSON::encode($resultSet);
+    }
 }
