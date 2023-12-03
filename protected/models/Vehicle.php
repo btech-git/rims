@@ -50,8 +50,7 @@ class Vehicle extends CActiveRecord {
     public $car_make_code;
     public $car_model_code;
     public $car_color;
-    public $customer_name_checked;
-    public $plate_number_checked;
+    public $selection_mode;
 
     /**
      * @return string the associated database table name
@@ -253,7 +252,6 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('t.car_sub_model_detail_id', $this->car_sub_model_detail_id);
         $criteria->compare('t.color_id', $this->color_id);
         $criteria->compare('year', $this->year, true);
-        $criteria->compare('t.customer_id', $this->customer_id);
         $criteria->compare('customer_pic_id', $this->customer_pic_id);
         $criteria->compare('chasis_code', $this->chasis_code, true);
         $criteria->compare('transmission', $this->transmission, true);
@@ -263,19 +261,10 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('customer.customer_type', $this->customer_type);
 
-        if ($this->customer_name_checked) {
-            $customerNameOperator = empty($this->customer_name) ? '=' : 'LIKE';
-            $customerNameValue = empty($this->customer_name) ? '' : "%{$this->customer_name}%";
-            $criteria->addCondition("customer.name {$customerNameOperator} :customer_name");
-            $criteria->params[':customer_name'] = $customerNameValue;
-        }
-
-        if ($this->plate_number_checked) {
-            $vehiclePlateNumberOperator = empty($this->plate_number) ? '=' : 'LIKE';
-            $vehiclePlateNumberValue = empty($this->plate_number) ? '' : "%{$this->plate_number}%";
-            $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number");
-            $criteria->params[':plate_number'] = $vehiclePlateNumberValue;
-        }
+        $vehiclePlateNumberOperator = empty($this->plate_number) ? '=' : 'LIKE';
+        $vehiclePlateNumberValue = empty($this->plate_number) ? '' : "%{$this->plate_number}%";
+        $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number");
+        $criteria->params[':plate_number'] = $vehiclePlateNumberValue;
 
         $criteria->order = 't.plate_number ASC';
 

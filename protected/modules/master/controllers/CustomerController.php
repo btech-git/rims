@@ -1437,4 +1437,13 @@ class CustomerController extends Controller {
         return "'" . implode(',', $numberphone);
     }
 
+    public function actionLog($customerId) {
+        $customer = Customer::model()->findByPk($customerId);
+        $customerLog = CustomerLog::model()->findAllByAttributes(array('customer_id' => $customerId), array('order' => 't.date_updated DESC'));
+        
+        $this->render('log', array(
+            'customer' => $customer,
+            'customerLog' => $customerLog,
+        ));
+    }
 }

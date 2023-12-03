@@ -722,4 +722,13 @@ class CoaController extends Controller {
         }
     }
 
+    public function actionLog($coaId) {
+        $coa = Coa::model()->findByPk($coaId);
+        $coaLog = CoaLog::model()->findAllByAttributes(array('coa_id' => $coaId), array('order' => 't.date_updated DESC'));
+        
+        $this->render('log', array(
+            'coa' => $coa,
+            'coaLog' => $coaLog,
+        ));
+    }
 }

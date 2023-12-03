@@ -25,16 +25,16 @@ class CustomerRegistrationController extends Controller {
 
     public function actionVehicleList() {
         $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
-        
-        if (!isset($_GET['Vehicle'])) {
-            $vehicle->customer_name_checked = true;
-        }
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
         
         $vehicleDataProvider = $vehicle->searchByRegistration();
+        $customerDataProvider = $customer->search();
 
         $this->render('vehicleList', array(
             'vehicle' => $vehicle,
             'vehicleDataProvider' => $vehicleDataProvider,
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
         ));
     }
     

@@ -257,3 +257,13 @@ $this->menu = array(
     <?php endif; ?>
     <div class="clear"></div>
 </div>
+
+<div>
+    <?php if (Yii::app()->user->checkAccess("director")): ?>
+        <div style="float: left; margin-left: 20px;">
+            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/accounting/' . $ccontroller . '/log', array('coaId' => $model->id)); ?>">
+                <span class="fa fa-info"></span>Data Log
+            </a>
+        </div>
+    <?php endif; ?>
+</div>

@@ -184,3 +184,12 @@ $this->menu = array(
         </fieldset>
     </div>
 </div>
+<div>
+    <?php if (Yii::app()->user->checkAccess("director")): ?>
+        <div style="float: left; margin-left: 20px;">
+            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/log', array('vehicleId' => $model->id)); ?>">
+                <span class="fa fa-info"></span>Data Log
+            </a>
+        </div>
+    <?php endif; ?>
+</div>

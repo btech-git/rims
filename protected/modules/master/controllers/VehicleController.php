@@ -696,4 +696,13 @@ class VehicleController extends Controller {
         }
     }
 
+    public function actionLog($vehicleId) {
+        $vehicle = Vehicle::model()->findByPk($vehicleId);
+        $vehicleLog = VehicleLog::model()->findAllByAttributes(array('vehicle_id' => $vehicleId), array('order' => 't.date_updated DESC'));
+        
+        $this->render('log', array(
+            'vehicle' => $vehicle,
+            'vehicleLog' => $vehicleLog,
+        ));
+    }
 }
