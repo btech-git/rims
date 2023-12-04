@@ -74,7 +74,7 @@ class EmployeeDayoff extends MonthlyTransactionActiveRecord {
         return array(
             'id' => 'ID',
             'employee_id' => 'Employee',
-            'day' => 'Day',
+            'day' => 'Day(s)',
             'notes' => 'Notes',
             'date_from' => 'Date From',
             'date_to' => 'Date To',
@@ -100,17 +100,17 @@ class EmployeeDayoff extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('employee_id', $this->employee_id);
-        $criteria->compare('day', $this->day);
-        $criteria->compare('notes', $this->notes, true);
-        $criteria->compare('date_from', $this->date_from, true);
-        $criteria->compare('date_to', $this->date_to, true);
-        $criteria->compare('date_created', $this->date_to, true);
-        $criteria->compare('time_created', $this->date_to, true);
-        $criteria->compare('status', $this->status, true);
-        $criteria->compare('off_type', $this->off_type, true);
-        $criteria->compare('user_id', $this->date_to);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.employee_id', $this->employee_id);
+        $criteria->compare('t.day', $this->day);
+        $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('t.date_from', $this->date_from, true);
+        $criteria->compare('t.date_to', $this->date_to, true);
+        $criteria->compare('t.date_created', $this->date_to, true);
+        $criteria->compare('t.time_created', $this->date_to, true);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.off_type', $this->off_type);
+        $criteria->compare('t.user_id', $this->date_to);
 
         $criteria->together = true;
         $criteria->with = array('employee');

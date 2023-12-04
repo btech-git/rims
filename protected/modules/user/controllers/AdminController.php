@@ -245,6 +245,40 @@ class AdminController extends Controller {
         }
     }
 
+    public function actionRequestDayoff($employeeId) {
+        $model = new EmployeeDayoff;
+        $model->date_from = date('Y-m-d');
+        $model->date_to = date('Y-m-d');
+        $model->date_created = date('Y-m-d');
+        $model->time_created = date('H:i:s');
+        $model->employee_id = $employeeId;
+        $model->user_id = Yii::app()->user->id;
+        $model->off_type = 'Unpaid';
+        $model->notes = 'Need Approval';
+
+        if (isset($_POST['EmployeeDayoff'])) {
+            $model->attributes = $_POST['EmployeeDayoff'];
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->date_created)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->date_created)));
+            
+            $valid = true;
+            if ($model->employeeOnleaveCategory->number_of_days > 0) {
+                $valid = $model->day == $model->employeeOnleaveCategory->number_of_days ? true : false;
+                
+                if ($valid == false) {
+                    $model->addError('error', 'Jumlah hari cuti melebihi ketentuan.');
+                }
+            } 
+            
+            if ($valid && $model->save()) {
+                $this->redirect(array('view', 'id' => $model->id));
+            }
+        }
+
+        $this->render('requestDayoff', array(
+            'model' => $model,
+        ));
+    }
+    
     public function actionEmployeeCompletion() {
         echo CJSON::encode(Completion::employee($_GET['term']));
     }
