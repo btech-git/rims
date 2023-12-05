@@ -286,7 +286,7 @@ $('form').submit(function(){
                     ),
                     array(
                         'class' => 'CButtonColumn',
-                        'template' => '{views}',
+                        'template' => '{views} {print}',
                         'buttons' => array(
                             'views' => array(
                                 'label' => 'bill detail',
@@ -300,6 +300,11 @@ $('form').submit(function(){
                                     newwindow.onunload = function(){  $.fn.yiiGridView.update('registration-transaction-grid')}
                                     return false;
                                 }"
+                            ),
+                            'print' => array(
+                                'label' => 'print',
+                                'url' => 'Yii::app()->createUrl("frontDesk/registrationTransaction/pdf", array("id"=>$data->id))',
+//                                'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
                             ),
                         ),
                     ),

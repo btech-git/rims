@@ -493,6 +493,25 @@ class RegistrationTransactionController extends Controller {
         ));
     }
 
+    public function actionPdf($id) {
+        $generalRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
+        $customer = Customer::model()->findByPk($generalRepairRegistration->customer_id);
+        $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->vehicle_id);
+        $branch = Branch::model()->findByPk($generalRepairRegistration->branch_id);
+//        $mPDF1 = Yii::app()->ePdf->mpdf();
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'generalRepairRegistration' => $generalRepairRegistration,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output();
+    }
+
     public function actionAdminWo() {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
