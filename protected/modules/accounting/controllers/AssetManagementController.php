@@ -240,11 +240,12 @@ class AssetManagementController extends Controller {
 
         if (isset($_POST['AssetPurchase']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetPurchase'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
-        $this->render('update', array(
+        $this->render('updatePurchase', array(
             'model' => $model,
         ));
     }

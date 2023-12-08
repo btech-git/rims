@@ -70,6 +70,11 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
     'id'=>'asset-purchase-grid',
     'dataProvider'=>$model->search(),
     'filter'=>$model,
+    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+    'pager'=>array(
+       'cssFile'=>false,
+       'header'=>'',
+    ),
     'columns'=>array(
         'assetCategory.description',
         'description: item',
@@ -108,11 +113,16 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         */
         array(
             'class'=>'CButtonColumn',
-            'template' => '{views} {sale}',
+            'template' => '{views} {updates} {sale}',
             'buttons' => array(
                 'views' => array(
                     'label' => 'view',
                     'url' => 'Yii::app()->createUrl("accounting/assetManagement/view", array("id"=>$data->id))',
+                    'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")',
+                ),
+                'updates' => array(
+                    'label' => 'update',
+                    'url' => 'Yii::app()->createUrl("accounting/assetManagement/update", array("id"=>$data->id))',
                     'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")',
                 ),
                 'sale' => array(
