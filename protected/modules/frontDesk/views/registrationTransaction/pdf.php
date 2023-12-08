@@ -165,22 +165,20 @@ function tanggal($date) {
             
             <tr>
                 <?php if ($generalRepairRegistration->ppn_price > 0.00): ?>
-                    <td style="border-bottom: none">&nbsp;</td>
+                    <td style="border-bottom: none" rowspan="2">&nbsp;</td>
                     <td>PPN - 10%</td>
                     <td style="text-align:right">Rp. <?php echo number_format($generalRepairRegistration->ppn_price, 2, ',', '.') ?> &nbsp; </td>
                 <?php else: ?>
-                    <td style="border-right: 1px solid; border-bottom: none">&nbsp;</td>
+                    <td style="border-right: 1px solid; border-bottom: none" rowspan="2">&nbsp;</td>
                     <td colspan="2">&nbsp;</td>
                 <?php endif; ?>
             </tr>
                 
             <tr>
                 <?php if ($generalRepairRegistration->pph_price > 0.00): ?>
-                    <td style="border-top: none">&nbsp;</td>
                     <td>PPH 23 - 2%</td>
                     <td style="text-align:right">Rp. <?php echo number_format($generalRepairRegistration->pph_price, 2, ',', '.') ?> &nbsp; </td>
                 <?php else: ?>
-                    <td style="border-right: 1px solid">&nbsp;</td>
                     <td colspan="2">&nbsp;</td>
                 <?php endif; ?>
             </tr>
