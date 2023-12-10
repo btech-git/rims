@@ -525,15 +525,20 @@ class Product extends CActiveRecord {
     }
     
     public function getAverageCogs() {
-        $unitPrice = 0;
-        $quantity = 0;
         
-        foreach ($this->transactionPurchaseOrderDetails as $detail) {
-            $unitPrice += $detail->getTotalPriceBeforeTax(0, 0);
-            $quantity += ($detail->quantity == 0) ? 1 : $detail->quantity;
-        }
-        
-        return empty($this->transactionPurchaseOrderDetails ) ? 0.00 : $unitPrice / $quantity;
+        $sql = "
+            SELECT COALESCE(SUM(unit_price * quantity) / SUM(quantity), 0) as cogs
+            FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
+            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
+            WHERE d.product_id = :product_id AND h.transaction_date > '2022-12-31'
+            GROUP BY i.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
     }
     
     public function getPurchasePriceReport($startDate, $endDate) {
