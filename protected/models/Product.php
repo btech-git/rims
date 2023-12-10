@@ -530,7 +530,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(unit_price * quantity) / SUM(quantity), 0) as cogs
             FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
-            WHERE d.product_id = :product_id AND h.transaction_date > '2022-12-31'
+            WHERE d.product_id = :product_id AND h.purchase_order_date > '2022-12-31'
             GROUP BY i.product_id
         ";
 
