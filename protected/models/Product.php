@@ -531,7 +531,7 @@ class Product extends CActiveRecord {
             FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
             WHERE d.product_id = :product_id AND h.purchase_order_date > '2022-12-31'
-            GROUP BY i.product_id
+            GROUP BY d.product_id
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
