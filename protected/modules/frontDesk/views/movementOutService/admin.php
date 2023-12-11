@@ -69,7 +69,8 @@ $('.search-form form').submit(function(){
                     'columns' => array(
                         array(
                             'name' => 'movement_out_no',
-                            'value' => 'CHTml::link($data->movement_out_no, array("view", "id"=>$data->id))', 'type' => 'raw'
+                            'value' => 'CHtml::link($data->movement_out_no, array("/transaction/movementOutHeader/view", "id"=>$data->id))', 
+                            'type' => 'raw'
                         ),
                         'date_posting',
 //                        'status',

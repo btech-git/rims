@@ -158,6 +158,7 @@ class Invoices extends CComponent {
         $transactionDate = $this->header->invoice_date;
         $branchId = $this->header->branch_id;
         $transactionSubject = $this->header->customer->name;
+        $remark = $this->header->vehicle->plate_number;
 
         if ($this->header->registrationTransaction->repair_type == 'GR') {
             $coaReceivableId = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
@@ -183,6 +184,7 @@ class Invoices extends CComponent {
         $jurnalUmumReceivable->debet_kredit = 'D';
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $transactionSubject;
+        $jurnalUmumReceivable->remark = $remark;
         $jurnalUmumReceivable->is_coa_category = 0;
         $jurnalUmumReceivable->transaction_type = $transactionType;
         $valid = $jurnalUmumReceivable->save() && $valid;
@@ -198,6 +200,7 @@ class Invoices extends CComponent {
             $jurnalUmumPpn->debet_kredit = 'K';
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
             $jurnalUmumPpn->transaction_subject = $transactionSubject;
+            $jurnalUmumPpn->remark = $remark;
             $jurnalUmumPpn->is_coa_category = 0;
             $jurnalUmumPpn->transaction_type = $transactionType;
             $valid = $jurnalUmumPpn->save() && $valid;
@@ -255,6 +258,7 @@ class Invoices extends CComponent {
             $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
             $jurnalUmumPersediaan->tanggal_posting = $postingDate;
             $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+            $jurnalUmumPersediaan->remark = $remark;
             $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
             $jurnalUmumPersediaan->transaction_type = $transactionType;
             $jurnalUmumPersediaan->save();

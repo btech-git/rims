@@ -797,6 +797,7 @@ class PaymentInController extends Controller {
 
                         $invoiceHeader->update(array('status'));
                         
+                        $remark = empty($paymentIn->vehicle_id) ? $paymentIn->invoice->invoice_number : $paymentIn->vehicle->plate_number;
                         $totalKas = ($paymentIn->is_tax_service == 2) ? $paymentIn->payment_amount : $paymentIn->payment_amount + $paymentIn->tax_service_amount;
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
@@ -807,6 +808,7 @@ class PaymentInController extends Controller {
                         $jurnalPiutang->debet_kredit = 'K';
                         $jurnalPiutang->tanggal_posting = date('Y-m-d');
                         $jurnalPiutang->transaction_subject = $paymentIn->notes;
+                        $jurnalPiutang->remark = $remark;
                         $jurnalPiutang->is_coa_category = 0;
                         $jurnalPiutang->transaction_type = 'Pin';
                         $jurnalPiutang->save();
@@ -826,6 +828,7 @@ class PaymentInController extends Controller {
                         $jurnalUmumKas->debet_kredit = 'D';
                         $jurnalUmumKas->tanggal_posting = date('Y-m-d');
                         $jurnalUmumKas->transaction_subject = $paymentIn->notes;
+                        $jurnalUmumKas->remark = $remark;
                         $jurnalUmumKas->is_coa_category = 0;
                         $jurnalUmumKas->transaction_type = 'Pin';
                         $jurnalUmumKas->save();
@@ -840,6 +843,7 @@ class PaymentInController extends Controller {
                             $jurnalPph->debet_kredit = 'D';
                             $jurnalPph->tanggal_posting = date('Y-m-d');
                             $jurnalPph->transaction_subject = $paymentIn->notes;
+                            $jurnalPph->remark = $remark;
                             $jurnalPph->is_coa_category = 0;
                             $jurnalPph->transaction_type = 'Pin';
                             $jurnalPph->save();
