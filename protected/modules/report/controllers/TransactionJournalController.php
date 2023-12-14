@@ -285,10 +285,10 @@ class TransactionJournalController extends Controller {
             $this->redirect(array('/frontDest/adjustment/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'DAS') {
             $model = AssetDepreciationHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->asset_purchase_id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'SAS') {
             $model = AssetSale::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->asset_purchase_id));
+            $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'PAS') {
             $model = AssetPurchase::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/assetManagement/view', 'id' => $model->id));
