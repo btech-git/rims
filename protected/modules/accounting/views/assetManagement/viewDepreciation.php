@@ -55,7 +55,10 @@ $this->menu=array(
                 <?php $totalDebit = 0; $totalCredit = 0; $count = 0; ?>
                 <?php if (!empty($model->assetDepreciationDetails)): ?>
                     <?php foreach ($model->assetDepreciationDetails as $assetDepreciationDetail): ?>
-                        <?php $depreciationJournals = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $assetDepreciationDetail->assetDepreciationHeader->transaction_number, 'transaction_subject' => $model->transaction_number, 'is_coa_category' => 0)); ?>
+                        <?php $depreciationJournals = JurnalUmum::model()->findAllByAttributes(array(
+                            'kode_transaksi' => $model->transaction_number, 
+                            'is_coa_category' => 0
+                        )); ?>
                         <?php foreach ($depreciationJournals as $i => $depreciationJournal): ?>
 
                             <?php $amountDebit = $depreciationJournal->debet_kredit == 'D' ? CHtml::value($depreciationJournal, 'total') : 0; ?>
@@ -101,34 +104,28 @@ $this->menu=array(
                     <tr>
                         <td>No.</td>
                         <td>Transaction #</td>
+                        <td>Description</td>
                         <td>Date</td>
+                        <td>Nilai Beli</td>
                         <td>Nilai Depresiasi</td>
+                        <td>Nilai Akumulasi</td>
+                        <td>Status</td>
                     </tr>
                 </thead>
                 <?php foreach($model->assetDepreciationDetails as $i => $depreciation): ?>
                     <tbody>
                         <tr>
                             <td style="width: 5%"><?php echo $i +1; ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetDepreciationHeader.transaction_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetPurchase.transaction_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetPurchase.description')); ?></td>
                             <td style="width: 15%"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciation, 'depreciation_date'))); ?></td>
+                            <td style="width: 20%; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'assetPurchase.purchase_value'))); ?></td>
                             <td style="width: 20%; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
+                            <td style="width: 20%; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'assetPurchase.accumulated_depreciation_value'))); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetPurchase.status')); ?></td>
                         </tr>
                     </tbody>
                 <?php endforeach; ?>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" style="text-align: right">Akumulasi Depresiasi</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'totalDepreciationValue'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="text-align: right">Nilai Beli</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'purchase_value'))); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="text-align: right">Nilai Sekarang</td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'current_value'))); ?></td>
-                    </tr>
-                </tfoot>
             </table>
         </fieldset>
     </div>
