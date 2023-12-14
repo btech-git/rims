@@ -74,7 +74,7 @@ class AssetManagementController extends Controller {
             $model->depreciation_end_date = date('Y-m-d', strtotime($model->depreciation_start_date . ' + ' . $model->assetCategory->number_of_years . ' years'));
             $model->current_value = $model->purchase_value;
             $model->monthly_useful_life = empty($model->assetCategory) ? 0 : $model->assetCategory->number_of_years * 12;
-            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), 6);
+            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), $model->branch_id);
             
             if ($model->save() && IdempotentManager::build()->save()) {
                 JurnalUmum::model()->deleteAllByAttributes(array(
@@ -85,7 +85,7 @@ class AssetManagementController extends Controller {
                 $jurnalInventory->kode_transaksi = $model->transaction_number;
                 $jurnalInventory->tanggal_transaksi = $model->transaction_date;
                 $jurnalInventory->coa_id = $model->assetCategory->coa_inventory_id;
-                $jurnalInventory->branch_id = 6;
+                $jurnalInventory->branch_id = $model->branch_id;
                 $jurnalInventory->total = $model->purchase_value;
                 $jurnalInventory->debet_kredit = 'D';
                 $jurnalInventory->tanggal_posting = date('Y-m-d');
@@ -98,7 +98,7 @@ class AssetManagementController extends Controller {
                 $jurnalBanking->kode_transaksi = $model->transaction_number;
                 $jurnalBanking->tanggal_transaksi = $model->transaction_date;
                 $jurnalBanking->coa_id = empty($model->companyBank->coa_id) ? 7 : $model->companyBank->coa_id;
-                $jurnalBanking->branch_id = 6;
+                $jurnalBanking->branch_id = $model->branch_id;
                 $jurnalBanking->total = $model->purchase_value;
                 $jurnalBanking->debet_kredit = 'K';
                 $jurnalBanking->tanggal_posting = date('Y-m-d');

@@ -158,6 +158,18 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo CHtml::label('Branch', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->dropDownlist($model, 'branch_id', CHtml::listData(Branch::model()->findAll(),'id','name'), array('empty' => '-- Pilih Branch --')); ?>
+                        <?php echo $form->error($model,'branch_id'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <?php echo CHtml::label('Note', false); ?>
                     </div>
                     <div class="small-8 columns">
