@@ -35,6 +35,26 @@ class AssetManagementController extends Controller {
     }
 
     /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionViewDepreciation($id) {
+        $this->render('viewDepreciation', array(
+            'model' => $this->loadModelDepreciation($id),
+        ));
+    }
+
+    /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionViewSale($id) {
+        $this->render('viewSale', array(
+            'model' => $this->loadModelSale($id),
+        ));
+    }
+
+    /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
@@ -325,6 +345,15 @@ class AssetManagementController extends Controller {
 
     public function loadModelDepreciation($id) {
         $model = AssetDepreciationHeader::model()->findByPk($id);
+
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
+
+        return $model;
+    }
+
+    public function loadModelSale($id) {
+        $model = AssetSaleHeader::model()->findByPk($id);
 
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
