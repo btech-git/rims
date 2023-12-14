@@ -119,9 +119,9 @@ $this->menu=array(
                             <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetPurchase.transaction_number')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetPurchase.description')); ?></td>
                             <td style="width: 15%"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($depreciation, 'depreciation_date'))); ?></td>
-                            <td style="width: 20%; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'assetPurchase.purchase_value'))); ?></td>
-                            <td style="width: 20%; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
-                            <td style="width: 20%; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'assetPurchase.accumulated_depreciation_value'))); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'assetPurchase.purchase_value'))); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'amount'))); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($depreciation, 'assetPurchase.accumulated_depreciation_value'))); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($depreciation, 'assetPurchase.status')); ?></td>
                         </tr>
                     </tbody>
