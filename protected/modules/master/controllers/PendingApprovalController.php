@@ -100,8 +100,11 @@ class PendingApprovalController extends Controller {
         $coa = Coa::model()->findByPk($coaId);
         $coa->status = 'Approved';
         $coa->is_approved = 1;
+        $coa->date_approval = date('Y-m-d');
+        $coa->time_approval = date('H:i:s');
+        $coa->user_id_approval = Yii::app()->user->id;
 
-        if ($coa->update(array('is_approved', 'status'))) {
+        if ($coa->update(array('is_approved', 'status', 'date_approval', 'time_approval', 'user_id_approval'))) {
             $this->redirect(array('index'));
         }
     }

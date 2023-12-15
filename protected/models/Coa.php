@@ -23,6 +23,7 @@
  * @property string $date_approval
  * @property string $time_created
  * @property string $time_approval
+ * @property integer $user_id_approval
  *
  * The followings are the available model relations:
  * @property CashTransaction[] $cashTransactions
@@ -40,6 +41,7 @@
  * @property TransactionSalesOrder[] $transactionSalesOrders
  * @property Bank[] $banks
  * @property User $user
+ * @property UserIdApproval $userIdApproval
  */
 class Coa extends CActiveRecord {
 
@@ -62,7 +64,7 @@ class Coa extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, coa_category_id, coa_sub_category_id, user_id', 'required'),
-            array('coa_category_id, coa_sub_category_id, coa_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
+            array('coa_category_id, coa_sub_category_id, coa_id, is_approved, user_id, user_id_approval', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 50),
             array('normal_balance', 'length', 'max' => 10),
             array('code', 'length', 'max' => 15),
@@ -72,7 +74,7 @@ class Coa extends CActiveRecord {
             array('date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date, is_approved, date_approval, user_id, user_id_approval', 'safe', 'on' => 'search'),
         );
     }
 
@@ -100,6 +102,7 @@ class Coa extends CActiveRecord {
             'jurnalUmums' => array(self::HAS_MANY, 'JurnalUmum', 'coa_id'),
             'banks' => array(self::HAS_MANY, 'Bank', 'coa_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
         );
     }
 
@@ -121,6 +124,7 @@ class Coa extends CActiveRecord {
             'is_approved' => 'Approval',
             'date_approval' => 'Tanggal Approval',
             'user_id' => 'User Input',
+            'user_id_approval' => 'User Approval',
         );
     }
 
@@ -154,6 +158,7 @@ class Coa extends CActiveRecord {
         $criteria->compare('t.is_approved', 1);
         $criteria->compare('t.date_approval', $this->date_approval);
         $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.user_id_approval', $this->user_id_approval);
 
         $criteria->together = true;
         $criteria->with = array('coaCategory', 'coaSubCategory');
