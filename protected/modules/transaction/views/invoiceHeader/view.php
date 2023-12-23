@@ -159,7 +159,7 @@ $this->menu = array(
                                     <td><?php echo $detail->product->name; ?></td>
                                     <td style="text-align: center"><?php echo $detail->quantity; ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
-                                    <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
+                                    <td style="text-align: right"><?php echo number_format($detail->discount, 2); ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->total_price, 2); ?></td>
                                 </tr>
                             <?php endif; ?>
