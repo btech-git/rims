@@ -32,7 +32,7 @@
                                 </textarea>
                             <?php endif ?>
                         <?php endif*/ ?>
-                        <textarea name="" id="Customer_phones" cols="30" rows="3" readonly="true"><?php echo $model->customer->phone; ?></textarea>
+                        <textarea name="" id="Customer_phones" cols="30" rows="3" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?></textarea>
                     </td>
                     <td>
                         <?php /*$getMobile = "" ?>
@@ -44,7 +44,7 @@
                                 <?php endforeach ?>
                             <?php endif ?>
                         <?php endif*/ ?>
-                        <textarea name="" id="Customer_mobiles" cols="30" rows="3" readonly="true"><?php echo $model->customer->mobile_phone; ?></textarea>
+                        <textarea name="" id="Customer_mobiles" cols="30" rows="3" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')); ?></textarea>
                     </td>
                 </tr>
             </tbody>
