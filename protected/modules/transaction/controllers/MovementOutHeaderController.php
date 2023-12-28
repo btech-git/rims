@@ -76,10 +76,10 @@ class MovementOutHeaderController extends Controller {
             foreach ($details as $movementDetail) {
                 if ((int)$model->movement_type == 3) {
                     $value = $movementDetail->registrationProduct->total_price;
-                    $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 1;
-                    $journalReferences[$coaId]['values'][] = $value;
+//                    $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
+//                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+//                    $journalReferences[$coaId]['is_coa_category'] = 1;
+//                    $journalReferences[$coaId]['values'][] = $value;
                     $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
                     $journalReferences[$coaId]['debet_kredit'] = 'D';
                     $journalReferences[$coaId]['is_coa_category'] = 0;
@@ -87,10 +87,10 @@ class MovementOutHeaderController extends Controller {
                     
                 } else {
                     $value = $movementDetail->quantity * $movementDetail->product->hpp;
-                    $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-                    $journalReferences[$coaId]['debet_kredit'] = 'D';
-                    $journalReferences[$coaId]['is_coa_category'] = 1;
-                    $journalReferences[$coaId]['values'][] = $value;
+//                    $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+//                    $journalReferences[$coaId]['debet_kredit'] = 'D';
+//                    $journalReferences[$coaId]['is_coa_category'] = 1;
+//                    $journalReferences[$coaId]['values'][] = $value;
                     $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
                     $journalReferences[$coaId]['debet_kredit'] = 'D';
                     $journalReferences[$coaId]['is_coa_category'] = 0;
