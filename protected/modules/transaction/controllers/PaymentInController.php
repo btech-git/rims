@@ -74,7 +74,7 @@ class PaymentInController extends Controller {
         $model = $this->loadModel($id);
         $revisionHistories = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $model->id));
         $postImages = PaymentInImages::model()->findAllByAttributes(array('payment_in_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
-        $invoice = InvoiceHeader::model()->findByPk($model->invoice_id);
+//        $invoice = InvoiceHeader::model()->findByPk($model->invoice_id);
         
         if (isset($_POST['SubmitFinish'])) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($model->invoice->registration_transaction_id);
@@ -89,27 +89,46 @@ class PaymentInController extends Controller {
                 'branch_id' => $model->branch_id,
             ));
 
-            $totalKas = ($model->is_tax_service == 2) ? $model->payment_amount : $model->payment_amount + $model->tax_service_amount;
+            foreach ($model->paymentInDetails as $detail) {
+                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                if (!empty($invoiceHeader->registration_transaction_id)) {
+                    $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
+                    $coaId = !empty($registrationTransaction->insurance_company_id) ? $registrationTransaction->insuranceCompany->coa_id : $model->customer->coa_id;
+                } else {
+                    $coaId = $model->customer->coa_id;
+                }
 
+                if ($invoiceHeader->payment_left > 0.00) {
+                    $invoiceHeader->status = 'PARTIALLY PAID';
+                } else {
+                    $invoiceHeader->status = 'PAID';
+                }
+
+                $invoiceHeader->update(array('status'));
+            }
+
+            $remark = $model->customer->name;
+            $totalKas = $model->payment_amount + $model->tax_service_amount + $model->downpayment_amount;
             $jurnalPiutang = new JurnalUmum;
             $jurnalPiutang->kode_transaksi = $model->payment_number;
             $jurnalPiutang->tanggal_transaksi = $model->payment_date;
-            $jurnalPiutang->coa_id = $model->customer->coa_id;
+            $jurnalPiutang->coa_id = $coaId;
             $jurnalPiutang->branch_id = $model->branch_id;
             $jurnalPiutang->total = $totalKas;
             $jurnalPiutang->debet_kredit = 'K';
             $jurnalPiutang->tanggal_posting = date('Y-m-d');
             $jurnalPiutang->transaction_subject = $model->notes;
+            $jurnalPiutang->remark = $remark;
             $jurnalPiutang->is_coa_category = 0;
             $jurnalPiutang->transaction_type = 'Pin';
             $jurnalPiutang->save();
-
+                
             if (!empty($model->paymentType->coa_id)) {
                 $coaId = $model->paymentType->coa_id;
             } else {
                 $coaId = $model->companyBank->coa_id;
             }
-            
+
             $jurnalUmumKas = new JurnalUmum;
             $jurnalUmumKas->kode_transaksi = $model->payment_number;
             $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
@@ -119,6 +138,7 @@ class PaymentInController extends Controller {
             $jurnalUmumKas->debet_kredit = 'D';
             $jurnalUmumKas->tanggal_posting = date('Y-m-d');
             $jurnalUmumKas->transaction_subject = $model->notes;
+            $jurnalUmumKas->remark = $remark;
             $jurnalUmumKas->is_coa_category = 0;
             $jurnalUmumKas->transaction_type = 'Pin';
             $jurnalUmumKas->save();
@@ -133,6 +153,23 @@ class PaymentInController extends Controller {
                 $jurnalPph->debet_kredit = 'D';
                 $jurnalPph->tanggal_posting = date('Y-m-d');
                 $jurnalPph->transaction_subject = $model->notes;
+                $jurnalPph->remark = $remark;
+                $jurnalPph->is_coa_category = 0;
+                $jurnalPph->transaction_type = 'Pin';
+                $jurnalPph->save();
+            }
+
+            if ($model->downpayment_amount > 0) {
+                $jurnalPph = new JurnalUmum;
+                $jurnalPph->kode_transaksi = $model->payment_number;
+                $jurnalPph->tanggal_transaksi = $model->payment_date;
+                $jurnalPph->coa_id = 1473;
+                $jurnalPph->branch_id = $model->branch_id;
+                $jurnalPph->total = $model->downpayment_amount;
+                $jurnalPph->debet_kredit = 'D';
+                $jurnalPph->tanggal_posting = date('Y-m-d');
+                $jurnalPph->transaction_subject = $model->notes;
+                $jurnalPph->remark = $remark;
                 $jurnalPph->is_coa_category = 0;
                 $jurnalPph->transaction_type = 'Pin';
                 $jurnalPph->save();
@@ -143,7 +180,7 @@ class PaymentInController extends Controller {
             'model' => $model,
             'postImages' => $postImages,
             'revisionHistories' => $revisionHistories,
-            'invoice' => $invoice,
+//            'invoice' => $invoice,
         ));
     }
 
@@ -183,89 +220,44 @@ class PaymentInController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($invoiceId) {
-        $model = new PaymentIn;
-        
+        $paymentIn = $this->instantiate(null);
         $invoice = InvoiceHeader::model()->findByPk($invoiceId);
-        $registrationTransaction = RegistrationTransaction::model()->findByPk($invoice->registration_transaction_id);
+        $customer = Customer::model()->findByPk($invoice->customer_id);
         
-        $model->invoice_id = $invoiceId;
-        $model->invoice_number = $invoice->invoice_number;
-        $model->customer_id = $invoice->customer_id;
-        $model->vehicle_id = $invoice->vehicle_id;
-        $model->payment_time = date('H:i:s');
-        $model->created_datetime = date('Y-m-d H:i:s');
-        $model->branch_id = $model->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $model->branch_id;
-        $images = $model->images = CUploadedFile::getInstances($model, 'images');
+        $paymentIn->header->customer_id = $customer->id;
+        $paymentIn->header->payment_time = date('H:i:s');
+        $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
+        $paymentIn->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+        $paymentIn->header->status = 'Draft';
+        $paymentIn->header->user_id = Yii::app()->user->id;
+        $paymentIn->addInvoice($invoiceId);
 
+        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
+        $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
+
+        if (!empty($customer->id)) {
+            $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
+            $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $customer->id;
+        }
+        
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
 
-        if (isset($_POST['PaymentIn']) && IdempotentManager::check()) {
-            $model->attributes = $_POST['PaymentIn'];
-            $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->payment_date)), $model->branch_id);
-                
-            $dbTransaction = Yii::app()->db->beginTransaction();
-            try {
-                $valid = true; 
-                
-                $paymentType = PaymentType::model()->findByPk($model->payment_type_id);
-                if (empty($paymentType->coa_id) && $model->company_bank_id == null) {
-                    $valid = false; 
-                    $model->addError('error', 'Company Bank harus diisi untuk payment type ini.');
-                } else {
-                    $model->payment_type = $model->paymentType->name;
-                }
-                
-                if ($model->payment_amount > $model->invoice->payment_left) {
-                    $valid = false; 
-                    $model->addError('error', 'Payment tidak bisa lebih besar dari jumlah invoice.');
-                }
-                
-                $valid = $valid && IdempotentManager::build()->save() && $model->save();
-
-                if (!empty($registrationTransaction)) {
-                    $registrationTransaction->payment_status = 'CLEAR';
-                    $registrationTransaction->update(array('payment_status'));
-                }
-
-                //update Invoice
-                $invoice->payment_amount = $invoice->getTotalPayment();
-                $invoice->payment_left = $invoice->getTotalRemaining();
-                $invoice->update(array('payment_amount', 'payment_left'));
-
-                $criteria = new CDbCriteria;
-                $criteria->condition = "invoice_id = " . $model->invoice_id . " AND id != " . $model->id;
-
-                foreach ($images as $file) {
-                    $contentImage = new PaymentInImages();
-                    $contentImage->payment_in_id = $model->id;
-                    $contentImage->is_inactive = PaymentIn::STATUS_ACTIVE;
-                    $contentImage->extension = $file->extensionName;
-                    $valid = $contentImage->save(false) && $valid;
-
-                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $contentImage->filename;
-                    $file->saveAs($originalPath);
-                }
-
-                if ($valid) {
-                    $dbTransaction->commit();
-                } else {
-                    $dbTransaction->rollback();
-                }
-            } catch (Exception $e) {
-                $dbTransaction->rollback();
-                $valid = false;
-            }
-
-            if ($valid) {
-                $this->redirect(array('view', 'id' => $model->id));
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($paymentIn);
+            $paymentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentIn->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentIn->header->payment_date)), $paymentIn->header->branch_id);
+            
+            if ($paymentIn->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $paymentIn->header->id));
             }
         }
 
         $this->render('create', array(
-            'model' => $model,
-            'invoice' => $invoice,
+            'paymentIn' => $paymentIn,
+            'customer' => $customer,
+            'invoiceHeader' => $invoiceHeader,
+            'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
         ));
     }
 
@@ -283,7 +275,7 @@ class PaymentInController extends Controller {
 
     public function actionCreateMultiple($customerId) {
         $customer = Customer::model()->findByPk($customerId);
-        $paymentIn = $this->instantiate();
+        $paymentIn = $this->instantiate(null);
         
         $paymentIn->header->customer_id = $customerId;
         $paymentIn->header->payment_time = date('H:i:s');
@@ -306,9 +298,10 @@ class PaymentInController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentIn);
+            $paymentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentIn->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentIn->header->payment_date)), $paymentIn->header->branch_id);
             
             if ($paymentIn->save(Yii::app()->db)) {
-                $this->redirect(array('admin'));
+                $this->redirect(array('view', 'id' => $paymentIn->header->id));
             }
         }
 
@@ -350,38 +343,36 @@ class PaymentInController extends Controller {
         }
     }
     
-    public function instantiate() {
+    public function instantiate($id) {
         
-//        if (empty($id)) {
+        if (empty($id)) {
             $paymentIn = new PaymentInComponent(new PaymentIn(), array());
-//        } else {
-//            $paymentInModel = $this->loadModel($id);
-//            $paymentIn = new PaymentInComponent($cashTransactionModel, $cashTransactionModel->cashTransactionDetails);
-//        }
+        } else {
+            $paymentInModel = $this->loadModel($id);
+            $paymentIn = new PaymentInComponent($paymentInModel, $paymentInModel->paymentInDetails);
+        }
         
         return $paymentIn;
     }
 
     public function loadState($paymentIn) {
-        if (isset($_POST['PaymentDate'], $_POST['BranchId'], $_POST['CompanyBankId'], $_POST['PaymentTypeId'])) {
-            $paymentIn->header->payment_date = $_POST['PaymentDate'];
-            $paymentIn->header->branch_id = $_POST['BranchId'];
-            $paymentIn->header->company_bank_id = $_POST['CompanyBankId'];
-            $paymentIn->header->payment_type_id = $_POST['PaymentTypeId'];
-        }
-
         if (isset($_POST['PaymentIn'])) {
-            foreach ($_POST['PaymentIn'] as $i => $item) {
+            $paymentIn->header->attributes = $_POST['PaymentIn'];
+        }
+        
+        if (isset($_POST['PaymentInDetail'])) {
+            foreach ($_POST['PaymentInDetail'] as $i => $item) {
                 if (isset($paymentIn->details[$i])) {
                     $paymentIn->details[$i]->attributes = $item;
                 } else {
-                    $detail = new PaymentIn();
+                    $detail = new PaymentInDetail();
                     $detail->attributes = $item;
                     $paymentIn->details[] = $detail;
                 }
             }
-            if (count($_POST['PaymentIn']) < count($paymentIn->details))
+            if (count($_POST['PaymentInDetail']) < count($paymentIn->details)) {
                 array_splice($paymentIn->details, $i + 1);
+            }
         } else {
             $paymentIn->details = array();
         }
@@ -393,128 +384,40 @@ class PaymentInController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $model = $this->loadModel($id);
-        $model->payment_time = date('H:i:s');
-        $images = $model->images = CUploadedFile::getInstances($model, 'images');
+        $paymentIn = $this->instantiate($id);
+        $customer = Customer::model()->findByPk($paymentIn->header->customer_id);
 
-        $invoice = new InvoiceHeader('search');
-        $invoice->unsetAttributes();
+        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
+        $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
+
+        if (!empty($paymentIn->header->customer_id)) {
+            $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
+            $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $paymentIn->header->customer_id;
+        }
         
-        if (isset($_GET['InvoiceHeader']))
-            $invoice->attributes = $_GET['InvoiceHeader'];
-        
-        $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.status != "CANCELLED"');
-        $invoiceCriteria->compare('invoice_number', $invoice->invoice_number, true);
-        $invoiceCriteria->compare('invoice_date', $invoice->invoice_date, true);
-        $invoiceCriteria->compare('due_date', $invoice->due_date, true);
-        $invoiceCriteria->compare('total_price', $invoice->total_price, true);
-        $invoiceCriteria->together = true;
-        $invoiceCriteria->with = array('customer');
-        $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
-        $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
-            'criteria' => $invoiceCriteria, 
-            'sort' => array(
-                'defaultOrder' => 'invoice_date DESC',
-            ),
-            'pagination' => array(
-                'pageSize' => 10,
-            )
-        ));
-
-        $postImages = PaymentInImages::model()->findAllByAttributes(array('payment_in_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
-        $countPostImage = count($postImages);
-        $maxImage = 10;
-        $allowedImages = $maxImage - $countPostImage;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
-        if (isset($_POST['PaymentIn']) && IdempotentManager::check()) {
-            $dbTransaction = Yii::app()->db->beginTransaction();
-            try {
-                $valid = true; 
-                $model->attributes = $_POST['PaymentIn'];
-                
-                JurnalUmum::model()->deleteAllByAttributes(array(
-                    'kode_transaksi' => $model->payment_number,
-                    'branch_id' => $model->branch_id,
-                ));
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($paymentIn);
+            $paymentIn->header->setCodeNumberByRevision('payment_number');
+            
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $paymentIn->header->payment_number,
+                'branch_id' => $paymentIn->header->branch_id,
+            ));
 
-                $model->setCodeNumberByRevision('payment_number');
-
-                if ((int)$model->payment_type_id !== 1 && (int)$model->company_bank_id == null) {
-                    $model->addError('error', 'Company Bank cannot be empty!');
-                } else {
-                    if ($model->save()) {
-                        //update Invoice
-                        $criteria = new CDbCriteria;
-
-                        $criteria->condition = "invoice_id =" . $model->invoice_id . " AND id != " . $model->id;
-                        $payment = PaymentIn::model()->findAll($criteria);
-                        $invoiceData = InvoiceHeader::model()->findByPk($model->invoice_id);
-                        $totalRemaining = $invoiceData->getTotalRemaining();
-
-                        if (count($payment) == 0) {
-                            $countTotal = $invoiceData->total_price - $model->payment_amount;
-                        } else {
-                            $countTotal = $invoiceData->payment_left - $model->payment_amount;
-                        }
-
-                        if ($totalRemaining > 0) {
-                            $invoiceData->status = 'PARTIALLY PAID';
-                        } elseif ($totalRemaining == 0) {
-                            $invoiceData->status = 'PAID';
-                        } else {
-                            $invoiceData->status = 'NOT PAID';
-                        }
-
-                        $invoiceData->payment_amount = $invoiceData->getTotalPayment();
-                        $invoiceData->payment_left = $totalRemaining;
-//                        $invoiceData->update(array('payment_amount', 'payment_left'));
-                        $invoiceData->save(false);
-
-                        PaymentInImages::model()->deleteAllByAttributes(array(
-                            'payment_in_id' => $model->id,
-                        ));
-
-                        foreach ($images as $file) {
-                            $contentImage = new PaymentInImages();
-                            $contentImage->payment_in_id = $model->id;
-                            $contentImage->is_inactive = PaymentIn::STATUS_ACTIVE;
-                            $contentImage->extension = $file->extensionName;
-                            $valid = $contentImage->save(false) && $valid;
-
-                            $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $contentImage->filename;
-                            $file->saveAs($originalPath);
-                        }
-
-                        if ($valid) {
-                            $dbTransaction->commit();
-                        } else {
-                            $dbTransaction->rollback();
-                        }
-                    }
-                }
-            } catch (Exception $e) {
-                $dbTransaction->rollback();
-                $valid = false;
-            }
-
-            if ($valid) {
-                $this->redirect(array('view', 'id' => $model->id));
+            if ($paymentIn->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $paymentIn->header->id));
             }
         }
 
         $this->render('update', array(
-            'model' => $model,
-            'invoice' => $invoice,
-            'invoiceDataProvider' => $invoiceDataProvider,
-            'postImages' => $postImages,
-            'allowedImages' => $allowedImages,
+            'paymentIn' => $paymentIn,
+            'customer' => $customer,
+            'invoiceHeader' => $invoiceHeader,
+            'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
         ));
     }
 
@@ -655,8 +558,11 @@ class PaymentInController extends Controller {
      */
     public function loadModel($id) {
         $model = PaymentIn::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -781,24 +687,26 @@ class PaymentInController extends Controller {
                     $paymentIn->update(array('status'));
 
                     if ($model->approval_type == 'Approved') {
-                        $invoiceHeader = InvoiceHeader::model()->findByPk($paymentIn->invoice_id);
-                        if (!empty($invoiceHeader->registration_transaction_id)) {
-                            $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
-                            $coaId = !empty($registrationTransaction->insurance_company_id) ? $registrationTransaction->insuranceCompany->coa_id : $paymentIn->customer->coa_id;
-                        } else {
-                            $coaId = $paymentIn->customer->coa_id;
-                        }
-                        
-                        if ($invoiceHeader->payment_left > 0.00) {
-                            $invoiceHeader->status = 'PARTIALLY PAID';
-                        } else {
-                            $invoiceHeader->status = 'PAID';
+                        foreach ($paymentIn->paymentInDetails as $detail) {
+                            $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                            if (!empty($invoiceHeader->registration_transaction_id)) {
+                                $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
+                                $coaId = !empty($registrationTransaction->insurance_company_id) ? $registrationTransaction->insuranceCompany->coa_id : $paymentIn->customer->coa_id;
+                            } else {
+                                $coaId = $paymentIn->customer->coa_id;
+                            }
+
+                            if ($invoiceHeader->payment_left > 0.00) {
+                                $invoiceHeader->status = 'PARTIALLY PAID';
+                            } else {
+                                $invoiceHeader->status = 'PAID';
+                            }
+
+                            $invoiceHeader->update(array('status'));
                         }
 
-                        $invoiceHeader->update(array('status'));
-                        
-                        $remark = empty($paymentIn->vehicle_id) ? $paymentIn->invoice->invoice_number : $paymentIn->vehicle->plate_number;
-                        $totalKas = ($paymentIn->is_tax_service == 2) ? $paymentIn->payment_amount : $paymentIn->payment_amount + $paymentIn->tax_service_amount;
+                        $remark = $paymentIn->customer->name;
+                        $totalKas = $paymentIn->payment_amount + $paymentIn->tax_service_amount + $paymentIn->downpayment_amount;
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
                         $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
@@ -812,7 +720,7 @@ class PaymentInController extends Controller {
                         $jurnalPiutang->is_coa_category = 0;
                         $jurnalPiutang->transaction_type = 'Pin';
                         $jurnalPiutang->save();
-
+                        
                         if (!empty($paymentIn->paymentType->coa_id)) {
                             $coaId = $paymentIn->paymentType->coa_id;
                         } else {
@@ -840,6 +748,22 @@ class PaymentInController extends Controller {
                             $jurnalPph->coa_id = 1473;
                             $jurnalPph->branch_id = $paymentIn->branch_id;
                             $jurnalPph->total = $paymentIn->tax_service_amount;
+                            $jurnalPph->debet_kredit = 'D';
+                            $jurnalPph->tanggal_posting = date('Y-m-d');
+                            $jurnalPph->transaction_subject = $paymentIn->notes;
+                            $jurnalPph->remark = $remark;
+                            $jurnalPph->is_coa_category = 0;
+                            $jurnalPph->transaction_type = 'Pin';
+                            $jurnalPph->save();
+                        }
+                        
+                        if ($paymentIn->downpayment_amount > 0) {
+                            $jurnalPph = new JurnalUmum;
+                            $jurnalPph->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalPph->coa_id = 1473;
+                            $jurnalPph->branch_id = $paymentIn->branch_id;
+                            $jurnalPph->total = $paymentIn->downpayment_amount;
                             $jurnalPph->debet_kredit = 'D';
                             $jurnalPph->tanggal_posting = date('Y-m-d');
                             $jurnalPph->transaction_subject = $paymentIn->notes;
@@ -912,17 +836,19 @@ class PaymentInController extends Controller {
         }
     }
 
-    public function actionAjaxJsonAmount($id) {
+    public function actionAjaxJsonAmount($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $model = new PaymentIn;
-            $model->attributes = $_POST['PaymentIn'];
+            $paymentIn = $this->instantiate($id);
+            $this->loadState($paymentIn);
 
-            $taxServiceAmount = empty($model->is_tax_service) ? 0.00 : $model->getTaxServiceAmount($model->is_tax_service);
+            $taxServiceAmount = CHtml::value($paymentIn->details[$index], 'taxServiceAmount');
 
             $object = array(
-                'amount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))),
-                'taxServiceAmount' => $taxServiceAmount,
+                'paymentAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'amount'))),
                 'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
+                'totalPayment' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))),
+                'totalInvoice' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))),
+                'totalServiceTax' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalServiceTax'))),
             );
 
             echo CJSON::encode($object);

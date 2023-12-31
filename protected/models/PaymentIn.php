@@ -24,6 +24,7 @@
  * @property string $created_datetime
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property string $downpayment_amount
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -35,6 +36,7 @@
  * @property PaymentInImages[] $paymentInImages
  * @property PaymentInApproval[] $paymentInApprovals
  * @property PaymentType $paymentType
+ * @property PaymentInDetails[] $paymentInDetails
  */
 class PaymentIn extends MonthlyTransactionActiveRecord {
 
@@ -70,16 +72,16 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_id, payment_number, payment_time, payment_date, payment_amount, notes, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
+            array('notes, payment_time, payment_date, payment_amount, downpayment_amount, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
             array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
-            array('payment_amount, tax_service_amount', 'length', 'max' => 18),
+            array('payment_amount, tax_service_amount, downpayment_amount', 'length', 'max' => 18),
             array('payment_type, status', 'length', 'max' => 30),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, customer_id, vehicle_id, payment_type, user_id, branch_id,invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id,invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 
@@ -99,6 +101,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'paymentInImages' => array(self::HAS_MANY, 'PaymentInImages', 'payment_in_id'),
             'paymentInApprovals' => array(self::HAS_MANY, 'PaymentInApproval', 'payment_in_id'),
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
+            'paymentInDetails' => array(self::HAS_MANY, 'PaymentInDetail', 'payment_in_id'),
         );
     }
 
@@ -127,6 +130,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'payment_type_id' => 'Payment Type',
             'is_tax_service' => 'PPh',
             'tax_service_amount' => 'PPh Amount',
+            'downpayment_amount' => 'Downpayment',
         );
     }
 
@@ -167,6 +171,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.payment_type_id', $this->payment_type_id);
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
+        $criteria->compare('downpayment_amount', $this->downpayment_amount);
 
         $criteria->together = 'true';
         $criteria->with = array('invoice');
@@ -320,15 +325,45 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         ));
     }
     
-    public function getTaxServiceAmount($serviceTax) {
+    public function getTotalPayment() {
+        $total = '0.00';
         
-        switch ($serviceTax) {
-            case self::ADD_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
-            case self::NON_SERVICE_TAX: return 0;
-            case self::INCLUDE_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
-            default: return '';
+        foreach ($this->paymentInDetails as $detail) {
+            $total += $detail->amount;
         }
+        
+        return $total;
     }
+    
+    public function getTotalInvoice() {
+        $total = '0.00';
+        
+        foreach ($this->paymentInDetails as $detail) {
+            $total += $detail->total_invoice;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalServiceTax() {
+        $total = '0.00';
+        
+        foreach ($this->paymentInDetails as $detail) {
+            $total += $detail->tax_service_amount;
+        }
+        
+        return $total;
+    }
+    
+//    public function getTaxServiceAmount($serviceTax) {
+//        
+//        switch ($serviceTax) {
+//            case self::ADD_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
+//            case self::NON_SERVICE_TAX: return 0;
+//            case self::INCLUDE_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
+//            default: return '';
+//        }
+//    }
 
     public function searchByPendingJournal() {
         // @todo Please modify the following code to remove attributes that should not be searched.

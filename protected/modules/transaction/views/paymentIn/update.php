@@ -4,7 +4,6 @@
 
 $this->breadcrumbs=array(
 	'Payment Ins'=>array('index'),
-	$model->id=>array('view','id'=>$model->id),
 	'Update',
 );
 
@@ -16,12 +15,13 @@ $this->breadcrumbs=array(
 );*/
 ?>
 
-<!--<h1>Update PaymentIn <?php echo $model->id; ?></h1>-->
+<h1>Update Payment In</h1>
 
 <div id="maincontent">
-	<?php $this->renderPartial('_form', array('model'=>$model,
-		'invoice'=>$invoice,
-		'invoiceDataProvider'=>$invoiceDataProvider,
-		'postImages' => $postImages,
-		'allowedImages' => $allowedImages,
-	)); ?></div>
+    <?php $this->renderPartial('_formMultiple', array(
+        'paymentIn' => $paymentIn,
+        'customer' => $customer,
+        'invoiceHeader' => $invoiceHeader,
+        'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
+    )); ?>
+</div>

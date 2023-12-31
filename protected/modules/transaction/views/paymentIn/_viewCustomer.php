@@ -16,9 +16,9 @@
                 <tr>
                     <td>
                         <?php echo $form->hiddenField($model, 'customer_id', array('readonly' => true)); ?>
-                        <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo $model->invoice_id != "" ? $model->invoice->customer->name : '' ?>"> 
+                        <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo $model->customer->name; ?>"> 
                     </td>
-                    <td><input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->invoice->customer->customer_type : '' ?>"></td>
+                    <td><input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"></td>
                     <td><textarea name="" id="Customer_customer_address" cols="30" rows="3" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea></td>
                     <td><input type="text" readonly="true" id="Customer_email" value="<?php echo $model->customer_id != "" ? $model->customer->email : ''; ?>"> </td>
                     <td>

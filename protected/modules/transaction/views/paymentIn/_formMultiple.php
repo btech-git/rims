@@ -1,5 +1,14 @@
 <div class="form">
-    <?php echo CHtml::beginForm(array(), 'POST'); ?>
+    <?php $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'payment-in-form',
+        'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        // Please note: When you enable ajax validation, make sure the corresponding
+        // controller action is handling ajax validation correctly.
+        // There is a call to performAjaxValidation() commented in generated controller code.
+        // See class documentation of CActiveForm for details on this.
+        'enableAjaxValidation' => false,
+    )); ?>
+    <?php echo CHtml::errorSummary($paymentIn->header); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
             <div class="field">
@@ -9,8 +18,8 @@
                     </div>
                     <div class="small-8 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                            'name' => 'PaymentDate',
-                            'value' => $paymentIn->header->payment_date,
+                            'model' => $paymentIn->header,
+                            'attribute' => "payment_date",
                             'options'=>array(
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
@@ -57,6 +66,17 @@
                         <?php echo CHtml::encode(CHtml::value($paymentIn->header, 'user.username')); ?>
                     </div>
                 </div>
+            </div>		
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Note', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeTextArea($paymentIn->header, 'notes'); ?>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -89,7 +109,7 @@
                             $userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
                             $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => $userBranch->branch_id));
                         ?>
-                        <?php echo CHtml::dropDownList('CompanyBankId', $paymentIn->header->company_bank_id, CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyBranch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
+                        <?php echo CHtml::activeDropDownList($paymentIn->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyBranch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
                             'empty' => '-- Select Company Bank --'
                         )); ?>
                         <?php echo CHtml::error($paymentIn->header, 'company_bank_id'); ?>
@@ -103,7 +123,7 @@
                         <?php echo CHtml::label('Payment Type', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::dropDownList('PaymentTypeId', $paymentIn->header->payment_type_id, CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($paymentIn->header, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
                             'empty' => '-- Select Payment Type --',
                             'onchange' => '
                                 if ($(this).val() == 1) {
@@ -124,10 +144,12 @@
 
     <hr />
 
-    <div class="row">
-        <?php echo CHtml::button('Tambah Invoice', array('name' => 'Search', 'onclick' => '$("#invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#invoice-dialog").dialog("open"); return false; }')); ?>
-        <?php echo CHtml::hiddenField('PurchaseInvoiceId'); ?>
-    </div>
+    <?php if ($paymentIn->header->isNewRecord): ?>
+        <div class="row">
+            <?php echo CHtml::button('Tambah Invoice', array('name' => 'Search', 'onclick' => '$("#invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#invoice-dialog").dialog("open"); return false; }')); ?>
+            <?php echo CHtml::hiddenField('SaleInvoiceId'); ?>
+        </div>
+    <?php endif; ?>
 
     <br />
     
@@ -137,12 +159,41 @@
         )); ?>
     </div>
 	
+    <div class="field">
+        <div class="row collapse">
+            <div class="small-4 columns">
+                <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
+            </div>
+            <div class="small-8 columns">
+                <?php $this->widget('CMultiFileUpload', array(
+                    'model' => $paymentIn->header,
+                    'attribute' => 'images',
+                    'accept' => 'jpg|jpeg|png|gif',
+                    'denied' => 'Only jpg, jpeg, png and gif are allowed',
+                    'max' => 10,
+                    'remove' => '[x]',
+                    'duplicate' => 'Already Selected',
+                    'options' => array(
+                        'afterFileSelect' => 'function(e ,v ,m){
+                            var fileSize = e.files[0].size;
+                            if (fileSize > 2*1024*1024) {
+                                alert("Exceeds file upload limit 2MB");
+                                $(".MultiFile-remove").click();
+                            }                      
+                            return true;
+                        }',
+                    ),
+                )); ?>
+            </div>
+        </div>
+    </div>
+
     <div class="row buttons">
         <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
     </div>
     <?php echo IdempotentManager::generate(); ?>
 
-    <?php echo CHtml::endForm(); ?>
+    <?php $this->endWidget(); ?>
 
 </div><!-- form -->
 
@@ -184,9 +235,21 @@
                 'name' => 'invoice_date',
                 'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
             ),
-            'total_price',
-            'payment_amount',
-            'payment_left',
+            array(
+                'name' => 'total_price',
+                'value' => 'CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $data->total_price))',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+            array(
+                'name' => 'payment_amount',
+                'value' => 'CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $data->payment_amount))',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+            array(
+                'name' => 'payment_left',
+                'value' => 'CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $data->payment_left))',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
         ),
     )); ?>
 

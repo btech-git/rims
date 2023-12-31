@@ -32,9 +32,9 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
-        <?php if ($model->invoice->registrationTransaction->status != 'Finished'): ?>
+        <?php //if ($model->invoice->registrationTransaction->status != 'Finished'): ?>
             <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning')); ?>
-        <?php endif; ?>
+        <?php //endif; ?>
         <?php //if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/paymentIn/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
@@ -71,18 +71,6 @@ $this->menu = array(
                                 
                                 <div class="small-8 columns">
                                     <input type="text" readonly="true" value="<?php echo $model->payment_date; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Payment Amount</span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo AppHelper::formatMoney($model->payment_amount); ?>">
                                 </div>
                             </div>
                         </div>
@@ -164,152 +152,7 @@ $this->menu = array(
                 </div>
             </fieldset>
             
-            <fieldset>
-                <legend>Approval Status</legend>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Approval type</th>
-                            <th>Revision</th>
-                            <th>date</th>
-                            <th>note</th>
-                            <th>supervisor</th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        <?php foreach ($revisionHistories as $key => $history): ?>
-                            <tr>
-                                <td><?php echo $history->approval_type; ?></td>
-                                <td><?php echo $history->revision; ?></td>
-                                <td><?php echo $history->date; ?></td>
-                                <td><?php echo $history->note; ?></td>
-                                <td><?php echo $history->supervisor->username; ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </fieldset>
-
-            <fieldset>
-                <h1>Invoice Detail</h1>
-                <div id="invoice-Detail">
-                    <fieldset>
-                        <legend>Invoice # <?php echo $model->invoice->invoice_number ?></legend>
-                        <div class="large-4 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Invoice Date</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true"  value="<?php echo $model->invoice_id != "" ? $model->invoice->invoice_date : '' ?>" > 
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Due Date </span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Invoice_due_date" value="<?php echo $model->invoice_id != "" ? $model->invoice->due_date : '' ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Status</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Invoice_status" value="<?php echo $model->invoice_id != "" ? $model->invoice->status : '' ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                        $referenceNum = "";
-                        $referenceType = "";
-                        if ($model->invoice->reference_type == 1) {
-                            $referenceType = 'Sales Order';
-                            $referenceNum = $model->invoice->salesOrder->sale_order_no;
-                        } else {
-                            $referenceType = 'Retail Sales';
-                            $referenceNum = $model->invoice->registrationTransaction->transaction_number;
-                        }
-                        ?>
-                        <div class="large-4 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Reference Type</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Invoice_reference_type" value="<?php echo $model->invoice_id != "" ? $referenceType : '' ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Reference Number</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Invoice_reference_number" value="<?php echo $model->invoice_id != "" ? $referenceNum : '' ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="large-4 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Invoice Amount</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Invoice_total_price" value="<?php echo $model->invoice ? AppHelper::formatMoney($model->invoice->total_price) : '' ?>">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Payment Amount</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo $model->invoice ? AppHelper::formatMoney($model->invoice->payment_amount) : '0' ?>">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Payment Left</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo $model->invoice ? AppHelper::formatMoney($model->invoice->payment_left) : '0' ?>">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
+<!--                    <fieldset>
                         <legend>Payment History</legend>
                         <div class="large-12 columns">
                             <table>
@@ -325,7 +168,7 @@ $this->menu = array(
                                 </thead>
                                 
                                 <tbody>
-                                    <?php foreach($invoice->paymentIns as $paymentIn): ?>
+                                    <?php /*foreach($invoice->paymentIns as $paymentIn): ?>
                                         <tr>
                                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_number')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_date')); ?></td>
@@ -334,243 +177,318 @@ $this->menu = array(
                                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'status')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'note')); ?></td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php endforeach;*/ ?>
                                 </tbody>
                             </table>
                         </div>
-                    </fieldset>
+                    </fieldset>-->
 
-                    <fieldset>
-                        <legend>Customer</legend>
-                        <div class="large-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Name</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo $model->invoice_id != "" ? $model->customer->name : '' ?>"> 
-                                    </div>
-                                </div>
+            <fieldset>
+                <legend>Customer</legend>
+                <div class="large-6 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Name</span>
                             </div>
 
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"> 
-                                    </div>
-                                </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo $model->customer->name; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Type</span>
                             </div>
 
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Address</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <textarea name="" id="Customer_customer_address" cols="30" rows="5" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea>
-                                    </div>
-                                </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"> 
                             </div>
-                        </div> <!-- end div large -->
+                        </div>
+                    </div>
 
-                        <div class="large-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Phone</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo $model->customer->phone; ?></textarea>
-                                    </div>
-                                </div>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Address</span>
                             </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Mobile</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo $model->customer->mobile_phone ?></textarea>
-                                    </div>
-                                </div>
+
+                            <div class="small-8 columns">
+                                <textarea name="" id="Customer_customer_address" cols="30" rows="5" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea>
                             </div>
-                            
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Email</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" id="Customer_email" value="<?php echo $model->customer_id != "" ? $model->customer->email : ''; ?>"> 
-                                    </div>
+                        </div>
+                    </div>
+                </div> <!-- end div large -->
+
+                <div class="large-6 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Phone</span>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo $model->customer->phone; ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Mobile</span>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo $model->customer->mobile_phone ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Email</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" id="Customer_email" value="<?php echo $model->customer_id != "" ? $model->customer->email : ''; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <?php if ($model->vehicle_id != ""): ?>
+                <fieldset>
+                    <legend>Vehicle</legend>
+
+                    <?php
+                    $vehicleId = $plate = $machine = $frame = $chasis = $power = $carMake = $carModel = $carSubModel = $carColor = "";
+                    if ($model->vehicle_id != "") {
+                        $vehicle = Vehicle::model()->findByPk($model->vehicle_id);
+                        if (!empty($vehicle)) {
+                            $vehicleId = $vehicle->id;
+                            $plate = $vehicle->plate_number != "" ? $vehicle->plate_number : '';
+                            $machine = $vehicle->machine_number != "" ? $vehicle->machine_number : '';
+                            $frame = $vehicle->frame_number != "" ? $vehicle->frame_number : '';
+                            $chasis = $vehicle->chasis_code != "" ? $vehicle->chasis_code : '';
+                            $power = $vehicle->power != "" ? $vehicle->power : '';
+                            $carMake = $vehicle->car_make_id != "" ? $vehicle->carMake->name : '';
+                            $carModel = $vehicle->car_model_id != "" ? $vehicle->carModel->name : '';
+                            $carSubModel = $vehicle->car_sub_model_detail_id != "" ? $vehicle->carSubModel->name : '';
+                            $carColor = $vehicle->color_id != "" ? Colors:: model()->findByPk($vehicle->color_id)->name : '';
+                        }
+                    }
+                    ?>
+                    <div class="large-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Plate Number</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_plate_number" value="<?php echo $plate != "" ? $plate : ''; ?>"> 
                                 </div>
                             </div>
                         </div>
-                    </fieldset>
 
-                    <?php if ($model->vehicle_id != ""): ?>
-                        <fieldset>
-                            <legend>Vehicle</legend>
-
-                            <?php
-                            $vehicleId = $plate = $machine = $frame = $chasis = $power = $carMake = $carModel = $carSubModel = $carColor = "";
-                            if ($model->vehicle_id != "") {
-                                $vehicle = Vehicle::model()->findByPk($model->vehicle_id);
-                                if (!empty($vehicle)) {
-                                    $vehicleId = $vehicle->id;
-                                    $plate = $vehicle->plate_number != "" ? $vehicle->plate_number : '';
-                                    $machine = $vehicle->machine_number != "" ? $vehicle->machine_number : '';
-                                    $frame = $vehicle->frame_number != "" ? $vehicle->frame_number : '';
-                                    $chasis = $vehicle->chasis_code != "" ? $vehicle->chasis_code : '';
-                                    $power = $vehicle->power != "" ? $vehicle->power : '';
-                                    $carMake = $vehicle->car_make_id != "" ? $vehicle->carMake->name : '';
-                                    $carModel = $vehicle->car_model_id != "" ? $vehicle->carModel->name : '';
-                                    $carSubModel = $vehicle->car_sub_model_detail_id != "" ? $vehicle->carSubModel->name : '';
-                                    $carColor = $vehicle->color_id != "" ? Colors:: model()->findByPk($vehicle->color_id)->name : '';
-                                }
-                            }
-                            ?>
-                            <div class="large-6 columns">
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Plate Number</span>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_plate_number" value="<?php echo $plate != "" ? $plate : ''; ?>"> 
-                                        </div>
-                                    </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Machine Number</span>
                                 </div>
-
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Machine Number</span>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_machine_number" value="<?php echo $machine != "" ? $machine : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Frame Number</span>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_frame_number" value="<?php echo $frame != "" ? $frame : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Chasis Code</span>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_chasis_code" value="<?php echo $chasis != "" ? $chasis : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Power CC</span>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_power" value="<?php echo $power != "" ? $power : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> <!-- end div large -->
-
-                            <div class="large-6 columns">
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Car Make</span>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_car_make_name" value="<?php echo $carMake != "" ? $carMake : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Car Model</span>
-                                        </div>
-                                        
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_car_model_name" value="<?php echo $carModel != "" ? $carModel : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Car Sub Model</span>
-                                        </div>
-                                        
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_car_sub_model_name" value="<?php echo $carSubModel != "" ? $carSubModel : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <span class="prefix">Color</span>
-                                        </div>
-                                        
-                                        <div class="small-8 columns">
-                                            <input type="text" readonly="true" id="Vehicle_car_color_name" value="<?php echo $carColor != "" ? $carColor : ''; ?>"> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- end div large -->
-                        </fieldset>
-                    <?php endif; ?>
-                    
-                    <fieldset>
-                        <legend>Attached Images</legend>
-
-                        <?php foreach ($postImages as $postImage):
-                            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $postImage->filename;
-                            $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename;
-                        ?>
-                            <div class="row">
-                                <div class="small-3 columns">
-                                    <div style="margin-bottom:.5rem">
-                                        <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
-                                    </div>
-                                </div>
-                                
                                 <div class="small-8 columns">
-                                    <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-                                        <?php echo (Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename); ?>
-                                    </div>
+                                    <input type="text" readonly="true" id="Vehicle_machine_number" value="<?php echo $machine != "" ? $machine : ''; ?>"> 
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    </fieldset>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Frame Number</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_frame_number" value="<?php echo $frame != "" ? $frame : ''; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Chasis Code</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_chasis_code" value="<?php echo $chasis != "" ? $chasis : ''; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Power CC</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_power" value="<?php echo $power != "" ? $power : ''; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end div large -->
+
+                    <div class="large-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Car Make</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_car_make_name" value="<?php echo $carMake != "" ? $carMake : ''; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Car Model</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_car_model_name" value="<?php echo $carModel != "" ? $carModel : ''; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Car Sub Model</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_car_sub_model_name" value="<?php echo $carSubModel != "" ? $carSubModel : ''; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Color</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Vehicle_car_color_name" value="<?php echo $carColor != "" ? $carColor : ''; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end div large -->
+                </fieldset>
+            <?php endif; ?>
+                    
+            <fieldset>
+                <legend>Payment Detail</legend>
+                <div id="invoice-Detail">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Total Invoice</th>
+                                <th>Pph</th>
+                                <th>Payment Amount</th>
+                                <th>Memo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($model->paymentInDetails as $detail): ?>
+                            <tr>
+                                <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')); ?></td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?></td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'tax_service_amount'))); ?></td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td style="text-align: right" colspan="3">Total Payment</td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPayment'))); ?></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right" colspan="3">Total Invoice</td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right" colspan="3">Total Pph</td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalServiceTax'))); ?></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right" colspan="3">Downpayment</td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'downpayment_amount'))); ?></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Approval Status</legend>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Approval type</th>
+                            <th>Revision</th>
+                            <th>date</th>
+                            <th>note</th>
+                            <th>supervisor</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php foreach ($revisionHistories as $key => $history): ?>
+                            <tr>
+                                <td><?php echo $history->approval_type; ?></td>
+                                <td><?php echo $history->revision; ?></td>
+                                <td><?php echo $history->date; ?></td>
+                                <td><?php echo $history->note; ?></td>
+                                <td><?php echo $history->supervisor->username; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </fieldset>
+
+            <fieldset>
+                <legend>Attached Images</legend>
+
+                <?php foreach ($postImages as $postImage):
+                    $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $postImage->filename;
+                    $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename;
+                ?>
+                    <div class="row">
+                        <div class="small-3 columns">
+                            <div style="margin-bottom:.5rem">
+                                <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
+                            </div>
+                        </div>
+
+<!--                        <div class="small-8 columns">
+                            <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
+                                <?php //echo (Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename); ?>
+                            </div>
+                        </div>-->
+                    </div>
+                <?php endforeach; ?>
             </fieldset>
             
             <br />

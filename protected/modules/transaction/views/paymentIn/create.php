@@ -8,9 +8,13 @@ $this->breadcrumbs = array(
 );
 ?>
 
+<h1>Payment In</h1>
+
 <div id="maincontent">
-    <?php $this->renderPartial('_form', array(
-        'model' => $model,
-        'invoice' => $invoice,
+    <?php $this->renderPartial('_formMultiple', array(
+        'paymentIn' => $paymentIn,
+        'customer' => $customer,
+        'invoiceHeader' => $invoiceHeader,
+        'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
     )); ?>
 </div>

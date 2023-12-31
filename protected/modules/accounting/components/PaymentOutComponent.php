@@ -70,10 +70,11 @@ class PaymentOutComponent extends CComponent {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
             $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
-            if ($valid)
+            if ($valid) {
                 $dbTransaction->commit();
-            else
+            } else {
                 $dbTransaction->rollback();
+            }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
