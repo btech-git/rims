@@ -70,7 +70,7 @@
                     <?php echo CHtml::button('X', array(
                         'onclick' => CHtml::ajax(array(
                             'type' => 'POST',
-                            'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('index' => $i)),
+                            'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $paymentIn->header->id, 'index' => $i)),
                             'update' => '#detail_div',
                         )),
                     )); ?>

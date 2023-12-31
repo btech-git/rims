@@ -253,7 +253,7 @@
         ),
     )); ?>
 
-    <?php echo CHtml::ajaxSubmitButton('Add Invoice', CController::createUrl('ajaxHtmlAddInvoices'), array(
+    <?php echo CHtml::ajaxSubmitButton('Add Invoice', CController::createUrl('ajaxHtmlAddInvoices', array('id' => $paymentIn->header->id)), array(
         'type' => 'POST',
         'data' => 'js:$("form").serialize()',
         'success' => 'js:function(html) {

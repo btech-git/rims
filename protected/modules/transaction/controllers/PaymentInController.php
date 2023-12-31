@@ -313,9 +313,9 @@ class PaymentInController extends Controller {
          ));
     }
    
-    public function actionAjaxHtmlAddInvoices() {
+    public function actionAjaxHtmlAddInvoices($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate();
+            $paymentIn = $this->instantiate($id);
             $this->loadState($paymentIn);
 
             if (isset($_POST['InvoiceIds'])) {
@@ -330,9 +330,9 @@ class PaymentInController extends Controller {
         }
     }
  
-    public function actionAjaxHtmlRemoveDetail($index) {
+    public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate();
+            $paymentIn = $this->instantiate($id);
             $this->loadState($paymentIn);
 
             $paymentIn->removeDetailAt($index);
