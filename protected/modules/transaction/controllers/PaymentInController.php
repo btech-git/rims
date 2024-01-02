@@ -77,9 +77,11 @@ class PaymentInController extends Controller {
 //        $invoice = InvoiceHeader::model()->findByPk($model->invoice_id);
         
         if (isset($_POST['SubmitFinish'])) {
-            $registrationTransaction = RegistrationTransaction::model()->findByPk($model->invoice->registration_transaction_id);
-            $registrationTransaction->status = 'Finished';
-            $registrationTransaction->update(array('status'));
+            foreach ($model->paymentInDetails as $detail) {
+                $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->invoiceHeader->registration_transaction_id);
+                $registrationTransaction->status = 'Finished';
+                $registrationTransaction->update(array('status'));
+            }
         }
 
         if (isset($_POST['Process'])) {
