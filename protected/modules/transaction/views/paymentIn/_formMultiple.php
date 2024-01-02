@@ -106,8 +106,8 @@
                     </div>
                     <div class="small-8 columns">
                         <?php
-                            $userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
-                            $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => $userBranch->branch_id));
+                            //$userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
+                            $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => 7));
                         ?>
                         <?php echo CHtml::activeDropDownList($paymentIn->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyBranch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
                             'empty' => '-- Select Company Bank --'
