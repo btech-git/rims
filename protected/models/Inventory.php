@@ -241,4 +241,15 @@ class Inventory extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
+    
+    public function getTotalStockInventoryDetail($productId, $warehouseId) {
+        $total = 0;
+        $inventoryDetails = InventoryDetail::model()->findAllByAttributes(array('product_id' => $productId, 'warehouse_id' => $warehouseId));
+        
+        foreach ($inventoryDetails as $detail) {
+            $total += $detail->stock_in + $detail->stock_out;
+        }
+        
+        return $total;
+    }
 }

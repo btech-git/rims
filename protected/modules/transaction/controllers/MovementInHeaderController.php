@@ -355,6 +355,20 @@ class MovementInHeaderController extends Controller {
             'kode_transaksi' => $model->movement_in_number,
         ));
 
+        InventoryDetail::model()->deleteAllByAttributes(array(
+            'transaction_number' => $model->movement_in_number,
+        ));
+
+        foreach ($model->movementInDetails as $movementDetail) {
+            $inventory = Inventory::model()->findByAttributes(array(
+                'product_id' => $movementDetail->product_id, 
+                'warehouse_id' => $movementDetail->warehouse_id
+            ));
+
+            $inventory->total_stock = $inventory->getTotalStockInventoryDetail($movementDetail->product_id, $movementDetail->warehouse_id);
+            $inventory->update(array('total_stock'));
+        }
+        
         $this->redirect(array('admin'));
     }
 

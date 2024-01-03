@@ -352,6 +352,20 @@ class MovementOutHeaderController extends Controller {
             'kode_transaksi' => $model->movement_out_no,
         ));
 
+        InventoryDetail::model()->deleteAllByAttributes(array(
+            'transaction_number' => $model->movement_out_no,
+        ));
+
+        foreach ($model->movementOutDetails as $movementDetail) {
+            $inventory = Inventory::model()->findByAttributes(array(
+                'product_id' => $movementDetail->product_id, 
+                'warehouse_id' => $movementDetail->warehouse_id
+            ));
+
+            $inventory->total_stock = $inventory->getTotalStockInventoryDetail($movementDetail->product_id, $movementDetail->warehouse_id);
+            $inventory->update(array('total_stock'));
+        }
+        
         $this->redirect(array('admin'));
     }
 
