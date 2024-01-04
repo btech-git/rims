@@ -86,19 +86,15 @@ $('.search-form form').submit(function(){
                         'header' => '',
                     ),
                     'columns' => array(
-                        array(
-                            'name' => 'invoice_id', 
-                            'value' => 'empty($data->invoice_id) ? "N/A" : CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
-                            'type' => 'raw'
-                        ),
-                        array(
-                            'name' => 'customer_name', 
-                            'value' => 'empty($data->customer_id) ? "N/A" : $data->customer->name'
-                        ),
-                        array(
-                            'header' => 'Plate #', 
-                            'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
-                        ),
+//                        array(
+//                            'name' => 'invoice_id', 
+//                            'value' => 'empty($data->invoice_id) ? "N/A" : CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
+//                            'type' => 'raw'
+//                        ),
+//                        array(
+//                            'header' => 'Plate #', 
+//                            'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
+//                        ),
                         array(
                             'name' => 'payment_number',
                             'value' => 'CHtml::link($data->payment_number, array("view", "id"=>$data->id))',
@@ -106,20 +102,24 @@ $('.search-form form').submit(function(){
                         ),
                         'payment_date',
                         array(
+                            'name' => 'customer_name', 
+                            'value' => 'empty($data->customer_id) ? "N/A" : $data->customer->name'
+                        ),
+                        array(
                             'name' => 'payment_amount', 
                             'value' => 'AppHelper::formatMoney($data->payment_amount)',
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
                         'notes',
-                        array(
-                            'header' => 'Invoice Status',
-                            'name' => 'invoice_status',
-                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->status',
-                        ),
-                        array(
-                            'header' => 'Type',
-                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->referenceTypeLiteral',
-                        ),
+//                        array(
+//                            'header' => 'Invoice Status',
+//                            'name' => 'invoice_status',
+//                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->status',
+//                        ),
+//                        array(
+//                            'header' => 'Type',
+//                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->referenceTypeLiteral',
+//                        ),
                         array(
                             'header' => 'Created By',
                             'name' => 'user_id',
