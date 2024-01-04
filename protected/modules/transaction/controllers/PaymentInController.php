@@ -403,13 +403,14 @@ class PaymentInController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentIn);
-            $paymentIn->header->setCodeNumberByRevision('payment_number');
             
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $paymentIn->header->payment_number,
                 'branch_id' => $paymentIn->header->branch_id,
             ));
 
+            $paymentIn->header->setCodeNumberByRevision('payment_number');
+            
             if ($paymentIn->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $paymentIn->header->id));
             }

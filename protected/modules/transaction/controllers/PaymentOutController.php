@@ -277,8 +277,7 @@ class PaymentOutController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        $model->setCodeNumberByRevision('payment_number');
-
+        
         $purchaseOrder = new TransactionPurchaseOrder('search');
         $purchaseOrder->unsetAttributes();
         
@@ -318,6 +317,14 @@ class PaymentOutController extends Controller {
 
         if (isset($_POST['PaymentOut'])) {
             $model->attributes = $_POST['PaymentOut'];
+
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->payment_number,
+                'branch_id' => $model->branch_id,
+            ));
+
+            $model->setCodeNumberByRevision('payment_number');
+
             $po = TransactionPurchaseOrder::model()->findByPk($model->purchase_order_id);
             if ($po->supplier->coa->id != "") {
                 if ($model->save()) {
