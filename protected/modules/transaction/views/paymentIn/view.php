@@ -193,7 +193,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo $model->customer->name; ?>"> 
+                                <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -231,7 +231,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo $model->customer->phone; ?></textarea>
+                                <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -243,7 +243,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo $model->customer->mobile_phone ?></textarea>
+                                <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')) ?></textarea>
                             </div>
                         </div>
                     </div>
