@@ -43,38 +43,38 @@
                         <?php echo CHtml::label('Tanggal Payment', ''); ?>
                     </td>
                     <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
+                        <?php echo CHtml::label('Customer', ''); ?>
+                    </td>
+                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
+                        <?php echo CHtml::label('Payment Type', ''); ?>
+                    </td>
+                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
+                        <?php echo CHtml::label('Payment Amount', ''); ?>
+                    </td>
+                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
+                        <?php echo CHtml::label('Status', ''); ?>
+                    </td>
+                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
+                        <?php echo CHtml::label('Admin', ''); ?>
+                    </td>
+<!--                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
+                        <?php /*echo CHtml::label('Jatuh Tempo', ''); ?>
+                    </td>
+                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
                         <?php echo CHtml::label('Invoice #', ''); ?>
                     </td>
                     <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
                         <?php echo CHtml::label('Tanggal Invoice', ''); ?>
                     </td>
                     <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Jatuh Tempo', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Customer', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
                         <?php echo CHtml::label('Vehicle', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Invoice Status', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Payment Type', ''); ?>
                     </td>
                     <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
                         <?php echo CHtml::label('Grand Total', ''); ?>
                     </td>
                     <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Payment Amount', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Remaining', ''); ?>
-                    </td>
-                    <td style="text-align: center; font-weight: bold; border-bottom: 1px solid">
-                        <?php echo CHtml::label('Admin', ''); ?>
-                    </td>
+                        <?php echo CHtml::label('Remaining', '');*/ ?>
+                    </td>-->
                 </tr>
             </thead>
             <tbody>
@@ -92,23 +92,24 @@
                                 <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'payment_date'))); ?>
                                 <?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_time')); ?>
                             </td>
-                            <td>
-                                <?php echo CHtml::link($paymentIn->invoice->invoice_number, array('javascript:;'), array(
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'customer.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'payment_amount'))); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'status')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'user.username')); ?></td>
+<!--                            <td>
+                                <?php /*echo CHtml::link($paymentIn->invoice->invoice_number, array('javascript:;'), array(
                                     'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
                                         "codeNumber" => $paymentIn->invoice->invoice_number
                                     )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                                )); ?>
+                                ));*/ ?>
                             </td>
-                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'invoice.invoice_date'))); ?></td>
-                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'invoice.due_date'))); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'customer.name')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'vehicle.plate_number')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'invoice.status')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'invoice.total_price'))); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'payment_amount'))); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'invoice.payment_left'))); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'user.username')); ?></td>
+                            <td><?php /*echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'invoice.invoice_date'))); ?></td>
+                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($paymentIn, 'invoice.due_date')));*/ ?></td>
+                            <td><?php /*echo CHtml::encode(CHtml::value($paymentIn, 'vehicle.plate_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'invoice.status'));*/ ?></td>
+                            <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'invoice.total_price'))); ?></td>
+                            <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($paymentIn, 'invoice.payment_left'))); ?></td>-->
                         </tr>
                     <?php //endif; ?>
                 <?php endforeach; ?>
