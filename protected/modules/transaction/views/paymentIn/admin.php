@@ -110,16 +110,16 @@ $('.search-form form').submit(function(){
                             'value' => 'AppHelper::formatMoney($data->payment_amount)',
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
-                        'notes',
+//                        'notes',
 //                        array(
 //                            'header' => 'Invoice Status',
 //                            'name' => 'invoice_status',
 //                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->status',
 //                        ),
-//                        array(
-//                            'header' => 'Type',
-//                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->referenceTypeLiteral',
-//                        ),
+                        array(
+                            'header' => 'Insurance',
+                            'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
+                        ),
                         array(
                             'header' => 'Created By',
                             'name' => 'user_id',
@@ -195,17 +195,22 @@ $('.search-form form').submit(function(){
                                 'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
                             ),
                             array(
+                                'header' => 'Insurance',
+                                'filter' => CHtml::activeDropDownList($invoice, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+                                'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
+                            ),
+                            array(
                                 'name' => 'user_id',
                                 'filter' => CHtml::activeDropDownList($invoice, 'user_id', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
                                 'header' => 'Created By',
                                 'value' => 'empty($data->user_id) ? "N/A" : $data->user->username',
                             ),
-                            array(
-                                'name' => 'branch_id',
-                                'header' => 'Branch',
-                                'filter' => CHtml::activeDropDownList($invoice, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-                                'value' => '$data->branch->name',
-                            ),
+//                            array(
+//                                'name' => 'branch_id',
+//                                'header' => 'Branch',
+//                                'filter' => CHtml::activeDropDownList($invoice, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+//                                'value' => '$data->branch->name',
+//                            ),
                             array(
                                 'name' => 'total_price', 
                                 'value' => 'AppHelper::formatMoney($data->total_price)',

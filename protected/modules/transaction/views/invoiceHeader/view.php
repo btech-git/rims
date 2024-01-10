@@ -80,9 +80,9 @@ $this->menu = array(
             </tr>
             
             <tr>
-                <td width="10%">Payment Bank</td>
+                <td width="10%">Insurance Company</td>
                 <td width="30%">
-                    <?php echo CHtml::encode(CHtml::value($model, 'companyBankIdEstimate.bank.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($registration, 'insuranceCompany.name')); ?>
                 </td>
                 <td width="10%">Plate #</td>
                 <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.plate_number')); ?>

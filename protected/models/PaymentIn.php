@@ -25,6 +25,7 @@
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
  * @property string $downpayment_amount
+ * @property integer $insurance_company_id
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -37,6 +38,7 @@
  * @property PaymentInApproval[] $paymentInApprovals
  * @property PaymentType $paymentType
  * @property PaymentInDetails[] $paymentInDetails
+ * @property InsuranceCompany $insuranceCompany
  */
 class PaymentIn extends MonthlyTransactionActiveRecord {
 
@@ -73,7 +75,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('notes, payment_time, payment_date, payment_amount, downpayment_amount, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
-            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled', 'numerical', 'integerOnly' => true),
+            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled, insurance_company_id', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount, tax_service_amount, downpayment_amount', 'length', 'max' => 18),
             array('payment_type, status', 'length', 'max' => 30),
@@ -81,7 +83,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id,invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 
@@ -102,6 +104,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'paymentInApprovals' => array(self::HAS_MANY, 'PaymentInApproval', 'payment_in_id'),
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
             'paymentInDetails' => array(self::HAS_MANY, 'PaymentInDetail', 'payment_in_id'),
+            'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
         );
     }
 
@@ -131,6 +134,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'is_tax_service' => 'PPh',
             'tax_service_amount' => 'PPh Amount',
             'downpayment_amount' => 'Downpayment',
+            'insurance_company_id' => 'Insurance Company',
         );
     }
 
@@ -172,6 +176,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
         $criteria->compare('downpayment_amount', $this->downpayment_amount);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
 
         $criteria->together = 'true';
         $criteria->with = array('invoice');

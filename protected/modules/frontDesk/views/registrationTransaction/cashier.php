@@ -45,6 +45,7 @@ $('form').submit(function(){
                             <td style="text-align: center; font-weight: bold">Invoice #</td>
                             <td style="text-align: center; font-weight: bold" colspan="2">Date</td>
                             <td style="text-align: center; font-weight: bold">Plate #</td>
+                            <td style="text-align: center; font-weight: bold">Customer Name</td>
                         </tr>
                         
                         <tr>
@@ -59,6 +60,7 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
+                                            insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -85,6 +87,7 @@ $('form').submit(function(){
                                                     status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
                                                     branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
                                                     customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
+                                                    insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
                                                 } } });
                                             ',
                                         ),
@@ -112,6 +115,7 @@ $('form').submit(function(){
                                                     status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
                                                     branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
                                                     customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
+                                                    insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
                                                 } } });
                                             ',
                                         ),
@@ -130,20 +134,12 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
+                                            insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
                             </td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align: center; font-weight: bold">Customer Name</td>
-                            <td style="text-align: center; font-weight: bold">Customer Type</td>
-                            <td style="text-align: center; font-weight: bold">Status</td>
-                            <td style="text-align: center; font-weight: bold">Branch</td>
-                        </tr>
-                        
-                        <tr>                            
+                            
                             <td>
                                 <?php echo CHtml::activeTextField($invoice, 'customer_name', array(
                                     'onchange' => '
@@ -156,6 +152,35 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
                                             customer_type: $("#' . CHtml::activeId($invoice, 'customer_type') . '").val(),
+                                            insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
+                                        } } });
+                                    ',
+                                )); ?>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="text-align: center; font-weight: bold">Insurance</td>
+                            <td style="text-align: center; font-weight: bold">Customer Type</td>
+                            <td style="text-align: center; font-weight: bold">Status</td>
+                            <td style="text-align: center; font-weight: bold">Branch</td>
+                        </tr>
+                        
+                        <tr>                            
+                            <td>
+                                <?php echo CHtml::activeDropDownList($invoice, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                    'empty' => '-- all --',
+                                    'onchange' => '
+                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                            insurance_company_id: $(this).val(),
+                                            invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
+                                            invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
+                                            invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
+                                            plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
+                                            status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
+                                            branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
+                                            customer_type: $("#' . CHtml::activeId($invoice, 'customer_type') . '").val(),
+                                            customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -177,6 +202,7 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
+                                            insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -199,6 +225,7 @@ $('form').submit(function(){
                                             plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
                                             branch_id: $("#' . CHtml::activeId($invoice, 'branch_id') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
+                                            insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -216,6 +243,7 @@ $('form').submit(function(){
                                             status: $("#' . CHtml::activeId($invoice, 'status') . '").val(),
                                             plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
                                             customer_name: $("#' . CHtml::activeId($invoice, 'customer_name') . '").val(),
+                                            insurance_company_id: $("#' . CHtml::activeId($invoice, 'insurance_company_id') . '").val(),
                                         } } });
                                     ',
                                 )); ?>
@@ -265,8 +293,8 @@ $('form').submit(function(){
                         'value' => '$data->customer != null? $data->customer->name : "-"'
                     ),
                     array(
-                        'name' => 'branch_id', 
-                        'value' => '$data->branch_id != null? $data->branch->name : "-"'
+                        'header' => 'Insurance',
+                        'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
                     ),
                     'status',
                     array(

@@ -140,6 +140,7 @@ class PaymentInComponent extends CComponent {
         $this->header->payment_type = $this->header->paymentType->name;
         $this->header->payment_amount = $this->totalPayment;
         $this->header->tax_service_amount = $this->totalServiceTax;
+        $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {

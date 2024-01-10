@@ -116,11 +116,11 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">User</span>
+                                    <span class="prefix">Branch</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->user->username; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo $model->branch->name; ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -128,11 +128,23 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
+                                    <span class="prefix">Insurance Company</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->branch->name; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">User</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo $model->user->username; ?>"> 
                                 </div>
                             </div>
                         </div>

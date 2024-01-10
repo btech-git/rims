@@ -287,6 +287,7 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->payment_date_estimate = date('Y-m-d');
         $invoice->header->coa_bank_id_estimate = null;
         $invoice->header->created_datetime = date('Y-m-d H:i:s');
+        $invoice->header->insurance_company_id = empty($registrationTransaction->insurance_company_id) ? null : $registrationTransaction->insurance_company_id;
         
         $invoice->addDetails($invoice->header->reference_type, $registrationId);
         

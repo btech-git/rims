@@ -495,6 +495,7 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('t.user_id', $invoice->user_id);
         $invoiceCriteria->compare('t.status', $invoice->status, true);
         $invoiceCriteria->compare('t.reference_type', $invoice->reference_type);
+        $invoiceCriteria->compare('t.insurance_company_id', $invoice->insurance_company_id);
         
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer', 'vehicle');
@@ -692,12 +693,6 @@ class PaymentInController extends Controller {
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
                             $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                            if (!empty($invoiceHeader->registration_transaction_id)) {
-                                $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
-                                $coaId = !empty($registrationTransaction->insurance_company_id) ? $registrationTransaction->insuranceCompany->coa_id : $paymentIn->customer->coa_id;
-                            } else {
-                                $coaId = $paymentIn->customer->coa_id;
-                            }
 
                             if ($invoiceHeader->payment_left > 0.00) {
                                 $invoiceHeader->status = 'PARTIALLY PAID';
@@ -708,6 +703,12 @@ class PaymentInController extends Controller {
                             $invoiceHeader->update(array('status'));
                         }
 
+                        if (!empty($paymentIn->insurance_company_id)) {
+                            $coaId = $paymentIn->insuranceCompany->coa_id;
+                        } else {
+                            $coaId = $paymentIn->customer->coa_id;
+                        }
+                        
                         $remark = $paymentIn->customer->name;
                         $totalKas = $paymentIn->payment_amount + $paymentIn->tax_service_amount + $paymentIn->downpayment_amount;
                         $jurnalPiutang = new JurnalUmum;
