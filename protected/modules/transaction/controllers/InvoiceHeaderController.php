@@ -140,12 +140,12 @@ class InvoiceHeaderController extends Controller {
                         $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
                         $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $total;
 
-                        $registrationProduct = RegistrationProduct::model()->findByAttributes(array('registration_transaction_id' => $model->registration_transaction_id, 'product_id' => $detail->product_id));
-                        if (!empty($registrationProduct) && $registrationProduct->discount > 0) {
+//                        $registrationProduct = RegistrationProduct::model()->findByAttributes(array('registration_transaction_id' => $model->registration_transaction_id, 'product_id' => $detail->product_id));
+                        if ($detail->discount > '0.00') {
                             $jurnalUmumDiskon = $detail->product->productSubMasterCategory->coa_diskon_penjualan;
                             $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
                             $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
-                            $journalReferences[$jurnalUmumDiskon]['values'][] = $registrationProduct->discountAmount;
+                            $journalReferences[$jurnalUmumDiskon]['values'][] = $detail->discount;
                         }
                     } elseif (!empty($detail->service_id)) { 
 //                        $price = $detail->is_quick_service == 1 ? $rService->price : $rService->price;
@@ -155,12 +155,12 @@ class InvoiceHeaderController extends Controller {
                         $journalReferences[$jurnalUmumPendapatanJasa]['is_coa_category'] = 0;
                         $journalReferences[$jurnalUmumPendapatanJasa]['values'][] = $detail->unit_price;
 
-                        $registrationService = RegistrationService::model()->findByAttributes(array('registration_transaction_id' => $model->registration_transaction_id, 'service_id' => $detail->service_id));
-                        if (!empty($registrationService) && $registrationService->discount_price > 0.00) {
+//                        $registrationService = RegistrationService::model()->findByAttributes(array('registration_transaction_id' => $model->registration_transaction_id, 'service_id' => $detail->service_id));
+                        if ($detail->discount > '0.00') {
                             $jurnalUmumDiscountPendapatanJasa = $detail->service->serviceCategory->coa_diskon_service;
                             $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
                             $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
-                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $registrationService->discountAmount;
+                            $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $detail->discount;
                         }
                     } else {
                         continue;
