@@ -251,9 +251,6 @@ $this->menu = array(
                         <th>QTY Left</th>
                         <th>QTY Movement</th>
                         <th>QTY Movement Left</th>
-                        <th>HPP</th>
-                        <th>Price</th>
-                        <th>Total</th>
                         <th>Note</th>
                         <!--<th>Barcode Product</th>-->
                     </tr>
@@ -272,9 +269,6 @@ $this->menu = array(
                             <td><?php echo $deliveryDetail->quantity_request_left == '' ? '-' : $deliveryDetail->quantity_request_left; ?></td>
                             <td><?php echo $deliveryDetail->quantity_movement == '' ? '-' : $deliveryDetail->quantity_movement; ?></td>
                             <td><?php echo $deliveryDetail->quantity_movement_left == '' ? '-' : $deliveryDetail->quantity_movement_left; ?></td>
-                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->product->hpp)); ?></td>
-                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->unitPrice)); ?></td>
-                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $deliveryDetail->totalSaleDelivered)); ?></td>
                             <td><?php echo $deliveryDetail->note == '' ? '-' : $deliveryDetail->note; ?></td>
                             <!--<td><?php //echo $deliveryDetail->barcode_product == '' ? '-' : $deliveryDetail->barcode_product; ?></td>-->
                         </tr>
@@ -356,7 +350,6 @@ $this->menu = array(
                         <td>Product</td>
                         <td>Qty Request</td>
                         <td>Qty Delivery</td>
-
                         <td>Qty Request Left</td>
                         <td>Note</td>
                         <td>Barcode</td>
