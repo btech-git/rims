@@ -160,7 +160,8 @@ class PaymentInComponent extends CComponent {
                 $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
                 $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment();
                 $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
-                $valid = $invoiceHeader->update(array('payment_amount', 'payment_left')) && $valid;
+                $invoiceHeader->status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
+                $valid = $invoiceHeader->update(array('payment_amount', 'payment_left', 'status')) && $valid;
             }
         }
 

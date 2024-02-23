@@ -114,6 +114,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'CompanyBank', 'coa_bank_id_estimate'),
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'invoice_id'),
             'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
+            'paymentInDetails' => array(self::HAS_MANY, 'PaymentInDetail', 'invoice_header_id'),
         );
     }
 
@@ -347,8 +348,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     public function getTotalPayment() {
         $total = 0.00;
         
-        foreach ($this->paymentIns as $detail) {
-            $total += $detail->payment_amount + $detail->tax_service_amount;
+        foreach ($this->paymentInDetails as $detail) {
+            $total += $detail->amount + $detail->tax_service_amount;
         }
         
         return $total;
