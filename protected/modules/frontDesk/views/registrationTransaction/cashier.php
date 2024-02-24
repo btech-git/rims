@@ -212,7 +212,7 @@ $('form').submit(function(){
                                 <?php echo CHtml::activeDropDownList($invoice, 'status', array(
                                     '' => '-- All --',
                                     'INVOICING' => 'INVOICING',
-                                    'PARTIAL PAYMENT' => 'PARTIAL PAYMENT',
+                                    'PARTIALLY PAID' => 'PARTIALLY PAID',
 //                                    'NOT PAID' => 'NOT PAID',
                                     'PAID' => 'PAID',
                                 ), array(
