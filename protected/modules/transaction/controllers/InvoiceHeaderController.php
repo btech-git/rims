@@ -52,7 +52,7 @@ class InvoiceHeaderController extends Controller {
     public function actionView($id) {
         $model = $this->loadModel($id);
         $details = InvoiceDetail::model()->findAllByAttributes(array('invoice_id' => $id));
-        $payments = PaymentIn::model()->findAllByAttributes(array('invoice_id' => $id));
+        $payments = PaymentInDetail::model()->findAllByAttributes(array('invoice_header_id' => $id));
         
         if (isset($_POST['Process'])) {
             if (IdempotentManager::check()) {

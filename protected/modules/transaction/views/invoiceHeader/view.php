@@ -289,12 +289,12 @@ $this->menu = array(
                     <tbody>
                         <?php foreach ($payments as $key => $payment): ?>
                             <tr>
-                                <td><?php echo $payment->payment_number; ?></td>
-                                <td><?php echo $payment->payment_date; ?></td>
-                                <td><?php echo $payment->paymentType->name; ?></td>
-                                <td><?php echo number_format($payment->payment_amount, 2); ?></td>
-                                <td><?php echo $payment->notes; ?></td>
-                                <td><?php echo $payment->status; ?></td>
+                                <td><?php echo $payment->paymentInHeader->payment_number; ?></td>
+                                <td><?php echo $payment->paymentInHeader->payment_date; ?></td>
+                                <td><?php echo $payment->paymentInHeader->paymentType->name; ?></td>
+                                <td><?php echo number_format($payment->amount, 2); ?></td>
+                                <td><?php echo $payment->paymentInHeader->notes; ?></td>
+                                <td><?php echo $payment->paymentInHeader->status; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
