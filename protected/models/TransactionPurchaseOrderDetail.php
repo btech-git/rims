@@ -223,7 +223,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $amount = 0.00;
 
         if ($this->discount1_type == 1)
-            $amount = $this->retail_price * $this->discount1_nominal / 100;
+            $amount = round($this->retail_price * $this->discount1_nominal / 100, 2);
         elseif ($this->discount1_type == 2)
             $amount = $this->discount1_nominal;
         else
@@ -240,7 +240,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $amount = 0.00;
 
         if ($this->discount2_type == 1)
-            $amount = $this->unitPriceAfterDiscount1 * $this->discount2_nominal / 100;
+            $amount = round($this->unitPriceAfterDiscount1 * $this->discount2_nominal / 100, 2);
         elseif ($this->discount2_type == 2)
             $amount = $this->discount2_nominal;
         else
@@ -257,7 +257,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $amount = 0.00;
 
         if ($this->discount3_type == 1)
-            $amount = $this->unitPriceAfterDiscount2 * $this->discount3_nominal / 100;
+            $amount = round($this->unitPriceAfterDiscount2 * $this->discount3_nominal / 100, 2);
         elseif ($this->discount3_type == 2)
             $amount = $this->discount3_nominal;
         else
@@ -274,7 +274,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $amount = 0.00;
 
         if ($this->discount4_type == 1)
-            $amount = $this->unitPriceAfterDiscount3 * $this->discount4_nominal / 100;
+            $amount = round($this->unitPriceAfterDiscount3 * $this->discount4_nominal / 100, 2);
         elseif ($this->discount4_type == 2)
             $amount = $this->discount4_nominal;
         else
@@ -291,7 +291,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $amount = 0.00;
 
         if ($this->discount5_type == 1)
-            $amount = $this->unitPriceAfterDiscount4 * $this->discount5_nominal / 100;
+            $amount = round($this->unitPriceAfterDiscount4 * $this->discount5_nominal / 100, 2);
         elseif ($this->discount5_type == 2)
             $amount = $this->discount5_nominal;
         else
@@ -308,40 +308,40 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         $unitPrice = 0.00;
 
         if ($this->discount_step == 1) {
-            $unitPrice = ($this->discount1_type == 3) ? $this->unitPriceAfterDiscount1 * $this->quantity / ($this->quantity + $this->discount1_nominal) : $this->unitPriceAfterDiscount1;
+            $unitPrice = ($this->discount1_type == 3) ? round($this->unitPriceAfterDiscount1 * $this->quantity / ($this->quantity + $this->discount1_nominal), 2) : $this->unitPriceAfterDiscount1;
         } elseif ($this->discount_step == 2) {
-            $unitPrice = ($this->discount2_type == 3) ? $this->unitPriceAfterDiscount2 * $this->quantity / ($this->quantity + $this->discount2_nominal) : $this->unitPriceAfterDiscount2;
+            $unitPrice = ($this->discount2_type == 3) ? round($this->unitPriceAfterDiscount2 * $this->quantity / ($this->quantity + $this->discount2_nominal), 2) : $this->unitPriceAfterDiscount2;
         } elseif ($this->discount_step == 3) {
-            $unitPrice = ($this->discount3_type == 3) ? $this->unitPriceAfterDiscount3 * $this->quantity / ($this->quantity + $this->discount3_nominal) : $this->unitPriceAfterDiscount3;
+            $unitPrice = ($this->discount3_type == 3) ? round($this->unitPriceAfterDiscount3 * $this->quantity / ($this->quantity + $this->discount3_nominal), 2) : $this->unitPriceAfterDiscount3;
         } elseif ($this->discount_step == 4) {
-            $unitPrice = ($this->discount4_type == 3) ? $this->unitPriceAfterDiscount4 * $this->quantity / ($this->quantity + $this->discount4_nominal) : $this->unitPriceAfterDiscount4;
+            $unitPrice = ($this->discount4_type == 3) ? round($this->unitPriceAfterDiscount4 * $this->quantity / ($this->quantity + $this->discount4_nominal), 2) : $this->unitPriceAfterDiscount4;
         } elseif ($this->discount_step == 5) {
-            $unitPrice = ($this->discount5_type == 3) ? $this->unitPriceAfterDiscount5 * $this->quantity / ($this->quantity + $this->discount5_nominal) : $this->unitPriceAfterDiscount5;
+            $unitPrice = ($this->discount5_type == 3) ? round($this->unitPriceAfterDiscount5 * $this->quantity / ($this->quantity + $this->discount5_nominal), 2) : $this->unitPriceAfterDiscount5;
         } else {
             $unitPrice = $this->retail_price;
         }
 
-        return ($tax == 1) ? $unitPrice * (1 + ($taxPercentage / 100)) : $unitPrice;
+        return ($tax == 1) ? round($unitPrice * (1 + ($taxPercentage / 100)), 2) : $unitPrice;
     }
 
     public function getPriceBeforeTax($tax, $taxPercentage) {
         $unitPrice = 0.00;
 
         if ($this->discount_step == 1) {
-            $unitPrice = ($this->discount1_type == 3) ? $this->unitPriceAfterDiscount1 * $this->quantity / ($this->quantity + $this->discount1_nominal) : $this->unitPriceAfterDiscount1;
+            $unitPrice = ($this->discount1_type == 3) ? round($this->unitPriceAfterDiscount1 * $this->quantity / ($this->quantity + $this->discount1_nominal), 2) : $this->unitPriceAfterDiscount1;
         } elseif ($this->discount_step == 2) {
-            $unitPrice = ($this->discount2_type == 3) ? $this->unitPriceAfterDiscount2 * $this->quantity / ($this->quantity + $this->discount2_nominal) : $this->unitPriceAfterDiscount2;
+            $unitPrice = ($this->discount2_type == 3) ? round($this->unitPriceAfterDiscount2 * $this->quantity / ($this->quantity + $this->discount2_nominal), 2) : $this->unitPriceAfterDiscount2;
         } elseif ($this->discount_step == 3) {
-            $unitPrice = ($this->discount3_type == 3) ? $this->unitPriceAfterDiscount3 * $this->quantity / ($this->quantity + $this->discount3_nominal) : $this->unitPriceAfterDiscount3;
+            $unitPrice = ($this->discount3_type == 3) ? round($this->unitPriceAfterDiscount3 * $this->quantity / ($this->quantity + $this->discount3_nominal), 2) : $this->unitPriceAfterDiscount3;
         } elseif ($this->discount_step == 4) {
-            $unitPrice = ($this->discount4_type == 3) ? $this->unitPriceAfterDiscount4 * $this->quantity / ($this->quantity + $this->discount4_nominal) : $this->unitPriceAfterDiscount4;
+            $unitPrice = ($this->discount4_type == 3) ? round($this->unitPriceAfterDiscount4 * $this->quantity / ($this->quantity + $this->discount4_nominal), 2) : $this->unitPriceAfterDiscount4;
         } elseif ($this->discount_step == 5) {
-            $unitPrice = ($this->discount5_type == 3) ? $this->unitPriceAfterDiscount5 * $this->quantity / ($this->quantity + $this->discount5_nominal) : $this->unitPriceAfterDiscount5;
+            $unitPrice = ($this->discount5_type == 3) ? round($this->unitPriceAfterDiscount5 * $this->quantity / ($this->quantity + $this->discount5_nominal), 2) : $this->unitPriceAfterDiscount5;
         } else {
             $unitPrice = $this->retail_price;
         }
 
-        return ($tax == 3) ? $this->getUnitPrice($tax, $taxPercentage) / (1 + ($taxPercentage / 100)) : $unitPrice;
+        return ($tax == 3) ? round($this->getUnitPrice($tax, $taxPercentage) / (1 + ($taxPercentage / 100)), 2) : $unitPrice;
     }
     
     public function getTotalPriceBeforeTax($tax, $taxPercentage) {
