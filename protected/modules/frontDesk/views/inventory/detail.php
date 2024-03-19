@@ -54,7 +54,7 @@ $this->breadcrumbs=array(
                 </thead>
                 <tbody>
                     <tr>
-                        <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantities(); ?>
+                        <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantitiesByPeriodic($endDate); ?>
                         <?php $inventoryCostOfGoodsSold = $product->getInventoryCostOfGoodsSold(); ?>
                         <?php $totalStock = 0; ?>
                         <?php $totalCogs = 0; ?>

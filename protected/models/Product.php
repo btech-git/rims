@@ -384,7 +384,7 @@ class Product extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 100,
+                'pageSize' => 500,
                 'currentPage' => $pageNumber - 1,
             ),
         ));
@@ -398,6 +398,21 @@ class Product extends CActiveRecord {
                 GROUP BY w.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
+
+        return $resultSet;
+    }
+
+    public function getInventoryTotalQuantitiesByPeriodic($endDate) {
+        $sql = "SELECT w.branch_id, COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE i.product_id = :product_id and i.transaction_date BETWEEN '2023-01-01' AND :end_date
+                GROUP BY w.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':product_id' => $this->id, 
+            ':end_date' => $endDate
+        ));
 
         return $resultSet;
     }
