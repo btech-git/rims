@@ -22,7 +22,7 @@
     
     <tbody>
         <?php foreach ($productDataProvider->data as $product): ?>
-            <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantities(); ?>
+            <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantitiesByPeriodic($endDate); ?>
             <?php $totalStock = 0; ?>
             <tr>
                 <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('detail', 'id' => $product->id)); ?></td>

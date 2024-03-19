@@ -3,15 +3,16 @@
 /* @var $model RegistrationTransaction */
 
 Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
+    $('.search-button').click(function(){
 	$('.search-form').toggle();
 	return false;
-});
+    });
+    $('#EndDate').val('" . $endDate . "');
 ");
 ?>
 
 <div>
-    <?php echo CHtml::beginForm(); ?>
+    <?php echo CHtml::beginForm(array(''), 'get'); ?>
     
     <div class="search-bar">
         <div class="clearfix button-bar">
@@ -21,6 +22,7 @@ $('.search-button').click(function(){
     <div class="clearfix"></div>
     <div class="search-form" style="display:none">
         <?php $this->renderPartial('_search',array(
+            'endDate' => $endDate,
             'product'=>$product,
         )); ?>
     </div><!-- search-form -->
@@ -31,6 +33,7 @@ $('.search-button').click(function(){
     <?php $this->renderPartial('_productStockTable', array(
         'productDataProvider' => $productDataProvider,
         'branches' => $branches,
+        'endDate' => $endDate,
     )); ?>
 </div>
 
