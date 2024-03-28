@@ -494,7 +494,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE i.product_id = :product_id AND i.transaction_date BETWEEN '2022-12-31' AND :start_date" . $branchConditionSql . "
+            WHERE i.product_id = :product_id AND i.transaction_date >= '2022-12-31' AND transaction_date < :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 
@@ -520,7 +520,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE i.product_id = :product_id AND i.transaction_date BETWEEN '2022-12-31' AND :start_date" . $branchConditionSql . "
+            WHERE i.product_id = :product_id AND i.transaction_date >= '2022-12-31' AND transaction_date < :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 

@@ -165,9 +165,9 @@ class StockCardController extends Controller {
         $worksheet->setCellValue('D6', 'Keterangan');
         $worksheet->setCellValue('E6', 'Gudang');
         $worksheet->setCellValue('F6', 'Masuk');
-        $worksheet->setCellValue('G6', 'Keluar');
-        $worksheet->setCellValue('H6', 'Stok');
-        $worksheet->setCellValue('I6', 'Nilai');
+        $worksheet->setCellValue('H6', 'Keluar');
+        $worksheet->setCellValue('J6', 'Stok');
+        $worksheet->setCellValue('K6', 'Nilai');
 
         $counter = 8;
 
@@ -178,9 +178,11 @@ class StockCardController extends Controller {
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'subBrand.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'subBrandSeries.name'));
-            $worksheet->getStyle("G{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("G{$counter}:H{$counter}")->getFont()->setBold(true);
             $saldo = $header->getBeginningStockReport($startDate, $branchId); 
+            $beginningValue = $header->getBeginningValueReport($startDate, $branchId);
             $worksheet->setCellValue("G{$counter}", $saldo);
+            $worksheet->setCellValue("H{$counter}", $beginningValue);
             
             $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); 
             $totalStockIn = 0;
@@ -192,6 +194,8 @@ class StockCardController extends Controller {
                 $stockIn = $stockRow['stock_in'];
                 $stockOut = $stockRow['stock_out'];
                 $saldo += $stockIn + $stockOut;
+                $inventoryInValue = $stockRow['purchase_price'] * $stockIn;
+                $inventoryOutValue = $stockRow['purchase_price'] * $stockOut;
                 $inventoryValue = $stockRow['purchase_price'] * $saldo;
                 
                 $worksheet->setCellValue("A{$counter}", $stockRow['transaction_date']);
@@ -200,9 +204,11 @@ class StockCardController extends Controller {
                 $worksheet->setCellValue("D{$counter}", $stockRow['notes']);
                 $worksheet->setCellValue("E{$counter}", $stockRow['name']);
                 $worksheet->setCellValue("F{$counter}", $stockIn);
-                $worksheet->setCellValue("G{$counter}", $stockOut);
-                $worksheet->setCellValue("H{$counter}", $saldo);
-                $worksheet->setCellValue("I{$counter}", $inventoryValue);
+                $worksheet->setCellValue("G{$counter}", $inventoryInValue);
+                $worksheet->setCellValue("H{$counter}", $stockOut);
+                $worksheet->setCellValue("I{$counter}", $inventoryOutValue);
+                $worksheet->setCellValue("J{$counter}", $saldo);
+                $worksheet->setCellValue("K{$counter}", $inventoryValue);
                 
                 $totalStockIn += $stockIn;
                 $totalStockOut += $stockOut;
@@ -226,7 +232,7 @@ class StockCardController extends Controller {
 //
 //        $counter++;
 
-        for ($col = 'A'; $col !== 'I'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

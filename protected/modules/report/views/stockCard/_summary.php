@@ -57,7 +57,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td style="text-align: center; font-weight: bold">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
                         </td>
-                        <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $beginningValue)); ?></td>
+                        <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningValue)); ?></td>
                     </tr>
 
                     <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); ?>
@@ -99,7 +99,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td colspan="3">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="8">&nbsp;</td>
+                        <td colspan="10">&nbsp;</td>
                     </tr>
                 <?php endif; ?>
             <?php endforeach; ?>
