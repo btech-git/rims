@@ -35,8 +35,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Jenis Transaksi</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Transaksi #</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Gudang</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Masuk</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keluar</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid" colspan="2">Masuk</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid" colspan="2">Keluar</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Stok</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Nilai</th>
             </tr>
@@ -45,19 +45,19 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($stockCardSummary->dataProvider->data as $header): ?>
                 <?php $stock = $header->getBeginningStockReport($startDate, $branchId); ?>
+                <?php $beginningValue = $header->getBeginningValueReport($startDate, $branchId); ?>
                 <?php if ($stock > 0): ?>
                     <tr class="items1">
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
+                        <td colspan="2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                        <td colspan="2"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?></td>
-                        <td style="text-align: right; font-weight: bold">
+                        <td style="text-align: center; font-weight: bold">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
                         </td>
-
-                        <td>&nbsp;</td>
+                        <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $beginningValue)); ?></td>
                     </tr>
 
                     <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); ?>
@@ -68,15 +68,19 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $stockIn = $stockRow['stock_in']; ?>
                         <?php $stockOut = $stockRow['stock_out']; ?>
                         <?php $stock += $stockIn + $stockOut; ?>
+                        <?php $inventoryInValue = $stockRow['purchase_price'] * $stockIn; ?>
+                        <?php $inventoryOutValue = $stockRow['purchase_price'] * $stockOut; ?>
                         <?php $inventoryValue = $stockRow['purchase_price'] * $stock; ?>
                         <tr class="items2">
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
                             <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
                             <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
                             <td><?php echo CHtml::encode($stockRow['name']); ?></td>
-                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
-                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
+                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
+                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $inventoryInValue); ?></td>
+                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
+                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $inventoryOutValue); ?></td>
+                            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
                         </tr>
                         <?php $totalStockIn += $stockIn; ?>
@@ -88,10 +92,11 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td style="text-align: right; font-weight: bold; border-top: 1px solid">
                             <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockIn); ?>
                         </td>
+                        <td>&nbsp;</td>
                         <td style="text-align: right; font-weight: bold; border-top: 1px solid">
                             <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockOut); ?>
                         </td>
-                        <td colspan="2">&nbsp;</td>
+                        <td colspan="3">&nbsp;</td>
                     </tr>
                     <tr>
                         <td colspan="8">&nbsp;</td>

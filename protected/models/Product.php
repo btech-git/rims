@@ -491,10 +491,36 @@ class Product extends CActiveRecord {
         }
         
         $sql = "
-            SELECT COALESCE(SUM(i.stock_in - i.stock_out), 0) AS beginning_balance 
+            SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE i.product_id = :product_id AND i.transaction_date < :start_date" . $branchConditionSql . "
+            WHERE i.product_id = :product_id AND i.transaction_date BETWEEN '2022-12-31' AND :start_date" . $branchConditionSql . "
+            GROUP BY i.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getBeginningValueReport($startDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':product_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE i.product_id = :product_id AND i.transaction_date BETWEEN '2022-12-31' AND :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 
