@@ -182,7 +182,7 @@ class StockCardController extends Controller {
             $saldo = $header->getBeginningStockReport($startDate, $branchId); 
             $beginningValue = $header->getBeginningValueReport($startDate, $branchId);
             $worksheet->setCellValue("G{$counter}", $saldo);
-            $worksheet->setCellValue("H{$counter}", $beginningValue);
+//            $worksheet->setCellValue("H{$counter}", $beginningValue);
             
             $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); 
             $totalStockIn = 0;
