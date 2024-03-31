@@ -162,7 +162,7 @@ class ProductMasterCategory extends CActiveRecord {
         $criteria->compare('t.code', $this->code, true);
         $criteria->compare('t.name', $this->name, true);
         $criteria->compare('t.description', $this->description, true);
-        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('LOWER(t.status)', strtolower($this->status), FALSE);
         $criteria->compare('t.coa_persediaan_barang_dagang', $this->coa_persediaan_barang_dagang);
         $criteria->compare('t.coa_hpp', $this->coa_hpp);
         $criteria->compare('t.coa_penjualan_barang_dagang', $this->coa_penjualan_barang_dagang);
