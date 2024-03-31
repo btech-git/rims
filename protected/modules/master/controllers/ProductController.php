@@ -284,8 +284,9 @@ class ProductController extends Controller {
 
         $productComplementSubstitute = new Product('search');
         $productComplementSubstitute->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
+        if (isset($_GET['Product'])) {
             $productComplementSubstitute->attributes = $_GET['Product'];
+        }
 
         $productComplementSubstituteCriteria = new CDbCriteria;
         $productComplementSubstituteCriteria->together = true;

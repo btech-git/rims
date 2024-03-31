@@ -11,11 +11,17 @@
  * @property string $name
  * @property string $description
  * @property string $status
+ * @property integer $user_id
+ * @property string $date_posting
+ * @property integer $is_approved
+ * @property integer $user_id_approval
+ * @property string $date_approval
  *
  * The followings are the available model relations:
  * @property Product[] $products
  * @property ProductSubMasterCategory $productSubMasterCategory
  * @property ProductMasterCategory $productMasterCategory
+ * @property User $user
  */
 class ProductSubCategory extends CActiveRecord {
 
@@ -38,15 +44,15 @@ class ProductSubCategory extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('product_master_category_id, product_sub_master_category_id, code, name, status', 'required'),
-            array('product_master_category_id, product_sub_master_category_id', 'numerical', 'integerOnly' => true),
+            array('product_master_category_id, product_sub_master_category_id, code, name, status, user_id', 'required'),
+            array('product_master_category_id, product_sub_master_category_id, user_id, is_approved, user_id_approval', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
             array('description', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, product_master_category_id, product_sub_master_category_id, code, name, description, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name', 'safe', 'on' => 'search'),
+            array('id, product_master_category_id, product_sub_master_category_id, code, name, description, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -60,6 +66,8 @@ class ProductSubCategory extends CActiveRecord {
             'products' => array(self::HAS_MANY, 'Product', 'product_sub_category_id'),
             'productSubMasterCategory' => array(self::BELONGS_TO, 'ProductSubMasterCategory', 'product_sub_master_category_id'),
             'productMasterCategory' => array(self::BELONGS_TO, 'ProductMasterCategory', 'product_master_category_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
         );
     }
 
@@ -75,6 +83,11 @@ class ProductSubCategory extends CActiveRecord {
             'name' => 'Name',
             'description' => 'Description',
             'status' => 'Status',
+            'user_id' => 'User Input',
+            'date_posting' => 'Tanggal Input',
+            'is_approved' => 'Approval',
+            'user_id_approval' => 'User Approval',
+            'date_approval' => 'Tanggal Approval',
         );
     }
 
@@ -102,6 +115,10 @@ class ProductSubCategory extends CActiveRecord {
         $criteria->compare('t.name', $this->name, true);
         $criteria->compare('t.description', $this->description, true);
         $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.date_posting', $this->date_posting);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.user_id_approval', $this->user_id_approval);
 
         $criteria->together = true;
         $criteria->with = array('productSubMasterCategory', 'productMasterCategory');

@@ -45,8 +45,27 @@ class ProductSubCategoryController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
+        
+        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
+            $model->is_approved = 1;
+            $model->user_id_approval = Yii::app()->user->getId();
+            $model->date_approval = date('Y-m-d H:i:s');
+            
+            if ($model->save(true, array('is_approved', 'user_id_approval', 'date_approval'))) {
+                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
+            }
+            
+        } elseif (isset($_POST['Reject'])) {
+            $model->is_approved = 2;
+            
+            if ($model->save(true, array('is_approved'))) {
+                Yii::app()->user->setFlash('confirm', 'Your data has been rejected!!!');
+            }
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
         ));
     }
 
@@ -56,14 +75,19 @@ class ProductSubCategoryController extends Controller {
      */
     public function actionCreate() {
         $model = new ProductSubCategory;
+        $model->user_id = Yii::app()->user->id;
+        $model->user_id_approval = null;
+        $model->date_posting = date('Y-m-d H:i:s');
+        $model->date_approval = null;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['ProductSubCategory'])) {
             $model->attributes = $_POST['ProductSubCategory'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(

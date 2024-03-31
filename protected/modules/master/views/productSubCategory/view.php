@@ -40,9 +40,37 @@ $this->menu = array(
                 'name',
                 'description',
                 'status',
+                'date_posting',
+                array(
+                    'label' => 'Created by',
+                    'name' => 'user_id', 
+                    'value' => $model->user->username
+                ),
+                array(
+                    'name' => 'user_id_approval',
+                    'value' => empty($model->user_id_approval) ? "N/A" : $model->userIdApproval->username,
+                ),
+                array(
+                    'name' => 'date_approval',
+                    'value' => empty($model->date_approval) ? "N/A" : $model->date_approval,
+                ),
             ),
         ));
         ?>
 
     </div>
+</div>
+
+<br/>
+
+<div>
+    <?php if ((int) $model->is_approved === 0): ?>
+        <div style="float: left; margin-left: 20px;">
+            <?php echo CHtml::beginForm(); ?>
+            <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
+            <?php echo CHtml::submitButton('REJECT', array('name' => 'Reject', 'class' => 'button warning')); ?>
+            <?php echo CHtml::endForm(); ?>
+        </div>
+    <?php endif; ?>
+    <div class="clear"></div>
 </div>

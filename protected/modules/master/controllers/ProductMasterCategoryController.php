@@ -45,8 +45,27 @@ class ProductMasterCategoryController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
+        
+        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
+            $model->is_approved = 1;
+            $model->user_id_approval = Yii::app()->user->getId();
+            $model->date_approval = date('Y-m-d H:i:s');
+            
+            if ($model->save(true, array('is_approved', 'user_id_approval', 'date_approval'))) {
+                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
+            }
+            
+        } elseif (isset($_POST['Reject'])) {
+            $model->is_approved = 2;
+            
+            if ($model->save(true, array('is_approved'))) {
+                Yii::app()->user->setFlash('confirm', 'Your data has been rejected!!!');
+            }
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
         ));
     }
 
@@ -56,13 +75,19 @@ class ProductMasterCategoryController extends Controller {
      */
     public function actionCreate() {
         $model = new ProductMasterCategory;
+        $model->user_id = Yii::app()->user->id;
+        $model->user_id_approval = null;
+        $model->date_posting = date('Y-m-d H:i:s');
+        $model->date_approval = null;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $coaPersediaan = new Coa('search');
         $coaPersediaan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaPersediaan->attributes = $_GET['Coa'];
+        }
+        
         $coaPersediaanCriteria = new CDbCriteria;
         $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id = 0 and code LIKE '%.000%'");
         $coaPersediaanCriteria->compare('code', $coaPersediaan->code . '%', true, 'AND', false);
@@ -73,8 +98,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaHpp = new Coa('search');
         $coaHpp->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaHpp->attributes = $_GET['Coa'];
+        }
         $coaHppCriteria = new CDbCriteria;
         $coaHppCriteria->addCondition("coa_sub_category_id = 44 and coa_id = 0 and code LIKE '%.000%'");
         $coaHppCriteria->compare('code', $coaHpp->code . '%', true, 'AND', false);
@@ -85,8 +111,10 @@ class ProductMasterCategoryController extends Controller {
 
         $coaPenjualan = new Coa('search');
         $coaPenjualan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaPenjualan->attributes = $_GET['Coa'];
+        }
+        
         $coaPenjualanCriteria = new CDbCriteria;
         $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id = 0 and code LIKE '%.000%'");
         $coaPenjualanCriteria->compare('code', $coaPenjualan->code . '%', true, 'AND', false);
@@ -97,8 +125,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaRetur = new Coa('search');
         $coaRetur->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaRetur->attributes = $_GET['Coa'];
+        }
         $coaReturCriteria = new CDbCriteria;
         $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id = 0 and code LIKE '%.000%'");
         $coaReturCriteria->compare('code', $coaRetur->code . '%', true, 'AND', false);
@@ -109,8 +138,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaDiskon = new Coa('search');
         $coaDiskon->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDiskon->attributes = $_GET['Coa'];
+        }
         $coaDiskonCriteria = new CDbCriteria;
         $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id = 0 and code LIKE '%.000%'");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
@@ -121,8 +151,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaReturPembelian = new Coa('search');
         $coaReturPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaReturPembelian->attributes = $_GET['Coa'];
+        }
         $coaReturPembelianCriteria = new CDbCriteria;
         $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id = 0 and code LIKE '%.000%'");
         $coaReturPembelianCriteria->compare('code', $coaReturPembelian->code . '%', true, 'AND', false);
@@ -133,8 +164,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaDiskonPembelian = new Coa('search');
         $coaDiskonPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDiskonPembelian->attributes = $_GET['Coa'];
+        }
         $coaDiskonPembelianCriteria = new CDbCriteria;
         $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id = 0 and code LIKE '%.000%'");
         $coaDiskonPembelianCriteria->compare('code', $coaDiskonPembelian->code . '%', true, 'AND', false);
@@ -145,8 +177,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaInventory = new Coa('search');
         $coaInventory->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaInventory->attributes = $_GET['Coa'];
+        }
         $coaInventoryCriteria = new CDbCriteria;
         $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id = 0 and code LIKE '%.000%'");
         $coaInventoryCriteria->compare('code', $coaInventory->code . '%', true, 'AND', false);
@@ -157,8 +190,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaConsignment = new Coa('search');
         $coaConsignment->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaConsignment->attributes = $_GET['Coa'];
+        }
         $coaConsignmentCriteria = new CDbCriteria;
         $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id = 0 and code LIKE '%.000%'");
         $coaConsignmentCriteria->compare('code', $coaConsignment->code . '%', true, 'AND', false);
@@ -169,8 +203,9 @@ class ProductMasterCategoryController extends Controller {
 
         if (isset($_POST['ProductMasterCategory'])) {
             $model->attributes = $_POST['ProductMasterCategory'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(

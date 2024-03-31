@@ -19,6 +19,11 @@
  * @property integer $coa_inventory_in_transit
  * @property integer $coa_consignment_inventory
  * @property integer $coa_outstanding_part_id
+ * @property integer $user_id
+ * @property string $date_posting
+ * @property integer $is_approved
+ * @property integer $user_id_approval
+ * @property string $date_approval
  *
  * The followings are the available model relations:
  * @property Product[] $products
@@ -34,6 +39,7 @@
  * @property ProductSubCategory[] $productSubCategories
  * @property ProductSubMasterCategory[] $productSubMasterCategories
  * @property Coa $coaOutstandingPart
+ * @property User $user
  */
 class ProductMasterCategory extends CActiveRecord {
 
@@ -70,15 +76,15 @@ class ProductMasterCategory extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('code, name, status', 'required'),
-            array('coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian, coa_inventory_in_transit, coa_consignment_inventory, coa_outstanding_part_id', 'numerical', 'integerOnly' => true),
+            array('code, name, status, user_id', 'required'),
+            array('coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian, coa_inventory_in_transit, coa_consignment_inventory, coa_outstanding_part_id, is_approved, user_id_approval, user_id', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
             array('description', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, name, description, status, coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian, coa_inventory_in_transit, coa_consignment_inventory,coa_persediaan_barang_dagang_name, coa_hpp_name, coa_penjualan_barang_dagang_name, coa_retur_penjualan_name, coa_diskon_penjualan_name, coa_retur_pembelian_name, coa_diskon_pembelian_name,coa_persediaan_barang_dagang_code, coa_hpp_code, coa_penjualan_barang_dagang_code, coa_retur_penjualan_code, coa_diskon_penjualan_code, coa_retur_pembelian_code, coa_diskon_pembelian_code, coa_inventory_in_transit, coa_inventory_in_transit_name, coa_inventory_in_transit_code, coa_consignment_inventory,coa_consignment_inventory_name, coa_consignment_inventory_code, coa_outstanding_part_id', 'safe', 'on' => 'search'),
+            array('id, code, name, description, status, coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian, coa_inventory_in_transit, coa_consignment_inventory,coa_persediaan_barang_dagang_name, coa_hpp_name, coa_penjualan_barang_dagang_name, coa_retur_penjualan_name, coa_diskon_penjualan_name, coa_retur_pembelian_name, coa_diskon_pembelian_name,coa_persediaan_barang_dagang_code, coa_hpp_code, coa_penjualan_barang_dagang_code, coa_retur_penjualan_code, coa_diskon_penjualan_code, coa_retur_pembelian_code, coa_diskon_pembelian_code, coa_inventory_in_transit, coa_inventory_in_transit_name, coa_inventory_in_transit_code, coa_consignment_inventory,coa_consignment_inventory_name, coa_consignment_inventory_code, coa_outstanding_part_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -102,6 +108,8 @@ class ProductMasterCategory extends CActiveRecord {
             'productSubCategories' => array(self::HAS_MANY, 'ProductSubCategory', 'product_master_category_id'),
             'productSubMasterCategories' => array(self::HAS_MANY, 'ProductSubMasterCategory', 'product_master_category_id'),
             'coaOutstandingPart' => array(self::BELONGS_TO, 'Coa', 'coa_outstanding_part_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
         );
     }
 
@@ -125,6 +133,11 @@ class ProductMasterCategory extends CActiveRecord {
             'coa_inventory_in_transit' => 'Coa Inventory In Transit',
             'coa_consignment_inventory' => 'Coa Consignment Inventory',
             'coa_outstanding_part_id' => 'Coa Outstanding Part',
+            'user_id' => 'User Input',
+            'date_posting' => 'Tanggal Input',
+            'is_approved' => 'Approval',
+            'user_id_approval' => 'User Approval',
+            'date_approval' => 'Tanggal Approval',
         );
     }
 
@@ -160,6 +173,10 @@ class ProductMasterCategory extends CActiveRecord {
         $criteria->compare('coa_inventory_in_transit', $this->coa_inventory_in_transit);
         $criteria->compare('coa_consignment_inventory', $this->coa_consignment_inventory);
         $criteria->compare('coa_outstanding_part_id', $this->coa_outstanding_part_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.date_posting', $this->date_posting);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.user_id_approval', $this->user_id_approval);
 
         $criteria->together = true;
         $criteria->with = array('coaPersediaanBarangDagang', 'coaHpp', 'coaPenjualanBarangDagang', 'coaReturPenjualan', 'coaDiskonPenjualan', 'coaReturPembelian', 'coaDiskonPembelian', 'coaInventoryInTransit', 'coaConsignmentInventory');
