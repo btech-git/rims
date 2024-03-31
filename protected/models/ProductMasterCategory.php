@@ -158,21 +158,21 @@ class ProductMasterCategory extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('code', $this->code, true);
-        $criteria->compare('name', $this->name, true);
-        $criteria->compare('description', $this->description, true);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.description', $this->description, true);
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
-        $criteria->compare('coa_persediaan_barang_dagang', $this->coa_persediaan_barang_dagang);
-        $criteria->compare('coa_hpp', $this->coa_hpp);
-        $criteria->compare('coa_penjualan_barang_dagang', $this->coa_penjualan_barang_dagang);
-        $criteria->compare('coa_retur_penjualan', $this->coa_retur_penjualan);
-        $criteria->compare('coa_diskon_penjualan', $this->coa_diskon_penjualan);
-        $criteria->compare('coa_retur_pembelian', $this->coa_retur_pembelian);
-        $criteria->compare('coa_diskon_pembelian', $this->coa_diskon_pembelian);
-        $criteria->compare('coa_inventory_in_transit', $this->coa_inventory_in_transit);
-        $criteria->compare('coa_consignment_inventory', $this->coa_consignment_inventory);
-        $criteria->compare('coa_outstanding_part_id', $this->coa_outstanding_part_id);
+        $criteria->compare('t.coa_persediaan_barang_dagang', $this->coa_persediaan_barang_dagang);
+        $criteria->compare('t.coa_hpp', $this->coa_hpp);
+        $criteria->compare('t.coa_penjualan_barang_dagang', $this->coa_penjualan_barang_dagang);
+        $criteria->compare('t.coa_retur_penjualan', $this->coa_retur_penjualan);
+        $criteria->compare('t.coa_diskon_penjualan', $this->coa_diskon_penjualan);
+        $criteria->compare('t.coa_retur_pembelian', $this->coa_retur_pembelian);
+        $criteria->compare('t.coa_diskon_pembelian', $this->coa_diskon_pembelian);
+        $criteria->compare('t.coa_inventory_in_transit', $this->coa_inventory_in_transit);
+        $criteria->compare('t.coa_consignment_inventory', $this->coa_consignment_inventory);
+        $criteria->compare('t.coa_outstanding_part_id', $this->coa_outstanding_part_id);
         $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('t.date_posting', $this->date_posting);
         $criteria->compare('t.is_approved', $this->is_approved);
