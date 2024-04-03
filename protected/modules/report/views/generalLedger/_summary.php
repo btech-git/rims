@@ -49,7 +49,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $nonZeroValueExists = true; ?>
             <?php break; ?>
         <?php endif; */?>
-        <?php if ((int)$beginningBalance !== 0): ?>
+        <?php //if ((int)$beginningBalance !== 0): ?>
             <tr class="items1">
                 <td><?php echo $i + 1; ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
@@ -112,6 +112,6 @@ Yii::app()->clientScript->registerCss('_report', '
                     </table>
                 </td>
             </tr>
-        <?php endif; ?>
+        <?php //endif; ?>
     <?php endforeach; ?>
 </table>
