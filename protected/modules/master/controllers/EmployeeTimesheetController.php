@@ -79,7 +79,7 @@ class EmployeeTimesheetController extends Controller {
                 if (($handle = fopen($_FILES['TimesheetImportFile']['tmp_name'], 'r')) !== false) {
                     $records = array();
                     while (($lineFields = fgetcsv($handle, null, ';')) !== false) {
-//                        if ($lineFields[0] !== 'NIP') {
+                        if ($lineFields[0] !== 'NIP') {
                             $employee = Employee::model()->findByAttributes(array('code' => $lineFields[0]));
 
                             list($day, $month, $year) = explode('-', $lineFields[2]);
@@ -95,7 +95,7 @@ class EmployeeTimesheetController extends Controller {
                             $model->employee_onleave_category_id = 16;
                             
                             $records[] = $model->getAttributes();
-//                        }
+                        }
                     }
                     Yii::app()->db->getCommandBuilder()->createMultipleInsertCommand(EmployeeTimesheet::model()->tableName(), $records)->execute();
                             
