@@ -522,6 +522,7 @@ class BodyRepairRegistration extends CComponent {
                 $productDetail->total_price = $productDetail->totalAmountProduct;
                 $productDetail->quantity_movement = 0;
                 $productDetail->quantity_movement_left = $productDetail->quantity;
+                $productDetail->hpp = $productDetail->product->hpp;
 
                 $valid = $productDetail->save(false) && $valid;
                 $new_product[] = $productDetail->id;
