@@ -877,18 +877,17 @@ class Coa extends CActiveRecord {
         
         $sql = "SELECT SUM(j.debet) - SUM(j.credit) as balance
                 FROM (
-                    SELECT coa_id, SUM(total) as debet, 0 AS credit, tanggal_transaksi
+                    SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
                     WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
                     GROUP BY coa_id
                     UNION
-                    SELECT coa_id, 0 as debet, SUM(total) AS credit, tanggal_transaksi
+                    SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
                     WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
                     GROUP BY coa_id
                 ) j
-                GROUP BY j.coa_id
-                ORDER BY tanggal_transaksi ASC";
+                GROUP BY j.coa_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 

@@ -311,19 +311,28 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalSales($startDate, $endDate) {
-        $sql = "
-            SELECT COALESCE(SUM(grand_total), 0) AS total 
-            FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE customer_id = :customer_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date
-            GROUP BY customer_id
-        ";
-
-        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+    public function getTotalSales($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
             ':customer_id' => $this->id,
             ':start_date' => $startDate,
             ':end_date' => $endDate,
-        ));
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(grand_total), 0) AS total 
+            FROM " . RegistrationTransaction::model()->tableName() . "
+            WHERE customer_id = :customer_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            GROUP BY customer_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
 
         return ($value === false) ? 0 : $value;
     }

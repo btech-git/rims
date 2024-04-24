@@ -8,7 +8,8 @@ Yii::app()->clientScript->registerCss('_report', '
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Penjualan per Pelanggan</div>
+    <?php $branch = Branch::model()->findByPk($branchId); ?>
+    <div style="font-size: larger">Penjualan per Pelanggan <?php echo CHtml::encode(CHtml::value($branch, 'name'));?></div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -27,7 +28,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <tbody>
         <?php $totalSale = 0.00; ?>
         <?php foreach ($saleRetailCustomerSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = $header->getTotalSales($startDate, $endDate); ?>
+            <?php $grandTotal = $header->getTotalSales($startDate, $endDate, $branchId); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>

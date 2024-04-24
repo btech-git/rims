@@ -159,11 +159,9 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="medium-6 columns">
-
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">

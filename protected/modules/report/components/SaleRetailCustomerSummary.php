@@ -32,6 +32,10 @@ class SaleRetailCustomerSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         $this->dataProvider->criteria->addBetweenCondition('substr(registrationTransactions.transaction_date, 1, 10)', $startDate, $endDate);
+        if (!empty($branchId)) {
+            $this->dataProvider->criteria->compare('registrationTransactions.branch_id', $branchId);
+        }
     }
 }

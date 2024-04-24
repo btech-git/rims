@@ -50,6 +50,62 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <span class="prefix">Service Code</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php /*echo CHtml::activeTextField($service, 'code', array(
+                                            'onchange' => '
+                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
+                                                service_category_id: $("#Service_service_category_id").val(),
+                                                service_type_id: $("#Service_service_type_id").val(),
+                                                code: $(this).val(),
+                                                name: $("#Service_name").val(),
+                                            } } });',
+                                        ));*/ ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Service Name</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextField($service, 'name', array(
+                                            'onchange' => '
+                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
+                                                service_category_id: $("#Service_service_category_id").val(),
+                                                service_type_id: $("#Service_service_type_id").val(),
+                                                code: $("#Service_code").val(),
+                                                name: $(this).val(),
+                                            } } });',
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch </span>
+                                    </div>
+                                     <div class="small-8 columns">
+                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+<!--                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Service</span>
                                     </div>
                                     <div class="small-8 columns">

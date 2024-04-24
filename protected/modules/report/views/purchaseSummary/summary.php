@@ -46,14 +46,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>-->
 
                     <div class="row">
-<!--                        <div class="medium-6 columns">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php /*echo CHtml::activeTextField($supplier, 'id', array(
+                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
                                             'readonly' => true,
                                             'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
@@ -61,12 +61,27 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                                         <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
                                         <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); */?>    
+                                        <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
                                 </div>
                             </div>
-                        </div>-->
+                        </div>
                         
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch </span>
+                                    </div>
+                                     <div class="small-8 columns">
+                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">                        
                         <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -129,6 +144,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'purchaseReport' => $purchaseReport,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
                     )); ?>
                 </div>
                 <div class="clear"></div>

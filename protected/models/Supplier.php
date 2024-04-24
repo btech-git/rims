@@ -390,12 +390,18 @@ class Supplier extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getPurchaseReport($startDate, $endDate) {
+    public function getPurchaseReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
         
         $sql = "
             SELECT s.id, s.code, s.company, s.name, po.purchase_total
@@ -403,7 +409,7 @@ class Supplier extends CActiveRecord {
             INNER JOIN (
                 SELECT p.supplier_id, SUM(p.total_price) AS purchase_total
                 FROM " . TransactionPurchaseOrder::model()->tableName() . " p
-                WHERE p.purchase_order_date BETWEEN :start_date AND :end_date
+                WHERE p.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
                 GROUP BY p.supplier_id
             ) po ON s.id = po.supplier_id
             ORDER BY s.company ASC

@@ -31,8 +31,9 @@ class PurchaseSummaryController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 //        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+//        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
 //        $purchaseSummary = new PurchaseSummary($supplier->search());
 //        $purchaseSummary->setupLoading();
@@ -43,7 +44,7 @@ class PurchaseSummaryController extends Controller {
 //            'endDate' => $endDate,
 //        );
 //        $purchaseSummary->setupFilter($filters);
-        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate);
+        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -60,8 +61,9 @@ class PurchaseSummaryController extends Controller {
             'purchaseReport' => $purchaseReport,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'currentPage' => $currentPage,
+//            'currentPage' => $currentPage,
             'currentSort' => $currentSort,
+            'branchId' => $branchId,
         ));
     }
 

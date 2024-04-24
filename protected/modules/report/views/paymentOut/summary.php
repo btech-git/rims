@@ -109,7 +109,76 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Supplier</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('SupplierId', $supplierId, array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
+                                        )); ?>
 
+                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                            'id' => 'supplier-dialog',
+                                            // additional javascript options for the dialog plugin
+                                            'options' => array(
+                                                'title' => 'Supplier',
+                                                'autoOpen' => false,
+                                                'width' => 'auto',
+                                                'modal' => true,
+                                            ),
+                                        )); ?>
+
+                                        <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                            'id' => 'supplier-grid',
+                                            'dataProvider' => $supplierDataProvider,
+                                            'filter' => $supplier,
+                                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                                            'pager'=>array(
+                                               'cssFile'=>false,
+                                               'header'=>'',
+                                            ),
+                                            'selectionChanged' => 'js:function(id){
+                                                $("#SupplierId").val($.fn.yiiGridView.getSelection(id));
+                                                $("#supplier-dialog").dialog("close");
+                                                if ($.fn.yiiGridView.getSelection(id) == "") {
+                                                    $("#supplier_name").html("");
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        dataType: "JSON",
+                                                        url: "' . CController::createUrl('ajaxJsonSupplier') . '",
+                                                        data: $("form").serialize(),
+                                                        success: function(data) {
+                                                            $("#supplier_name").html(data.supplier_name);
+                                                        },
+                                                    });
+                                                }
+                                            }',
+                                            'columns' => array(
+                                                'company',
+                                                'name',
+                                                array(
+                                                    'header' => 'COA account',
+                                                    'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
+                                                ),
+                                            ),
+                                        )); ?>
+                                        <?php $this->endWidget(); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                                        <?php $supplier = Supplier::model()->findByPk($supplierId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?> 
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -156,11 +225,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
 <div class="hide">
     <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
             'itemCount' => $paymentOutSummary->dataProvider->pagination->itemCount,
             'pageSize' => $paymentOutSummary->dataProvider->pagination->pageSize,
             'currentPage' => $paymentOutSummary->dataProvider->pagination->getCurrentPage(false),
-        )); ?>
+        ));*/ ?>
     </div>
     <div class="clear"></div>
 </div>

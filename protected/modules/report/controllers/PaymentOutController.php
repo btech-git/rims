@@ -29,6 +29,7 @@ class PaymentOutController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $supplierId = isset($_GET['SupplierId']) ? $_GET['SupplierId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -37,7 +38,21 @@ class PaymentOutController extends Controller {
         $paymentOutSummary->setupLoading();
         $paymentOutSummary->setupPaging($pageSize, $currentPage);
         $paymentOutSummary->setupSorting();
-        $paymentOutSummary->setupFilter($startDate, $endDate, $branchId, $paymentType);
+        $paymentOutSummary->setupFilter($startDate, $endDate, $branchId, $paymentType, $supplierId);
+
+        $supplier = new Supplier('search');
+        $supplier->unsetAttributes();  // clear any default values
+        
+        if (isset($_GET['Supplier'])) {
+            $supplier->attributes = $_GET['Supplier'];
+        }
+        
+        $supplierCriteria = new CDbCriteria;
+        $supplierCriteria->compare('t.name', $supplier->name, true);
+        $supplierCriteria->compare('t.company', $supplier->company, true);
+        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
+            'criteria' => $supplierCriteria,
+        ));
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -51,11 +66,27 @@ class PaymentOutController extends Controller {
             'paymentOut' => $paymentOut,
             'paymentOutSummary' => $paymentOutSummary,
             'branchId' => $branchId,
+            'supplierId' => $supplierId,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
             'paymentType' => $paymentType,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
         ));
+    }
+
+    public function actionAjaxJsonSupplier() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $supplierId = (isset($_POST['SupplierId'])) ? $_POST['SupplierId'] : '';
+            $supplier = Supplier::model()->findByPk($supplierId);
+
+            $object = array(
+                'supplier_name' => CHtml::value($supplier, 'company'),
+            );
+            
+            echo CJSON::encode($object);
+        }
     }
 
     protected function saveToExcel($dataProvider, $branchId, array $options = array()) {

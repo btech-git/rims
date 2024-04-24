@@ -600,20 +600,29 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalSales($startDate, $endDate) {
+    public function getTotalSales($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
         $sql = "
             SELECT COALESCE(SUM(p.total_price), 0) AS total 
             FROM " . RegistrationProduct::model()->tableName() . " p 
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
-            WHERE p.product_id = :product_id AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date
+            WHERE p.product_id = :product_id AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
             GROUP BY product_id
         ";
 
-        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
-            ':product_id' => $this->id,
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        ));
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
 
         return ($value === false) ? 0 : $value;
     }

@@ -80,6 +80,16 @@ class TransactionJournalController extends Controller {
         }
     }
 
+    public function actionAjaxHtmlUpdateSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $categoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
+
+            $this->renderPartial('_subCategorySelect', array(
+                'categoryId' => $categoryId,
+            ), false, true);
+        }
+    }
+
     public function actionAjaxHtmlUpdateBranchSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $companyId = isset($_GET['CompanyId']) ? $_GET['CompanyId'] : 0;

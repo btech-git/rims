@@ -99,6 +99,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             <td>
                                                 <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                                                     'empty' => '-- All --',
+                                                    'onchange' => CHtml::ajax(array(
+                                                        'type' => 'GET',
+                                                        'url' => CController::createUrl('ajaxHtmlUpdateSubCategorySelect'),
+                                                        'update' => '#sub_category',
+                                                    )),
                                                 )); ?>
                                             </td>
 

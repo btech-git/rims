@@ -30,8 +30,9 @@ class SaleRetailServiceController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 //        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+//        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
 //        $saleRetailServiceSummary = new SaleRetailServiceSummary($service->search());
 //        $saleRetailServiceSummary->setupLoading();
@@ -42,7 +43,7 @@ class SaleRetailServiceController extends Controller {
 //            'endDate' => $endDate,
 //        );
 //        $saleRetailServiceSummary->setupFilter($filters);
-        $saleRetailServiceReport = $service->getSaleRetailServiceReport($startDate, $endDate);
+        $saleRetailServiceReport = $service->getSaleRetailServiceReport($startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -58,8 +59,10 @@ class SaleRetailServiceController extends Controller {
             'serviceDataProvider' => $serviceDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'currentPage' => $currentPage,
+//            'pageSize' => $pageSize,
+//            'currentPage' => $currentPage,
             'currentSort' => $currentSort,
+            'branchId' => $branchId,
         ));
     }
 
