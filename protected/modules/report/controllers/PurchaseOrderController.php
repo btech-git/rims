@@ -33,13 +33,14 @@ class PurchaseOrderController extends Controller {
 //        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
 //        $purchaseOrderSummary = new PurchaseOrderSummary($supplier->search());
 //        $purchaseOrderSummary->setupLoading();
 //        $purchaseOrderSummary->setupPaging($pageSize, $currentPage);
 //        $purchaseOrderSummary->setupSorting();
 //        $purchaseOrderSummary->setupFilter($startDate, $endDate);
-        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate);
+        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -57,6 +58,7 @@ class PurchaseOrderController extends Controller {
             'endDate' => $endDate,
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
+            'branchId' => $branchId,
         ));
     }
 
