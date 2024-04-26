@@ -50,7 +50,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php foreach ($paymentOutSummary->dataProvider->data as $header): ?>
             <?php $paymentAmount = CHtml::value($header, 'payment_amount'); ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentOut/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
+                <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->payment_number), array("/accounting/paymentOut/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->payment_date))); ?></td>
                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'notes')); ?></td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
