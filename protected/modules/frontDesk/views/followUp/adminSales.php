@@ -70,12 +70,18 @@ Yii::app()->clientScript->registerScript('search', "
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
             ),
-            array(
-                'name' => 'branch_id',
-                'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                'value' => '$data->branch->name'
-            ),
             'problem',
+            'feedback',
+            array(
+                'class' => 'CButtonColumn',
+                'template' => '{feedback}',
+                'buttons' => array(
+                    'feedback' => array(
+                        'label' => 'feedback',
+                        'url' => 'Yii::app()->createUrl("frontDesk/followUp/updateFeedback", array("id"=>$data->id))',
+                    ),
+                ),
+            ),
         ),
     )); ?>
 </div>

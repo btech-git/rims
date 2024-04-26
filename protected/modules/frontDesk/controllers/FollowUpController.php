@@ -135,4 +135,30 @@ class FollowUpController extends Controller {
             'customerName' => $customerName,
         ));
     }
+    public function actionUpdateFeedback($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        $customer = Customer::model()->findByPk($vehicle->customer_id);
+
+        $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        
+        if (isset($_POST['Submit'])) {
+            $registrationTransaction->feedback = $_POST['RegistrationTransaction']['feedback'];
+            $registrationTransaction->update(array('feedback'));
+            $this->redirect(array('adminSales'));
+        }
+
+        $this->render('updateFeedback', array(
+            'registrationTransaction' => $registrationTransaction,
+            'vehicle' => $vehicle,
+            'customer' => $customer,
+            'products' => $products,
+            'services' => $services,
+        ));
+    }
 }
