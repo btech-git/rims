@@ -554,7 +554,7 @@ class RegistrationService extends CActiveRecord {
                 FROM " . ServiceType::model()->tableName() . " s 
                 LEFT OUTER JOIN " . RegistrationService::model()->tableName() . " d ON s.id = r.service_type_id
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = d.registration_transaction_id
-                WHERE substring(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND s.is_deleted = 0 " . $branchConditionSql . "
+                WHERE substring(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND s.is_deleted = 0" . $branchConditionSql . "
                 GROUP BY substring(h.transaction_date, 1, 10), d.service_type_id
                 ORDER BY substring(h.transaction_date, 1, 10) ASC, s.name ASC";
 
@@ -563,17 +563,24 @@ class RegistrationService extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getTotalQuantityServiceCategoryData($yearMonth) {
+    public static function getTotalQuantityServiceCategoryData($yearMonth, $branchId) {
+        $branchConditionSql = '';
+        
         $params = array(
             ':year_month' => $yearMonth,
         );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND t.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
         
         $sql = "SELECT c.id AS service_category_id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3) AS transaction_date, c.code AS service_category_code, COUNT(*) AS total_quantity_service_category
                 FROM " . RegistrationService::model()->tableName() . " r
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = r.registration_transaction_id
                 INNER JOIN " . Service::model()->tableName() . " s ON s.id = r.service_id
                 INNER JOIN " . ServiceCategory::model()->tableName() . " c ON c.id = s.service_category_id
-                WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 2) = :year_month
+                WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 2) = :year_month" . $branchConditionSql . "
                 GROUP BY c.id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3)
                 ORDER BY c.code ASC, transaction_date ASC";
 

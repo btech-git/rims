@@ -311,7 +311,7 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalSales($startDate, $endDate, $branchId) {
+    public function getTotalSaleCompany($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -330,6 +330,31 @@ class Customer extends CActiveRecord {
             FROM " . RegistrationTransaction::model()->tableName() . "
             WHERE customer_id = :customer_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
             GROUP BY customer_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public static function getTotalSaleIndividual($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(r.grand_total), 0) AS total 
+            FROM " . RegistrationTransaction::model()->tableName() . " r 
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+            WHERE c.customer_type = 'Individual' AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);

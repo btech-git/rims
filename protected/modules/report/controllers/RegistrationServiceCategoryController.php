@@ -25,10 +25,11 @@ class RegistrationServiceCategoryController extends Controller {
         
         $yearMonthNow = date('Y-m');
 
-        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
+        $yearMonth = isset($_GET['YearMonth']) ? $_GET['YearMonth'] : $yearMonthNow;
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
         $registrationServiceInfo = array();
-        $registrationServiceData = RegistrationService::getTotalQuantityServiceCategoryData($yearMonth);
+        $registrationServiceData = RegistrationService::getTotalQuantityServiceCategoryData($yearMonth, $branchId);
         foreach ($registrationServiceData as $registrationServiceItem) {
             $registrationServiceInfo[$registrationServiceItem['service_category_id']]['code'] = $registrationServiceItem['service_category_code'];
             $registrationServiceInfo[$registrationServiceItem['service_category_id']]['totals'][$registrationServiceItem['transaction_date']] = $registrationServiceItem['total_quantity_service_category'];
@@ -45,6 +46,7 @@ class RegistrationServiceCategoryController extends Controller {
         $this->render('summary', array(
             'yearMonthNow' => $yearMonthNow,
             'yearMonth' => $yearMonth,
+            'branchId' => $branchId,
             'registrationServiceInfo' => $registrationServiceInfo,
         ));
     }

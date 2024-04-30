@@ -27,12 +27,14 @@ class SaleInvoiceSummaryController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $customerId = isset($_GET['InvoiceHeader']['customer_id']) ? $_GET['InvoiceHeader']['customer_id'] : 0;
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
-        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $vehicleId = (isset($_GET['VehicleId'])) ? $_GET['VehicleId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        
+        $vehicles = Vehicle::model()->findAllByAttributes(array('customer_id' => $customerId), array('order' => 'id DESC', 'limit' => 100));
 
         $saleInvoiceSummary = new SaleInvoiceSummary($invoiceHeader->search());
         $saleInvoiceSummary->setupLoading();
@@ -41,8 +43,8 @@ class SaleInvoiceSummaryController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'plateNumber' => $plateNumber,
-            'customerName' => $customerName,
+            'vehicleId' => $vehicleId,
+            'customerId' => $customerId,
             'customerType' => $customerType,
         );
         $saleInvoiceSummary->setupFilter($filters);
@@ -64,11 +66,12 @@ class SaleInvoiceSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
-            'plateNumber' => $plateNumber,
-            'customerName' => $customerName,
+            'vehicleId' => $vehicleId,
+            'customerId' => $customerId,
             'customerType' => $customerType,
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
+            'vehicles' => $vehicles,
         ));
     }
 
@@ -84,6 +87,19 @@ class SaleInvoiceSummaryController extends Controller {
                 'customer_mobile_phone' => CHtml::value($customer, 'mobile_phone'),
             );
             echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxHtmlUpdateVehicleList() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $customerId = isset($_GET['InvoiceHeader']['customer_id']) ? $_GET['InvoiceHeader']['customer_id'] : 0;
+            $vehicleId = isset($_GET['VehicleId']) ? $_GET['VehicleId'] : '';
+            $vehicles = Vehicle::model()->findAllByAttributes(array('customer_id' => $customerId), array('order' => 'id DESC', 'limit' => 100));
+
+            $this->renderPartial('_vehicleList', array(
+                'vehicles' => $vehicles,
+                'vehicleId' => $vehicleId,
+            ));
         }
     }
 

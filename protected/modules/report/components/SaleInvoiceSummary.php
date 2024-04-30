@@ -38,8 +38,8 @@ class SaleInvoiceSummary extends CComponent {
         $this->dataProvider->criteria->addCondition('t.status <> "CANCELLED"');
         $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
 //        $this->dataProvider->criteria->compare('t.customer_id', FALSE);
-        $this->dataProvider->criteria->compare('vehicle.plate_number', $filters['plateNumber'], TRUE);
+        $this->dataProvider->criteria->compare('vehicle.id', $filters['vehicleId']);
         $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType'], false);
-        $this->dataProvider->criteria->compare('customer.name', $filters['customerName'], TRUE);
+        $this->dataProvider->criteria->compare('customer.id', $filters['customerId']);
     }
 }

@@ -2,7 +2,7 @@
     
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'asset-purchase-grid',
-        'dataProvider'=>$retailTransactionDataProvider,
+        'dataProvider'=>$retailTransactionHeadDataProvider,
         'filter'=>null,
         'pager' => array(
             'cssFile' => false,
@@ -31,7 +31,7 @@
     )); ?>
     
     <div style="text-align: center; font-weight: bold">
-        Total Sales Retail: <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $this->reportGrandTotalRetailTransaction($retailTransactionDataProvider))); ?>
+        Total Sales Retail: <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $this->reportGrandTotalRetailTransaction($retailTransactionHeadDataProvider))); ?>
     </div>
 
 </div>

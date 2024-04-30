@@ -148,10 +148,46 @@
                 <div class="row">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
-                            'Sales Retail' => array(
-                                'content' => $this->renderPartial('_viewRetailTransaction', array(
-                                    'retailTransaction' => $retailTransaction,
-                                    'retailTransactionDataProvider' => $retailTransactionDataProvider,
+                            'Retail HO' => array(
+                                'content' => $this->renderPartial('_viewRetailTransactionHead', array(
+                                    'retailTransactionHead' => $retailTransactionHead,
+                                    'retailTransactionHeadDataProvider' => $retailTransactionHeadDataProvider,
+                                ), true),
+                            ),
+                            'Retail R-1' => array(
+                                'content' => $this->renderPartial('_viewRetailTransaction1', array(
+    'retailTransaction1' => $retailTransaction1,
+    'retailTransaction1DataProvider' => $retailTransaction1DataProvider,
+                                ), true),
+                            ),
+                            'Retail R-2' => array(
+                                'content' => $this->renderPartial('_viewRetailTransaction2', array(
+    'retailTransaction2' => $retailTransaction2,
+    'retailTransaction2DataProvider' => $retailTransaction2DataProvider,
+                                ), true),
+                            ),
+                            'Retail R-4' => array(
+                                'content' => $this->renderPartial('_viewRetailTransaction4', array(
+    'retailTransaction4' => $retailTransaction4,
+    'retailTransaction4DataProvider' => $retailTransaction4DataProvider,
+                                ), true),
+                            ),
+                            'Retail R-5' => array(
+                                'content' => $this->renderPartial('_viewRetailTransaction5', array(
+    'retailTransaction5' => $retailTransaction5,
+    'retailTransaction5DataProvider' => $retailTransaction5DataProvider,
+                                ), true),
+                            ),
+                            'Retail R-6' => array(
+                                'content' => $this->renderPartial('_viewRetailTransaction6', array(
+    'retailTransaction6' => $retailTransaction6,
+    'retailTransaction6DataProvider' => $retailTransaction6DataProvider,
+                                ), true),
+                            ),
+                            'Retail R-8' => array(
+                                'content' => $this->renderPartial('_viewRetailTransaction8', array(
+    'retailTransaction8' => $retailTransaction8,
+    'retailTransaction8DataProvider' => $retailTransaction8DataProvider,
                                 ), true),
                             ),
                             'Sales Wholesale' => array(

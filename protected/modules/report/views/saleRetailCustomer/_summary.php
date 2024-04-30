@@ -26,9 +26,14 @@ Yii::app()->clientScript->registerCss('_report', '
     </thead>
     
     <tbody>
+        <tr>
+            <?php $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId); ?>
+            <td colspan="3" style="text-align: center">Individual</td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalIndividual)); ?></td>
+        </tr>
         <?php $totalSale = 0.00; ?>
         <?php foreach ($saleRetailCustomerSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = $header->getTotalSales($startDate, $endDate, $branchId); ?>
+            <?php $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>

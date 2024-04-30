@@ -106,17 +106,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 ),
                                                 array(
                                                     'name' => 'customer_type',
-                                                    'filter' => CHtml::activeDropDownList($customer, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company'), array(
-                                                        'empty' => '-- All --',
-                                                    )), 
+                                                    'filter' => false,
                                                     'value' => '$data->customer_type',
                                                 ),
                                                 array(
                                                     'name' => 'coa_id',
                                                     'header' => 'COA account',
-                                                    'filter' => CHtml::activeDropDownList($customer, 'coa_id', CHtml::listData(Coa::model()->findAllByAttributes(array('coa_sub_category_id' => 8), array('order' => 'name ASC')), 'id', 'name'), array(
-                                                        'empty' => '-- All --',
-                                                    )), 
+                                                    'filter' => false,
                                                     'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
                                                 ),
                                             ),
@@ -134,10 +130,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
+                                        <span class="prefix">Branch </span>
                                     </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownlist($customer, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company'), array('empty' => '-- All Type --')); ?>
+                                     <div class="small-8 columns">
+                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +141,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                        <div class="medium-6 columns">
+                        <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
@@ -179,19 +175,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 'placeholder' => 'Sampai',
                                             ),
                                         )); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
-                                    </div>
-                                     <div class="small-8 columns">
-                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>

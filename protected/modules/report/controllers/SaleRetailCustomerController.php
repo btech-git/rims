@@ -50,7 +50,7 @@ class SaleRetailCustomerController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailCustomerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($saleRetailCustomerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
         }
 
         $this->render('summary', array(
@@ -90,6 +90,7 @@ class SaleRetailCustomerController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate']; 
+        $branchId = $options['branchId']; 
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
@@ -117,10 +118,17 @@ class SaleRetailCustomerController extends Controller {
 
         $worksheet->getStyle('A6:D6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 8;
+        $counter = 7;
+        
+        $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId);
+        $worksheet->setCellValue("B{$counter}", 'Individual');
+        $worksheet->setCellValue("D{$counter}", CHtml::encode($totalIndividual));
+            
+        $counter++;
+            
         $totalSale = 0.00;
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate);
+            $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId);
             $worksheet->getStyle("D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));

@@ -90,11 +90,47 @@ class CashDailySummaryController extends Controller {
         $transactionJournalDataProvider->criteria->compare('t.tanggal_transaksi', $transactionDate,true);
         $transactionJournalDataProvider->criteria->compare('t.branch_id', $branchId);
         
-        $retailTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
-        $retailTransactionDataProvider = $retailTransaction->searchByDailyCashReport();
-        $retailTransactionDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
-        $retailTransactionDataProvider->criteria->compare('t.branch_id', $branchId);
-        $retailTransactionDataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        $retailTransactionHead = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $retailTransactionHeadDataProvider = $retailTransactionHead->searchByDailyCashReport();
+        $retailTransactionHeadDataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransactionHeadDataProvider->criteria->compare('t.branch_id', 6);
+        $retailTransactionHeadDataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        
+        $retailTransaction1 = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $retailTransaction1DataProvider = $retailTransaction1->searchByDailyCashReport();
+        $retailTransaction1DataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransaction1DataProvider->criteria->compare('t.branch_id', 1);
+        $retailTransaction1DataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        
+        $retailTransaction2 = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $retailTransaction2DataProvider = $retailTransaction2->searchByDailyCashReport();
+        $retailTransaction2DataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransaction2DataProvider->criteria->compare('t.branch_id', 7);
+        $retailTransaction2DataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        
+        $retailTransaction4 = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $retailTransaction4DataProvider = $retailTransaction4->searchByDailyCashReport();
+        $retailTransaction4DataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransaction4DataProvider->criteria->compare('t.branch_id', 2);
+        $retailTransaction4DataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        
+        $retailTransaction5 = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $retailTransaction5DataProvider = $retailTransaction5->searchByDailyCashReport();
+        $retailTransaction5DataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransaction5DataProvider->criteria->compare('t.branch_id', 3);
+        $retailTransaction5DataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        
+        $retailTransaction6 = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $retailTransaction6DataProvider = $retailTransaction6->searchByDailyCashReport();
+        $retailTransaction6DataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransaction6DataProvider->criteria->compare('t.branch_id', 4);
+        $retailTransaction6DataProvider->criteria->addCondition('customer.customer_type = "Individual"');
+        
+        $retailTransaction8 = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $retailTransaction8DataProvider = $retailTransaction8->searchByDailyCashReport();
+        $retailTransaction8DataProvider->criteria->compare('t.transaction_date', $transactionDate,true);
+        $retailTransaction8DataProvider->criteria->compare('t.branch_id', 5);
+        $retailTransaction8DataProvider->criteria->addCondition('customer.customer_type = "Individual"');
         
         $wholesaleTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $wholesaleTransactionDataProvider = $wholesaleTransaction->searchByDailyCashReport();
@@ -157,8 +193,20 @@ class CashDailySummaryController extends Controller {
             'existingDate' => $existingDate,
             'saleOrder' => $saleOrder,
             'saleOrderDataProvider' => $saleOrderDataProvider,
-            'retailTransaction' => $retailTransaction,
-            'retailTransactionDataProvider' => $retailTransactionDataProvider,
+            'retailTransactionHead' => $retailTransactionHead,
+            'retailTransactionHeadDataProvider' => $retailTransactionHeadDataProvider,
+            'retailTransaction1' => $retailTransaction1,
+            'retailTransaction1DataProvider' => $retailTransaction1DataProvider,
+            'retailTransaction2' => $retailTransaction2,
+            'retailTransaction2DataProvider' => $retailTransaction2DataProvider,
+            'retailTransaction4' => $retailTransaction4,
+            'retailTransaction4DataProvider' => $retailTransaction4DataProvider,
+            'retailTransaction5' => $retailTransaction5,
+            'retailTransaction5DataProvider' => $retailTransaction5DataProvider,
+            'retailTransaction6' => $retailTransaction6,
+            'retailTransaction6DataProvider' => $retailTransaction6DataProvider,
+            'retailTransaction8' => $retailTransaction8,
+            'retailTransaction8DataProvider' => $retailTransaction8DataProvider,
             'wholesaleTransaction' => $wholesaleTransaction,
             'wholesaleTransactionDataProvider' => $wholesaleTransactionDataProvider,
             'purchaseOrder' => $purchaseOrder,

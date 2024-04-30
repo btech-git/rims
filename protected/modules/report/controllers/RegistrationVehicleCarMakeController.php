@@ -26,9 +26,10 @@ class RegistrationVehicleCarMakeController extends Controller {
         $yearMonthNow = date('Y-m');
 
         $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
         $registrationVehicleInfo = array();
-        $registrationVehicleData = RegistrationTransaction::getTotalQuantityVehicleCarMakeData($yearMonth);
+        $registrationVehicleData = RegistrationTransaction::getTotalQuantityVehicleCarMakeData($yearMonth, $branchId);
         foreach ($registrationVehicleData as $registrationVehicleItem) {
             $registrationVehicleInfo[$registrationVehicleItem['car_make_id']]['name'] = $registrationVehicleItem['car_make_name'];
             $registrationVehicleInfo[$registrationVehicleItem['car_make_id']]['car_models'][$registrationVehicleItem['car_model_id']]['name'] = $registrationVehicleItem['car_model_name'];
@@ -46,6 +47,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         $this->render('summary', array(
             'yearMonthNow' => $yearMonthNow,
             'yearMonth' => $yearMonth,
+            'branchId' => $branchId,
             'registrationVehicleInfo' => $registrationVehicleInfo,
         ));
     }

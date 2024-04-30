@@ -4,7 +4,7 @@ Yii::app()->clientScript->registerScript('report', '
 
 	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
-	$("#PlateNumber").val("' . $plateNumber . '");
+	$("#VehicleId").val("' . $vehicleId . '");
 	$("#PageSize").val("' . $saleInvoiceSummary->dataProvider->pagination->pageSize . '");
 	$("#CurrentPage").val("' . ($saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
@@ -18,6 +18,34 @@ Yii::app()->clientScript->registerScript('report', '
             <div class="myForm tabForm customer">
                 <?php echo CHtml::beginForm(array(''), 'get'); ?>
 
+                <div class="row">
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Jumlah per Halaman</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Halaman saat ini</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="row">
                     <div class="medium-6 columns">
                         <div class="field">
@@ -54,14 +82,9 @@ Yii::app()->clientScript->registerScript('report', '
                                         'selectionChanged' => 'js:function(id) {
                                             $("#' . CHtml::activeId($invoiceHeader, 'customer_id') . '").val($.fn.yiiGridView.getSelection(id));
                                             $("#customer-dialog").dialog("close");
-                                            if ($.fn.yiiGridView.getSelection(id) == "")
-                                            {
+                                            if ($.fn.yiiGridView.getSelection(id) == "") {
                                                 $("#customer_name").html("");
-                                                $("#customer_type").html("");
-                                                $("#customer_mobile_phone").html("");
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 $.ajax({
                                                     type: "POST",
                                                     dataType: "JSON",
@@ -69,8 +92,14 @@ Yii::app()->clientScript->registerScript('report', '
                                                     data: $("form").serialize(),
                                                     success: function(data) {
                                                         $("#customer_name").html(data.customer_name);
-                                                        $("#customer_type").html(data.customer_type);
-                                                        $("#customer_mobile_phone").html(data.customer_mobile_phone);
+                                                    },
+                                                });
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: "' . CController::createUrl('ajaxHtmlUpdateVehicleList') . '",
+                                                    data: $("form").serialize(),
+                                                    success: function(html) {
+                                                        $("#vehicle_list_span").html(html);
                                                     },
                                                 });
                                             }
@@ -89,18 +118,9 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-
-<!--                            <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label class="prefix">Customer</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php //echo CHtml::textField('CustomerName', $customerName, array('size' => 3)); ?>
-                                </div>
-                            </div>
-                        </div>-->
-
+                    </div>
+                    
+                    <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -114,18 +134,45 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
                                     <label class="prefix">Vehicle Plate #</label>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::textField('PlateNumber', $plateNumber, array('size' => 3)); ?>
+                                    <span id="vehicle_list_span">
+                                        <?php $this->renderPartial('_vehicleList', array(
+                                            'vehicles' => $vehicles,
+                                            'vehicleId' => $vehicleId,
+                                        )); ?>
+                                    </span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch </span>
+                                </div>
+                                 <div class="small-8 columns">
+                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+
+                    <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-2 columns">
@@ -169,17 +216,6 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Branch </span>
-                                </div>
-                                 <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
                                     <span class="prefix">Status</span>
                                 </div>
                                  <div class="small-8 columns">
@@ -191,37 +227,15 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label class="prefix">Jumlah per Halaman</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label class="prefix">Halaman saat ini</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="clear"></div>
-                
-                        <div class="row buttons">
-                            <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                            <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
-                        </div>
                     </div>
+                </div>
+
+                <div class="clear"></div>
+
+                <div class="row buttons">
+                    <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
+                    <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
                 </div>
 
                 <div class="row">
@@ -244,7 +258,6 @@ Yii::app()->clientScript->registerScript('report', '
                     'saleInvoiceSummary' => $saleInvoiceSummary, 
                     'startDate' => $startDate, 
                     'endDate' => $endDate,
-                    'plateNumber' => $plateNumber,
                 )); ?>
             </div>
 
