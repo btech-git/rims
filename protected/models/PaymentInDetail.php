@@ -133,4 +133,8 @@ class PaymentInDetail extends CActiveRecord {
             default: return '';
         }
     }
+    
+    public function getTotalAmount() {
+        return $this->amount + $this->tax_service_amount;
+    }
 }

@@ -31,10 +31,10 @@ Yii::app()->clientScript->registerCss('_report', '
         <thead>
             <tr>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Tanggal</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Db/Cr</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Transaksi #</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Nilai</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Debit</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Credit</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Saldo</th>
             </tr>
         </thead>
@@ -70,10 +70,14 @@ Yii::app()->clientScript->registerCss('_report', '
                     
                         <tr class="items2">
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['tanggal_transaksi']))); ?></td>
-                            <td><?php echo CHtml::encode($payableRow['transaction_type']); ?></td>
                             <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
                             <td><?php echo CHtml::encode($payableRow['remark']); ?></td>
-                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $amount); ?></td>
+                            <td style="text-align: right">
+                                <?php echo $payableRow['transaction_type'] == 'D' ? Yii::app()->numberFormatter->format('#,##0', $amount) : 0; ?>
+                            </td>
+                            <td style="text-align: right">
+                                <?php echo $payableRow['transaction_type'] == 'K' ? Yii::app()->numberFormatter->format('#,##0', $amount) : 0; ?>
+                            </td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
                         </tr>
                         <?php $positiveAmount += $purchaseAmount; ?>

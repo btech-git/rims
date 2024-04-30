@@ -129,7 +129,6 @@ $('#invoiceSearch').submit(function(){
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -230,10 +229,9 @@ $('#invoiceSearch').submit(function(){
                                         </div>
                                         <div class="small-8 columns">						
                                             <?php echo $form->dropDownList($model, 'status', array(
-                                                'PAID' => 'PAID', 
-                                                'NOT PAID' => 'NOT PAID',
-                                                'CLEAR' => 'CLEAR',
+                                                'PARTIALLY PAID' => 'PARTIALLY PAID',
                                                 'INVOICING' => 'INVOICING',
+                                                'PAID' => 'PAID', 
                                                 'CANCELLED!!!' => 'CANCEL',
                                             ), array('prompt' => 'Select',)); ?>
                                         </div>

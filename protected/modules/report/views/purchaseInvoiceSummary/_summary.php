@@ -7,6 +7,11 @@
     .width1-6 { width: 10% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
+
+    .width2-1 { width: 15% }
+    .width2-2 { width: 15% }
+    .width2-3 { width: 15% }
+    .width2-4 { width: 15% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -27,10 +32,18 @@
         <th class="width1-6">Payment</th>
         <th class="width1-7">Remaining</th>
         <th class="width1-8">Status</th>
-
     </tr>
     <tr id="header2">
-        <td colspan="11">&nbsp;</td>
+        <td colspan="8">
+            <table>
+                <tr>
+                    <th class="width2-1">Payment out #</th>
+                    <th class="width2-2">Tanggal</th>
+                    <th class="width2-3">Jumlah</th>
+                    <th class="width2-4">Memo</th>
+                </tr>
+            </table>
+        </td>
     </tr>
     <?php foreach ($purchaseInvoiceSummary->dataProvider->data as $header): ?>
         <tr class="items1">
@@ -42,6 +55,32 @@
             <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->payment_amount))); ?></td>
             <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->payment_left))); ?></td>
             <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
+        </tr>
+        <tr class="items2">
+            <td colspan="8">
+                    <table>
+                        <?php foreach ($header->transactionReceiveItems as $receiveItem): ?>
+                            <?php $totalPayment = 0; ?>
+                            <?php if (!empty($receiveItem->payOutDetails )): ?>
+                                <?php foreach ($receiveItem->payOutDetails as $paymentOutDetail): ?>
+                                    <?php $amount = CHtml::value($paymentOutDetail, 'amount'); ?>
+                                    <tr>
+                                        <td class="width2-1"><?php echo CHtml::link(CHtml::encode($paymentOutDetail->paymentOut->payment_number), array("/accounting/paymentOut/view", "id"=>$paymentOutDetail->paymentOut->id), array("target" => "_blank")); ?></td>
+                                        <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($paymentOutDetail->paymentOut->payment_date))); ?></td>
+                                        <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amount)); ?></td>
+                                        <td class="width2-5"><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'memo')); ?></td>
+                                    </tr>
+                                    <?php $totalPayment += $amount; ?>
+                                <?php endforeach; ?>
+                                <tr>
+                                    <td style="text-align: right; font-weight: bold" colspan="2">Total Payment</td>
+                                    <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
+                                    <td></td>
+                                </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </table>
+            </td>
         </tr>
     <?php endforeach; ?>
     <tr id="header1">

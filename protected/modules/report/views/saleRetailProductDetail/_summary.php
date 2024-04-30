@@ -57,6 +57,7 @@ Yii::app()->clientScript->registerCss('_report', '
         </tr>
     </thead>
     <tbody>
+        <?php $grandTotalSale = 0.00; ?>
         <?php foreach ($saleRetailProductSummary->dataProvider->data as $header): ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
@@ -94,6 +95,15 @@ Yii::app()->clientScript->registerCss('_report', '
                     </table>
                 </td>
             </tr>
+            <?php $grandTotalSale += $totalSale; ?>
         <?php endforeach; ?>
     </tbody>
+    <tfoot>
+    <tr>
+        <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
+        <td style="text-align: right; font-weight: bold" class="width1-9">
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalSale)); ?>
+        </td>
+    </tr>
+    </tfoot>
 </table>

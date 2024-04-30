@@ -121,16 +121,16 @@ $this->menu = array(
         if (!empty($delivery)) {
             if ($delivery->request_type == "Sales Order") {
                 $type = "Sales Order";
-                $requestNumber = $delivery->salesOrder->sale_order_no;
+                $requestNumber = CHTml::link($delivery->salesOrder->sale_order_no, array("/transaction/transactionSalesOrder/view", "id" => $model->sales_order_id), array('target' => 'blank'));
             } elseif ($delivery->request_type == "Sent Request") {
                 $type = "Sent Request";
-                $requestNumber = $delivery->sentRequest->sent_request_no;
+                $requestNumber = CHTml::link($delivery->sentRequest->sent_request_no, array("/transaction/transactionSentRequest/view", "id" => $model->sent_request_id), array('target' => 'blank'));
             } elseif ($delivery->request_type == "Consignment Out") {
                 $type = "Consignment out";
-                $requestNumber = $delivery->consignmentOut->consignment_out_no;
+                $requestNumber = CHTml::link($delivery->consignmentOut->consignment_out_no, array("/transaction/consignmentOut/view", "id" => $model->consignment_out_id), array('target' => 'blank'));
             } elseif ($delivery->request_type == "Transfer Request") {
                 $type = "Transfer Request";
-                $requestNumber = $delivery->transferRequest->transfer_request_no;
+                $requestNumber = CHTml::link($delivery->transferRequest->transfer_request_no, array("/transaction/transferRequest/view", "id" => $model->transfer_request_id), array('target' => 'blank'));
             }
         }
         ?>
@@ -171,7 +171,7 @@ $this->menu = array(
                         <label for="right-label" class="right" style="font-weight:bold;">Reference #</label>
                     </div>
                     <div class="small-9 columns">
-                        <label for=""><?php echo $model->return_order_id != "" ? $model->returnOrder->return_order_no : ""; ?></label>
+                        <label for=""><?php echo $model->return_order_id != "" ? CHTml::link($model->returnOrder->return_order_no, array("/transaction/transactionReturnOrder/view", "id" => $model->return_order_id), array('target' => 'blank')) : ""; ?></label>
                     </div>
                 </div>
             </div>
@@ -184,7 +184,7 @@ $this->menu = array(
                         <label for="right-label" class="right" style="font-weight:bold;">Reference #</label>
                     </div>
                     <div class="small-9 columns">
-                        <label for=""><?php echo $model->registration_transaction_id != "" ? $model->registrationTransaction->transaction_number : ""; ?></label>
+                        <label for=""><?php echo $model->registration_transaction_id != "" ? CHTml::link($model->registrationTransaction->transaction_number, array($model->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $model->registration_transaction_id), array('target' => 'blank')) : ""; ?></label>
                     </div>
                 </div>
             </div>

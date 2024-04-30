@@ -137,6 +137,8 @@ Yii::app()->clientScript->registerScript('report', '
                                         'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,
@@ -150,6 +152,8 @@ Yii::app()->clientScript->registerScript('report', '
                                         'name' => 'EndDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,
@@ -181,10 +185,8 @@ Yii::app()->clientScript->registerScript('report', '
                                  <div class="small-8 columns">
                                       <?php echo CHtml::activeDropDownlist($invoiceHeader, 'status', array(
                                           'INVOICING' => 'INVOICING',
-                                          'NOT PAID' => 'NOT PAID',
                                           'PARTIALLY PAID' => 'PARTIALLY PAID',
                                           'PAID' => 'PAID',
-                                          'CLEAR' => 'CLEAR',
                                       ), array('empty'=>'-- All Status --')); ?>
                                 </div>
                             </div>

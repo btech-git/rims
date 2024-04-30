@@ -29,10 +29,13 @@ class PayableLedgerSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.code ASC';
     }
 
-    public function setupFilter() {
+    public function setupFilter($coaId) {
         $this->dataProvider->criteria->addCondition("t.code NOT LIKE '%.000'");
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 15);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
+        if (!empty($coaId)) {
+            $this->dataProvider->criteria->compare('t.id', $coaId);
+        }
     }
 
 }

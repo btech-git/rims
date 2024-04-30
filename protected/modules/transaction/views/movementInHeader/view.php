@@ -137,13 +137,13 @@ $this->menu = array(
         if (!empty($receive)) {
             if ($receive->request_type == "Internal Delivery Order") {
                 $type = "Internal Delivery Order";
-                $requestNumber = $receive->deliveryOrder->delivery_order_no;
+                $requestNumber = CHTml::link($receive->deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id" => $receive->delivery_order_id), array('target' => 'blank'));
             } elseif ($receive->request_type == "Purchase Order") {
                 $type = "Purchase Order";
-                $requestNumber = $receive->purchaseOrder->purchase_order_no;
+                $requestNumber = CHTml::link($receive->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id" => $receive->purchase_order_id), array('target' => 'blank'));
             } elseif ($receive->request_type == "Consignment In") {
                 $type = "Consignment In";
-                $requestNumber = $receive->consignmentIn->consignment_in_number;
+                $requestNumber = CHTml::link($receive->consignmentIn->consignment_in_number, array("/transaction/consignmentIn/view", "id" => $receive->consignment_in_id), array('target' => 'blank'));
             }
         }
         ?>
@@ -185,7 +185,7 @@ $this->menu = array(
                     </div>
                     
                     <div class="small-9 columns">
-                        <label for=""><?php echo $model->return_item_id != "" ? $model->returnItem->return_item_no : ""; ?></label>
+                        <label for=""><?php echo $model->return_item_id != "" ? CHTml::link($model->returnItem->return_item_no, array("/transaction/transactionReturnItem/view", "id" => $model->return_item_id), array('target' => 'blank')) : ""; ?></label>
                  <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>

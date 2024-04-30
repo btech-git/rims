@@ -22,20 +22,26 @@ class PayableLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+//        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
+        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $accountDataProvider = $account->search();
+        $accountDataProvider->criteria->compare('t.is_approved', 1);
+        $accountDataProvider->criteria->compare('t.coa_sub_category_id', 15);
+        $accountDataProvider->pagination->pageVar = 'page_dialog';
+
         $payableLedgerSummary = new PayableLedgerSummary($account->search());
         $payableLedgerSummary->setupLoading();
         $payableLedgerSummary->setupPaging($pageSize, $currentPage);
         $payableLedgerSummary->setupSorting();
-        $payableLedgerSummary->setupFilter();
+        $payableLedgerSummary->setupFilter($coaId);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -51,11 +57,13 @@ class PayableLedgerController extends Controller {
         
         $this->render('summary', array(
             'account' => $account,
+            'accountDataProvider' => $accountDataProvider,
             'branchId' => $branchId,
             'payableLedgerSummary' => $payableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'coaId' => $coaId,
         ));
     }
 
@@ -69,6 +77,16 @@ class PayableLedgerController extends Controller {
                 'supplier_address' => $supplier->address,
             );
             echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxHtmlUpdateSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $categoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
+
+            $this->renderPartial('_subCategorySelect', array(
+                'categoryId' => $categoryId,
+            ), false, true);
         }
     }
 

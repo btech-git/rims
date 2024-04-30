@@ -67,12 +67,6 @@
             'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
         ),
         array(
-            'name' => 'recipient_branch_id',
-            'header' => 'Branch',
-            'filter' => CHtml::activeDropDownList($receiveItem, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-            'value' => '$data->recipientBranch->name',
-        ),
-        array(
             'header' => 'Tanggal Input',
             'value' => '$data->dateTimeCreated',
         ),

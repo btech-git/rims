@@ -155,7 +155,7 @@ class InsuranceCompany extends CActiveRecord {
                 ),
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             ),
         ));
     }
@@ -174,9 +174,7 @@ class InsuranceCompany extends CActiveRecord {
         $branchConditionSql = '';
         
         $criteria = new CDbCriteria;
-        
         $criteria->compare('t.id', $this->id);
-        
         $criteria->params = array(
             ':end_date' => $endDate,
         );

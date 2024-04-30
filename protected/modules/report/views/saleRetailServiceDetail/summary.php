@@ -74,19 +74,71 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Service Name</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($service, 'name', array(
-                                            'onchange' => '
-                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                service_category_id: $("#Service_service_category_id").val(),
-                                                service_type_id: $("#Service_service_type_id").val(),
-                                                code: $("#Service_code").val(),
-                                                name: $(this).val(),
-                                            } } });',
+                                        <?php echo CHtml::activeTextField($service, 'id', array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#service-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#service-dialog").dialog("open"); return false; }',
                                         )); ?>
+
+                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                            'id' => 'service-dialog',
+                                            // additional javascript options for the dialog plugin
+                                            'options' => array(
+                                                'title' => 'Service',
+                                                'autoOpen' => false,
+                                                'width' => 'auto',
+                                                'modal' => true,
+                                            ),
+                                        )); ?>
+
+                                        <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                            'id' => 'service-grid',
+                                            'dataProvider' => $serviceDataProvider,
+                                            'filter' => $service,
+                                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                                            'pager'=>array(
+                                               'cssFile'=>false,
+                                               'header'=>'',
+                                            ),
+                                            'selectionChanged' => 'js:function(id){
+                                                $("#' . CHtml::activeId($service, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                                                $("#service-dialog").dialog("close");
+                                                if ($.fn.yiiGridView.getSelection(id) == "") {
+                                                    $("#service_name").html("");
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        dataType: "JSON",
+                                                        url: "' . CController::createUrl('ajaxJsonService') . '",
+                                                        data: $("form").serialize(),
+                                                        success: function(data) {
+                                                            $("#service_name").html(data.service_name);
+                                                        },
+                                                    });
+                                                }
+                                            }',
+                                            'columns' => array(
+                                                'code',
+                                                'name',
+                                                array(
+                                                    'name' => 'service_category_id',
+                                                    'value' => '$data->serviceCategory->name',
+                                                ),
+                                                array(
+                                                    'name' => 'service_type_id',
+                                                    'value' => '$data->serviceType->name',
+                                                ),
+                                            ),
+                                        )); ?>
+                                        <?php $this->endWidget(); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'service_name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($service, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?> 
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -253,6 +305,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'StartDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -266,6 +320,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'EndDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -282,7 +338,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                        <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>

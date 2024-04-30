@@ -329,7 +329,7 @@ class Coa extends CActiveRecord {
     public function getTransactionTotalDebitAmount() {
         $sql = "SELECT branch_id, COALESCE(SUM(total), 0) AS total_amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE coa_id = :coa_id AND debet_kredit = 'D' AND is_coa_category = 0 
+                WHERE coa_id = :coa_id AND debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
                 GROUP BY branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':coa_id' => $this->id));
@@ -340,7 +340,7 @@ class Coa extends CActiveRecord {
     public function getTransactionTotalCreditAmount() {
         $sql = "SELECT branch_id, COALESCE(SUM(total), 0) AS total_amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE coa_id = :coa_id AND debet_kredit = 'K' AND is_coa_category = 0 
+                WHERE coa_id = :coa_id AND debet_kredit = 'K' AND is_coa_category = 0  AND tanggal_transaksi > '2022-12-31'
                 GROUP BY branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':coa_id' => $this->id));
@@ -362,7 +362,7 @@ class Coa extends CActiveRecord {
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
-                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND debet_kredit = 'D'";
+                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND dc.debet_kredit = 'D' AND dc.tanggal_transaksi > '2022-12-31'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
@@ -383,7 +383,7 @@ class Coa extends CActiveRecord {
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
-                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND debet_kredit = 'K'";
+                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND dc.debet_kredit = 'K' AND dc.tanggal_transaksi > '2022-12-31'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
@@ -409,11 +409,11 @@ class Coa extends CActiveRecord {
             FROM (
                 SELECT coa_id, tanggal_transaksi, total AS amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2021-12-31'
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
                 UNION ALL
                 SELECT coa_id, tanggal_transaksi, total * -1 AS amount
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2021-12-31'
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
             ) j
             INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
             WHERE j.coa_id = :account_id AND j.tanggal_transaksi < :start_date
@@ -432,8 +432,8 @@ class Coa extends CActiveRecord {
         $sql = "
             SELECT COALESCE(SUM(j.total), 0) AS beginning_balance 
             FROM " . JurnalUmum::model()->tableName() . " j
-            INNER JOIN " . Account::model()->tableName() . " a ON a.id = dc.detail_account_id
-            WHERE dc.account_id = :account_id AND dc.date <= :end_date
+            INNER JOIN " . Account::model()->tableName() . " a ON a.id = j.detail_account_id
+            WHERE j.account_id = :account_id AND j.tanggal_transaksi <= :end_date AND j.tanggal_transaksi > '2022-12-31'
         ";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
@@ -633,7 +633,7 @@ class Coa extends CActiveRecord {
         );
         
         $accountingJournals = $this->getRelated('jurnalUmums', false, array(
-            'condition' => "tanggal_transaksi < :transactionDate AND coa_id = :coa_id AND is_coa_category = 0 ",
+            'condition' => "tanggal_transaksi < :transactionDate AND coa_id = :coa_id AND is_coa_category = 0 tanggal_transaksi > '2022-12-31'",
             'params' => $params,
         ));
 
@@ -765,12 +765,12 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id
@@ -792,12 +792,12 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG')
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id";
@@ -852,12 +852,12 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id
@@ -879,12 +879,12 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE')
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '2022-12-31'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id";

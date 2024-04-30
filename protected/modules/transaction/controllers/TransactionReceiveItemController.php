@@ -272,6 +272,7 @@ class TransactionReceiveItemController extends Controller {
     public function actionAddInvoice($id) {
         $receiveItem = $this->loadModel($id);
         $receiveItem->invoice_date = date('Y-m-d');
+        $receiveItem->invoice_due_date = date('Y-m-d',strtotime('+' . $receiveItem->supplier->tenor . ' days', strtotime(date('Y-m-d'))));
         $receiveItem->invoice_date_created = date('Y-m-d');
         $receiveItem->invoice_time_created = date('H:i:s');
         $receiveItem->user_id_invoice = Yii::app()->user->id;

@@ -58,6 +58,8 @@
                         'name' => 'StartDate',
                         'options' => array(
                             'dateFormat' => 'yy-mm-dd',
+                            'changeMonth'=>true,
+                            'changeYear'=>true,
                         ),
                         'htmlOptions' => array(
                             'readonly' => true,
@@ -71,6 +73,8 @@
                         'name' => 'EndDate',
                         'options' => array(
                             'dateFormat' => 'yy-mm-dd',
+                            'changeMonth'=>true,
+                            'changeYear'=>true,
                         ),
                         'htmlOptions' => array(
                             'readonly' => true,

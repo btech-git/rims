@@ -49,9 +49,9 @@ class SaleRetailServiceController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($saleRetailServiceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($saleRetailServiceReport, array('startDate' => $startDate, 'endDate' => $endDate, $branchId));
+        }
 
         $this->render('summary', array(
             'saleRetailServiceReport' => $saleRetailServiceReport,
@@ -79,7 +79,7 @@ class SaleRetailServiceController extends Controller {
         }
     }
 
-    protected function saveToExcel($dataProvider, array $options = array()) {
+    protected function saveToExcel($saleRetailServiceReport, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -112,27 +112,32 @@ class SaleRetailServiceController extends Controller {
         $worksheet->getStyle('A5:E5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Code');
-        $worksheet->setCellValue('B5', 'Name');
+        $worksheet->setCellValue('B5', 'Type');
         $worksheet->setCellValue('C5', 'Category');
-        $worksheet->setCellValue('D5', 'Type');
-        $worksheet->setCellValue('E5', 'Total');
+        $worksheet->setCellValue('D5', 'Name');
+        $worksheet->setCellValue('E5', 'Quantity');
+        $worksheet->setCellValue('E5', 'Amount');
 
         $worksheet->getStyle('A5:E5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $totalSale = 0.00;
-        foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate);
+        $grandTotalQuantity = 0;
+        foreach ($saleRetailServiceReport as $saleRetailServiceItem) {
+            $grandTotal = $saleRetailServiceItem['total'];
+            $totalQuantity = $saleRetailServiceItem['total_quantity'];
             $worksheet->getStyle("E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->code));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->name));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'serviceCategory.name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'serviceType.name')));
+            $worksheet->setCellValue("A{$counter}", $saleRetailServiceItem['code']);
+            $worksheet->setCellValue("B{$counter}", $saleRetailServiceItem['type']);
+            $worksheet->setCellValue("C{$counter}", $saleRetailServiceItem['category']);
+            $worksheet->setCellValue("D{$counter}", $saleRetailServiceItem['name']);
             $worksheet->setCellValue("E{$counter}", CHtml::encode($grandTotal));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode($totalQuantity));
 
             $counter++;
             $totalSale += $grandTotal;
+            $grandTotalQuantity += $totalQuantity;
         }
 
         $worksheet->setCellValue("D{$counter}", 'TOTAL');

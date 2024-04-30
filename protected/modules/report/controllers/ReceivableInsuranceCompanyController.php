@@ -37,6 +37,7 @@ class ReceivableInsuranceCompanyController extends Controller {
 
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
+        $insuranceCompanyDataProvider->pagination->pageVar = 'page_dialog';
 
         $receivableSummary = new ReceivableSummary($insuranceCompany->searchByReceivableReport($endDate, $branchId));
         $receivableSummary->setupLoading();

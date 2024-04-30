@@ -25,6 +25,8 @@ class PurchasePerProductDetailController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
+        $productDataProvider = $product->search();
+        $productDataProvider->pagination->pageVar = 'page_dialog';
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -48,9 +50,11 @@ class PurchasePerProductDetailController extends Controller {
 
         $this->render('summary', array(
             'product' => $product,
+            'productDataProvider' => $productDataProvider,
             'purchasePerProductSummary' => $purchasePerProductSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'currentPage' => $currentPage,
             'currentSort' => $currentSort,
         ));
     }

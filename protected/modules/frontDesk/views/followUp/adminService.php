@@ -48,7 +48,11 @@ Yii::app()->clientScript->registerScript('search', "
         ),
         'rowCssClassExpression' => '(($data->status == "Finished")?"hijau":"merah")',
         'columns' => array(
-            'transaction_number',
+            array(
+                'header' => 'Registration #',
+                'value' => 'CHtml::link($data->transaction_number, array($data->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$data->id), array("target" => "blank"))', 
+                'type' => 'raw'
+            ),
             'work_order_date',
             array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
             array(

@@ -36,7 +36,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <label class="prefix">Supplier</label>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::textField('SupplierName', $supplierName, array('size' => 3)); ?>
+                                    <?php echo CHtml::activeTextField($purchaseOrderHeader, 'supplier_id', array(
+                                        'readonly' => true,
+                                        'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                                        'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
+                                    )); ?>
+
+                                    <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                                    <?php echo CHtml::encode(CHtml::value($purchaseOrderHeader, 'supplier.company')); ?>
+                                    <?php echo CHtml::closeTag('span'); ?>    
                                 </div>
                             </div>
                         </div>
@@ -52,6 +60,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,
@@ -65,6 +75,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         'name' => 'EndDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,
@@ -136,7 +148,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <hr />
 
-            <div class="right"><?php //echo ReportHelper::summaryText($purchaseInvoiceSummary->dataProvider); ?></div>
+            <div class="right"><?php echo ReportHelper::summaryText($purchaseInvoiceSummary->dataProvider); ?></div>
             <div class="clear"></div>
             <div class="right"><?php //echo ReportHelper::sortText($purchaseInvoiceSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
             <div class="clear"></div>
@@ -161,4 +173,55 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             </div>
         </div>
     </div>
+</div>
+
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'supplier-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Supplier',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'supplier-grid',
+        'dataProvider' => $supplierDataProvider,
+        'filter' => $supplier,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#' . CHtml::activeId($purchaseOrderHeader, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#supplier-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "")
+            {
+                $("#supplier_name").html("");
+                $("#supplier_code").html("");
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $supplier->id)) . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#supplier_name").html(data.supplier_name);
+                        $("#supplier_code").html(data.supplier_code);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'code',
+            'name',
+            'company',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

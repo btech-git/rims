@@ -98,7 +98,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo $model->purchase_order_id == NULL ? '-' : CHTml::link($model->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$model->purchaseOrder->id)); ?></label>
+                            <label for="label"><?php echo $model->purchase_order_id == NULL ? '-' : CHTml::link($model->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$model->purchase_order_id)); ?></label>
                         </div>
                     </div>
                 </div>
@@ -139,7 +139,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo $model->delivery_order_id == NULL ? '-' : $model->deliveryOrder->delivery_order_no; ?></label>
+                            <label for="label"><?php echo $model->delivery_order_id == NULL ? '-' : CHTml::link($model->deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id"=>$model->delivery_order_id)); ?></label>
                         </div>
                     </div>
                 </div>

@@ -1070,7 +1070,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'transaction_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 50,
+                'pageSize' => 500,
             ),
         ));
     }

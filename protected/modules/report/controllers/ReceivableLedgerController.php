@@ -22,20 +22,26 @@ class ReceivableLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+//        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
+        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $accountDataProvider = $account->search();
+        $accountDataProvider->criteria->compare('t.is_approved', 1);
+        $accountDataProvider->criteria->compare('t.coa_sub_category_id', 8);
+        $accountDataProvider->pagination->pageVar = 'page_dialog';
+
         $receivableLedgerSummary = new ReceivableLedgerSummary($account->search());
         $receivableLedgerSummary->setupLoading();
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
-        $receivableLedgerSummary->setupFilter();
+        $receivableLedgerSummary->setupFilter($coaId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -51,11 +57,13 @@ class ReceivableLedgerController extends Controller {
         
         $this->render('summary', array(
             'account' => $account,
+            'accountDataProvider' => $accountDataProvider,
             'branchId' => $branchId,
             'receivableLedgerSummary' => $receivableLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'coaId' => $coaId,
         ));
     }
 

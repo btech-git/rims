@@ -64,6 +64,30 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <span class="prefix">Insurance Company</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
+                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Per Tanggal</span>
                                     </div>
                                     <div class="small-8 columns">
@@ -71,6 +95,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'EndDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -81,9 +107,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
 <!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -106,27 +129,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </div>
                         </div>-->
                         
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Insurance Company</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
-                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="clear"></div>
@@ -243,7 +245,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'insurance-company-grid',
         'dataProvider' => $insuranceCompanyDataProvider,
-        'filter' => $insuranceCompany,
+        'filter' => null,
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager' => array(
             'cssFile' => false,

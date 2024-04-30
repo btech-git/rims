@@ -86,6 +86,8 @@ Yii::app()->clientScript->registerScript('report', '
                                         'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,
@@ -99,6 +101,8 @@ Yii::app()->clientScript->registerScript('report', '
                                         'name' => 'EndDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,

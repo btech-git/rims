@@ -267,6 +267,7 @@ class InvoiceHeaderController extends Controller {
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
         $invoice->header->reference_type = 2;
         $invoice->header->registration_transaction_id = $registrationId;
+        $invoice->header->due_date = date('Y-m-d',strtotime('+' . $registrationTransaction->customer->tenor . ' days',strtotime(date('Y-m-d'))));
         $invoice->header->customer_id = $registrationTransaction->customer_id;
         $invoice->header->vehicle_id = $registrationTransaction->vehicle_id;
         $invoice->header->branch_id = $registrationTransaction->branch_id;

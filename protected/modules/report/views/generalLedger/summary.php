@@ -32,6 +32,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
 
                             <div class="field">
                                 <div class="row collapse">
@@ -43,7 +46,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
                             
+                    <div class="row">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
@@ -54,6 +61,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'StartDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -67,6 +76,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'EndDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -80,61 +91,23 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         
                         <div class="medium-6 columns">
                             <div class="field">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <td>Code</td>
-                                            <td>Name</td>
-                                            <td>Category</td>
-                                            <td>Sub Category</td>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td><?php echo CHtml::activeTextField($account, 'code'); ?></td>
-
-                                            <td><?php echo CHtml::activeTextField($account, 'name'); ?></td>
-
-                                            <td>
-                                                <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
-                                                    'empty' => '-- All --',
-                                                    'onchange' => CHtml::ajax(array(
-                                                        'type' => 'GET',
-                                                        'url' => CController::createUrl('ajaxHtmlUpdateSubCategorySelect'),
-                                                        'update' => '#sub_category',
-                                                    )),
-                                                )); ?>
-                                            </td>
-
-                                            <td>
-                                                <div id="sub_category">
-                                                    <?php echo CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
-                                                        'empty' => '-- All --',
-                                                    )); ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-            
-<!--                                <div class="row collapse">
+                                <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">COA </span>
                                     </div>
 
-                                    <div class="small-8 columns">-->
-                                        <?php /*echo CHtml::activeTextField($account, 'id', array(
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('CoaId', $coaId, array(
                                             'readonly' => true,
                                             'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
                                         )); ?>
                                         <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
-                                        <?php $coaAccount = Coa::model()->findByPk($account->id); ?>
-                                        <?php echo CHtml::encode(CHtml::value($coaAccount, 'combinationName')); ?>
-                                        <?php echo CHtml::closeTag('span');*/ ?> 
-<!--                                    </div>
-                                </div>-->
+                                        <?php $coa = Coa::model()->findByPk($account->id); ?>
+                                        <?php echo CHtml::encode(CHtml::value($coa, 'combinationName')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?> 
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -184,50 +157,125 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'modal' => true,
         ),
     )); ?>
+    <?php echo CHtml::beginForm(); ?>
+    <div class="row">
+        <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Code</td>
+                        <td>Name</td>
+                        <td>Category</td>
+                        <td>Sub Category</td>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr>
+                        <td>
+                            <?php echo CHtml::activeTextField($account, 'code', array(
+                                'onchange' => '
+                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
+                                    code: $(this).val(),
+                                    name: $("#coa_name").val(),
+                                    coa_category_id: $("#coa_category_id").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <?php echo CHtml::activeTextField($account, 'name', array(
+                                'onchange' => '
+                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
+                                    name: $(this).val(),
+                                    code: $("#coa_code").val(),
+                                    coa_category_id: $("#coa_category_id").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <?php echo CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                'empty' => '-- All --',
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'GET',
+                                    'url' => CController::createUrl('ajaxHtmlUpdateSubCategorySelect'),
+                                    'update' => '#sub_category',
+                                )) . '$.fn.yiiGridView.update("coa-grid", {data: {Coa: {
+                                    coa_category_id: $(this).val(),
+                                    id: $("#coa_id").val(),
+                                    code: $("#coa_code").val(),
+                                    name: $("#coa_name").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <div id="sub_category">
+                                <?php echo CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                    'empty' => '-- All --',
+                                    'onchange' => '
+                                    $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
+                                        coa_sub_category_id: $(this).val(),
+                                        code: $("#coa_code").val(),
+                                        coa_category_id: $("#coa_category_id").val(),
+                                        name: $("#coa_name").val(),
+                                    } } });',
+                                )); ?>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
     
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id'=>'coa-grid',
-        'dataProvider'=>$coaDataProvider,
-        'filter'=>$coa,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager'=>array(
-           'cssFile'=>false,
-           'header'=>'',
-        ),
-        'selectionChanged'=>'js:function(id){
-            $("#' . CHtml::activeId($account, 'id') . '").val($.fn.yiiGridView.getSelection(id));
-            $("#coa-dialog").dialog("close");
-            if ($.fn.yiiGridView.getSelection(id) == "") {
-                $("#coa_id").html("");
-                $("#coa_name").html("");
-            } else {
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonCoa') . '",
-                    data: $("form").serialize(),
-                    success: function(data) {
-                        $("#coa_id").html(data.coa_code);
-                        $("#coa_name").html(data.coa_name);
-                    },
-                });
-            }
-        }',
-        'columns'=> array(
-            'code',
-            'name',
-            array(
-                'name' => 'coa_category_id',
-                'filter' => CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
-            ),
-            array(
-                'name' => 'coa_sub_category_id',
-                'filter' => CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
-            ),
-        ),
-    )); ?>
-    
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id'=>'coa-grid',
+                'dataProvider'=>$accountDataProvider,
+                'filter' => null,
+                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                'pager'=>array(
+                   'cssFile'=>false,
+                   'header'=>'',
+                ),
+                'selectionChanged'=>'js:function(id){
+                    $("#' . CHtml::activeId($account, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                    $("#coa-dialog").dialog("close");
+                    if ($.fn.yiiGridView.getSelection(id) == "") {
+                        $("#coa_id").html("");
+                        $("#coa_name").html("");
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "JSON",
+                            url: "' . CController::createUrl('ajaxJsonCoa') . '",
+                            data: $("form").serialize(),
+                            success: function(data) {
+                                $("#coa_id").html(data.coa_code);
+                                $("#coa_name").html(data.coa_name);
+                            },
+                        });
+                    }
+                }',
+                'columns'=> array(
+                    'code',
+                    'name',
+                    array(
+                        'name' => 'coa_category_id',
+                        'filter' => CHtml::activeDropDownList($account, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                        'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
+                    ),
+                    array(
+                        'name' => 'coa_sub_category_id',
+                        'filter' => CHtml::activeDropDownList($account, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+                        'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
+                    ),
+                ),
+            )); ?>
+        </div>
+    </div>
+    <?php echo CHtml::endForm(); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

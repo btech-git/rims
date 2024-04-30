@@ -201,7 +201,8 @@ class PaymentOutComponent extends CComponent {
                 $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
                 $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
                 $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-                $valid = $purchaseOrder->update(array('payment_amount', 'payment_left')) && $valid;
+                $purchaseOrder->payment_status = $purchaseOrder->payment_left > 0 ? 'Partial Payment' : 'PAID';
+                $valid = $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status')) && $valid;
             } else {
                 $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
                 $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();

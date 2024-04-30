@@ -339,10 +339,7 @@ class Service extends CActiveRecord {
     
     public function getSaleRetailServiceReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
-//        $codeConditionSql = '';
         $nameConditionSql = '';
-//        $categoryConditionSql = '';
-//        $typeConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -353,34 +350,19 @@ class Service extends CActiveRecord {
             $branchConditionSql = ' AND h.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
-        
-//        if (!empty($this->code)) {
-//            $codeConditionSql = " s.code LIKE '%:code%'";
-//            $params[':code'] = $this->code;
-//        }
-        
-        if (!empty($this->name)) {
-            $nameConditionSql = "WHERE s.name LIKE '%$this->name%'";
-//            $params[':name'] = $this->name;
+       
+        if (!empty($this->id)) {
+            $nameConditionSql = "WHERE s.id = :id";
+            $params[':id'] = $this->id;
         }
         
-//        if (!empty($this->service_category_id)) {
-//            $categoryConditionSql = ' AND s.service_category_id = :service_category_id';
-//            $params[':service_category_id'] = $this->service_category_id;
-//        }
-//        
-//        if (!empty($this->service_type_id)) {
-//            $typeConditionSql = ' AND s.service_type_id = :service_type_id';
-//            $params[':service_type_id'] = $this->service_type_id;
-//        }
-        
         $sql = "
-            SELECT s.id, s.code, s.name, c.name as category, t.name as type, po.sale_total as total
+            SELECT s.id, s.code, s.name, c.name as category, t.name as type, po.sale_total as total, po.quantity as total_quantity
             FROM " . Service::model()->tableName() . " s
             INNER JOIN " . ServiceCategory::model()->tableName() . " c ON c.id = s.service_category_id
             INNER JOIN " . ServiceType::model()->tableName() . " t ON t.id = s.service_type_id
             INNER JOIN (
-                SELECT p.service_id, SUM(p.total_price) AS sale_total
+                SELECT p.service_id, SUM(p.total_price) AS sale_total, COUNT(p.service_id) AS quantity
                 FROM " . RegistrationService::model()->tableName() . " p
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = p.registration_transaction_id
                 WHERE substr(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "

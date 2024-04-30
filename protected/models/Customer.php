@@ -385,7 +385,7 @@ class Customer extends CActiveRecord {
         }
         
         $sql = "
-            SELECT r.id, r.transaction_number, r.transaction_date, r.repair_type, r.subtotal_product, r.subtotal_service, r.grand_total, v.plate_number AS plate_number
+            SELECT r.id, r.transaction_number, r.transaction_date, r.repair_type, r.subtotal_product, r.subtotal_service, r.discount_product, r.discount_service, r.grand_total, v.plate_number AS plate_number
             FROM " . RegistrationTransaction::model()->tableName() . " r
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
             WHERE r.customer_id = :customer_id AND r.transaction_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "

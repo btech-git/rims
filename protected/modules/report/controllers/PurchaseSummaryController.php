@@ -50,9 +50,9 @@ class PurchaseSummaryController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($purchaseSummary->dataProvider, $startDate, $endDate);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($purchaseReport, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
+        }
 
         $this->render('summary', array(
             'supplier'=>$supplier,
@@ -79,7 +79,7 @@ class PurchaseSummaryController extends Controller {
         }
     }
 
-    protected function saveToExcel($dataProvider, $startDate, $endDate) {
+    protected function saveToExcel($purchaseReport, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -89,6 +89,9 @@ class PurchaseSummaryController extends Controller {
 
         $objPHPExcel = new PHPExcel();
 
+        $startDate = $options['startDate'];
+        $endDate = $options['endDate']; 
+        
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
         $documentProperties->setTitle('Laporan Pembelian per Pemasok');
@@ -119,16 +122,15 @@ class PurchaseSummaryController extends Controller {
         $counter = 7;
 
         $totalPurchase = 0.00;
-        foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalPurchase($startDate, $endDate);
-            $worksheet->setCellValue("A{$counter}", $header->code);
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", $grandTotal);
+        foreach ($purchaseReport as $purchaseItem) {
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($purchaseItem['code']));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($purchaseItem['company']));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode($purchaseItem['name']));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode($purchaseItem['purchase_total']));
 
             $counter++;
             
-            $totalPurchase += $grandTotal;
+            $totalPurchase += $purchaseItem['purchase_total'];
         }
 
         $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);

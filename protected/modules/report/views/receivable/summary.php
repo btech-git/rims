@@ -50,6 +50,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'EndDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -179,64 +181,65 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             </div>
         </div>
     </div>
-    <div>
-        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-            'id' => 'customer-dialog',
-            // additional javascript options for the dialog plugin
-            'options' => array(
-                'title' => 'Customer',
-                'autoOpen' => false,
-                'width' => 'auto',
-                'modal' => true,
-            ),
-        )); ?>
-        <?php $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'customer-grid',
-            'dataProvider' => $customerDataProvider,
-            'filter' => $customer,
-            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-            'pager' => array(
-                'cssFile' => false,
-                'header' => '',
-            ),
-            'selectionChanged' => 'js:function(id) {
-                $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
-                $("#customer-dialog").dialog("close");
-                if ($.fn.yiiGridView.getSelection(id) == "") {
-                    $("#customer_name").html("");
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        dataType: "JSON",
-                        url: "' . CController::createUrl('ajaxJsonCustomer') . '",
-                        data: $("form").serialize(),
-                        success: function(data) {
-                            $("#customer_name").html(data.customer_name);
-                        },
-                    });
-                }
-            }',
-            'columns' => array(
-                'name',
-                array(
-                    'header'=>'Customer Type', 
-                    'name'=>'customer_type',
-                    'value'=>'$data->customer_type',
-                    'type'=>'raw',
-                    'filter'=>CHtml::dropDownList('Customer[customer_type]', $customer->customer_type, 
-                        array(
-                            ''=>'All',
-                            'Company' => 'Company',
-                            'Individual' => 'Individual',
-                        )
-                    ),
+</div>
+
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'customer-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Customer',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'customer-grid',
+        'dataProvider' => $customerDataProvider,
+        'filter' => $customer,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
+            $("#customer-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#customer_name").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonCustomer') . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#customer_name").html(data.customer_name);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'name',
+            array(
+                'header'=>'Customer Type', 
+                'name'=>'customer_type',
+                'value'=>'$data->customer_type',
+                'type'=>'raw',
+                'filter'=>CHtml::dropDownList('Customer[customer_type]', $customer->customer_type, 
+                    array(
+                        ''=>'All',
+                        'Company' => 'Company',
+                        'Individual' => 'Individual',
+                    )
                 ),
-                'mobile_phone',
-                'email',
             ),
-        )); ?>
-        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-    </div>
+            'mobile_phone',
+            'email',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>
 
 <div>

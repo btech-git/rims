@@ -18,25 +18,31 @@ Yii::app()->clientScript->registerCss('_report', '
 <table class="report">
     <tr id="header1">
         <th class="width1-1">Code</th>
-        <th class="width1-2">Name</th>
-        <th class="width1-3">Category</th>
         <th class="width1-4">Type</th>
-        <th class="width1-5">Total</th>
+        <th class="width1-3">Category</th>
+        <th class="width1-2">Name</th>
+        <th class="width1-5">Quantity</th>
+        <th class="width1-5">Amount</th>
     </tr>
     <?php $totalSale = 0.00; ?>
+    <?php $grandTotalQuantity = 0; ?>
         <?php foreach ($saleRetailServiceReport as $saleRetailServiceItem): ?>
         <?php $grandTotal = $saleRetailServiceItem['total']; ?>
+        <?php $totalQuantity = $saleRetailServiceItem['total_quantity']; ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode($saleRetailServiceItem['code']); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode($saleRetailServiceItem['name']); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode($saleRetailServiceItem['category']); ?></td>
                 <td class="width1-4"><?php echo CHtml::encode($saleRetailServiceItem['type']); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode($saleRetailServiceItem['category']); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode($saleRetailServiceItem['name']); ?></td>
+                <td class="width1-5" style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity)); ?></td>
                 <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
             </tr>
             <?php $totalSale += $grandTotal; ?>
+            <?php $grandTotalQuantity += $totalQuantity; ?>
     <?php endforeach; ?>
     <tr>
         <td colspan="4" style="text-align: right; font-weight: bold">Total Sales</td>
+        <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalQuantity)); ?></td>
         <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
     </tr>
 </table>

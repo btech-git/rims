@@ -25,9 +25,9 @@ Yii::app()->clientScript->registerCss('_report', '
     <thead>
         <tr id="header1">
             <th class="width1-1">Code</th>
-            <th class="width1-2">Name</th>
-            <th class="width1-3">Category</th>
             <th class="width1-4">Type</th>
+            <th class="width1-3">Category</th>
+            <th class="width1-2">Name</th>
         </tr>
         <tr id="header2">
             <td colspan="8">
@@ -49,9 +49,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $grandTotal = $saleRetailServiceItem['total']; ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode($saleRetailServiceItem['code']); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode($saleRetailServiceItem['name']); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode($saleRetailServiceItem['category']); ?></td>
                 <td class="width1-4"><?php echo CHtml::encode($saleRetailServiceItem['type']); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode($saleRetailServiceItem['category']); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode($saleRetailServiceItem['name']); ?></td>
             </tr>
             <tr class="items2">
                 <td colspan="8">

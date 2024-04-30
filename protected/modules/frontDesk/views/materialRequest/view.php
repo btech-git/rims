@@ -54,7 +54,8 @@ $this->menu = array(
                 'dateTime',
                 array(
                     'name' => 'registration_transaction_id', 
-                    'value' => $materialRequest->registrationTransaction->transaction_number
+                    'value' => CHTml::link($materialRequest->registrationTransaction->transaction_number, array($materialRequest->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $materialRequest->registration_transaction_id), array('target' => 'blank')),
+                    'type'=>'raw',
                 ),
                 array(
                     'label' => 'WO #', 

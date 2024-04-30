@@ -419,7 +419,7 @@ $this->menu = array(
                         <tbody>
                             <?php foreach ($model->paymentInDetails as $detail): ?>
                             <tr>
-                                <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')); ?></td>
+                                <td><?php echo CHTml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/view", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'tax_service_amount'))); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?></td>

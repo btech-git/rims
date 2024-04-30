@@ -62,9 +62,6 @@ $this->menu = array(
                     'value' => $model->senderBranch->name
                 ),
                 'request_type',
-                'salesOrder.sale_order_no',
-                'sentRequest.sent_request_no',
-                'transferRequest.transfer_request_no',
                 'request_date',
                 array(
                     'name' => 'destination_branch_id',
@@ -130,7 +127,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->salesOrder != "" ? $model->salesOrder->sale_order_no : ''; ?></label>
+                                <label for="label"><?php echo $model->salesOrder != "" ? CHTml::link($model->salesOrder->sale_order_no, array("/transaction/transactionSalesOrder/view", "id" => $model->sales_order_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>
@@ -158,7 +155,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->sentRequest != NULL ? $model->sentRequest->sent_request_no : ''; ?></label>
+                                <label for="label"><?php echo $model->sentRequest != NULL ? CHTml::link($model->sentRequest->sent_request_no, array("/transaction/transactionSentRequest/view", "id" => $model->sent_request_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>
@@ -186,7 +183,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->consignmentOut != NULL ? $model->consignmentOut->consignment_out_no : ''; ?></label>
+                                <label for="label"><?php echo $model->consignmentOut != NULL ? CHTml::link($model->consignmentOut->consignment_out_no, array("/transaction/consignmentOut/view", "id" => $model->consignment_out_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>
@@ -214,7 +211,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->transferRequest != NULL ? $model->transferRequest->transfer_request_no : ''; ?></label>
+                                <label for="label"><?php echo $model->transferRequest != NULL ? CHTml::link($model->transferRequest->transfer_request_no, array("/transaction/transferRequest/view", "id" => $model->transfer_request_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>

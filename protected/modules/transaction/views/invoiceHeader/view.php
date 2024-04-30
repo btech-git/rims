@@ -76,7 +76,7 @@ $this->menu = array(
                 <td width="10%">Payment Est Date</td>
                 <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
                 <td width="10%">Registration #</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  $registration->transaction_number; ?></td>
+                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$registration->id), array('target' => 'blank')); ?></td>
             </tr>
             
             <tr>
@@ -289,7 +289,7 @@ $this->menu = array(
                     <tbody>
                         <?php foreach ($payments as $key => $payment): ?>
                             <tr>
-                                <td><?php echo $payment->paymentIn->payment_number; ?></td>
+                                <td><?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/view", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?></td>
                                 <td><?php echo $payment->paymentIn->payment_date; ?></td>
                                 <td><?php echo $payment->paymentIn->paymentType->name; ?></td>
                                 <td><?php echo number_format($payment->amount, 2); ?></td>

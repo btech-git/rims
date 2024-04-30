@@ -334,7 +334,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $total = '0.00';
         
         foreach ($this->paymentInDetails as $detail) {
-            $total += $detail->amount;
+            $total += $detail->amount + $detail->tax_service_amount;
         }
         
         return $total;

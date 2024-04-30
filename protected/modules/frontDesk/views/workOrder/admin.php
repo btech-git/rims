@@ -294,7 +294,7 @@ $('form').submit(function(){
                     ),
                     array(
                         'name' => 'work_order_number', 
-                        'value' => 'CHtml::link($data->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
+                        'value' => 'CHtml::link($data->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id), array("target" => "blank"))', 
                         'type' => 'raw'
                     ),
                     'work_order_date',

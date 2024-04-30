@@ -49,9 +49,9 @@ class SaleRetailServiceDetailController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($saleRetailServiceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($saleRetailServiceReport, array('startDate' => $startDate, 'endDate' => $endDate, $branchId));
+        }
 
         $this->render('summary', array(
             'saleRetailServiceReport' => $saleRetailServiceReport,
@@ -78,7 +78,7 @@ class SaleRetailServiceDetailController extends Controller {
         }
     }
 
-    protected function saveToExcel($dataProvider, array $options = array()) {
+    protected function saveToExcel($saleRetailServiceReport, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -111,45 +111,50 @@ class SaleRetailServiceDetailController extends Controller {
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Code');
-        $worksheet->setCellValue('B5', 'Name');
+        $worksheet->setCellValue('B5', 'Type');
         $worksheet->setCellValue('C5', 'Category');
-        $worksheet->setCellValue('D5', 'Type');
+        $worksheet->setCellValue('D5', 'Name');
 
         $worksheet->setCellValue('A6', 'Penjualan #');
         $worksheet->setCellValue('B6', 'Tanggal');
         $worksheet->setCellValue('C6', 'Jenis');
         $worksheet->setCellValue('D6', 'Customer');
         $worksheet->setCellValue('E6', 'Vehicle');
-        $worksheet->setCellValue('F6', 'Type');
-        $worksheet->setCellValue('G6', 'Harga');
+        $worksheet->setCellValue('F6', 'Harga');
 
         $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
-        foreach ($dataProvider->data as $header) {
+        foreach ($saleRetailServiceReport as $saleRetailServiceItem) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->code));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'serviceCategory.name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'serviceType.name')));
+            $worksheet->setCellValue("A{$counter}", $saleRetailServiceItem['code']);
+            $worksheet->setCellValue("B{$counter}", $saleRetailServiceItem['type']);
+            $worksheet->setCellValue("C{$counter}", $saleRetailServiceItem['category']);
+            $worksheet->setCellValue("D{$counter}", $saleRetailServiceItem['name']);
             
             $counter++;
             
-            $saleRetailData = $header->getSaleRetailReport($startDate, $endDate);
             $totalSale = 0.00;
-            foreach ($saleRetailData as $saleRetailRow) {
-                $total = $saleRetailRow['total_price'];
+            $registrationServices = RegistrationService::model()->with('registrationTransaction')->findAll(array(
+                'condition' => 't.service_id = :service_id AND registrationTransaction.transaction_date BETWEEN :start_date AND :end_date', 
+                'params' => array(
+                    ':service_id' => $saleRetailServiceItem['id'],
+                    ':start_date' => $startDate,
+                    ':end_date' => $endDate,
+                )
+            ));
+            foreach ($registrationServices as $registrationService) {
+                $total = $registrationService->total_price; 
                 
                 $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['transaction_number']));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['transaction_date']));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['repair_type']));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['customer']));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['vehicle']));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailRow['type']));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($total));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($registrationService->registrationTransaction->transaction_number));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($registrationService->registrationTransaction->transaction_date));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($registrationService->registrationTransaction->repair_type));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($registrationService->registrationTransaction->customer->name));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($registrationService->registrationTransaction->vehicle->plate_number));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($total));
 
                 $counter++;
                 $totalSale += $total;

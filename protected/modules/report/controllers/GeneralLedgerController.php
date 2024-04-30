@@ -21,7 +21,7 @@ class GeneralLedgerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+//        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -29,18 +29,19 @@ class GeneralLedgerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-//        $number = (isset($_GET['Number'])) ? $_GET['Number'] : '';
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+
+        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $accountDataProvider = $account->search();
+        $accountDataProvider->criteria->compare('t.is_approved', 1);
+        $accountDataProvider->pagination->pageVar = 'page_dialog';
 
         $generalLedgerSummary = new GeneralLedgerSummary($account->search());
         $generalLedgerSummary->setupLoading();
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
-        $generalLedgerSummary->setupFilter();
+        $generalLedgerSummary->setupFilter($coaId);
 //        $generalLedgerSummary->getSaldo($startDate);
-
-        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-        $coaDataProvider = $coa->search();
-        $coaDataProvider->criteria->compare('t.is_approved', 1);
 
 //        $coaCriteria = new CDbCriteria;
 //        $coaCriteria->addCondition("t.is_approved = 1");
@@ -71,10 +72,10 @@ class GeneralLedgerController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
-//            'number' => $number,
+            'coaId' => $coaId,
             'branchId' => $branchId,
-            'coa' => $coa,
-            'coaDataProvider' => $coaDataProvider,
+            'account' => $account,
+            'accountDataProvider' => $accountDataProvider,
             'currentSort' => $currentSort,
             'pageSize' => $pageSize,
             'currentPage' => $currentPage,

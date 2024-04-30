@@ -272,7 +272,7 @@ $('form').submit(function(){
                     array(
                         'name' => 'invoice_number',
                         'header' => 'Invoice',
-                        'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->id))', 
+                        'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->id), array("target" => "blank"))', 
                         'type' => 'raw'
                     ),
                     array(
@@ -281,7 +281,7 @@ $('form').submit(function(){
                     ),
                     array(
                         'header' => 'Registration #',
-                        'value' => 'CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id))', 
+                        'value' => 'CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
                         'type' => 'raw'
                     ),
                     array(

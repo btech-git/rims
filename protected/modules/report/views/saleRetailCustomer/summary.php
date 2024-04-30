@@ -106,24 +106,25 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 ),
                                                 array(
                                                     'name' => 'customer_type',
-                                                    'filter' => false, 
+                                                    'filter' => CHtml::activeDropDownList($customer, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company'), array(
+                                                        'empty' => '-- All --',
+                                                    )), 
                                                     'value' => '$data->customer_type',
                                                 ),
                                                 array(
+                                                    'name' => 'coa_id',
                                                     'header' => 'COA account',
+                                                    'filter' => CHtml::activeDropDownList($customer, 'coa_id', CHtml::listData(Coa::model()->findAllByAttributes(array('coa_sub_category_id' => 8), array('order' => 'name ASC')), 'id', 'name'), array(
+                                                        'empty' => '-- All --',
+                                                    )), 
                                                     'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
-                                                ),
-                                                array(
-                                                    'header' => 'PIC',
-                                                    'value' => 'empty($data->customerPics) ? "" : $data->customerPics[0]->name',
                                                 ),
                                             ),
                                         )); ?>
                                         <?php $this->endWidget(); ?>
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customer, 'company')); ?>
                                         <?php echo CHtml::closeTag('span'); ?> 
-
                                     </div>
                                 </div>
                             </div>
@@ -155,6 +156,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'StartDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
@@ -168,6 +171,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'name' => 'EndDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
