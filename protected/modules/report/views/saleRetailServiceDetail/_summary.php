@@ -6,11 +6,13 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-4 { width: 20% }
 
     .width2-1 { width: 15% }
-    .width2-2 { width: 15% }
+    .width2-2 { width: 10% }
     .width2-3 { width: 5% }
-    .width2-4 { width: 35% }
+    .width2-4 { width: 20% }
     .width2-5 { width: 15% }
     .width2-6 { width: 15% }
+    .width2-7 { width: 10% }
+    .width2-8 { width: 10% }
 ');
 ?>
 
@@ -30,15 +32,17 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-2">Name</th>
         </tr>
         <tr id="header2">
-            <td colspan="8">
+            <td colspan="4">
                 <table>
                     <tr>
                         <th class="width2-1">Penjualan #</th>
                         <th class="width2-2">Tanggal</th>
                         <th class="width2-3">Jenis</th>
                         <th class="width2-4">Customer</th>
-                        <th class="width2-5">Vehicle</th>
-                        <th class="width2-6">Harga</th>
+                        <th class="width2-6">Make</th>
+                        <th class="width2-5">Model</th>
+                        <th class="width2-7">Vehicle</th>
+                        <th class="width2-8">Harga</th>
                     </tr>
                 </table>
             </td>
@@ -54,7 +58,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-2"><?php echo CHtml::encode($saleRetailServiceItem['name']); ?></td>
             </tr>
             <tr class="items2">
-                <td colspan="8">
+                <td colspan="4">
                     <table>
                         <?php //$saleRetailData = $header->getSaleRetailReport($startDate, $endDate); ?>
                         <?php $totalSale = 0.00; ?>
@@ -69,17 +73,19 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php foreach ($registrationServices as $registrationService): ?>
                             <?php $total = $registrationService->total_price; ?>
                             <tr>
-                                <td class="width2-1"><?php echo CHtml::encode($registrationService->registrationTransaction->transaction_number); ?></td>
+                                <td class="width2-1"><?php echo CHtml::link($registrationService->registrationTransaction->transaction_number, array($registrationService->registrationTransaction->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$registrationService->registration_transaction_id), array('target' => 'blank')); ?></td>
                                 <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', $registrationService->registrationTransaction->transaction_date)); ?></td>
                                 <td class="width2-3"><?php echo CHtml::encode($registrationService->registrationTransaction->repair_type); ?></td>
                                 <td class="width2-4"><?php echo CHtml::encode($registrationService->registrationTransaction->customer->name); ?></td>
-                                <td class="width2-5"><?php echo CHtml::encode($registrationService->registrationTransaction->vehicle->plate_number); ?></td>
-                                <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $total)); ?></td>
+                                <td class="width2-6"><?php echo CHtml::encode($registrationService->registrationTransaction->vehicle->carMake->name); ?></td>
+                                <td class="width2-5"><?php echo CHtml::encode($registrationService->registrationTransaction->vehicle->carModel->name); ?></td>
+                                <td class="width2-7"><?php echo CHtml::encode($registrationService->registrationTransaction->vehicle->plate_number); ?></td>
+                                <td class="width2-8" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $total)); ?></td>
                             </tr>
                             <?php $totalSale += $total; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td style="text-align: right; font-weight: bold" colspan="5">Total</td>
+                            <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
                             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
                         </tr>
                     </table>
