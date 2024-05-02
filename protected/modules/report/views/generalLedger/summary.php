@@ -97,7 +97,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CoaId', $coaId, array(
+                                        <?php echo CHtml::activeTextField($account, 'id', array(
                                             'readonly' => true,
                                             'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
