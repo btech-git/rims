@@ -32,6 +32,8 @@ $this->breadcrumbs = array(
 						<tr>
 							<th>Code</th>
 							<th>Name</th>
+							<th>Category</th>
+							<th>Sub Category</th>
 							<th>Opening Balance</th>
 						</tr>';
             if ($i != 9) {
@@ -41,6 +43,8 @@ $this->breadcrumbs = array(
 								<tr>
 									<td>' . $coa->code . '</td>
 									<td>' . $coa->name . '</td>
+									<td>' . $coa->coaCategory->name . '</td>
+									<td>' . $coa->coaSubCategory->name . '</td>
 									<td>' . $coa->opening_balance . '</td>
 								</tr>';
                     }
@@ -54,6 +58,8 @@ $this->breadcrumbs = array(
 								<tr>
 									<td>' . $coa->code . '</td>
 									<td>' . $coa->name . '</td>
+									<td>' . $coa->coaCategory->name . '</td>
+									<td>' . $coa->coaSubCategory->name . '</td>
 									<td>' . $coa->opening_balance . '</td>
 								</tr>';
                     }
