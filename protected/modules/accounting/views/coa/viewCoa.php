@@ -43,8 +43,8 @@ $this->breadcrumbs = array(
 								<tr>
 									<td>' . $coa->code . '</td>
 									<td>' . $coa->name . '</td>
-									<td>' . $coa->coaCategory->name . '</td>
-									<td>' . $coa->coaSubCategory->name . '</td>
+									<td>' . CHtml::encode(CHtml::value($coa, 'coaCategory.name')) . '</td>
+									<td>' . CHtml::encode(CHtml::value($coa, 'coaSubCategory.name')) . '</td>
 									<td>' . $coa->opening_balance . '</td>
 								</tr>';
                     }
@@ -58,8 +58,8 @@ $this->breadcrumbs = array(
 								<tr>
 									<td>' . $coa->code . '</td>
 									<td>' . $coa->name . '</td>
-									<td>' . $coa->coaCategory->name . '</td>
-									<td>' . $coa->coaSubCategory->name . '</td>
+									<td>' . CHtml::encode(CHtml::value($coa, 'coaCategory.name')) . '</td>
+									<td>' . CHtml::encode(CHtml::value($coa, 'coaSubCategory.name')) . '</td>
 									<td>' . $coa->opening_balance . '</td>
 								</tr>';
                     }
