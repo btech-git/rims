@@ -31,7 +31,7 @@ function tanggal($date) {
     </div>
 
     <div class="center">
-        <table>
+        <table style="font-size: 12px">
             <tr>
                 <td>TGL PEMERIKSAAN</td>
                 <td>:</td>
@@ -73,7 +73,7 @@ function tanggal($date) {
                 <td>:</td>
                 <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
                 <?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $generalRepairRegistration->id)); ?>
-                <?php if ($invoiceHeader->status == 'PAID'): ?>
+                <?php if (!empty($invoiceHeader) && $invoiceHeader->status == 'PAID'): ?>
                     <td colspan="3" style="text-align: center; font-size: 18px; font-weight: bold; color: green">
                         PAID
                     </td>
