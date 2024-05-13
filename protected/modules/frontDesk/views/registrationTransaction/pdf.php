@@ -74,12 +74,12 @@ function tanggal($date) {
                 <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
                 <?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $generalRepairRegistration->id)); ?>
                 <?php if (!empty($invoiceHeader) && $invoiceHeader->status === 'PAID'): ?>
-                    <td colspan="3" style="text-align: center; font-size: 18px; font-weight: bold; color: green">
-                        PAID
-                    </td>
-                <?php else: ?>
                     <td colspan="3" style="text-align: center; font-size: 14px; font-weight: bold; color: red">
                         UNPAID
+                    </td>
+                <?php else: ?>
+                    <td colspan="3" style="text-align: center; font-size: 18px; font-weight: bold; color: green">
+                        PAID
                     </td>
                 <?php endif; ?>
             </tr>
