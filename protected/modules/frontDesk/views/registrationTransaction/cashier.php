@@ -296,7 +296,7 @@ $('form').submit(function(){
                         'header' => 'Insurance',
                         'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
                     ),
-                    'status',
+                    'payment_status',
                     array(
                         'name' => 'total_price', 
                         'header' => 'Total',
