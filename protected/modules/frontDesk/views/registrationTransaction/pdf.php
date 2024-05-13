@@ -71,7 +71,16 @@ function tanggal($date) {
             <tr>
                 <td>PROBLEM</td>
                 <td>:</td>
-                <td colspan="4"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
+                <?php if ($generalRepairRegistration->payment_status === 'CLEAR'): ?>
+                    <td colspan="3" style="text-align: center; font-size: 18px; font-weight: bold; color: green">
+                        PAID
+                    </td>
+                <?php else: ?>
+                    <td colspan="3" style="text-align: center; font-size: 14px; font-weight: bold; color: red">
+                        UNPAID
+                    </td>
+                <?php endif; ?>
             </tr>
         </table>
     </div>
