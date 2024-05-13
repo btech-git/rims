@@ -317,7 +317,7 @@ $('form').submit(function(){
                         'template' => '{views} {print}',
                         'buttons' => array(
                             'views' => array(
-                                'label' => 'bill detail',
+                                'label' => 'payment',
                                 'url' => 'Yii::app()->createUrl("transaction/paymentIn/create",array("invoiceId"=>$data->id))',
                                 'visible' => 'Yii::app()->user->checkAccess("paymentInCreate") && !empty($data->registration_transaction_id) && $data->payment_left > 0',
                                 'click' => "js:function(){
@@ -331,7 +331,7 @@ $('form').submit(function(){
                             ),
                             'print' => array(
                                 'label' => 'print',
-                                'url' => 'Yii::app()->createUrl("frontDesk/registrationTransaction/pdf", array("id"=>$data->id))',
+                                'url' => 'Yii::app()->createUrl("frontDesk/registrationTransaction/pdf", array("id"=>$data->id), array("target" => "blank"))',
 //                                'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
                             ),
                         ),
