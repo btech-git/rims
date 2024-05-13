@@ -331,7 +331,7 @@ $('form').submit(function(){
                             ),
                             'print' => array(
                                 'label' => 'print',
-                                'url' => 'Yii::app()->createUrl("frontDesk/registrationTransaction/pdf", array("id"=>$data->id), array("target" => "blank"))',
+                                'url' => 'Yii::app()->createUrl("frontDesk/registrationTransaction/pdf", array("id"=>$data->id))',
 //                                'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
                             ),
                         ),
