@@ -212,6 +212,7 @@ class Products extends CComponent {
 
         $isNewRecord = $this->header->isNewRecord;
 //        $this->header->hpp = $this->purchasePriceAfterTax;
+        $this->header->minimum_selling_price = $this->minimumSellingPrice;
         $this->header->recommended_selling_price = $this->recommendedSellingPrice;
         $valid = $this->header->save();
         //echo $valid;
@@ -337,6 +338,12 @@ class Products extends CComponent {
         $marginAmount = ($this->header->margin_type == 1) ? $this->retailPriceAfterTax * $this->header->margin_amount / 100 : $this->header->margin_amount;
 
         return $this->retailPriceAfterTax + $marginAmount;
+    }
+
+    public function getMinimumSellingPrice() {
+        $marginAmount = ($this->header->margin_type == 1) ? $this->header->retail_price * $this->header->margin_amount / 100 : $this->header->margin_amount;
+
+        return $this->header->retail_price + $marginAmount;
     }
 
 }

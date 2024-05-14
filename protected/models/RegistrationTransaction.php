@@ -423,6 +423,58 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+    
+    public function searchByProcessingWorkOrder() {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'vehicle' => array(
+                'with' => array(
+                    'carMake',
+                    'carModel',
+                ),
+            ),
+            'branch',
+            'customer',
+            'invoiceHeaders',
+        );
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('is_quick_service', $this->is_quick_service);
+        $criteria->compare('t.work_order_number', $this->work_order_number, true);
+        $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.service_status', $this->service_status);
+        $criteria->compare('note', $this->note, true);
+
+        if (!empty($this->transaction_date_from) && !empty($this->transaction_date_to)) {
+            $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
+        }
+        
+        $criteria->addCondition("NOT EXISTS (
+            SELECT i.registration_transaction_id
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            WHERE t.id = i.registration_transaction_id
+        ) AND t.work_order_number IS NOT NULL AND t.total_product_price > 0 AND t.status NOT LIKE '%CANCELLED%' AND t.transaction_date > '2022-12-31'");
+
+        $criteria->compare('carMake.id', $this->car_make_code, true);
+        $criteria->compare('carModel.id', $this->car_model_code, true);
+        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+
+        $criteria->order = 't.transaction_date DESC';
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
 
     /**
      * Returns the static model of the specified AR class.
@@ -505,7 +557,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
         }
         
-        $criteria->addCondition("t.work_order_number IS NOT NULL");
+        $criteria->addCondition("t.work_order_number IS NOT NULL AND t.total_product_price > 0");
 
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);

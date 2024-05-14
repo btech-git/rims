@@ -23,22 +23,14 @@
 
                 <div class="small-8 columns">
                     <?php echo CHtml::dropDownlist('TransactionType', $transactionType, array(
-                        'Invoice' => 'Sales',
-                        'CASH' => 'Cash',
-                        'JP' => 'Penyesuaian',
-                        'Pout' => 'Purchase Payment',
-                        'Pin' => 'Sales Receipt',
-                        'MI' => 'Movement In',
-                        'MO' => 'Movement Out',
-                        'MR' => 'Material',
-//                        'PO' => 'PURCHASE',
-//                                            'DO' => 'DELIVERY',
-//                                            'TR' => 'TRANSFER REQUEST',
-//                                            'RCI' => 'RECEIVE',
-//                                            'Pin' => 'PAYMENT IN',
-//                                            'Pout' => 'PAYMENT OUT',
-//                                            'SO' => 'SALES',
-                    ), array('empty' => '-- All Transaction --')); ?>
+                        'PO' => 'Pembelian',
+                        'PP' => 'Pelunasan Pembelian',
+                        'SL' => 'Penjualan',
+                        'SP' => 'Penerimaan Penjualan',
+                        'MI' => 'Pemasukan Cabang - Barang',
+                        'MO' => 'Pengeluaran Cabang - Barang',
+                        'CS' => 'Kas',
+                    )); ?>
                 </div>
             </div>
         </div>
@@ -81,42 +73,6 @@
                             'placeholder' => 'Sampai',
                         ),
                     )); ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-                    <div class="row">
-    <div class="medium-12 columns">
-        <div class="field">
-            <div class="row collapse">
-                <div class="small-2 columns">
-                    <span class="prefix">COA Category:</span>
-                </div>
-                <div class="small-10 columns">
-                    <?php echo CHtml::checkBoxList('CoaCategoryList', $coaCategoryList, CHtml::listData(CoaCategory::model()->findAll(array(
-                        'condition' => 'id NOT IN (11, 12, 13, 18, 19, 20, 22, 1, 3)', 
-                        'order' => 'code ASC'
-                    )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="medium-12 columns">
-        <div class="field">
-            <div class="row collapse">
-                <div class="small-2 columns">
-                    <span class="prefix">COA Sub Category:</span>
-                </div>
-                <div class="small-10 columns">
-                    <?php echo CHtml::checkBoxList('CoaSubCategoryList', $coaSubCategoryList, CHtml::listData(CoaSubCategory::model()->findAll(array(
-                        'condition' => 'coa_category_id IN (16)', 
-                        'order' => 'code ASC'
-                    )), 'id', 'name'), array('separator'=>'', 'labelOptions'=>array('style'=>'display:inline'))); ?>
                 </div>
             </div>
         </div>

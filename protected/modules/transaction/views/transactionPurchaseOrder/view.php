@@ -65,6 +65,11 @@ $this->menu=array(
                     'name'=>'supplier_name',
                     'value'=>empty($model->supplier_id) ? "" : $model->supplier->name
                 ),
+                array(
+                    'name' =>'registration_transaction_id',
+                    'label' => 'Untuk WO #',
+                    'value'=>empty($model->registration_transaction_id) ? '' : $model->registrationTransaction->work_order_number,
+                ),
                 'estimate_date_arrival',
                 'payment_date_estimate',
                 array(

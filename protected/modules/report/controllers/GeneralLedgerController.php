@@ -41,18 +41,20 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
         $generalLedgerSummary->setupFilter($coaId);
-//        $generalLedgerSummary->getSaldo($startDate);
-
-//        $coaCriteria = new CDbCriteria;
-//        $coaCriteria->addCondition("t.is_approved = 1");
-//        $coaCriteria->compare('t.code', $coa->code, true);
-//        $coaCriteria->compare('t.name', $coa->name, true);
-//        $coaCriteria->compare('t.coa_category_id', $coa->coa_category_id);
-//        $coaCriteria->compare('t.coa_sub_category_id', $coa->coa_sub_category_id);
-//
-//        $coaDataProvider = new CActiveDataProvider('Coa', array(
-//            'criteria' => $coaCriteria,
-//        ));
+        
+        $coaIds = array_map(function($coa) { return $coa->id; }, $generalLedgerSummary->dataProvider->data);
+        
+        $ledgerBeginningBalances = JurnalUmum::getLedgerBeginningBalances($coaIds, $startDate, $branchId);
+        $ledgerBeginningBalanceData = array();
+        foreach ($ledgerBeginningBalances as $ledgerBeginningBalance) {
+            $ledgerBeginningBalanceData[$ledgerBeginningBalance['coa_id']] = $ledgerBeginningBalance['beginning_balance'];
+        }
+        
+        $generalLedgerReport = JurnalUmum::getGeneralLedgerReport($coaIds, $startDate, $endDate, $branchId);
+        $generalLedgerReportData = array();
+        foreach ($generalLedgerReport as $generalLedgerReportItem) {
+            $generalLedgerReportData[$generalLedgerReportItem['coa_id']][] = $generalLedgerReportItem;
+        }
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -71,14 +73,14 @@ class GeneralLedgerController extends Controller {
             'generalLedgerSummary' => $generalLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'currentSort' => $currentSort,
             'coaId' => $coaId,
             'branchId' => $branchId,
-            'account' => $account,
             'accountDataProvider' => $accountDataProvider,
             'currentSort' => $currentSort,
             'pageSize' => $pageSize,
             'currentPage' => $currentPage,
+            'ledgerBeginningBalanceData' => $ledgerBeginningBalanceData,
+            'generalLedgerReportData' => $generalLedgerReportData,
         ));
     }
 

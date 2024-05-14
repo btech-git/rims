@@ -26,5 +26,7 @@ $this->menu=array(
         'price' => $price,
         'priceDataProvider' => $priceDataProvider,
         'destinationBranchDataProvider' => $destinationBranchDataProvider,
+        'registrationTransaction' => $registrationTransaction,
+        'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
     )); ?>
 </div>

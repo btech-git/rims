@@ -227,7 +227,7 @@ class JurnalUmum extends CActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
-    
+
     public function searchByReceivable() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -265,7 +265,124 @@ class JurnalUmum extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
+    
+    public static function getLedgerBeginningBalances($coaIds, $startDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT j.coa_id, IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
+            FROM (
+                SELECT coa_id, tanggal_transaksi, total AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+                UNION ALL
+                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+            ) j
+            INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
+            WHERE j.coa_id IN (" . implode(',', $coaIds) . ") AND j.tanggal_transaksi < :start_date " . $branchConditionSql . " 
+            GROUP BY j.coa_id
+        ";
 
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getGeneralLedgerReport($coaIds, $startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT coa_id, kode_transaksi, tanggal_transaksi, transaction_subject, transaction_type, total, debet_kredit
+            FROM " . JurnalUmum::model()->tableName() . " 
+            WHERE coa_id IN (" . implode(',', $coaIds) . ") AND tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            ORDER BY coa_id, tanggal_transaksi, kode_transaksi
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getTransactionJournalBalances($coaIds, $startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT j.coa_id, IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
+            FROM (
+                SELECT coa_id, tanggal_transaksi, total AS debit, 0 AS credit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+                UNION ALL
+                SELECT coa_id, tanggal_transaksi, 0 AS debit, total AS credit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+            ) j
+            INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
+            WHERE j.coa_id IN (" . implode(',', $coaIds) . ") AND j.tanggal_transaksi < :start_date " . $branchConditionSql . " 
+            GROUP BY j.coa_id
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+
+    public static function getTransactionJournalData($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT c.code AS coa_code, c.name AS coa_name, SUM(IF(j.debet_kredit = 'D', j.total, 0)) AS debit, SUM(IF(j.debet_kredit = 'K', j.total, 0)) AS credit
+                FROM " . JurnalUmum::model()->tableName() . " j
+                INNER JOIN " . Coa::model()->tableName() . " c on c.id = j.coa_id
+                WHERE j.coa_id NOT IN (SELECT c1.id FROM rims_coa c1 WHERE EXISTS (SELECT c1.id FROM rims_coa c2 WHERE c1.id = c2.coa_id)) AND j.tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . "
+                GROUP BY j.coa_id
+                ORDER BY c.code ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public static function getBalanceSheetDataByTransactionYear($startYearMonth, $endYearMonth, $branchId) {
         $branchConditionSql = '';
         

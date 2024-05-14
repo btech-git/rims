@@ -4,23 +4,33 @@ class SiteController extends Controller {
 
     public $layout = '//layouts/column1';
 
+    public function filters() {
+        return array(
+            'access',
+        );
+    }
+
+    public function filterAccess($filterChain) {
+        $filterChain->run();
+    }
+
     /**
      * Declares class-based actions.
      */
-    public function actions() {
-        return array(
-            // captcha action renders the CAPTCHA image displayed on the contact page
-            'captcha' => array(
-                'class' => 'CCaptchaAction',
-                'backColor' => 0xFFFFFF,
-            ),
-            // page action renders "static" pages stored under 'protected/views/site/pages'
-            // They can be accessed via: index.php?r=site/page&view=FileName
-            'page' => array(
-                'class' => 'CViewAction',
-            ),
-        );
-    }
+//    public function actions() {
+//        return array(
+//            // captcha action renders the CAPTCHA image displayed on the contact page
+//            'captcha' => array(
+//                'class' => 'CCaptchaAction',
+//                'backColor' => 0xFFFFFF,
+//            ),
+//            // page action renders "static" pages stored under 'protected/views/site/pages'
+//            // They can be accessed via: index.php?r=site/page&view=FileName
+//            'page' => array(
+//                'class' => 'CViewAction',
+//            ),
+//        );
+//    }
 
     /**
      * This is the default 'index' action that is invoked
@@ -30,6 +40,40 @@ class SiteController extends Controller {
         if (Yii::app()->user->isGuest) {
             $this->redirect(array('login'));
         } else {
+            $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+
+            $endDate = date('Y-m-d');
+            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+            $vehicleDataProvider = $vehicle->searchByDashboard();
+            $productDataProvider = $product->searchByStockCheck($pageNumber);
+            $branches = Branch::model()->findAll();
+
+            $vehicleDataProvider->criteria->with = array(
+                'customer',
+            );
+
+            $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
+            $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '';
+
+            if (!empty($customerName)) {
+                $vehicleDataProvider->criteria->addCondition('customer.name LIKE :customer_name');
+                $vehicleDataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
+            }
+
+            if (!empty($customerType)) {
+                $vehicleDataProvider->criteria->addCondition('customer.customer_type = :customer_type');
+                $vehicleDataProvider->criteria->params[':customer_type'] = $customerType;
+            }
+
+            if (isset($_GET['Vehicle'])) {
+                $vehicle->attributes = $_GET['Vehicle'];
+            }
+
+            if (isset($_GET['Product'])) {
+                $product->attributes = $_GET['Product'];
+            }
+
 //            $assetPurchases = AssetPurchase::model()->findAll();
 //            
 //            $transactionDate = '2022-01-12';
@@ -175,6 +219,14 @@ class SiteController extends Controller {
         // renders the view file 'protected/views/site/index.php'
         // using the default layout 'protected/views/layouts/main.php'
         $this->render('index', array(
+            'vehicle' => $vehicle,
+            'vehicleDataProvider' => $vehicleDataProvider,
+            'productDataProvider' => $productDataProvider, 
+            'product' => $product, 
+            'customerName' => $customerName,
+            'customerType' => $customerType,
+            'branches' => $branches,
+            'endDate' => $endDate,
 //            'dataSale' => $dataSale,
 //            'dataSalePerBranch' => $dataSalePerBranch,
 //            'dataIncomeExpense' => $dataIncomeExpense,
@@ -191,6 +243,82 @@ class SiteController extends Controller {
 //            'movementIn' => $movementIn,
 //            'count' => $count,
         ));
+    }
+    
+    public function actionAjaxHtmlUpdateProductStockTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+            $endDate = date('Y-m-d');
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $productDataProvider = $product->searchByStockCheck($pageNumber);
+            $branches = Branch::model()->findAll();
+
+            $this->renderPartial('_productStockTable', array(
+                'productDataProvider' => $productDataProvider,
+                'branches' => $branches,
+                'endDate' => $endDate,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateCarModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $carMakeId = isset($_GET['Vehicle']['car_make_id']) ? $_GET['Vehicle']['car_make_id'] : 0;
+
+            $this->renderPartial('_carModelSelect', array(
+                'carMakeId' => $carMakeId,
+            ));
+        }
+    }
+    
+    public function actionAjaxHtmlUpdateCarSubModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $carModelId = isset($_GET['Vehicle']['car_model_id']) ? $_GET['Vehicle']['car_model_id'] : 0;
+
+            $this->renderPartial('_carSubModelSelect', array(
+                'carModelId' => $carModelId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'productBrandId' => $productBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'productSubBrandId' => $productSubBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'productMasterCategoryId' => $productMasterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubCategorySelect', array(
+                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+            ));
+        }
     }
 
     /**

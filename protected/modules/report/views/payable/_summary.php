@@ -21,61 +21,65 @@
 <br />
 
 <table class="report">
-    <tr id="header1">
-        <th class="width1-1">Code</th>
-        <th class="width1-2">Company</th>
-        <th class="width1-3">Name</th>
+    <thead style="position: sticky; top: 0">
+        <tr id="header1">
+            <th class="width1-1">Code</th>
+            <th class="width1-2">Company</th>
+            <th class="width1-3">Name</th>
 
-    </tr>
-    <tr id="header2">
-        <td colspan="3">
-            <table>
-                <tr>
-                    <th class="width2-1">Tanggal</th>
-                    <th class="width2-2">PO #</th>
-                    <th class="width2-3">Grand Total</th>
-                    <th class="width2-4">Payment</th>
-                    <th class="width2-5">Remaining</th>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <?php foreach ($payableSummary->dataProvider->data as $header): ?>
-        <tr class="items1">
-            <td class="width1-1"><?php echo CHtml::encode($header->code); ?></td>
-            <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'company')); ?></td>
-            <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
         </tr>
-        <tr class="items2">
+        <tr id="header2">
             <td colspan="3">
                 <table>
-                    <?php $payableData = $header->getPayableReport($endDate, $branchId); ?>
-                    <?php $totalPurchase = 0.00; ?>
-                    <?php $totalPayment = 0.00; ?>
-                    <?php $totalPayable = 0.00; ?>
-                    <?php foreach ($payableData as $payableRow): ?>
-                        <?php $purchase = $payableRow['total_price']; ?>
-                        <?php $paymentAmount = $payableRow['payment_amount']; ?>
-                        <?php $paymentLeft = $payableRow['payment_left']; ?>
-                        <tr>
-                            <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['purchase_order_date']))); ?></td>
-                            <td class="width2-2"><?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $payableRow['purchase_order_no'])), array('target' => '_blank'));?></td>
-                            <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?></td>
-                            <td class="width2-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
-                            <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>
-                        </tr>
-                        <?php $totalPurchase += $purchase; ?>
-                        <?php $totalPayment += $paymentAmount; ?>
-                        <?php $totalPayable += $paymentLeft; ?>
-                    <?php endforeach; ?>
                     <tr>
-                        <td colspan="2" style="text-align: right">TOTAL</td>
-                        <td class="width2-3" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
-                        <td class="width2-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
-                        <td class="width2-5" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayable)); ?></td>
-                    </tr>     
+                        <th class="width2-1">Tanggal</th>
+                        <th class="width2-2">PO #</th>
+                        <th class="width2-3">Grand Total</th>
+                        <th class="width2-4">Payment</th>
+                        <th class="width2-5">Remaining</th>
+                    </tr>
                 </table>
             </td>
         </tr>
-    <?php endforeach; ?>
+    </thead>
+    <tbody>
+        <?php foreach ($payableSummary->dataProvider->data as $header): ?>
+            <tr class="items1">
+                <td class="width1-1"><?php echo CHtml::encode($header->code); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'company')); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+            </tr>
+            <tr class="items2">
+                <td colspan="3">
+                    <table>
+                        <?php $payableData = $header->getPayableReport($endDate, $branchId); ?>
+                        <?php $totalPurchase = 0.00; ?>
+                        <?php $totalPayment = 0.00; ?>
+                        <?php $totalPayable = 0.00; ?>
+                        <?php foreach ($payableData as $payableRow): ?>
+                            <?php $purchase = $payableRow['total_price']; ?>
+                            <?php $paymentAmount = $payableRow['payment_amount']; ?>
+                            <?php $paymentLeft = $payableRow['payment_left']; ?>
+                            <tr>
+                                <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['purchase_order_date']))); ?></td>
+                                <td class="width2-2"><?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $payableRow['purchase_order_no'])), array('target' => '_blank'));?></td>
+                                <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?></td>
+                                <td class="width2-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
+                                <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>
+                            </tr>
+                            <?php $totalPurchase += $purchase; ?>
+                            <?php $totalPayment += $paymentAmount; ?>
+                            <?php $totalPayable += $paymentLeft; ?>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td colspan="2" style="text-align: right">TOTAL</td>
+                            <td class="width2-3" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
+                            <td class="width2-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
+                            <td class="width2-5" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayable)); ?></td>
+                        </tr>     
+                    </table>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>

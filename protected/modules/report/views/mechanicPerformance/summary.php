@@ -37,10 +37,74 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
+                                        <span class="prefix">Mechanic</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php echo CHtml::activeTextField($employee, 'id', array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#employee-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#employee-dialog").dialog("open"); return false; }',
+                                        )); ?>
+
+                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                            'id' => 'employee-dialog',
+                                            // additional javascript options for the dialog plugin
+                                            'options' => array(
+                                                'title' => 'Mekanik',
+                                                'autoOpen' => false,
+                                                'width' => 'auto',
+                                                'modal' => true,
+                                            ),
+                                        )); ?>
+
+                                        <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                            'id' => 'employee-grid',
+                                            'dataProvider' => $employeeDataProvider,
+                                            'filter' => $employee,
+                                            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                                            'pager'=>array(
+                                               'cssFile'=>false,
+                                               'header'=>'',
+                                            ),
+                                            'selectionChanged' => 'js:function(id){
+                                                $("#' . CHtml::activeId($employee, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                                                $("#employee-dialog").dialog("close");
+                                                if ($.fn.yiiGridView.getSelection(id) == "") {
+                                                    $("#employee_name").html("");
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        dataType: "JSON",
+                                                        url: "' . CController::createUrl('ajaxJsonEmployee') . '",
+                                                        data: $("form").serialize(),
+                                                        success: function(data) {
+                                                            $("#employee_name").html(data.employee_name);
+                                                        },
+                                                    });
+                                                }
+                                            }',
+                                            'columns' => array(
+                                                'name',
+                                                array(
+                                                    'name' => 'email',
+                                                    'value' => 'CHtml::encode(CHtml::value($data, "email"))',
+                                                ),
+                                                array(
+                                                    'name' => 'id_card',
+                                                    'filter' => false,
+                                                    'value' => '$data->id_card',
+                                                ),
+                                                array(
+                                                    'name' => 'skills',
+                                                    'filter' => false,
+                                                    'value' => '$data->skills',
+                                                ),
+                                            ),
+                                        )); ?>
+                                        <?php $this->endWidget(); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'employee_name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?> 
                                     </div>
                                 </div>
                             </div>
@@ -48,22 +112,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Mechanic</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('EmployeeId', $employeeId, CHtml::listData(Employee::model()->findAllByAttributes(array(
-                                            "position_id" => 1,
-                                        )), "id", "name"), array("empty" => "--All Mechanic--")); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
+                        <div class="medium-12 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
@@ -118,6 +167,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php echo ReportHelper::summaryText($mechanicPerformanceSummary->dataProvider); ?>
+                        <?php //echo ReportHelper::sortText($mechanicPerformanceSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                    </div>
+                    
                     <?php $this->renderPartial('_summary', array(
                         'employee' => $employee,
                         'mechanicPerformanceSummary' => $mechanicPerformanceSummary,

@@ -38,26 +38,27 @@ class CustomerRegistrationController extends Controller {
         ));
     }
     
-	public function actionAjaxHtmlUpdateCarModelSelect()
-	{
+    public function actionAjaxHtmlUpdateCarModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
+            $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
             $carMakeId = isset($_GET['Vehicle']['car_make_id']) ? $_GET['Vehicle']['car_make_id'] : 0;
 
             $this->renderPartial('_carModelSelect', array(
+                'vehicle' => $vehicle,
                 'carMakeId' => $carMakeId,
             ));
         }
     }
     
-	public function actionAjaxHtmlUpdateCarSubModelSelect()
-	{
+    public function actionAjaxHtmlUpdateCarSubModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
+            $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
             $carModelId = isset($_GET['Vehicle']['car_model_id']) ? $_GET['Vehicle']['car_model_id'] : 0;
 
             $this->renderPartial('_carSubModelSelect', array(
+                'vehicle' => $vehicle,
                 'carModelId' => $carModelId,
             ));
         }
     }
-    
 }

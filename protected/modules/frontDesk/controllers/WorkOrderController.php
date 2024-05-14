@@ -126,6 +126,23 @@ class WorkOrderController extends Controller {
         ));
     }
 
+    public function actionAdminProcessing() {
+        $model = new RegistrationTransaction('search');
+        $model->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['RegistrationTransaction'])) {
+            $model->attributes = $_GET['RegistrationTransaction'];
+        }
+
+        $dataProvider = $model->searchByProcessingWorkOrder();
+        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+
+        $this->render('adminProcessing', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     public function actionAjaxHtmlUpdateCarModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $model = new RegistrationTransaction('search');

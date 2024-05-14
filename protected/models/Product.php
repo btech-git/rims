@@ -28,6 +28,7 @@
  * @property integer $minimum_stock
  * @property integer $margin_type
  * @property integer $margin_amount
+ * @property string $minimum_selling_price
  * @property string $is_usable
  * @property string $status
  * @property integer $unit_id
@@ -109,18 +110,18 @@ class Product extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('code, manufacturer_code, name, production_year, brand_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id, user_id', 'required'),
+            array('code, manufacturer_code, name, production_year, brand_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id, user_id, minimum_selling_price', 'required'),
             array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, is_approved, user_id_approval, user_id', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('manufacturer_code, barcode, extension', 'length', 'max' => 50),
             array('manufacturer_code', 'unique', 'on' => 'insert'),
             array('name', 'length', 'max' => 30),
-            array('purchase_price, recommended_selling_price, hpp, retail_price, status', 'length', 'max' => 10),
+            array('purchase_price, recommended_selling_price, hpp, retail_price, status, minimum_selling_price', 'length', 'max' => 10),
             array('is_usable', 'length', 'max' => 5),
             array('date_posting, date_approval', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -196,6 +197,7 @@ class Product extends CActiveRecord {
             'retail_price' => 'Retail Price',
             'stock' => 'Stock',
             'minimum_stock' => 'Minimum Stock',
+            'minimum_selling_price' => 'Min Sell Price',
             'margin_type' => 'Margin Type',
             'margin_amount' => 'Margin Amount',
             'is_usable' => 'Is Usable',
@@ -250,6 +252,7 @@ class Product extends CActiveRecord {
         $criteria->compare('retail_price', $this->retail_price, true);
         $criteria->compare('stock', $this->stock);
         $criteria->compare('minimum_stock', $this->minimum_stock);
+        $criteria->compare('minimum_selling_price', $this->minimum_selling_price);
         $criteria->compare('margin_type', $this->margin_type);
         $criteria->compare('margin_amount', $this->margin_amount);
         $criteria->compare('is_usable', $this->is_usable, true);
@@ -329,6 +332,114 @@ class Product extends CActiveRecord {
                     // ),
                     '*'
                 )
+            ),
+        ));
+    }
+    
+    public function searchByDashboard() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
+        $criteria->compare('barcode', $this->barcode, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('description', $this->description, true);
+        $criteria->compare('production_year', $this->production_year);
+        $criteria->compare('t.brand_id', $this->brand_id);
+        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
+        $criteria->compare('extension', $this->extension, true);
+        $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
+        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
+        $criteria->compare('t.vehicle_car_make_id', $this->vehicle_car_make_id);
+        $criteria->compare('t.vehicle_car_model_id', $this->vehicle_car_model_id);
+        $criteria->compare('purchase_price', $this->purchase_price, true);
+        $criteria->compare('recommended_selling_price', $this->recommended_selling_price, true);
+        $criteria->compare('hpp', $this->hpp, true);
+        $criteria->compare('retail_price', $this->retail_price, true);
+        $criteria->compare('stock', $this->stock);
+        $criteria->compare('minimum_stock', $this->minimum_stock);
+        $criteria->compare('margin_type', $this->margin_type);
+        $criteria->compare('margin_amount', $this->margin_amount);
+        $criteria->compare('is_usable', $this->is_usable, true);
+        $criteria->compare('LOWER(t.status)', strtolower($this->status), FALSE);
+        $criteria->compare('ppn', $this->ppn);
+        $criteria->compare('t.unit_id', $this->unit_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.date_posting', $this->date_posting);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.user_id_approval', $this->user_id_approval);
+
+        $criteria->together = true;
+        $criteria->with = array('productSubMasterCategory', 'productMasterCategory', 'productSubCategory', 'brand', 'subBrand', 'subBrandSeries');
+        $criteria->compare('productMasterCategory.code', $this->product_master_category_code, true);
+        $criteria->compare('productMasterCategory.name', $this->product_master_category_name, true);
+        $criteria->compare('productSubMasterCategory.code', $this->product_sub_master_category_code, true);
+        $criteria->compare('productSubMasterCategory.name', $this->product_sub_master_category_name, true);
+        $criteria->compare('productSubCategory.code', $this->product_sub_category_code, true);
+        $criteria->compare('productSubCategory.name', $this->product_sub_category_name, true);
+        $criteria->compare('brand.name', $this->product_brand_name, true);
+        $criteria->compare('subBrand.name', $this->product_sub_brand_name, true);
+        $criteria->compare('subBrandSeries.name', $this->product_sub_brand_series_name, true);
+
+        $explodeKeyword = explode(" ", $this->findkeyword);
+
+        foreach ($explodeKeyword as $key) {
+
+            $criteria->compare('t.code', $key, true, 'AND');
+            $criteria->compare('production_year', $key, true, 'AND');
+            $criteria->compare('manufacturer_code', $key, true, 'AND');
+            $criteria->compare('barcode', $key, true, 'AND');
+            $criteria->compare('t.name', $key, true, 'AND');
+            $criteria->compare('t.description', $key, true, 'AND');
+            $criteria->compare('extension', $key, true, 'AND');
+
+            $criteria->compare('productMasterCategory.code', $key, true, 'AND');
+            $criteria->compare('productMasterCategory.name', $key, true, 'AND');
+            $criteria->compare('productSubMasterCategory.code', $key, true, 'AND');
+            $criteria->compare('productSubMasterCategory.name', $key, true, 'AND');
+            // $criteria->compare('productSubCategory.code',$key,true,'OR');
+            // $criteria->compare('productSubCategory.name',$key,true,'OR');
+
+            $criteria->compare('brand.name', $key, true, 'AND');
+        }
+        // $criteria->compare('productSubCategory.code',$this->findkeyword,true,'OR');
+        // $criteria->compare('productSubCategory.name',$this->findkeyword,true,'OR');
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+                'attributes' => array(
+                    'product_master_category_code' => array(
+                        'asc' => 'productMasterCategory.code',
+                        'desc' => 'productMasterCategory.code DESC'
+                    ),
+                    'product_master_category_name' => array(
+                        'asc' => 'productMasterCategory.name',
+                        'desc' => 'productMasterCategory.name DESC'
+                    ),
+                    'product_sub_master_category_code' => array(
+                        'asc' => 'productSubMasterCategory.code',
+                        'desc' => 'productSubMasterCategory.code DESC'
+                    ),
+                    'product_sub_master_category_name' => array(
+                        'asc' => 'productSubMasterCategory.name',
+                        'desc' => 'productSubMasterCategory.name DESC'
+                    ),
+                    'product_sub_category_code' => array(
+                        'asc' => 'productSubMasterCategory.code',
+                        'desc' => 'productSubMasterCategory.code DESC'
+                    ),
+                    '*'
+                )
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
             ),
         ));
     }
@@ -431,7 +542,7 @@ class Product extends CActiveRecord {
     }
 
     public function getRetailPriceTax() {
-        return $this->retail_price * 10 / 100;
+        return $this->retail_price * 11 / 100;
     }
 
     public function getRetailPriceAfterTax() {
@@ -442,6 +553,12 @@ class Product extends CActiveRecord {
         $marginAmount = ($this->margin_type == 1) ? $this->retailPriceAfterTax * $this->margin_amount / 100 : $this->margin_amount;
 
         return $this->retailPriceAfterTax + $marginAmount;
+    }
+
+    public function getMinimumSellingPrice() {
+        $marginAmount = ($this->productSubMasterCategory->margin_type == 1) ? $this->retail_price * $this->productSubMasterCategory->margin_amount / 100 : $this->productSubMasterCategory->margin_amount;
+
+        return $this->retail_price + $marginAmount;
     }
 
     public function getMasterSubCategoryCode() {

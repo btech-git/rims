@@ -8,89 +8,84 @@
 
     <br />
 
-    <table style="width: 60%; margin: 0 auto; border-spacing: 0pt">
-        <tr>
-            <th style="text-align: center">Chart of Account</th>
-            <th style="text-align: center">Debit</th>
-            <th style="text-align: center">Credit</th>
-        </tr>
-        <?php $accountCategoryDebitBalance = 0.00; ?>
-        <?php $accountCategoryCreditBalance = 0.00; ?>
-        <?php foreach ($coaSubCategories as $coaSubCategory): ?>
-            <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC')); ?>
-            <?php foreach ($coas as $coa): ?>
-                <?php $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType); ?>
-                <?php $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType); ?>
-                <?php if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0): // && $journalDebitBalance !== $journalCreditBalance): ?>
+    <table style="margin: 0 auto; border-spacing: 0pt">
+        <thead style="position: sticky; top: 0">
+            <tr>
+                <th style="text-align: center">Kode COA</th>
+                <th style="text-align: center">Nama COA</th>
+                <th style="text-align: center">Debit</th>
+                <th style="text-align: center">Credit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $totalDebit = '0.00'; ?>
+            <?php $totalCredit = '0.00'; ?>
+            <?php foreach ($transactionJournalData as $transactionJournalItem): ?>
+                <?php $valid = false; ?>
+                <?php $valid = $valid || $transactionType === 'PO' && (
+                    preg_match('/^136\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    $transactionJournalItem['coa_code'] === '143.00.001' ||
+                    preg_match('/^211\.00.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php $valid = $valid || $transactionType === 'PP' && (
+                    $transactionJournalItem['coa_code'] === '111.00.001' ||
+                    preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^113\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^211\.00.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php $valid = $valid || $transactionType === 'SL' && (
+                    $transactionJournalItem['coa_code'] === '224.00.001' ||
+                    preg_match('/^121\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^411.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^412.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^421.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^422.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php $valid = $valid || $transactionType === 'SP' && (
+                    $transactionJournalItem['coa_code'] === '111.00.001' ||
+                    $transactionJournalItem['coa_code'] === '143.00.002' ||
+                    preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^121\.00.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php $valid = $valid || $transactionType === 'MI' && (
+                    preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php $valid = $valid || $transactionType === 'MO' && (
+                    preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php $valid = $valid || $transactionType === 'CS' && (
+                    $transactionJournalItem['coa_code'] === '111.00.001' ||
+                    preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^113\.00.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php if ($valid): ?>
                     <tr>
-                        <td>
-                            <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
-                            <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/transactionJournalSummary/jurnalTransaction", array(
-                                "CoaId" => $coa->id, 
-                                "StartDate" => $startDate, 
-                                "EndDate" => $endDate, 
-                                "BranchId" => $branchId
-                            )), array('target' => '_blank')); ?>
-                        </td>
-                        <td style="text-align: right;">
-                            <?php if (empty($coa->coaIds)): ?> 
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalDebitBalance)); ?>
-                            <?php endif; ?>
-                        </td>
-                        <td style="text-align: right;">
-                            <?php if (empty($coa->coaIds)): ?> 
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalCreditBalance)); ?>
-                            <?php endif; ?>
-                        </td>
+                        <td><?php echo CHtml::encode($transactionJournalItem['coa_code']); ?></td>
+                        <td><?php echo CHtml::encode($transactionJournalItem['coa_name']); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $transactionJournalItem['debit'])); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $transactionJournalItem['credit'])); ?></td>
                     </tr>
-
-                    <?php $groupDebitBalance = 0; $groupCreditBalance = 0; ?>
-                    <?php if (!empty($coa->coaIds)): ?> 
-                        <?php $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC')); ?>
-                        <?php foreach ($coaIds as $account): ?>
-                            <?php $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType); ?>
-                            <?php $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType); ?>
-                            <?php if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance): ?>
-                                <tr>
-                                    <td style="font-size: 10px">
-                                        <?php /*echo CHtml::encode(CHtml::value($account, 'code')); ?> - 
-                                        <?php echo CHtml::link($account->name, Yii::app()->createUrl("report/transactionJournalSummary/jurnalTransaction", array(
-                                            "CoaId" => $account->id, 
-                                            "StartDate" => $startDate, 
-                                            "EndDate" => $endDate, 
-                                            "BranchId" => $branchId
-                                        )), array('target' => '_blank'));*/ ?>
-                                    </td>
-                                    <td style="text-align: right; font-size: 10px">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalDebitBalance)); ?>
-                                    </td>
-                                    <td style="text-align: right; font-size: 10px">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalCreditBalance)); ?>
-                                    </td>
-                                </tr>
-                                <?php $groupDebitBalance += $journalDebitBalance; ?>
-                                <?php $groupCreditBalance += $journalCreditBalance; ?>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php $totalDebit += $transactionJournalItem['debit']; ?>
+                    <?php $totalCredit += $transactionJournalItem['credit']; ?>
                 <?php endif; ?>
-                <?php $accountCategoryDebitBalance += $journalDebitBalance; ?>
-                <?php $accountCategoryCreditBalance += $journalCreditBalance; ?>
             <?php endforeach; ?>
-        <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="text-align: right; font-weight: bold; border-top: 2px solid; text-transform: uppercase" colspan="2">
+                    TOTAL 
+                </td>
 
-        <tr>
-            <td style="text-align: right; font-weight: bold; border-top: 2px solid; text-transform: uppercase">
-                TOTAL 
-            </td>
+                <td style="text-align: right; font-weight: bold; border-top: 2px solid">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                </td>
 
-            <td style="text-align: right; font-weight: bold; border-top: 2px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryDebitBalance)); ?>
-            </td>
-
-            <td style="text-align: right; font-weight: bold; border-top: 2px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryCreditBalance)); ?>
-            </td>
-        </tr>
+                <td style="text-align: right; font-weight: bold; border-top: 2px solid">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </div>

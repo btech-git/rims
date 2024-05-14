@@ -19,7 +19,9 @@ Yii::app()->clientScript->registerScript('search', "
             <a href="#" class="search-button right button cbutton secondary" id="menushow">Advanced Search</a>
         </div>
     </div>
+    
     <div class="clearfix"></div>
+    
     <div class="search-form" style="display:none">
         <?php $this->renderPartial('_search',array(
             'endDate' => $endDate,

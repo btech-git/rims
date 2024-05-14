@@ -348,6 +348,35 @@
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label class="prefix">
+                                <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'registration_transaction_id'); ?>
+                                <?php echo $form->labelEx($purchaseOrder->header, 'registration_transaction_id'); ?>
+                            </label>
+                        </div>
+                        <?php if ($purchaseOrder->header->isNewRecord): ?>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::activeTextField($purchaseOrder->header, 'work_order_number', array(
+                                    'size' => 15,
+                                    'maxlength' => 10,
+                                    'readonly' => true,
+                                    'onclick' => '$("#registration-transaction-dialog").dialog("open"); return false;',
+                                    'onkeypress' => 'if (event.keyCode == 13) { $("#registration-transaction-dialog").dialog("open"); return false; }',
+                                    'value' => $purchaseOrder->header->registration_transaction_id == "" ? '' : RegistrationTransaction::model()->findByPk($purchaseOrder->header->registration_transaction_id)->work_order_number
+                                )); ?>
+
+                                <?php echo $form->error($purchaseOrder->header, 'registration_transaction_id'); ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::encode(CHtml::value($purchaseOrder->header, 'registrationTransaction.work_order_number')); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix">
                                 <?php echo $form->labelEx($purchaseOrder->header, 'payment_type'); ?>
                             </label>
                         </div>
@@ -487,6 +516,7 @@
 
         <?php $this->endWidget(); ?>
     </div><!-- form -->
+    
     <?php //if ($purchaseOrder->header->isNewRecord): ?>
         <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
             'id' => 'supplier-dialog',
@@ -564,6 +594,71 @@
         )); ?>
         <?php $this->endWidget(); ?>
     <?php //endif; ?>
+    
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'registration-transaction-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Work Order',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'registration-transaction-grid',
+        'dataProvider' => $registrationTransactionDataProvider,
+        'filter' => $registrationTransaction,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id){
+            $("#TransactionPurchaseOrder_registration_transaction_id").val($.fn.yiiGridView.getSelection(id));
+            $("#registration-transaction-dialog").dialog("close");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxRegistrationTransaction', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                data: $("form").serialize(),
+                success: function(data) {
+                    $("#TransactionPurchaseOrder_work_order_number").val(data.work_order_number);
+                },
+            });
+        }',
+        'columns' => array(
+            'transaction_number',
+            array(
+                'name' => 'transaction_date',
+                'value' => "Yii::app()->dateFormatter->formatDateTime(\$data->transaction_date, 'medium', 'short')",
+                'filter' => false, // Set the filter to false when date range searching
+            ),
+            array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
+            array(
+                'header' => 'Car Make',
+                'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
+            ),
+            array(
+                'header' => 'Car Model',
+                'value' => '$data->vehicle->carModel->name'
+            ),
+            array(
+                'header' => 'Repair Type',
+                'name' => 'repair_type',
+                'value' => '$data->repair_type',
+                'type' => 'raw',
+                'filter' => false,
+            ),
+            array(
+                'header' => 'Customer Name',
+                'value' => '$data->customer->name',
+            ),
+            'work_order_number',
+        )
+    )); ?>
+    <?php $this->endWidget(); ?>
     
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'product-dialog',

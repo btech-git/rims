@@ -219,7 +219,7 @@ $this->breadcrumbs = array(
         <?php if (empty($model->work_order_number) && $model->status !== 'Pending' && empty($model->sales_order_number)): ?>
             <?php echo CHtml::link('<span class="fa fa-bookmark"></span>Pending', Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/pendingOrder?id=' . $model->id, array('class'=>'button secondary right', 'style' => 'margin-right:10px')); ?>
         <?php endif; ?>
-        <?php if (!empty($model->work_order_number) && $model->status !== 'Finished'): ?>
+        <?php if (!empty($model->work_order_number) && $model->total_service > 0): ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Work Order', Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/pdfWorkOrder?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px')); ?>
         <?php endif; ?>
         <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished'): ?>

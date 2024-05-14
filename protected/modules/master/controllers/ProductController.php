@@ -47,8 +47,8 @@ class ProductController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $productPrices = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('product_id' => $id), array('order' => 't.id DESC'));
-        $productSales = RegistrationProduct::model()->findAllByAttributes(array('product_id' => $id), array('limit' => 50));
+        $productPrices = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('product_id' => $id), array('order' => 't.id DESC', 'limit' => 100));
+        $productSales = RegistrationProduct::model()->findAllByAttributes(array('product_id' => $id), array('order' => 't.id ASC', 'limit' => 100));
         $model = $this->loadModel($id);
         
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {

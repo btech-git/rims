@@ -81,11 +81,8 @@ $this->menu = array(
                             <td>Address</td>
                             <td>Province</td>
                             <td>City</td>
-                            <td>Zipcode</td>
-                            <td>Fax</td>
                             <td>Email</td>
                             <td>Note</td>
-                            <td>Birthdate</td>
                         </tr>
                         
                         <?php foreach ($customers as $key => $customer): ?>
@@ -95,11 +92,8 @@ $this->menu = array(
                                 <td><?php echo $customer->address; ?></td>
                                 <td><?php echo $customer->province_id != "" ? $customer->province->name : '-'; ?></td>
                                 <td><?php echo $customer->city_id != "" ? $customer->city->name : '-'; ?></td>
-                                <td><?php echo $customer->zipcode; ?></td>
-                                <td><?php echo $customer->fax; ?></td>
                                 <td><?php echo $customer->email; ?></td>
                                 <td><?php echo $customer->note; ?></td>
-                                <td><?php echo $customer->birthdate; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
@@ -115,11 +109,8 @@ $this->menu = array(
                             <td>Address</td>
                             <td>Province</td>
                             <td>City</td>
-                            <td>Zipcode</td>
-                            <td>Fax</td>
                             <td>Email</td>
                             <td>Note</td>
-                            <td>Birthdate</td>
                         </tr>
                         <?php foreach ($picDetails as $key => $picDetail): ?>
                             <tr>
@@ -127,11 +118,8 @@ $this->menu = array(
                                 <td><?php echo $picDetail->address; ?></td>
                                 <td><?php echo $picDetail->province_id != "" ? $picDetail->province->name : '-'; ?></td>
                                 <td><?php echo $picDetail->city_id != "" ? $picDetail->city->name : '-'; ?></td>
-                                <td><?php echo $picDetail->zipcode; ?></td>
-                                <td><?php echo $picDetail->fax; ?></td>
                                 <td><?php echo $picDetail->email; ?></td>
                                 <td><?php echo $picDetail->note; ?></td>
-                                <td><?php echo $picDetail->birthdate; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
@@ -167,12 +155,18 @@ $this->menu = array(
                         'transaction_date',
                         'repair_type',
                         'status',
+                        'work_order_number',
                         array(
-                            'name' => 'branch_id',
-                            'header' => 'Branch',
-                            'filter' => CHtml::activeDropDownList($registrationTransaction, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-                            'value' => '$data->branch->name',
+                            'header' => 'Invoice #',
+                            'value' => 'empty($data->invoiceHeaders) ? "" : $data->invoiceHeaders[0]->invoice_number',
+                            'type' => 'raw'
                         ),
+//                        array(
+//                            'name' => 'branch_id',
+//                            'header' => 'Branch',
+//                            'filter' => CHtml::activeDropDownList($registrationTransaction, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+//                            'value' => '$data->branch->name',
+//                        ),
                         array(
                             'name' => 'grand_total', 
                             'value' => 'AppHelper::formatMoney($data->grand_total)',

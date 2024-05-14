@@ -25,22 +25,21 @@ class MechanicPerformanceController extends Controller {
 
         $employee = Search::bind(new Employee('search'), isset($_GET['Employee']) ? $_GET['Employee'] : array());
         $employeeDataProvider = $employee->search();
+        $employeeDataProvider->pagination->pageVar = 'page_dialog';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $employeeId = (isset($_GET['EmployeeId'])) ? $_GET['EmployeeId'] : '';
 
-        $mechanicPerformanceSummary = new MechanicPerformanceSummary($employeeDataProvider);
+        $mechanicPerformanceSummary = new MechanicPerformanceSummary($employee->search());
         $mechanicPerformanceSummary->setupLoading();
         $mechanicPerformanceSummary->setupPaging($pageSize, $currentPage);
         $mechanicPerformanceSummary->setupSorting();
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'employeeId' => $employeeId,
         );
         $mechanicPerformanceSummary->setupFilter($filters);
         
@@ -56,7 +55,6 @@ class MechanicPerformanceController extends Controller {
             'employee' => $employee,
             'employeeDataProvider' => $employeeDataProvider,
             'mechanicPerformanceSummary' => $mechanicPerformanceSummary,
-            'employeeId' => $employeeId,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentPage' => $currentPage,

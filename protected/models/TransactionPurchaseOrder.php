@@ -34,6 +34,7 @@
  * @property string $note
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property integer $registration_transaction_id
  *
  * The followings are the available model relations:
  * @property PaymentOut[] $paymentOuts
@@ -46,6 +47,7 @@
  * @property TransactionReceiveItem[] $transactionReceiveItems
  * @property TransactionReturnOrder[] $transactionReturnOrders
  * @property CoaBank $coaBankIdEstimate
+ * @property RegistrationTransaction $registrationTransaction
  */
 class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
@@ -55,6 +57,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
      * @return string the associated database table name
      */
     public $supplier_name;
+    public $work_order_number;
     public $coa_name;
     public $coa_supplier;
     public $main_branch_name;
@@ -91,12 +94,12 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
-            array('estimate_date_arrival, payment_date_estimate, note', 'safe'),
+            array('estimate_date_arrival, payment_date_estimate, note, registration_transaction_id', 'safe'),
             array('payment_status', 'length', 'max' => 50),
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, registration_transaction_id, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 
@@ -118,6 +121,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'user' => array(self::BELONGS_TO, 'User', 'requester_id'),
             'approval' => array(self::BELONGS_TO, 'User', 'approved_id'),
             'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
+            'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'Coa', 'coa_bank_id_estimate'),
         );
     }
@@ -152,6 +156,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'purchase_type' => 'Purchase Type',
             'coa_bank_id_estimate' => 'Coa Bank',
             'tax_percentage' => 'PPn %',
+            'registration_transaction_id' => 'WO #',
         );
     }
 
@@ -197,6 +202,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
         $criteria->compare('t.purchase_type', $this->purchase_type, true);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
 
         $criteria->together = 'true';
         $criteria->with = array('supplier');

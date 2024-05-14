@@ -203,6 +203,68 @@ class Vehicle extends CActiveRecord {
             ),
         ));
     }
+    
+    public function searchByDashboard() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.plate_number', $this->plate_number, true);
+        $criteria->compare('t.plate_number_prefix_id', $this->plate_number_prefix_id);
+        $criteria->compare('t.plate_number_ordinal', $this->plate_number_ordinal, true);
+        $criteria->compare('t.plate_number_suffix', $this->plate_number_suffix, true);
+        $criteria->compare('t.machine_number', $this->machine_number, true);
+        $criteria->compare('frame_number', $this->frame_number, true);
+        $criteria->compare('t.car_make_id', $this->car_make_id);
+        $criteria->compare('t.car_model_id', $this->car_model_id);
+        $criteria->compare('t.car_sub_model_id', $this->car_sub_model_id);
+        $criteria->compare('t.car_sub_model_detail_id', $this->car_sub_model_detail_id);
+        $criteria->compare('t.color_id', $this->color_id);
+        $criteria->compare('year', $this->year, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('customer_pic_id', $this->customer_pic_id);
+        $criteria->compare('chasis_code', $this->chasis_code, true);
+        $criteria->compare('transmission', $this->transmission, true);
+        $criteria->compare('fuel_type', $this->fuel_type, true);
+        $criteria->compare('power', $this->power);
+        $criteria->compare('drivetrain', $this->drivetrain, true);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('insurance_company_id', $this->insurance_company_id);
+
+        $criteria->together = 'true';
+        //$criteria->with = array('carMake','carModel','carSubModel','color');
+        $criteria->with = array('carMake', 'carModel', 'carSubModel');
+        $criteria->compare('carMake.name', $this->car_make, true);
+        $criteria->compare('carModel.name', $this->car_model, true);
+        $criteria->compare('carSubModel.name', $this->car_sub_model, true);
+        //$criteria->compare('color.name', $this->color, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.id ASC',
+                'attributes' => array(
+                    'car_make' => array(
+                        'asc' => 'carMake.name ASC',
+                        'desc' => 'carMake.name DESC',
+                    ),
+                    'car_model' => array(
+                        'asc' => 'carModel.name ASC',
+                        'desc' => 'carModel.name DESC',
+                    ),
+                    'car_sub_model' => array(
+                        'asc' => 'carSubModel.name ASC',
+                        'desc' => 'carSubModel.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
 
     /**
      * Returns the static model of the specified AR class.

@@ -145,6 +145,25 @@ class TransactionPurchaseOrderController extends Controller {
             ),
         ));
 
+        $registrationTransaction = new RegistrationTransaction('search');
+        $registrationTransaction->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
+        $registrationTransactionCriteria = new CDbCriteria;
+        $registrationTransactionCriteria->addCondition("NOT EXISTS (
+            SELECT i.registration_transaction_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " i
+            WHERE t.id = i.registration_transaction_id
+        ) AND t.work_order_number IS NOT NULL AND t.total_product_price > 0 AND t.status NOT LIKE '%CANCELLED%' AND t.transaction_date > '2022-12-31'");
+
+        $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
+            'criteria' => $registrationTransactionCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.work_order_number DESC, t.transaction_date DESC",
+            ),
+        ));
+
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         if (isset($_GET['Product'])) {
@@ -202,6 +221,8 @@ class TransactionPurchaseOrderController extends Controller {
             'price' => $price,
             'priceDataProvider' => $priceDataProvider,
             'destinationBranchDataProvider' => $destinationBranchDataProvider,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
         ));
     }
 
@@ -229,6 +250,25 @@ class TransactionPurchaseOrderController extends Controller {
             'criteria' => $supplierCriteria,
             'sort' => array(
                 "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
+        ));
+
+        $registrationTransaction = new RegistrationTransaction('search');
+        $registrationTransaction->unsetAttributes();  // clear any default values
+        if (isset($_GET['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
+        $registrationTransactionCriteria = new CDbCriteria;
+        $registrationTransactionCriteria->addCondition("NOT EXISTS (
+            SELECT i.registration_transaction_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " i
+            WHERE t.id = i.registration_transaction_id
+        ) AND t.work_order_number IS NOT NULL AND t.total_product_price > 0 AND t.status NOT LIKE '%CANCELLED%' AND t.transaction_date > '2022-12-31'");
+
+        $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
+            'criteria' => $registrationTransactionCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.work_order_number DESC, t.transaction_date DESC",
             ),
         ));
 
@@ -293,6 +333,8 @@ class TransactionPurchaseOrderController extends Controller {
             'price' => $price,
             'priceDataProvider' => $priceDataProvider,
             'destinationBranchDataProvider' => $destinationBranchDataProvider,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
         ));
     }
 
@@ -1148,6 +1190,19 @@ class TransactionPurchaseOrderController extends Controller {
                 'coa_name' => $supplier->coa ? $supplier->coa->name : '',
                 'tenor' => $tenor,
                 'estimate_payment_date_label' => CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($tanggal_jatuh_tempo))),
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxRegistrationTransaction($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+
+            $object = array(
+                'work_order_number' => $registrationTransaction->work_order_number,
             );
 
             echo CJSON::encode($object);

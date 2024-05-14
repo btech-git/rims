@@ -24,7 +24,7 @@ Yii::app()->clientScript->registerCss('_report', '
 <br />
 
 <table class="report">
-    <thead>
+    <thead style="position: sticky; top: 0">
         <tr id="header1">
             <th class="width1-1">Code</th>
             <th class="width1-4">Type</th>

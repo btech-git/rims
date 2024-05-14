@@ -23,12 +23,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
+                                        <span class="prefix">Jumlah per Halaman</span>
                                     </div>
-
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::hiddenField('PageSize', $pageSize); ?>
-                                        <?php echo CHtml::textField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
@@ -138,6 +136,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'ledgerBeginningBalanceData' => $ledgerBeginningBalanceData,
+                        'generalLedgerReportData' => $generalLedgerReportData,
+                    )); ?>
+                </div>
+
+                <div class="right">
+                    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+                        'itemCount' => $generalLedgerSummary->dataProvider->pagination->itemCount,
+                        'pageSize' => $generalLedgerSummary->dataProvider->pagination->pageSize,
+                        'currentPage' => $generalLedgerSummary->dataProvider->pagination->getCurrentPage(false),
                     )); ?>
                 </div>
                 <div class="clear"></div>

@@ -52,6 +52,7 @@ class Customer extends CActiveRecord {
     public $city_name;
     public $province_name;
     public $plate_number;
+    public $mobile_number;
     public $coa_name;
     public $coa_code;
 
@@ -269,6 +270,16 @@ class Customer extends CActiveRecord {
         }
 
         return $this->plate_number = implode('', $plate);
+    }
+
+    public function getMobilePhone() {
+        $mobile = array();
+
+        foreach ($this->customerMobiles as $customerMobile) {
+            $mobile[] = $customerMobile->mobile_no . ', ';
+        }
+
+        return $this->mobile_number = implode('', $mobile);
     }
 
     public function getReceivableLedgerReport($startDate, $endDate) {

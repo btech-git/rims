@@ -29,7 +29,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <br />
 
     <table style="width: 95%; margin: 0 auto; border-spacing: 0pt">
-        <thead>
+        <thead style="position: sticky; top: 0">
             <tr>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Tanggal</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Jenis Transaksi</th>

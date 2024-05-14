@@ -263,7 +263,7 @@ $('form').submit(function(){
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'work-order-grid',
-                'dataProvider'=>$modelDataProvider,
+                'dataProvider'=>$dataProvider,
                 'filter'=>null,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',				
                 'pager'=>array(
@@ -316,55 +316,22 @@ $('form').submit(function(){
                     ),								
                     'problem',
                     array(
-                        'header' => 'Invoice #', 
-                        'value' => 'empty($data->invoiceHeaders) ? "" : CHtml::link($data->invoiceHeaders[0]->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->invoiceHeaders[0]->id), array("target" => "blank"))', 
-                        'type' => 'raw'
-                    ),
-                    array(
                         'header'=>'User',
                         'name'=>'user_id',
                         'value'=>'!empty($data->user->username)?$data->user->username:""',
                     ),
-//                    array(
-//                        'header'=>'Cabang',
-//                        'name'=>'branch_id',
-//                        'value'=>'$data->branch != "" ? $data->branch->name : ""',
-//                        'filter'=>CHtml::dropDownList('RegistrationTransaction[branch_id]', 'branch_name', CHtml::listData(Branch::model()->findAll(),'id','name'), array('class'=>'form-control','empty'=>'--Select Branch--')),
-//                    ),
+                    array(
+                        'header'=>'Cabang',
+                        'name'=>'branch_id',
+                        'value'=>'$data->branch != "" ? $data->branch->name : ""',
+                        'filter'=>CHtml::dropDownList('RegistrationTransaction[branch_id]', 'branch_name', CHtml::listData(Branch::model()->findAll(),'id','name'), array('class'=>'form-control','empty'=>'--Select Branch--')),
+                    ),
                     array(
                         'header'=>'WO Status',
                         'name'=>'status', 
                         'value'=>'$data->status',
                         'type'=>'raw',
-//                        'filter'=>CHtml::dropDownList('RegistrationTransaction[service_status]', $model->status, array(
-//                            ''=>'All',
-//                            'Pending'=>'Pending',
-//                            'Available'=>'Available',
-//                            'On Progress'=>'On Progress',
-//                            'Finished'=>'Finished'
-//                        )),
                     ),
-//                    array(
-//                        'class'=>'CButtonColumn',
-//                        'template'=>'{detail}',
-//                        'buttons'=>array (
-//                            'detail' => array (
-//                                'label'=>'view',
-//                                'url'=>'Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id"=>$data->id))',
-//                                //'options'=>array('class'=>'registration-service-view','id'=>''),
-//                                'visible'=>'Yii::app()->user->checkAccess("workOrderReport")',
-//                                'click'=>"js:function(){
-//                                    var url = $(this).attr('href');
-//
-//                                    newwindow=window.open(url,'name','height=600,width=1200,left=100');
-//                                    if (window.focus) {newwindow.focus()}
-//                                    newwindow.onbeforeunload = function(){  $.fn.yiiGridView.update('work-order-grid')}
-//                                    newwindow.onunload = function(){  $.fn.yiiGridView.update('work-order-grid')}
-//                                    return false;
-//                                }"
-//                            ),
-//                        ),
-//                    ),
                 ),
             )); ?>
         </div>

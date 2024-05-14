@@ -83,7 +83,7 @@
 
 <div>
     <table>
-        <thead>
+        <thead style="position: sticky; top: 0">
             <tr>
                 <th>Tanggal Transaksi</th>
                 <th>Hari Transaksi</th>

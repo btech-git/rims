@@ -43,37 +43,51 @@ $this->menu=array(
                 array('name'=>'product_master_category_id', 'value'=>$model->productMasterCategory->name),
                 array('name'=>'product_sub_master_category_id', 'value'=>$model->productSubMasterCategory->name),
                 array('name'=>'product_sub_category_id', 'value'=>$model->productSubCategory->name),
-                'product_specification_type_id',
+                array(
+                    'name' => 'hpp',
+                    'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->hpp),
+                    'visible' => Yii::app()->user->checkAccess('director'),
+                ),
                 array(
                     'name' => 'retail_price',
                     'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->retail_price),
+                    'visible' => Yii::app()->user->checkAccess('director'),
+                ),
+                array(
+                    'name'=>'ppn', 
+                    'value'=>$model->ppn == 1 ? 'Include': 'Exclude',
+                    'visible' => Yii::app()->user->checkAccess('director'),
                 ),
                 array(
                     'name' => 'Ppn',
                     'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->retailPriceTax),
+                    'visible' => Yii::app()->user->checkAccess('director'),
                 ),
                 array(
                     'label' => 'Retail Price After Tax',
                     'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->retailPriceAfterTax),
+                    'visible' => Yii::app()->user->checkAccess('director'),
                 ),
                 array(
                     'name' => 'margin_type',
                     'value' => ($model->margin_type == 1) ? "%" : "RP",
+                    'visible' => Yii::app()->user->checkAccess('director'),
                 ),
                 array(
                     'name' => 'margin_amount',
                     'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->margin_amount),
+                    'visible' => Yii::app()->user->checkAccess('director'),
                 ),
                 array(
                     'name' => 'recommended_selling_price',
                     'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->recommended_selling_price),
+                    'visible' => Yii::app()->user->checkAccess('director'),
                 ),
                 array(
-                    'name' => 'hpp',
-                    'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->hpp),
+                    'name' => 'minimum_selling_price',
+                    'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->minimum_selling_price),
+                    'visible' => Yii::app()->user->checkAccess('director'),
                 ),
-                'minimum_selling_price',
-                array('name'=>'ppn', 'value'=>$model->ppn == 1 ? 'Include': 'Exclude'),
                 'minimum_stock',
                 'date_posting',
                 array(
@@ -96,35 +110,37 @@ $this->menu=array(
 
 <br />
 
-<div class="row">
-    <div class="large-12 columns">
-        <fieldset>
-            <legend>Product Price</legend>
-            <table>
-                <thead>
-                    <th>Supplier</th>
-                    <th>Purchase Date</th>
-                    <th>Quantity</th>
-                    <th>HPP </th>
-                    <th>HPP Average</th>
-                </thead>
-                <tbody>
-                    <?php foreach ($productPrices as $key => $pp): ?>
-                        <tr>
-                            <td><?php echo $pp->purchaseOrder != "" ? $pp->purchaseOrder->supplier->name:''; ?></td>
-                            <td><?php echo $pp->purchaseOrder != "" ? $pp->purchaseOrder->purchase_order_date : '-'; ?></td>
-                            <td><?php echo Yii::app()->numberFormatter->format("#,##0", $pp->quantity); ?></td>
-                            <td style="text-align: right"><?php echo $pp->unit_price != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->unit_price) : '0'; ?></td>
-                            <td style="text-align: right"><?php echo $pp->product_id != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->product->averageCogs) : '-'; ?></td>
-                        </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-        </fieldset>
+<?php if (Yii::app()->user->checkAccess('director')): ?>
+    <div class="row">
+        <div class="large-12 columns">
+            <fieldset>
+                <legend>Product Price</legend>
+                <table>
+                    <thead>
+                        <th>Supplier</th>
+                        <th>Purchase Date</th>
+                        <th>Quantity</th>
+                        <th>HPP </th>
+                        <th>HPP Average</th>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($productPrices as $key => $pp): ?>
+                            <tr>
+                                <td><?php echo $pp->purchaseOrder != "" ? $pp->purchaseOrder->supplier->name:''; ?></td>
+                                <td><?php echo $pp->purchaseOrder != "" ? $pp->purchaseOrder->purchase_order_date : '-'; ?></td>
+                                <td><?php echo Yii::app()->numberFormatter->format("#,##0", $pp->quantity); ?></td>
+                                <td style="text-align: right"><?php echo $pp->unit_price != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->unit_price) : '0'; ?></td>
+                                <td style="text-align: right"><?php echo $pp->product_id != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->product->averageCogs) : '-'; ?></td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
     </div>
-</div>
 
-<br />
+    <br />
+<?php endif; ?>
 
 <div class="row">
     <div class="large-12 columns">

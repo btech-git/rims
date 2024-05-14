@@ -19,7 +19,7 @@
 <br />
 
 <table class="report">
-    <thead>
+    <thead style="position: sticky; top: 0">
         <tr id="header1">
             <th class="width1-1">No</th>
             <th class="width1-2">Tanggal</th>

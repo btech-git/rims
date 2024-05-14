@@ -261,16 +261,14 @@ Yii::app()->clientScript->registerScript('report', '
                 )); ?>
             </div>
 
-            <div class="hide">
-                <div class="right">
-                    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-                        'itemCount' => $saleInvoiceSummary->dataProvider->pagination->itemCount,
-                        'pageSize' => $saleInvoiceSummary->dataProvider->pagination->pageSize,
-                        'currentPage' => $saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
-                    ));*/ ?>
-                </div>
-                <div class="clear"></div>
+            <div class="right">
+                <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+                    'itemCount' => $saleInvoiceSummary->dataProvider->pagination->itemCount,
+                    'pageSize' => $saleInvoiceSummary->dataProvider->pagination->pageSize,
+                    'currentPage' => $saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
+                )); ?>
             </div>
+            <div class="clear"></div>
         </div>
     </div>
 </div>

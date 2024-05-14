@@ -64,6 +64,9 @@
             <td style="text-align: right">Total</td>
             <?php $grandTotal = 0; ?>
             <?php foreach ($dateNumList as $dateNum): ?>
+                <?php if (!isset($footerTotalSums[$dateNum])): ?>
+                    <?php $footerTotalSums[$dateNum] = 0; ?>
+                <?php endif; ?>
                 <td style="text-align: right"><?php echo CHtml::encode($footerTotalSums[$dateNum]); ?></td>
                 <?php $grandTotal += $footerTotalSums[$dateNum]; ?>
             <?php endforeach; ?>

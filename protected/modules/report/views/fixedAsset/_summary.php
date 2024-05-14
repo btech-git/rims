@@ -19,75 +19,78 @@ Yii::app()->clientScript->registerCss('_report', '
 <br />
 
 <table class="report">
-    <tr id="header1">
-        <th class="width1-1">Kode Aktiva</th>
-        <th class="width1-2">Nama Aktiva</th>
-        <th class="width1-3">Harga Perolehan</th>
-        <th class="width1-4">Penyesuaian Tahun ini </th>
-        <th class="width1-5">Akumulasi Depr</th>
-        <th class="width1-6">Book Value</th>
-        <th class="width1-7">Depr Tahun ini</th>
-        <th class="width1-8">Tanggal Pembelian</th>
-    </tr>
-    <tr id="header2">
-        <td colspan="8">&nbsp;</td>
-    </tr>
-    <?php foreach ($assetCategories as $assetCategory): ?>
-    
-        <tr class="items1">
-            <td style="font-weight: bold" colspan="8"><?php echo CHtml::encode(CHtml::value($assetCategory, 'description')); ?></td>
+    <thead style="position: sticky; top: 0">
+        <tr id="header1">
+            <th class="width1-1">Kode Aktiva</th>
+            <th class="width1-2">Nama Aktiva</th>
+            <th class="width1-3">Harga Perolehan</th>
+            <th class="width1-4">Penyesuaian Tahun ini </th>
+            <th class="width1-5">Akumulasi Depr</th>
+            <th class="width1-6">Book Value</th>
+            <th class="width1-7">Depr Tahun ini</th>
+            <th class="width1-8">Tanggal Pembelian</th>
         </tr>
-        
-        <?php $totalPurchaseValue = 0.00; ?>
-        <?php $totalAccumulatedValue = 0.00; ?>
-        <?php $totalCurrentValue = 0.00; ?>
-        <?php $totalAdjustedValue = 0.00; ?>
-        <?php $totalYearlyValue = 0.00; ?>
-        
-        <?php $assetPurchases = AssetPurchase::model()->findAll(array(
-            'condition' => 'asset_category_id = :asset_category_id AND transaction_date BETWEEN :start_date AND :end_date', 
-            'params' => array(
-                ':asset_category_id' => $assetCategory->id,
-                ':start_date' => $startDate,
-                ':end_date' => $endDate,
-            )
-        )); ?>
-        <?php foreach ($assetPurchases as $detail): ?>
-            <?php $purchaseValue = CHtml::value($detail, 'purchase_value'); ?>
-            <?php $accumulatedValue = CHtml::value($detail, 'accumulated_depreciation_value'); ?>
-            <?php $currentValue = CHtml::value($detail, 'current_value'); ?>
-            <?php $adjustedValue = CHtml::value($detail, 'monthlyDepreciationAmount'); ?>
-            <?php $yearlyValue = 0.00; ?>
-
-            <tr>
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($detail, 'assetCategory.code')); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($detail, 'description')); ?></td>
-                <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseValue)); ?></td>
-                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', 0)); ?></td>
-                <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accumulatedValue)); ?></td>
-                <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $currentValue)); ?></td>
-                <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustedValue)); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->transaction_date))); ?></td>
-            </tr>
-            
-            <?php $totalPurchaseValue += $purchaseValue; ?>
-            <?php $totalAccumulatedValue += $accumulatedValue; ?>
-            <?php $totalCurrentValue += $currentValue; ?>
-            <?php $totalAdjustedValue += $adjustedValue; ?>
-            <?php $totalYearlyValue += 0.00; ?>
-
-        <?php endforeach; ?>
-        <tr>
-            <td style="text-align: right; font-weight: bold" colspan="2">TOTAL: </td>
-            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchaseValue)); ?></td>
-            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalYearlyValue)); ?></td>
-            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAccumulatedValue)); ?></td>
-            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCurrentValue)); ?></td>
-            <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAdjustedValue)); ?></td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
+        <tr id="header2">
             <td colspan="8">&nbsp;</td>
         </tr>
-    <?php endforeach; ?>
+    </thead>
+    <tbody>
+        <?php foreach ($assetCategories as $assetCategory): ?>
+            <tr class="items1">
+                <td style="font-weight: bold" colspan="8"><?php echo CHtml::encode(CHtml::value($assetCategory, 'description')); ?></td>
+            </tr>
+
+            <?php $totalPurchaseValue = 0.00; ?>
+            <?php $totalAccumulatedValue = 0.00; ?>
+            <?php $totalCurrentValue = 0.00; ?>
+            <?php $totalAdjustedValue = 0.00; ?>
+            <?php $totalYearlyValue = 0.00; ?>
+
+            <?php $assetPurchases = AssetPurchase::model()->findAll(array(
+                'condition' => 'asset_category_id = :asset_category_id AND transaction_date BETWEEN :start_date AND :end_date', 
+                'params' => array(
+                    ':asset_category_id' => $assetCategory->id,
+                    ':start_date' => $startDate,
+                    ':end_date' => $endDate,
+                )
+            )); ?>
+            <?php foreach ($assetPurchases as $detail): ?>
+                <?php $purchaseValue = CHtml::value($detail, 'purchase_value'); ?>
+                <?php $accumulatedValue = CHtml::value($detail, 'accumulated_depreciation_value'); ?>
+                <?php $currentValue = CHtml::value($detail, 'current_value'); ?>
+                <?php $adjustedValue = CHtml::value($detail, 'monthlyDepreciationAmount'); ?>
+                <?php $yearlyValue = 0.00; ?>
+
+                <tr>
+                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($detail, 'assetCategory.code')); ?></td>
+                    <td class="width1-2"><?php echo CHtml::encode(CHtml::value($detail, 'description')); ?></td>
+                    <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseValue)); ?></td>
+                    <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', 0)); ?></td>
+                    <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accumulatedValue)); ?></td>
+                    <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $currentValue)); ?></td>
+                    <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustedValue)); ?></td>
+                    <td class="width1-8"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->transaction_date))); ?></td>
+                </tr>
+
+                <?php $totalPurchaseValue += $purchaseValue; ?>
+                <?php $totalAccumulatedValue += $accumulatedValue; ?>
+                <?php $totalCurrentValue += $currentValue; ?>
+                <?php $totalAdjustedValue += $adjustedValue; ?>
+                <?php $totalYearlyValue += 0.00; ?>
+
+            <?php endforeach; ?>
+            <tr>
+                <td style="text-align: right; font-weight: bold" colspan="2">TOTAL: </td>
+                <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchaseValue)); ?></td>
+                <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalYearlyValue)); ?></td>
+                <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAccumulatedValue)); ?></td>
+                <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCurrentValue)); ?></td>
+                <td style="text-align: right; border-top: 1px solid; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAdjustedValue)); ?></td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="8">&nbsp;</td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>

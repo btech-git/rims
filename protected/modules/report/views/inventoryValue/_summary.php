@@ -3,7 +3,7 @@
 </div>
 
 <table>
-    <thead>
+    <thead style="position: sticky; top: 0">
         <tr>
             <th style="text-align: center">Sub Category</th>
             <th style="text-align: center">Sub Master Category</th>

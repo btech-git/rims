@@ -121,8 +121,13 @@
                         'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
                     ),
                     array(
-                        'label' => 'SPK', 
+                        'label' => 'Work Orders', 
                         'url' => array('/frontDesk/workOrder/admin'),
+                        'visible' => Yii::app()->user->checkAccess('workOrderApproval')
+                    ),
+                    array(
+                        'label' => 'SPK belum invoice', 
+                        'url' => array('/frontDesk/workOrder/adminProcessing'),
                         'visible' => Yii::app()->user->checkAccess('workOrderApproval')
                     ),
                     array(

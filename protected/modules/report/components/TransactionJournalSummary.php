@@ -13,7 +13,7 @@ class TransactionJournalSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 10000 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 100 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -29,14 +29,13 @@ class TransactionJournalSummary extends CComponent {
     public function setupFilter($startDate, $endDate, $branchId) {
         $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
         $this->dataProvider->criteria->addCondition("t.is_coa_category = 0");
-//        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
         $this->dataProvider->criteria->compare('t.branch_id', $branchId);
     }
 
-    public function setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId) {
-        $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
-        $this->dataProvider->criteria->addCondition("t.is_coa_category = 0");
-        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
-        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
-    }
+//    public function setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId) {
+//        $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
+//        $this->dataProvider->criteria->addCondition("t.is_coa_category = 0");
+//        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
+//        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
+//    }
 }
