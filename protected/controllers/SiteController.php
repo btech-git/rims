@@ -38,7 +38,7 @@ class SiteController extends Controller {
      */
     public function actionIndex() {
         if (Yii::app()->user->isGuest) {
-            $this->redirect(array('login'));
+            $this->redirect(array('/user/login'));
         } else {
             $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
