@@ -43,7 +43,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td colspan="2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                     <td colspan="3"><?php echo CHtml::encode(CHtml::value($header, 'description')); ?></td>
                     <td style="text-align: right; font-weight: bold">
-                        <?php $stock = $header->getBeginningStockReport($startDate); ?>
+                        <?php $stock = $header->getBeginningStockReport($startDate, $branchId); ?>
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
                     </td>
                     <td>&nbsp;</td>
