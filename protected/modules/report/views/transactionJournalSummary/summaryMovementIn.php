@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <div class="relative">
                 <?php $this->renderPartial('_summary', array(
-                    'transactionTypeLiteral' => 'Pemasukan Cabang - Barang',
+                    'transactionTypeLiteral' => $transactionTypeLiteral,
                     'transactionType' => $transactionType,
                     'startDate' => $startDate,
                     'endDate' => $endDate,

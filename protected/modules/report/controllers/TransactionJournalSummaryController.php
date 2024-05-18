@@ -28,17 +28,19 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Pembelian';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
 
         $this->render('summaryPurchase', array(
             'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
@@ -56,17 +58,19 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Pelunasan Pembelian';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
 
         $this->render('summaryPaymentOut', array(
             'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
@@ -84,17 +88,19 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Penjualan';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
 
         $this->render('summarySale', array(
             'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
@@ -112,17 +118,19 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Penerimaan Penjualan';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
 
         $this->render('summaryPaymentIn', array(
             'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
@@ -140,17 +148,19 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Pemasukan Cabang - Barang';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
 
         $this->render('summaryMovementIn', array(
             'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
@@ -168,17 +178,19 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Pengeluaran Cabang - Barang';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
 
         $this->render('summaryMovementOut', array(
             'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
@@ -196,17 +208,19 @@ class TransactionJournalSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Kas';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
 
         $this->render('summaryCash', array(
             'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
@@ -298,7 +312,7 @@ class TransactionJournalSummaryController extends Controller {
         ));
     }
 
-    protected function saveToExcel($coaSubCategories, $startDate, $endDate, $branchId, $transactionType) {
+    protected function saveToExcel($transactionJournalData, $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -327,68 +341,65 @@ class TransactionJournalSummaryController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', CHtml::encode(($branch === null) ? '' : $branch->name));
-        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap');
+        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap' . $transactionTypeLiteral);
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateString . ' - ' . $endDateString);
 
         $worksheet->getStyle("A5:J5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->getStyle('A5:J5')->getFont()->setBold(true);
-        $worksheet->setCellValue('A5', 'Chart of Account');
-        $worksheet->setCellValue('B5', 'Debit');
-        $worksheet->setCellValue('C5', 'Credit');
+        $worksheet->setCellValue('A5', 'Kode COA');
+        $worksheet->setCellValue('B5', 'Nama COA');
+        $worksheet->setCellValue('C5', 'Debit');
+        $worksheet->setCellValue('D5', 'Credit');
 
         $counter = 6;
 
-        $accountCategoryDebitBalance = 0.00;
-        $accountCategoryCreditBalance = 0.00;
-        foreach ($coaSubCategories as $coaSubCategory) {
-            $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC'));
-            foreach ($coas as $coa) {
-                $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-                $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-                if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0) { //&& $journalDebitBalance !== $journalCreditBalance) {
-                    $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
-                    if (empty($coa->coaIds)) {
-                        $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-                        $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
-                    }
-                    $counter++;
-            
-                    $groupDebitBalance = 0;
-                    $groupCreditBalance = 0;
-                    if (!empty($coa->coaIds)) {
-                        $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC'));
-                        foreach ($coaIds as $account) {
-                            $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-                            $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-                            if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
-                                $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
-                                if (empty($coa->coaIds)) {
-                                    $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-                                    $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
-                                }
-                                $groupDebitBalance += $journalDebitBalance;
-                                $groupCreditBalance += $journalCreditBalance;
-                                
-                                $counter++;
-                                
-                            }
-                        }
-                    }
-                }
-                $accountCategoryDebitBalance += $journalDebitBalance;
-                $accountCategoryCreditBalance += $journalCreditBalance;
+        $totalDebit = '0.00';
+        $totalCredit = '0.00';
+        foreach ($transactionJournalData as $transactionJournalItem) {
+            $valid = false;
+            $valid = $valid || $transactionType === 'PO';
+            $valid = $valid || $transactionType === 'Pout';
+            $valid = $valid || $transactionType === 'Invoice' && (
+                $transactionJournalItem['coa_code'] === '224.00.001' ||
+                preg_match('/^121\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^411.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^412.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^421.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^422.+$/', $transactionJournalItem['coa_code']) === 1
+            );
+            $valid = $valid || $transactionType === 'Pin';
+            $valid = $valid || $transactionType === 'MI' && (
+                preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
+            );
+            $valid = $valid || $transactionType === 'MO' && (
+                preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
+            );
+            $valid = $valid || $transactionType === 'CASH' && (
+                $transactionJournalItem['coa_code'] === '111.00.001' ||
+                preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^113\.00.+$/', $transactionJournalItem['coa_code']) === 1
+            );
+            if ($valid){
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($transactionJournalItem['coa_code']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($transactionJournalItem['coa_name']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($transactionJournalItem['debit']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($transactionJournalItem['credit']));
+                $totalDebit += $transactionJournalItem['debit'];
+                $totalCredit += $transactionJournalItem['credit'];
             }
 
             $counter++;
         }
         
-        $worksheet->setCellValue("A{$counter}", "Total");
-        $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
-        $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
+        $worksheet->setCellValue("B{$counter}", "Total");
+        $worksheet->setCellValue("C{$counter}", $totalDebit);
+        $worksheet->setCellValue("D{$counter}", $totalCredit);
 
-        for ($col = 'A'; $col !== 'D'; $col++) {
+        for ($col = 'A'; $col !== 'E'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
