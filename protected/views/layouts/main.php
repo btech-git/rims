@@ -141,7 +141,7 @@
 
         <div id="utilities">
             <div class="row">
-                <div class="small-12 columns ">
+                <div class="medium-12 columns ">
                     <div class="small-1 columns leftside ">
                         <?php if (!Yii::app()->user->isGuest): ?>
 
@@ -165,7 +165,7 @@
                         <?php endif; ?>
                     </div>
                     
-                    <div class="small-11 columns">
+                    <div class="small-13-13 columns">
                         <?php $this->widget('zii.widgets.CMenu', array(
                             'items' => array(
                                 array('label' => 'Home', 'url' => array('/site/index')),

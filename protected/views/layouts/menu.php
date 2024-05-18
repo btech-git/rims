@@ -1,4 +1,5 @@
 <ul class="right clearfix">
+    <li><?php echo CHtml::link('Marketing', array('/site/marketing')); ?></li>
     <?php if (
         Yii::app()->user->checkAccess('pendingTransactionView') || 
         Yii::app()->user->checkAccess('orderOutstandingView') || 
