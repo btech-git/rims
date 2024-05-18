@@ -18,16 +18,16 @@ class TransactionJournalSummaryController extends Controller {
         $filterChain->run();
     }
 
-    public function actionSummary() {
+    public function actionSummaryPurchase() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : 'CS';
+        $transactionType = 'PO';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -37,7 +37,175 @@ class TransactionJournalSummaryController extends Controller {
 //            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
 //        }
 
-        $this->render('summary', array(
+        $this->render('summaryPurchase', array(
+            'transactionType' => $transactionType,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
+    public function actionSummaryPaymentOut() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'Pout';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
+//        }
+
+        $this->render('summaryPaymentOut', array(
+            'transactionType' => $transactionType,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
+    public function actionSummarySale() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'Invoice';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
+//        }
+
+        $this->render('summarySale', array(
+            'transactionType' => $transactionType,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
+    public function actionSummaryPaymentIn() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'Pin';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
+//        }
+
+        $this->render('summaryPaymentIn', array(
+            'transactionType' => $transactionType,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
+    public function actionSummaryMovementIn() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'MI';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
+//        }
+
+        $this->render('summaryMovementIn', array(
+            'transactionType' => $transactionType,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
+    public function actionSummaryMovementOut() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'MO';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
+//        }
+
+        $this->render('summaryMovementOut', array(
+            'transactionType' => $transactionType,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
+    public function actionSummaryCash() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'CASH';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
+//        }
+
+        $this->render('summaryCash', array(
             'transactionType' => $transactionType,
             'startDate' => $startDate,
             'endDate' => $endDate,

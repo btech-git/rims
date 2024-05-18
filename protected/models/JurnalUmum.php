@@ -281,11 +281,11 @@ class JurnalUmum extends CActiveRecord {
         $sql = "
             SELECT j.coa_id, IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
             FROM (
-                SELECT coa_id, tanggal_transaksi, total AS amount
+                SELECT coa_id, tanggal_transaksi, total AS amount, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
                 UNION ALL
-                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
+                SELECT coa_id, tanggal_transaksi, total * -1 AS amount, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
             ) j
@@ -340,11 +340,11 @@ class JurnalUmum extends CActiveRecord {
         $sql = "
             SELECT j.coa_id, IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
             FROM (
-                SELECT coa_id, tanggal_transaksi, total AS debit, 0 AS credit
+                SELECT coa_id, tanggal_transaksi, total AS debit, 0 AS credit, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
                 UNION ALL
-                SELECT coa_id, tanggal_transaksi, 0 AS debit, total AS credit
+                SELECT coa_id, tanggal_transaksi, 0 AS debit, total AS credit, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
             ) j
@@ -358,12 +358,13 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
 
-    public static function getTransactionJournalData($startDate, $endDate, $branchId) {
+    public static function getTransactionJournalData($startDate, $endDate, $branchId, $transactionType) {
         $branchConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
             ':end_date' => $endDate,
+            ':transaction_type' => $transactionType,
         );
         
         if (!empty($branchId)) {
@@ -374,7 +375,7 @@ class JurnalUmum extends CActiveRecord {
         $sql = "SELECT c.code AS coa_code, c.name AS coa_name, SUM(IF(j.debet_kredit = 'D', j.total, 0)) AS debit, SUM(IF(j.debet_kredit = 'K', j.total, 0)) AS credit
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c on c.id = j.coa_id
-                WHERE j.coa_id NOT IN (SELECT c1.id FROM rims_coa c1 WHERE EXISTS (SELECT c1.id FROM rims_coa c2 WHERE c1.id = c2.coa_id)) AND j.tanggal_transaksi BETWEEN :start_date AND :end_date " . $branchConditionSql . "
+                WHERE j.coa_id NOT IN (SELECT c1.id FROM rims_coa c1 WHERE EXISTS (SELECT c1.id FROM rims_coa c2 WHERE c1.id = c2.coa_id)) AND j.tanggal_transaksi BETWEEN :start_date AND :end_date AND j.transaction_type = :transaction_type " . $branchConditionSql . "
                 GROUP BY j.coa_id
                 ORDER BY c.code ASC";
         

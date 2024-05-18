@@ -61,6 +61,9 @@ Yii::app()->clientScript->registerScript('search', "
                         })
                     '
                 )); ?>
+                <?php echo CHtml::beginForm(array(''), 'get'); ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel', 'class' => 'button warning')); ?>
+                <?php echo CHtml::endForm(); ?>
                 <h2>Manage Coas</h2>
             </div>
 

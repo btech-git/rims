@@ -88,18 +88,48 @@
                                     ),
                                     array(
                                         'label' => 'Ringkasan Buku Besar', 
-                                        'url' => array('/report/transactionJournalSummary/summary'), 
+                                        'url' => array('/report/accountingJournalSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('generalManager'),
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Pembelian', 
+                                        'url' => array('/report/transactionJournalSummary/summaryPurchase'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Pelunasan Pembelian', 
+                                        'url' => array('/report/transactionJournalSummary/summaryPaymentOut'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Penjualan', 
+                                        'url' => array('/report/transactionJournalSummary/summarySale'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Penerimaan Penjualan', 
+                                        'url' => array('/report/transactionJournalSummary/summaryPaymentIn'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Pemasukan Cabang - Barang', 
+                                        'url' => array('/report/transactionJournalSummary/summaryMovementIn'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Pengeluaran Cabang - Barang', 
+                                        'url' => array('/report/transactionJournalSummary/summaryMovementOut'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Kas', 
+                                        'url' => array('/report/transactionJournalSummary/summaryCash'), 
                                         'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
                                     ),
                                     array(
                                         'label' => 'Rincian Buku Besar', 
                                         'url' => array('/report/generalLedger/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('generalLedgerReport')
-                                    ),
-                                    array(
-                                        'label' => 'Ringkasan Buku Besar II', 
-                                        'url' => array('/report/accountingJournalSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('generalManager'),
                                     ),
                                 ),
                             )); ?>

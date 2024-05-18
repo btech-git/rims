@@ -128,7 +128,7 @@ class AnalyticsTransactionController extends Controller {
             foreach ($record as $m => $value) {
                 $incomeExpenseMonth = date("M", mktime(0, 0, 0, $m));
                 $incomeExpenseYear = substr($y, 2);
-                $incomeExpenseRows[] = array_merge(array($incomeExpenseMonth . " " . $incomeExpenseYear), $value);
+//                $incomeExpenseRows[] = array_merge(array($incomeExpenseMonth . " " . $incomeExpenseYear), $value);
             }
         }
         $dataIncomeExpense = array_merge(array(array('Monthly', 'Income', 'Expense')), array_reverse($incomeExpenseRows));

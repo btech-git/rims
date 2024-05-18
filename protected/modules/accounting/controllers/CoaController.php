@@ -78,8 +78,13 @@ class CoaController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionViewCoa() {
+        $coas = Coa::model()->findAll(array('condition' => 't.is_approved = 1', 'order' => 't.code ASC'));
+        $coaInactives = Coa::model()->findAll(array('condition' => 't.is_approved = 2', 'order' => 't.code ASC'));
+        
         //$coaDetails = CoaDetail::model()->findAllByAttributes(array('coa_id'=>$id));
         $this->render('viewCoa', array(
+            'coas' => $coas,
+            'coaInactives' => $coaInactives,
         ));
     }
 
@@ -176,8 +181,15 @@ class CoaController extends Controller {
     public function actionAdmin() {
         $model = new Coa('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $model->attributes = $_GET['Coa'];
+        }
+
+        if (isset($_GET['SaveExcel'])) {
+            $coas = Coa::model()->findAll(array('condition' => 't.is_approved = 1', 'order' => 't.code ASC'));
+        
+            $this->saveToExcel($coas);
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -730,5 +742,87 @@ class CoaController extends Controller {
             'coa' => $coa,
             'coaLog' => $coaLog,
         ));
+    }
+
+    protected function saveToExcel($coas) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('COA List');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('COA List');
+
+        $worksheet->getColumnDimension('A')->setAutoSize(true);
+        $worksheet->getColumnDimension('B')->setAutoSize(true);
+        $worksheet->getColumnDimension('C')->setAutoSize(true);
+        $worksheet->getColumnDimension('D')->setAutoSize(true);
+        $worksheet->getColumnDimension('E')->setAutoSize(true);
+        $worksheet->getColumnDimension('F')->setAutoSize(true);
+        $worksheet->getColumnDimension('G')->setAutoSize(true);
+        $worksheet->getColumnDimension('H')->setAutoSize(true);
+        $worksheet->getColumnDimension('I')->setAutoSize(true);
+        $worksheet->getColumnDimension('J')->setAutoSize(true);
+        $worksheet->getColumnDimension('K')->setAutoSize(true);
+        $worksheet->getColumnDimension('L')->setAutoSize(true);
+        $worksheet->getColumnDimension('M')->setAutoSize(true);
+        $worksheet->getColumnDimension('N')->setAutoSize(true);
+
+        $worksheet->mergeCells('A1:N1');
+        $worksheet->mergeCells('A2:N2');
+        $worksheet->mergeCells('A3:N3');
+
+        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A2', 'COA List');
+
+        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Kode');
+        $worksheet->setCellValue('C5', 'Nama');
+        $worksheet->setCellValue('D5', 'Kategori');
+        $worksheet->setCellValue('E5', 'Sub Kategori');
+        $worksheet->setCellValue('F5', 'Normal Balance');
+        $worksheet->setCellValue('G5', 'Date Created');
+        $worksheet->setCellValue('H5', 'Time');
+        $worksheet->setCellValue('I5', 'User Input');
+
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        foreach ($coas as $coa) {
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($coa, 'id')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($coa, 'code')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($coa, 'coaCategory.name')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($coa, 'coaSubCategory.name')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($coa, 'normal_balance')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($coa, 'date')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($coa, 'time_created')));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($coa, 'user.username')));
+
+            $counter++;
+        }
+
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="COA list.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
     }
 }

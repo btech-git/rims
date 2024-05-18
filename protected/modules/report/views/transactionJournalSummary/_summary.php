@@ -2,7 +2,7 @@
     <div style="font-weight: bold; text-align: center">
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-        <div style="font-size: larger">Laporan Jurnal Umum Rekap</div>
+        <div style="font-size: larger">Laporan Jurnal Umum Rekap <?php echo $transactionTypeLiteral; ?></div>
         <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
     </div>
 
@@ -22,18 +22,9 @@
             <?php $totalCredit = '0.00'; ?>
             <?php foreach ($transactionJournalData as $transactionJournalItem): ?>
                 <?php $valid = false; ?>
-                <?php $valid = $valid || $transactionType === 'PO' && (
-                    preg_match('/^136\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    $transactionJournalItem['coa_code'] === '143.00.001' ||
-                    preg_match('/^211\.00.+$/', $transactionJournalItem['coa_code']) === 1
-                ); ?>
-                <?php $valid = $valid || $transactionType === 'PP' && (
-                    $transactionJournalItem['coa_code'] === '111.00.001' ||
-                    preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^113\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^211\.00.+$/', $transactionJournalItem['coa_code']) === 1
-                ); ?>
-                <?php $valid = $valid || $transactionType === 'SL' && (
+                <?php $valid = $valid || $transactionType === 'PO'; ?>
+                <?php $valid = $valid || $transactionType === 'Pout'; ?>
+                <?php $valid = $valid || $transactionType === 'Invoice' && (
                     $transactionJournalItem['coa_code'] === '224.00.001' ||
                     preg_match('/^121\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^411.+$/', $transactionJournalItem['coa_code']) === 1 ||
@@ -41,12 +32,7 @@
                     preg_match('/^421.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^422.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
-                <?php $valid = $valid || $transactionType === 'SP' && (
-                    $transactionJournalItem['coa_code'] === '111.00.001' ||
-                    $transactionJournalItem['coa_code'] === '143.00.002' ||
-                    preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^121\.00.+$/', $transactionJournalItem['coa_code']) === 1
-                ); ?>
+                <?php $valid = $valid || $transactionType === 'Pin'; ?>
                 <?php $valid = $valid || $transactionType === 'MI' && (
                     preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
@@ -55,7 +41,7 @@
                     preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
-                <?php $valid = $valid || $transactionType === 'CS' && (
+                <?php $valid = $valid || $transactionType === 'CASH' && (
                     $transactionJournalItem['coa_code'] === '111.00.001' ||
                     preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^113\.00.+$/', $transactionJournalItem['coa_code']) === 1
