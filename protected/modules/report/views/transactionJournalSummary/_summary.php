@@ -41,11 +41,7 @@
                     preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
-                <?php $valid = $valid || $transactionType === 'CASH' && (
-                    $transactionJournalItem['coa_code'] === '111.00.001' ||
-                    preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^113\.00.+$/', $transactionJournalItem['coa_code']) === 1
-                ); ?>
+                <?php $valid = $valid || $transactionType === 'CASH'; ?>
                 <?php if ($valid): ?>
                     <tr>
                         <td><?php echo CHtml::encode($transactionJournalItem['coa_code']); ?></td>
