@@ -57,7 +57,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php $stockIn = $stockRow['stock_in']; ?>
                     <?php $stockOut = $stockRow['stock_out']; ?>
                     <?php $stock += $stockIn + $stockOut; ?>
-                    <?php $inventoryValue = $stockRow['purchase_price'] * $stock; ?>
+                    <?php $inventoryValue = $stockRow['purchase_price'] * ($stockIn + $stockOut); ?>
                     <tr class="items2">
                         <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
                         <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
