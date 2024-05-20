@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     </td>
                     <td style="text-align: right; font-weight: bold">
                         <?php $balance = $header->getBeginningBalanceStockReport($startDate, $warehouse->branch_id); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $balance)); ?>
                     </td>
                 </tr>
                 
