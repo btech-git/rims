@@ -163,6 +163,22 @@ class Warehouse extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getBeginningBalanceStockReport($startDate) {
+        $sql = "
+            SELECT COALESCE(SUM((stock_in + stock_out) * purchase_price), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . "
+            WHERE warehouse_id = :warehouse_id AND transaction_date < :start_date AND transaction_date > '2022-12-31'
+            GROUP BY warehouse_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':warehouse_id' => $this->id,
+            ':start_date' => $startDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
     public function getInventoryStockReport($startDate, $endDate) {
         
         $sql = "SELECT i.transaction_number, i.transaction_date, i.transaction_type, i.notes, i.stock_in, i.stock_out, i.purchase_price, p.name AS product_name

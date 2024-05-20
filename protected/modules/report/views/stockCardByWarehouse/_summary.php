@@ -46,7 +46,10 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $stock = $header->getBeginningStockReport($startDate, $warehouse->branch_id); ?>
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
                     </td>
-                    <td>&nbsp;</td>
+                    <td>
+                        <?php $balance = $header->getBeginningBalanceStockReport($startDate, $warehouse->branch_id); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)); ?>
+                    </td>
                 </tr>
                 
                 <?php $stockData = $header->getInventoryStockReport($startDate, $endDate); ?>
@@ -57,7 +60,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php $stockIn = $stockRow['stock_in']; ?>
                     <?php $stockOut = $stockRow['stock_out']; ?>
                     <?php $stock += $stockIn + $stockOut; ?>
-                    <?php $inventoryValue = $stockRow['purchase_price'] * ($stockIn + $stockOut); ?>
+                    <?php $balance += ($stockRow['purchase_price'] * ($stockIn + $stockOut)); ?>
                     <tr class="items2">
                         <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
                         <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
@@ -66,7 +69,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
                         <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $balance)); ?></td>
                     </tr>
                     <?php $totalStockIn += $stockIn; ?>
                     <?php $totalStockOut += $stockOut; ?>
