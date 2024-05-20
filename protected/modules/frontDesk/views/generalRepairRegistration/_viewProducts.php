@@ -39,18 +39,18 @@
                     <td><?php echo $product->quantity_movement_left; ?></td>
 <!--                    <td><?php /*echo $product->quantity_receive; ?></td>
                     <td><?php echo $product->quantity_receive_left;*/ ?></td>-->
-                    <td>
-                        <?php echo CHtml::tag('button', array(
+<!--                    <td>
+                        <?php /*echo CHtml::tag('button', array(
                         // 'name'=>'btnSubmit',
                         'type'=>'button',
                         'class' => 'hello button expand',
                         'onclick'=>'$("#detail-'.$product->id.'").toggle();'
-                      ), '<span class="fa fa-caret-down">&nbsp;</span>');?>
-                    </td>
+                      ), '<span class="fa fa-caret-down">&nbsp;</span>'); */?>
+                    </td>-->
                 </tr>
 
-                <tr>
-                    <td id="detail-<?php echo $product->id?>" class="hide" colspan=12>
+<!--                <tr>
+                    <td id="detail-<?php /*echo $product->id?>" class="hide" colspan=12>
                         <?php $getMovementDetails = MovementOutDetail::model()->findAllByAttributes(array('registration_product_id'=>$product->id)); ?>
                         <table>
                             <thead>
@@ -73,10 +73,10 @@
                                     <td><input type="text" id="quantityReceived-<?php echo $i?>" value="<?php echo $md->quantity_receive ?>" readonly="true"></td>
                                     <td><input type="text" id="quantityReceivedLeft-<?php echo $i?>" value="<?php echo $md->quantity_receive_left ?>" readonly="true"></td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php endforeach;*/ ?>
                         </table>
                     </td>
-                </tr>
+                </tr>-->
             <?php endforeach ?>
         <?php endif ?>
     </tbody>

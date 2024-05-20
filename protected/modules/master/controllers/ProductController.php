@@ -47,9 +47,23 @@ class ProductController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $productPrices = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('product_id' => $id), array('order' => 't.id DESC', 'limit' => 100));
-        $productSales = RegistrationProduct::model()->findAllByAttributes(array('product_id' => $id), array('order' => 't.id DESC', 'limit' => 100));
         $model = $this->loadModel($id);
+        
+        $purchaseOrderDetailCriteria = new CDbCriteria;
+        $purchaseOrderDetailCriteria->compare('product_id', $id);
+        $purchaseOrderDetailDataProvider = new CActiveDataProvider('TransactionPurchaseOrderDetail', array(
+            'criteria' => $purchaseOrderDetailCriteria,
+        ));
+        $purchaseOrderDetailDataProvider->criteria->order = 't.id DESC';
+        $purchaseOrderDetailDataProvider->criteria->limit = 100;
+
+        $productSalesCriteria = new CDbCriteria;
+        $productSalesCriteria->compare('product_id', $id);
+        $productSalesDataProvider = new CActiveDataProvider('RegistrationProduct', array(
+            'criteria' => $productSalesCriteria,
+        ));
+        $productSalesDataProvider->criteria->order = 't.id DESC';
+        $productSalesDataProvider->criteria->limit = 100;
         
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
@@ -70,8 +84,8 @@ class ProductController extends Controller {
 
         $this->render('view', array(
             'model' => $model,
-            'productPrices' => $productPrices,
-            'productSales' => $productSales,
+            'purchaseOrderDetailDataProvider' => $purchaseOrderDetailDataProvider,
+            'productSalesDataProvider' => $productSalesDataProvider,
         ));
     }
 

@@ -93,7 +93,6 @@ class CustomerController extends Controller {
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
 
-
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,
         ));

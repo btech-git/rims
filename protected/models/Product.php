@@ -514,7 +514,7 @@ class Product extends CActiveRecord {
     }
 
     public function getInventoryTotalQuantitiesByPeriodic($endDate) {
-        $sql = "SELECT w.branch_id, COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock
+        $sql = "SELECT w.branch_id, COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock, COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS stock_amount
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 WHERE i.product_id = :product_id and i.transaction_date BETWEEN '2022-12-31' AND :end_date

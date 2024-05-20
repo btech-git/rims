@@ -300,17 +300,20 @@ $('form').submit(function(){
                     array(
                         'name' => 'total_price', 
                         'header' => 'Total',
-                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->total_price)'
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->total_price)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
                     ),
                     array(
                         'name' => 'payment_amount', 
                         'header' => 'Payment',
-                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->payment_amount)'
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->payment_amount)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
                     ),
                     array(
                         'name' => 'payment_left', 
                         'header' => 'Remaining',
-                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->payment_left)'
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->payment_left)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
                     ),
                     array(
                         'class' => 'CButtonColumn',

@@ -9,6 +9,7 @@
                     <th>Status</th>
                     <th>Product</th>
                     <th>Quantity</th>
+                    <th>Qty Left</th>
                 </tr>
             </thead>
 
@@ -21,6 +22,7 @@
                             <td><?php echo $movementOutHeader->status; ?></td>
                             <td><?php echo $movementOutDetail->product->name; ?></td>
                             <td><?php echo number_format($movementOutDetail->quantity,0); ?></td>
+                            <td><?php echo number_format($movementOutDetail->registrationProduct->quantity_movement_left,0); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endforeach; ?>

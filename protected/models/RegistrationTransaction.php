@@ -522,6 +522,16 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public function getPphLiteral() {
         return ($this->ppn == 0) ? '0%' : '2.5%';
     }
+    
+    public function getTotalQuantityMovementLeft() {
+        $total = 0;
+        
+        foreach ($this->registrationProducts as $registrationProduct) {
+            $total+= $registrationProduct->quantity_movement_left;
+        }
+        
+        return $total;
+    }
 
     public function searchByWorkOrder() {
         $criteria = new CDbCriteria;

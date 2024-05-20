@@ -424,23 +424,31 @@
                             <?php echo $form->labelEx($product->header, 'HPP', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($product->header, 'hpp'); ?>
+                            <?php if ($product->header->isNewRecord): ?>
+                                <?php echo $form->textField($product->header, 'hpp'); ?>
+                            <?php else: ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'hpp'))); ?>
+                            <?php endif; ?>
                             <?php echo $form->error($product->header, 'hpp'); ?>
                         </div>
                     </div>
                 </div>
 
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($product->header, 'stock', array('class' => 'prefix')); ?>
+                            <?php /*echo $form->labelEx($product->header, 'stock', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($product->header, 'stock', array('size' => 10, 'maxlength' => 10)); ?>
-                            <?php echo $form->error($product->header, 'stock'); ?>
+                            <?php if ($product->header->isNewRecord): ?>
+                                <?php echo $form->textField($product->header, 'stock', array('size' => 10, 'maxlength' => 10)); ?>
+                            <?php else: ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'stock'))); ?>
+                            <?php endif; ?>
+                            <?php echo $form->error($product->header, 'stock');*/ ?>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="field">
                     <div class="row collapse">

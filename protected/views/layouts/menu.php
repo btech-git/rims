@@ -127,7 +127,7 @@
                         'visible' => Yii::app()->user->checkAccess('workOrderApproval')
                     ),
                     array(
-                        'label' => 'SPK belum invoice', 
+                        'label' => 'WO Outstanding', 
                         'url' => array('/frontDesk/workOrder/adminProcessing'),
                         'visible' => Yii::app()->user->checkAccess('workOrderApproval')
                     ),

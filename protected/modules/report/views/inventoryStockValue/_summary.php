@@ -17,6 +17,7 @@
                 <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
             <?php endforeach; ?>
             <th style="text-align: center">Total</th>
+            <th style="text-align: center">Value</th>
         </tr>
     </thead>
     
@@ -24,6 +25,7 @@
         <?php foreach ($productDataProvider->data as $product): ?>
             <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantitiesByPeriodic($endDate); ?>
             <?php $totalStock = 0; ?>
+            <?php $totalAmount = 0; ?>
             <tr>
                 <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('detail', 'id' => $product->id, 'endDate' => $endDate)); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
@@ -36,17 +38,20 @@
                 
                 <?php foreach ($branches as $branch): ?>
                     <?php $stockValue = 0; ?>
+                    <?php $stockAmount = 0; ?>
                     <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
                         <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
                             <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
+                            <?php $stockAmount = CHtml::value($inventoryTotalQuantities[$i], 'stock_amount'); ?>
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <td style="text-align: center"><?php echo CHtml::encode($stockValue); ?></td>
                     <?php $totalStock += $stockValue; ?>
+                    <?php $totalAmount += $stockAmount; ?>
                 <?php endforeach; ?>
-                        
                 <td style="text-align: center"><?php echo CHtml::encode($totalStock); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalAmount)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

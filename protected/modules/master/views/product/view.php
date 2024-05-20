@@ -115,26 +115,45 @@ $this->menu=array(
         <div class="large-12 columns">
             <fieldset>
                 <legend>Product Price</legend>
-                <table>
-                    <thead>
-                        <th>Supplier</th>
-                        <th>Purchase Date</th>
-                        <th>Quantity</th>
-                        <th>HPP </th>
-                        <th>HPP Average</th>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($productPrices as $key => $pp): ?>
-                            <tr>
-                                <td><?php echo $pp->purchaseOrder != "" ? $pp->purchaseOrder->supplier->name:''; ?></td>
-                                <td><?php echo $pp->purchaseOrder != "" ? $pp->purchaseOrder->purchase_order_date : '-'; ?></td>
-                                <td><?php echo Yii::app()->numberFormatter->format("#,##0", $pp->quantity); ?></td>
-                                <td style="text-align: right"><?php echo $pp->unit_price != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->unit_price) : '0'; ?></td>
-                                <td style="text-align: right"><?php echo $pp->product_id != "" ? Yii::app()->numberFormatter->format("#,##0.00", $pp->product->averageCogs) : '-'; ?></td>
-                            </tr>
-                        <?php endforeach ?>
-                    </tbody>
-                </table>
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'purchase-grid',
+                    'dataProvider' => $purchaseOrderDetailDataProvider,
+                    'filter' => null,
+                    'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'header' => 'Supplier',
+                            'value' => 'empty($data->purchase_order_id) ? "" : $data->purchaseOrder->supplier->name',
+                        ),
+                        array(
+                            'header' => 'PO #',
+                            'value' => 'empty($data->purchase_order_id) ? "" : $data->purchaseOrder->purchase_order_no',
+                        ),
+                        array(
+                            'header' => 'Tanggal',
+                            'value' => 'empty($data->purchase_order_id) ? "" : $data->purchaseOrder->purchase_order_date',
+                        ),
+                        array(
+                            'header' => 'Quantity',
+                            'value' => 'number_format($data->quantity, 0)',
+                            'htmlOptions' => array('style' => 'text-align: center'),
+                        ),
+                        array(
+                            'header' => 'HPP',
+                            'value' => 'number_format($data->unit_price, 2)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                        array(
+                            'header' => 'HPP Average',
+                            'value' => 'empty($data->product_id) ? "" : number_format($data->product->averageCogs, 2)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                    ),
+                )); ?>
             </fieldset>
         </div>
     </div>
@@ -146,26 +165,45 @@ $this->menu=array(
     <div class="large-12 columns">
         <fieldset>
             <legend>Product Sales</legend>
-            <table>
-                <thead>
-                    <th>Transaction #</th>
-                    <th>Date</th>
-                    <th>Quantity</th>
-                    <th>Price </th>
-                    <th>Total</th>
-                </thead>
-                <tbody>
-                    <?php foreach ($productSales as $productSale): ?>
-                        <tr>
-                            <td><?php echo CHtml::encode(CHtml::value($productSale, 'registrationTransaction.transaction_number')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($productSale, 'registrationTransaction.transaction_date')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($productSale, 'quantity')); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($productSale, 'sale_price'))); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($productSale, 'total_price'))); ?></td>
-                        </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id' => 'sale-grid',
+                'dataProvider' => $productSalesDataProvider,
+                'filter' => null,
+                'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
+                'pager' => array(
+                    'cssFile' => false,
+                    'header' => '',
+                ),
+                'columns' => array(
+                    array(
+                        'header' => 'Customer',
+                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->customer->name',
+                    ),
+                    array(
+                        'header' => 'Sales #',
+                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->transaction_number',
+                    ),
+                    array(
+                        'header' => 'Tanggal',
+                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->transaction_date',
+                    ),
+                    array(
+                        'header' => 'Quantity',
+                        'value' => 'number_format($data->quantity, 0)',
+                        'htmlOptions' => array('style' => 'text-align: center'),
+                    ),
+                    array(
+                        'header' => 'Price',
+                        'value' => 'number_format($data->sale_price, 2)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
+                    ),
+                    array(
+                        'header' => 'Total',
+                        'value' => 'number_format($data->total_price, 2)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
+                    ),
+                ),
+            )); ?>
         </fieldset>
     </div>
 </div>

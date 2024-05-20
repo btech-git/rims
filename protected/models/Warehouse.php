@@ -149,9 +149,9 @@ class Warehouse extends CActiveRecord {
 
     public function getBeginningStockReport($startDate) {
         $sql = "
-            SELECT COALESCE(SUM(stock_in - stock_out), 0) AS beginning_balance 
+            SELECT COALESCE(SUM(stock_in + stock_out), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . "
-            WHERE warehouse_id = :warehouse_id AND transaction_date < :start_date
+            WHERE warehouse_id = :warehouse_id AND transaction_date < :start_date AND transaction_date > '2022-12-31'
             GROUP BY warehouse_id
         ";
 

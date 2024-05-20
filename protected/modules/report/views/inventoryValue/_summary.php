@@ -20,7 +20,7 @@
             <?php $inventoryTotalQuantities = $productSubCategory->getInventoryTotalQuantities(); ?>
             <?php $totalStock = 0; ?>
             <tr>
-                <td><?php echo CHtml::link(CHtml::value($productSubCategory, 'name'), array('detail', 'id' => $productSubCategory->id)); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($productSubCategory, 'name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($productSubCategory, 'productSubMasterCategory.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($productSubCategory, 'productSubMasterCategory.productMasterCategory.name')); ?></td>
                 
@@ -32,7 +32,7 @@
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <td><?php echo CHtml::encode($stockValue); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode($stockValue); ?></td>
                     <?php $totalStock += $stockValue; ?>
                 <?php endforeach; ?>
                         

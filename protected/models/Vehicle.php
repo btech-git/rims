@@ -240,6 +240,11 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('carSubModel.name', $this->car_sub_model, true);
         //$criteria->compare('color.name', $this->color, true);
 
+        $vehiclePlateNumberOperator = empty($this->plate_number) ? '=' : 'LIKE';
+        $vehiclePlateNumberValue = empty($this->plate_number) ? '' : "%{$this->plate_number}%";
+        $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number");
+        $criteria->params[':plate_number'] = $vehiclePlateNumberValue;
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

@@ -10,8 +10,12 @@
                         'content' => $this->renderPartial('_viewVehicle', array(
                             'vehicleDataProvider' => $vehicleDataProvider, 
                             'vehicle' => $vehicle, 
-                            'customerName' => $customerName,
-                            'customerType' => $customerType,
+                        ), true),
+                    ),
+                    'Customer' => array(
+                        'content' => $this->renderPartial('_viewCustomer', array(
+                            'customer' => $customer,
+                            'customerDataProvider' => $customerDataProvider,
                         ), true),
                     ),
                     'Product' => array(

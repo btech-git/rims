@@ -374,6 +374,11 @@
                                         'url' => array('/report/inventoryValue/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardReport')
                                     ),
+                                    array(
+                                        'label' => 'Nilai Stok Persediaan', 
+                                        'url' => array('/report/inventoryStockValue/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardReport')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

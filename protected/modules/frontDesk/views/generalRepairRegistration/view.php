@@ -62,12 +62,12 @@ $this->breadcrumbs = array(
                             )); ?>
                         <?php endif; ?>
                     
-                        <?php //if (!empty($model->sales_order_number)): ?>
+                        <?php if (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0 && empty($invoices)): ?>
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px'
                             )); ?>
-                        <?php //endif; ?>
+                        <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
                             <?php echo CHtml::button('Show Realization', array(
@@ -77,7 +77,6 @@ $this->breadcrumbs = array(
                                 'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
                             )); ?>
                         <?php endif; ?>
-
                     <?php endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>

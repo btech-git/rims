@@ -312,7 +312,7 @@ class InventoryDetail extends CActiveRecord {
         $sql = "SELECT i.id,  i.transaction_type, i.transaction_number, i.transaction_date, i.stock_in, i.stock_out, w.code AS warehouse_code, i.notes
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
-                WHERE i.product_id = :product_id AND i.transaction_date BETWEEN '2023-01-01' And :end_date" . $branchConditionSql . "
+                WHERE i.product_id = :product_id AND i.transaction_date BETWEEN '2022-12-31' And :end_date" . $branchConditionSql . "
                 ORDER BY i.transaction_date DESC, i.id DESC
                 LIMIT {$limit}";
 
@@ -342,7 +342,7 @@ class InventoryDetail extends CActiveRecord {
         $sql = "SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_stock
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
-                WHERE i.product_id = :product_id AND i.transaction_date = '2023-01-01'" . $branchConditionSql . $excludeInventoryConditionSql . "";
+                WHERE i.product_id = :product_id AND i.transaction_date = '2022-12-31'" . $branchConditionSql . $excludeInventoryConditionSql . "";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
 

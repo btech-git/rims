@@ -207,6 +207,7 @@ class SiteController extends Controller {
     public function actionMarketing() {
         $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
 
         $endDate = date('Y-m-d');
         $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -217,22 +218,15 @@ class SiteController extends Controller {
         $vehicleDataProvider->criteria->with = array(
             'customer',
         );
-
-        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
-        $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '';
-
-        if (!empty($customerName)) {
-            $vehicleDataProvider->criteria->addCondition('customer.name LIKE :customer_name');
-            $vehicleDataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
-        }
-
-        if (!empty($customerType)) {
-            $vehicleDataProvider->criteria->addCondition('customer.customer_type = :customer_type');
-            $vehicleDataProvider->criteria->params[':customer_type'] = $customerType;
-        }
+        
+        $customerDataProvider = $customer->search();
 
         if (isset($_GET['Vehicle'])) {
             $vehicle->attributes = $_GET['Vehicle'];
+        }
+
+        if (isset($_GET['Customer'])) {
+            $customer->attributes = $_GET['Customer'];
         }
 
         if (isset($_GET['Product'])) {
@@ -242,10 +236,10 @@ class SiteController extends Controller {
         $this->render('marketing', array(
             'vehicle' => $vehicle,
             'vehicleDataProvider' => $vehicleDataProvider,
-            'productDataProvider' => $productDataProvider, 
             'product' => $product, 
-            'customerName' => $customerName,
-            'customerType' => $customerType,
+            'productDataProvider' => $productDataProvider, 
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
             'branches' => $branches,
             'endDate' => $endDate,
         ));

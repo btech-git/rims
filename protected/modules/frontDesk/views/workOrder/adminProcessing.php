@@ -271,7 +271,14 @@ $('form').submit(function(){
                    'header'=>'',
                 ),
                 'columns'=>array(
-                    array('name'=>'plate_number', 'value'=>'$data->vehicle->plate_number'),
+                    array(
+                        'name'=>'id', 
+                        'value'=>'$data->vehicle_id'
+                    ),
+                    array(
+                        'name'=>'plate_number', 
+                        'value'=>'$data->vehicle->plate_number'
+                    ),
                     array(
                         'name'=>'transaction_date',
                         'value'=>'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)',
