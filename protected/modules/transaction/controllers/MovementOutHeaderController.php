@@ -545,7 +545,7 @@ class MovementOutHeaderController extends Controller {
                 $movement->save(false);
 
                 if ($model->approval_type == 'Approved') {
-                    $transactionType = 'MO';
+                    $transactionType = $movement->movement_type == 4 ? 'MOM' : 'MO';
                     $postingDate = date('Y-m-d');
                     $transactionCode = $movement->movement_out_no;
                     $transactionDate = $movement->date_posting;
