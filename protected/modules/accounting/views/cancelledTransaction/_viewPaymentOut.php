@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'body-repair-grid',
+    'id'=>'payment-out-grid',
     'dataProvider'=>$paymentOutDataProvider,
     'filter'=>$paymentOut,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

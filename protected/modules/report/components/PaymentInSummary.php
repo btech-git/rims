@@ -11,11 +11,6 @@ class PaymentInSummary extends CComponent {
     public function setupLoading() {
         $this->dataProvider->criteria->with = array(
             'customer',
-            'vehicle',
-            'paymentType',
-            'invoice',
-            'branch',
-            'user',
         );
     }
 
@@ -33,14 +28,25 @@ class PaymentInSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branch, $customerType, $customerId) {
-//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+    public function setupFilter($startDate, $endDate, $branch, $customerType, $customerId, $plateNumber) {
+        
         $this->dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.branch_id', $branch);
         $this->dataProvider->criteria->compare('t.customer_id', $customerId);
+        
         if (!empty($customerType)) {
             $this->dataProvider->criteria->compare('customer.customer_type', $customerType);
+        }
+
+        if (!empty($plateNumber)) {
+            $this->dataProvider->criteria->addCondition("EXISTS (
+                SELECT p.payment_in_id
+                FROM " . PaymentInDetail::model()->tableName() . " p 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = p.invoice_header_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+                WHERE v.plate_number LIKE :plate_number)");
+            
+            $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
         }
     }
 }

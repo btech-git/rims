@@ -16,6 +16,7 @@
         array(
             'header' => 'Tanggal',
             'name' => 'transaction_date',
+            'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
         ),
         'problem',

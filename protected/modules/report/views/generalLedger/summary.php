@@ -26,6 +26,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Jumlah per Halaman</span>
                                     </div>
                                     <div class="small-8 columns">
+                                        <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
                                         <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
                                     </div>
                                 </div>
@@ -95,7 +96,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($account, 'id', array(
+                                        <?php echo CHtml::textField('AccountIds', $accountIds, array(
                                             'readonly' => true,
                                             'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
@@ -165,7 +166,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'modal' => true,
         ),
     )); ?>
-    <?php echo CHtml::beginForm(); ?>
     <div class="row">
         <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
             <table>
@@ -268,6 +268,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     }
                 }',
                 'columns'=> array(
+                    array(
+                        'id' => 'CoaIds',
+                        'class' => 'CCheckBoxColumn',
+                        'selectableRows' => '10',
+                    ),
                     'code',
                     'name',
                     array(
@@ -282,8 +287,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     ),
                 ),
             )); ?>
+            <?php echo CHtml::htmlButton('Add COA', array(
+                'onclick' => '
+                    $("#coa-dialog").dialog("close");
+                    var coaIds = [];
+                    $("input[name^=CoaIds]:checked").each(function() {
+                        coaIds.push($(this).val());
+                    });
+                    $("#AccountIds").val(coaIds.join(","));
+                ',
+            )); ?>
+
         </div>
     </div>
-    <?php echo CHtml::endForm(); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

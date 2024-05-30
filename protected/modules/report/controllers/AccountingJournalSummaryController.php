@@ -71,32 +71,36 @@ class AccountingJournalSummaryController extends Controller {
         ));
     }
 
-//    public function actionJurnalTransaction() {
-//        set_time_limit(0);
-//        ini_set('memory_limit', '1024M');
-//
-//        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-//
-//        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
-//        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-//        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-//        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-//
-//        $balanceSheetSummary = new BalanceSheetSummary($coa->search());
-//        $balanceSheetSummary->setupLoading();
-//        $balanceSheetSummary->setupPaging(1000, 1);
-//        $balanceSheetSummary->setupSorting();
-//        $balanceSheetSummary->setupFilter($startDate, $endDate, $coaId, $branchId);
-//
-//        $this->render('jurnalTransaction', array(
-//            'coa' => $coa,
-//            'balanceSheetSummary' => $balanceSheetSummary,
-//            'startDate' => $startDate,
-//            'endDate' => $endDate,
-//            'coaId' => $coaId,
-//            'branchId' => $branchId,
-//        ));
-//    }
+    public function actionJurnalTransaction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $jurnalUmum = new JurnalUmum('search');
+
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+
+        $transactionJournalSummary = new AccountingJournalSummary($jurnalUmum->search());
+        $transactionJournalSummary->setupLoading();
+        $transactionJournalSummary->setupPaging(10000, 1);
+        $transactionJournalSummary->setupSorting();
+        $transactionJournalSummary->setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId);
+
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId);
+        }
+
+        $this->render('jurnalTransaction', array(
+            'jurnalUmum' => $jurnalUmum,
+            'transactionJournalSummary' => $transactionJournalSummary,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'coaId' => $coaId,
+            'branchId' => $branchId,
+        ));
+    }
 
     protected function saveToExcel($coaSubCategories, $startDate, $endDate, $branchId, $transactionType) {
         set_time_limit(0);

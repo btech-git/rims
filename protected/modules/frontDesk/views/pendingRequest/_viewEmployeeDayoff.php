@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'sent-grid',
+    'id'=>'employee-dayoff-grid',
     'dataProvider'=>$employeeDayoffDataProvider,
     'filter'=>$employeeDayoff,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

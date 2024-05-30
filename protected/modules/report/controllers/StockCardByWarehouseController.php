@@ -69,6 +69,7 @@ class StockCardByWarehouseController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'currentPage' => $currentPage,
         ));
     }
 

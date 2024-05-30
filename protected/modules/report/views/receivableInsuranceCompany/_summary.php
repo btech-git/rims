@@ -52,7 +52,7 @@
             <tr class="items2">
                 <td colspan="2">
                     <table>
-                        <?php $receivableData = $header->getReceivableReport($endDate, $branchId); ?>
+                        <?php $receivableData = $header->getReceivableReport($endDate, $branchId, $plateNumber); ?>
                         <?php $totalRevenue = 0.00; ?>
                         <?php $totalPayment = 0.00; ?>
                         <?php $totalReceivable = 0.00; ?>

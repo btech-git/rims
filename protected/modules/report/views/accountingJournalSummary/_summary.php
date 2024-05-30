@@ -25,7 +25,7 @@
                     <tr>
                         <td>
                             <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
-                            <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/transactionJournalSummary/jurnalTransaction", array(
+                            <?php echo CHtml::link($coa->name, Yii::app()->createUrl("report/accountingJournalSummary/jurnalTransaction", array(
                                 "CoaId" => $coa->id, 
                                 "StartDate" => $startDate, 
                                 "EndDate" => $endDate, 

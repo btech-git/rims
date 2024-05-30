@@ -27,6 +27,7 @@ class PaymentInController extends Controller {
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $customerId = isset($_GET['CustomerId']) ? $_GET['CustomerId'] : '';
         $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -38,7 +39,7 @@ class PaymentInController extends Controller {
         $paymentInSummary->setupLoading();
         $paymentInSummary->setupPaging($pageSize, $currentPage);
         $paymentInSummary->setupSorting();
-        $paymentInSummary->setupFilter($startDate, $endDate, $branchId, $customerType, $customerId);
+        $paymentInSummary->setupFilter($startDate, $endDate, $branchId, $customerType, $customerId, $plateNumber);
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
@@ -69,6 +70,7 @@ class PaymentInController extends Controller {
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
             'customerType' => $customerType,
+            'plateNumber' => $plateNumber,
             'branchId' => $branchId,
             'startDate' => $startDate,
             'endDate' => $endDate,

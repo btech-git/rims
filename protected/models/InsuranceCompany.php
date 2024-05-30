@@ -170,8 +170,9 @@ class InsuranceCompany extends CActiveRecord {
         return $color;
     }
     
-    public function searchByReceivableReport($endDate, $branchId) {
+    public function searchByReceivableReport($endDate, $branchId, $plateNumber) {
         $branchConditionSql = '';
+        $plateNumberConditionSql = '';
         
         $criteria = new CDbCriteria;
         $criteria->compare('t.id', $this->id);
@@ -184,20 +185,27 @@ class InsuranceCompany extends CActiveRecord {
             $criteria->params[':branch_id'] = $branchId;
         }
         
+        if (!empty($plateNumber)) {
+            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $criteria->params[':plate_number'] = "%{$plateNumber}%";
+        }
+
         $criteria->addCondition("EXISTS (
             SELECT r.insurance_company_id
             FROM " . RegistrationTransaction::model()->tableName() . " r 
             INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
-            WHERE r.insurance_company_id = t.id AND r.insurance_company_id IS NOT NULL AND i.payment_left > 100.00 AND i.invoice_date <= :end_date " . $branchConditionSql .
-        ")");
+            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+            WHERE r.insurance_company_id = t.id AND r.insurance_company_id IS NOT NULL AND i.payment_left > 100.00 AND i.invoice_date <= :end_date " . $branchConditionSql . $plateNumberConditionSql . " 
+        )");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
     }
 
-    public function getReceivableReport($endDate, $branchId) {
+    public function getReceivableReport($endDate, $branchId, $plateNumber) {
         $branchConditionSql = '';
+        $plateNumberConditionSql = '';
         
         $params = array(
             ':insurance_company_id' => $this->id,
@@ -209,6 +217,11 @@ class InsuranceCompany extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
+        if (!empty($plateNumber)) {
+            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $params[':plate_number'] = "%{$plateNumber}%";
+        }
+        
         $sql = "
             SELECT i.invoice_number, i.invoice_date, due_date, v.plate_number AS vehicle, COALESCE(i.total_price, 0) AS total_price, COALESCE(i.payment_amount, 0) AS payment_amount, COALESCE(i.payment_left, 0) AS payment_left, c.name as customer_name 
             FROM " . RegistrationTransaction::model()->tableName() . " r
@@ -216,7 +229,7 @@ class InsuranceCompany extends CActiveRecord {
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             WHERE r.insurance_company_id = :insurance_company_id AND r.insurance_company_id IS NOT NULL AND i.payment_left > 100.00 AND i.invoice_date <= :end_date 
-        " . $branchConditionSql;
+        " . $branchConditionSql . $plateNumberConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

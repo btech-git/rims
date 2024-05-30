@@ -18,11 +18,8 @@ Yii::app()->clientScript->registerScript('report', '
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
-
-	
 <div id="maincontent">
 <div class="clearfix page-action">
-    <?php echo CHtml::link('<span class="fa fa-plus"></span>New Delivery Order', Yii::app()->baseUrl.'/transaction/transactionDeliveryOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.create"))) ?>
     <h1>Pending Transaction</h1>
      <div class="grid-view"></div>
         <fieldset>
@@ -87,17 +84,6 @@ Yii::app()->clientScript->registerScript('report', '
             </div>
             <div class="row">
                 <div class="medium-6 columns">
-<!--                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Requester Branch</span>
-                            </div>
-                             <div class="small-8 columns">
-                                <?php //echo CHtml::dropDownlist('RequesterBranch', $requesterBranch, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Requester Branch --')); ?>
-                            </div>
-                        </div>
-                    </div>-->
-                    
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">

@@ -26,7 +26,7 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Material Request', Yii::app()->baseUrl . '/frontDesk/materialRequest/admin', array(
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Permintaan Bahan', Yii::app()->baseUrl . '/frontDesk/materialRequest/admin', array(
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.admin")
         ));  ?>

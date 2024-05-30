@@ -30,6 +30,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                     
                                     <div class="small-8 columns">
+                                        <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
                                         <?php echo CHtml::activeTextField($product, 'name'); ?>
                                     </div>
                                 </div>

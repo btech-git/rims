@@ -55,6 +55,7 @@ class StockCardController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'currentPage' => $currentPage,
             'branchId' => $branchId,
         ));
     }

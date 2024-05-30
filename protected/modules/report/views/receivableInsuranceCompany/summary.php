@@ -64,19 +64,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Insurance Company</span>
+                                        <span class="prefix">VehiclePlate #</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
-                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
+                                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
                                     </div>
                                 </div>
                             </div>
@@ -107,28 +98,28 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-<!--                        <div class="medium-6 columns">
+                        
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Customer</span>
+                                        <span class="prefix">Insurance Company</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php /*echo CHtml::textField('CustomerId', $customerId, array(
+                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
                                             'readonly' => true,
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
+                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
                                         )); ?>
 
-                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customerModel = Customer::model()->findByPk($customerId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customerModel, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span');*/ ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
+                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
                                 </div>
                             </div>
-                        </div>-->
-                        
+                        </div>
                     </div>
 
                     <div class="clear"></div>
@@ -158,6 +149,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'insuranceCompanyId' => $insuranceCompanyId,
+                        'plateNumber' => $plateNumber,
                     )); ?>
                 </div>
                 <div class="clear"></div>

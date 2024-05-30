@@ -339,7 +339,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 ),
             ),
             'pagination' => array(
-                'pageSize' => 100,
+                'pageSize' => 10,
             ),
         ));
     }

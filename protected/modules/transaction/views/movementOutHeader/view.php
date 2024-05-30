@@ -101,9 +101,9 @@ $this->menu = array(
                     } elseif ($model->movement_type == 2) {
                         $movementType = "Return Order";
                     } elseif ($model->movement_type == 3) {
-                        $movementType = "Retail Sales";
+                        $movementType = "GR/BR";
                     } elseif ($model->movement_type == 4) {
-                        $movementType = "Material Request";
+                        $movementType = "Permintaan Bahan";
                     } else {
                         $movementType = "";
                     }
@@ -172,6 +172,19 @@ $this->menu = array(
                     </div>
                     <div class="small-9 columns">
                         <label for=""><?php echo $model->return_order_id != "" ? CHTml::link($model->returnOrder->return_order_no, array("/transaction/transactionReturnOrder/view", "id" => $model->return_order_id), array('target' => 'blank')) : ""; ?></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php elseif ($model->movement_type == 4): ?>
+        <div class="row">
+            <div class="small-8">
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label for="right-label" class="right" style="font-weight:bold;">Reference #</label>
+                    </div>
+                    <div class="small-9 columns">
+                        <label for=""><?php echo $model->material_request_header_id != "" ? CHTml::link($model->materialRequestHeader->transaction_number, array("/frontDesk/materialRequest/view", "id" => $model->material_request_header_id), array('target' => 'blank')) : ""; ?></label>
                     </div>
                 </div>
             </div>

@@ -62,11 +62,23 @@ $this->breadcrumbs = array(
                             )); ?>
                         <?php endif; ?>
                     
-                        <?php if (/*!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0 &&*/ empty($invoices)): ?>
-                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
-                                'class' => 'button success left', 
-                                'style' => 'margin-right:10px'
-                            )); ?>
+                        <?php if (empty($invoices)): ?>
+                            <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px'
+                                )); ?>
+                            <?php elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px'
+                                )); ?>
+                            <?php elseif (empty($model->registrationServices) && !empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px'
+                                )); ?>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
@@ -79,13 +91,6 @@ $this->breadcrumbs = array(
                         <?php endif; ?>
                     <?php endif; ?>
                     
-                    <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>
-                        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
-                            'class' => 'button alert right', 
-                            'style' => 'margin-right:10px', 
-                        )); ?>
-                    <?php endif; ?>
-
                 </div>
             </div>
 
@@ -197,6 +202,13 @@ $this->breadcrumbs = array(
     </div>
     
     <div>
+        <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor") && $model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
+                'class' => 'button alert', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php endif; ?>
+
         <?php if (empty($model->work_order_number) && $model->status !== 'Pending' && empty($model->sales_order_number)): ?>
             <?php echo CHtml::link('<span class="fa fa-bookmark"></span>Pending', Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/pendingOrder?id=' . $model->id, array('class'=>'button secondary right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>

@@ -23,9 +23,9 @@ class InventoryValueController extends Controller {
         
         $productSubCategory = Search::bind(new ProductSubCategory(), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         
-        $productSubCategoryDataProvider = $productSubCategory->searchByStockCheck($pageNumber);
+        $productSubCategoryDataProvider = $productSubCategory->searchByStockCheck($currentPage);
         $branches = Branch::model()->findAll();
 
         if (isset($_GET['Clear'])) {
@@ -37,7 +37,7 @@ class InventoryValueController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($productSubCategoryDataProvider, array());
+            $this->saveToExcel($productSubCategoryDataProvider);
         }
         
         $this->render('summary', array(
@@ -45,6 +45,7 @@ class InventoryValueController extends Controller {
             'productSubCategory' => $productSubCategory,
             'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
             'branches' => $branches,
+            'currentPage' => $currentPage,
         ));
     }
 
@@ -137,7 +138,7 @@ class InventoryValueController extends Controller {
         return $inventoryDetailDataProvider;
     }
 
-    protected function saveToExcel($dataProvider, array $options = array()) {
+    protected function saveToExcel($dataProvider) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -165,52 +166,40 @@ class InventoryValueController extends Controller {
 
         $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'ID');        
-        $worksheet->setCellValue('B5', 'Code');
-        $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Brand');
-        $worksheet->setCellValue('E5', 'Sub Brand');
-        $worksheet->setCellValue('F5', 'Sub Brand Series');
-        $worksheet->setCellValue('G5', 'Kategori');
+        $worksheet->setCellValue('A5', 'Sub Category');        
+        $worksheet->setCellValue('B5', 'Sub Master Category');
+        $worksheet->setCellValue('C5', 'Master Category');
         $branches = Branch::model()->findAll();
-        $column = 'H';
+        $column = 'D';
         foreach ($branches as $branch) {
             $worksheet->setCellValue($column . '5', $branch->code);
             $column++;
         }
-        $worksheet->setCellValue('O5', 'Stock');
-        $worksheet->setCellValue('P5', 'HPP');
-        $worksheet->setCellValue('Q5', 'Inventory');
+        $worksheet->setCellValue('K5', 'Stock');
 
-        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
 
         foreach ($dataProvider->data as $header) {
-            $inventoryTotalQuantities = $header->getInventoryTotalQuantities(); 
-            $inventoryCostOfGoodsSold = $header->getInventoryCostOfGoodsSold(); 
-            $totalStock = 0; 
-            $totalCogs = 0; 
-            $totalValue = 0; 
+            $inventoryTotalQuantities = $header->getInventoryTotalQuantities();
+            $totalStock = 0;
             
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')));
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.productMasterCategory.name')));
             
-            $column = 'H'; 
+            $column = 'D'; 
             foreach ($branches as $branch) {
                 $index = -1;
+                $stockValue = 0;
                 foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
                     if ($inventoryTotalQuantity['branch_id'] == $branch->id) {
                         $index = $i;
+                        $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
                         break;
                     }
                 }
-                $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
                 if ($index >= 0) {
                     $worksheet->setCellValue($column . "{$counter}", CHtml::encode($stockValue));
                 } else {
@@ -219,13 +208,9 @@ class InventoryValueController extends Controller {
                 
                 $column++;
                 $totalStock += $stockValue; 
-                $totalCogs += CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); 
-                $totalValue += CHtml::value($inventoryCostOfGoodsSold[$i], 'value'); 
             }
                         
             $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalStock));
-            $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalCogs));
-            $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalValue));
             $counter++;
 
         }

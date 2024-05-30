@@ -122,6 +122,16 @@
                                         'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
                                     ),
                                     array(
+                                        'label' => 'Rekap Jurnal Umum Sub Pekerjaan Luar', 
+                                        'url' => array('/report/transactionJournalSummary/summaryWorkOrderExpense'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rekap Jurnal Umum Material', 
+                                        'url' => array('/report/transactionJournalSummary/summaryMovementOutMaterial'), 
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport')
+                                    ),
+                                    array(
                                         'label' => 'Rekap Jurnal Umum Kas', 
                                         'url' => array('/report/transactionJournalSummary/summaryCash'), 
                                         'visible' => Yii::app()->user->checkAccess('journalSummaryReport')

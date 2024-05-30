@@ -148,6 +148,7 @@
                 </td>
 
                 <td>
+                    <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
                     <?php echo CHtml::activeTextField($product, 'name', array(
                         'onchange' => CHtml::ajax(array(
                             'type' => 'GET',

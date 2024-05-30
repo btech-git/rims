@@ -53,10 +53,10 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $nonZeroValueExists = true; ?>
                 <?php break; ?>
             <?php endif; */?>
-            <?php if ((int)$beginningBalance !== 0): ?>
+            <?php //if ((int)$beginningBalance !== 0): ?>
                 <tr class="items1">
                     <td><?php echo $accountNumber++; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                     <td style="text-align: right; font-weight: bold">
                         <?php //if ($header->coa_category_id > 5 && $header->coa_category_id < 11): ?>
                             <?php //echo '0'; ?>
@@ -118,7 +118,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         </table>
                     </td>
                 </tr>
-            <?php endif; ?>
+            <?php //endif; ?>
         <?php endforeach; ?>
     </tbody>
 </table>

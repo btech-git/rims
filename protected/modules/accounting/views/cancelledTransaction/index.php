@@ -10,8 +10,6 @@ Yii::app()->clientScript->registerScript('report', '
 ');
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
-
-
 	
 <div id="maincontent">
 <div class="clearfix page-action">

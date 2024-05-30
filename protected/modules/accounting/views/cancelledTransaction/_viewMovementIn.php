@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'body-repair-grid',
+    'id'=>'movement-in-grid',
     'dataProvider'=>$movementInDataProvider,
     'filter'=>$movementIn,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

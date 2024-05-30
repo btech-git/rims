@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'body-repair-grid',
+    'id'=>'invoice-grid',
     'dataProvider'=>$invoiceHeaderDataProvider,
     'filter'=>$invoiceHeader,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -17,6 +17,7 @@
         array(
             'header' => 'Tanggal',
             'name' => 'invoice_date',
+            'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
         ),
         'total_price',

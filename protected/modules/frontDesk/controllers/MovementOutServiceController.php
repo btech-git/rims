@@ -166,7 +166,7 @@ class MovementOutServiceController extends Controller {
         }
         
         $criteria = new CDbCriteria;
-        $criteria->addCondition('t.registration_transaction_id IS NOT NULL');
+        $criteria->addCondition('t.material_request_header_id IS NOT NULL');
         $dataProvider = new CActiveDataProvider('MovementOutHeader', array(
             'criteria' => $criteria,
             'sort' => array(
@@ -179,10 +179,14 @@ class MovementOutServiceController extends Controller {
 
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
-            'registrationTransaction' => array(
+            'materialRequestHeader' => array(
                 'with' => array(
-                    'customer',
-                    'vehicle',
+                    'registrationTransaction' => array(
+                        'with' => array(
+                            'customer',
+                            'vehicle',
+                        ),
+                    ),
                 ),
             ),
         );

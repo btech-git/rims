@@ -38,8 +38,9 @@ class PendingTransactionController extends Controller {
 
         $model = new TransactionDeliveryOrder('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionDeliveryOrder']))
+        if (isset($_GET['TransactionDeliveryOrder'])) {
             $model->attributes = $_GET['TransactionDeliveryOrder'];
+        }
 
         $branchId = User::model()->findByPk(Yii::app()->user->getId())->branch_id;
         $branch = Branch::model()->findByPk($branchId);

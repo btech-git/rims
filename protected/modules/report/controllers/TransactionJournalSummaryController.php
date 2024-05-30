@@ -228,6 +228,66 @@ class TransactionJournalSummaryController extends Controller {
         ));
     }
 
+    public function actionSummaryWorkOrderExpense() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'WOE';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Sub Pekerjaan Luar';
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
+
+        $this->render('summaryWorkOrderExpense', array(
+            'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
+    public function actionSummaryMovementOutMaterial() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $transactionType = 'MOM';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionTypeLiteral = 'Material';
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($transactionJournalData , $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral);
+        }
+
+        $this->render('summaryMovementOutMaterial', array(
+            'transactionType' => $transactionType,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+        ));
+    }
+
 //    public function actionSummary() {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
@@ -291,15 +351,16 @@ class TransactionJournalSummaryController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
 
         $transactionJournalSummary = new TransactionJournalSummary($jurnalUmum->search());
         $transactionJournalSummary->setupLoading();
         $transactionJournalSummary->setupPaging(10000, 1);
         $transactionJournalSummary->setupSorting();
-        $transactionJournalSummary->setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId);
+        $transactionJournalSummary->setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId, $transactionType);
 
         if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId);
+            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId, $transactionType);
         }
 
         $this->render('jurnalTransaction', array(
@@ -309,6 +370,7 @@ class TransactionJournalSummaryController extends Controller {
             'endDate' => $endDate,
             'coaId' => $coaId,
             'branchId' => $branchId,
+            'transactionType' => $transactionType,
         ));
     }
 
@@ -378,10 +440,14 @@ class TransactionJournalSummaryController extends Controller {
                 preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
                 preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
             );
-            $valid = $valid || $transactionType === 'CASH' && (
-                $transactionJournalItem['coa_code'] === '111.00.001' ||
-                preg_match('/^112\.00.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                preg_match('/^113\.00.+$/', $transactionJournalItem['coa_code']) === 1
+            $valid = $valid || $transactionType === 'CASH';
+            $valid = $valid || $transactionType === 'WOE' && (
+                $transactionJournalItem['coa_code'] === '502.00.001' ||
+                preg_match('/^211\.00.+$/', $transactionJournalItem['coa_code']) === 1
+            );
+            $valid = $valid || $transactionType === 'MOM' && (
+                preg_match('/^131\.07.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                preg_match('/^132\.07.+$/', $transactionJournalItem['coa_code']) === 1
             );
             if ($valid){
                 $worksheet->setCellValue("A{$counter}", CHtml::encode($transactionJournalItem['coa_code']));
@@ -408,7 +474,7 @@ class TransactionJournalSummaryController extends Controller {
         ob_end_clean();
         
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Jurnal Umum Rekap.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Jurnal Umum Rekap ' . $transactionTypeLiteral . '.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -11,8 +11,7 @@
     <table style="margin: 0 auto; border-spacing: 0pt">
         <thead style="position: sticky; top: 0">
             <tr>
-                <th style="text-align: center">Kode COA</th>
-                <th style="text-align: center">Nama COA</th>
+                <th style="text-align: center">COA</th>
                 <th style="text-align: center">Debit</th>
                 <th style="text-align: center">Credit</th>
             </tr>
@@ -39,13 +38,30 @@
                 ); ?>
                 <?php $valid = $valid || $transactionType === 'MO' && (
                     preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
+                    preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^134.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
                 <?php $valid = $valid || $transactionType === 'CASH'; ?>
+                <?php $valid = $valid || $transactionType === 'WOE' && (
+                    $transactionJournalItem['coa_code'] === '502.00.001' ||
+                    preg_match('/^211\.00.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
+                <?php $valid = $valid || $transactionType === 'MOM' && (
+                    preg_match('/^131\.07.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^132\.07.+$/', $transactionJournalItem['coa_code']) === 1
+                ); ?>
                 <?php if ($valid): ?>
                     <tr>
-                        <td><?php echo CHtml::encode($transactionJournalItem['coa_code']); ?></td>
-                        <td><?php echo CHtml::encode($transactionJournalItem['coa_name']); ?></td>
+                        <td>
+                            <?php echo CHtml::encode($transactionJournalItem['coa_code']); ?> - 
+                            <?php echo CHtml::link($transactionJournalItem['coa_name'], Yii::app()->createUrl("report/transactionJournalSummary/jurnalTransaction", array(
+                                "CoaId" => $transactionJournalItem['coa_id'], 
+                                "StartDate" => $startDate, 
+                                "EndDate" => $endDate, 
+                                "BranchId" => $branchId,
+                                "TransactionType" => $transactionType,
+                            )), array('target' => '_blank')); ?>
+                        </td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $transactionJournalItem['debit'])); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $transactionJournalItem['credit'])); ?></td>
                     </tr>
@@ -56,7 +72,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td style="text-align: right; font-weight: bold; border-top: 2px solid; text-transform: uppercase" colspan="2">
+                <td style="text-align: right; font-weight: bold; border-top: 2px solid; text-transform: uppercase">
                     TOTAL 
                 </td>
 

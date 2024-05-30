@@ -29,7 +29,9 @@ class GeneralLedgerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $accountIds = (isset($_GET['AccountIds'])) ? $_GET['AccountIds'] : '';
+        
+        $accountIdList = $accountIds === '' ? array() : explode(',', $accountIds);
 
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $accountDataProvider = $account->search();
@@ -40,7 +42,7 @@ class GeneralLedgerController extends Controller {
         $generalLedgerSummary->setupLoading();
         $generalLedgerSummary->setupPaging($pageSize, $currentPage);
         $generalLedgerSummary->setupSorting();
-        $generalLedgerSummary->setupFilter($coaId);
+        $generalLedgerSummary->setupFilter($accountIdList, $startDate, $endDate, $branchId);
         
         $coaIds = array_map(function($coa) { return $coa->id; }, $generalLedgerSummary->dataProvider->data);
         
@@ -73,7 +75,7 @@ class GeneralLedgerController extends Controller {
             'generalLedgerSummary' => $generalLedgerSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'coaId' => $coaId,
+            'accountIds' => $accountIds,
             'branchId' => $branchId,
             'accountDataProvider' => $accountDataProvider,
             'currentSort' => $currentSort,

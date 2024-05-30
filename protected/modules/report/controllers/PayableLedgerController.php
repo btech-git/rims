@@ -63,6 +63,7 @@ class PayableLedgerController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'currentPage' => $currentPage,
             'coaId' => $coaId,
         ));
     }

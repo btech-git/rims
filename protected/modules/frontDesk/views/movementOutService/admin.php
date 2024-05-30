@@ -36,7 +36,7 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <h2>Manage Pengeluaran Bahan Pemakaian</h2>
+                <h2>Manage Pengeluaran Bahan</h2>
             </div>
 
             <div class="search-bar">
@@ -73,49 +73,34 @@ $('.search-form form').submit(function(){
                             'type' => 'raw'
                         ),
                         'date_posting',
-//                        'status',
                         array(
-                            'name' => 'branch_id',
-                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                            'value' => '$data->branch->code',
+                            'header' => 'Permintaan Bahan #',
+                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->transaction_number : ""'
                         ),
                         array(
-                            'header' => 'Registration #',
-                            'name' => 'registration_transaction_number',
-                            'value' => '(!empty($data->registrationTransaction->transaction_number) ? $data->registrationTransaction->transaction_number : "")'
-                        ),
-                        array('name' => 'plate_number', 'value' => '$data->registrationTransaction->vehicle->plate_number'),
-                        array(
-                            'header' => 'Car Make',
-                            'name' => 'car_make_code',
-                            'value' => 'empty($data->registrationTransaction->vehicle->carMake) ? "" : $data->registrationTransaction->vehicle->carMake->name'
-                        ),
-                        array(
-                            'header'=>'Car Model',
-                            'name'=>'car_model_code',
-                            'value'=>'$data->registrationTransaction->vehicle->carModel->name'
+                            'header' => 'WO #',
+                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->work_order_number : ""'
                         ),
                         array(
                             'header' => 'Customer Name',
-                            'name' => 'customer_name',
-                            'value' => '$data->registrationTransaction->customer->name',
+                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->customer->name : ""',
                         ),
-                        'registrationTransaction.work_order_number',
+                        array(
+                            'header' => 'Vehicle', 
+                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->vehicle->plate_number : ""'
+                        ),
+                        array(
+                            'header' => 'Car Make',
+                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->vehicle->carMake->name : ""'
+                        ),
+                        array(
+                            'header'=>'Car Model',
+                            'value'=>'!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->vehicle->carModel->name : ""'
+                        ),
                         array(
                             'name' => 'user_id',
                             'value' => '$data->user->username',
                         ),
-//                        array(
-//                            'class' => 'CButtonColumn',
-//                            'template' => '{edit}',
-//                            'buttons' => array(
-//                                'edit' => array(
-//                                    'label' => 'edit',
-//                                    'url' => 'Yii::app()->createUrl("frontDesk/movementOutService/update", array("id"=>$data->id))',
-//                                    'visible' => '($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && Yii::app()->user->checkAccess("movementOutEdit")',
-//                                ),
-//                            ),
-//                        ),
                     ),
                 )); ?>
             </div>

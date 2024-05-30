@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'sent-grid',
+    'id'=>'car-sub-model-grid',
     'dataProvider'=>$carSubModelDataProvider,
     'filter'=>$carSubModel,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

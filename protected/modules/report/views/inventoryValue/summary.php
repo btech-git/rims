@@ -14,8 +14,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     
-<!--                    <div class="row">
-                        <table>
+                    <div class="row">
+                        <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
+                    </div>
+<!--                        <table>
                             <thead>
                                 <tr>
                                     <td>Brand</td>

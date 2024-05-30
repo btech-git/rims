@@ -26,6 +26,7 @@ Yii::app()->clientScript->registerScript('search', "
         <?php $this->renderPartial('_search',array(
             'endDate' => $endDate,
             'product'=>$product,
+            'pageNumber' => $pageNumber,
         )); ?>
     </div><!-- search-form -->
     <?php echo CHtml::endForm(); ?>

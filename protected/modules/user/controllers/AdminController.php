@@ -23,8 +23,14 @@ class AdminController extends Controller {
             $filterChain->action->id === 'update' || 
             $filterChain->action->id === 'delete'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterUserEdit')))
+            if (!Yii::app()->user->checkAccess('masterUserEdit'))
                 $this->redirect(array('/site/login'));
+        }
+
+        if ($filterChain->action->id === 'switchUser') {
+            if (!Yii::app()->user->checkAccess('director')) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -276,6 +282,36 @@ class AdminController extends Controller {
 
         $this->render('requestDayoff', array(
             'model' => $model,
+        ));
+    }
+    
+    public function actionSwitchUser() {
+        $userId = isset($_POST['UserId']) ? $_POST['UserId'] : '';
+        $userList = User::model()->findAllByAttributes(array('status' => 1), array('order' => 'username ASC'));
+        $userIsError = false;
+        
+        if (isset($_POST['Submit'])) {
+            if ($userId === '') {
+                $userIsError = true;
+            } else {
+                Yii::app()->user->logout();
+                $user = User::model()->findByPk($userId);
+                $identity = new AutoSwitchUserIdentity($user->username, '');
+                $identity->authenticate();
+                switch ($identity->errorCode)
+                {
+                    case UserIdentity::ERROR_NONE:
+                        Yii::app()->user->login($identity, 3600);
+                        $this->redirect(array('/site/index'));
+                        break;
+                }
+            }
+        }
+
+        $this->render('switchUser', array(
+            'userId' => $userId,
+            'userList' => $userList,
+            'userIsError' => $userIsError,
         ));
     }
     

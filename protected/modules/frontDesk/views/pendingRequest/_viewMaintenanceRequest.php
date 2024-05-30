@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'sent-grid',
+    'id'=>'maintenance-request-grid',
     'dataProvider'=>$maintenanceRequestHeaderDataProvider,
     'filter'=>$maintenanceRequestHeader,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

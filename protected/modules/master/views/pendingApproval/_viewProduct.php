@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'sent-grid',
+    'id'=>'product-grid',
     'dataProvider'=>$productDataProvider,
     'filter'=>$product,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

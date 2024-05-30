@@ -98,7 +98,6 @@
 <div style="font-size:16px; text-align:center">
     <div style="font-size:30px">Raperind Information Management System (RIMS) Dashboard</div>
     <br /><br/>
-    
 <!--    <table>
         <thead>
             <tr>

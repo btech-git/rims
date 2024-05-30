@@ -320,7 +320,8 @@
                                     Yii::app()->user->checkAccess('masterColorEdit') ||
                                     Yii::app()->user->checkAccess('masterColorApproval')
                                 ),
-                                array('label' => 'Profile (' . Yii::app()->user->name . ')', 'url' => Yii::app()->createUrl("user/admin/profile", array("id" => Yii::app()->user->id)), 'template' => '/ {menu}', 'visible' => !Yii::app()->user->isGuest),
+                                array('label' => 'Switch User', 'url' => array('/user/admin/switchUser'), 'template' => '/ {menu}', 'visible' => Yii::app()->user->checkAccess('director')),
+                                array('label' => 'Profile (' . Yii::app()->user->name . ')', 'url' => Yii::app()->createUrl("/user/admin/profile", array("id" => Yii::app()->user->id)), 'template' => '/ {menu}', 'visible' => !Yii::app()->user->isGuest),
                                 array('url' => Yii::app()->getModule('user')->loginUrl, 'label' => Yii::app()->getModule('user')->t("Login"), 'template' => '/ {menu}', 'visible' => Yii::app()->user->isGuest),
                                 array('url' => Yii::app()->getModule('user')->logoutUrl, 'label' => Yii::app()->getModule('user')->t("Logout"), 'template' => '/ {menu}', 'visible' => !Yii::app()->user->isGuest),
                             ),

@@ -157,6 +157,7 @@
                     )); ?>
                 </td>
                 <td>
+                    <?php echo CHtml::hiddenField('page', $pageNumber, array('id' => 'CurrentPage')); ?>
                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                         'name' => 'EndDate',
                         'options' => array(

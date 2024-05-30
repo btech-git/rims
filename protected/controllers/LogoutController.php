@@ -14,11 +14,11 @@ class LogoutController extends Controller
     {
         // change status_login
         $user = MyHelper::getUser();
-	    if ($user != null) {
-	        $user->scenario = 'logout';
-	        $user->status = User::STATUS_OFFLINE;
-	        $user->save();
-	    }
+        if ($user != null) {
+            $user->scenario = 'logout';
+            $user->status = User::STATUS_OFFLINE;
+            $user->save();
+        }
 
         Yii::app()->user->logout();
         $this->redirect('login');

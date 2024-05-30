@@ -127,6 +127,7 @@ class CancelledTransactionController extends Controller {
             'endDate' => $endDate,
             'branchId' => $branchId,
             'registrationTransaction' => $registrationTransaction,
+//            'registrationTransaction2' => $registrationTransaction2,
             'generalRepairDataProvider' => $generalRepairDataProvider,
             'bodyRepairDataProvider' => $bodyRepairDataProvider,
             'purchaseOrderDataProvider' => $purchaseOrderDataProvider,

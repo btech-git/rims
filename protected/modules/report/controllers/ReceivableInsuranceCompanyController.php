@@ -27,19 +27,15 @@ class ReceivableInsuranceCompanyController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-//        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-//        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-//        $customerDataProvider = $customer->search();
-//        $customerDataProvider->pagination->pageVar = 'page_dialog';
-
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
         $insuranceCompanyDataProvider->pagination->pageVar = 'page_dialog';
 
-        $receivableSummary = new ReceivableSummary($insuranceCompany->searchByReceivableReport($endDate, $branchId));
+        $receivableSummary = new ReceivableSummary($insuranceCompany->searchByReceivableReport($endDate, $branchId, $plateNumber));
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
@@ -54,10 +50,8 @@ class ReceivableInsuranceCompanyController extends Controller {
         }
 
         $this->render('summary', array(
-//            'customer'=>$customer,
-//            'customerDataProvider'=>$customerDataProvider,
-//            'customerId' => $customerId,
             'branchId' => $branchId,
+            'plateNumber' => $plateNumber,
             'insuranceCompany'=>$insuranceCompany,
             'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
             'insuranceCompanyId' => $insuranceCompanyId,

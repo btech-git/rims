@@ -109,7 +109,7 @@ class AnalyticsTransactionController extends Controller {
         $incomeExpenseYear = intval(date('Y'));
         $incomeExpenseMonth = intval(date('m'));
         for ($i = 0; $i < 12; $i++) {
-            $incomeExpenseRecords[$incomeExpenseYear][$incomeExpenseMonth] = 0;
+            $incomeExpenseRecords[$incomeExpenseYear][$incomeExpenseMonth] = array(0.00, 0.00);
             $incomeExpenseMonth--;
             if ($incomeExpenseMonth <= 0) {
                 $incomeExpenseMonth += 12;
@@ -128,7 +128,7 @@ class AnalyticsTransactionController extends Controller {
             foreach ($record as $m => $value) {
                 $incomeExpenseMonth = date("M", mktime(0, 0, 0, $m));
                 $incomeExpenseYear = substr($y, 2);
-//                $incomeExpenseRows[] = array_merge(array($incomeExpenseMonth . " " . $incomeExpenseYear), $value);
+                $incomeExpenseRows[] = array_merge(array($incomeExpenseMonth . " " . $incomeExpenseYear), $value);
             }
         }
         $dataIncomeExpense = array_merge(array(array('Monthly', 'Income', 'Expense')), array_reverse($incomeExpenseRows));
