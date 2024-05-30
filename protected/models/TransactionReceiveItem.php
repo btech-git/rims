@@ -322,14 +322,14 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     public function searchForPaymentOut() {
         $criteria = new CDbCriteria;
 
-        $criteria->condition = " 
-            t.id NOT IN (
-                SELECT p.receive_item_id
-                FROM " . PayOutDetail::model()->tableName() . " p
-                LEFT OUTER JOIN " . PaymentOutApproval::model()->tableName() . " a ON p.payment_out_id = a.payment_out_id
-                WHERE p.receive_item_id IS NOT null AND a.approval_type = 'Approved'
-            ) AND t.invoice_number IS NOT NULL AND t.purchase_order_id IS NOT NULL AND t.receive_item_date > '2021-12-31'
-        ";
+//        $criteria->condition = " 
+//            t.id NOT IN (
+//                SELECT p.receive_item_id
+//                FROM " . PayOutDetail::model()->tableName() . " p
+//                LEFT OUTER JOIN " . PaymentOutApproval::model()->tableName() . " a ON p.payment_out_id = a.payment_out_id
+//                WHERE p.receive_item_id IS NOT null AND a.approval_type = 'Approved'
+//            ) AND t.invoice_number IS NOT NULL AND t.purchase_order_id IS NOT NULL AND t.receive_item_date > '2021-12-31'
+//        ";
         
         $criteria->compare('id', $this->id);
         $criteria->compare('receive_item_no', $this->receive_item_no, true);
