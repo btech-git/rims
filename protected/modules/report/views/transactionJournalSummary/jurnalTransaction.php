@@ -29,6 +29,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
     <?php echo CHtml::hiddenField('EndDate', $endDate); ?>
     <?php echo CHtml::hiddenField('BranchId', $branchId); ?>
+    <?php echo CHtml::hiddenField('TransactionType', $transactionType); ?>
     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
 </div>
 
