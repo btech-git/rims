@@ -360,7 +360,7 @@ class TransactionJournalSummaryController extends Controller {
         $transactionJournalSummary->setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId, $transactionType);
 
         if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId, $transactionType);
+            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate);
         }
 
         $this->render('jurnalTransaction', array(
@@ -370,7 +370,6 @@ class TransactionJournalSummaryController extends Controller {
             'endDate' => $endDate,
             'coaId' => $coaId,
             'branchId' => $branchId,
-            'transactionType' => $transactionType,
         ));
     }
 
@@ -483,7 +482,7 @@ class TransactionJournalSummaryController extends Controller {
         Yii::app()->end();
     }
     
-    protected function saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId) {
+    protected function saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -531,7 +530,7 @@ class TransactionJournalSummaryController extends Controller {
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'kode_transaksi')));
             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'tanggal_transaksi')));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_subject')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'transaction_type')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'remark')));
             $worksheet->setCellValue("E{$counter}", $debitAmount);
             $worksheet->setCellValue("F{$counter}", $creditAmount);
 
