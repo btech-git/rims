@@ -89,7 +89,7 @@
                                     array(
                                         'label' => 'Ringkasan Buku Besar', 
                                         'url' => array('/report/accountingJournalSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('generalManager'),
+                                        'visible' => Yii::app()->user->checkAccess('journalSummaryReport'),
                                     ),
                                     array(
                                         'label' => 'Rekap Jurnal Umum Pembelian', 
