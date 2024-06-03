@@ -47,7 +47,7 @@ class AccountingJournalSummaryController extends Controller {
             $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
         } else {
             $coaSubCategories = CoaSubCategory::model()->findAll(array(
-                'condition' => 't.coa_category_id NOT IN (11, 12, 13, 22, 1, 2, 3)', 
+                'condition' => 't.coa_category_id NOT IN (11, 2)', 
                 'order' => 't.code ASC'
             ));
         }
