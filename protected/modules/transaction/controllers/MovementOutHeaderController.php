@@ -709,6 +709,7 @@ class MovementOutHeaderController extends Controller {
                         $inventoryDetail->stock_out = $movementDetail->quantity * -1;
                         $inventoryDetail->notes = "Data from Movement Out";
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
+                        $inventoryDetail->transaction_time = date('H:i:s');
                         $inventoryDetail->save(false);
                     }
 

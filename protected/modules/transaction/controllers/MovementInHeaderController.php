@@ -690,6 +690,7 @@ class MovementInHeaderController extends Controller {
                         $inventoryDetail->stock_out = 0;
                         $inventoryDetail->notes = "Data from Movement In";
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
+                        $inventoryDetail->transaction_time = date('H:i:s');
 
                         $inventoryDetail->save(false);
 
