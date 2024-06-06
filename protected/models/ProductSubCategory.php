@@ -168,11 +168,11 @@ class ProductSubCategory extends CActiveRecord {
         return $this->name . ' - ' . $this->code;
     }
 
-    public function searchByStockCheck($pageNumber) {
+    public function searchByStockCheck() {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
         $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
         $criteria->compare('t.code', $this->code, true);
@@ -184,7 +184,7 @@ class ProductSubCategory extends CActiveRecord {
             'criteria' => $criteria,
             'pagination' => array(
                 'pageSize' => 100,
-                'currentPage' => $pageNumber - 1,
+//                'currentPage' => $pageNumber - 1,
             ),
         ));
     }

@@ -158,7 +158,7 @@ class PaymentInComponent extends CComponent {
 
             if (!empty($detail->invoice_header_id)) {
                 $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment();
+                $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment() + $this->header->downpayment_amount;
                 $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
                 $invoiceHeader->status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
                 $valid = $invoiceHeader->update(array('payment_amount', 'payment_left', 'status')) && $valid;
@@ -194,10 +194,10 @@ class PaymentInComponent extends CComponent {
         $total = 0.00;
         
         foreach ($this->details as $detail) {
-            $total += $detail->amount;
+            $total += $detail->amount + $detail->tax_service_amount;
         }
         
-        return $total;
+        return $total + $this->header->downpayment_amount;
     }
     
     public function getTotalServiceTax() {

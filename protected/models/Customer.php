@@ -211,6 +211,60 @@ class Customer extends CActiveRecord {
         ));
     }
 
+    public function searchByDashboard() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.address', $this->address, true);
+        $criteria->compare('t.zipcode', $this->zipcode, true);
+        $criteria->compare('t.province_id', $this->province_id);
+        $criteria->compare('t.city_id', $this->city_id);
+        $criteria->compare('fax', $this->fax, true);
+        $criteria->compare('t.email', $this->email, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.default_payment_type', $this->default_payment_type);
+        $criteria->compare('t.customer_type', $this->customer_type, true);
+        $criteria->compare('tenor', $this->tenor);
+        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('birthdate', $this->birthdate, true);
+        $criteria->compare('flat_rate', $this->flat_rate, true);
+        $criteria->compare('mobile_phone', $this->mobile_phone, true);
+        $criteria->compare('phone', $this->phone, true);
+        $criteria->compare('t.coa_id', $this->coa_id);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
+
+        $customerNameOperator = empty($this->name) ? '=' : 'LIKE';
+        $customerNameValue = empty($this->name) ? '' : "%{$this->name}%";
+        $criteria->addCondition("t.name {$customerNameOperator} :name");
+        $criteria->params[':name'] = $customerNameValue;
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.status ASC, t.name ASC',
+                'attributes' => array(
+                    'province_name' => array(
+                        'asc' => 'province.name ASC',
+                        'desc' => 'province.name DESC',
+                    ),
+                    'city_name' => array(
+                        'asc' => 'city.name ASC',
+                        'desc' => 'city.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+
     public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber) {
         $branchConditionSql = '';
         $insuranceConditionSql = '';

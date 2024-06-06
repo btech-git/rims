@@ -46,7 +46,7 @@
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <td style="text-align: center"><?php echo CHtml::encode($stockValue); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode($stockValue); ?> - <?php echo CHtml::encode($stockAmount); ?></td>
                     <?php $totalStock += $stockValue; ?>
                     <?php $totalAmount += $stockAmount; ?>
                 <?php endforeach; ?>

@@ -26,6 +26,12 @@
                             'endDate' => $endDate,
                         ), true),
                     ),
+                    'Jasa' => array(
+                        'content' => $this->renderPartial('_viewService', array(
+                            'service' => $service, 
+                            'serviceDataProvider' => $serviceDataProvider, 
+                        ), true),
+                    ),
                 ),
                 // additional javascript options for the tabs plugin
                 'options' => array(

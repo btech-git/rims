@@ -76,3 +76,42 @@ $this->menu = array(
         </table>
     </div>
 </div>
+
+<fieldset>
+    <legend>Vehicle List</legend>
+    <div class="grid-view">
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'registration-grid',
+            'dataProvider' => $registrationTransactionDataProvider,
+            'filter' => null,
+            // 'summaryText'=>'',
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager' => array(
+                'cssFile' => false,
+                'header' => '',
+            ),
+            'columns' => array(
+                array(
+                    'header' => 'Plate #', 
+                    'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->plate_number', 
+                ),
+                array(
+                    'header' => 'Customer', 
+                    'value' => 'empty($data->customer_id) ? "" : $data->customer->name', 
+                ),
+                array(
+                    'header' => 'Car Make', 
+                    'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->carMake->name', 
+                ),
+                array(
+                    'header' => 'Model', 
+                    'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->carModel->name', 
+                ),
+                array(
+                    'header' => 'Sub Model', 
+                    'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->carSubModel->name', 
+                ),
+            )
+        )); ?>
+    </div>
+</fieldset>

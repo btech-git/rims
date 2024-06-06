@@ -14,6 +14,11 @@ $this->menu = array(
     array('label' => 'Delete Coa', 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->id), 'confirm' => 'Are you sure you want to delete this item?')),
     array('label' => 'Manage Coa', 'url' => array('admin')),
 );
+
+Yii::app()->clientScript->registerScript('coa', '
+    $("#StartDate").val("' . $startDate . '");
+    $("#EndDate").val("' . $endDate . '");
+');
 ?>
 
 <!--<h1>View Coa #<?php echo $model->id; ?></h1>-->
@@ -90,32 +95,84 @@ $this->menu = array(
 
 <fieldset>
     <legend>COA DETAIL</legend>
-    <table>
-        <thead>
-            <tr>
-                <th>Transaksi</th>
-                <th>Tanggal</th>
-                <th>Type</th>
-                <th>Debit</th>
-                <th>Credit</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-            <?php foreach (array_reverse($coaDetails) as $key => $coaDetail): ?>
-                <?php if ($key <= 50): ?>
-                    <tr>
-                        <td><?php echo $coaDetail->kode_transaksi; ?></td>
-                        <td><?php echo $coaDetail->tanggal_transaksi; ?></td>
-                        <td><?php echo $coaDetail->transaction_type; ?></td>
-                        <td><?php echo $coaDetail->debet_kredit == "D" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $coaDetail->total)) : 0 ?></td>
-                        <td><?php echo $coaDetail->debet_kredit == "K" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $coaDetail->total)) : 0 ?></td>
-                    </tr>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </tbody>
-        
-    </table>
+    <?php echo CHtml::beginForm(array(''), 'get'); ?>
+<!--    <div class="search-bar">
+        <div class="clearfix button-bar">
+            <div class="row">
+                <div class="medium-6 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-2 columns">
+                                <span class="prefix">Tanggal </span>
+                            </div>
+                            <div class="small-5 columns">
+                                <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'name' => 'StartDate',
+                                    'options' => array(
+                                        'dateFormat' => 'yy-mm-dd',
+                                        'changeMonth'=>true,
+                                        'changeYear'=>true,
+                                    ),
+                                    'htmlOptions' => array(
+                                        'readonly' => true,
+                                        'placeholder' => 'Mulai',
+                                    ),
+                                )); ?>
+                            </div>
+
+                            <div class="small-5 columns">
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'name' => 'EndDate',
+                                    'options' => array(
+                                        'dateFormat' => 'yy-mm-dd',
+                                        'changeMonth'=>true,
+                                        'changeYear'=>true,
+                                    ),
+                                    'htmlOptions' => array(
+                                        'readonly' => true,
+                                        'placeholder' => 'Sampai',
+                                    ),
+                                )); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="medium-6 columns">
+                    <div class="row buttons">
+                        <?php echo CHtml::submitButton('Tampilkan', array('class' => 'button cbutton'));*/ ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="grid-view">
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'coa-grid',
+            'dataProvider' => $jurnalUmumDataProvider,
+            'filter' => null,
+            // 'summaryText'=>'',
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager' => array(
+                'cssFile' => false,
+                'header' => '',
+            ),
+            'columns' => array(
+                'kode_transaksi',
+                'tanggal_transaksi',
+                'transaction_type',
+                array(
+                    'header' => 'Debit', 
+                    'value' => '$data->debet_kredit == "D" ? CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $data->total)) : 0', 
+                ),
+                array(
+                    'header' => 'Kredit', 
+                    'value' => '$data->debet_kredit == "K" ? CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $data->total)) : 0', 
+                ),
+            )
+        )); ?>
+    </div>
+    <?php echo CHtml::endForm(); ?>
 </fieldset>
 
 <div>

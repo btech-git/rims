@@ -211,6 +211,28 @@
                     </div>
                 </div>
                 
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Status Barang</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo ($model->totalQuantityMovementLeft > 0) ? 'Pending' : 'Completed'; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Status Service</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->service_status; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
             </div><!-- end div large -->
         </div>
     </div>

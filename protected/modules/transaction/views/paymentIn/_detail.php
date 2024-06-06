@@ -80,6 +80,11 @@
     </tbody>
     <tfoot>
         <tr>
+            <td colspan="4">Downpayment</td>
+            <td><?php echo CHtml::activeTextField($paymentIn->header, 'downpayment_amount'); ?></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
             <td colspan="4">Total Payment</td>
             <td style="text-align: right">
                 <span id="total_payment">
@@ -106,10 +111,5 @@
             </td>
             <td colspan="2"></td>
         </tr>-->
-        <tr>
-            <td colspan="4">Downpayment</td>
-            <td><?php echo CHtml::activeTextField($paymentIn->header, 'downpayment_amount'); ?></td>
-            <td colspan="2"></td>
-        </tr>
     </tfoot>
 </table>

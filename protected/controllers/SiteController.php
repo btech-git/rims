@@ -208,18 +208,20 @@ class SiteController extends Controller {
         $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
+        $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
 
         $endDate = date('Y-m-d');
         $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         $vehicleDataProvider = $vehicle->searchByDashboard();
         $productDataProvider = $product->searchByStockCheck($pageNumber);
+        $customerDataProvider = $customer->searchByDashboard();
+        $serviceDataProvider = $service->searchByDashboard();
+        
         $branches = Branch::model()->findAll();
 
         $vehicleDataProvider->criteria->with = array(
             'customer',
         );
-        
-        $customerDataProvider = $customer->search();
 
         if (isset($_GET['Vehicle'])) {
             $vehicle->attributes = $_GET['Vehicle'];
@@ -233,6 +235,14 @@ class SiteController extends Controller {
             $product->attributes = $_GET['Product'];
         }
         
+        if (isset($_GET['Service'])) {
+            $service->attributes = $_GET['Service'];
+        }
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('marketing'));
+        }
+        
         $this->render('marketing', array(
             'vehicle' => $vehicle,
             'vehicleDataProvider' => $vehicleDataProvider,
@@ -240,6 +250,8 @@ class SiteController extends Controller {
             'productDataProvider' => $productDataProvider, 
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
+            'service' => $service,
+            'serviceDataProvider' => $serviceDataProvider,
             'branches' => $branches,
             'endDate' => $endDate,
         ));

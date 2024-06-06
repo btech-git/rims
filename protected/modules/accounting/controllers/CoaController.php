@@ -51,8 +51,14 @@ class CoaController extends Controller {
      */
     public function actionView($id) {
         $model = $this->loadModel($id);
-        $coaDetails = JurnalUmum::model()->findAllByAttributes(array('coa_id' => $id));
         
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
+        $jurnalUmumDataProvider = $jurnalUmum->search();
+//        $jurnalUmumDataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
+        $jurnalUmumDataProvider->criteria->compare('t.coa_id', $id);
+
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
             $model->date_approval = date('Y-m-d');
@@ -63,13 +69,17 @@ class CoaController extends Controller {
         } elseif (isset($_POST['Reject'])) {
             $model->is_approved = 2;
             
-            if ($model->save(true, array('is_approved')))
+            if ($model->save(true, array('is_approved'))) {
                 Yii::app()->user->setFlash('error', 'Your data has been rejected!!!');
+            }
         }
 
         $this->render('view', array(
             'model' => $model,
-            'coaDetails' => $coaDetails,
+            'jurnalUmum' => $jurnalUmum,
+            'jurnalUmumDataProvider' => $jurnalUmumDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

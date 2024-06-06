@@ -37,7 +37,7 @@ $('form').submit(function(){
 <div id="maincontent">
     <div class="clearfix page-action">
         
-        <h1>Work Orders</h1>
+        <h1>WO Outstanding (pending invoices)</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <div class="left clearfix bulk-action"></div>

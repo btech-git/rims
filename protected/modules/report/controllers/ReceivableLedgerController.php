@@ -118,8 +118,9 @@ class ReceivableLedgerController extends Controller {
         $worksheet->setCellValue('B5', 'Jenis Transaksi');
         $worksheet->setCellValue('C5', 'Transaksi #');
         $worksheet->setCellValue('D5', 'Keterangan');
-        $worksheet->setCellValue('E5', 'Nilai');
-        $worksheet->setCellValue('F5', 'Saldo');
+        $worksheet->setCellValue('E5', 'Debit');
+        $worksheet->setCellValue('F5', 'Kredit');
+        $worksheet->setCellValue('G5', 'Saldo');
 
         $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
@@ -155,8 +156,9 @@ class ReceivableLedgerController extends Controller {
                     $worksheet->setCellValue("B{$counter}", CHtml::encode($receivableRow['transaction_type']));
                     $worksheet->setCellValue("C{$counter}", CHtml::encode($receivableRow['kode_transaksi']));
                     $worksheet->setCellValue("D{$counter}", CHtml::encode($receivableRow['remark']));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode($amount));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
+                    $worksheet->setCellValue("E{$counter}", $receivableRow['transaction_type'] == 'D' ? CHtml::encode($amount) : 0);
+                    $worksheet->setCellValue("F{$counter}", $receivableRow['transaction_type'] == 'K' ? CHtml::encode($amount) : 0);
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode($saldo));
                     
                     $positiveAmount += $saleAmount;
                     $negativeAmount += $paymentAmount; 
@@ -164,25 +166,25 @@ class ReceivableLedgerController extends Controller {
                     $counter++;
                 }
                 
-                $worksheet->mergeCells("A{$counter}:E{$counter}");
+                $worksheet->mergeCells("A{$counter}:F{$counter}");
                 $worksheet->setCellValue("A{$counter}", "Total Penambahan");
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($positiveAmount));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($positiveAmount));
                 $counter++;
                 
-                $worksheet->mergeCells("A{$counter}:E{$counter}");
+                $worksheet->mergeCells("A{$counter}:F{$counter}");
                 $worksheet->setCellValue("A{$counter}", "Total Penurunan");
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($negativeAmount));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($negativeAmount));
                 $counter++;
                 
-                $worksheet->mergeCells("A{$counter}:E{$counter}");
+                $worksheet->mergeCells("A{$counter}:F{$counter}");
                 $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($saldo));
                 $counter++; $counter++;
                 
             }
         }
             
-        for ($col = 'A'; $col !== 'G'; $col++) {
+        for ($col = 'A'; $col !== 'L'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

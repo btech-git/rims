@@ -162,19 +162,19 @@ class PaymentInController extends Controller {
             }
 
             if ($model->downpayment_amount > 0) {
-                $jurnalPph = new JurnalUmum;
-                $jurnalPph->kode_transaksi = $model->payment_number;
-                $jurnalPph->tanggal_transaksi = $model->payment_date;
-                $jurnalPph->coa_id = 1473;
-                $jurnalPph->branch_id = $model->branch_id;
-                $jurnalPph->total = $model->downpayment_amount;
-                $jurnalPph->debet_kredit = 'D';
-                $jurnalPph->tanggal_posting = date('Y-m-d');
-                $jurnalPph->transaction_subject = $model->notes;
-                $jurnalPph->remark = $remark;
-                $jurnalPph->is_coa_category = 0;
-                $jurnalPph->transaction_type = 'Pin';
-                $jurnalPph->save();
+                $jurnalDownpayment = new JurnalUmum;
+                $jurnalDownpayment->kode_transaksi = $model->payment_number;
+                $jurnalDownpayment->tanggal_transaksi = $model->payment_date;
+                $jurnalDownpayment->coa_id = 751;
+                $jurnalDownpayment->branch_id = $model->branch_id;
+                $jurnalDownpayment->total = $model->downpayment_amount;
+                $jurnalDownpayment->debet_kredit = 'D';
+                $jurnalDownpayment->tanggal_posting = date('Y-m-d');
+                $jurnalDownpayment->transaction_subject = $model->notes;
+                $jurnalDownpayment->remark = $remark;
+                $jurnalDownpayment->is_coa_category = 0;
+                $jurnalDownpayment->transaction_type = 'Pin';
+                $jurnalDownpayment->save();
             }
         }
         
@@ -762,21 +762,20 @@ class PaymentInController extends Controller {
                         }
                         
                         if ($paymentIn->downpayment_amount > 0) {
-                            $jurnalPph = new JurnalUmum;
-                            $jurnalPph->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalPph->coa_id = 1473;
-                            $jurnalPph->branch_id = $paymentIn->branch_id;
-                            $jurnalPph->total = $paymentIn->downpayment_amount;
-                            $jurnalPph->debet_kredit = 'D';
-                            $jurnalPph->tanggal_posting = date('Y-m-d');
-                            $jurnalPph->transaction_subject = $paymentIn->notes;
-                            $jurnalPph->remark = $remark;
-                            $jurnalPph->is_coa_category = 0;
-                            $jurnalPph->transaction_type = 'Pin';
-                            $jurnalPph->save();
+                            $jurnalDownpayment = new JurnalUmum;
+                            $jurnalDownpayment->kode_transaksi = $model->payment_number;
+                            $jurnalDownpayment->tanggal_transaksi = $model->payment_date;
+                            $jurnalDownpayment->coa_id = 751;
+                            $jurnalDownpayment->branch_id = $model->branch_id;
+                            $jurnalDownpayment->total = $model->downpayment_amount;
+                            $jurnalDownpayment->debet_kredit = 'D';
+                            $jurnalDownpayment->tanggal_posting = date('Y-m-d');
+                            $jurnalDownpayment->transaction_subject = $model->notes;
+                            $jurnalDownpayment->remark = $remark;
+                            $jurnalDownpayment->is_coa_category = 0;
+                            $jurnalDownpayment->transaction_type = 'Pin';
+                            $jurnalDownpayment->save();
                         }
-
                     }// end if approved
                 }
                 $this->redirect(array('view', 'id' => $headerId));

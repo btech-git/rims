@@ -101,7 +101,7 @@ $this->breadcrumbs=array(
                                             <?php echo $form->dropDownList($generalRepairRegistration->header, 'ppn', array(
                                                 '3' => 'Include PPN',
                                                 '1' => 'Add PPN', 
-                                                '2' => 'Non PPN',
+                                                '0' => 'Non PPN',
                                             ), array(
                                                 'empty' => '-- Pilih PPN --',
                                                 'onchange' => CHtml::ajax(array(

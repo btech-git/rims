@@ -55,7 +55,6 @@ class ProductController extends Controller {
             'criteria' => $purchaseOrderDetailCriteria,
         ));
         $purchaseOrderDetailDataProvider->criteria->order = 't.id DESC';
-        $purchaseOrderDetailDataProvider->criteria->limit = 100;
 
         $productSalesCriteria = new CDbCriteria;
         $productSalesCriteria->compare('product_id', $id);
@@ -63,7 +62,6 @@ class ProductController extends Controller {
             'criteria' => $productSalesCriteria,
         ));
         $productSalesDataProvider->criteria->order = 't.id DESC';
-        $productSalesDataProvider->criteria->limit = 100;
         
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;

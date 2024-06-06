@@ -27,8 +27,13 @@ class EmployeeAttendanceController extends Controller {
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
-        $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0), array('order' => 't.name ASC'));
+        if (empty($branchId)) {
+            $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0), array('order' => 't.name ASC'));
+        } else {
+            $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0, 'branch_id' => $branchId), array('order' => 't.name ASC'));
+        }
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -42,6 +47,7 @@ class EmployeeAttendanceController extends Controller {
             'employeeData' => $employeeData,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'branchId' => $branchId,
 //            'yearMonth' => $yearMonth,
 //            'yearMonthNow' => $yearMonthNow,
         ));

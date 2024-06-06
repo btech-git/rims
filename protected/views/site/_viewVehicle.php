@@ -1,12 +1,6 @@
 <table style="border: 0px solid">
     <tr>
         <td style="border: 0px solid" colspan="2"><h1>List Vehicle</h1></td>
-        <td style="border: 0px solid">
-            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage GR', array('/frontDesk/generalRepairRegistration/admin'), array('class'=>'button success right')); ?>
-        </td>
-        <td style="border: 0px solid" colspan="2">
-            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage BR', array('/frontDesk/bodyRepairRegistration/admin'), array('class'=>'button success left')); ?>
-        </td>
     </tr>
     <tr>
         <td>No Polisi</td>
@@ -85,6 +79,14 @@
         </td>
     </tr>
 </table>
+
+<div class="clear"></div>
+
+<div class="row buttons" style="text-align: center">
+    <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+</div>
+
+<hr />
 
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(

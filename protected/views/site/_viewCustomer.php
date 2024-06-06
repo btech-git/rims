@@ -1,17 +1,6 @@
 <table style="border: 0px solid">
     <tr>
         <td style="border: 0px solid" colspan="4"><h1>List Customer</h1></td>
-        <td style="border: 0px solid" colspan="2">
-            <a class="button info right" href="<?php echo Yii::app()->baseUrl.'/master/customer/create';?>">
-                <span class="fa fa-plus"></span>New Customer
-            </a>
-        </td>
-        <td style="border: 0px solid">
-            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage GR', array('/frontDesk/generalRepairRegistration/admin'), array('class'=>'button success right')); ?>
-        </td>
-        <td style="border: 0px solid" colspan="2">
-            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage BR', array('/frontDesk/bodyRepairRegistration/admin'), array('class'=>'button success left')); ?>
-        </td>
     </tr>
     <tr>
         <td>Customer</td>
@@ -83,6 +72,14 @@
     </tr>
 </table>
 
+<div class="clear"></div>
+
+<div class="row buttons" style="text-align: center">
+    <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+</div>
+
+<hr />
+
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'customer-grid',
@@ -110,14 +107,6 @@
                 'value' => 'CHtml::value($data, "customer_type")',
             ),
             'note',
-            array(
-                'header' => '',
-                'type' => 'raw',
-                'value' => 'CHtml::link("+ vehicle", array("/master/customer/addVehicle", "id"=>$data->id))',
-                'htmlOptions' => array(
-                    'style' => 'text-align: center;'
-                ),
-            ),
         ),
     )); ?>
 </div>

@@ -357,7 +357,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public function getTotalRemaining() {
         
-        return $this->total_price - $this->getTotalPayment();
+        return $this->total_price - $this->payment_amount;
     }
 
     public function getRemainingDueDate() {

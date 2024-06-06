@@ -241,6 +241,16 @@ class GeneralRepairRegistrationController extends Controller {
             $model->update(array('vehicle_status', 'transaction_date_out', 'transaction_time_out'));
         }
 
+        if (isset($_POST['SubmitService'])) {
+            $model->service_status = 'Done';
+            $model->update(array('service_status'));
+            
+            foreach ($model->registrationServices as $service) {
+                $service->status = 'Done';
+                $service->update(array('status')); 
+            }
+        }
+
 //        if (isset($_POST['Process'])) {
 //            JurnalUmum::model()->deleteAllByAttributes(array(
 //                'kode_transaksi' => $model->transaction_number,

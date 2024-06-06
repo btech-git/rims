@@ -49,7 +49,8 @@
 
                 <td><?php echo CHtml::encode($totalStock); ?></td>
                 <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($product, 'recommended_selling_price'))); ?>
+                    <?php $registrationProduct = RegistrationProduct::model()->findByAttributes(array('product_id' => $product->id), array('order' => 't.id DESC')); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationProduct, 'sale_price'))); ?>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -150,54 +150,76 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Penjualan Summary');
 
-        $worksheet->mergeCells('A1:K1');
-        $worksheet->mergeCells('A2:K2');
-        $worksheet->mergeCells('A3:K3');
-        $worksheet->mergeCells('A4:K4');
+        $worksheet->mergeCells('A1:S1');
+        $worksheet->mergeCells('A2:S2');
+        $worksheet->mergeCells('A3:S3');
+        $worksheet->mergeCells('A4:S4');
         
-        $worksheet->getStyle('A1:K3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:K3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:S3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:S3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Laporan Penjualan Summary');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:K6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:K6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:S6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:S6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:K6')->getFont()->setBold(true);
+        $worksheet->getStyle('A6:S6')->getFont()->setBold(true);
         $worksheet->setCellValue('A6', 'Tanggal');
         $worksheet->setCellValue('B6', 'Faktur #');
         $worksheet->setCellValue('C6', 'Jatuh Tempo');
         $worksheet->setCellValue('D6', 'Customer');
         $worksheet->setCellValue('E6', 'Type');
         $worksheet->setCellValue('F6', 'Vehicle');
-        $worksheet->setCellValue('G6', 'Branch');
         $worksheet->setCellValue('H6', 'Grand Total');
         $worksheet->setCellValue('I6', 'Payment');
         $worksheet->setCellValue('J6', 'Remaining');
         $worksheet->setCellValue('K6', 'Status');
+        $worksheet->setCellValue('L6', 'User');
+        $worksheet->setCellValue('M6', 'Payment In #');
+        $worksheet->setCellValue('N6', 'Tanggal');
+        $worksheet->setCellValue('O6', 'Jumlah');
+        $worksheet->setCellValue('P6', 'Pph 21');
+        $worksheet->setCellValue('Q6', 'Total');
+        $worksheet->setCellValue('R6', 'Memo');
+        $worksheet->setCellValue('S6', 'User');
 
         $counter = 7;
 
         foreach ($saleInvoiceSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->invoice_date);
-            $worksheet->setCellValue("B{$counter}", $header->invoice_number);
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.company')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'branch.code')));
-            $worksheet->setCellValue("H{$counter}", $header->total_price);
-            $worksheet->setCellValue("I{$counter}", $header->payment_amount);
-            $worksheet->setCellValue("J{$counter}", $header->payment_left);
-            $worksheet->setCellValue("K{$counter}", $header->status);
+            if (!empty($header->paymentInDetails )){
+                $totalPayment = 0; 
+                foreach ($header->paymentInDetails as $paymentInDetail) {
+                    $amount = CHtml::value($paymentInDetail, 'amount');
+                    $total = CHtml::value($paymentInDetail, 'totalAmount'); 
+                    
+                    $worksheet->setCellValue("A{$counter}", $header->invoice_date);
+                    $worksheet->setCellValue("B{$counter}", $header->invoice_number);
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
+                    $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
+                    $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+                    $worksheet->setCellValue("H{$counter}", $header->total_price);
+                    $worksheet->setCellValue("I{$counter}", $header->payment_amount);
+                    $worksheet->setCellValue("J{$counter}", $header->payment_left);
+                    $worksheet->setCellValue("K{$counter}", $header->status);
+                    $worksheet->setCellValue("L{$counter}", $header->user->username);
+                    $worksheet->setCellValue("M{$counter}", $paymentInDetail->paymentIn->payment_number);
+                    $worksheet->setCellValue("N{$counter}", $paymentInDetail->paymentIn->payment_date);
+                    $worksheet->setCellValue("O{$counter}", $amount);
+                    $worksheet->setCellValue("P{$counter}", $paymentInDetail->tax_service_amount);
+                    $worksheet->setCellValue("Q{$counter}", $total);
+                    $worksheet->setCellValue("R{$counter}", $paymentInDetail->memo);
+                    $worksheet->setCellValue("S{$counter}", $paymentInDetail->paymentIn->user->username);
 
-            $counter++;
+                    $counter++;
+                }
+            }
         }
 
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:U{$counter}")->getFont()->setBold(true);
 
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:U{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("H{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $worksheet->setCellValue("F{$counter}", 'Total Penjualan');
         $worksheet->setCellValue("G{$counter}", 'Rp');
@@ -205,7 +227,7 @@ class SaleInvoiceSummaryController extends Controller {
 
         $counter++;
 
-        for ($col = 'A'; $col !== 'K'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

@@ -517,7 +517,7 @@ class Product extends CActiveRecord {
         $sql = "SELECT w.branch_id, COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock, COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS stock_amount
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-                WHERE i.product_id = :product_id and i.transaction_date BETWEEN '2022-12-31' AND :end_date
+                WHERE i.product_id = :product_id and i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY w.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -611,7 +611,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE i.product_id = :product_id AND i.transaction_date >= '2022-12-31' AND transaction_date < :start_date" . $branchConditionSql . "
+            WHERE i.product_id = :product_id AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 
@@ -637,7 +637,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE i.product_id = :product_id AND i.transaction_date >= '2022-12-31' AND transaction_date < :start_date" . $branchConditionSql . "
+            WHERE i.product_id = :product_id AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 
@@ -688,7 +688,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(unit_price * quantity) / SUM(quantity), 0) as cogs
             FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
-            WHERE d.product_id = :product_id AND h.purchase_order_date > '2022-12-31'
+            WHERE d.product_id = :product_id AND h.purchase_order_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
             GROUP BY d.product_id
         ";
 

@@ -193,8 +193,18 @@ $this->menu=array(
                         'htmlOptions' => array('style' => 'text-align: center'),
                     ),
                     array(
-                        'header' => 'Price',
-                        'value' => 'number_format($data->sale_price, 2)',
+                        'header' => 'DPP',
+                        'value' => 'number_format($data->unitPriceBeforeTax, 2)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
+                    ),
+                    array(
+                        'header' => 'PPn',
+                        'value' => '$data->registrationTransaction->ppnLiteral',
+                        'htmlOptions' => array('style' => 'text-align: center'),
+                    ),
+                    array(
+                        'header' => 'Sell Price',
+                        'value' => 'number_format($data->unitPriceAfterTax, 2)',
                         'htmlOptions' => array('style' => 'text-align: right'),
                     ),
                     array(

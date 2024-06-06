@@ -21,11 +21,11 @@ class InventoryValueController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $productSubCategory = Search::bind(new ProductSubCategory(), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         
-        $productSubCategoryDataProvider = $productSubCategory->searchByStockCheck($currentPage);
+        $productSubCategory = Search::bind(new ProductSubCategory(), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
+        $productSubCategoryDataProvider = $productSubCategory->searchByStockCheck();
         $branches = Branch::model()->findAll();
 
         if (isset($_GET['Clear'])) {
@@ -49,56 +49,9 @@ class InventoryValueController extends Controller {
         ));
     }
 
-    public function actionDetail($id) {
-        $product = Product::model()->findByPk($id);
-        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
-        $detailTabs = array();
-        
-        foreach ($branches as $branch) {
-            $tabContent = $this->renderPartial('_viewStock', array(
-                'dataProvider' => $this->getInventoryDetailDataProvider($product->id, $branch->id, 0),
-                'productId' => $product->id,
-                'branchId' => $branch->id,
-            ), true);
-            $detailTabs[$branch->name] = array('content' => $tabContent);
-        }
-        $tabContent = $this->renderPartial('_viewStock', array(
-            'dataProvider' => $this->getInventoryDetailDataProvider($product->id, '', 0),
-            'productId' => $product->id,
-            'branchId' => '',
-        ), true);
-        $detailTabs['All'] = array('content' => $tabContent);
-
-        $this->render('detail', array(
-            'detailTabs' => $detailTabs,
-            'product' => $product,
-            'branches' => $branches,
-        ));
-    }
-
-    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
-
-            $this->renderPartial('_productSubBrandSelect', array(
-                'productBrandId' => $productBrandId,
-            ));
-        }
-    }
-
-    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
-
-            $this->renderPartial('_productSubBrandSeriesSelect', array(
-                'productSubBrandId' => $productSubBrandId,
-            ));
-        }
-    }
-
     public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
+            $productMasterCategoryId = isset($_GET['ProductSubCategory']['product_master_category_id']) ? $_GET['ProductSubCategory']['product_master_category_id'] : 0;
 
             $this->renderPartial('_productSubMasterCategorySelect', array(
                 'productMasterCategoryId' => $productMasterCategoryId,
@@ -108,7 +61,7 @@ class InventoryValueController extends Controller {
 
     public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
+            $productSubMasterCategoryId = isset($_GET['ProductSubCategory']['product_sub_master_category_id']) ? $_GET['ProductSubCategory']['product_sub_master_category_id'] : 0;
 
             $this->renderPartial('_productSubCategorySelect', array(
                 'productSubMasterCategoryId' => $productSubMasterCategoryId,
@@ -118,26 +71,24 @@ class InventoryValueController extends Controller {
 
     public function actionAjaxHtmlUpdateProductStockTable() {
         if (Yii::app()->request->isAjaxRequest) {
-            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
-            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
-            $productDataProvider = $product->searchByStockCheck($pageNumber);
+            
+            $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+            $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+
+            $productSubCategory = Search::bind(new ProductSubCategory(), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
+            $productSubCategoryDataProvider = $productSubCategory->searchByStockCheck($currentPage);
             $branches = Branch::model()->findAll();
 
             $this->renderPartial('_productStockTable', array(
-                'productDataProvider' => $productDataProvider,
+                'currentSort' => $currentSort,
+                'productSubCategory' => $productSubCategory,
+                'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
                 'branches' => $branches,
+                'currentPage' => $currentPage,
             ));
         }
     }
     
-    public function getInventoryDetailDataProvider($productId, $branchId, $currentPage) {
-        $inventoryDetail = Search::bind(new InventoryDetail(), '');
-        $inventoryDetail->product_id = $productId;
-        $inventoryDetailDataProvider = $inventoryDetail->searchByStock($branchId, $currentPage);
-        
-        return $inventoryDetailDataProvider;
-    }
-
     protected function saveToExcel($dataProvider) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

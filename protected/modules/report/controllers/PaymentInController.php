@@ -108,69 +108,67 @@ class PaymentInController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Payment In');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-        $worksheet->getColumnDimension('H')->setAutoSize(true);
-        $worksheet->getColumnDimension('I')->setAutoSize(true);
-        $worksheet->getColumnDimension('J')->setAutoSize(true);
+        $worksheet->mergeCells('A1:P1');
+        $worksheet->mergeCells('A2:P2');
+        $worksheet->mergeCells('A3:P3');
 
-        $worksheet->mergeCells('A1:J1');
-        $worksheet->mergeCells('A2:J2');
-        $worksheet->mergeCells('A3:J3');
-
-        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:P5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:P5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Payment In');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Payment #');
         $worksheet->setCellValue('B5', 'Tanggal');
-        $worksheet->setCellValue('C5', 'Amount');
-        $worksheet->setCellValue('D5', 'Note');
-        $worksheet->setCellValue('E5', 'Customer');
-        $worksheet->setCellValue('F5', 'Vehicle');
-        $worksheet->setCellValue('G5', 'Status');
-        $worksheet->setCellValue('H5', 'Payment Type');
-        $worksheet->setCellValue('I5', 'Branch');
-        $worksheet->setCellValue('J5', 'Admin');
+        $worksheet->setCellValue('C5', 'Customer');
+        $worksheet->setCellValue('D5', 'Status');
+        $worksheet->setCellValue('E5', 'Payment Type');
+        $worksheet->setCellValue('F5', 'Note');
+        $worksheet->setCellValue('G5', 'Admin');
+        $worksheet->setCellValue('H5', 'Invoice #');
+        $worksheet->setCellValue('I5', 'Tanggal');
+        $worksheet->setCellValue('J5', 'Kendaraan');
+        $worksheet->setCellValue('K5', 'Jumlah');
+        $worksheet->setCellValue('L5', 'Pph 21');
+        $worksheet->setCellValue('M5', 'Total');
+        $worksheet->setCellValue('N5', 'Memo');
 
-        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $totalPayment = 0.00;
         foreach ($dataProvider->data as $header) {
-            $paymentAmount = CHtml::value($header, 'payment_amount');
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            foreach ($header->paymentInDetails as $detail) {
+                $paymentAmount = CHtml::value($detail, 'totalAmount');
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->payment_number));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->payment_date));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode($paymentAmount));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'notes')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'vehicle.plate_number')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'status')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'paymentType.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->payment_number));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->payment_date));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'status')));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'paymentType.name')));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'notes')));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')));
+                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_date')));
+                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')));
+                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'amount')));
+                $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($detail, 'tax_service_amount')));
+                $worksheet->setCellValue("M{$counter}", CHtml::encode($paymentAmount));
+                $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($detail, 'memo')));
 
-            $counter++;
-            $totalPayment += $paymentAmount;
+                $counter++;
+                $totalPayment += $paymentAmount;
+            }
         }
         
-        $worksheet->getStyle("B{$counter}:D{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->setCellValue("C{$counter}", CHtml::encode($totalPayment));        
+        $worksheet->getStyle("J{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue("M{$counter}", CHtml::encode($totalPayment));        
 
-        for ($col = 'A'; $col !== 'L'; $col++) {
+        for ($col = 'A'; $col !== 'P'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

@@ -159,7 +159,13 @@
                 </tr>
             </tbody>
         </table>
-        
+
+        <div class="clear"></div>
+
+        <div class="row buttons" style="text-align: center">
+            <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+        </div>
+
         <div id="product_stock_table">
             <?php $this->renderPartial('_productStockTable', array(
                 'productDataProvider' => $productDataProvider,

@@ -47,9 +47,16 @@ class InsuranceCompanyController extends Controller {
      */
     public function actionView($id) {
         $pricelists = InsuranceCompanyPricelist::model()->findAllByAttributes(array('insurance_company_id' => $id));
+        
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
+        $registrationTransactionDataProvider = $registrationTransaction->search();
+        $registrationTransactionDataProvider->criteria->compare('t.insurance_company_id', $id);
+        
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'pricelists' => $pricelists,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
         ));
     }
 
