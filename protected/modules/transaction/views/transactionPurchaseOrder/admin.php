@@ -80,8 +80,11 @@ Yii::app()->clientScript->registerScript('search', "
                     'header'=>'',
                 ),
                 'columns'=>array(
-                    //'id',
-                    array('name'=>'purchase_order_no', 'value'=>'CHTml::link($data->purchase_order_no, array("view", "id"=>$data->id))', 'type'=>'raw'),
+                    array(
+                        'name'=>'purchase_order_no', 
+                        'value'=>'CHTml::link($data->purchase_order_no, array("view", "id"=>$data->id))', 
+                        'type'=>'raw'
+                    ),
                     'purchase_order_date',
                     array(
                         'name'=>'purchase_type',
@@ -109,12 +112,6 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'empty($data->approval) ? "" : $data->approval->username',
                     ),
-//                    array(
-//                        'name' => 'main_branch_id',
-//                        'header' => 'Branch',
-//                        'filter' => CHtml::activeDropDownList($model, 'main_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-//                        'value' => 'empty($data->mainBranch) ? "" : $data->mainBranch->code',
-//                    ),
                     array(
                         'header' => 'Status Receive',
                         'value' => '$data->totalRemainingQuantityReceived',
