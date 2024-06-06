@@ -63,13 +63,13 @@ Yii::app()->clientScript->registerScript('report', '
                                         'MR' => 'Material',
 //                                        'Invoice GR' => 'GENERAL REPAIR',
 //                                        'Invoice BR' => 'BODY REPAIR',
-//                                        'DO' => 'DELIVERY',
-                                        'TR' => 'TRANSFER REQUEST',
-                                        'RCI' => 'RECEIVE',
+                                        'WOE' => 'Sub Pekerjaan Luar',
+                                        'TR' => 'Transfer Request',
+                                        'RCI' => 'Penerimaan',
 //                                        'CSI' => 'CONSIGNMENT IN',
 //                                        'CSO' => 'CONSIGNMENT OUT',
 //                                        'JP' => 'JURNAL UMUM',
-                                        'SR' => 'SALES RETURN',
+                                        'SR' => 'Retur Penjualan',
                                     ), array('empty' => '-- All Transaction --')); ?>
                                 </div>
                             </div>
