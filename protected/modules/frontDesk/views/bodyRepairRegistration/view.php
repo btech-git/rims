@@ -64,8 +64,23 @@ $this->breadcrumbs = array(
                             )); ?>
                         <?php endif; ?>
 
-                        <?php if (/*!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0 &&*/ empty($invoices)): ?>
-                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')); ?>
+                        <?php if (empty($invoices)): ?>
+                            <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px'
+                                )); ?>
+                            <?php elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px'
+                                )); ?>
+                            <?php elseif (empty($model->registrationServices) && !empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px'
+                                )); ?>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
