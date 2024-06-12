@@ -50,9 +50,9 @@ class ProfitLossMonthlyController extends Controller {
             }
             $amount = '0.00';
             if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'debit') {
-                $amount = -$profitLossItem['total'];
-            } else if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'kredit') {
                 $amount = +$profitLossItem['total'];
+            } else if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'kredit') {
+                $amount = -$profitLossItem['total'];
             } else if (strtoupper($profitLossItem['debet_kredit']) === 'K' && strtolower($profitLossItem['normal_balance']) === 'debit') {
                 $amount = -$profitLossItem['total'];
             } else if (strtoupper($profitLossItem['debet_kredit']) === 'K' && strtolower($profitLossItem['normal_balance']) === 'kredit') {
