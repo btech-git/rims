@@ -20,7 +20,7 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
-		<div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns">
             <?php if (!$model->isNewRecord): ?>
                 <div class="field">
                     <div class="row collapse">
@@ -28,7 +28,7 @@
                             <?php echo $form->labelEx($model,'code'); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($model,'code'); ?>
+                            <?php echo $form->textField($model,'time_created'); ?>
                             <?php echo $form->error($model,'code'); ?>
                         </div>
                     </div>

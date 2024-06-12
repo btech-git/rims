@@ -140,4 +140,23 @@ class VehicleCarMake extends CActiveRecord {
             default: return '';
         }
     }
+    
+    public function getSaleVehicleProductReport($startDate, $endDate) {
+        
+        $sql = "SELECT r.transaction_number, r.transaction_date, p.code, p.name, d.quantity, d.sale_price, d.total_price
+                FROM " . Vehicle::model()->tableName() . " v
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON v.id = r.vehicle_id
+                INNER JOIN " . RegistrationProduct::model()->tableName() . " d ON r.id = d.registration_transaction_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND v.car_make_id = :car_make_id
+                ORDER BY r.transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':car_make_id' => $this->id,
+        ));
+        
+        return $resultSet;
+    }
 }

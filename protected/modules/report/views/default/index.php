@@ -220,6 +220,11 @@
                                     'url' => array('/report/paymentIn/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('paymentInReport')
                                 ),
+                                array(
+                                    'label' => 'Piutang Customer Summary', 
+                                    'url' => array('/report/receivableCustomer/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
                             ),
                         )); ?>
                         <?php endif; ?>
@@ -271,6 +276,11 @@
                                         'label' => 'Rincian Penjualan per Jasa', 
                                         'url' => array('/report/saleRetailServiceDetail/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleServiceReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Rincian Penjualan per Kendaraan', 
+                                        'url' => array('/report/saleVehicleProduct/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
                                     ),
                                 ),
                             )); ?>

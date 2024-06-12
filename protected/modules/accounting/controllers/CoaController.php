@@ -56,7 +56,7 @@ class CoaController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
         $jurnalUmumDataProvider = $jurnalUmum->search();
-//        $jurnalUmumDataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
+        $jurnalUmumDataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
         $jurnalUmumDataProvider->criteria->compare('t.coa_id', $id);
 
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {

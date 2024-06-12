@@ -96,7 +96,7 @@ Yii::app()->clientScript->registerScript('coa', '
 <fieldset>
     <legend>COA DETAIL</legend>
     <?php echo CHtml::beginForm(array(''), 'get'); ?>
-<!--    <div class="search-bar">
+    <div class="search-bar">
         <div class="clearfix button-bar">
             <div class="row">
                 <div class="medium-6 columns">
@@ -106,7 +106,7 @@ Yii::app()->clientScript->registerScript('coa', '
                                 <span class="prefix">Tanggal </span>
                             </div>
                             <div class="small-5 columns">
-                                <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'name' => 'StartDate',
                                     'options' => array(
                                         'dateFormat' => 'yy-mm-dd',
@@ -139,12 +139,17 @@ Yii::app()->clientScript->registerScript('coa', '
                 </div>
                 <div class="medium-6 columns">
                     <div class="row buttons">
-                        <?php echo CHtml::submitButton('Tampilkan', array('class' => 'button cbutton'));*/ ?>
+                        <?php echo CHtml::button('Tampilkan', array('class' => 'button cbutton',
+                            'onclick' => '$.fn.yiiGridView.update("coa-grid", {data: {
+                                StartDate: $("#StartDate").val(),
+                                EndDate: $("#EndDate").val()
+                            } });',
+                        )); ?>
                     </div>
                 </div>
             </div>
         </div>
-    </div>-->
+    </div>
 
     <div class="grid-view">
         <?php $this->widget('zii.widgets.grid.CGridView', array(
