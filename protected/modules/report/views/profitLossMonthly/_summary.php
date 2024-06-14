@@ -114,7 +114,7 @@
                                 <?php endforeach; ?>
                             </tr>
                             <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
-                                <?php if ($subCategoryInfo['code'] === '412.00.000' || $subCategoryInfo['code'] === '422.00.000'): ?>
+                                <?php if ($subCategoryInfo['code'] === '412.00.000' || $subCategoryInfo['code'] === '422.00.000' || $subCategoryInfo['code'] === '423.00.000' || $subCategoryInfo['code'] === '524.00.000'): ?>
                                     <?php $categoryTotalSums[$yearMonth] -= $subCategoryTotalSums[$yearMonth]; ?>
                                 <?php else: ?>
                                     <?php $categoryTotalSums[$yearMonth] += $subCategoryTotalSums[$yearMonth]; ?>
