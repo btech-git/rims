@@ -50,10 +50,7 @@ class ProfitLossMonthlyController extends Controller {
                 $profitLossInfo[$elementNumber][$profitLossItem['category_id']]['sub_categories'][$profitLossItem['sub_category_id']]['accounts'][$profitLossItem['coa_id']]['totals'][$profitLossItem['transaction_month_year']] = '0.00';
             }
             $amount = '0.00';
-            $codePrefix = substr($profitLossItem['coa_code'], 0, 3);
-            if ($codePrefix === '412' || $codePrefix === '422') {
-                $amount = -$profitLossItem['total'];
-            } else if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'debit') {
+            if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'debit') {
                 $amount = +$profitLossItem['total'];
             } else if (strtoupper($profitLossItem['debet_kredit']) === 'D' && strtolower($profitLossItem['normal_balance']) === 'kredit') {
                 $amount = -$profitLossItem['total'];

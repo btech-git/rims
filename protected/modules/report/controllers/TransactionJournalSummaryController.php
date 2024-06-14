@@ -457,9 +457,9 @@ class TransactionJournalSummaryController extends Controller {
                 $worksheet->setCellValue("D{$counter}", CHtml::encode($transactionJournalItem['credit']));
                 $totalDebit += $transactionJournalItem['debit'];
                 $totalCredit += $transactionJournalItem['credit'];
-            }
 
-            $counter++;
+                $counter++;
+            }
         }
         
         $worksheet->setCellValue("B{$counter}", "Total");
