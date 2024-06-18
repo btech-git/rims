@@ -27,6 +27,7 @@ Yii::app()->clientScript->registerScript('search', "
             'endDate' => $endDate,
             'product'=>$product,
             'pageNumber' => $pageNumber,
+            'stockOperator' => $stockOperator,
         )); ?>
     </div><!-- search-form -->
     <?php echo CHtml::endForm(); ?>

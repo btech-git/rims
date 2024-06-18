@@ -476,7 +476,7 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
-    public function searchByStockCheck($pageNumber, $endDate) {
+    public function searchByStockCheck($pageNumber, $endDate, $stockOperator) {
 
         $criteria = new CDbCriteria;
 
@@ -496,7 +496,7 @@ class Product extends CActiveRecord {
             SELECT SUM(stock_in + stock_out) AS total_stock
             FROM " . InventoryDetail::model()->tableName() . " i
             WHERE t.id = i.product_id AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-            HAVING SUM(stock_in + stock_out) <> 0
+            HAVING SUM(stock_in + stock_out) {$stockOperator} 0
         )");
         $criteria->params[':end_date'] = $endDate;
         

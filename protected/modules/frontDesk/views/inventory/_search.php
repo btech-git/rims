@@ -122,6 +122,7 @@
                 <td>Code</td>
                 <td>Name</td>
                 <td>Per Tanggal</td>
+                <td>Stok Operator</td>
             </tr>
         </thead>
 
@@ -168,6 +169,16 @@
                             'placeholder' => 'Per Tanggal',
                         ),
                     )); ?>
+                </td>
+                <td>
+                    <?php echo CHtml::dropDownList('StockOperator', $stockOperator, array(
+                    '>' => '>',
+                    '<' => '<',
+                    '=' => '=',
+                    '>=' => '>=',
+                    '<=' => '<=',
+                    '<>' => '<>',
+                )); ?>
                 </td>
             </tr>
         </tbody>

@@ -27,10 +27,11 @@ class InventoryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
+        $stockOperator = isset($_GET['StockOperator']) ? $_GET['StockOperator'] : '<>';
         $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : date('Y-m-d');
         $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
-        $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate);
+        $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, $stockOperator);
         $branches = Branch::model()->findAll();
 
         if (isset($_GET['ResetFilter'])) {
@@ -47,6 +48,7 @@ class InventoryController extends Controller {
             'productDataProvider' => $productDataProvider,
             'branches' => $branches,
             'pageNumber' => $pageNumber,
+            'stockOperator' => $stockOperator,
         ));
     }
 
