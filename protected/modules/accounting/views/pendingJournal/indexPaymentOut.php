@@ -125,7 +125,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             array(
                 'header' => 'Supplier',
                 'name' => 'supplier_id', 
-                'value' => '$data->supplier->name'
+                'value' => 'empty($data->supplier_id) ? "" : $data->supplier->name'
             ),
             array(
                 'header' => 'Branch',
