@@ -30,7 +30,7 @@ class InventoryStockValueController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : date('Y-m-d');
         $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
-        $productDataProvider = $product->searchByStockCheck($currentPage);
+        $productDataProvider = $product->searchByStockCheck($currentPage, $endDate, '<>');
         $branches = Branch::model()->findAll();
 
         if (isset($_GET['ResetFilter'])) {
