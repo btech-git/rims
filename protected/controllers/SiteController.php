@@ -213,7 +213,7 @@ class SiteController extends Controller {
         $endDate = date('Y-m-d');
         $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         $vehicleDataProvider = $vehicle->searchByDashboard();
-        $productDataProvider = $product->searchByStockCheck($pageNumber);
+        $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, '<>');
         $customerDataProvider = $customer->searchByDashboard();
         $serviceDataProvider = $service->searchByDashboard();
         
