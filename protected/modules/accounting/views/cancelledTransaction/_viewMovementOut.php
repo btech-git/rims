@@ -28,7 +28,7 @@
             'buttons'=>array(
                 'views' => array(
                     'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("transaction/movementOut/view", array("id"=>$data->id))',
+                    'url'=>'Yii::app()->createUrl("transaction/movementOutHeader/view", array("id"=>$data->id))',
                 ),
             ),
         ),
