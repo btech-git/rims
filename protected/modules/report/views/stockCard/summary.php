@@ -196,6 +196,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         </div>
                         
                         <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">ID</span>
+                                    </div>
+                                    
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextField($product, 'id'); ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
