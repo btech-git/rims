@@ -165,7 +165,7 @@ class SaleRetailProductController extends Controller {
         $counter = 7;
         $totalSale = 0.00;
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate);
+            $grandTotal = $header->getTotalSales($startDate, $endDate, $branchId);
             $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->id));
