@@ -424,8 +424,8 @@ class PaymentOutController extends Controller {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
         $model->payment_amount = 0; 
-        $model->purchase_order_id = null;
-        $model->supplier_id = null;
+//        $model->purchase_order_id = null;
+//        $model->supplier_id = null;
         $model->ppn = 0;
         $model->notes = '';
         $model->cancelled_datetime = date('Y-m-d H:i:s');

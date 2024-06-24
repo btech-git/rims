@@ -23,6 +23,12 @@
         array('name'=>'movement_type','value'=>'$data->getMovementType($data->movement_type)'),
         'status',
         array(
+            'header' => 'Cancelled by',
+            'name' => 'user_id_cancelled',
+            'filter' => false,
+            'value' => 'empty($data->user_id_cancelled) ? "" : $data->userIdCancelled->username',
+        ),
+        array(
             'class'=>'CButtonColumn',
             'template'=>'{views}',
             'buttons'=>array(

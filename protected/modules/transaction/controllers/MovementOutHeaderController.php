@@ -338,12 +338,12 @@ class MovementOutHeaderController extends Controller {
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
-        $model->delivery_order_id = null; 
-        $model->return_order_id = null; 
-        $model->delivery_order_id = null; 
-        $model->material_request_header_id = null; 
-        $model->registration_service_id = null; 
-        $model->registration_transaction_id = null; 
+//        $model->delivery_order_id = null; 
+//        $model->return_order_id = null; 
+//        $model->delivery_order_id = null; 
+//        $model->material_request_header_id = null; 
+//        $model->registration_service_id = null; 
+//        $model->registration_transaction_id = null; 
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
         $model->update(array('status', 'delivery_order_id', 'return_order_id', 'delivery_order_id', 'material_request_header_id', 'registration_service_id', 'registration_transaction_id', 'cancelled_datetime', 'user_id_cancelled'));

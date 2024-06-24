@@ -24,6 +24,7 @@
  * @property Branch $branch
  * @property TransactionReceiveItem $receiveItem
  * @property TransactionReturnItem $returnItem
+ * @property UserIdCancelled $userIdCancelled
  */
 class MovementInHeader extends MonthlyTransactionActiveRecord {
 
@@ -80,6 +81,7 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
             'receiveItem' => array(self::BELONGS_TO, 'TransactionReceiveItem', 'receive_item_id'),
             'returnItem' => array(self::BELONGS_TO, 'TransactionReturnItem', 'return_item_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
         );
     }
 

@@ -50,6 +50,7 @@
  * @property CoaBank $coaBankIdEstimate
  * @property PaymentIn[] $invoiceHeaders
  * @property InsuranceCompany $insuranceCompany
+ * @property UserIdCancelled $userIdCancelled
  */
 class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
@@ -111,6 +112,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'CompanyBank', 'coa_bank_id_estimate'),
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'invoice_id'),
             'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),

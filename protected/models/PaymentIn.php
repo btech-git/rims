@@ -32,6 +32,7 @@
  * @property Customer $customer
  * @property Vehicle $vehicle
  * @property Users $user
+ * @property UserIdCancelled $userIdCancelled
  * @property Branch $branch
  * @property CompanyBank $companyBank
  * @property PaymentInImages[] $paymentInImages
@@ -98,6 +99,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
             'paymentInImages' => array(self::HAS_MANY, 'PaymentInImages', 'payment_in_id'),

@@ -24,6 +24,7 @@
  * @property Coa $coa
  * @property Branch $branch
  * @property Users $user
+ * @property UserIdCancelled $userIdCancelled
  * @property CashTransactionApproval[] $cashTransactionApprovals
  * @property CashTransactionDetail[] $cashTransactionDetails
  * @property CashTransactionImages[] $cashTransactionImages
@@ -80,6 +81,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
             'cashTransactionApprovals' => array(self::HAS_MANY, 'CashTransactionApproval', 'cash_transaction_id'),
             'cashTransactionDetails' => array(self::HAS_MANY, 'CashTransactionDetail', 'cash_transaction_id'),

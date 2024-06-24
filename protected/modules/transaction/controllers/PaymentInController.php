@@ -802,10 +802,10 @@ class PaymentInController extends Controller {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
         $model->payment_amount = 0; 
-        $model->invoice_id = null;
-        $model->customer_id = null;
-        $model->vehicle_id = null;
-        $model->notes = '';
+//        $model->invoice_id = null;
+//        $model->customer_id = null;
+//        $model->vehicle_id = null;
+//        $model->notes = '';
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
         $model->update(array('status', 'invoice_id', 'payment_amount', 'customer_id', 'vehicle_id', 'notes', 'cancelled_datetime', 'user_id_cancelled'));

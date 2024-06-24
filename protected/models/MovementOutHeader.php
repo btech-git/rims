@@ -31,6 +31,7 @@
  * @property RegistrationTransaction $registrationTransaction
  * @property RegistrationService $registrationService
  * @property MaterialRequestHeader $materialRequestHeader
+ * @property UserIdCancelled $userIdCancelled
  */
 class MovementOutHeader extends MonthlyTransactionActiveRecord {
 
@@ -88,6 +89,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
             'deliveryOrder' => array(self::BELONGS_TO, 'TransactionDeliveryOrder', 'delivery_order_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
             'returnOrder' => array(self::BELONGS_TO, 'TransactionReturnOrder', 'return_order_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'registrationService' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_service_id'),

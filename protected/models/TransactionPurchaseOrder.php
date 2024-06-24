@@ -48,6 +48,7 @@
  * @property TransactionReturnOrder[] $transactionReturnOrders
  * @property CoaBank $coaBankIdEstimate
  * @property RegistrationTransaction $registrationTransaction
+ * @property UserIdCancelled $userIdCancelled
  */
 class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
@@ -119,6 +120,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'purchase_order_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'purchase_order_id'),
             'user' => array(self::BELONGS_TO, 'User', 'requester_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
             'approval' => array(self::BELONGS_TO, 'User', 'approved_id'),
             'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),

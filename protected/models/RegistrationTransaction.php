@@ -76,6 +76,7 @@
  * @property Branch $branch
  * @property InsuranceCompany $insuranceCompany
  * @property User $user
+ * @property UserIdCancelled $userIdCancelled
  * @property Customer $customer
  * @property Vehicle $vehicle
  * @property EmployeeIdAssignMechanic $employeeIdAssignMechanic
@@ -157,6 +158,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
             'employeeIdAssignMechanic' => array(self::BELONGS_TO, 'Employee', 'employee_id_assign_mechanic'),
             'employeeIdSalesPerson' => array(self::BELONGS_TO, 'Employee', 'employee_id_sales_person'),
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),

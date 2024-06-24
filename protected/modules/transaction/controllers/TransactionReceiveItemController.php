@@ -424,14 +424,14 @@ class TransactionReceiveItemController extends Controller {
         $model->update(array('note', 'purchase_order_id', 'transfer_request_id', 'consignment_in_id', 'delivery_order_id', 'movement_out_id', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded', 'cancelled_datetime', 'user_id_cancelled'));
 
         foreach ($model->transactionReceiveItemDetails as $detail) {
-            $detail->qty_received = 0;
-            $detail->quantity_movement = 0;
-            $detail->quantity_movement_left = 0;
-            $detail->quantity_delivered = 0;
-            $detail->quantity_delivered_left = 0;
-            $detail->quantity_return = 0;
-            $detail->total_price = 0;
-            $detail->update(array('qty_received', 'quantity_movement', 'quantity_movement_left', 'quantity_delivered', 'quantity_delivered_left', 'quantity_return', 'total_price'));
+//            $detail->qty_received = 0;
+//            $detail->quantity_movement = 0;
+//            $detail->quantity_movement_left = 0;
+//            $detail->quantity_delivered = 0;
+//            $detail->quantity_delivered_left = 0;
+//            $detail->quantity_return = 0;
+//            $detail->total_price = 0;
+//            $detail->update(array('qty_received', 'quantity_movement', 'quantity_movement_left', 'quantity_delivered', 'quantity_delivered_left', 'quantity_return', 'total_price'));
             
             $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
             $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getTotalQuantityReceived();

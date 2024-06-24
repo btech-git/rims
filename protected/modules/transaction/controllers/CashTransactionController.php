@@ -321,7 +321,7 @@ class CashTransactionController extends Controller {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
         $model->debit_amount = 0; 
-        $model->credit_amount = null;
+        $model->credit_amount = 0;
         $model->payment_type_id = null;
         $model->note = '';
         $model->cancelled_datetime = date('Y-m-d H:i:s');

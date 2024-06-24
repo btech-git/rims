@@ -26,6 +26,7 @@
  * @property TransactionPurchaseOrder $purchaseOrder
  * @property Supplier $supplier
  * @property Users $user
+ * @property UserIdCancelled $userIdCancelled
  * @property Branch $branch
  * @property CompanyBank $companyBank
  * @property PayOutDetails[] $payOutDetails
@@ -81,6 +82,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             'purchaseOrder' => array(self::BELONGS_TO, 'TransactionPurchaseOrder', 'purchase_order_id'),
             'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'bank' => array(self::BELONGS_TO, 'Bank', 'bank_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),

@@ -345,8 +345,6 @@ class MovementInHeaderController extends Controller {
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
-        $model->return_item_id = null; 
-        $model->receive_item_id = null;
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
         $model->update(array('status', 'return_item_id', 'receive_item_id', 'cancelled_datetime', 'user_id_cancelled'));
