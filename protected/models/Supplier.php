@@ -418,13 +418,19 @@ class Supplier extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getPurchaseReport($startDate, $endDate, $branchId) {
+    public function getPurchaseReport($supplierId, $startDate, $endDate, $branchId) {
         $branchConditionSql = '';
+        $supplierIdConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
+        
+        if (!empty($supplierId)) {
+            $supplierIdConditionSql = ' WHERE s.id = :supplier_id';
+            $params[':supplier_id'] = $supplierId;
+        }
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND p.main_branch_id = :branch_id';
@@ -440,6 +446,7 @@ class Supplier extends CActiveRecord {
                 WHERE p.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
                 GROUP BY p.supplier_id
             ) po ON s.id = po.supplier_id
+            " . $supplierIdConditionSql . " 
             ORDER BY s.company ASC
         ";
 

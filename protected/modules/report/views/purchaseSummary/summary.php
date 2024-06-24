@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
+                                        <?php echo CHtml::textField('SupplierId', $supplierId, array(
                                             'readonly' => true,
                                             'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
@@ -196,7 +196,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id) {
-            $("#' . CHtml::activeId($supplier, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#SupplierId").val($.fn.yiiGridView.getSelection(id));
             $("#supplier-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "")
             {

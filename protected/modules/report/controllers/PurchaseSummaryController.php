@@ -30,7 +30,7 @@ class PurchaseSummaryController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+        $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
 //        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
@@ -44,20 +44,20 @@ class PurchaseSummaryController extends Controller {
 //            'endDate' => $endDate,
 //        );
 //        $purchaseSummary->setupFilter($filters);
-        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate, $branchId);
+        $purchaseReport = $supplier->getPurchaseReport($supplierId, $startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseReport, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
+            $this->saveToExcel($purchaseReport, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId, 'supplierId' => $supplierId));
         }
 
         $this->render('summary', array(
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
-//            'purchaseSummary' => $purchaseSummary,
+            'supplierId' => $supplierId,
             'purchaseReport' => $purchaseReport,
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -91,6 +91,7 @@ class PurchaseSummaryController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate']; 
+        $supplierId = $options['supplierId'];
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
