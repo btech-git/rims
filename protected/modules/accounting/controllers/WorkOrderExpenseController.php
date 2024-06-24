@@ -239,14 +239,14 @@ class WorkOrderExpenseController extends Controller {
         if (isset($_POST['WorkOrderExpenseApproval'])) {
             $model->attributes = $_POST['WorkOrderExpenseApproval'];
             
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $workOrderExpense->transaction_number,
+                'branch_id' => $workOrderExpense->branch_id,
+            ));
+
             if ($model->save()) {
                 $workOrderExpense->status = $model->approval_type;
                 $workOrderExpense->save(false);
-
-                JurnalUmum::model()->deleteAllByAttributes(array(
-                    'kode_transaksi' => $workOrderExpense->transaction_number,
-                    'branch_id' => $workOrderExpense->branch_id,
-                ));
 
                 $jurnalHutang = new JurnalUmum;
                 $jurnalHutang->kode_transaksi = $workOrderExpense->transaction_number;
