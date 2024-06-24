@@ -244,7 +244,7 @@ class WorkOrderExpenseController extends Controller {
                 'branch_id' => $workOrderExpense->branch_id,
             ));
 
-            if ($model->status === 'Approved' && $model->save()) {
+            if ($workOrderExpense->status === 'Approved' && $model->save()) {
                 $workOrderExpense->status = $model->approval_type;
                 $workOrderExpense->save(false);
 
