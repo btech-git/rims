@@ -38,6 +38,7 @@ class StockCardController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'branchId' => $branchId,
         );
         $stockCardSummary->setupFilter($filters);
         

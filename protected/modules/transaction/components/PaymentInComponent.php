@@ -194,7 +194,7 @@ class PaymentInComponent extends CComponent {
         $total = 0.00;
         
         foreach ($this->details as $detail) {
-            $total += $detail->amount + $detail->tax_service_amount;
+            $total += $detail->amount;
         }
         
         return $total + $this->header->downpayment_amount;

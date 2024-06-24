@@ -131,34 +131,36 @@ class PaymentInController extends Controller {
                 $coaId = $model->companyBank->coa_id;
             }
 
-            $jurnalUmumKas = new JurnalUmum;
-            $jurnalUmumKas->kode_transaksi = $model->payment_number;
-            $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
-            $jurnalUmumKas->coa_id = $coaId;
-            $jurnalUmumKas->branch_id = $model->branch_id;
-            $jurnalUmumKas->total = $model->payment_amount;
-            $jurnalUmumKas->debet_kredit = 'D';
-            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-            $jurnalUmumKas->transaction_subject = $model->notes;
-            $jurnalUmumKas->remark = $remark;
-            $jurnalUmumKas->is_coa_category = 0;
-            $jurnalUmumKas->transaction_type = 'Pin';
-            $jurnalUmumKas->save();
+            foreach ($model->paymentInDetails as $detail) {
+                $jurnalUmumKas = new JurnalUmum;
+                $jurnalUmumKas->kode_transaksi = $model->payment_number;
+                $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
+                $jurnalUmumKas->coa_id = $coaId;
+                $jurnalUmumKas->branch_id = $model->branch_id;
+                $jurnalUmumKas->total = $detail->amount;
+                $jurnalUmumKas->debet_kredit = 'D';
+                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                $jurnalUmumKas->transaction_subject = $detail->memo;
+                $jurnalUmumKas->remark = $remark;
+                $jurnalUmumKas->is_coa_category = 0;
+                $jurnalUmumKas->transaction_type = 'Pin';
+                $jurnalUmumKas->save();
 
-            if ($model->tax_service_amount > 0) {
-                $jurnalPph = new JurnalUmum;
-                $jurnalPph->kode_transaksi = $model->payment_number;
-                $jurnalPph->tanggal_transaksi = $model->payment_date;
-                $jurnalPph->coa_id = 1473;
-                $jurnalPph->branch_id = $model->branch_id;
-                $jurnalPph->total = $model->tax_service_amount;
-                $jurnalPph->debet_kredit = 'D';
-                $jurnalPph->tanggal_posting = date('Y-m-d');
-                $jurnalPph->transaction_subject = $model->notes;
-                $jurnalPph->remark = $remark;
-                $jurnalPph->is_coa_category = 0;
-                $jurnalPph->transaction_type = 'Pin';
-                $jurnalPph->save();
+                if ($model->tax_service_amount > 0) {
+                    $jurnalPph = new JurnalUmum;
+                    $jurnalPph->kode_transaksi = $model->payment_number;
+                    $jurnalPph->tanggal_transaksi = $model->payment_date;
+                    $jurnalPph->coa_id = 1473;
+                    $jurnalPph->branch_id = $model->branch_id;
+                    $jurnalPph->total = $detail->tax_service_amount;
+                    $jurnalPph->debet_kredit = 'D';
+                    $jurnalPph->tanggal_posting = date('Y-m-d');
+                    $jurnalPph->transaction_subject = $detail->memo;
+                    $jurnalPph->remark = $remark;
+                    $jurnalPph->is_coa_category = 0;
+                    $jurnalPph->transaction_type = 'Pin';
+                    $jurnalPph->save();
+                }
             }
 
             if ($model->downpayment_amount > 0) {
@@ -733,34 +735,36 @@ class PaymentInController extends Controller {
                             $coaId = $paymentIn->companyBank->coa_id;
                         }
 
-                        $jurnalUmumKas = new JurnalUmum;
-                        $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
-                        $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
-                        $jurnalUmumKas->coa_id = $coaId;
-                        $jurnalUmumKas->branch_id = $paymentIn->branch_id;
-                        $jurnalUmumKas->total = $paymentIn->payment_amount;
-                        $jurnalUmumKas->debet_kredit = 'D';
-                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumKas->transaction_subject = $paymentIn->notes;
-                        $jurnalUmumKas->remark = $remark;
-                        $jurnalUmumKas->is_coa_category = 0;
-                        $jurnalUmumKas->transaction_type = 'Pin';
-                        $jurnalUmumKas->save();
+                        foreach ($paymentIn->paymentInDetails as $detail) {
+                            $jurnalUmumKas = new JurnalUmum;
+                            $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalUmumKas->coa_id = $coaId;
+                            $jurnalUmumKas->branch_id = $paymentIn->branch_id;
+                            $jurnalUmumKas->total = $detail->amount;
+                            $jurnalUmumKas->debet_kredit = 'D';
+                            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                            $jurnalUmumKas->transaction_subject = $paymentIn->notes;
+                            $jurnalUmumKas->remark = $remark;
+                            $jurnalUmumKas->is_coa_category = 0;
+                            $jurnalUmumKas->transaction_type = 'Pin';
+                            $jurnalUmumKas->save();
 
-                        if ($paymentIn->tax_service_amount > 0) {
-                            $jurnalPph = new JurnalUmum;
-                            $jurnalPph->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalPph->coa_id = 1473;
-                            $jurnalPph->branch_id = $paymentIn->branch_id;
-                            $jurnalPph->total = $paymentIn->tax_service_amount;
-                            $jurnalPph->debet_kredit = 'D';
-                            $jurnalPph->tanggal_posting = date('Y-m-d');
-                            $jurnalPph->transaction_subject = $paymentIn->notes;
-                            $jurnalPph->remark = $remark;
-                            $jurnalPph->is_coa_category = 0;
-                            $jurnalPph->transaction_type = 'Pin';
-                            $jurnalPph->save();
+                            if ($paymentIn->tax_service_amount > 0) {
+                                $jurnalPph = new JurnalUmum;
+                                $jurnalPph->kode_transaksi = $paymentIn->payment_number;
+                                $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
+                                $jurnalPph->coa_id = 1473;
+                                $jurnalPph->branch_id = $paymentIn->branch_id;
+                                $jurnalPph->total = $detail->tax_service_amount;
+                                $jurnalPph->debet_kredit = 'D';
+                                $jurnalPph->tanggal_posting = date('Y-m-d');
+                                $jurnalPph->transaction_subject = $paymentIn->notes;
+                                $jurnalPph->remark = $remark;
+                                $jurnalPph->is_coa_category = 0;
+                                $jurnalPph->transaction_type = 'Pin';
+                                $jurnalPph->save();
+                            }
                         }
                         
                         if ($paymentIn->downpayment_amount > 0) {

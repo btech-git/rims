@@ -7,6 +7,14 @@ Yii::app()->clientScript->registerScript('report', '
     $("#CurrentPage").val("' . ($stockCardSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
 ');
+Yii::app()->clientScript->registerScript('search', "
+    $('.search-button').click(function(){
+	$('.search-form').toggle();
+	return false;
+    });
+    $('#StartDate').val('" . $startDate . "');
+    $('#EndDate').val('" . $endDate . "');
+");
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -21,7 +29,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     
-                    <div class="row">
+<!--                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -30,7 +38,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                     
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php /*echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
                                         <?php echo CHtml::activeTextField($product, 'name'); ?>
                                     </div>
                                 </div>
@@ -256,8 +264,26 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));*/ ?>
+                    </div>-->
+                    
+                    <div class="search-bar">
+                        <div class="clearfix button-bar">
+                            <a href="#" class="search-button right button cbutton secondary" id="menushow">Advanced Search</a>
+                        </div>
                     </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="search-form" style="display:none">
+                        <?php $this->renderPartial('_search',array(
+                            'startDate' => $startDate,
+                            'endDate' => $endDate,
+                            'product'=>$product,
+                            'branchId' => $branchId,
+                            'currentPage' => $currentPage,
+                        )); ?>
+                    </div><!-- search-form -->
 
                     <?php echo CHtml::endForm(); ?>
                     <div class="clear"></div>

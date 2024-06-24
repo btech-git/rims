@@ -9,10 +9,10 @@ class StockCardSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = TRUE;
-        $this->dataProvider->criteria->with = array(
-            'inventoryDetails',
-        );
+//        $this->dataProvider->criteria->together = TRUE;
+//        $this->dataProvider->criteria->with = array(
+//            'inventoryDetails',
+//        );
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -32,8 +32,23 @@ class StockCardSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $branchId = $filters['branchId'];
         
-        $this->dataProvider->criteria->addBetweenCondition('inventoryDetails.transaction_date', $startDate, $endDate);
+        $branchConditionSql = '';
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+        }
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT i.id
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE i.product_id = t.id AND i.transaction_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+        )");
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($branchId)) {
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
     }
 
 }
