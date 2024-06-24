@@ -273,9 +273,8 @@ class WorkOrderExpenseController extends Controller {
                 $jurnalUmumKas->is_coa_category = 0;
                 $jurnalUmumKas->transaction_type = 'WOE';
                 $jurnalUmumKas->save();
-
-                $this->redirect(array('view', 'id' => $headerId));
             }
+            $this->redirect(array('view', 'id' => $headerId));
         }
 
         $this->render('updateApproval', array(
