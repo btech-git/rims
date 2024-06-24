@@ -225,6 +225,11 @@
                                     'url' => array('/report/receivableCustomer/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
                                 ),
+                                array(
+                                    'label' => 'Kartu Piutang Customer', 
+                                    'url' => array('/report/receivableTransaction/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
                             ),
                         )); ?>
                         <?php endif; ?>
@@ -329,6 +334,11 @@
                                     ),
                                     array(
                                         'label' => 'Faktur Belum Lunas', 
+                                        'url' => array('/report/payable/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
+                                    ),
+                                    array(
+                                        'label' => 'Kartu Hutang', 
                                         'url' => array('/report/payable/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),

@@ -311,6 +311,54 @@ class Customer extends CActiveRecord {
         ));
     }
 
+    public function searchByReceivableTransactionReport($startDate, $endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber) {
+        $branchConditionSql = '';
+        $insuranceConditionSql = '';
+        $typeConditionSql = '';
+        $plateNumberConditionSql = '';
+        
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.id', $this->id);
+        $criteria->params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($insuranceCompanyId)) {
+            $insuranceConditionSql = ' AND r.insurance_company_id = :insurance_company_id';
+            $criteria->params[':insurance_company_id'] = $insuranceCompanyId;
+        }
+
+        if (!empty($customerType)) {
+            $typeConditionSql = ' AND t.customer_type = :customer_type';
+            $criteria->params[':customer_type'] = $customerType;
+        }
+
+        if (!empty($plateNumber)) {
+            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $criteria->params[':plate_number'] = "%{$plateNumber}%";
+        }
+
+        $criteria->addCondition("EXISTS (
+            SELECT p.customer_id
+            FROM " . InvoiceHeader::model()->tableName() . " p 
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
+            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+            WHERE p.customer_id = t.id AND c.customer_type = 'Company' AND p.invoice_date BETWEEN :start_date AND :end_date " . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . " 
+        )" . $typeConditionSql);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     /**
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!

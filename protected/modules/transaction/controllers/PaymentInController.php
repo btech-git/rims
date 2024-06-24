@@ -227,6 +227,7 @@ class PaymentInController extends Controller {
         $customer = Customer::model()->findByPk($invoice->customer_id);
         
         $paymentIn->header->customer_id = $customer->id;
+        $paymentIn->header->payment_date = date('Y-m-d');
         $paymentIn->header->payment_time = date('H:i:s');
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
         $paymentIn->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
@@ -280,6 +281,7 @@ class PaymentInController extends Controller {
         $paymentIn = $this->instantiate(null);
         
         $paymentIn->header->customer_id = $customerId;
+        $paymentIn->header->payment_date = date('Y-m-d');
         $paymentIn->header->payment_time = date('H:i:s');
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
         $paymentIn->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;

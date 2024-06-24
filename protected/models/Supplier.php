@@ -246,6 +246,34 @@ class Supplier extends CActiveRecord {
         ));
     }
 
+    public function searchByPayableSupplierReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $criteria = new CDbCriteria;
+        
+        $criteria->compare('t.id', $this->id);
+        
+        $criteria->params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        $criteria->addCondition("EXISTS (
+            SELECT p.supplier_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            WHERE p.supplier_id = t.id AND p.purchase_order_date BETWEEN :start_date AND :end_date " . $branchConditionSql . " 
+        )");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     public function searchByPayable($startDate) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

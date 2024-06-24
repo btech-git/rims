@@ -44,9 +44,22 @@
                     )); ?>
                 </td>
                 <td style="text-align: right">
-                    <span id="tax_service_amount_<?php echo $i; ?>">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'tax_service_amount'))); ?>
-                    </span>
+                    <!--<span id="tax_service_amount_<?php echo $i; ?>">-->
+                    <?php echo CHtml::activeTextField($detail, "[$i]tax_service_amount", array(
+                        'onchange' => '$.ajax({
+                            type: "POST",
+                            dataType: "JSON",
+                            url: "' . CController::createUrl('ajaxJsonAmount', array('id' => $paymentIn->header->id, 'index'=>$i)) . '",
+                            data: $("form").serialize(),
+                            success: function(data) {
+                                $("#payment_amount_' . $i . '").html(data.paymentAmount);
+                                $("#total_invoice").html(data.totalInvoice);
+                                $("#total_payment").html(data.totalPayment);
+                                $("#total_service_tax").html(data.totalServiceTax);
+                            },
+                        });',                        
+                    )); ?>
+                    <!--</span>-->
                 </td>
                 <td>
                     <?php echo CHtml::activeTextField($detail, "[$i]amount", array(

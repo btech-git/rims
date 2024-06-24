@@ -248,4 +248,87 @@ class ProductSubCategory extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public function getBeginningStockReport($startDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':product_sub_category_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+            WHERE p.product_sub_category_id = :product_sub_category_id AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
+            GROUP BY p.product_sub_category_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getBeginningValueReport($startDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':product_sub_category_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+            WHERE p.product_sub_category_id = :product_sub_category_id AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
+            GROUP BY p.product_sub_category_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getInventoryStockReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':product_sub_category_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT c.id, c.code, c.name, c.description, SUM(i.stock_in) AS stock_in, SUM(i.stock_out) AS stock_out
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                INNER JOIN " . ProductSubCategory::model()->tableName() . " c on c.id = p.product_sub_category_id
+                INNER JOIN " . Unit::model()->tableName() . " u ON u.id = p.unit_id
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date AND p.product_sub_category_id = :product_sub_category_id" . $branchConditionSql . "
+                GROUP BY c.id, c.code, c.name, c.description";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
 }
