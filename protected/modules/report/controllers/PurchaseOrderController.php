@@ -55,6 +55,7 @@ class PurchaseOrderController extends Controller {
             'purchaseReport' => $purchaseReport,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
+            'supplierId' => $supplierId,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentPage' => $currentPage,
