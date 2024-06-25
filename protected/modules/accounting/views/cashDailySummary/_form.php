@@ -61,13 +61,13 @@
                                 <?php //echo CHtml::resetButton('Clear', array('class'=>'button secondary')); ?>
                                 <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;', 'class'=>'button info right')); ?>
                                 
-                                <?php if (empty($existingDate)): ?>
+                                <?php /*if (empty($existingDate)): ?>
                                     <?php echo CHtml::link('Approve Daily', Yii::app()->createUrl("accounting/cashDailySummary/create", array(
 //                                        "branchId" => $paymentInRetailBranchId,
                                         "transactionDate" => $transactionDate,
                                     )), array('target' => '_blank', 'class'=>'button warning')); ?>
                                     <?php //echo CHtml::submitButton('Approve', array('name' => 'Approve', 'class'=>'button success right', 'confirm' => 'Are you sure you want to approve?')); ?>
-                                <?php endif; ?>
+                                <?php endif;*/ ?>
                             </div>
                         </div>
                     </div>
