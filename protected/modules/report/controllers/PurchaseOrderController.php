@@ -30,6 +30,7 @@ class PurchaseOrderController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
 //        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -40,7 +41,7 @@ class PurchaseOrderController extends Controller {
 //        $purchaseOrderSummary->setupPaging($pageSize, $currentPage);
 //        $purchaseOrderSummary->setupSorting();
 //        $purchaseOrderSummary->setupFilter($startDate, $endDate);
-        $purchaseReport = $supplier->getPurchaseReport($startDate, $endDate, $branchId);
+        $purchaseReport = $supplier->getPurchaseReport($supplierId, $startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
