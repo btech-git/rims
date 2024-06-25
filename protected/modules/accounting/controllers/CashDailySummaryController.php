@@ -512,6 +512,7 @@ class CashDailySummaryController extends Controller {
             $approvalsRefs[$approval['transaction_date']][0] = $approval['username'];
             $approvalsRefs[$approval['transaction_date']][1] = $approval['amount'];
             $approvalsRefs[$approval['transaction_date']][2] = $approval['branch_name'];
+            $approvalsRefs[$approval['transaction_date']][3] = $approval['input_datetime'];
         }
         
         $monthYearLimit = $yearEnd * 12 + $monthEnd;
@@ -531,6 +532,7 @@ class CashDailySummaryController extends Controller {
                 $approvals[$index]['username'] = isset($approvalsRefs[$currentDate][0]) ? $approvalsRefs[$currentDate][0] : '';
                 $approvals[$index]['amount'] = isset($approvalsRefs[$currentDate][1]) ? $approvalsRefs[$currentDate][1] : '0.00';
                 $approvals[$index]['branch_name'] = isset($approvalsRefs[$currentDate][2]) ? $approvalsRefs[$currentDate][2] : '';
+                $approvals[$index]['input_datetime'] = isset($approvalsRefs[$currentDate][3]) ? $approvalsRefs[$currentDate][3] : '';
                 $index++;
             }
             if ((int) $currentMonth < 12) {

@@ -104,6 +104,7 @@
                 <th>Tanggal Transaksi</th>
                 <th>Hari Transaksi</th>
                 <th>Approved By</th>
+                <th>Approved Date</th>
                 <th>Branch</th>
                 <th>Amount</th>
             </tr>
@@ -117,6 +118,7 @@
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($approval, 'transaction_date'))); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'transaction_day_of_week')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'username')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($approval, 'input_datetime')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($approval, 'branch_name')); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amount)); ?></td>
                 </tr>
@@ -126,7 +128,7 @@
         
         <tfoot>
             <tr>
-                <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
+                <td colspan="5" style="text-align: right; font-weight: bold">Total</td>
                 <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $total)); ?></td>
             </tr>
         </tfoot>

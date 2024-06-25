@@ -117,18 +117,32 @@ class CashDailySummary extends CActiveRecord {
     
 
     public function getApprovalList($monthStart, $yearStart, $monthEnd, $yearEnd, $branchId) {
-        $sql = "SELECT c.transaction_date, u.username, c.amount, b.name AS branch_name
-                FROM " . CashDailySummary::model()->tableName() . " c
-                INNER JOIN " . Users::model()->tableName() . " u ON u.id = c.user_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = c.branch_id
-                WHERE c.branch_id = :branch_id AND CONCAT(SUBSTRING_INDEX(c.transaction_date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(c.transaction_date, '-', 2), '-', -1)) BETWEEN :yearMonthStart AND :yearMonthEnd
-                ORDER BY c.transaction_date ASC";
-        
-        $resultSet = CActiveRecord::$db->createCommand($sql)->queryAll(true, array(
-            ':yearMonthStart' => $yearStart . '-' . $monthStart,
-            ':yearMonthEnd' => $yearEnd . '-' . $monthEnd,
-            ':branch_id' => $branchId,
-        ));
+        if (empty($branchId)) {
+            $sql = "SELECT c.transaction_date, MAX(u.username) AS username, SUM(c.amount) AS amount, '' AS branch_name, MAX(c.input_datetime) AS input_datetime
+                    FROM " . CashDailySummary::model()->tableName() . " c
+                    INNER JOIN " . Users::model()->tableName() . " u ON u.id = c.user_id
+                    WHERE CONCAT(SUBSTRING_INDEX(c.transaction_date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(c.transaction_date, '-', 2), '-', -1)) BETWEEN :yearMonthStart AND :yearMonthEnd
+                    GROUP BY c.transaction_date
+                    ORDER BY c.transaction_date ASC";
+
+            $resultSet = CActiveRecord::$db->createCommand($sql)->queryAll(true, array(
+                ':yearMonthStart' => $yearStart . '-' . $monthStart,
+                ':yearMonthEnd' => $yearEnd . '-' . $monthEnd,
+            ));
+        } else {
+            $sql = "SELECT c.transaction_date, u.username, c.amount, b.name AS branch_name, c.input_datetime
+                    FROM " . CashDailySummary::model()->tableName() . " c
+                    INNER JOIN " . Users::model()->tableName() . " u ON u.id = c.user_id
+                    INNER JOIN " . Branch::model()->tableName() . " b ON b.id = c.branch_id
+                    WHERE c.branch_id = :branch_id AND CONCAT(SUBSTRING_INDEX(c.transaction_date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(c.transaction_date, '-', 2), '-', -1)) BETWEEN :yearMonthStart AND :yearMonthEnd
+                    ORDER BY c.transaction_date ASC";
+
+            $resultSet = CActiveRecord::$db->createCommand($sql)->queryAll(true, array(
+                ':yearMonthStart' => $yearStart . '-' . $monthStart,
+                ':yearMonthEnd' => $yearEnd . '-' . $monthEnd,
+                ':branch_id' => $branchId,
+            ));
+        }
 
         return $resultSet;
     }

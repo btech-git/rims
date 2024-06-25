@@ -163,7 +163,7 @@
                                     ),
                                     array(
                                         'label' => 'Summary Kas Harian', 
-                                        'url' => array('/accounting/cashDailySummary/admin'), 
+                                        'url' => array('/accounting/cashDailySummary/index'), 
                                         'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport')
                                     ),
                                     array(
