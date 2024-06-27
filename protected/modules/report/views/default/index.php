@@ -339,7 +339,7 @@
                                     ),
                                     array(
                                         'label' => 'Kartu Hutang', 
-                                        'url' => array('/report/payable/summary'), 
+                                        'url' => array('/report/payableSupplier/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),
                                     array(
