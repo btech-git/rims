@@ -128,16 +128,18 @@ class InventoryController extends Controller {
 
     public function actionAjaxHtmlUpdateProductStockTable() {
         if (Yii::app()->request->isAjaxRequest) {
+            $stockOperator = isset($_GET['StockOperator']) ? $_GET['StockOperator'] : '<>';
             $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
             $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : date('Y-m-d');
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
-            $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate);
+            $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, $stockOperator);
             $branches = Branch::model()->findAll();
 
             $this->renderPartial('_productStockTable', array(
                 'productDataProvider' => $productDataProvider,
                 'branches' => $branches,
                 'endDate' => $endDate,
+                'stockOperator' => $stockOperator,
             ));
         }
     }
