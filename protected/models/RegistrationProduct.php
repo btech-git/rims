@@ -168,4 +168,16 @@ class RegistrationProduct extends CActiveRecord {
 
         return $totalAfterTax;
     }
+    
+    public function getTotalMovementOutQuantity() {
+        $total = 0; 
+        
+        foreach ($this->movementOutDetails as $detail) {
+            if ($detail->movementOutHeader->status !== 'CANCELLED!!!') {
+                $total += $detail->quantity; 
+            }
+        }
+        
+        return $total;
+    }
 }

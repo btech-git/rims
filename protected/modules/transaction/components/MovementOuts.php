@@ -245,10 +245,10 @@ class MovementOuts extends CComponent {
                     $quantity += $mvmntDetail->quantity;
                 }
                 
-                $deliveryDetail = RegistrationProduct::model()->findByAttributes(array('id' => $detail->registration_product_id, 'registration_transaction_id' => $this->header->registration_transaction_id));
-                $deliveryDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
-                $deliveryDetail->quantity_movement = $quantity + $detail->quantity;
-                $deliveryDetail->save(false);
+                $registrationProduct = RegistrationProduct::model()->findByAttributes(array('id' => $detail->registration_product_id, 'registration_transaction_id' => $this->header->registration_transaction_id));
+                $registrationProduct->quantity_movement = $registrationProduct->getTotalMovementOutQuantity();
+                $registrationProduct->quantity_movement_left = $registrationProduct->quantity - $registrationProduct->quantity_movement;
+                $registrationProduct->save(false);
             } elseif ($movementType == 4) {
                 
                 $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detail->material_request_detail_id);
