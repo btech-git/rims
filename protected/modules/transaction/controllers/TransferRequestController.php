@@ -131,7 +131,7 @@ class TransferRequestController extends Controller {
             $jurnalUmumInterbranchRequester->save();
 
             foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
-                $hppPrice = $detail->unit_price * $detail->quantity;
+                $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
 
                 //save coa persediaan product master
 //                $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
@@ -183,7 +183,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumInterbranchDestination->save();
 
                 foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
-                    $hppPrice = $detail->unit_price * $detail->quantity;
+                    $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
 
                     //save coa persediaan product master
     //                $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
@@ -269,7 +269,7 @@ class TransferRequestController extends Controller {
                         $transferRequestDetail->quantity_delivery = $detail->quantity_delivery;
                         $transferRequestDetail->save(false);
 
-                        $hppPrice = $detail->unit_price * $detail->quantity;
+                        $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
 
                         //save coa persediaan product master
                         $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
