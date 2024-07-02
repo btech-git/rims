@@ -38,7 +38,7 @@
                 ); ?>
                 <?php $valid = $valid || $transactionType === 'MO' && (
                     preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
-//                    preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^134.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
                 <?php $valid = $valid || $transactionType === 'CASH'; ?>
