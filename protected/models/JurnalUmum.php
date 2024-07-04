@@ -373,8 +373,9 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
 
-    public static function getTransactionJournalData($startDate, $endDate, $branchId, $transactionType) {
+    public static function getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark) {
         $branchConditionSql = '';
+        $remarkConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -387,10 +388,15 @@ class JurnalUmum extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
+        if ($remark !== '') {
+            $remarkConditionSql = ' AND j.remark = :remark';
+            $params[':remark'] = $remark;
+        }
+        
         $sql = "SELECT j.coa_id AS coa_id, c.code AS coa_code, c.name AS coa_name, SUM(IF(j.debet_kredit = 'D', j.total, 0)) AS debit, SUM(IF(j.debet_kredit = 'K', j.total, 0)) AS credit
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c on c.id = j.coa_id
-                WHERE j.coa_id NOT IN (SELECT c1.id FROM rims_coa c1 WHERE EXISTS (SELECT c1.id FROM rims_coa c2 WHERE c1.id = c2.coa_id)) AND j.tanggal_transaksi BETWEEN :start_date AND :end_date AND j.transaction_type = :transaction_type " . $branchConditionSql . "
+                WHERE j.coa_id NOT IN (SELECT c1.id FROM rims_coa c1 WHERE EXISTS (SELECT c1.id FROM rims_coa c2 WHERE c1.id = c2.coa_id)) AND j.tanggal_transaksi BETWEEN :start_date AND :end_date AND j.transaction_type = :transaction_type AND j.is_coa_category = 0 " . $branchConditionSql . $remarkConditionSql . "
                 GROUP BY j.coa_id
                 ORDER BY c.code ASC";
         

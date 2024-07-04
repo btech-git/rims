@@ -11,7 +11,7 @@
 		<?php //echo CHtml::errorSummary($model); ?>
 
 		<?php echo CHtml::activeLabelEx($model,'username'); ?>
-		<?php echo CHtml::activeTextField($model,'username') ?>
+		<?php echo CHtml::activeTextField($model,'username', array('autofocus'=>'autofocus')); ?>
 		<?php echo CHtml::error($model,'username'); ?>
 
 		<?php echo CHtml::activeLabelEx($model,'password'); ?>

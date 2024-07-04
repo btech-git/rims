@@ -124,15 +124,15 @@ class PaymentInDetail extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getTaxServiceAmount() {
-        
-        switch ($this->is_tax_service) {
-            case self::ADD_SERVICE_TAX: return $this->invoiceHeader->registrationTransaction->total_service_price * 2 / 100;
-            case self::NON_SERVICE_TAX: return 0;
-            case self::INCLUDE_SERVICE_TAX: return $this->invoiceHeader->registrationTransaction->total_service_price * 2 / 100;
-            default: return '';
-        }
-    }
+//    public function getTaxServiceAmount() {
+//        
+//        switch ($this->is_tax_service) {
+//            case self::ADD_SERVICE_TAX: return $this->invoiceHeader->registrationTransaction->total_service_price * 2 / 100;
+//            case self::NON_SERVICE_TAX: return 0;
+//            case self::INCLUDE_SERVICE_TAX: return $this->invoiceHeader->registrationTransaction->total_service_price * 2 / 100;
+//            default: return '';
+//        }
+//    }
     
     public function getTotalAmount() {
         return $this->amount + $this->tax_service_amount;

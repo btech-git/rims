@@ -32,15 +32,11 @@
                     preg_match('/^422.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
                 <?php $valid = $valid || $transactionType === 'Pin'; ?>
-                <?php $valid = $valid || $transactionType === 'MI' && (
-                    preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                <?php $valid = $valid || $transactionType === 'RCI' && (
+                    preg_match('/^134.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
-                <?php $valid = $valid || $transactionType === 'MO' && (
-                    preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^134.+$/', $transactionJournalItem['coa_code']) === 1
-                ); ?>
+                <?php $valid = $valid || $transactionType === 'DO'; ?>
                 <?php $valid = $valid || $transactionType === 'CASH'; ?>
                 <?php $valid = $valid || $transactionType === 'WOE' && (
                     $transactionJournalItem['coa_code'] === '502.00.001' ||

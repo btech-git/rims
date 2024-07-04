@@ -23,11 +23,12 @@ class TransactionJournalSummaryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $transactionType = 'PO';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Pembelian';
         
         if (isset($_GET['ResetFilter'])) {
@@ -53,11 +54,12 @@ class TransactionJournalSummaryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $transactionType = 'Pout';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Pelunasan Pembelian';
         
         if (isset($_GET['ResetFilter'])) {
@@ -83,11 +85,12 @@ class TransactionJournalSummaryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $transactionType = 'Invoice';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Penjualan';
         
         if (isset($_GET['ResetFilter'])) {
@@ -113,11 +116,12 @@ class TransactionJournalSummaryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $transactionType = 'Pin';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Penerimaan Penjualan';
         
         if (isset($_GET['ResetFilter'])) {
@@ -142,12 +146,13 @@ class TransactionJournalSummaryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $transactionType = 'MI';
+        $transactionType = 'RCI';
+        $remark = 'Internal Delivery Order';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Pemasukan Cabang - Barang';
         
         if (isset($_GET['ResetFilter'])) {
@@ -172,12 +177,13 @@ class TransactionJournalSummaryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $transactionType = 'MO';
+        $transactionType = 'DO';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Pengeluaran Cabang - Barang';
         
         if (isset($_GET['ResetFilter'])) {
@@ -203,11 +209,12 @@ class TransactionJournalSummaryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $transactionType = 'CASH';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Kas';
         
         if (isset($_GET['ResetFilter'])) {
@@ -233,11 +240,12 @@ class TransactionJournalSummaryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $transactionType = 'WOE';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Sub Pekerjaan Luar';
         
         if (isset($_GET['ResetFilter'])) {
@@ -263,11 +271,12 @@ class TransactionJournalSummaryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $transactionType = 'MOM';
+        $remark = '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType);
+        $transactionJournalData = JurnalUmum::getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark);
         $transactionTypeLiteral = 'Material';
         
         if (isset($_GET['ResetFilter'])) {

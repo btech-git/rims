@@ -224,30 +224,36 @@ class ReceiveItems extends CComponent {
                     $coaId = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
                     $journalReferences[$coaId]['debet_kredit'] = 'D';
                     $journalReferences[$coaId]['is_coa_category'] = 0;
+                    $journalReferences[$coaId]['remark'] = $this->header->request_type;
                     $journalReferences[$coaId]['values'][] = $value;
                 } else if ($this->header->request_type == 'Internal Delivery Order') {
                     $value = $detail->qty_received * $detail->product->hpp;
                     $coaIdTransit = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
                     $journalReferences[$coaIdTransit]['debet_kredit'] = 'D';
                     $journalReferences[$coaIdTransit]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdTransit]['remark'] = $this->header->request_type;
                     $journalReferences[$coaIdTransit]['values'][] = $value;
-                    $coaIdOutstandingMaster = $detail->product->productMasterCategory->coa_outstanding_part_id;
-                    $journalReferences[$coaIdOutstandingMaster]['debet_kredit'] = 'K';
-                    $journalReferences[$coaIdOutstandingMaster]['is_coa_category'] = 1;
-                    $journalReferences[$coaIdOutstandingMaster]['values'][] = $value;
+//                    $coaIdOutstandingMaster = $detail->product->productMasterCategory->coa_outstanding_part_id;
+//                    $journalReferences[$coaIdOutstandingMaster]['debet_kredit'] = 'K';
+//                    $journalReferences[$coaIdOutstandingMaster]['is_coa_category'] = 1;
+//                    $journalReferences[$coaIdOutstandingMaster]['remark'] = 'Internal Delivery Order';
+//                    $journalReferences[$coaIdOutstandingMaster]['values'][] = $value;
                     $coaIdOutstandingSub = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
                     $journalReferences[$coaIdOutstandingSub]['debet_kredit'] = 'K';
                     $journalReferences[$coaIdOutstandingSub]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdOutstandingSub]['remark'] = $this->header->request_type;
                     $journalReferences[$coaIdOutstandingSub]['values'][] = $value;
                 } else if ($this->header->request_type == 'Consignment In') {
                     $value = $detail->qty_received * $detail->consignmentInDetail->price;
                     $coaIdTransit = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
                     $journalReferences[$coaIdTransit]['debet_kredit'] = 'D';
                     $journalReferences[$coaIdTransit]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdTransit]['remark'] = $this->header->request_type;
                     $journalReferences[$coaIdTransit]['values'][] = $value;
                     $coaIdInventory = $detail->product->productSubMasterCategory->coa_consignment_inventory;
                     $journalReferences[$coaIdInventory]['debet_kredit'] = 'K';
                     $journalReferences[$coaIdInventory]['is_coa_category'] = 0;
+                    $journalReferences[$coaIdInventory]['remark'] = $this->header->request_type;
                     $journalReferences[$coaIdInventory]['values'][] = $value;
                 }
             }
