@@ -52,7 +52,7 @@
 //        								 'yearRange'=>'1900:2020'
                      ),
                       'htmlOptions'=>array(
-                      	'value'=>date('Y-m-d'),
+//                      	'value'=>date('Y-m-d'),
                         //'value'=>$customer->header->isNewRecord ? '' : Customer::model()->findByPk($customer->header->id)->birthdate,
                         ),
                  ));

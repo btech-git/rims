@@ -36,7 +36,7 @@
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
-                                                'value' => date('Y-m-d'),
+//                                                'value' => date('Y-m-d'),
                                             ),
                                         )); ?>
                                         <?php echo CHtml::error($materialRequest->header, 'transaction_date'); ?>

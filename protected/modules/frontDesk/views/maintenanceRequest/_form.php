@@ -31,7 +31,7 @@
                             ),
                             'htmlOptions' => array(
                                 'readonly' => true,
-                                'value' => date('Y-m-d'),
+//                                'value' => date('Y-m-d'),
                             ),
                         )); ?>
                         <?php //echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($maintenanceRequest->header, 'transaction_date'))); ?>

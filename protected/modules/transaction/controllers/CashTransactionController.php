@@ -116,6 +116,7 @@ class CashTransactionController extends Controller {
         
         $cashTransaction->header->branch_id = $cashTransaction->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $cashTransaction->header->branch_id;
         $cashTransaction->header->payment_type_id = 1;
+        $cashTransaction->header->transaction_date = date('Y-m-d');
         $cashTransaction->header->transaction_time = date('H:i:s');
         $cashTransaction->header->created_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($cashTransaction->header);

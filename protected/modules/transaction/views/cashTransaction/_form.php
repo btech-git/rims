@@ -58,7 +58,7 @@
 //                                'yearRange'=>'1900:2020'
                             ),
                             'htmlOptions'=>array(
-                                'value'=>date('Y-m-d'),
+//                                'value'=>date('Y-m-d'),
                                 'readonly' => true,
                             ),
                         )); ?>

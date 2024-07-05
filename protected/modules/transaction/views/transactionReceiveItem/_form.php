@@ -41,7 +41,7 @@
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
-                                    'value' => date('Y-m-d'),
+//                                    'value' => date('Y-m-d'),
                                 ),
                             )); ?>
                             <?php echo $form->error($receiveItem->header, 'receive_item_date'); ?>

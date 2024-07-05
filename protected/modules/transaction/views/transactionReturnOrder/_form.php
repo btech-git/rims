@@ -46,7 +46,7 @@
                             ),
                             'htmlOptions' => array(
                                 'readonly' => true,
-                                'value' => date('Y-m-d'),
+//                                'value' => date('Y-m-d'),
                             ),
                         )); ?>
                         <?php echo $form->error($returnOrder->header, 'return_order_date'); ?>

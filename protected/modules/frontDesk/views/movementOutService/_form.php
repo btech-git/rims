@@ -43,7 +43,7 @@
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
-                                                'value' => date('Y-m-d'),
+//                                                'value' => date('Y-m-d'),
                                             ),
                                         )); ?>
                                         <?php //echo $form->textField($movementOut->header,'date_posting',array('readonly'=>true)); ?>

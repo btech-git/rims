@@ -136,6 +136,7 @@ class TransactionReturnOrderController extends Controller {
         $receiveDataProvider->criteria->addCondition('t.receive_item_date > "2021-12-31"');
 
         $returnOrder = $this->instantiate(null);
+        $returnOrder->header->return_order_date = date('Y-m-d');
         $returnOrder->header->created_datetime = date('Y-m-d H:i:s');
         $returnOrder->header->status = 'Draft';
         $this->performAjaxValidation($returnOrder->header);
