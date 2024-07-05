@@ -95,41 +95,34 @@ class PayableSupplierController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Hutang Supplier');
 
-        $worksheet->mergeCells('A1:E1');
-        $worksheet->mergeCells('A2:E2');
-        $worksheet->mergeCells('A3:E3');
+        $worksheet->mergeCells('A1:H1');
+        $worksheet->mergeCells('A2:H2');
+        $worksheet->mergeCells('A3:H3');
 
-        $worksheet->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:E3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A2', 'Raperind Motor');
         $worksheet->setCellValue('A3', 'Laporan Hutang Supplier');
-        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+        $worksheet->setCellValue('A3', 'Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:E5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:E6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:E6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
-
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'PO #');
-        $worksheet->setCellValue('C6', 'Grand Total');
-        $worksheet->setCellValue('D6', 'Payment');
-        $worksheet->setCellValue('E6', 'Remaining');
+        $worksheet->setCellValue('D5', 'Tanggal');
+        $worksheet->setCellValue('E5', 'PO #');
+        $worksheet->setCellValue('F5', 'Grand Total');
+        $worksheet->setCellValue('G5', 'Payment');
+        $worksheet->setCellValue('H5', 'Remaining');
 
         $counter = 8;
         
         foreach ($payableSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->code);
-            $worksheet->setCellValue("B{$counter}", $header->company);
-            $worksheet->setCellValue("C{$counter}", $header->name);
-            
-            $counter++;
-            
-            $payableData = $header->getPayableReport($endDate, $branchId);
+            $payableData = $header->getPayableSupplierReport($startDate, $endDate, $branchId);
             $totalPurchase = 0.00;
             $totalPayment = 0.00;
             $totalPayable = 0.00;
@@ -138,11 +131,14 @@ class PayableSupplierController extends Controller {
                 $paymentAmount = $payableRow['payment_amount'];
                 $paymentLeft = $payableRow['payment_left'];
                 
-                $worksheet->setCellValue("A{$counter}", $payableRow['purchase_order_date']);
-                $worksheet->setCellValue("B{$counter}", $payableRow['purchase_order_no']);
-                $worksheet->setCellValue("C{$counter}", $purchase);
-                $worksheet->setCellValue("D{$counter}", $paymentAmount);
-                $worksheet->setCellValue("E{$counter}", $paymentLeft);
+                $worksheet->setCellValue("A{$counter}", $header->code);
+                $worksheet->setCellValue("B{$counter}", $header->company);
+                $worksheet->setCellValue("C{$counter}", $header->name);
+                $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_date']);
+                $worksheet->setCellValue("E{$counter}", $payableRow['purchase_order_no']);
+                $worksheet->setCellValue("F{$counter}", $purchase);
+                $worksheet->setCellValue("G{$counter}", $paymentAmount);
+                $worksheet->setCellValue("H{$counter}", $paymentLeft);
 
                 $counter++;
                 
@@ -151,20 +147,20 @@ class PayableSupplierController extends Controller {
                 $totalPayable += $paymentLeft;
             }
             
-            $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
 
-            $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->mergeCells("A{$counter}:B{$counter}");
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->mergeCells("A{$counter}:E{$counter}");
             $worksheet->setCellValue("A{$counter}", 'Total');
-            $worksheet->setCellValue("C{$counter}", $totalPurchase);
-            $worksheet->setCellValue("D{$counter}", $totalPayment);
-            $worksheet->setCellValue("E{$counter}", $totalPayable);
+            $worksheet->setCellValue("F{$counter}", $totalPurchase);
+            $worksheet->setCellValue("G{$counter}", $totalPayment);
+            $worksheet->setCellValue("H{$counter}", $totalPayable);
 
             $counter++;$counter++;
         }
 
-        for ($col = 'A'; $col !== 'F'; $col++) {
+        for ($col = 'A'; $col !== 'J'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

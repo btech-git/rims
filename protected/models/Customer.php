@@ -480,13 +480,14 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getReceivableReport($endDate, $branchId, $insuranceCompanyId, $plateNumber) {
+    public function getReceivableReport($startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber) {
         $branchConditionSql = '';
         $insuranceConditionSql = '';
         $plateNumberConditionSql = '';
         
         $params = array(
             ':customer_id' => $this->id,
+            ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
         
@@ -511,7 +512,7 @@ class Customer extends CActiveRecord {
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
-            WHERE p.customer_id = :customer_id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date " . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
+            WHERE p.customer_id = :customer_id AND p.payment_left > 100.00 AND p.invoice_date BETWEEN :start_date AND :end_date " . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
