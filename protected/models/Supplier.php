@@ -223,22 +223,20 @@ class Supplier extends CActiveRecord {
         $branchConditionSql = '';
         
         $criteria = new CDbCriteria;
-        
         $criteria->compare('t.id', $this->id);
-        
         $criteria->params = array(
             ':end_date' => $endDate,
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
             $criteria->params[':branch_id'] = $branchId;
         }
         
         $criteria->addCondition("EXISTS (
-            SELECT p.supplier_id
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = t.id AND p.payment_left > 100.00 AND p.purchase_order_date <= :end_date " . $branchConditionSql . " 
+            SELECT supplier_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = t.id AND payment_left > 100.00 AND substring(purchase_order_date, 1, 10) <= :end_date " . $branchConditionSql . " 
         )");
 
         return new CActiveDataProvider($this, array(
@@ -250,23 +248,21 @@ class Supplier extends CActiveRecord {
         $branchConditionSql = '';
         
         $criteria = new CDbCriteria;
-        
         $criteria->compare('t.id', $this->id);
-        
         $criteria->params = array(
             ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
             $criteria->params[':branch_id'] = $branchId;
         }
         
         $criteria->addCondition("EXISTS (
-            SELECT p.supplier_id
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = t.id AND p.purchase_order_date BETWEEN :start_date AND :end_date " . $branchConditionSql . " 
+            SELECT supplier_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = t.id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date " . $branchConditionSql . " 
         )");
 
         return new CActiveDataProvider($this, array(
@@ -282,7 +278,7 @@ class Supplier extends CActiveRecord {
         $criteria->addCondition("EXISTS (
             SELECT COALESCE(SUM(payment_left), 0) AS beginning_balance 
             FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE t.id = supplier_id AND purchase_order_date < :start_date
+            WHERE t.id = supplier_id AND substring(purchase_order_date, 1, 10) < :start_date
             GROUP BY supplier_id
             HAVING SUM(payment_left) > 0
         )");
