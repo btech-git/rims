@@ -407,13 +407,13 @@ class Supplier extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         $sql = "
-            SELECT purchase_order_no, purchase_order_date, COALESCE(p.total_price, 0) AS total_price, COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left 
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date " . $branchConditionSql;
+            SELECT purchase_order_no, purchase_order_date, COALESCE(total_price, 0) AS total_price, COALESCE(payment_amount, 0) AS payment_amount, COALESCE(payment_left, 0) AS payment_left 
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date " . $branchConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
