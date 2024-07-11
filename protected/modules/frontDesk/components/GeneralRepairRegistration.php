@@ -578,8 +578,7 @@ class GeneralRepairRegistration extends CComponent {
             foreach ($this->productDetails as $productDetail) {
                 $productDetail->registration_transaction_id = $this->header->id;
                 $productDetail->total_price = $productDetail->totalAmountProduct;
-                $productDetail->quantity_movement = 0;
-                $productDetail->quantity_movement_left = $productDetail->quantity;
+                $productDetail->quantity_movement_left = $productDetail->quantity - $productDetail->quantity_movement;
                 $productDetail->hpp = $productDetail->product->hpp;
 
                 $valid = $productDetail->save(false) && $valid;

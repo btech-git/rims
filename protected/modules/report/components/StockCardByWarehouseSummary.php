@@ -9,10 +9,10 @@ class StockCardByWarehouseSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = TRUE;
-        $this->dataProvider->criteria->with = array(
-            'inventoryDetails',
-        );
+//        $this->dataProvider->criteria->together = TRUE;
+//        $this->dataProvider->criteria->with = array(
+//            'inventoryDetails',
+//        );
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -32,12 +32,14 @@ class StockCardByWarehouseSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $productId = $filters['productId'];
-        
-        $this->dataProvider->criteria->addBetweenCondition('inventoryDetails.transaction_date', $startDate, $endDate);
-        if (!empty($productId)) {
-            $this->dataProvider->criteria->compare('inventoryDetails.product_id', $productId);
-        }
+
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT i.id
+            FROM " . InventoryDetail::model()->tableName() . " i
+            WHERE i.product_id = t.id AND i.transaction_date BETWEEN :start_date AND :end_date
+        )");
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 
 }

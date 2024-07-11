@@ -121,12 +121,6 @@ $('.search-form form').submit(function(){
                                     'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
                                 ), true)
                             ),
-                            'Return Pembelian' => array(
-                                'content' => $this->renderPartial('_viewReturn', array(
-                                    'returnOrder' => $returnOrder,
-                                    'returnOrderDataProvider' => $returnOrderDataProvider,
-                                ), true)
-                            ),
                             'Retail Sales' => array(
                                 'content' => $this->renderPartial('_viewSales', array(
                                     'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
@@ -137,6 +131,12 @@ $('.search-form form').submit(function(){
                                 'content' => $this->renderPartial('_viewRequest', array(
                                     'materialRequestDataProvider' => $materialRequestDataProvider,
                                     'materialRequest' => $materialRequest,
+                                ), true)
+                            ),
+                            'Return Pembelian' => array(
+                                'content' => $this->renderPartial('_viewReturn', array(
+                                    'returnOrder' => $returnOrder,
+                                    'returnOrderDataProvider' => $returnOrderDataProvider,
                                 ), true)
                             ),
                         ),

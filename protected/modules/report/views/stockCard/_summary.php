@@ -46,7 +46,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php foreach ($stockCardSummary->dataProvider->data as $header): ?>
                 <?php $stock = $header->getBeginningStockReport($startDate, $branchId); ?>
                 <?php $beginningValue = $header->getBeginningValueReport($startDate, $branchId); ?>
-                <?php if ($stock > 0): ?>
+                <?php //if ($stock > 0): ?>
                     <tr class="items1">
                         <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
@@ -104,7 +104,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <td colspan="10">&nbsp;</td>
                     </tr>
-                <?php endif; ?>
+                <?php //endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

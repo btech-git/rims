@@ -38,7 +38,6 @@ class MovementOuts extends CComponent {
 
             if ($deliveryOrder !== null) {
                 foreach ($deliveryOrder->transactionDeliveryOrderDetails as $deliveryDetail) {
-
                     if ($deliveryDetail->quantity_movement_left > 0) {
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
@@ -60,7 +59,6 @@ class MovementOuts extends CComponent {
 
             if ($returnOrder !== null) {
                 foreach ($returnOrder->transactionReturnOrderDetails as $returnDetail) {
-
                     if ($returnDetail->quantity_movement_left > 0) {
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
@@ -82,7 +80,6 @@ class MovementOuts extends CComponent {
 
             if ($registrationTransaction !== null) {
                 foreach ($registrationTransaction->registrationProducts as $registrationDetail) {
-
                     if ($registrationDetail->quantity_movement_left > 0) {
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
@@ -104,7 +101,6 @@ class MovementOuts extends CComponent {
 
             if ($materialRequest !== null) {
                 foreach ($materialRequest->materialRequestDetails as $materialRequestDetail) {
-
                     if ($materialRequestDetail->quantity_remaining > 0) {
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;

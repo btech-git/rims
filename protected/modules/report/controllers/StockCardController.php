@@ -31,7 +31,7 @@ class StockCardController extends Controller {
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $stockCardSummary = new StockCardSummary($product->search());
+        $stockCardSummary = new StockCardSummary($product->searchByStockCard());
         $stockCardSummary->setupLoading();
         $stockCardSummary->setupPaging($pageSize, $currentPage);
         $stockCardSummary->setupSorting();

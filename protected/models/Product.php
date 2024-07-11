@@ -34,6 +34,8 @@
  * @property integer $unit_id
  * @property integer $user_id
  * @property string $date_posting
+ * @property integer $user_id_edit
+ * @property string $date_edit
  * @property integer $is_approved
  * @property integer $user_id_approval
  * @property string $date_approval
@@ -79,6 +81,8 @@
  * @property TransactionTransferRequestDetail[] $transactionTransferRequestDetails
  * @property Unit $unit
  * @property User $user
+ * @property UserIdApproval $userIdApproval
+ * @property UserIdEdit $userIdEdit
  */
 class Product extends CActiveRecord {
 
@@ -111,17 +115,17 @@ class Product extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, manufacturer_code, name, production_year, brand_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id, user_id, minimum_selling_price', 'required'),
-            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, is_approved, user_id_approval, user_id', 'numerical', 'integerOnly' => true),
+            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, is_approved, user_id_approval, user_id_edit, user_id', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('manufacturer_code, barcode, extension', 'length', 'max' => 50),
             array('manufacturer_code', 'unique', 'on' => 'insert'),
             array('name', 'length', 'max' => 30),
             array('purchase_price, recommended_selling_price, hpp, retail_price, status, minimum_selling_price', 'length', 'max' => 10),
             array('is_usable', 'length', 'max' => 5),
-            array('date_posting, date_approval', 'safe'),
+            array('date_posting, date_approval, date_edit', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -166,6 +170,7 @@ class Product extends CActiveRecord {
             'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
+            'userIdEdit' => array(self::BELONGS_TO, 'Users', 'user_id_edit'),
             'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'product_id'),
         );
     }
@@ -210,6 +215,8 @@ class Product extends CActiveRecord {
             'is_approved' => 'Approval',
             'user_id_approval' => 'User Approval',
             'date_approval' => 'Tanggal Approval',
+            'user_id_edit' => 'User Edit',
+            'date_edit' => 'Tanggal Edit',
         );
     }
 
@@ -505,6 +512,30 @@ class Product extends CActiveRecord {
             'pagination' => array(
                 'pageSize' => 500,
                 'currentPage' => $pageNumber - 1,
+            ),
+        ));
+    }
+
+    public function searchByStockCard() {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.brand_id', $this->brand_id);
+        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
+        $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
+        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
+        $criteria->compare('t.unit_id', $this->unit_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 500,
             ),
         ));
     }

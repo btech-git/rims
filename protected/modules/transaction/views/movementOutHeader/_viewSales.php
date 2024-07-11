@@ -1,4 +1,44 @@
 <h2>Retail Sales</h2>
+<div class="wide form" id="advSearch">
+
+    <?php $form=$this->beginWidget('CActiveForm', array(
+	'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
+    )); ?>
+
+    <div class="row">
+        <div class="small-12 medium-6 columns">
+            <!-- BEGIN FIELDS -->
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($registrationTransaction, 'transaction_date', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                            'model' => $registrationTransaction,
+                            'attribute' => "transaction_date",
+                            'options'=>array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth'=>true,
+                                'changeYear'=>true,
+                            ),
+                            'htmlOptions'=>array(
+                                'readonly' => true,
+                            ),
+                        )); ?>
+                    </div>
+                </div>
+            </div>	
+
+            <div class="field buttons text-right">
+                <?php echo CHtml::submitButton('SearchRegistrationDate',array('class'=>'button cbutton')); ?>
+            </div>
+        </div>
+    </div>	
+    <?php $this->endWidget(); ?>
+</div>	
+            
 <hr />
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -19,6 +59,7 @@
             ),
             array(
                 'name'=>'transaction_date',
+                'filter' => false,
                 'value'=>'$data->transaction_date'
             ),
             array(
