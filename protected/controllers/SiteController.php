@@ -262,7 +262,7 @@ class SiteController extends Controller {
             $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
             $endDate = date('Y-m-d');
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
-            $productDataProvider = $product->searchByStockCheck($pageNumber);
+            $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, '<>');
             $branches = Branch::model()->findAll();
 
             $this->renderPartial('_productStockTable', array(
