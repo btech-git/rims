@@ -210,7 +210,7 @@ class Products extends CComponent {
 
     public function flush() {
 
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
 //        $this->header->hpp = $this->purchasePriceAfterTax;
         $this->header->minimum_selling_price = $this->minimumSellingPrice;
         $this->header->recommended_selling_price = $this->recommendedSellingPrice;
