@@ -148,7 +148,7 @@ class ReceivableController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId);
+            $receivableData = $header->getReceivableReport('2023-01-01', $endDate, $branchId, $insuranceCompanyId);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
