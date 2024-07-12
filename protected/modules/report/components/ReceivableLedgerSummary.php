@@ -37,7 +37,7 @@ class ReceivableLedgerSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT i.id FROM " . InvoiceHeader::model()->tableName() . " i 
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.coa_id = t.id AND transaction_date BETWEEN :start_date AND :end_date
+            WHERE c.coa_id = t.id AND invoice_date BETWEEN :start_date AND :end_date
         )");
 
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
