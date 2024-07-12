@@ -41,7 +41,7 @@ class ReceivableLedgerController extends Controller {
         $receivableLedgerSummary->setupLoading();
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
-        $receivableLedgerSummary->setupFilter($coaId);
+        $receivableLedgerSummary->setupFilter($startDate, $endDate);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));

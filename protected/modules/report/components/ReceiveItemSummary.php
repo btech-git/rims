@@ -36,8 +36,8 @@ class ReceiveItemSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate, $branch) {
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
+//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.receive_item_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.recipient_branch_id', $branch);
     }

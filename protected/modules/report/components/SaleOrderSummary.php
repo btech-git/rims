@@ -31,8 +31,8 @@ class SaleOrderSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate, $branch) {
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
+//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
         $this->dataProvider->criteria->addBetweenCondition('t.sale_order_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.requester_branch_id', $branch);
     }

@@ -30,9 +30,17 @@ class ReceivableLedgerSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.code ASC'; //$this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter() {
+    public function setupFilter($startDate, $endDate) {
         $this->dataProvider->criteria->addCondition("t.code NOT LIKE '%.000'");
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT i.id FROM " . InvoiceHeader::model()->tableName() . " i 
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.coa_id = t.id AND transaction_date BETWEEN :start_date AND :end_date
+        )");
+
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 }
