@@ -38,6 +38,10 @@ class ReceivableLedgerSummary extends CComponent {
             SELECT i.id FROM " . InvoiceHeader::model()->tableName() . " i 
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
             WHERE c.coa_id = t.id AND invoice_date BETWEEN :start_date AND :end_date
+            UNION
+            SELECT i.id FROM " . PaymentIn::model()->tableName() . " i 
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.coa_id = t.id AND payment_date BETWEEN :start_date AND :end_date
         )");
 
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
