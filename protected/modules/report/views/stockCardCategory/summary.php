@@ -25,24 +25,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns" id="product_sub_brand_series">
-                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                            'empty' => '-- All --',
-                                        )); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="medium-12 columns">
-                            <div class="field">
-                                <div class="row collapse">
                                     <div class="small-2 columns">
                                         <span class="prefix">Periode:</span>
                                         <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
@@ -75,6 +57,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 'readonly' => true,
                                                 'placeholder' => 'Sampai',
                                             ),
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch</span>
+                                    </div>
+                                    
+                                    <div class="small-8 columns" id="product_sub_brand_series">
+                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
                                         )); ?>
                                     </div>
                                 </div>

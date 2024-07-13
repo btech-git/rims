@@ -30,10 +30,28 @@ class StockCardCategorySummary extends CComponent {
     }
 
     public function setupFilter($filters) {
+        $branchConditionSql = '';
+        
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         
-//        $this->dataProvider->criteria->addBetweenCondition('inventoryDetails.transaction_date', $startDate, $endDate);
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+        }
+        
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT i.id
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+            WHERE p.product_sub_category_id = t.id AND i.transaction_date BETWEEN :start_date AND :end_date " . $branchConditionSql . "
+        )");
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        
+        if (!empty($branchId)) {
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
     }
-
 }

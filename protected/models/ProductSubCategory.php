@@ -317,14 +317,13 @@ class ProductSubCategory extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT c.id, c.code, c.name, c.description, SUM(i.stock_in) AS stock_in, SUM(i.stock_out) AS stock_out
+        $sql = "SELECT p.id, p.code, p.name, p.manufacturer_code, SUM(i.stock_in) AS stock_in, SUM(i.stock_out) AS stock_out
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
-                INNER JOIN " . ProductSubCategory::model()->tableName() . " c on c.id = p.product_sub_category_id
                 INNER JOIN " . Unit::model()->tableName() . " u ON u.id = p.unit_id
                 WHERE i.transaction_date BETWEEN :start_date AND :end_date AND p.product_sub_category_id = :product_sub_category_id" . $branchConditionSql . "
-                GROUP BY c.id, c.code, c.name, c.description";
+                GROUP BY p.id, p.code, p.name, p.manufacturer_code";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
