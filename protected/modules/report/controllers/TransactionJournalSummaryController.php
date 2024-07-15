@@ -441,15 +441,11 @@ class TransactionJournalSummaryController extends Controller {
                 preg_match('/^422.+$/', $transactionJournalItem['coa_code']) === 1
             );
             $valid = $valid || $transactionType === 'Pin';
-            $valid = $valid || $transactionType === 'MI' && (
-                preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
+            $valid = $valid || $transactionType === 'RCI' && (
+                preg_match('/^134.+$/', $transactionJournalItem['coa_code']) === 1 ||
                 preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1
             );
-            $valid = $valid || $transactionType === 'MO' && (
-                preg_match('/^131.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                preg_match('/^132.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                preg_match('/^134.+$/', $transactionJournalItem['coa_code']) === 1
-            );
+            $valid = $valid || $transactionType === 'DO';
             $valid = $valid || $transactionType === 'CASH';
             $valid = $valid || $transactionType === 'WOE' && (
                 $transactionJournalItem['coa_code'] === '502.00.001' ||
