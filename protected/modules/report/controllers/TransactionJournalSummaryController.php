@@ -45,6 +45,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -76,6 +77,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -107,6 +109,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -138,6 +141,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -169,6 +173,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -200,6 +205,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -231,6 +237,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -262,6 +269,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -293,6 +301,7 @@ class TransactionJournalSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionJournalData' => $transactionJournalData,
         ));
     }
@@ -360,13 +369,14 @@ class TransactionJournalSummaryController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $remark = (isset($_GET['Remark'])) ? $_GET['Remark'] : '';
         $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
 
         $transactionJournalSummary = new TransactionJournalSummary($jurnalUmum->search());
         $transactionJournalSummary->setupLoading();
         $transactionJournalSummary->setupPaging(10000, 1);
         $transactionJournalSummary->setupSorting();
-        $transactionJournalSummary->setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId, $transactionType);
+        $transactionJournalSummary->setupFilterTransactionDetail($startDate, $endDate, $coaId, $branchId, $remark, $transactionType);
 
         if (isset($_GET['SaveToExcel'])) {
             $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate);

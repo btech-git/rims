@@ -53,6 +53,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                     'branchId' => $branchId,
+                    'remark' => $remark,
                     'transactionJournalData' => $transactionJournalData,
                 )); ?>
             </div>

@@ -55,6 +55,7 @@
                                 "StartDate" => $startDate, 
                                 "EndDate" => $endDate, 
                                 "BranchId" => $branchId,
+                                'Remark' => $remark,
                                 "TransactionType" => $transactionType,
                             )), array('target' => '_blank')); ?>
                         </td>
