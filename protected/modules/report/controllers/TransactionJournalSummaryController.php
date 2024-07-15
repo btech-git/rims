@@ -389,6 +389,7 @@ class TransactionJournalSummaryController extends Controller {
             'endDate' => $endDate,
             'coaId' => $coaId,
             'branchId' => $branchId,
+            'remark' => $remark,
             'transactionType' => $transactionType,
         ));
     }
