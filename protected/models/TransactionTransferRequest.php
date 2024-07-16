@@ -223,10 +223,10 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         $criteria->condition = "EXISTS (
             SELECT COALESCE(SUM(d.quantity_delivery_left), 0) AS quantity_remaining
             FROM " . TransactionTransferRequestDetail::model()->tableName() . " d
-            WHERE t.id = d.transfer_request_id AND t.status_document NOT IN ('Draft', 'Rejected') AND t.destination_approval_status = 1 AND t.transfer_request_date > '2021-12-31'
+            WHERE t.id = d.transfer_request_id
             GROUP BY d.transfer_request_id
             HAVING quantity_remaining > 0
-        )";
+        ) AND t.status_document NOT IN ('Draft', 'Rejected') AND t.destination_approval_status = 1 AND t.transfer_request_date > '2022-12-31'";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transfer_request_no', $this->transfer_request_no, true);

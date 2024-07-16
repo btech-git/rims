@@ -365,7 +365,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('deliveryOrder.delivery_order_no', $this->delivery_order_no, true);
         $criteria->compare('movementOut.movement_out_no', $this->movement_out_no, true);
 
-        $criteria->addCondition("purchaseOrder.payment_left > 0.00");
+        $criteria->addCondition("purchaseOrder.payment_left > 0.00 AND t.cancelled_datetime IS null");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

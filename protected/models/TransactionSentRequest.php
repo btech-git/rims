@@ -166,12 +166,12 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-			SELECT COALESCE(SUM(d.quantity - d.delivery_quantity), 0) AS quantity_remaining
-			FROM " . TransactionSentRequestDetail::model()->tableName() . " d
-			WHERE t.id = d.sent_request_id AND status_document NOT IN ('Draft', 'Rejected')
-			GROUP BY d.sent_request_id
-			HAVING quantity_remaining > 0
-		)";
+            SELECT COALESCE(SUM(d.quantity - d.delivery_quantity), 0) AS quantity_remaining
+            FROM " . TransactionSentRequestDetail::model()->tableName() . " d
+            WHERE t.id = d.sent_request_id
+            GROUP BY d.sent_request_id
+            HAVING quantity_remaining > 0
+        ) AND t.status_document NOT IN ('Draft', 'Rejected') AND t.destination_approval_status = 1 AND t.sent_request_date > '2022-12-31'";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('sent_request_no', $this->sent_request_no, true);
