@@ -407,7 +407,7 @@ class GeneralRepairRegistrationController extends Controller {
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $dataProvider = $model->searchAdmin();
-        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_id);
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'customer',
