@@ -255,7 +255,7 @@ class PaymentOutComponent extends CComponent {
         $total = 0.00;
         
         foreach ($this->details as $detail) {
-            $total += empty($detail->receiveItem) ? $detail->workOrderExpenseHeader->grand_total : $detail->receiveItem->grandTotal;
+            $total += $detail->total_invoice;
         }
         
         return $total;
