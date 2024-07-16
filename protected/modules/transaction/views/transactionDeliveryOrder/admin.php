@@ -109,13 +109,6 @@ Yii::app()->clientScript->registerScript('search', "
 <div>
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(
-            'Sales Order' => array(
-                'content' => $this->renderPartial('_viewSales', array(
-                    'salesDataProvider' => $salesDataProvider, 
-                    'sales' => $sales, 
-                    'model' => $model
-                ), true),
-            ),
             'Transfer Request' => array(
                 'content' => $this->renderPartial('_viewTransfer', array(
                     'transferDataProvider' => $transferDataProvider, 
@@ -127,6 +120,13 @@ Yii::app()->clientScript->registerScript('search', "
                 'content' => $this->renderPartial('_viewSent', array(
                     'sentDataProvider' => $sentDataProvider, 
                     'sent' => $sent, 
+                    'model' => $model
+                ), true),
+            ),
+            'Sales Order' => array(
+                'content' => $this->renderPartial('_viewSales', array(
+                    'salesDataProvider' => $salesDataProvider, 
+                    'sales' => $sales, 
                     'model' => $model
                 ), true),
             ),
