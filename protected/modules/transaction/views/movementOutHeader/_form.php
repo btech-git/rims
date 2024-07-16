@@ -72,7 +72,7 @@
                             <?php echo $form->labelEx($movementOut->header, 'branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownlist($movementOut->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
+                            <?php echo $form->dropDownlist($movementOut->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active', 'id' => Yii::app()->user->branch_id)), 'id', 'name'), array(
                                 'prompt' => '[--Select Branch--]', 
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'POST',

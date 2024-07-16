@@ -32,6 +32,7 @@ $('.search-form form').submit(function(){
 });
 ");
 ?>
+
 <div id="maincontent">
     <div class="row">
         <div class="small-12 columns">

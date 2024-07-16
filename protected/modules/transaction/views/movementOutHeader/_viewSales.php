@@ -1,18 +1,13 @@
 <h2>Retail Sales</h2>
 <div class="wide form" id="advSearch">
 
-    <?php $form=$this->beginWidget('CActiveForm', array(
-	'action'=>Yii::app()->createUrl($this->route),
-	'method'=>'get',
-    )); ?>
-
     <div class="row">
         <div class="small-12 medium-6 columns">
             <!-- BEGIN FIELDS -->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($registrationTransaction, 'transaction_date', array('class'=>'prefix')); ?>
+                        <?php echo CHtml::activeLabel($registrationTransaction, 'transaction_date'); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
@@ -30,13 +25,29 @@
                     </div>
                 </div>
             </div>	
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::activeLabel($registrationTransaction, 'customer_name'); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeTextField($registrationTransaction, 'customer_name'); ?>
+                    </div>
+                </div>
+            </div>
 
             <div class="field buttons text-right">
-                <?php echo CHtml::submitButton('SearchRegistrationDate',array('class'=>'button cbutton')); ?>
+                <?php echo CHtml::button('Search', array('class'=>'button cbutton',
+                    'onclick' => '$.fn.yiiGridView.update("retail-sale-grid", {data: {
+                            RegistrationTransaction: {
+                                transaction_date: $("#' . CHtml::activeId($registrationTransaction, 'transaction_date') . '").val(),
+                                customer_name: $("#' . CHtml::activeId($registrationTransaction, 'customer_name') . '").val()
+                            }
+                        } });',
+                    )); ?>
             </div>
         </div>
     </div>	
-    <?php $this->endWidget(); ?>
 </div>	
             
 <hr />
@@ -72,7 +83,7 @@
             ),
             array(
                 'name'=>'customer_id', 
-                'filter' => CHtml::activeTextField($registrationTransaction, 'customer_name'), 
+                'filter' => false,
                 'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
                 'type'=>'raw'
             ),
