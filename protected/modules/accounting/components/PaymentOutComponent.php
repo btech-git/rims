@@ -32,11 +32,12 @@ class PaymentOutComponent extends CComponent {
                     $detail = new PayOutDetail;
                     $detail->receive_item_id = $transactionId;
                     $detail->work_order_expense_header_id = null;
-                    $detail->total_invoice = $receiveItem->grandTotal;
+                    $detail->total_invoice = $receiveItem->purchaseOrder->payment_left;
                     $this->details[] = $detail;
                 }
-            } else
+            } else {
                 $this->header->addError('error', 'Invoice tidak ada di dalam detail');
+            }
         } elseif ($movementType == 2) {
             $workOrderExpense = WorkOrderExpenseHeader::model()->findByPk($transactionId);
             
@@ -55,10 +56,9 @@ class PaymentOutComponent extends CComponent {
                     $detail->total_invoice = $workOrderExpense->grand_total;
                     $this->details[] = $detail;
                 }
-            } else
+            } else {
                 $this->header->addError('error', 'Invoice tidak ada di dalam detail');
-        } else {
-            $exist;
+            }
         }
     }
 
