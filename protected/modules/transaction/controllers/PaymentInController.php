@@ -489,7 +489,7 @@ class PaymentInController extends Controller {
         }
 
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.payment_left > 1 AND t.invoice_date > "2021-12-31"');
+        $invoiceCriteria->addCondition('t.payment_left > 1 AND t.invoice_date > "2021-12-31" AND t.status NOT LIKE "%CANCEL%"');
 //        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
         $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);

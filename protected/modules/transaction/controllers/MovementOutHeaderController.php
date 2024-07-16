@@ -293,7 +293,7 @@ class MovementOutHeaderController extends Controller {
         }
         
         $deliveryOrderDataProvider = $deliveryOrder->searchByMovementOut();
-        $deliveryOrderDataProvider->criteria->addCondition("t.delivery_date > '2021-12-31'");
+        $deliveryOrderDataProvider->criteria->addCondition("t.delivery_date > '2022-12-31' AND t.is_cancelled = 0");
         $deliveryOrderDataProvider->criteria->addInCondition('sender_branch_id', Yii::app()->user->branch_ids);
 
         $returnOrder = Search::bind(new TransactionReturnOrder('search'), isset($_GET['TransactionReturnOrder']) ? $_GET['TransactionReturnOrder'] : array());
@@ -307,7 +307,7 @@ class MovementOutHeaderController extends Controller {
         }
 
         $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
-        $registrationTransactionDataProvider->criteria->addCondition('t.transaction_date > "2021-12-31"');
+        $registrationTransactionDataProvider->criteria->addCondition('t.transaction_date > "2022-12-31" AND t.user_id_cancelled IS null');
         $registrationTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
 
         /* Registration Transaction */
@@ -318,7 +318,7 @@ class MovementOutHeaderController extends Controller {
         }
 
         $materialRequestDataProvider = $materialRequest->searchByMovementOut();
-        $materialRequestDataProvider->criteria->addCondition('t.transaction_date > "2021-12-31"');
+        $materialRequestDataProvider->criteria->addCondition('t.transaction_date > "2022-12-31"');
         $materialRequestDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(

@@ -329,17 +329,12 @@ class TransactionReceiveItemController extends Controller {
     public function actionAdmin() {
         $model = new TransactionReceiveItem('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionReceiveItem']))
+        if (isset($_GET['TransactionReceiveItem'])) {
             $model->attributes = $_GET['TransactionReceiveItem'];
+        }
 
         $dataProvider = $model->search();
         $dataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
-//        $dataProvider->criteria->together = true;
-//        $dataProvider->criteria->with = array(
-//            'supplier',
-//            'recipientBranch',
-//            'purchaseOrder',
-//        );
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
@@ -364,10 +359,6 @@ class TransactionReceiveItemController extends Controller {
         }
         
         $purchaseDataProvider = $purchase->searchByReceive();
-//        $purchaseDataProvider->criteria->addCondition("EXISTS (
-//            SELECT d.branch_id FROM " . TransactionPurchaseOrderDestinationBranch::model()->tableName() . " d
-//            WHERE t.id = d.purchase_order_id AND d.branch_id IN ($branchIdsString)
-//        )");
 
         $consignment = new ConsignmentInHeader('search');
         $consignment->unsetAttributes();  // clear any default values
@@ -389,7 +380,7 @@ class TransactionReceiveItemController extends Controller {
 
         $movementCriteria = new CDbCriteria;
         $movementCriteria->compare('movement_out_no', $movement->movement_out_no, true);
-        $movementCriteria->addCondition("status = 'Approved' AND t.date_posting > '2021-12-31'");
+        $movementCriteria->addCondition("status = 'Approved' AND t.date_posting > '2022-12-31' AND t.cancelled_datetime is null");
         $movementCriteria->order = 't.date_posting DESC';
         $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
             'criteria' => $movementCriteria,

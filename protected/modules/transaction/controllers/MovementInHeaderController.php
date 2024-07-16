@@ -319,7 +319,7 @@ class MovementInHeaderController extends Controller {
         }
 
         $receiveItemDataProvider = $receiveItem->searchByMovementIn();
-        $receiveItemDataProvider->criteria->addCondition("t.receive_item_date > '2021-12-31'");
+        $receiveItemDataProvider->criteria->addCondition("t.receive_item_date > '2022-12-31' AND t.cancelled_datetime is null");
         $receiveItemDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
     
         $returnItem = new TransactionReturnItem('search');
