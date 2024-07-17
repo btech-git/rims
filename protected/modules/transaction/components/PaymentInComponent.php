@@ -139,7 +139,7 @@ class PaymentInComponent extends CComponent {
     public function flush() {
         $this->header->payment_type = $this->header->paymentType->name;
         $this->header->payment_amount = $this->totalPayment;
-//        $this->header->tax_service_amount = $this->totalServiceTax;
+        $this->header->tax_service_amount = $this->totalServiceTax;
         $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
@@ -152,7 +152,6 @@ class PaymentInComponent extends CComponent {
                 $detail->payment_in_id = $this->header->id;
             }
                 
-//            $detail->tax_service_amount = $detail->getTaxServiceAmount();
             $detail->tax_service_percentage = $detail->is_tax_service === 2 ? 0 : 0.02;
             $valid = $detail->save(false) && $valid;
 
@@ -200,13 +199,13 @@ class PaymentInComponent extends CComponent {
         return $total + $this->header->downpayment_amount;
     }
     
-//    public function getTotalServiceTax() {
-//        $total = 0.00;
-//        
-//        foreach ($this->details as $detail) {
-//            $total += $detail->taxServiceAmount;
-//        }
-//        
-//        return $total;
-//    }
+    public function getTotalServiceTax() {
+        $total = 0.00;
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->tax_service_amount;
+        }
+        
+        return $total;
+    }
 }

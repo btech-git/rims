@@ -146,7 +146,7 @@ class PaymentInController extends Controller {
                 $jurnalUmumKas->transaction_type = 'Pin';
                 $jurnalUmumKas->save();
 
-                if ($model->tax_service_amount > 0) {
+                if ($detail->tax_service_amount > 0) {
                     $jurnalPph = new JurnalUmum;
                     $jurnalPph->kode_transaksi = $model->payment_number;
                     $jurnalPph->tanggal_transaksi = $model->payment_date;
