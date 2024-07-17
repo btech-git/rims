@@ -134,6 +134,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
     <p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
 
     <?php echo $form->errorSummary(array($model)); ?>
+    
     <div class="row">
         <div class="medium-12 columns">
             <div class="field">
@@ -241,6 +242,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
                         <?php $branchIds = array_map(function ($userBranch) { return $userBranch->branch_id; }, $userBranches); ?>
                         <?php echo CHtml::checkBoxList('BranchId[]', $branchIds, CHtml::listData($branches, 'id', 'code'), array('labelOptions'=>array('style'=>'display:inline'), 'separator'=>' ',)); ?>
                     </div>
+                    <div style="color: red; font-weight: bold"><?php echo $emptyBranchErrorMessage; ?></div>
                 </div>
             </div>
             

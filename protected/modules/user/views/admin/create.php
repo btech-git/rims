@@ -14,6 +14,6 @@ $this->menu=array(
     <?php echo $this->renderPartial('_form', array(
         'model'=>$model,
         'employees' => $employees,
-//        'branches' => $branches,
+        'emptyBranchErrorMessage' => $emptyBranchErrorMessage,
     )); ?>
 </div>

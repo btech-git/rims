@@ -249,7 +249,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             WHERE t.id = d.receive_item_id
             GROUP BY d.receive_item_id
             HAVING quantity_remaining > 0
-        )";
+        ) AND t.receive_item_date > '2022-12-31' AND t.cancelled_datetime is null";
 
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.receive_item_no', $this->receive_item_no, true);

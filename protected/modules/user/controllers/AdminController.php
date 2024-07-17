@@ -122,6 +122,7 @@ class AdminController extends Controller {
         $model->create_at = date('Y-m-d H:i:s');
         $model->lastvisit_at = date('Y-m-d H:i:s');
         $employees = Employee::model()->findAll(array('condition' => 'status = "Active"', 'order' => 't.name'));
+        $emptyBranchErrorMessage = '';
         
         $this->performAjaxValidation(array($model));
         if (isset($_POST['User'])) {
@@ -130,8 +131,10 @@ class AdminController extends Controller {
             $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
             if ($model->validate()) {
                 $model->password = Yii::app()->controller->module->encrypting($model->password);
-                
-                if ($model->save()) {
+                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : array();
+                if (empty($branches)) {
+                    $emptyBranchErrorMessage = '1 or more branch must be selected!!';
+                } else if ($model->save()) {
                     $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
                     $authorizer->authManager->assign('Authenticated', $model->id);
                     
@@ -139,7 +142,6 @@ class AdminController extends Controller {
                         $authorizer->authManager->assign('Admin', $model->id);
                     }
                     
-                    $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : $_POST['BranchId'];
                     foreach($branches as $i=>$branch) {
                         $userBranch = new UserBranch;
                         $userBranch->users_id = $model->id;
@@ -155,7 +157,7 @@ class AdminController extends Controller {
         $this->render('create', array(
             'model' => $model,
             'employees' => $employees,
-//            'profile' => $profile,
+            'emptyBranchErrorMessage' => $emptyBranchErrorMessage,
         ));
     }
 
@@ -167,38 +169,34 @@ class AdminController extends Controller {
         $model = $this->loadModel();
         $employees = Employee::model()->findAll(array('order' => 't.name'));
         $this->performAjaxValidation(array($model));
+        $emptyBranchErrorMessage = '';
         
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
 
             if ($model->validate()) {
-                $model->save();
-//                $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
-//                $authorizer->authManager->assign('Authenticated', $model->id);
-
-                UserBranch::model()->deleteAllByAttributes(array('users_id' => $model->id,));
+                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : array();
+                if (empty($branches)) {
+                    $emptyBranchErrorMessage = '1 or more branch must be selected!!';
+                } else if ($model->save()) {
                 
-                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : '';
-                if (!empty($branches)) {
+                    UserBranch::model()->deleteAllByAttributes(array('users_id' => $model->id,));
                     foreach($branches as $i=>$branch) {
                         $userBranch = new UserBranch;
                         $userBranch->users_id = $model->id;
                         $userBranch->branch_id = $branch;
                         $userBranch->save();
                     }
-                }
 
-                $this->redirect(array('view', 'id' => $model->id));
+                    $this->redirect(array('view', 'id' => $model->id));
+                }
             }
-//            else {
-//                $profile->validate();
-//            }
         }
 
         $this->render('update', array(
             'model' => $model,
             'employees' => $employees,
-//            'profile' => $profile,
+            'emptyBranchErrorMessage' => $emptyBranchErrorMessage,
         ));
     }
 
@@ -298,8 +296,7 @@ class AdminController extends Controller {
                 $user = User::model()->findByPk($userId);
                 $identity = new AutoSwitchUserIdentity($user->username, '');
                 $identity->authenticate();
-                switch ($identity->errorCode)
-                {
+                switch ($identity->errorCode) {
                     case UserIdentity::ERROR_NONE:
                         Yii::app()->user->login($identity, 3600);
                         $this->redirect(array('/site/index'));

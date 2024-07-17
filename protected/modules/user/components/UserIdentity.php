@@ -8,6 +8,7 @@
 class UserIdentity extends CUserIdentity {
 
     private $_id;
+    private $_branchId;
 
     const ERROR_EMAIL_INVALID = 3;
     const ERROR_STATUS_NOTACTIV = 4;
@@ -46,6 +47,7 @@ class UserIdentity extends CUserIdentity {
                 return $userBranch->branch_id;
             }, $userBranches);
             $this->setState('branch_ids', $branchIds);
+            $this->setState('branch_id', $this->_branchId);
             $this->_id = $user->id;
             $this->username = $user->username;
             $this->errorCode = self::ERROR_NONE;
@@ -61,4 +63,7 @@ class UserIdentity extends CUserIdentity {
         return $this->_id;
     }
 
+    public function setBranchId($branchId) {
+        $this->_branchId = $branchId;
+    }
 }
