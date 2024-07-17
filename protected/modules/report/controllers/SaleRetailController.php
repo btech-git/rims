@@ -50,7 +50,11 @@ class SaleRetailController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($saleRetailSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate,
+                'branchId' => $branchId,
+            ));
         }
 
         $this->render('summary', array(
@@ -89,6 +93,7 @@ class SaleRetailController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate']; 
+        $branchId = $options['branchId']; 
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
@@ -97,17 +102,17 @@ class SaleRetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Penjualan per Pelanggan');
 
-        $worksheet->mergeCells('A1:I1');
-        $worksheet->mergeCells('A2:I2');
-        $worksheet->mergeCells('A3:I3');
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
 
-        $worksheet->getStyle('A1:I6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:I6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Rincian Penjualan per Pelanggan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Customer');
         $worksheet->setCellValue('B5', 'Type');
@@ -115,48 +120,45 @@ class SaleRetailController extends Controller {
         $worksheet->setCellValue('D5', 'Tanggal');
         $worksheet->setCellValue('E5', 'Jenis');
         $worksheet->setCellValue('F5', 'Vehicle');
-        $worksheet->setCellValue('G5', 'Total Jasa');
-        $worksheet->setCellValue('H5', 'Total Product');
-        $worksheet->setCellValue('I5', 'Grand Total');
+        $worksheet->setCellValue('G5', 'Barang');
+        $worksheet->setCellValue('H5', 'Disc Barang');
+        $worksheet->setCellValue('I5', 'Jasa');
+        $worksheet->setCellValue('J5', 'Disc Jasa');
+        $worksheet->setCellValue('K5', 'Total');
 
-        $worksheet->getStyle('A6:I6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         foreach ($dataProvider->data as $header) {
             $totalSale = 0.00;
-            $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-                'condition' => 'customer_id = :customer_id AND transaction_date BETWEEN :start_date AND :end_date', 
-                'params' => array(
-                    ':customer_id' => $header->id,
-                    ':start_date' => $startDate,
-                    ':end_date' => $endDate,
-                )
-            ));
-            if (!empty($registrationTransactions)) {
-                foreach ($registrationTransactions as $detail) {
-                    $grandTotal = CHtml::value($detail, 'grand_total');
+            $registrationTransactionData = $header->getRegistrationTransactionReport($startDate, $endDate, $branchId);
+            if (!empty($registrationTransactionData)) {
+                foreach ($registrationTransactionData as $registrationTransactionRow) {
+                    $grandTotal = $registrationTransactionRow['grand_total'];
                     $worksheet->getStyle("G{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
                     $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'customer_type')));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($detail->transaction_number));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($detail->transaction_date));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($detail, 'repair_type')));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($detail, 'vehicle.plate_number')));
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($detail, 'subtotal_service')));
-                    $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($detail, 'subtotal_product')));
-                    $worksheet->setCellValue("I{$counter}", CHtml::encode($grandTotal));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode($registrationTransactionRow['transaction_number']));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode($registrationTransactionRow['transaction_date']));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode($registrationTransactionRow['repair_type']));
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode($registrationTransactionRow['plate_number']));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode($registrationTransactionRow['subtotal_product']));
+                    $worksheet->setCellValue("H{$counter}", CHtml::encode($registrationTransactionRow['discount_product']));
+                    $worksheet->setCellValue("I{$counter}", CHtml::encode($registrationTransactionRow['subtotal_service']));
+                    $worksheet->setCellValue("J{$counter}", CHtml::encode($registrationTransactionRow['discount_service']));
+                    $worksheet->setCellValue("K{$counter}", CHtml::encode($grandTotal));
                     $counter++;
                     
                     $totalSale += $grandTotal;
                 }
-                $worksheet->setCellValue("H{$counter}", 'TOTAL');
-                $worksheet->setCellValue("I{$counter}", CHtml::encode($totalSale));
+                $worksheet->setCellValue("J{$counter}", 'TOTAL');
+                $worksheet->setCellValue("K{$counter}", CHtml::encode($totalSale));
                 $counter++;$counter++;
             }
         }
 
-        for ($col = 'A'; $col !== 'I'; $col++) {
+        for ($col = 'A'; $col !== 'M'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

@@ -444,9 +444,9 @@ class RegistrationTransactionController extends Controller {
         $invoiceCriteria->compare('t.status', $invoice->status);
         $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('t.insurance_company_id', $invoice->insurance_company_id);
-//        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $invoiceCriteria->addCondition('t.branch_id = :branch_id');
+        $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
         $invoiceCriteria->addCondition("t.status != 'CANCELLED' AND t.registration_transaction_id IS NOT NULL AND invoice_date > '2021-01-01'");
-//        $invoiceCriteria->compare('t.registration_transaction_id', $invoice->registration_transaction_id);
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array(
             'customer', 
@@ -2326,7 +2326,8 @@ class RegistrationTransactionController extends Controller {
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $modelDataProvider = $model->search();
-        $modelDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $modelDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $modelDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         $modelDataProvider->criteria->addCondition("t.work_order_number IS NOT NULL AND t.status != 'Finished'");
 
         $services = Service::model()->findAll();

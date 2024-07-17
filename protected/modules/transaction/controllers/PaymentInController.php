@@ -490,7 +490,7 @@ class PaymentInController extends Controller {
 
         $invoiceCriteria = new CDbCriteria;
         $invoiceCriteria->addCondition('t.payment_left > 1 AND t.invoice_date > "2021-12-31" AND t.status NOT LIKE "%CANCEL%"');
-//        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+//        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_id);
         $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('t.invoice_date', $invoice->invoice_date, true);
@@ -500,6 +500,8 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('t.status', $invoice->status, true);
         $invoiceCriteria->compare('t.reference_type', $invoice->reference_type);
         $invoiceCriteria->compare('t.insurance_company_id', $invoice->insurance_company_id);
+        $invoiceCriteria->addCondition('t.branch_id = :branch_id');
+        $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
         
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer', 'vehicle');
@@ -523,7 +525,8 @@ class PaymentInController extends Controller {
         
         $dataProvider = $model->search();
         $dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
-        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         $dataProvider->criteria->with = array(
             'customer',
             'paymentInApprovals',

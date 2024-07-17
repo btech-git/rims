@@ -168,7 +168,7 @@ class ConsignmentOutHeader extends MonthlyTransactionActiveRecord {
             WHERE t.id = d.consignment_out_id AND status_document = 'Approved'
             GROUP BY d.consignment_out_id
             HAVING quantity_remaining > 0
-        )";
+        ) AND t.date_posting > '2022-12-31'";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('consignment_out_no', $this->consignment_out_no, true);

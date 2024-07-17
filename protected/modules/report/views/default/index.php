@@ -400,12 +400,12 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Kartu Stok Persediaan', 
+                                        'label' => 'Nilai Stok Persediaan', 
                                         'url' => array('/report/inventoryValue/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardReport')
                                     ),
                                     array(
-                                        'label' => 'Nilai Stok Persediaan', 
+                                        'label' => 'Stok Quantity + Nilai Persediaan', 
                                         'url' => array('/report/inventoryStockValue/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardReport')
                                     ),
@@ -437,7 +437,7 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Kuantitas Barang per Gudang', 
+                                        'label' => 'Kartu Stok Gudang', 
                                         'url' => array('/frontDesk/inventory/check'), 
                                         'visible' => (Yii::app()->user->checkAccess('stockInventoryReport'))
                                     ),

@@ -108,11 +108,10 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($purchaseOrder->header, 'main_branch_id', array(
-                                'value' => $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id,
                                 'readonly' => true
                             )); ?>
                             <?php echo $form->textField($purchaseOrder->header, 'main_branch_name', array(
-                                'value' => $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $purchaseOrder->header->mainBranch->name,
+                                'value' => $purchaseOrder->header->mainBranch->name,
                                 'readonly' => true
                             )); ?>
 

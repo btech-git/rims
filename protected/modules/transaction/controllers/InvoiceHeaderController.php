@@ -400,13 +400,13 @@ class InvoiceHeaderController extends Controller {
         }
         
         $dataProvider = $model->searchByAdmin();
-        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         $dataProvider->criteria->with = array(
             'salesOrder',
             'registrationTransaction',
             'customer',
             'vehicle',
-            
         );
         
         (!empty(Yii::app()->session['pr'])) ? $pr = Yii::app()->session['pr'] : $pr = array();

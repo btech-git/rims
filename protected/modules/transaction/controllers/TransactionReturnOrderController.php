@@ -363,7 +363,8 @@ class TransactionReturnOrderController extends Controller {
             $model->attributes = $_GET['TransactionReturnOrder'];
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
+        $dataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,

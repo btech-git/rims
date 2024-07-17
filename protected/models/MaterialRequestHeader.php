@@ -152,7 +152,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
 
-        $criteria->addCondition("t.total_quantity_remaining > 0.00 AND t.status_document = 'Approved'");
+        $criteria->addCondition("t.total_quantity_remaining > 0.00 AND t.status_document = 'Approved' AND t.transaction_date > '2022-12-31'");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

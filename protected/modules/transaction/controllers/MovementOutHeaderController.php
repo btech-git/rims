@@ -278,11 +278,13 @@ class MovementOutHeaderController extends Controller {
         $model = new MovementOutHeader('search');
         $model->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['MovementOutHeader']))
+        if (isset($_GET['MovementOutHeader'])) {
             $model->attributes = $_GET['MovementOutHeader'];
+        }
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         /* Delivery Order */
         $deliveryOrder = new TransactionDeliveryOrder('search');
@@ -293,8 +295,8 @@ class MovementOutHeaderController extends Controller {
         }
         
         $deliveryOrderDataProvider = $deliveryOrder->searchByMovementOut();
-        $deliveryOrderDataProvider->criteria->addCondition("t.delivery_date > '2022-12-31' AND t.is_cancelled = 0");
-        $deliveryOrderDataProvider->criteria->addInCondition('sender_branch_id', Yii::app()->user->branch_ids);
+        $deliveryOrderDataProvider->criteria->addCondition("t.sender_branch_id = :sender_branch_id");
+        $deliveryOrderDataProvider->criteria->params[':sender_branch_id'] = Yii::app()->user->branch_id;
 
         $returnOrder = Search::bind(new TransactionReturnOrder('search'), isset($_GET['TransactionReturnOrder']) ? $_GET['TransactionReturnOrder'] : array());
         $returnOrderDataProvider = $returnOrder->searchByMovementOut();
@@ -307,8 +309,8 @@ class MovementOutHeaderController extends Controller {
         }
 
         $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
-        $registrationTransactionDataProvider->criteria->addCondition('t.transaction_date > "2022-12-31" AND t.user_id_cancelled IS null');
-        $registrationTransactionDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $registrationTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $registrationTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         /* Registration Transaction */
         $materialRequest = new MaterialRequestHeader('search');
@@ -318,8 +320,8 @@ class MovementOutHeaderController extends Controller {
         }
 
         $materialRequestDataProvider = $materialRequest->searchByMovementOut();
-        $materialRequestDataProvider->criteria->addCondition('t.transaction_date > "2022-12-31"');
-        $materialRequestDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $materialRequestDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $materialRequestDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,

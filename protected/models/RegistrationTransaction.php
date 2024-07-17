@@ -672,7 +672,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             WHERE t.id = d.registration_transaction_id
             GROUP BY d.registration_transaction_id
             HAVING quantity_remaining > 0
-        ) AND t.total_product > 0";
+        ) AND t.total_product > 0 AND t.transaction_date > '2022-12-31' AND t.user_id_cancelled IS null";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);

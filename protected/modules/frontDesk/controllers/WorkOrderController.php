@@ -118,7 +118,8 @@ class WorkOrderController extends Controller {
         }
 
         $modelDataProvider = $model->searchByWorkOrder();
-        $modelDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $modelDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $modelDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,
@@ -135,7 +136,8 @@ class WorkOrderController extends Controller {
         }
 
         $dataProvider = $model->searchByProcessingWorkOrder();
-        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('adminProcessing', array(
             'model' => $model,

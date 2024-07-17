@@ -128,9 +128,9 @@ class SalesmanPerformanceController extends Controller {
 
             $totalSale = 0.00;
             $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-                'condition' => 'employee_id_assign_salesman = :employee_id_assign_salesman AND transaction_date BETWEEN :start_date AND :end_date', 
+                'condition' => 'employee_id_sales_person = :employee_id_sales_person AND transaction_date BETWEEN :start_date AND :end_date', 
                 'params' => array(
-                    ':employee_id_assign_salesman' => $header->id,
+                    ':employee_id_sales_person' => $header->id,
                     ':start_date' => $startDate,
                     ':end_date' => $endDate,
                 )
@@ -174,7 +174,7 @@ class SalesmanPerformanceController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Mekanik.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Salesman.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

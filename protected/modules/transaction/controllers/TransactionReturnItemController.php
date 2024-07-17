@@ -229,7 +229,8 @@ class TransactionReturnItemController extends Controller {
             $model->attributes = $_GET['TransactionReturnItem'];
         }
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
+        $dataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
 
         $retailTransaction = new RegistrationTransaction('search');
         $retailTransaction->unsetAttributes();  // clear any default values
@@ -238,7 +239,9 @@ class TransactionReturnItemController extends Controller {
         }
         $retailTransactionDataProvider = $retailTransaction->search();
         $retailTransactionDataProvider->criteria->compare('transaction_number', $retailTransaction->transaction_number . '%', true, 'AND', false);
-        $retailTransactionDataProvider->criteria->addCondition("total_product > 0 AND t.transaction_date > '2021-12-31'");
+        $retailTransactionDataProvider->criteria->addCondition("total_product > 0 AND t.transaction_date > '2022-12-31'");
+        $retailTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $retailTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $delivery = new TransactionDeliveryOrder('search');
         $delivery->unsetAttributes();  // clear any default values
@@ -255,7 +258,9 @@ class TransactionReturnItemController extends Controller {
                 'defaultOrder' => 'delivery_date DESC',
             ),
         ));
-        $deliveryDataProvider->criteria->addCondition("t.delivery_date > '2021-12-31'");
+        $deliveryDataProvider->criteria->addCondition("t.delivery_date > '2022-12-31'");
+        $deliveryDataProvider->criteria->addCondition('t.sender_branch_id = :sender_branch_id');
+        $deliveryDataProvider->criteria->params[':sender_branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,

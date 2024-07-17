@@ -170,7 +170,8 @@ class VehicleInspectionController extends Controller {
             $vehicle->attributes = $_GET['RegistrationTransaction'];
         }
         $vehicleDataProvider = $vehicle->searchAdmin();
-        $vehicleDataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
+        $vehicleDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $vehicleDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'vehicle' => $vehicle,

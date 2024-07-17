@@ -36,11 +36,6 @@ class SaleRetailSummary extends CComponent {
         
         $branchConditionSql = '';
         
-        $params = array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
         if (!empty($branchId)) {
             $branchConditionSql = ' AND branch_id = :branch_id';
         }
@@ -52,7 +47,7 @@ class SaleRetailSummary extends CComponent {
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         if (!empty($branchId)) {
-            $params[':branch_id'] = $branchId;
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
     }
 }

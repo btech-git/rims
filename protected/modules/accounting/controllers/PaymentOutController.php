@@ -306,6 +306,8 @@ class PaymentOutController extends Controller {
 
         $dataProvider = $paymentOut->search();
         $dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 //        $dataProvider->criteria->with = array(
 //            'supplier',
 //            'paymentOutApprovals',
@@ -320,9 +322,13 @@ class PaymentOutController extends Controller {
 
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
+        $receiveItemDataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
+        $receiveItemDataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
 
         $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
         $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
+        $workOrderExpenseDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $workOrderExpenseDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'paymentOut' => $paymentOut,

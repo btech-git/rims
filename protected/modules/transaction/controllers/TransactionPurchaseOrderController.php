@@ -125,7 +125,8 @@ class TransactionPurchaseOrderController extends Controller {
      */
     public function actionCreate() {
         $purchaseOrder = $this->instantiate(null);
-        $purchaseOrder->header->main_branch_id = $purchaseOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $purchaseOrder->header->main_branch_id;
+        $purchaseOrder->header->main_branch_id = Yii::app()->user->branch_id;
+;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
         $purchaseOrder->header->purchase_order_date = date('Y-m-d H:i:s');
         $this->performAjaxValidation($purchaseOrder->header);
@@ -398,7 +399,8 @@ class TransactionPurchaseOrderController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.main_branch_id = :main_branch_id');
+        $dataProvider->criteria->params[':main_branch_id'] = Yii::app()->user->branch_id;
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'supplier',

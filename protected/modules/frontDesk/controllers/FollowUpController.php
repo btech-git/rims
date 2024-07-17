@@ -54,8 +54,8 @@ class FollowUpController extends Controller {
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $dataProvider = $model->searchByFollowUp();
-        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
-        $dataProvider->criteria->addCondition("t.status <> 'Finished'");
+        $dataProvider->criteria->addCondition("t.status <> 'Finished' AND t.branch_id = :branch_id");
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         if (!empty($plateNumber)) {
             $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
@@ -99,8 +99,8 @@ class FollowUpController extends Controller {
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $dataProvider = $model->searchByFollowUp();
-        $dataProvider->criteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
-        $dataProvider->criteria->addCondition("t.status = 'Finished' AND t.work_order_date IS NOT NULL");
+        $dataProvider->criteria->addCondition("t.status = 'Finished' AND t.work_order_date IS NOT NULL AND t.branch_id = :branch_id");
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         
         if (!empty($plateNumber)) {
             $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');

@@ -147,7 +147,7 @@
                                     'readonly' => true
                                 ));*/ ?>
                                 <?php echo $form->textField($requestOrder->header, 'requester_branch_name', array(
-                                    'value' => $requestOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $requestOrder->header->requesterBranch->name,
+                                    'value' => $requestOrder->header->requesterBranch->name,
                                     'readonly' => true
                                 )); ?>
                                 <?php //echo $form->dropDownlist($requestOrder->header,'requester_branch_id',CHtml::listData(Branch::model()->findAll(),'id','name'),array('prompt'=>'[--Select Branch--]')); ?>

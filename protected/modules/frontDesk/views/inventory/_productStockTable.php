@@ -1,5 +1,6 @@
 <div style="text-align: right">
     <?php echo ReportHelper::summaryText($productDataProvider); ?>
+    <span style="text-align: center"><h2>Kartu Stok Gudang</h2></span>
 </div>
 
 <table>

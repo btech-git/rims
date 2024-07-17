@@ -334,7 +334,8 @@ class TransactionReceiveItemController extends Controller {
         }
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('recipient_branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
+        $dataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
@@ -349,8 +350,8 @@ class TransactionReceiveItemController extends Controller {
         }
         
         $deliveryDataProvider = $delivery->searchByReceive();
-        $branchIdsString = implode(',', Yii::app()->user->branch_ids);
-        $deliveryDataProvider->criteria->addCondition("sender_branch_id IN ({$branchIdsString}) OR destination_branch IN ({$branchIdsString})");
+        $branchIdsString = Yii::app()->user->branch_id;
+        $deliveryDataProvider->criteria->addCondition("sender_branch_id = {$branchIdsString} OR destination_branch = {$branchIdsString}");
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values
@@ -370,7 +371,8 @@ class TransactionReceiveItemController extends Controller {
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
             'criteria' => $consignmentCriteria,
         ));
-        $consignmentDataProvider->criteria->addInCondition('t.receive_branch', Yii::app()->user->branch_ids);
+        $consignmentDataProvider->criteria->addCondition('t.receive_branch = :receive_branch');
+        $consignmentDataProvider->criteria->params[':receive_branch'] = Yii::app()->user->branch_id;
 
         $movement = new MovementOutHeader('search');
         $movement->unsetAttributes();  // clear any default values
@@ -380,12 +382,12 @@ class TransactionReceiveItemController extends Controller {
 
         $movementCriteria = new CDbCriteria;
         $movementCriteria->compare('movement_out_no', $movement->movement_out_no, true);
-        $movementCriteria->addCondition("status = 'Approved' AND t.date_posting > '2022-12-31' AND t.cancelled_datetime is null");
+        $movementCriteria->addCondition("status = 'Approved' AND t.date_posting > '2022-12-31' AND t.cancelled_datetime is null AND t.branch_id = :branch_id");
         $movementCriteria->order = 't.date_posting DESC';
+        $movementCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
         $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
             'criteria' => $movementCriteria,
         ));
-        $movementDataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
 
         $this->render('admin', array(
             'model' => $model,

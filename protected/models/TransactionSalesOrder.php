@@ -242,12 +242,12 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-			SELECT COALESCE(SUM(d.sales_order_quantity_left), 0) AS quantity_remaining
-			FROM " . TransactionSalesOrderDetail::model()->tableName() . " d
-			WHERE t.id = d.sales_order_id AND status_document = 'Approved'
-			GROUP BY d.sales_order_id
-			HAVING quantity_remaining > 0
-		)";
+            SELECT COALESCE(SUM(d.sales_order_quantity_left), 0) AS quantity_remaining
+            FROM " . TransactionSalesOrderDetail::model()->tableName() . " d
+            WHERE t.id = d.sales_order_id AND status_document = 'Approved'
+            GROUP BY d.sales_order_id
+            HAVING quantity_remaining > 0
+        ) AND t.status_document = 'Approved' AND t.sale_order_date > '2022-12-31'";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('sale_order_no', $this->sale_order_no, true);

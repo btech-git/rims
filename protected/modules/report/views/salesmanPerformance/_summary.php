@@ -63,7 +63,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <table>
                         <?php $totalSale = 0.00; ?>
                         <?php $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-                            'condition' => 'employee_id_sales_person = :employee_id_sales_person AND transaction_date BETWEEN :start_date AND :end_date', 
+                            'condition' => 'employee_id_sales_person = :employee_id_sales_person AND transaction_date BETWEEN :start_date AND :end_date AND t.status = "Finished"', 
                             'params' => array(
                                 ':employee_id_sales_person' => $header->id,
                                 ':start_date' => $startDate,
@@ -74,7 +74,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php foreach ($registrationTransactions as $detail): ?>
                                 <?php $grandTotal = CHtml::value($detail, 'grand_total'); ?>
                                 <tr>
-                                    <td class="width2-1"><?php echo CHtml::link(CHtml::encode($detail->sales_order_number), array("/frontDesk/registrationTransaction/view", "id"=>$detail->id), array("target" => "_blank")); ?></td>
+                                    <td class="width2-1"><?php echo CHtml::encode($detail->id); ?><?php echo CHtml::link(CHtml::encode($detail->sales_order_number), array("/frontDesk/registrationTransaction/view", "id"=>$detail->id), array("target" => "_blank")); ?></td>
                                     <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($detail->sales_order_date))); ?></td>
                                     <td class="width2-3"><?php echo CHtml::encode(CHtml::value($detail, 'repair_type')); ?></td>
                                     <td class="width2-4"><?php echo CHtml::encode(CHtml::value($detail, 'customer.name')); ?></td>

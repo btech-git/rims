@@ -309,7 +309,8 @@ class MovementInHeaderController extends Controller {
         }
         
         $dataProvider = $model->search();
-        $dataProvider->criteria->addInCondition('t.branch_id', Yii::app()->user->branch_ids);
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
@@ -319,7 +320,8 @@ class MovementInHeaderController extends Controller {
         }
 
         $receiveItemDataProvider = $receiveItem->searchByMovementIn();
-        $receiveItemDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
+        $receiveItemDataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
+        $receiveItemDataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
     
         $returnItem = new TransactionReturnItem('search');
         $returnItem->unsetAttributes();
@@ -329,11 +331,12 @@ class MovementInHeaderController extends Controller {
         }
 
         $returnItemDataProvider = $returnItem->search();
-        $returnItemDataProvider->criteria->addCondition("t.return_item_date > '2021-12-31'");
-        $returnItemDataProvider->criteria->addInCondition('t.recipient_branch_id', Yii::app()->user->branch_ids);
+        $returnItemDataProvider->criteria->addCondition("t.return_item_date > '2021-12-31' AND t.recipient_branch_id = :recipient_branch_id");
+        $returnItemDataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
             'receiveItem' => $receiveItem,
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'returnItem' => $returnItem,
