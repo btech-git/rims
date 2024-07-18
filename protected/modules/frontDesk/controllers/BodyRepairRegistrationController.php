@@ -52,7 +52,7 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration->header->user_id = Yii::app()->user->id;
         $bodyRepairRegistration->header->vehicle_id = $vehicleId;
         $bodyRepairRegistration->header->customer_id = $vehicle->customer_id;
-        $bodyRepairRegistration->header->branch_id = $bodyRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $bodyRepairRegistration->header->branch_id;
+        $bodyRepairRegistration->header->branch_id = Yii::app()->user->branch_id;
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($bodyRepairRegistration);

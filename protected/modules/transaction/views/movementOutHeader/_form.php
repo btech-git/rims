@@ -72,14 +72,7 @@
                             <?php echo $form->labelEx($movementOut->header, 'branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownlist($movementOut->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active', 'id' => Yii::app()->user->branch_ids)), 'id', 'name'), array(
-                                'prompt' => '[--Select Branch--]', 
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'POST',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateAllWarehouse', array('id' => $movementOut->header->id)),
-                                    'update' => '#detail_div',
-                                )),
-                            )); ?>
+                            <?php echo CHtml::encode(CHtml::value($movementOut->header, 'branch.name')); ?>
                             <?php echo $form->error($movementOut->header, 'branch_id'); ?>
                         </div>
                     </div>

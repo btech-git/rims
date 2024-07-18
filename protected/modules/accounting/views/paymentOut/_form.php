@@ -55,14 +55,7 @@
                         <?php echo CHtml::label('Branch', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php if ($paymentOut->header->isNewRecord): ?>
-                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                                'empty' => '-- Select Branch --'
-                            )); ?>
-                            <?php echo CHtml::error($paymentOut->header, 'branch_id'); ?>
-                        <?php else: ?>
-                            <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'branch.name'));?>
-                        <?php endif; ?>
+                        <?php echo CHtml::encode(CHtml::value($paymentOut->header, 'branch.name'));?>
                     </div>
                 </div>
             </div>

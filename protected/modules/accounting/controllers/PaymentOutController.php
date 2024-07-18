@@ -47,6 +47,7 @@ class PaymentOutController extends Controller {
         $supplier = Supplier::model()->findByPk($supplierId);
 
         $paymentOut->header->user_id = Yii::app()->user->id;
+        $paymentOut->header->branch_id = Yii::app()->user->branch_id;
         $paymentOut->header->payment_date = date('Y-m-d');
         $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->supplier_id = $supplierId;
@@ -119,6 +120,7 @@ class PaymentOutController extends Controller {
         }
         
         $paymentOut->header->user_id = Yii::app()->user->id;
+        $paymentOut->header->branch_id = Yii::app()->user->branch_id;
         $paymentOut->header->payment_date = date('Y-m-d');
         $paymentOut->header->created_datetime = date('Y-m-d H:i:s');
         $paymentOut->header->status = 'Draft';

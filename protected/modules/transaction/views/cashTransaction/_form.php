@@ -101,9 +101,7 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($cashTransaction->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
-                            'prompt' => '[--Select Branch--]'
-                        )); ?>
+                        <?php echo CHtml::encode(CHtml::value($cashTransaction->header, 'branch.name'));?>
                         <?php echo $form->error($cashTransaction->header, 'branch_id'); ?>
                     </div>
                 </div>

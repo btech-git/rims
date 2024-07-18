@@ -181,7 +181,7 @@ class TransactionSentRequestController extends Controller {
 
         $sentRequest = $this->instantiate(null);
         $sentRequest->header->sent_request_date = date('Y-m-d');
-        $sentRequest->header->requester_branch_id = $sentRequest->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $sentRequest->header->requester_branch_id;
+        $sentRequest->header->requester_branch_id = Yii::app()->user->branch_id;
         $this->performAjaxValidation($sentRequest->header);
 
         if (isset($_POST['Cancel'])) {

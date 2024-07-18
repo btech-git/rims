@@ -90,7 +90,7 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($returnItem->header, 'recipient_branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]')); ?>
+                        <?php echo CHtml::encode(CHtml::value($returnItem->header, 'recipientBranch.name')); ?>
                         <?php echo $form->error($returnItem->header, 'recipient_branch_id'); ?>
                     </div>
                 </div>

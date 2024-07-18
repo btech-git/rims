@@ -119,8 +119,9 @@ class TransactionReturnOrderController extends Controller {
         
         $receive = new TransactionReceiveItem('search');
         $receive->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionReceiveItem']))
+        if (isset($_GET['TransactionReceiveItem'])) {
             $receive->attributes = $_GET['TransactionReceiveItem'];
+        }
 
         $receiveCriteria = new CDbCriteria;
         $receiveCriteria->together = 'true';
@@ -133,12 +134,13 @@ class TransactionReturnOrderController extends Controller {
             'criteria' => $receiveCriteria,
         ));
         
-        $receiveDataProvider->criteria->addCondition('t.receive_item_date > "2021-12-31"');
+        $receiveDataProvider->criteria->addCondition('t.receive_item_date > "2022-12-31"');
 
         $returnOrder = $this->instantiate(null);
         $returnOrder->header->return_order_date = date('Y-m-d');
         $returnOrder->header->created_datetime = date('Y-m-d H:i:s');
         $returnOrder->header->status = 'Draft';
+        $returnOrder->header->recipient_branch_id = Yii::app()->user->branch_id;
         $this->performAjaxValidation($returnOrder->header);
 
         if (isset($_POST['Cancel'])) {

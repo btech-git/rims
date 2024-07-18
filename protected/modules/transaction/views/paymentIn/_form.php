@@ -194,32 +194,6 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($model, 'branch_id'); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php if ($model->isNewRecord): ?>
-                            <?php echo $form->dropDownlist($model, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('prompt' => '[--Select Branch--]',
-                                'onchange' => 'jQuery.ajax({
-                                        type: "POST",
-                                        url: "' . CController::createUrl('ajaxGetCompanyBank') . '",
-                                        data: jQuery("form").serialize(),
-                                        success: function(data){
-                                        console.log(data);
-                                        jQuery("#PaymentIn_company_bank_id").html(data);
-                                    },
-                                });'
-                            )); ?>
-                            <?php echo $form->error($model, 'branch_id'); ?>
-                        <?php else: ?>
-                            <?php echo CHtml::encode(CHtml::value($model, 'branch.name'));?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
                         <?php echo $form->labelEx($model, 'company_bank_id'); ?>
                     </div>
                     <div class="small-8 columns">

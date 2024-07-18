@@ -40,7 +40,7 @@ class WorkOrderExpenseController extends Controller {
         $workOrderExpense->header->transaction_time = date('H:i:s');
         $workOrderExpense->header->created_datetime = date('Y-m-d H:i:s');
         $workOrderExpense->header->status = 'Draft';
-        $workOrderExpense->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+        $workOrderExpense->header->branch_id = Yii::app()->user->branch_id;
 
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();

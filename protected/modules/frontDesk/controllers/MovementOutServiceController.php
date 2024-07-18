@@ -78,7 +78,7 @@ class MovementOutServiceController extends Controller {
         $movementOut = $this->instantiate(null);
         $movementOut->header->date_posting = date('Y-m-d');
         $movementOut->header->date_created = date('Y-m-d H:i:s');
-        $movementOut->header->branch_id = $movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $movementOut->header->branch_id;
+        $movementOut->header->branch_id = Yii::app()->user->branch_id;
         $movementOut->header->user_id = Yii::app()->user->id;
         $movementOut->header->registration_transaction_id = $registrationTransactionId;
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationTransactionId);

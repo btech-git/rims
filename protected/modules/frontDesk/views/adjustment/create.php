@@ -55,14 +55,7 @@
                                     <?php echo CHtml::label('Cabang', ''); ?>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                                        'empty' => '-- Pilih Cabang --',
-                                        'onchange' => CHtml::ajax(array(
-                                            'type' => 'GET',
-                                            'url' => CController::createUrl('ajaxHtmlUpdateWarehouseSelect'),
-                                            'update' => '#warehouse_list',
-                                        ))
-                                    )); ?>
+                                    <?php echo CHtml::encode(CHtml::value($adjustment->header, 'branch.name')); ?>
                                     <?php echo CHtml::error($adjustment->header, 'branch_id'); ?>
                                 </div>
                             </div>
@@ -71,18 +64,10 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <?php echo CHtml::label('Gudang', ''); ?>
+                                    <?php echo CHtml::label('User', ''); ?>
                                 </div>
-                                <div class="small-8 columns" id="warehouse_list">
-                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'warehouse_id', CHtml::listData(Warehouse::model()->findAllByAttributes(array('branch_id' => $adjustment->header->branch_id)), 'id', 'name'), array(
-                                        'empty' => '-- Pilih Warehouse --',
-                                        'onchange' => CHtml::ajax(array(
-                                            'type' => 'POST',
-                                            'url' => CController::createUrl('ajaxHtmlUpdateAllProduct', array('id' => $adjustment->header->id)),
-                                            'update' => '#detail_div',
-                                        )),
-                                    )); ?>
-                                    <?php echo CHtml::error($adjustment->header, 'warehouse_id'); ?>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::encode(CHtml::value($adjustment->header, 'user.username')); ?>
                                 </div>
                             </div>
                         </div>
@@ -103,10 +88,18 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <?php echo CHtml::label('User', ''); ?>
+                                    <?php echo CHtml::label('Gudang', ''); ?>
                                 </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::encode(CHtml::value($adjustment->header, 'user.username')); ?>
+                                <div class="small-8 columns" id="warehouse_list">
+                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'warehouse_id', CHtml::listData(Warehouse::model()->findAllByAttributes(array('branch_id' => $adjustment->header->branch_id)), 'id', 'name'), array(
+                                        'empty' => '-- Pilih Warehouse --',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'POST',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateAllProduct', array('id' => $adjustment->header->id)),
+                                            'update' => '#detail_div',
+                                        )),
+                                    )); ?>
+                                    <?php echo CHtml::error($adjustment->header, 'warehouse_id'); ?>
                                 </div>
                             </div>
                         </div>

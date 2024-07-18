@@ -92,10 +92,7 @@
                                 array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php //echo $form->textField($consignmentIn->header,'receive_branch',array('size'=>30,'maxlength'=>30)); ?>
-                            <?php echo $form->dropDownlist($consignmentIn->header, 'receive_branch',
-                                CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'),
-                                array('prompt' => '[--Select Branch--]')); ?>
+                            <?php echo CHtml::encode(CHtml::value($consignmentIn->header, 'receiveBranch.name')); ?>
                             <?php echo $form->error($consignmentIn->header, 'receive_branch'); ?>
                         </div>
                     </div>

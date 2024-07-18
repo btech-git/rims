@@ -51,7 +51,7 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->user_id = Yii::app()->user->id;
         $generalRepairRegistration->header->vehicle_id = $vehicleId;
         $generalRepairRegistration->header->customer_id = $vehicle->customer_id;
-        $generalRepairRegistration->header->branch_id = $generalRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $generalRepairRegistration->header->branch_id;
+        $generalRepairRegistration->header->branch_id = Yii::app()->user->branch_id;
 //        $generalRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
 
         if (isset($_POST['Cancel'])) {
@@ -63,9 +63,9 @@ class GeneralRepairRegistrationController extends Controller {
             $this->loadState($generalRepairRegistration);
             $generalRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
 
-            if ($generalRepairRegistration->save(Yii::app()->db))
+            if ($generalRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
-//            }
+            }
         }
 
         $this->render('create', array(

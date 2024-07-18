@@ -232,7 +232,7 @@ class PaymentInController extends Controller {
         $paymentIn->header->payment_date = date('Y-m-d');
         $paymentIn->header->payment_time = date('H:i:s');
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
-        $paymentIn->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+        $paymentIn->header->branch_id = Yii::app()->user->branch_id;
         $paymentIn->header->status = 'Draft';
         $paymentIn->header->user_id = Yii::app()->user->id;
         $paymentIn->addInvoice($invoiceId);
@@ -286,7 +286,7 @@ class PaymentInController extends Controller {
         $paymentIn->header->payment_date = date('Y-m-d');
         $paymentIn->header->payment_time = date('H:i:s');
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
-        $paymentIn->header->branch_id = Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id;
+        $paymentIn->header->branch_id = Yii::app()->user->branch_id;
         $paymentIn->header->status = 'Draft';
         $paymentIn->header->user_id = Yii::app()->user->id;
 

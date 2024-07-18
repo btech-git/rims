@@ -114,7 +114,7 @@ class CashTransactionController extends Controller {
         // $this->performAjaxValidation($model);
         $cashTransaction = $this->instantiate(null);
         
-        $cashTransaction->header->branch_id = $cashTransaction->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $cashTransaction->header->branch_id;
+        $cashTransaction->header->branch_id = Yii::app()->user->branch_id;
         $cashTransaction->header->payment_type_id = 1;
         $cashTransaction->header->transaction_date = date('Y-m-d');
         $cashTransaction->header->transaction_time = date('H:i:s');
@@ -124,8 +124,9 @@ class CashTransactionController extends Controller {
         $coaKas = new Coa('search');
         $coaKas->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaKas->attributes = $_GET['Coa'];
+        }
         
         $coaKasCriteria = new CDbCriteria;
         $coaKasCriteria->addCondition("SUBSTRING(code, -3 , 3) <> 000 AND t.coa_sub_category_id IN (1, 2, 3, 72) AND t.status = 'Approved'");

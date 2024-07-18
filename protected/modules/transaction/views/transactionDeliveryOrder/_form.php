@@ -103,8 +103,7 @@
                             <?php echo $form->labelEx($deliveryOrder->header, 'sender_branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->hiddenField($deliveryOrder->header, 'sender_branch_id', array('value' => $deliveryOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $deliveryOrder->header->sender_branch_id)); ?>
-                            <?php echo $form->textField($deliveryOrder->header, 'branch_name', array('size' => 30, 'maxlength' => 30, 'value' => $deliveryOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $deliveryOrder->header->senderBranch->name, 'readonly' => true)); ?>
+                            <?php echo $form->textField($deliveryOrder->header, 'branch_name', array('size' => 30, 'maxlength' => 30, 'value' => $deliveryOrder->header->senderBranch->name, 'readonly' => true)); ?>
                             <?php echo $form->error($deliveryOrder->header, 'sender_branch_id'); ?>
                         </div>
                     </div>

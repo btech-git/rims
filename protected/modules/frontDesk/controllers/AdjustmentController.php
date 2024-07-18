@@ -29,7 +29,7 @@ class AdjustmentController extends Controller {
         $adjustment->header->status = 'Draft';
         $adjustment->header->date_posting = date('Y-m-d');
         $adjustment->header->created_datetime = date('Y-m-d H:i:s');
-        $adjustment->header->branch_id = $adjustment->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $adjustment->header->branch_id;
+        $adjustment->header->branch_id = Yii::app()->user->branch_id;
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
@@ -69,11 +69,17 @@ class AdjustmentController extends Controller {
     public function actionAdmin() {
         $model = new StockAdjustmentHeader('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['StockAdjustmentHeader']))
+        if (isset($_GET['StockAdjustmentHeader'])) {
             $model->attributes = $_GET['StockAdjustmentHeader'];
+        }
 
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

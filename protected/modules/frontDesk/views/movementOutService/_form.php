@@ -94,7 +94,7 @@
                                         <label class="prefix"><?php echo $form->labelEx($movementOut->header,'branch_id'); ?></label>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo $form->textField($movementOut->header,'branch_name',array('value'=>$movementOut->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $movementOut->header->branch->name,'readonly'=>true)); ?>
+                                        <?php echo $form->textField($movementOut->header,'branch_name',array('value' => $movementOut->header->branch->name, 'readonly'=>true)); ?>
                                         <?php echo $form->error($movementOut->header,'branch_id'); ?>
                                     </div>
                                 </div>

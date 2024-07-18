@@ -218,9 +218,7 @@
                         <label class="prefix"><?php echo CHtml::label('Branch', false); ?></label>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($workOrderExpense->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                            'empty' => '-- Select Branch --'
-                        )); ?>
+                        <?php echo CHtml::encode(CHtml::value($workOrderExpense->header, 'branch.name')); ?>
                         <?php echo CHtml::error($workOrderExpense->header, 'branch_id'); ?>
                     </div>
                 </div>

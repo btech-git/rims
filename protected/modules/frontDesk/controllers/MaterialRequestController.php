@@ -48,7 +48,7 @@ class MaterialRequestController extends Controller {
         $materialRequest->header->created_datetime = date('Y-m-d H:i:s');
         $materialRequest->header->status_document = 'Draft';
         $materialRequest->header->status_progress = 'NO MOVEMENT';
-        $materialRequest->header->branch_id = Users::model()->findByPk(Yii::app()->user->id)->branch_id;
+        $materialRequest->header->branch_id = Yii::app()->user->branch_id;
 
         $branches = Branch::model()->findAll();
         

@@ -135,13 +135,8 @@
                                 array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php //echo $form->dropDownlist($sentRequest->header,'requester_branch_id',CHtml::listData(Branch::model()->findAll(),'id','name'),array('prompt'=>'[--Select Branch--]')); ?>
-                            <?php echo $form->hiddenField($sentRequest->header, 'requester_branch_id', array(
-                                'value' => $sentRequest->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $sentRequest->header->requester_branch_id,
-                                'readonly' => true
-                            )); ?>
                             <?php echo $form->textField($sentRequest->header, 'requester_branch_name', array(
-                                'value' => $sentRequest->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $sentRequest->header->requesterBranch->name,
+                                'value' => $sentRequest->header->requesterBranch->name,
                                 'readonly' => true
                             )); ?>
                             <?php echo $form->error($sentRequest->header, 'requester_branch_id'); ?>

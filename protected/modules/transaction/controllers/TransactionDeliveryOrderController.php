@@ -320,7 +320,7 @@ class TransactionDeliveryOrderController extends Controller {
         $deliveryOrder->header->posting_date = date('Y-m-d');
         $deliveryOrder->header->created_datetime = date('Y-m-d H:i:s');
         $deliveryOrder->header->estimate_arrival_date = null;
-        $deliveryOrder->header->sender_branch_id = $deliveryOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $deliveryOrder->header->sender_branch_id;
+        $deliveryOrder->header->sender_branch_id = Yii::app()->user->branch_id;
         $this->performAjaxValidation($deliveryOrder->header);
 
         if ($movementType == 1) {
@@ -528,8 +528,8 @@ class TransactionDeliveryOrderController extends Controller {
             $transfer->attributes = $_GET['TransactionTransferRequest'];
 
         $transferDataProvider = $transfer->searchByPendingDelivery();
-        $transferDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
-        $transferDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+        $transferDataProvider->criteria->addCondition('t.destination_branch_id = :destination_branch_id');
+        $transferDataProvider->criteria->params[':destination_branch_id'] = Yii::app()->user->branch_id;
 
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
@@ -539,8 +539,8 @@ class TransactionDeliveryOrderController extends Controller {
         }
 
         $sentDataProvider = $sent->searchByPendingDelivery();
-        $sentDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
-        $sentDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+        $sentDataProvider->criteria->addCondition('t.destination_branch_id = :destination_branch_id');
+        $sentDataProvider->criteria->params[':destination_branch_id'] = Yii::app()->user->branch_id;
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values

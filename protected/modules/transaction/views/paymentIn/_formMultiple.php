@@ -60,45 +60,27 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo CHtml::label('Branch', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($paymentIn->header, 'branch.name'));?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <?php echo CHtml::label('User', ''); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::encode(CHtml::value($paymentIn->header, 'user.username')); ?>
                     </div>
                 </div>
-            </div>		
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Note', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeTextArea($paymentIn->header, 'notes'); ?>
-                    </div>
-                </div>
             </div>
         </div>
         
         <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Branch', false); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php if ($paymentIn->header->isNewRecord): ?>
-                            <?php echo CHtml::dropDownList('BranchId', $paymentIn->header->branch_id, CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                                'empty' => '-- Select Branch --'
-                            )); ?>
-                            <?php echo CHtml::error($paymentIn->header, 'branch_id'); ?>
-                        <?php else: ?>
-                            <?php echo CHtml::encode(CHtml::value($paymentIn->header, 'branch.name'));?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            
             <div class="field" >
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -136,6 +118,17 @@
                             '
                         )); ?>
                         <?php echo CHtml::error($paymentIn->header, 'payment_type_id'); ?>
+                    </div>
+                </div>
+            </div>		
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Note', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeTextArea($paymentIn->header, 'notes'); ?>
                     </div>
                 </div>
             </div>

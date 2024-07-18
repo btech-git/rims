@@ -68,6 +68,7 @@ class TransactionReturnItemController extends Controller {
         $returnItem->header->created_datetime = date('Y-m-d H:i:s');
         $returnItem->header->return_item_date = date('Y-m-d');
         $returnItem->header->status = 'Draft';
+        $returnItem->header->recipient_branch_id = Yii::app()->user->branch_id;
         
         if ($returnType == 1) {
             $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);

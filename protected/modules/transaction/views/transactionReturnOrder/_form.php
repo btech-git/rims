@@ -252,7 +252,7 @@
                         <?php echo $form->labelEx($returnOrder->header, 'recipient_branch_id', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($returnOrder->header, 'recipient_branch_id', CHtml::listData(UserBranch::model()->findAllByAttributes(array('users_id' => Yii::app()->user->getId())), 'branch_id', 'branch.name'), array('prompt' => '[--Select Branch--]')); ?>
+                        <?php echo CHtml::encode(CHtml::value($returnOrder->header, 'recipientBranch.name')); ?>
                         <?php echo $form->error($returnOrder->header, 'recipient_branch_id'); ?>
                     </div>
                 </div>

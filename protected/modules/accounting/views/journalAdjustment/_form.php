@@ -86,14 +86,7 @@
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php if ($journalVoucher->header->isNewRecord): ?>
-                                            <?php echo CHtml::activeDropDownList($journalVoucher->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                                                'empty' => '-Select Branch-'
-                                            )); ?>
-                                            <?php echo CHtml::error($journalVoucher->header, 'branch_id'); ?>
-                                        <?php else: ?>
-                                            <?php echo CHtml::encode(CHtml::value($journalVoucher->header, 'branch.name')); ?>
-                                        <?php endif; ?>
+                                        <?php echo CHtml::encode(CHtml::value($journalVoucher->header, 'branch.name')); ?>
                                     </div>
                                 </div>
                             </div>
