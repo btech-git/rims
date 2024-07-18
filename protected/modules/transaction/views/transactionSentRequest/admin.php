@@ -34,7 +34,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Sent Request', Yii::app()->baseUrl . '/transaction/transactionSentRequest/adminDestination', array(
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Approval Sent Request', Yii::app()->baseUrl . '/transaction/transactionSentRequest/adminDestination', array(
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
         )); ?> &nbsp;&nbsp;&nbsp;
