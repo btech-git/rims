@@ -432,21 +432,21 @@ class TransactionReceiveItemController extends Controller {
                 $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
                 $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
                 $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
-            } elseif (!empty($detail->transfer_request_detail_id)) {
-            $transferRequestDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->transfer_request_detail_id));
-            $transferRequestDetail->receive_quantity = $transferRequestDetail->getQuantityReceiveTotal();
-            $transferRequestDetail->transfer_request_quantity_left = $transferRequestDetail->getQuantityReceiveRemaining();
-            $transferRequestDetail->update(array('receive_quantity', 'transfer_request_quantity_left'));
-            } elseif (!empty($detail->purchase_order_detail_id)) {
-            $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
-            $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
-            $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
-            $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
-            } elseif (!empty($detail->purchase_order_detail_id)) {
-            $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
-            $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
-            $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
-            $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
+            } elseif (!empty($detail->delivery_order_detail_id)) {
+                $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id));
+                $deliveryOrderDetail->quantity_receive = $deliveryOrderDetail->getQuantityReceive();
+                $deliveryOrderDetail->quantity_receive_left = $deliveryOrderDetail->getQuantityReceiveLeft();
+                $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));
+            } elseif (!empty($detail->movement_out_detail_id)) {
+                $movementOutDetail = MovementOutDetail::model()->findByAttributes(array('id' => $detail->movement_out_detail_id));
+                $movementOutDetail->quantity_receive = $movementOutDetail->getQuantityReceive();
+                $movementOutDetail->quantity_receive_left = $movementOutDetail->getQuantityReceiveLeft();
+                $movementOutDetail->update(array('quantity_receive', 'quantity_receive_left'));
+            } elseif (!empty($detail->consignment_in_detail)) {
+                $consignmentInDetail = ConsignmentInDetail::model()->findByAttributes(array('id' => $detail->consignment_in_detail));
+                $consignmentInDetail->qty_received = $consignmentInDetail->getTotalQuantityReceived();
+                $consignmentInDetail->qty_request_left = $consignmentInDetail->getQuantityRequestLeft();
+                $consignmentInDetail->update(array('qty_received', 'qty_request_left'));
             }
         }
         

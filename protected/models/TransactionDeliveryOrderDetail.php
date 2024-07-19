@@ -194,4 +194,18 @@ class TransactionDeliveryOrderDetail extends CActiveRecord {
     public function getQuantityMovementLeft() {
         return $this->quantity_delivery - $this->quantity_movement;
     }
+    
+    public function getQuantityReceive() {
+        $total = 0;
+        
+        foreach ($this->transactionReceiveItemDetails as $detail) {
+            $total += $detail->qty_received;
+        }
+        
+        return $total;
+    }
+    
+    public function getQuantityReceiveLeft() {
+        return $this->quantity_delivery - $this->quantity_receive;
+    }
 }

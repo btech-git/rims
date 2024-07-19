@@ -582,17 +582,43 @@ class TransactionDeliveryOrderController extends Controller {
         $model = $this->loadModel($id);
         $model->is_cancelled = 1;
         $model->request_type = 'Cancelled!!!'; 
-        $model->sales_order_id = null; 
-        $model->sent_request_id = null; 
-        $model->consignment_out_id = null; 
-        $model->request_date = null; 
-        $model->estimate_arrival_date = null;
-        $model->customer_id = null; 
-        $model->transfer_request_id = null; 
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('is_cancelled', 'request_type', 'sales_order_id', 'sent_request_id', 'consignment_out_id', 'request_date', 'estimate_arrival_date', 'customer_id', 'transfer_request_id', 'cancelled_datetime', 'user_id_cancelled'));
+        $model->update(array('is_cancelled', 'request_type', 'cancelled_datetime', 'user_id_cancelled'));
 
+        foreach ($model->transactionDeliveryOrderDetails as $detail) {
+            $detail->quantity_request = 0;
+            $detail->quantity_delivery = 0;
+            $detail->quantity_request_left = 0;
+            $detail->quantity_movement = 0;
+            $detail->quantity_movement_left = 0;
+            $detail->quantity_receive = 0;
+            $detail->quantity_receive_left = 0;
+            $detail->update(array('quantity_request', 'quantity_delivery', 'quantity_request_left', 'quantity_movement', 'quantity_movement_left', 'quantity_receive', 'quantity_receive_left'));
+            
+            if (!empty($detail->sales_order_detail_id)) {
+                $saleOrderDetail = TransactionSalesOrderDetail::model()->findByAttributes(array('id' => $detail->sales_order_detail_id));
+                $saleOrderDetail->delivery_quantity = $saleOrderDetail->getQuantityDelivery();
+                $saleOrderDetail->sales_order_quantity_left = $saleOrderDetail->getQuantityDeliveryLeft();
+                $saleOrderDetail->update(array('delivery_quantity', 'sales_order_quantity_left'));
+            } elseif (!empty($detail->sent_request_detail_id)) {
+                $sentRequestDetail = TransactionSentRequestDetail::model()->findByAttributes(array('id' => $detail->sent_request_detail_id));
+                $sentRequestDetail->delivery_quantity = $sentRequestDetail->getTotalQuantityDelivered();
+                $sentRequestDetail->sent_request_quantity_left = $sentRequestDetail->getRemainingQuantityDelivery();
+                $sentRequestDetail->update(array('delivery_quantity', 'sent_request_quantity_left'));
+            } elseif (!empty($detail->consignment_out_detail_id)) {
+                $consignmentOutDetail = ConsignmentOutDetail::model()->findByAttributes(array('id' => $detail->consignment_out_detail_id));
+                $consignmentOutDetail->qty_sent = $consignmentOutDetail->getTotalQuantityDelivery();
+                $consignmentOutDetail->qty_request_left = $consignmentOutDetail->getQuantityDeliveredLeft();
+                $consignmentOutDetail->update(array('qty_sent', 'qty_request_left'));
+            } elseif (!empty($detail->transfer_request_detail_id)) {
+                $transferRequestDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->transfer_request_detail_id));
+                $transferRequestDetail->quantity_delivery = $transferRequestDetail->getQuantityDelivery();
+                $transferRequestDetail->quantity_delivery_left = $transferRequestDetail->getQuantityDeliveryRemaining();
+                $transferRequestDetail->update(array('quantity_delivery', 'quantity_delivery_left'));
+            }
+        }
+        
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->delivery_order_no,
         ));

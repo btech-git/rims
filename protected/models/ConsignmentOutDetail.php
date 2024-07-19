@@ -106,22 +106,19 @@ class ConsignmentOutDetail extends CActiveRecord {
         ));
     }
 
-    public function getRemainingQuantityDelivery() {
-        $quantityRemaining = 0;
-
-        foreach ($this->transactionDeliveryOrderDetails as $detail)
-            $quantityRemaining += $detail->quantity_delivery;
-
-        return $this->quantity - $quantityRemaining;
-    }
-
-    public function getTotalQuantityDelivered() {
+    public function getTotalQuantityDelivery() {
         $total = 0;
 
-        foreach ($this->transactionDeliveryOrderDetails as $detail)
+        foreach ($this->transactionDeliveryOrderDetails as $detail) {
             $total += $detail->quantity_delivery;
+        }
 
         return $total;
+    }
+
+    public function getQuantityDeliveredLeft() {
+        
+        return $this->quantity - $this->qty_sent;
     }
 
 }

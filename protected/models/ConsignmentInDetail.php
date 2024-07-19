@@ -121,10 +121,14 @@ class ConsignmentInDetail extends CActiveRecord {
     public function getTotalQuantityReceived() {
         $total = 0;
 
-        foreach ($this->transactionReceiveItemDetails as $detail)
+        foreach ($this->transactionReceiveItemDetails as $detail) {
             $total += $detail->qty_received;
+        }
 
         return $total;
     }
-
+    
+    public function getQuantityRequestLeft() {
+        return $this->quantity - $this->qty_received;
+    }
 }

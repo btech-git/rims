@@ -125,19 +125,16 @@ class TransactionSentRequestDetail extends CActiveRecord {
     public function getTotalQuantityDelivered() {
         $total = 0;
 
-        foreach ($this->transactionDeliveryOrderDetails as $detail)
+        foreach ($this->transactionDeliveryOrderDetails as $detail) {
             $total += $detail->quantity_delivery;
+        }
 
         return $total;
     }
 
     public function getRemainingQuantityDelivery() {
-        $quantityRemaining = 0;
-
-        foreach ($this->transactionDeliveryOrderDetails as $detail)
-            $quantityRemaining += $detail->quantity_delivery;
-
-        return $this->quantity - $quantityRemaining;
+        
+        return $this->quantity - $this->delivery_quantity;
     }
 
 }

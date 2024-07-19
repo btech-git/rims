@@ -147,5 +147,18 @@ class MovementOutDetail extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-
+    
+    public function getQuantityReceive() {
+        $total = 0;
+        
+        foreach ($this->transactionReceiveItemDetails as $detail) {
+            $total += $detail->qty_received;
+        }
+        
+        return $total;
+    }
+    
+    public function getQuantityReceiveLeft() {
+        return $this->quantity_delivery - $this->quantity_receive;
+    }
 }
