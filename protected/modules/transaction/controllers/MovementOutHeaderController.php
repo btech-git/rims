@@ -340,16 +340,22 @@ class MovementOutHeaderController extends Controller {
 
     public function actionCancel($id) {
         $model = $this->loadModel($id);
-        $model->status = 'CANCELLED!!!';
-//        $model->delivery_order_id = null; 
-//        $model->return_order_id = null; 
-//        $model->delivery_order_id = null; 
-//        $model->material_request_header_id = null; 
-//        $model->registration_service_id = null; 
-//        $model->registration_transaction_id = null; 
+        $model->status = 'CANCELLED!!!'; 
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status', 'delivery_order_id', 'return_order_id', 'delivery_order_id', 'material_request_header_id', 'registration_service_id', 'registration_transaction_id', 'cancelled_datetime', 'user_id_cancelled'));
+        $model->update(array('status', 'cancelled_datetime', 'user_id_cancelled'));
+
+        foreach($model->movementInDetails as $detail) {
+            $detail->quantity = 0;
+            $detail->update(array('quantity'));
+            
+            if (!empty($detail->delivery_order_detail_id)) {
+                $deliveryOrderDetail = $detail->deliveryOrderDetail;
+                $deliveryOrderDetail->quantity_movement = $deliveryOrderDetail->getQuantityMovement();
+                $deliveryOrderDetail->quantity_movement_left = $deliveryOrderDetail->getQuantityMovementLeft();
+                $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));
+            }
+        }
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->movement_out_no,

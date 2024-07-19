@@ -349,7 +349,19 @@ class MovementInHeaderController extends Controller {
         $model->status = 'CANCELLED!!!';
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status', 'return_item_id', 'receive_item_id', 'cancelled_datetime', 'user_id_cancelled'));
+        $model->update(array('status', 'cancelled_datetime', 'user_id_cancelled'));
+        
+        foreach($model->movementInDetails as $detail) {
+            $detail->quantity = 0;
+            $detail->update(array('quantity'));
+            
+            if (!empty($detail->receive_item_detail_id)) {
+                $receiveItemDetail = $detail->receiveItemDetail;
+                $receiveItemDetail->quantity_movement = $receiveItemDetail->getQuantityMovement();
+                $receiveItemDetail->quantity_movement_left = $receiveItemDetail->getQuantityMovementLeft();
+                $receiveItemDetail->update(array('quantity_movement', 'quantity_movement_left'));
+            }
+        }
 
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->movement_in_number,
