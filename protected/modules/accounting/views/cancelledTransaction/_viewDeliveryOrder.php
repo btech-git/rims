@@ -1,7 +1,7 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'receive-item-grid',
-    'dataProvider'=>$receiveItemDataProvider,
-    'filter'=>$receiveItem,
+    'id'=>'delivery-order-grid',
+    'dataProvider'=>$deliveryOrderDataProvider,
+    'filter'=>$deliveryOrder,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager'=>array(
         'cssFile'=>false,
@@ -10,19 +10,18 @@
     //'summaryText'=>'',
     'columns'=>array(
         array(
-            'name'=>'receive_item_no', 
-            'value'=>'$data->receive_item_no', 
+            'name'=>'delivery_order_no', 
+            'value'=>'$data->delivery_order_no', 
             'type'=>'raw'
         ),
         array(
             'header' => 'Tanggal',
-            'name' => 'receive_item_date',
+            'name' => 'delivery_date',
             'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->receive_item_date)'
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->delivery_date)'
         ),
         'request_type',
-        array('name'=>'supplier_id','value'=>'empty($data->supplier_id) ? "" :$data->supplier->company'),
-        'note',
+        array('name'=>'customer_id','value'=>'empty($data->customer_id) ? "" :$data->customer->name'),
         array(
             'header' => 'Cancelled by',
             'name' => 'user_id_cancelled',
@@ -35,7 +34,7 @@
             'buttons'=>array(
                 'views' => array(
                     'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("transaction/transactionReceiveItem/view", array("id"=>$data->id))',
+                    'url'=>'Yii::app()->createUrl("transaction/transactionDeliveryOrder/view", array("id"=>$data->id))',
                 ),
             ),
         ),

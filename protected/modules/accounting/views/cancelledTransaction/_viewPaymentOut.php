@@ -36,7 +36,7 @@
             'buttons'=>array(
                 'views' => array(
                     'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("transaction/paymentOut/view", array("id"=>$data->id))',
+                    'url'=>'Yii::app()->createUrl("accounting/paymentOut/view", array("id"=>$data->id))',
                 ),
             ),
         ),

@@ -152,6 +152,19 @@ $this->menu = array(
             <div class="small-8">
                 <div class="row">
                     <div class="small-3 columns">
+                        <label for="right-label" class="right" style="font-weight:bold;">Penerimaan #</label>
+                    </div>
+                    
+                    <div class="small-9 columns">
+                        <label for=""><?php echo empty($receive) ? "N/A" : CHTml::link($receive->receive_item_no, array("/transaction/transactionReceiveItem/view", "id" => $receive->id), array('target' => 'blank')); ?></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-8">
+                <div class="row">
+                    <div class="small-3 columns">
                         <label for="right-label" class="right" style="font-weight:bold;">Reference Type</label>
                     </div>
                     <div class="small-9 columns">

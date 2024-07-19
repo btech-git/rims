@@ -296,8 +296,8 @@ class MovementOutHeaderController extends Controller {
         }
         
         $deliveryOrderDataProvider = $deliveryOrder->searchByMovementOut();
-        $deliveryOrderDataProvider->criteria->addCondition("t.sender_branch_id = :sender_branch_id");
-        $deliveryOrderDataProvider->criteria->params[':sender_branch_id'] = Yii::app()->user->branch_id;
+//        $deliveryOrderDataProvider->criteria->addCondition("t.sender_branch_id = :sender_branch_id");
+//        $deliveryOrderDataProvider->criteria->params[':sender_branch_id'] = Yii::app()->user->branch_id;
 
         $returnOrder = Search::bind(new TransactionReturnOrder('search'), isset($_GET['TransactionReturnOrder']) ? $_GET['TransactionReturnOrder'] : array());
         $returnOrderDataProvider = $returnOrder->searchByMovementOut();
@@ -310,8 +310,8 @@ class MovementOutHeaderController extends Controller {
         }
 
         $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
-        $registrationTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $registrationTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+//        $registrationTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+//        $registrationTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         /* Registration Transaction */
         $materialRequest = new MaterialRequestHeader('search');
@@ -321,8 +321,8 @@ class MovementOutHeaderController extends Controller {
         }
 
         $materialRequestDataProvider = $materialRequest->searchByMovementOut();
-        $materialRequestDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $materialRequestDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+//        $materialRequestDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+//        $materialRequestDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,

@@ -180,4 +180,18 @@ class TransactionDeliveryOrderDetail extends CActiveRecord {
         
         return $this->quantity_delivery * $this->getUnitPrice();
     }
+    
+    public function getQuantityMovement() {
+        $total = 0;
+        
+        foreach ($this->movementOutDetails as $detail) {
+            $total += $detail->quantity;
+        }
+        
+        return $total;
+    }
+    
+    public function getQuantityMovementLeft() {
+        return $this->quantity_delivery - $this->quantity_movement;
+    }
 }

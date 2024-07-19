@@ -528,8 +528,8 @@ class TransactionDeliveryOrderController extends Controller {
             $transfer->attributes = $_GET['TransactionTransferRequest'];
 
         $transferDataProvider = $transfer->searchByPendingDelivery();
-        $transferDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
-        $transferDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+//        $transferDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
+//        $transferDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
 
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
@@ -539,8 +539,8 @@ class TransactionDeliveryOrderController extends Controller {
         }
 
         $sentDataProvider = $sent->searchByPendingDelivery();
-        $sentDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
-        $sentDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+//        $sentDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
+//        $sentDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
 
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
@@ -550,8 +550,8 @@ class TransactionDeliveryOrderController extends Controller {
         }
 
         $salesDataProvider = $sales->searchByPendingDelivery();
-        $salesDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
-        $salesDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+//        $salesDataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
+//        $salesDataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
 
         $consignment = new ConsignmentOutHeader('search');
         $consignment->unsetAttributes();  // clear any default values
@@ -561,8 +561,8 @@ class TransactionDeliveryOrderController extends Controller {
         }
 
         $consignmentDataProvider = $consignment->searchByPendingDelivery();
-        $consignmentDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $consignmentDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+//        $consignmentDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+//        $consignmentDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,

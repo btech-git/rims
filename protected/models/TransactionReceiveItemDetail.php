@@ -82,6 +82,7 @@ class TransactionReceiveItemDetail extends CActiveRecord {
             'transferRequestDetail' => array(self::BELONGS_TO, 'TransactionTransferRequestDetail', 'transfer_request_detail_id'),
             'consignmentInDetail' => array(self::BELONGS_TO, 'ConsignmentInDetail', 'consignment_in_detail_id'),
             'deliveryOrderDetail' => array(self::BELONGS_TO, 'TransactionDeliveryOrderDetail', 'delivery_order_detail_id'),
+            'movementInDetails' => array(self::HAS_MANY, 'MovementInDetail', 'receive_item_detail_id'),
         );
     }
 
@@ -181,5 +182,19 @@ class TransactionReceiveItemDetail extends CActiveRecord {
         }
         
         return $this->qty_received * $total;
+    }
+    
+    public function getQuantityMovement() {
+        $total = 0;
+        
+        foreach ($this->movementInDetails as $detail) {
+            $total += $detail->quantity;
+        }
+        
+        return $total;
+    }
+    
+    public function getQuantityMovementLeft() {
+        return $this->qty_received - $this->quantity_movement;
     }
 }

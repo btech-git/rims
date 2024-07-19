@@ -90,6 +90,12 @@ class CancelledTransactionController extends Controller {
         $movementInDataProvider->criteria->addBetweenCondition('t.date_posting', $startDate, $endDate);
         $movementInDataProvider->criteria->addCondition('t.status = "CANCELLED!!!"');
 
+        $deliveryOrder = Search::bind(new TransactionDeliveryOrder('search'), isset($_GET['TransactionDeliveryOrder']) ? $_GET['TransactionDeliveryOrder'] : '');
+        $deliveryOrderDataProvider = $deliveryOrder->search();
+        $deliveryOrderDataProvider->criteria->order = 't.delivery_date DESC';
+        $deliveryOrderDataProvider->criteria->addBetweenCondition('t.delivery_date', $startDate, $endDate);
+        $deliveryOrderDataProvider->criteria->addCondition('t.is_cancelled = 1');
+
         if (!empty($branchId)) {
             $generalRepairDataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $generalRepairDataProvider->criteria->params[':branch_id'] = $branchId;
@@ -120,6 +126,9 @@ class CancelledTransactionController extends Controller {
 
             $movementInDataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $movementInDataProvider->criteria->params[':branch_id'] = $branchId;
+
+            $deliveryOrderDataProvider->criteria->addCondition('t.sender_branch_id = :sender_branch_id');
+            $deliveryOrderDataProvider->criteria->params[':sender_branch_id'] = $branchId;
         }
 
         $this->render('index', array(
@@ -138,6 +147,7 @@ class CancelledTransactionController extends Controller {
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'movementOutDataProvider' => $movementOutDataProvider,
             'movementInDataProvider' => $movementInDataProvider,
+            'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
             'purchaseOrder' => $purchaseOrder,
             'invoiceHeader' => $invoiceHeader,
             'paymentIn' => $paymentIn,
@@ -146,6 +156,7 @@ class CancelledTransactionController extends Controller {
             'receiveItem' => $receiveItem,
             'movementOut' => $movementOut,
             'movementIn' => $movementIn,
+            'deliveryOrder' => $deliveryOrder,
         ));
     }
 }

@@ -134,6 +134,12 @@ Yii::app()->clientScript->registerScript('report', '
                                 'receiveItemDataProvider' => $receiveItemDataProvider,
                             ), true)
                         ),
+                        'Delivery Order' => array(
+                            'content' => $this->renderPartial('_viewDeliveryOrder', array(
+                                'deliveryOrder' => $deliveryOrder,
+                                'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
+                            ), true)
+                        ),
                     ),
                     // additional javascript options for the tabs plugin
                     'options' => array(
