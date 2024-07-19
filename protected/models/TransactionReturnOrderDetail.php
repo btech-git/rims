@@ -117,4 +117,19 @@ class TransactionReturnOrderDetail extends CActiveRecord {
         ));
     }
 
+    public function getTotalQuantityMovementOut() {
+        $total = 0;
+        
+        foreach ($this->movementOutDetails as $detail) {
+            if ($detail->movementOutHeader->status !== 'CANCELLED!!!') {
+                $total += $detail->quantity;
+            }
+        }
+        
+        return $total;
+    }
+    
+    public function getQuantityMovementLeft() {
+        return $this->quantity - $this->quantity_movement;
+    }
 }

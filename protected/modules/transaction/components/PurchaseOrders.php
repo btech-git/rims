@@ -171,9 +171,11 @@ class PurchaseOrders extends CComponent {
             $detail->total_quantity = $detail->quantityAfterBonus;
 
             if ($isNewRecord) {
+                $detail->receive_quantity = 0;
                 $detail->purchase_order_quantity_left = $detail->total_quantity;
             } else {
-                $detail->purchase_order_quantity_left = $detail->quantityReceiveRemaining;
+                $detail->receive_quantity = $detail->getQuantityReceiveTotal();
+                $detail->purchase_order_quantity_left = $detail->getQuantityReceiveRemaining();
             }
 
             $valid = $detail->save(false) && $valid;

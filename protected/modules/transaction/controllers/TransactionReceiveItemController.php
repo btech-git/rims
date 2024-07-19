@@ -408,11 +408,6 @@ class TransactionReceiveItemController extends Controller {
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         $model->note = 'CANCELLED!!!';
-//        $model->purchase_order_id = null; 
-//        $model->transfer_request_id = null; 
-//        $model->consignment_in_id = null; 
-//        $model->delivery_order_id = null; 
-//        $model->movement_out_id = null; 
         $model->invoice_number = 'CANCELLED!!!';
         $model->invoice_sub_total = 0; 
         $model->invoice_grand_total = 0; 
@@ -420,22 +415,39 @@ class TransactionReceiveItemController extends Controller {
         $model->invoice_grand_total_rounded = 0; 
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('note', 'purchase_order_id', 'transfer_request_id', 'consignment_in_id', 'delivery_order_id', 'movement_out_id', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded', 'cancelled_datetime', 'user_id_cancelled'));
+        $model->update(array('note', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded', 'cancelled_datetime', 'user_id_cancelled'));
 
         foreach ($model->transactionReceiveItemDetails as $detail) {
-//            $detail->qty_received = 0;
-//            $detail->quantity_movement = 0;
-//            $detail->quantity_movement_left = 0;
-//            $detail->quantity_delivered = 0;
-//            $detail->quantity_delivered_left = 0;
-//            $detail->quantity_return = 0;
-//            $detail->total_price = 0;
-//            $detail->update(array('qty_received', 'quantity_movement', 'quantity_movement_left', 'quantity_delivered', 'quantity_delivered_left', 'quantity_return', 'total_price'));
+            $detail->qty_received = 0;
+            $detail->quantity_movement = 0;
+            $detail->quantity_movement_left = 0;
+            $detail->quantity_delivered = 0;
+            $detail->quantity_delivered_left = 0;
+            $detail->quantity_return = 0;
+            $detail->total_price = 0;
+            $detail->update(array('qty_received', 'quantity_movement', 'quantity_movement_left', 'quantity_delivered', 'quantity_delivered_left', 'quantity_return', 'total_price'));
             
+            if (!empty($detail->purchase_order_detail_id)) {
+                $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
+                $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
+                $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
+                $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
+            } elseif (!empty($detail->transfer_request_detail_id)) {
+            $transferRequestDetail = TransactionTransferRequestDetail::model()->findByAttributes(array('id' => $detail->transfer_request_detail_id));
+            $transferRequestDetail->receive_quantity = $transferRequestDetail->getQuantityReceiveTotal();
+            $transferRequestDetail->transfer_request_quantity_left = $transferRequestDetail->getQuantityReceiveRemaining();
+            $transferRequestDetail->update(array('receive_quantity', 'transfer_request_quantity_left'));
+            } elseif (!empty($detail->purchase_order_detail_id)) {
             $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
-            $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getTotalQuantityReceived();
-            $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->total_quantity - $purchaseOrderDetail->receive_quantity;
+            $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
+            $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
             $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
+            } elseif (!empty($detail->purchase_order_detail_id)) {
+            $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
+            $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
+            $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
+            $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
+            }
         }
         
         JurnalUmum::model()->deleteAllByAttributes(array(

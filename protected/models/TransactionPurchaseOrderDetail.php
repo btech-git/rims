@@ -365,18 +365,19 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getSubTotal($tax, $taxPercentage) {
         $total = 0.00;
 
-        if ($this->discount_step == 1)
+        if ($this->discount_step == 1) {
             $total = $this->quantity * $this->unitPriceAfterDiscount1;
-        elseif ($this->discount_step == 2)
+        } elseif ($this->discount_step == 2) {
             $total = $this->quantity * $this->unitPriceAfterDiscount2;
-        elseif ($this->discount_step == 3)
+        } elseif ($this->discount_step == 3) {
             $total = $this->quantity * $this->unitPriceAfterDiscount3;
-        elseif ($this->discount_step == 4)
+        } elseif ($this->discount_step == 4) {
             $total = $this->quantity * $this->unitPriceAfterDiscount4;
-        elseif ($this->discount_step == 5)
+        } elseif ($this->discount_step == 5) {
             $total = $this->quantity * $this->unitPriceAfterDiscount5;
-        else
+        } else {
             $total = $this->quantity * $this->retail_price;
+        }   
 
         return ($tax == 1) ? $total * (1 + ($taxPercentage / 100)) : $total;
     }
@@ -389,14 +390,19 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return $this->quantity * $this->retail_price;
     }
 
-    public function getQuantityReceiveRemaining() {
-        $quantityRemaining = 0;
+    public function getQuantityReceiveTotal() {
+        $total = 0;
 
         foreach ($this->transactionReceiveItemDetails as $detail) {
-            $quantityRemaining += $detail->qty_received;
+            $total += $detail->qty_received;
         }
 
-        return $this->total_quantity - $quantityRemaining;
+        return $total;
+    }
+    
+    public function getQuantityReceiveRemaining() {
+        
+        return $this->total_quantity - $this->receive_quantity;
     }
 
     public function getDiscountType1Literal() {

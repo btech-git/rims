@@ -180,4 +180,8 @@ class RegistrationProduct extends CActiveRecord {
         
         return $total;
     }
+    
+    public function getQuantityMovementLeft() {
+        return $this->quantity - $this->quantity_movement;
+    }
 }

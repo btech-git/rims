@@ -133,9 +133,15 @@ class MaterialRequestDetail extends CActiveRecord {
         $total = 0;
         
         foreach ($this->movementOutDetails as $detail) {
-            $total += $detail->quantity;
+            if ($detail->movementOutHeader->status !== 'CANCELLED!!!') {
+                $total += $detail->quantity;
+            }
         }
         
         return $total;
+    }
+    
+    public function getQuantityMovementLeft() {
+        return $this->quantity - $this->quantity_movement_out;
     }
 }

@@ -163,8 +163,9 @@ class TransferRequest extends CComponent {
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {
-            if ($detail->quantity <= 0 && $this->header->isNewRecord)
+            if ($detail->quantity <= 0 && $this->header->isNewRecord) {
                 continue;
+            }
 
             $detail->transfer_request_id = $this->header->id;
             $detail->amount = $detail->total;

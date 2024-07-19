@@ -155,7 +155,7 @@ class MovementOutHeaderController extends Controller {
             $movementOut->header->return_order_id = null;
             $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = null;
-            $movementOut->header->branch_id = $deliveryOrder->sender_branch_id;
+//            $movementOut->header->branch_id = $deliveryOrder->sender_branch_id;
             
         } else if ($movementType == 2) {
             $returnOrder = TransactionReturnOrder::model()->findByPk($transactionId);
@@ -163,7 +163,7 @@ class MovementOutHeaderController extends Controller {
             $movementOut->header->return_order_id = $transactionId;
             $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = null;
-            $movementOut->header->branch_id = $returnOrder->recipient_branch_id;
+//            $movementOut->header->branch_id = $returnOrder->recipient_branch_id;
             
         } else if ($movementType == 3) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($transactionId);
@@ -171,14 +171,14 @@ class MovementOutHeaderController extends Controller {
             $movementOut->header->return_order_id = null;
             $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = $transactionId;
-            $movementOut->header->branch_id = $registrationTransaction->branch_id;
+//            $movementOut->header->branch_id = $registrationTransaction->branch_id;
         } else if ($movementType == 4) {
             $materialRequest = MaterialRequestHeader::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = null;
             $movementOut->header->registration_transaction_id = null;
             $movementOut->header->material_request_header_id = $transactionId;
-            $movementOut->header->branch_id = $materialRequest->branch_id;
+//            $movementOut->header->branch_id = $materialRequest->branch_id;
         } else {
             $this->redirect(array('admin'));
         }
@@ -340,39 +340,63 @@ class MovementOutHeaderController extends Controller {
 
     public function actionCancel($id) {
         $model = $this->loadModel($id);
-        $model->status = 'CANCELLED!!!'; 
-        $model->cancelled_datetime = date('Y-m-d H:i:s');
-        $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status', 'cancelled_datetime', 'user_id_cancelled'));
+        
+        $receiveItem = TransactionReceiveItem::model()->findByAttributes(array('movement_out_id' => $model->id, 'user_id_cancelled' => null));
+        if (empty($receiveItem)) {
+            $model->status = 'CANCELLED!!!'; 
+            $model->cancelled_datetime = date('Y-m-d H:i:s');
+            $model->user_id_cancelled = Yii::app()->user->id;
+            $model->update(array('status', 'cancelled_datetime', 'user_id_cancelled'));
 
-        foreach($model->movementInDetails as $detail) {
-            $detail->quantity = 0;
-            $detail->update(array('quantity'));
-            
-            if (!empty($detail->delivery_order_detail_id)) {
-                $deliveryOrderDetail = $detail->deliveryOrderDetail;
-                $deliveryOrderDetail->quantity_movement = $deliveryOrderDetail->getQuantityMovement();
-                $deliveryOrderDetail->quantity_movement_left = $deliveryOrderDetail->getQuantityMovementLeft();
-                $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));
+            foreach($model->movementInDetails as $detail) {
+                $detail->quantity = 0;
+                $detail->update(array('quantity'));
+
+                if (!empty($detail->delivery_order_detail_id)) {
+                    $deliveryOrderDetail = $detail->deliveryOrderDetail;
+                    $deliveryOrderDetail->quantity_movement = $deliveryOrderDetail->getQuantityMovement();
+                    $deliveryOrderDetail->quantity_movement_left = $deliveryOrderDetail->getQuantityMovementLeft();
+                    $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));
+                } elseif (!empty($detail->registration_product_id)) {
+                    $registrationProduct = $detail->registrationProduct;
+                    $registrationProduct->quantity_movement = $registrationProduct->getTotalMovementOutQuantity();
+                    $registrationProduct->quantity_movement_left = $registrationProduct->getQuantityMovementLeft();
+                    $registrationProduct->update(array('quantity_movement', 'quantity_movement_left'));
+                } elseif (!empty($detail->material_request_detail_id)) {
+                    $materialRequestDetail = $detail->materialRequestDetail;
+                    $materialRequestDetail->quantity_movement_out = $materialRequestDetail->getTotalQuantityMovementOut();
+                    $materialRequestDetail->quantity_remaining = $materialRequestDetail->getQuantityMovementLeft();
+                    $materialRequestDetail->update(array('quantity_movement_out', 'quantity_remaining'));
+                } else {
+                    $returnOrderDetail = $detail->returnOrderDetail;
+                    $returnOrderDetail->quantity_movement = $returnOrderDetail->getTotalQuantityMovementOut();
+                    $returnOrderDetail->quantity_movement_left = $returnOrderDetail->getQuantityMovementLeft();
+                    $returnOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));                
+                }
             }
-        }
 
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->movement_out_no,
-        ));
-
-        InventoryDetail::model()->deleteAllByAttributes(array(
-            'transaction_number' => $model->movement_out_no,
-        ));
-
-        foreach ($model->movementOutDetails as $movementDetail) {
-            $inventory = Inventory::model()->findByAttributes(array(
-                'product_id' => $movementDetail->product_id, 
-                'warehouse_id' => $movementDetail->warehouse_id
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->movement_out_no,
             ));
 
-            $inventory->total_stock = $inventory->getTotalStockInventoryDetail($movementDetail->product_id, $movementDetail->warehouse_id);
-            $inventory->update(array('total_stock'));
+            InventoryDetail::model()->deleteAllByAttributes(array(
+                'transaction_number' => $model->movement_out_no,
+            ));
+
+            foreach ($model->movementOutDetails as $movementDetail) {
+                $inventory = Inventory::model()->findByAttributes(array(
+                    'product_id' => $movementDetail->product_id, 
+                    'warehouse_id' => $movementDetail->warehouse_id
+                ));
+
+                $inventory->total_stock = $inventory->getTotalStockInventoryDetail($movementDetail->product_id, $movementDetail->warehouse_id);
+                $inventory->update(array('total_stock'));
+            }
+            
+            Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
+        } else {
+            Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check receive transaction!');
+            $this->redirect(array('view', 'id' => $id));
         }
         
         $this->redirect(array('admin'));
