@@ -302,6 +302,16 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         return $status;
     }
 
+    public function getRemainingQuantityDelivered() {
+        $totalRemaining = 0;
+
+        foreach ($this->transactionTransferRequestDetails as $detail) {
+            $totalRemaining += $detail->quantity_delivery_left;
+        }
+
+        return $totalRemaining;
+    }
+
     public function getTotalRemainingQuantityDelivered() {
         $totalRemaining = 0;
 
