@@ -291,12 +291,13 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
     public function getApprovalStatus() {
         $status = '';
 
-        if ($this->destination_approval_status == self::STATUS_PENDING)
+        if ($this->destination_approval_status == self::STATUS_PENDING) {
             $status = self::STATUS_PENDING_LITERAL;
-        else if ($this->destination_approval_status == self::STATUS_APPROVED)
+        } else if ($this->destination_approval_status == self::STATUS_APPROVED) {
             $status = self::STATUS_APPROVED_LITERAL;
-        else if ($this->destination_approval_status == self::STATUS_REJECTED)
+        } else if ($this->destination_approval_status == self::STATUS_REJECTED) {
             $status = self::STATUS_REJECTED_LITERAL;
+        }
 
         return $status;
     }
