@@ -76,7 +76,7 @@ class DeliveryOrders extends CComponent {
                 $detail = new TransactionDeliveryOrderDetail();
                 $detail->product_id = $transfer->product_id;
                 $detail->quantity_request = $transfer->quantity;
-                $detail->quantity_request_left = $transfer->quantityDeliveryRemaining;
+                $detail->quantity_request_left = $transfer->quantity_delivery_left;
                 $detail->transfer_request_detail_id = $transfer->id;
                 $this->details[] = $detail;
             }
