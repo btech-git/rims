@@ -141,8 +141,7 @@ $this->menu = array(
                         <label for="right-label" class="right" style="font-weight:bold;">Reference Type</label>
                     </div>
                     <div class="small-9 columns">
-
-                        <label for=""><?php echo !empty($delivery->request_type) ? $type : ""; ?></label>
+                        <label for=""><?php echo !empty($type) ? $type : ""; ?></label>
                  <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>
@@ -157,7 +156,7 @@ $this->menu = array(
                     <div class="small-9 columns">
 
 
-                        <label for=""><?php echo !empty($delivery->request_type) ? $requestNumber : ""; ?></label>
+                        <label for=""><?php echo !empty($requestNumber) ? $requestNumber : ""; ?></label>
                  <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>
