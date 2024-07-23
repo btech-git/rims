@@ -35,19 +35,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-<!--                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <label class="prefix">Branch</label>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(UserBranch::model()->findAllByAttributes(array('users_id' => Yii::app()->user->id)), 'branch_id', 'branch.name'), array('empty' => '-- All --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
                     </div>
                 </div>
             </div>
@@ -60,14 +47,6 @@
                             <div class="field">
                                 <?php //echo CHtml::resetButton('Clear', array('class'=>'button secondary')); ?>
                                 <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;', 'class'=>'button info right')); ?>
-                                
-                                <?php /*if (empty($existingDate)): ?>
-                                    <?php echo CHtml::link('Approve Daily', Yii::app()->createUrl("accounting/cashDailySummary/create", array(
-//                                        "branchId" => $paymentInRetailBranchId,
-                                        "transactionDate" => $transactionDate,
-                                    )), array('target' => '_blank', 'class'=>'button warning')); ?>
-                                    <?php //echo CHtml::submitButton('Approve', array('name' => 'Approve', 'class'=>'button success right', 'confirm' => 'Are you sure you want to approve?')); ?>
-                                <?php endif;*/ ?>
                             </div>
                         </div>
                     </div>
@@ -148,9 +127,9 @@
                 )); ?>
             </div>
             
-            <br /> <br />
+            <br />
             
-            <?php if (Yii::app()->user->checkAccess('cashDailyTransactionReport')): ?>
+            <?php /*if (Yii::app()->user->checkAccess('cashDailyTransactionReport')): ?>
                 <div class="row">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
@@ -217,7 +196,51 @@
                         'id' => 'view_tab_transaction',
                     )); ?>
                 </div>
-            <?php endif; ?>
+            <?php endif; */?>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Branch</th>
+                        <th>Retail</th>
+                        <th>Wholesale</th>
+                        <th>Sale Order</th>
+                        <th>Total</th>
+                    </tr>                    
+                </thead>
+                <tbody>
+                    <?php $retailGrandTotal = '0.00'; ?>
+                    <?php $wholesaleGrandTotal = '0.00'; ?>
+                    <?php $saleOrderGrandTotal = '0.00'; ?>
+                    <?php $branchGrandTotal = '0.00'; ?>
+                    <?php foreach ($branches as $branch): ?>
+                        <?php $retailTotal = isset($cashDailySummary['retail'][$branch->id]) ? $cashDailySummary['retail'][$branch->id] : '0.00'; ?>
+                        <?php $wholeSaleTotal = isset($cashDailySummary['wholesale'][$branch->id]) ? $cashDailySummary['wholesale'][$branch->id] : '0.00'; ?>
+                        <?php $saleOrderTotal = isset($cashDailySummary['saleorder'][$branch->id]) ? $cashDailySummary['saleorder'][$branch->id] : '0.00'; ?>
+                        <?php $branchTotal = $retailTotal + $wholeSaleTotal + $saleOrderTotal; ?>
+                        <tr>
+                            <td><?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $retailTotal)); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $wholeSaleTotal)); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleOrderTotal)); ?></td>
+                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $branchTotal)); ?></td>
+                        </tr>
+                        <?php $retailGrandTotal += $retailTotal; ?>
+                        <?php $wholesaleGrandTotal += $wholeSaleTotal; ?>
+                        <?php $saleOrderGrandTotal += $saleOrderTotal; ?>
+                        <?php $branchGrandTotal += $branchTotal; ?>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td style="text-align: right">Total</td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $retailGrandTotal)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $wholesaleGrandTotal)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleOrderGrandTotal)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $branchGrandTotal)); ?></td>
+                    </tr>
+                </tfoot>
+            </table>
             <?php echo CHtml::endForm(); ?>
         </div>
     </div>

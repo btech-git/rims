@@ -392,4 +392,17 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
 
         return $sql;
     }
+    
+    public static function getCashDailySummary($transactionDate) {
+        $sql = "SELECT s.requester_branch_id AS branch_id, SUM(s.total_price) AS grand_total
+                FROM " . TransactionSalesOrder::model()->tableName() . " s
+                WHERE s.sale_order_date LIKE :sale_order_date
+                GROUP BY s.requester_branch_id";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':sale_order_date' => $transactionDate . '%',
+        ));
+
+        return $resultSet;
+    }
 }

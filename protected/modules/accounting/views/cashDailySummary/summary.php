@@ -51,4 +51,6 @@ $this->menu=array(
     'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
     'transactionJournal' => $transactionJournal,
     'transactionJournalDataProvider' => $transactionJournalDataProvider,
+    'cashDailySummary' => $cashDailySummary,
+    'branches' => $branches,
 )); ?>

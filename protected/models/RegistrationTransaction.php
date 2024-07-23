@@ -1164,4 +1164,34 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getIndividualCashDailySummary($transactionDate) {
+        
+        $sql = "SELECT r.branch_id, SUM(r.grand_total) AS grand_total
+                FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+                WHERE c.customer_type = 'Individual' AND r.transaction_date LIKE :transaction_date
+                GROUP BY r.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':transaction_date' => $transactionDate . '%',
+        ));
+
+        return $resultSet;
+    }
+    
+    public static function getCompanyCashDailySummary($transactionDate) {
+        
+        $sql = "SELECT r.branch_id, SUM(r.grand_total) AS grand_total
+                FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+                WHERE c.customer_type = 'Company' AND r.transaction_date LIKE :transaction_date
+                GROUP BY r.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':transaction_date' => $transactionDate . '%',
+        ));
+
+        return $resultSet;
+    }
 }

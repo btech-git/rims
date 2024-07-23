@@ -161,6 +161,23 @@ class CashDailySummaryController extends Controller {
             $lastBranchId = $paymentInRetailRow['branch_id'];
         }
 
+        $registrationTransactionIndividualCashDailySummary = RegistrationTransaction::getIndividualCashDailySummary($transactionDate);
+        $registrationTransactionCompanyCashDailySummary = RegistrationTransaction::getCompanyCashDailySummary($transactionDate);
+        $saleOrderCashDailySummary = TransactionSalesOrder::getCashDailySummary($transactionDate);
+        
+        $branches = Branch::model()->findAll(array('order' => 't.name ASC'));
+        
+        $cashDailySummary = array();
+        foreach ($registrationTransactionIndividualCashDailySummary as $registrationTransactionIndividualCashDailyItem) {
+            $cashDailySummary['retail'][$registrationTransactionIndividualCashDailyItem['branch_id']] = $registrationTransactionIndividualCashDailyItem['grand_total'];
+        }
+        foreach ($registrationTransactionCompanyCashDailySummary as $registrationTransactionCompanyCashDailyItem) {
+            $cashDailySummary['wholesale'][$registrationTransactionCompanyCashDailyItem['branch_id']] = $registrationTransactionCompanyCashDailyItem['grand_total'];
+        }
+        foreach ($saleOrderCashDailySummary as $saleOrderCashDailyItem) {
+            $cashDailySummary['saleorder'][$saleOrderCashDailyItem['branch_id']] = $saleOrderCashDailyItem['grand_total'];
+        }
+        
         $existingDate = CashDailyApproval::model()->findByAttributes(array('transaction_date' => $transactionDate));
         if (isset($_GET['Approve'])) {
             $branchId = $_GET['Approve'];
@@ -213,6 +230,8 @@ class CashDailySummaryController extends Controller {
             'purchaseOrderDataProvider' => $purchaseOrderDataProvider,
             'transactionJournal' => $transactionJournal,
             'transactionJournalDataProvider' => $transactionJournalDataProvider,
+            'cashDailySummary' => $cashDailySummary,
+            'branches' => $branches,
         ));
     }
     
