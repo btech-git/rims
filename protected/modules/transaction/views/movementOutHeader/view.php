@@ -118,6 +118,21 @@ $this->menu = array(
     <?php if ($model->movement_type == 1): ?>
         <?php
         $delivery = TransactionDeliveryOrder::model()->findByPk($model->delivery_order_id);
+        if (!empty($delivery)) {
+            if ($delivery->request_type == "Sales Order") {
+                $type = "Sales Order";
+                $requestNumber = CHTml::link($delivery->salesOrder->sale_order_no, array("/transaction/transactionSalesOrder/view", "id" => $delivery->sales_order_id), array('target' => 'blank'));
+            } elseif ($delivery->request_type == "Sent Request") {
+                $type = "Sent Request";
+                $requestNumber = CHTml::link($delivery->sentRequest->sent_request_no, array("/transaction/transactionSentRequest/view", "id" => $delivery->sent_request_id), array('target' => 'blank'));
+            } elseif ($delivery->request_type == "Consignment Out") {
+                $type = "Consignment out";
+                $requestNumber = CHTml::link($delivery->consignmentOut->consignment_out_no, array("/transaction/consignmentOut/view", "id" => $delivery->consignment_out_id), array('target' => 'blank'));
+            } elseif ($delivery->request_type == "Transfer Request") {
+                $type = "Transfer Request";
+                $requestNumber = CHTml::link($delivery->transferRequest->transfer_request_no, array("/transaction/transferRequest/view", "id" => $delivery->transfer_request_id), array('target' => 'blank'));
+            }
+        }
         ?>
         <div class="row">
             <div class="small-8">
@@ -127,7 +142,7 @@ $this->menu = array(
                     </div>
                     <div class="small-9 columns">
 
-                        <label for=""><?php echo !empty($delivery) ? $delivery->request_type : ""; ?></label>
+                        <label for=""><?php echo !empty($delivery->request_type) ? $type : ""; ?></label>
                  <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>
@@ -142,7 +157,7 @@ $this->menu = array(
                     <div class="small-9 columns">
 
 
-                        <label for=""><?php echo $requestNumber; ?></label>
+                        <label for=""><?php echo !empty($delivery->request_type) ? $requestNumber : ""; ?></label>
                  <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>
