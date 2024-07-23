@@ -348,7 +348,7 @@ class MovementOutHeaderController extends Controller {
             $model->user_id_cancelled = Yii::app()->user->id;
             $model->update(array('status', 'cancelled_datetime', 'user_id_cancelled'));
 
-            foreach($model->movementInDetails as $detail) {
+            foreach($model->movementOutDetails as $detail) {
                 $detail->quantity = 0;
                 $detail->update(array('quantity'));
 
