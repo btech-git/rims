@@ -333,10 +333,10 @@ class Service extends CActiveRecord {
         $tampilkan = ($this->is_deleted == 1) ? array(0, 1) : array(0);
         $criteria->addInCondition('t.is_deleted', $tampilkan);
 
-        $serviceNameOperator = empty($this->name) ? '=' : 'LIKE';
-        $serviceNameValue = empty($this->name) ? '' : "%{$this->name}%";
-        $criteria->addCondition("t.name {$serviceNameOperator} :name");
-        $criteria->params[':name'] = $serviceNameValue;
+//        $serviceNameOperator = empty($this->name) ? '=' : 'LIKE';
+//        $serviceNameValue = empty($this->name) ? '' : "%{$this->name}%";
+//        $criteria->addCondition("t.name {$serviceNameOperator} :name");
+//        $criteria->params[':name'] = $serviceNameValue;
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -363,7 +363,7 @@ class Service extends CActiveRecord {
                 ),
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             ),
         ));
     }

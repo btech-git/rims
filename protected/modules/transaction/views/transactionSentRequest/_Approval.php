@@ -78,11 +78,11 @@
                                 <td><?php echo $product->name ?></td>
                                 <td><?php echo $product->manufacturer_code ?></td>
                                 <td><?php echo $product->masterSubCategoryCode ?></td>
-                                <td><?php echo $product->brand->name ?></td>
-                                <td><?php echo $product->subBrand->name ?></td>
-                                <td><?php echo $product->subBrandSeries->name ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($product , 'subBrand.name')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
                                 <td><?php echo $sentDetail->quantity; ?></td>
-                                <td><?php echo $sentDetail->unit->name; ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($sentDetail, 'unit.name')); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

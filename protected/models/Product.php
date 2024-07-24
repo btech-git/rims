@@ -685,6 +685,31 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getBeginningStockCardReport($branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE i.product_id = :product_id AND i.transaction_date = '" . AppParam::BEGINNING_TRANSACTION_DATE . "'" . $branchConditionSql . "
+            GROUP BY i.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
     public function getSalesQuantityReport($startDate, $endDate) {
         $sql = "
             SELECT COALESCE(SUM(p.quantity), 0) AS sales_quantity 

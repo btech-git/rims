@@ -22,7 +22,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <div style="font-size: larger">Laporan Posisi Stok</div>
         <div>
             <?php //$endDate = date('Y-m-d'); ?>
-            <?php echo ' Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
+            <?php echo ' Periode: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
         </div>
     </div>
 
@@ -44,32 +44,34 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <tbody>
             <?php foreach ($stockCardCategorySummary->dataProvider->data as $header): ?>
-                    <tr class="items1">
-                        <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
-                        <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                        <td colspan="6" style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                    </tr>
+                <tr class="items1">
+                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
+                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
+                    <td colspan="6" style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                </tr>
 
-                    <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); ?>
-                    <?php foreach ($stockData as $stockRow): ?>
-                        <?php $product = Product::model()->findByPk($stockRow['id']); ?>
-                        <?php $stockBegin = $product->getBeginningStockReport($startDate, $branchId); ?>
-                        <?php $stockIn = $stockRow['stock_in']; ?>
-                        <?php $stockOut = $stockRow['stock_out']; ?>
-                        <?php $stokEnd = $stockBegin - $stockIn + $stockOut; ?>
-                        <?php $inventoryValue = $product->getAverageCogs() * $stokEnd; ?>
-                        <tr class="items2">
-                            <td><?php echo CHtml::encode($stockRow['id']); ?></td>
-                            <td><?php echo CHtml::encode($stockRow['name']); ?></td>
-                            <td><?php echo CHtml::encode($stockRow['manufacturer_code']); ?></td>
-                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockBegin); ?></td>
-                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
-                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
-                            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stokEnd)); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                        <tr><td colspan="8">&nbsp;</td></tr>
+                <?php $stockData = $header->getInventoryStockReport($endDate, $branchId); ?>
+                <?php foreach ($stockData as $stockRow): ?>
+                    <?php $product = Product::model()->findByPk($stockRow['id']); ?>
+                    <?php $stockBegin = $product->getBeginningStockCardReport($branchId); ?>
+                    <?php $stockIn = $stockRow['stock_in']; ?>
+                    <?php $stockOut = $stockRow['stock_out']; ?>
+                    <?php $stokEnd = $stockBegin + $stockIn + $stockOut; ?>
+                    <?php $inventoryValue = $product->getAverageCogs() * $stokEnd; ?>
+                    <tr class="items2">
+                        <td><?php echo CHtml::encode($stockRow['id']); ?></td>
+                        <td><?php echo CHtml::encode($stockRow['name']); ?></td>
+                        <td><?php echo CHtml::encode($stockRow['manufacturer_code']); ?></td>
+                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockBegin); ?></td>
+                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
+                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
+                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stokEnd)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <tr>
+                    <td colspan="8">&nbsp;</td>
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
