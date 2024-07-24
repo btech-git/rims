@@ -65,12 +65,6 @@ class KasharianController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $kascomponent = new KasharianComponents();
-        $criteria = new CDbCriteria;
-        $criteria->addInCondition('id', $kascomponent->getListBank());
-        $banks = Coa::model()->findAll($criteria);
-        $branchs = Branch::model()->findAll();
-
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
         spl_autoload_register(array('YiiBase', 'autoload'));
@@ -78,12 +72,9 @@ class KasharianController extends Controller {
         // $type = 'cash out'; 
         $objPHPExcel = new PHPExcel();
 
-        // Set document properties
-        $objPHPExcel->setTitle("Laporan Kas Harian " . date('d-m-Y'))
-                ->setSubject("Laporan Kas Harian")
-                ->setDescription("Export Laporan Kas Harian, generated using PHP classes.")
-                ->setKeywords("Laporan Kas Harian")
-                ->setCategory("Export Laporan Kas Harian");
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('PT. Raperind Motor');
+        $documentProperties->setTitle("Laporan Kas Harian " . date('d-m-Y'));
 
         // style for horizontal vertical center
         $styleHorizontalVertivalCenter = array(
@@ -92,6 +83,13 @@ class KasharianController extends Controller {
                 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
             )
         );
+        
+        $kascomponent = new KasharianComponents();
+        $criteria = new CDbCriteria;
+        $criteria->addInCondition('id', $kascomponent->getListBank());
+        $banks = Coa::model()->findAll($criteria);
+        $branchs = Branch::model()->findAll();
+
         $styleHorizontalVertivalCenterBold = array(
             'font' => array(
                 'bold' => true,
@@ -392,22 +390,17 @@ class KasharianController extends Controller {
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
+        ob_end_clean();
         // Save a xls file
         $filename = 'Laporan Kas Harian - ' . strtoupper($tanggal);
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->setPreCalculateFormulas(true);
-        // $objWriter->setPreCalculateFormulas(true);
-
         $objWriter->save('php://output');
-        unset($this->objWriter);
-        unset($this->objWorksheet);
-        unset($this->objReader);
-        unset($this->objPHPExcel);
-        exit();
+
+        Yii::app()->end();
     }
 
     public function getXlsCashout($tanggal) {
