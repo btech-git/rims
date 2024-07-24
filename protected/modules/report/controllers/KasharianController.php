@@ -62,19 +62,24 @@ class KasharianController extends Controller {
     }
 
     public function getXlsReport($tanggal) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
         $kascomponent = new KasharianComponents();
         $criteria = new CDbCriteria;
         $criteria->addInCondition('id', $kascomponent->getListBank());
         $banks = Coa::model()->findAll($criteria);
         $branchs = Branch::model()->findAll();
 
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         // $type = 'cash out'; 
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-                ->setLastModifiedBy("Apri Pebriana")
-                ->setTitle("Laporan Kas Harian " . date('d-m-Y'))
+        $objPHPExcel->setTitle("Laporan Kas Harian " . date('d-m-Y'))
                 ->setSubject("Laporan Kas Harian")
                 ->setDescription("Export Laporan Kas Harian, generated using PHP classes.")
                 ->setKeywords("Laporan Kas Harian")
