@@ -27,14 +27,6 @@ class FinancialForecastController extends Controller {
         
         $companyBanks = CompanyBank::model()->findAllByAttributes(array('company_id' => '2'));
 
-        $payableTransaction = Search::bind(new TransactionPurchaseOrder(), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
-        $payableTransactionDataProvider = $payableTransaction->search();
-        $payableTransactionDataProvider->criteria->addCondition('t.payment_left > 0 AND t.status_document = "Approved"');
-        
-        $receivableTransaction = Search::bind(new InvoiceHeader(), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
-        $receivableTransactionDataProvider = $receivableTransaction->search();
-        $receivableTransactionDataProvider->criteria->addCondition('t.payment_left > 0 AND t.status <> "CANCELLED"');
-        
         $year = date('Y');
         $month = date('m');
         $numberOfDays = 0;
@@ -45,6 +37,7 @@ class FinancialForecastController extends Controller {
             $numberOfDays += $numberOfDaysinMonth;
         }
         $dateNow = date('Y-m-d');
+        $dateNext = date('Y-m-d', strtotime($dateNow . ' +' . $numberOfDays . ' days'));
         $datePrevious = date('Y-m-d', strtotime($dateNow . ' -' . $numberOfDays . ' days'));
         
         if (isset($_POST['Approve'])) {
@@ -72,12 +65,9 @@ class FinancialForecastController extends Controller {
             'companyBanks' => $companyBanks,
             'companyId' => $companyId,
             'dateNow' => $dateNow,
+            'dateNext' => $dateNext,
             'datePrevious' => $datePrevious,
             'numberOfPeriod' => $numberOfPeriod,
-            'payableTransaction' => $payableTransaction,
-            'payableTransactionDataProvider' => $payableTransactionDataProvider,
-            'receivableTransaction' => $receivableTransaction,
-            'receivableTransactionDataProvider' => $receivableTransactionDataProvider,
         ));
     }
 
@@ -90,6 +80,26 @@ class FinancialForecastController extends Controller {
         $this->render('transaction', array(
             'transactionDate' => $transactionDate,
             'coa' => $coa,
+        ));
+    }
+
+    public function actionReceivablePayable() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $payableTransaction = Search::bind(new TransactionReceiveItem(), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : '');
+        $payableTransactionDataProvider = $payableTransaction->search();
+        $payableTransactionDataProvider->criteria->addCondition('purchaseOrder.payment_left > 0 AND purchaseOrder.status_document = "Approved"');
+        
+        $receivableTransaction = Search::bind(new InvoiceHeader(), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
+        $receivableTransactionDataProvider = $receivableTransaction->search();
+        $receivableTransactionDataProvider->criteria->addCondition('t.payment_left > 0 AND t.status <> "CANCELLED"');
+        
+        $this->render('receivablePayable', array(
+            'payableTransaction' => $payableTransaction,
+            'payableTransactionDataProvider' => $payableTransactionDataProvider,
+            'receivableTransaction' => $receivableTransaction,
+            'receivableTransactionDataProvider' => $receivableTransactionDataProvider,
         ));
     }
 

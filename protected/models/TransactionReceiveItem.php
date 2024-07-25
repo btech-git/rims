@@ -234,7 +234,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
                 ),
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 100,
             ),
         ));
     }
