@@ -35,7 +35,7 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
-                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]')); ?></td>
+                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]', 'readonly' => 'readonly')); ?></td>
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]quantity_transaction"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?>

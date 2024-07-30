@@ -61,6 +61,10 @@ class FinancialForecastController extends Controller {
             $this->redirect(array('summary'));
         }
         
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($companyBanks, $dateNow, $dateNext, $datePrevious);
+        }
+
         $this->render('summary', array(
             'companyBanks' => $companyBanks,
             'companyId' => $companyId,
@@ -128,77 +132,102 @@ class FinancialForecastController extends Controller {
         }
     }
 
-//    protected function saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId) {
-//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
-//        $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
-//        $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
-//
-//        spl_autoload_unregister(array('YiiBase', 'autoload'));
-//        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
-//        spl_autoload_register(array('YiiBase', 'autoload'));
-//
-//        $objPHPExcel = new PHPExcel();
-//
-//        $documentProperties = $objPHPExcel->getProperties();
-//        $documentProperties->setCreator('Lanusa');
-//        $documentProperties->setTitle('Laporan Balance Sheet');
-//
-//        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-//        $worksheet->setTitle('Laporan Balance Sheet');
-//
-//        $worksheet->mergeCells('A1:B1');
-//        $worksheet->mergeCells('A2:B2');
-//        $worksheet->mergeCells('A3:B3');
-//        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-//        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
-//
-//        $branch = Branch::model()->findByPk($branchId);
-//        $worksheet->setCellValue('A1', CHtml::encode(($branch === null) ? '' : $branch->name));
-//        $worksheet->setCellValue('A2', 'Laporan Balance Sheet');
-//        $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
-//
-//
-//        $counter = 6;
-//
-//
-//        foreach ($accountCategoryTypes as $accountCategoryType) {
-//            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
-//            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryType, 'name')));
-//
-//            $counter++;
-//
-//            foreach ($accountCategoryType->accountCategories as $accountCategory) {
-//                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
-//                $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//                $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategory->getBalanceTotal($startDate, $endDate, $branchId)));
-//                $counter++;
-//            }
-//
-//            $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//            $worksheet->getStyle("A{$counter}:B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//            $worksheet->setCellValue("A{$counter}", 'TOTAL ' . CHtml::encode(CHtml::value($accountCategoryType, 'name')));
-//            $worksheet->setCellValue("B{$counter}", CHtml::encode($accountCategoryType->getBalanceTotal($startDate, $endDate, $branchId)));
-//
-//            $counter++;
-//            $counter++;
-//        }
-//
-//
-//
-//        for ($col = 'A'; $col !== 'H'; $col++) {
-//            $objPHPExcel->getActiveSheet()
-//                    ->getColumnDimension($col)
-//                    ->setAutoSize(true);
-//        }
-//
-//        header('Content-Type: application/xlsx');
-//        header('Content-Disposition: attachment;filename="Laporan Balance Sheet.xlsx"');
-//        header('Cache-Control: max-age=0');
-//
-//        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-//        $objWriter->save('php://output');
-//
-//        Yii::app()->end();
-//    }
+    protected function saveToExcel($companyBanks, $dateNow, $dateNext, $datePrevious) {
+        $coas = array();
+        foreach ($companyBanks as $companyBank) {
+            $coas[] = Coa::model()->findByPk($companyBank->coa_id);
+        }
+        $coaIds = array();
+        foreach ($coas as $coa) {
+            $coaIds[] = $coa->id;
+        }
+        $forecastApprovalCriteria = new CDbCriteria();
+        $forecastApprovalCriteria->addBetweenCondition('date_transaction', $datePrevious, $dateNext);
+        $forecastApprovalCriteria->addInCondition('coa_id', $coaIds);
+        $forecastApprovalList = FinancialForecastApproval::model()->findAll($forecastApprovalCriteria);
+        $forecastApprovalReference = array();
+        foreach ($forecastApprovalList as $forecastApprovalItem) {
+            $forecastApprovalReference[$forecastApprovalItem->coa_id][$forecastApprovalItem->date_transaction] = true;
+        }
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Laporan Financial Forecast');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Laporan Financial Forecast');
+
+        $worksheet->mergeCells('A1:B1');
+        $worksheet->mergeCells('A2:B2');
+        $worksheet->mergeCells('A3:B3');
+        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A2', 'Laporan Financial Forecast');
+        $worksheet->setCellValue('A3', CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($dateNow))));
+
+        $counter = 5;
+
+        foreach ($coas as $coa) {
+            $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
+            $worksheet->setCellValue("A{$counter}", 'Bank');
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($coa, 'code')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
+            $saldo = $coa->getBalanceTotal($datePrevious, $dateNext, null);
+            $worksheet->setCellValue("D{$counter}", CHtml::encode($saldo));
+
+            $counter++;
+
+            $worksheet->setCellValue("A{$counter}", 'Tanggal');
+            $worksheet->setCellValue("B{$counter}", 'Debit Rcvb');
+            $worksheet->setCellValue("C{$counter}", 'Debit All');
+            $worksheet->setCellValue("D{$counter}", 'Kredit Pay');
+            $worksheet->setCellValue("E{$counter}", 'Kredit All');
+            $worksheet->setCellValue("F{$counter}", 'Saldo');
+            
+            $counter++;
+
+            $forecastData = $coa->getFinancialForecastReport($datePrevious, $dateNext);
+            foreach ($forecastData as $forecastRow) {
+                $debitReceivableAmount = $forecastRow['total_receivable_debit'];
+                $debitJournalAmount = $forecastRow['total_journal_debit'];
+                $creditPayableAmount = $forecastRow['total_payable_credit'];
+                $creditJournalAmount = $forecastRow['total_journal_credit'];
+                $saldo += $debitReceivableAmount + $debitJournalAmount - $creditPayableAmount - $creditJournalAmount;
+                
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($forecastRow['transaction_date']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($debitReceivableAmount));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($debitJournalAmount));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($creditPayableAmount));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($creditJournalAmount));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
+                $counter++;
+            }
+        }
+
+
+
+        for ($col = 'A'; $col !== 'J'; $col++) {
+            $objPHPExcel->getActiveSheet()
+                    ->getColumnDimension($col)
+                    ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Laporan Financial Forecast.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
 }

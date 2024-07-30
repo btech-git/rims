@@ -91,14 +91,14 @@
                 
                 <div class="field">
                     <div class="row collapse">
-                        <?php $branches = Branch::model()->findAll(array('order' => 'name ASC')); ?>
                         <table>
-                        <?php foreach ($branches as $branch): ?>
-                            <tr>
-                                <td><?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></td>
-                                <td><?php echo CHtml::textField('Warehouse', ''); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
+                            <?php foreach ($branches as $branch): ?>
+                                <tr>
+                                    <td><?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></td>
+                                    <td><?php echo CHtml::dropDownList("WarehouseId[{$branch->id}]", $warehouseIds[$branch->id], CHtml::listData(Warehouse::model()->findAllByAttributes(array('branch_id' => $branch->id)), 'id', 'name'), array('empty' => '-- Pilih --')); ?></td>
+                                    <td><?php echo CHtml::errorSummary($warehouseBranchProductCategories[$branch->id]); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         </table>
                     </div>
                 </div>
