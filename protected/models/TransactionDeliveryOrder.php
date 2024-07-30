@@ -270,7 +270,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
                 WHERE p.delivery_date > '2022-12-31' AND p.delivery_order_no NOT IN (
                     SELECT kode_transaksi 
                     FROM " . JurnalUmum::model()->tableName() . "
-                ) AND t.is_cancelled = 0
+                ) AND p.is_cancelled = 0
                 ORDER BY p.delivery_date DESC";
 
         return $sql;
