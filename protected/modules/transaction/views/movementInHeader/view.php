@@ -61,7 +61,7 @@ $this->menu = array(
                 'name' => 'Detail',
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-                'disabled' => $model->status == 'Approved' ? false : true,
+//                'disabled' => $model->status == 'Approved' ? false : true,
                 'onclick' => ' 
                     $.ajax({
                         type: "POST",
