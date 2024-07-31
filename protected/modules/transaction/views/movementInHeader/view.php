@@ -55,13 +55,13 @@ $this->menu = array(
           },})
           '
           )); */ ?>
-        <?php //if ($model->status != 'Finished' && $model->status != 'CANCELLED!!!'): ?>
+        <?php if ($model->status != 'Finished' && $model->status != 'CANCELLED!!!'): ?>
             <?php echo CHtml::button('Update Received', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-//                'disabled' => $model->status == 'Approved' ? false : true,
+                'disabled' => $model->status == 'Approved' ? false : true,
                 'onclick' => ' 
                     $.ajax({
                         type: "POST",
@@ -75,7 +75,7 @@ $this->menu = array(
                     })
                 '
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
         
         <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementInHeader/cancel", "id" => $model->id), array(
