@@ -436,7 +436,7 @@
                     array(
                         'label' => 'Cancelled Transactions', 
                         'url' => array('/accounting/cancelledTransaction/index'), 
-                        'visible' => Yii::app()->user->checkAccess('director')
+                        'visible' => Yii::app()->user->checkAccess('requestOrderSupervisor')
                     ),
                 ),
             )); ?>
