@@ -50,7 +50,7 @@ class MovementOuts extends CComponent {
                         $detail->registration_product_id = null;
                         $detail->product_id = $deliveryDetail->product_id;
                         $detail->unit_id = $deliveryDetail->product->unit_id;
-                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
+//                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $deliveryDetail->quantity_movement_left;
                         $this->details[] = $detail;
                     }
@@ -73,7 +73,7 @@ class MovementOuts extends CComponent {
                         $detail->registration_product_id = null;
                         $detail->product_id = $returnDetail->product_id;
                         $detail->unit_id = $returnDetail->product->unit_id;
-                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
+//                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $returnDetail->quantity_movement_left;
                         $this->details[] = $detail;
                     }
@@ -96,7 +96,7 @@ class MovementOuts extends CComponent {
                         $detail->registration_product_id = $registrationDetail->id;
                         $detail->product_id = $registrationDetail->product_id;
                         $detail->unit_id = $registrationDetail->product->unit_id;
-                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
+//                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $registrationDetail->quantity_movement_left;
                         $this->details[] = $detail;
                     }
@@ -119,7 +119,7 @@ class MovementOuts extends CComponent {
                         $detail->material_request_detail_id = $materialRequestDetail->id;
                         $detail->product_id = $materialRequestDetail->product_id;
                         $detail->unit_id = $materialRequestDetail->unit_id;
-                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
+//                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $materialRequestDetail->quantity_remaining;
                         $this->details[] = $detail;
                     }
