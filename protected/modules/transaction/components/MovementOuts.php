@@ -39,7 +39,7 @@ class MovementOuts extends CComponent {
             if ($deliveryOrder !== null) {
                 foreach ($deliveryOrder->transactionDeliveryOrderDetails as $deliveryDetail) {
                     if ($deliveryDetail->quantity_movement_left > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $deliveryDetail->product->product_master_category_id));
+//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $deliveryDetail->product->product_master_category_id));
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -62,7 +62,7 @@ class MovementOuts extends CComponent {
             if ($returnOrder !== null) {
                 foreach ($returnOrder->transactionReturnOrderDetails as $returnDetail) {
                     if ($returnDetail->quantity_movement_left > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $returnDetail->product->product_master_category_id));
+//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $returnDetail->product->product_master_category_id));
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -85,7 +85,7 @@ class MovementOuts extends CComponent {
             if ($registrationTransaction !== null) {
                 foreach ($registrationTransaction->registrationProducts as $registrationDetail) {
                     if ($registrationDetail->quantity_movement_left > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $registrationDetail->product->product_master_category_id));
+//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $registrationDetail->product->product_master_category_id));
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -108,7 +108,7 @@ class MovementOuts extends CComponent {
             if ($materialRequest !== null) {
                 foreach ($materialRequest->materialRequestDetails as $materialRequestDetail) {
                     if ($materialRequestDetail->quantity_remaining > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $materialRequestDetail->product->product_master_category_id));
+//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $materialRequestDetail->product->product_master_category_id));
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
