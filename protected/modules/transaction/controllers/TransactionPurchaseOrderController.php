@@ -315,7 +315,6 @@ class TransactionPurchaseOrderController extends Controller {
             
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $purchaseOrder->header->purchase_order_no,
-                'branch_id' => $purchaseOrder->header->main_branch_id,
             ));
         
             $purchaseOrder->header->setCodeNumberByRevision('purchase_order_no');

@@ -253,6 +253,10 @@ class MovementInHeaderController extends Controller {
 
         if (isset($_POST['MovementInHeader']) && IdempotentManager::check()) {
             $this->loadState($movementIn);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $movementIn->header->movement_in_number,
+            ));
+
             $movementIn->header->setCodeNumberByRevision('movement_in_number');
             
             if ($movementIn->save(Yii::app()->db)) {
