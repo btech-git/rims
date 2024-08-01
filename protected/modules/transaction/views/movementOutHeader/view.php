@@ -36,7 +36,7 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
-        <?php //if ($model->status != 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+        <?php if ($model->status != 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::button('Update Delivered', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',
@@ -55,7 +55,7 @@ $this->menu = array(
                     },})
                 '
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
 
         <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
