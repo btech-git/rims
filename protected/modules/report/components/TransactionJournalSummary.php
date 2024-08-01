@@ -38,6 +38,6 @@ class TransactionJournalSummary extends CComponent {
         $this->dataProvider->criteria->compare('t.coa_id', $coaId);
         $this->dataProvider->criteria->compare('t.branch_id', $branchId);
         $this->dataProvider->criteria->compare('t.remark', $remark, true);
-        $this->dataProvider->criteria->compare('t.transaction_type', $transactionType);
+        $this->dataProvider->criteria->compare('t.transaction_type', $transactionType, true);
     }
 }
