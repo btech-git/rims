@@ -18,7 +18,7 @@ class CancelledTransactionController extends Controller {
         if (
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('director'))) {
+            if (!(Yii::app()->user->checkAccess('requestOrderSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }
