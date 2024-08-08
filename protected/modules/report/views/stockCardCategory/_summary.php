@@ -50,8 +50,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td colspan="6" style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                 </tr>
 
-                <?php $startDate = AppParam::BEGINNING_TRANSACTION_DATE; ?>
-                <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); ?>
+                <?php $stockData = $header->getInventoryStockReport($endDate, $branchId); ?>
                 <?php foreach ($stockData as $stockRow): ?>
                     <?php $product = Product::model()->findByPk($stockRow['id']); ?>
                     <?php $stockBegin = $product->getBeginningStockCardReport($branchId); ?>
