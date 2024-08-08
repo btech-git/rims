@@ -321,7 +321,7 @@ class ProductSubCategory extends CActiveRecord {
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . Unit::model()->tableName() . " u ON u.id = p.unit_id
-                WHERE i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.transaction_date <= :end_date AND p.product_sub_category_id = :product_sub_category_id" . $branchConditionSql . "
+                WHERE i.transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.transaction_date <= :end_date AND p.product_sub_category_id = :product_sub_category_id" . $branchConditionSql . "
                 GROUP BY p.id, p.code, p.name, p.manufacturer_code";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
