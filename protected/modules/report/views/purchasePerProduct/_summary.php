@@ -38,7 +38,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <tbody>
         <?php $totalPurchase = 0.00; ?>
         <?php foreach ($purchasePerProductSummary->dataProvider->data as $header): ?>
-            <?php $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate); ?>
+            <?php $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate, $branchId); ?>
             <?php if ($purchasePrice > 0): ?>
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>

@@ -9,14 +9,7 @@ class SaleRetailProductSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = TRUE;
-        $this->dataProvider->criteria->with = array(
-            'registrationProducts' => array(
-                'with' => array(
-                    'registrationTransaction'
-                ),
-            ),
-        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -37,9 +30,22 @@ class SaleRetailProductSummary extends CComponent {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
-        $this->dataProvider->criteria->addBetweenCondition('substr(registrationTransaction.transaction_date, 1, 10)', $startDate, $endDate);
+        
+        $branchConditionSql = '';
+        
         if (!empty($branchId)) {
-            $this->dataProvider->criteria->compare('registrationTransaction.branch_id', $branchId);
+            $branchConditionSql = ' AND branch_id = :branch_id';
+        }
+
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT d.id FROM " . RegistrationProduct::model()->tableName() . " d 
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = d.registration_transaction_id
+            WHERE d.product_id = t.id AND h.transaction_date BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
+        )");
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($branchId)) {
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
     }
 }

@@ -9,10 +9,7 @@ class SaleRetailSummary extends CComponent {
     }
 
     public function setupLoading() {
-//        $this->dataProvider->criteria->together = TRUE;
-//        $this->dataProvider->criteria->with = array(
-//            'registrationTransactions',
-//        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -40,10 +37,10 @@ class SaleRetailSummary extends CComponent {
             $branchConditionSql = ' AND branch_id = :branch_id';
         }
 
-        $this->dataProvider->criteria->addCondition('EXISTS (
-            SELECT id FROM rims_registration_transaction
-            WHERE customer_id = t.id AND transaction_date BETWEEN :start_date AND :end_date' . $branchConditionSql . '
-        )');
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT id FROM " . RegistrationTransaction::model()->tableName() . "
+            WHERE customer_id = t.id AND transaction_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+        )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         if (!empty($branchId)) {

@@ -33,12 +33,13 @@ class PurchasePerProductDetailController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $purchasePerProductSummary = new PurchasePerProductSummary($product->search());
         $purchasePerProductSummary->setupLoading();
         $purchasePerProductSummary->setupPaging($pageSize, $currentPage);
         $purchasePerProductSummary->setupSorting();
-        $purchasePerProductSummary->setupFilter($startDate, $endDate);
+        $purchasePerProductSummary->setupFilter($startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -56,6 +57,7 @@ class PurchasePerProductDetailController extends Controller {
             'endDate' => $endDate,
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
+            'branchId' => $branchId,
         ));
     }
 

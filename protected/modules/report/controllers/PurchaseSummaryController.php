@@ -31,19 +31,9 @@ class PurchaseSummaryController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
-//        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-//        $purchaseSummary = new PurchaseSummary($supplier->search());
-//        $purchaseSummary->setupLoading();
-//        $purchaseSummary->setupPaging($pageSize, $currentPage);
-//        $purchaseSummary->setupSorting();
-//        $filters = array(
-//            'startDate' => $startDate,
-//            'endDate' => $endDate,
-//        );
-//        $purchaseSummary->setupFilter($filters);
         $purchaseReport = $supplier->getPurchaseReport($supplierId, $startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {

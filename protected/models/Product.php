@@ -763,20 +763,29 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getPurchasePriceReport($startDate, $endDate) {
+    public function getPurchasePriceReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.main_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
         $sql = "
             SELECT COALESCE(SUM(d.total_price), 0) AS total_purchase 
             FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
-            WHERE d.product_id = :product_id AND h.purchase_order_date BETWEEN :start_date AND :end_date
+            WHERE d.product_id = :product_id AND h.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
             GROUP BY d.product_id
         ";
 
-        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
-            ':product_id' => $this->id,
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        ));
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
 
         return ($value === false) ? 0 : $value;
     }
@@ -849,6 +858,34 @@ class Product extends CActiveRecord {
                 WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND product_id = :product_id" . $branchConditionSql . "
                 ORDER BY r.transaction_date ASC";
         
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public function getPurchasePerProductReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.main_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT h.id, h.purchase_order_no, h.purchase_order_date, s.company, d.quantity, d.retail_price, d.discount, d.unit_price, d.total_price
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " h
+            INNER JOIN " . TransactionPurchaseOrderDetail::model()->tableName() . " d ON h.id = d.purchase_order_id
+            INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = h.supplier_id
+            WHERE d.product_id = :product_id AND h.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            ORDER BY h.purchase_order_date, h.purchase_order_no
+        ";
+
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;

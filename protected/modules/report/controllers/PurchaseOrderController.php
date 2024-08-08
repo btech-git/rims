@@ -36,11 +36,6 @@ class PurchaseOrderController extends Controller {
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-//        $purchaseOrderSummary = new PurchaseOrderSummary($supplier->search());
-//        $purchaseOrderSummary->setupLoading();
-//        $purchaseOrderSummary->setupPaging($pageSize, $currentPage);
-//        $purchaseOrderSummary->setupSorting();
-//        $purchaseOrderSummary->setupFilter($startDate, $endDate);
         $purchaseReport = $supplier->getPurchaseReport($supplierId, $startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {

@@ -59,8 +59,6 @@ Yii::app()->clientScript->registerCss('_report', '
     <tbody>
         <?php $grandTotalPurchase = 0.00; ?>
         <?php foreach ($purchasePerProductSummary->dataProvider->data as $header): ?>
-            <?php $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate); ?>
-            <?php if ($purchasePrice > 0): ?>
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
@@ -76,32 +74,26 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td colspan="8">
                         <table>
                             <?php $totalPurchase = 0.00; ?>
-                            <?php 
-                                $purchaseOrderDetailCriteria = new CDbCriteria;
-                                $purchaseOrderDetailCriteria->join = 'INNER JOIN rims_transaction_purchase_order po ON po.id = t.purchase_order_id';
-                                $purchaseOrderDetailCriteria->addCondition("po.purchase_order_date BETWEEN :start_date AND :end_date AND t.product_id = :product_id");
-                                $purchaseOrderDetailCriteria->params = array(
-                                    ':start_date' => $startDate,
-                                    ':end_date' => $endDate,
-                                    ':product_id' => $header->id,
-                                );
-                            ?>
-                            <?php $purchaseDetails = TransactionPurchaseOrderDetail::model()->findAll($purchaseOrderDetailCriteria); ?>
-                            <?php foreach ($purchaseDetails as $purchaseDetail): ?>
-                                <?php $totalPrice = CHtml::value($purchaseDetail, 'total_price'); ?>
+                        <?php $purchaseOrderData = $header->getPurchasePerProductReport($startDate, $endDate, $branchId); ?>
+                        <?php if (!empty($purchaseOrderData)): ?>
+                            <?php foreach ($purchaseOrderData as $purchaseOrderItem): ?>
+                                <?php $totalPrice = $purchaseOrderItem['total_price']; ?>
                                 <tr>
-                                    <td class="width2-1"><?php echo CHtml::link($purchaseDetail->purchaseOrder->purchase_order_no, Yii::app()->createUrl("transaction/transactionPurchaseOrder/view", array("id" => $purchaseDetail->purchase_order_id)), array('target' => '_blank')); ?></td>
-                                    <td class="width2-2"><?php echo CHtml::encode(CHtml::value($purchaseDetail, 'purchaseOrder.purchase_order_date')); ?></td>
-                                    <td class="width2-3"><?php echo CHtml::encode(CHtml::value($purchaseDetail, 'purchaseOrder.supplier.name')); ?></td>
-                                    <td class="width2-4" style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseDetail, 'quantity'))); ?></td>
-                                    <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseDetail, 'retail_price'))); ?></td>
-                                    <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseDetail, 'discount'))); ?></td>
-                                    <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($purchaseDetail, 'unit_price'))); ?></td>
+                                    <td class="width2-1">
+                                        <?php echo CHtml::link($purchaseOrderItem['purchase_order_no'], Yii::app()->createUrl("transaction/transactionPurchaseOrder/view", array("id" => $purchaseOrderItem['id'])), array('target' => '_blank')); ?>
+                                    </td>
+                                    <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($purchaseOrderItem['purchase_order_date']))); ?></td>
+                                    <td class="width2-3"><?php echo CHtml::encode($purchaseOrderItem['company']); ?></td>
+                                    <td class="width2-4" style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['quantity'])); ?></td>
+                                    <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['retail_price'])); ?></td>
+                                    <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['discount'])); ?></td>
+                                    <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['unit_price'])); ?></td>
                                     <td class="width2-8" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?></td>
                                 </tr>
 
                                 <?php $totalPurchase += $totalPrice; ?>
                             <?php endforeach; ?>
+                                <?php endif; ?>
                             <tr>
                                 <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
                                 <td style="text-align: right; font-weight: bold" class="width2-8">
@@ -112,7 +104,6 @@ Yii::app()->clientScript->registerCss('_report', '
                     </td>
                 </tr>
                 <?php $grandTotalPurchase += $totalPurchase; ?>
-            <?php endif; ?>
         <?php endforeach; ?>
     </tbody>
     <tfoot>

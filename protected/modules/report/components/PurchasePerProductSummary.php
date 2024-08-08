@@ -9,14 +9,7 @@ class PurchasePerProductSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = TRUE;
-        $this->dataProvider->criteria->with = array(
-            'transactionPurchaseOrderDetails' => array(
-                'with' => array(
-                    'purchaseOrder'
-                ),
-            ),
-        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -33,7 +26,22 @@ class PurchasePerProductSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate) {
-        $this->dataProvider->criteria->addBetweenCondition('purchaseOrder.purchase_order_date', $startDate, $endDate);
+    public function setupFilter($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
+        }
+
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT d.id FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d 
+            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
+            WHERE d.product_id = t.id AND h.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
+        )");
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($branchId)) {
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
     }
 }
