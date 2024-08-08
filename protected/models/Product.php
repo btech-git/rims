@@ -826,4 +826,31 @@ class Product extends CActiveRecord {
         
         return $resultSet;
     }
+    
+    public function getSaleRetailProductDetailReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, p.quantity, p.sale_price, p.total_price
+                FROM " . RegistrationProduct::model()->tableName() . " p 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND product_id = :product_id" . $branchConditionSql . "
+                ORDER BY r.transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
 }

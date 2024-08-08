@@ -127,10 +127,10 @@ class StockCardCategoryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Kartu Stok Persediaan');
+        $documentProperties->setTitle('Laporan Posisi Stok');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Kartu Stok Persediaan');
+        $worksheet->setTitle('Laporan Posisi Stok');
 
         $worksheet->mergeCells('A1:I1');
         $worksheet->mergeCells('A2:I2');
@@ -139,7 +139,7 @@ class StockCardCategoryController extends Controller {
         $worksheet->getStyle('A1:I3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:I3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Kartu Stok Persediaan');
+        $worksheet->setCellValue('A2', 'Laporan Posisi Stok');
         $worksheet->setCellValue('A3', 'Periode: ' . $endDateFormatted);
 
         $worksheet->getStyle("A6:I6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);

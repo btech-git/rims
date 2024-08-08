@@ -44,7 +44,7 @@ class StockCardCategorySummary extends CComponent {
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
             INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
-            WHERE p.product_sub_category_id = t.id AND i.transaction_date <= :end_date " . $branchConditionSql . "
+            WHERE p.product_sub_category_id = t.id AND .transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.transaction_date <= :end_date " . $branchConditionSql . "
         )");
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         

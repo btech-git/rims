@@ -368,6 +368,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'product' => $product,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
                     )); ?>
                 </div>
                 <div class="clear"></div>

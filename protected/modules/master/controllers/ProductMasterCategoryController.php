@@ -384,11 +384,59 @@ class ProductMasterCategoryController extends Controller {
         $coaConsignmentDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaConsignmentCriteria,
         ));
+        
+        $branches = Branch::model()->findAll(array('order' => 'name ASC'));
+        $branchIds = array_map(function($branch) { return $branch->id; }, $branches);
+        $branchIdsString = implode(',', $branchIds);
 
+        $warehouseBranchProductCategoryList = WarehouseBranchProductCategory::model()->findAll(array(
+            'condition' => "product_master_category_id = :product_master_category_id AND branch_id IN ({$branchIdsString})",
+            'params' => array(':product_master_category_id' => $model->id),
+        ));
+        
+        $warehouseIds = array();
+        $warehouseBranchProductCategories = array();
+        foreach ($branches as $branch) {
+            $warehouseIds[$branch->id] = null;
+            $warehouseBranchProductCategories[$branch->id] = new WarehouseBranchProductCategory();
+            foreach ($warehouseBranchProductCategoryList as $warehouseBranchProductCategoryItem) {
+                if ($warehouseBranchProductCategoryItem->branch_id === $branch->id) {
+                    $warehouseIds[$branch->id] = $warehouseBranchProductCategoryItem->warehouse_id;
+                    $warehouseBranchProductCategories[$branch->id] = $warehouseBranchProductCategoryItem;
+                }
+            }
+        }
         if (isset($_POST['ProductMasterCategory'])) {
             $model->attributes = $_POST['ProductMasterCategory'];
-            if ($model->save())
+            $warehouseIds = $_POST['WarehouseId'];
+            foreach ($warehouseIds as $branchId => $warehouseId) {
+                $warehouseBranchProductCategory = $warehouseBranchProductCategories[$branchId];
+                $warehouseBranchProductCategory->warehouse_id = empty($warehouseId) ? null : (int) $warehouseId;
+                $warehouseBranchProductCategory->branch_id = $branchId;
+            }
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = $model->validate();
+                foreach ($branches as $branch) {
+                    $valid = $valid && $warehouseBranchProductCategories[$branch->id]->validate(array('warehouse_id', 'branch_id'));
+                }
+                $valid = $valid && $model->save(false);
+                foreach ($branches as $branch) {
+                    $warehouseBranchProductCategories[$branch->id]->product_master_category_id = $model->id;
+                    $valid = $valid && $warehouseBranchProductCategories[$branch->id]->save(false);
+                }
+                if ($valid) {
+                    $dbTransaction->commit();
+                } else {
+                    $dbTransaction->rollback();
+                }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
+            }
+            if ($valid) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -411,6 +459,9 @@ class ProductMasterCategoryController extends Controller {
             'coaInventoryDataProvider' => $coaInventoryDataProvider,
             'coaConsignment' => $coaConsignment,
             'coaConsignmentDataProvider' => $coaConsignmentDataProvider,
+            'warehouseIds' => $warehouseIds,
+            'branches' => $branches,
+            'warehouseBranchProductCategories' => $warehouseBranchProductCategories,
         ));
     }
 
