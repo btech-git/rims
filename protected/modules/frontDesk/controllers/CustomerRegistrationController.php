@@ -14,7 +14,9 @@ class CustomerRegistrationController extends Controller {
         if ($filterChain->action->id === 'vehicleList') {
             if (
                 !(Yii::app()->user->checkAccess('generalRepairCreate')) || 
-                !(Yii::app()->user->checkAccess('bodyRepairCreate'))
+                !(Yii::app()->user->checkAccess('generalRepairEdit')) || 
+                !(Yii::app()->user->checkAccess('bodyRepairCreate')) || 
+                !(Yii::app()->user->checkAccess('bodyRepairEdit'))
             ) {
                 $this->redirect(array('/site/login'));
             }
