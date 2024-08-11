@@ -46,7 +46,11 @@ class PurchasePerProductController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchasePerProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($purchasePerProductSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate,
+                'branchId' => $branchId,
+            ));
         }
 
         $this->render('summary', array(
@@ -167,7 +171,7 @@ class PurchasePerProductController extends Controller {
             $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'productMasterCategory.name')));
             $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
             $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'productSubCategory.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode($header->getPurchasePriceReport($options['startDate'], $options['endDate'])));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode($header->getPurchasePriceReport($options['startDate'], $options['endDate'], $options['branchId'])));
 
             $counter++;
         }
