@@ -44,6 +44,12 @@ $('.search-form form').submit(function(){
                 <h2>Manage Cash Transactions</h2>
             </div>
 
+            <?php if (Yii::app()->user->hasFlash('message')): ?>
+                <div class="flash-success">
+                    <?php echo Yii::app()->user->getFlash('message'); ?>
+                </div>
+            <?php endif; ?>
+
             <div class="search-bar">
                 <div class="clearfix button-bar">
                     <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>					

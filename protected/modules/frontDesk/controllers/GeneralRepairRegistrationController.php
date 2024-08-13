@@ -626,14 +626,24 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionCancel($id) {
-        $model = $this->loadModel($id);
-        $model->status = 'CANCELLED!!!';
-        $model->payment_status = 'CANCELLED!!!';
-        $model->service_status = 'CANCELLED!!!';
-        $model->vehicle_status = 'CANCELLED!!!';
-        $model->cancelled_datetime = date('Y-m-d H:i:s');
-        $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status', 'payment_status', 'service_status', 'vehicle_status', 'cancelled_datetime', 'user_id_cancelled'));
+        
+        $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
+        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
+        if (empty($movementOutHeader && $invoiceHeader)) { 
+            $model = $this->loadModel($id);
+            $model->status = 'CANCELLED!!!';
+            $model->payment_status = 'CANCELLED!!!';
+            $model->service_status = 'CANCELLED!!!';
+            $model->vehicle_status = 'CANCELLED!!!';
+            $model->cancelled_datetime = date('Y-m-d H:i:s');
+            $model->user_id_cancelled = Yii::app()->user->id;
+            $model->update(array('status', 'payment_status', 'service_status', 'vehicle_status', 'cancelled_datetime', 'user_id_cancelled'));
+            
+            Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
+        } else {
+            Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
+            $this->redirect(array('view', 'id' => $id));
+        }
 
         $this->redirect(array('admin'));
     }

@@ -3,6 +3,11 @@
     'View',
 ); ?>
 
+<?php if (Yii::app()->user->hasFlash('message')): ?>
+    <div class="flash-error">
+        <?php echo Yii::app()->user->getFlash('message'); ?>
+    </div>
+<?php endif; ?>
 
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px')); ?>

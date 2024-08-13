@@ -19,6 +19,13 @@ $this->menu = array(
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
     <div class="clearfix page-action">
+
+        <?php if (Yii::app()->user->hasFlash('message')): ?>
+            <div class="flash-error">
+                <?php echo Yii::app()->user->getFlash('message'); ?>
+            </div>
+        <?php endif; ?>
+
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 

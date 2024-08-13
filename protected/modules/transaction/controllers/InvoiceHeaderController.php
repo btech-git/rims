@@ -363,17 +363,28 @@ class InvoiceHeaderController extends Controller {
 
     public function actionCancel($id) {
         $model = $this->loadModel($id);
-        $model->status = 'CANCELLED!!!';
-        $model->total_price = 0; 
-        $model->payment_amount = 0;
-        $model->payment_left = 0;
-        $model->cancelled_datetime = date('Y-m-d H:i:s');
-        $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status', 'total_price', 'payment_amount', 'payment_left', 'cancelled_datetime', 'user_id_cancelled'));
+        
+        $paymentInDetail = PaymentInDetail::model()->findByAttributes(array('invoice_header_id' => $id));
+//        $paymentInHeader = empty($paymentInDetail) ? null : $paymentInDetail->paymentIn;
+        
+        if (empty($paymentInDetail) || $paymentInDetail->paymentIn->user_id_cancelled !== null) {
+            $model->status = 'CANCELLED!!!';
+            $model->total_price = 0; 
+            $model->payment_amount = 0;
+            $model->payment_left = 0;
+            $model->cancelled_datetime = date('Y-m-d H:i:s');
+            $model->user_id_cancelled = Yii::app()->user->id;
+            $model->update(array('status', 'total_price', 'payment_amount', 'payment_left', 'cancelled_datetime', 'user_id_cancelled'));
 
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->invoice_number,
-        ));
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->invoice_number,
+            ));
+            
+            Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
+        } else {
+            Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
+            $this->redirect(array('view', 'id' => $id));
+        }
 
         $this->redirect(array('admin'));
     }

@@ -39,6 +39,13 @@ Yii::app()->clientScript->registerScript('search', "
 <div id="maincontent">
     <div class="clearfix page-action">
         <h1>Manage Transaction Receive Item</h1>
+
+        <?php if (Yii::app()->user->hasFlash('message')): ?>
+            <div class="flash-success">
+                <?php echo Yii::app()->user->getFlash('message'); ?>
+            </div>
+        <?php endif; ?>
+
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>

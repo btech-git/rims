@@ -31,6 +31,13 @@ Yii::app()->clientScript->registerScript('search', "
     <div class="clearfix page-action">
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Registration', Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("frontDesk.generalRepairRegistration.admin"))); ?>
         <h1>Manage General Repair Registrations</h1>
+        
+        <?php if (Yii::app()->user->hasFlash('message')): ?>
+            <div class="flash-success">
+                <?php echo Yii::app()->user->getFlash('message'); ?>
+            </div>
+        <?php endif; ?>
+
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary" id="menushow">Advanced Search</a>

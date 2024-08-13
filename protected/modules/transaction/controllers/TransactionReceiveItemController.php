@@ -407,52 +407,63 @@ class TransactionReceiveItemController extends Controller {
 
     public function actionCancel($id) {
         $model = $this->loadModel($id);
-        $model->note = 'CANCELLED!!!';
-        $model->invoice_number = 'CANCELLED!!!';
-        $model->invoice_sub_total = 0; 
-        $model->invoice_grand_total = 0; 
-        $model->invoice_rounding_nominal = 0; 
-        $model->invoice_grand_total_rounded = 0; 
-        $model->cancelled_datetime = date('Y-m-d H:i:s');
-        $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('note', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded', 'cancelled_datetime', 'user_id_cancelled'));
-
-        foreach ($model->transactionReceiveItemDetails as $detail) {
-            $detail->qty_received = 0;
-            $detail->quantity_movement = 0;
-            $detail->quantity_movement_left = 0;
-            $detail->quantity_delivered = 0;
-            $detail->quantity_delivered_left = 0;
-            $detail->quantity_return = 0;
-            $detail->total_price = 0;
-            $detail->update(array('qty_received', 'quantity_movement', 'quantity_movement_left', 'quantity_delivered', 'quantity_delivered_left', 'quantity_return', 'total_price'));
-            
-            if (!empty($detail->purchase_order_detail_id)) {
-                $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
-                $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
-                $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
-                $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
-            } elseif (!empty($detail->delivery_order_detail_id)) {
-                $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id));
-                $deliveryOrderDetail->quantity_receive = $deliveryOrderDetail->getQuantityReceive();
-                $deliveryOrderDetail->quantity_receive_left = $deliveryOrderDetail->getQuantityReceiveLeft();
-                $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));
-            } elseif (!empty($detail->movement_out_detail_id)) {
-                $movementOutDetail = MovementOutDetail::model()->findByAttributes(array('id' => $detail->movement_out_detail_id));
-                $movementOutDetail->quantity_receive = $movementOutDetail->getQuantityReceive();
-                $movementOutDetail->quantity_receive_left = $movementOutDetail->getQuantityReceiveLeft();
-                $movementOutDetail->update(array('quantity_receive', 'quantity_receive_left'));
-            } elseif (!empty($detail->consignment_in_detail)) {
-                $consignmentInDetail = ConsignmentInDetail::model()->findByAttributes(array('id' => $detail->consignment_in_detail));
-                $consignmentInDetail->qty_received = $consignmentInDetail->getTotalQuantityReceived();
-                $consignmentInDetail->qty_request_left = $consignmentInDetail->getQuantityRequestLeft();
-                $consignmentInDetail->update(array('qty_received', 'qty_request_left'));
-            }
-        }
         
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->receive_item_no,
-        ));
+        $paymentOutDetail = PayOutDetail::model()->findByAttributes(array('receive_item_id' => $id));
+        $movementin = MovementInHeader::model()->findByAttributes(array('receive_item_id' => $id, 'user_id_cancelled' => null));
+        
+        if (!empty($movementin) && $paymentOutDetail->paymentOut->user_id_cancelled !== null) {
+            $model->note = 'CANCELLED!!!';
+            $model->invoice_number = 'CANCELLED!!!';
+            $model->invoice_sub_total = 0; 
+            $model->invoice_grand_total = 0; 
+            $model->invoice_rounding_nominal = 0; 
+            $model->invoice_grand_total_rounded = 0; 
+            $model->cancelled_datetime = date('Y-m-d H:i:s');
+            $model->user_id_cancelled = Yii::app()->user->id;
+            $model->update(array('note', 'invoice_number', 'invoice_sub_total', 'invoice_grand_total', 'invoice_rounding_nominal', 'invoice_grand_total_rounded', 'cancelled_datetime', 'user_id_cancelled'));
+
+            foreach ($model->transactionReceiveItemDetails as $detail) {
+                $detail->qty_received = 0;
+                $detail->quantity_movement = 0;
+                $detail->quantity_movement_left = 0;
+                $detail->quantity_delivered = 0;
+                $detail->quantity_delivered_left = 0;
+                $detail->quantity_return = 0;
+                $detail->total_price = 0;
+                $detail->update(array('qty_received', 'quantity_movement', 'quantity_movement_left', 'quantity_delivered', 'quantity_delivered_left', 'quantity_return', 'total_price'));
+
+                if (!empty($detail->purchase_order_detail_id)) {
+                    $purchaseOrderDetail = TransactionPurchaseOrderDetail::model()->findByAttributes(array('id' => $detail->purchase_order_detail_id));
+                    $purchaseOrderDetail->receive_quantity = $purchaseOrderDetail->getQuantityReceiveTotal();
+                    $purchaseOrderDetail->purchase_order_quantity_left = $purchaseOrderDetail->getQuantityReceiveRemaining();
+                    $purchaseOrderDetail->update(array('receive_quantity', 'purchase_order_quantity_left'));
+                } elseif (!empty($detail->delivery_order_detail_id)) {
+                    $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id));
+                    $deliveryOrderDetail->quantity_receive = $deliveryOrderDetail->getQuantityReceive();
+                    $deliveryOrderDetail->quantity_receive_left = $deliveryOrderDetail->getQuantityReceiveLeft();
+                    $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));
+                } elseif (!empty($detail->movement_out_detail_id)) {
+                    $movementOutDetail = MovementOutDetail::model()->findByAttributes(array('id' => $detail->movement_out_detail_id));
+                    $movementOutDetail->quantity_receive = $movementOutDetail->getQuantityReceive();
+                    $movementOutDetail->quantity_receive_left = $movementOutDetail->getQuantityReceiveLeft();
+                    $movementOutDetail->update(array('quantity_receive', 'quantity_receive_left'));
+                } elseif (!empty($detail->consignment_in_detail)) {
+                    $consignmentInDetail = ConsignmentInDetail::model()->findByAttributes(array('id' => $detail->consignment_in_detail));
+                    $consignmentInDetail->qty_received = $consignmentInDetail->getTotalQuantityReceived();
+                    $consignmentInDetail->qty_request_left = $consignmentInDetail->getQuantityRequestLeft();
+                    $consignmentInDetail->update(array('qty_received', 'qty_request_left'));
+                }
+            }
+
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->receive_item_no,
+            ));
+            
+            Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
+        } else {
+            Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
+            $this->redirect(array('view', 'id' => $id));
+        }
 
         $this->redirect(array('admin'));
     }

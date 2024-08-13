@@ -12,6 +12,13 @@ $this->breadcrumbs = array(
 <div class="small-12 columns">
     <div id="maincontent">
         <div class="clearfix page-action">
+            
+            <?php if (Yii::app()->user->hasFlash('message')): ?>
+                <div class="flash-error">
+                    <?php echo Yii::app()->user->getFlash('message'); ?>
+                </div>
+            <?php endif; ?>
+
             <?php $ccontroller = Yii::app()->controller->id; ?>
             <?php $ccaction = Yii::app()->controller->action->id; ?>
             <?php $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $model->id)); ?>

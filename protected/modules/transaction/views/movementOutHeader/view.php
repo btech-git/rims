@@ -19,6 +19,13 @@ $this->menu = array(
 <!--<h1>View MovementOutHeader #<?php echo $model->id; ?></h1>-->
 <div id="maincontent">
     <div class="clearfix page-action">
+        
+        <?php if (Yii::app()->user->hasFlash('message')): ?>
+            <div class="flash-error">
+                <?php echo Yii::app()->user->getFlash('message'); ?>
+            </div>
+        <?php endif; ?>
+
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>

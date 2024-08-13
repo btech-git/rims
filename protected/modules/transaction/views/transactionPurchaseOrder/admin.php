@@ -50,6 +50,13 @@ Yii::app()->clientScript->registerScript('search', "
     <div class="clearfix page-action">
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("purchaseOrderCreate"))) ?>
         <h1>Manage Transaction Purchase Orders</h1>
+        
+        <?php if (Yii::app()->user->hasFlash('message')): ?>
+            <div class="flash-success">
+                <?php echo Yii::app()->user->getFlash('message'); ?>
+            </div>
+        <?php endif; ?>
+
         <div class="search-bar">
             <div class="clearfix button-bar">
             <!--<div class="left clearfix bulk-action">

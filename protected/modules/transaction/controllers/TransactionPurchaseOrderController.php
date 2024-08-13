@@ -975,20 +975,31 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function actionCancel($id) {
         $model = $this->loadModel($id);
-        $model->status_document = 'CANCELLED!!!';
-        $model->total_quantity = 0; 
-        $model->subtotal = 0;
-        $model->total_price = 0;
-        $model->payment_amount = 0;
-        $model->payment_left = 0;
-        $model->payment_status = 'CANCELLED!!!';
-        $model->cancelled_datetime = date('Y-m-d H:i:s');
-        $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status_document', 'total_quantity', 'subtotal', 'total_price', 'payment_amount', 'payment_left', 'payment_status', 'cancelled_datetime', 'user_id_cancelled'));
+        
+        $paymentOut = PaymentOut::model()->findByAttributes(array('purchase_order_id' => $id, 'user_id_cancelled' => null));
+        $receiveItem = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id' => $id, 'user_id_cancelled' => null));
+        
+        if (!empty($receiveItem && $paymentOut)) {
+            $model->status_document = 'CANCELLED!!!';
+            $model->total_quantity = 0; 
+            $model->subtotal = 0;
+            $model->total_price = 0;
+            $model->payment_amount = 0;
+            $model->payment_left = 0;
+            $model->payment_status = 'CANCELLED!!!';
+            $model->cancelled_datetime = date('Y-m-d H:i:s');
+            $model->user_id_cancelled = Yii::app()->user->id;
+            $model->update(array('status_document', 'total_quantity', 'subtotal', 'total_price', 'payment_amount', 'payment_left', 'payment_status', 'cancelled_datetime', 'user_id_cancelled'));
 
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->purchase_order_no,
-        ));
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $model->purchase_order_no,
+            ));
+            
+            Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
+        } else {
+            Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
+            $this->redirect(array('view', 'id' => $id));
+        }
 
         $this->redirect(array('admin'));
     }

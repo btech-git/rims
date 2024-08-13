@@ -17,6 +17,12 @@ $this->menu=array(
 ?>
 <div id="maincontent">
     <div class="clearfix page-action">
+        <?php if (Yii::app()->user->hasFlash('message')): ?>
+            <div class="flash-error">
+                <?php echo Yii::app()->user->getFlash('message'); ?>
+            </div>
+        <?php endif; ?>
+
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/admin', array('class'=>'button cbutton right','style'=>'margin-left:10px')) ?>

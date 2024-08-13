@@ -36,6 +36,13 @@ Yii::app()->clientScript->registerScript('search', "
     <div class="clearfix page-action">
         <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.create"))) ?>
         <h1>Manage Delivery Orders</h1>
+        
+        <?php if (Yii::app()->user->hasFlash('message')): ?>
+            <div class="flash-success">
+                <?php echo Yii::app()->user->getFlash('message'); ?>
+            </div>
+        <?php endif; ?>
+
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
