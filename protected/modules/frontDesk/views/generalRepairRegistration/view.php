@@ -215,12 +215,12 @@ $this->breadcrumbs = array(
     </div>
     
     <div>
-        <?php //if (Yii::app()->user->checkAccess("generalRepairSupervisor") && $model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+        <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor") && $model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
                 'class' => 'button alert', 
                 'style' => 'margin-right:10px', 
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
 
         <?php if (empty($model->work_order_number) && $model->status !== 'Pending' && empty($model->sales_order_number)): ?>
             <?php echo CHtml::link('<span class="fa fa-bookmark"></span>Pending', Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/pendingOrder?id=' . $model->id, array('class'=>'button secondary right', 'style' => 'margin-right:10px')) ?>
