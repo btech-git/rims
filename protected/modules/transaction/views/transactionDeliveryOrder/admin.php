@@ -37,12 +37,6 @@ Yii::app()->clientScript->registerScript('search', "
         <?php //echo CHtml::link('<span class="fa fa-plus"></span>New Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/create', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.create"))) ?>
         <h1>Manage Delivery Orders</h1>
         
-        <?php if (Yii::app()->user->hasFlash('message')): ?>
-            <div class="flash-success">
-                <?php echo Yii::app()->user->getFlash('message'); ?>
-            </div>
-        <?php endif; ?>
-
         <div class="search-bar">
             <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
@@ -153,3 +147,32 @@ Yii::app()->clientScript->registerScript('search', "
         'id' => 'view_tab',
     )); ?>
 </div>
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'cancel-message-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Cancel Message',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => false,
+    ),
+));?>
+<div>
+    <?php $hasFlash = Yii::app()->user->hasFlash('message'); ?>
+    <?php if ($hasFlash): ?>
+        <div class="flash-error">
+            <?php echo Yii::app()->user->getFlash('message'); ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+    });
+</script>

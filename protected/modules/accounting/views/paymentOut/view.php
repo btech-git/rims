@@ -3,12 +3,6 @@
     'View',
 ); ?>
 
-<?php if (Yii::app()->user->hasFlash('message')): ?>
-    <div class="flash-error">
-        <?php echo Yii::app()->user->getFlash('message'); ?>
-    </div>
-<?php endif; ?>
-
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px')); ?>
 
@@ -292,3 +286,32 @@
         <?php echo CHtml::endForm(); ?>
     </div>
 <?php //endif; ?>
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'cancel-message-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Cancel Message',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => false,
+    ),
+));?>
+<div>
+    <?php $hasFlash = Yii::app()->user->hasFlash('message'); ?>
+    <?php if ($hasFlash): ?>
+        <div class="flash-error">
+            <?php echo Yii::app()->user->getFlash('message'); ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+    });
+</script>

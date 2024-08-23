@@ -59,12 +59,6 @@ $('.search-form form').submit(function(){
                 )); ?>
             </div>
 
-            <?php if (Yii::app()->user->hasFlash('message')): ?>
-                <div class="flash-success">
-                    <?php echo Yii::app()->user->getFlash('message'); ?>
-                </div>
-            <?php endif; ?>
-
             <div class="search-bar">
                 <div class="clearfix button-bar">
                     <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>
@@ -247,3 +241,32 @@ $('.search-form form').submit(function(){
         </div>
     </div> <!-- end row -->
 </div> <!-- end maintenance -->
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'cancel-message-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Cancel Message',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => false,
+    ),
+));?>
+<div>
+    <?php $hasFlash = Yii::app()->user->hasFlash('message'); ?>
+    <?php if ($hasFlash): ?>
+        <div class="flash-error">
+            <?php echo Yii::app()->user->getFlash('message'); ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+    });
+</script>

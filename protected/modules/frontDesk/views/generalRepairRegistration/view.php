@@ -12,12 +12,6 @@ $this->breadcrumbs = array(
 <div class="small-12 columns">
     <div id="maincontent">
         <div class="clearfix page-action">
-            
-            <?php if (Yii::app()->user->hasFlash('message')): ?>
-                <div class="flash-error">
-                    <?php echo Yii::app()->user->getFlash('message'); ?>
-                </div>
-            <?php endif; ?>
 
             <?php $ccontroller = Yii::app()->controller->id; ?>
             <?php $ccaction = Yii::app()->controller->action->id; ?>
@@ -238,3 +232,32 @@ $this->breadcrumbs = array(
 </div>
 
 <?php echo CHtml::endForm(); ?>
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'cancel-message-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Cancel Message',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => false,
+    ),
+));?>
+<div>
+    <?php $hasFlash = Yii::app()->user->hasFlash('message'); ?>
+    <?php if ($hasFlash): ?>
+        <div class="flash-error">
+            <?php echo Yii::app()->user->getFlash('message'); ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+    });
+</script>
