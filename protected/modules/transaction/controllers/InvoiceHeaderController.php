@@ -321,22 +321,19 @@ class InvoiceHeaderController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $invoice = $this->instantiate($id);
-        $invoice->header->setCodeNumberByRevision('invoice_number');
         $this->performAjaxValidation($invoice->header);
-
-        // if(isset($_POST['InvoiceHeader']))
-        // {
-        // 	$model->attributes=$_POST['InvoiceHeader'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-
+        
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
         if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
-
             $this->loadState($invoice);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $invoice->header->invoice_number,
+            ));
+
+            $invoice->header->setCodeNumberByRevision('invoice_number');
+            
             if ($invoice->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $invoice->header->id));
             }
