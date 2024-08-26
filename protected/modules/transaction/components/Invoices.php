@@ -135,6 +135,8 @@ class Invoices extends CComponent {
     }
 
     public function flush() {
+        $registrationTransaction = $this->header->registrationTransaction;
+        $this->header->total_price = $registrationTransaction->subtotal_product + $registrationTransaction->subtotal_service + $registrationTransaction->ppn_price;
         $this->header->payment_date_estimate = $this->header->due_date;
         $valid = $this->header->save();
 
@@ -144,9 +146,8 @@ class Invoices extends CComponent {
             $valid = $detail->save(false) && $valid;
         }
 
-        $registrationTransaction = RegistrationTransaction::model()->findByPk($this->header->registration_transaction_id);
         $registrationTransaction->payment_status = 'INVOICING';
-        $valid = $registrationTransaction->update(array('payment_status'));
+        $valid = $valid && $registrationTransaction->update(array('payment_status'));
         
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $this->header->invoice_number,
@@ -180,7 +181,7 @@ class Invoices extends CComponent {
         $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
         $jurnalUmumReceivable->coa_id = $coaReceivableId;
         $jurnalUmumReceivable->branch_id = $this->header->branch_id;
-        $jurnalUmumReceivable->total = $this->header->registrationTransaction->subtotal_product + $this->header->registrationTransaction->subtotal_service + $this->header->registrationTransaction->ppn_price;
+        $jurnalUmumReceivable->total = $this->header->total_price;
         $jurnalUmumReceivable->debet_kredit = 'D';
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $transactionSubject;
