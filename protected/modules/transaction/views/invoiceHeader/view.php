@@ -244,7 +244,7 @@ $this->menu = array(
                         <td class="title">Quick Service Price</td>
                         <td>Rp. <?php echo number_format($model->quick_service_price, 2); ?></td>
                     </tr>
-                <?php endif ?>
+                <?php endif; ?>
                 <tr>
                     <td class="title">Sub Total</td>
                     <td>Rp. <?php echo number_format($model->subTotal, 2) ?></td>

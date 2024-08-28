@@ -242,6 +242,7 @@ class InventoryStockValueController extends Controller {
 
             $inventoryTotalQuantities = $header->getInventoryTotalQuantitiesByPeriodic($endDate);
             $totalStock = 0;
+            $totalAmount = 0; 
 
             $column = 'I'; 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
@@ -254,16 +255,21 @@ class InventoryStockValueController extends Controller {
             $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'unit.name')));
             foreach ($branches as $branch) {
                 $stockValue = 0;
+                $stockAmount = 0;
                 foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
                     if ($inventoryTotalQuantity['branch_id'] == $branch->id) {
                         $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
+                        $stockAmount = CHtml::value($inventoryTotalQuantities[$i], 'stock_amount');
                     }
                 }
-                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($stockValue));
+                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($stockValue) . ' - ' . CHtml::encode($stockAmount));
                 $totalStock += $stockValue;
+                $totalAmount += $stockAmount;
                 $column++;
             }
             $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($totalStock));
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($totalAmount));
 
             $counter++;
 

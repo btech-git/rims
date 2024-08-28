@@ -1,6 +1,6 @@
 <div id="content">
     <div class="row">
-        <div class="small-12 columns">
+        <div class="small-32 columns">
             <div class="breadcrumbs">
                 <a href="#">Home</a>
                 <span>Settings</span>
@@ -8,7 +8,7 @@
         </div>
     </div>
     <style type="text/css">
-        /*.small-1a { width: 12%; border:0px solid #ccc; border-radius: 5px; margin-right:20px; float: left !important; }*/
+        /*.small-3a { width: 12%; border:0px solid #ccc; border-radius: 5px; margin-right:20px; float: left !important; }*/
         #noliststyle ul {
             list-style: none;
             margin: 0;
@@ -19,13 +19,13 @@
     </style>
 
     <div class="row">
-        <div class="small-12 columns" >
+        <div class="small-32 columns" >
             <div id="maincontent">
                 <div class="clearfix page-action">
                     <h1>Master Settings</h1>
                 </div>
                 <div class="row" style="margin-top:20px" id="noliststyle">
-                    <div class="small-2 columns">
+                    <div class="small-3 columns">
                         <img src="<?php echo Yii::app()->baseUrl . '/images/company.png' ?>" /> <br/><br/>
                         
                         <?php if (
@@ -117,23 +117,12 @@
                                         'url' => array('/master/level/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterLevelCreate') || Yii::app()->user->checkAccess('masterLevelEdit') || Yii::app()->user->checkAccess('masterLevelApproval')
                                     ),
-                                    array(
-                                        'label' => 'Unit', 
-                                        'url' => array('/master/unit/admin'), 
-//                                        'linkOptions' => array('class' => 'titleNav'), 
-                                        'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Unit Conversion', 
-                                        'url' => array('/master/unitConversion/admin'), 
-                                        'visible' => Yii::app()->user->checkAccess('masterConversionCreate') || Yii::app()->user->checkAccess('masterConversionEdit') || Yii::app()->user->checkAccess('masterConversionApproval')
-                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
                     </div>
 
-                    <div class="small-2 columns">
+                    <div class="small-3 columns">
                         <img src="<?php echo Yii::app()->baseUrl . '/images/accounting.png' ?>" /> <br/><br/>
                         <?php if (
                             Yii::app()->user->checkAccess('masterBankCreate') || 
@@ -185,8 +174,131 @@
                         <?php endif; ?>
                     </div>
 
-                    <div class="small-2 columns">
+                    <div class="small-3 columns">
                         <img src="<?php echo Yii::app()->baseUrl . '/images/product.png' ?>" /> <br/><br/>
+                        <?php if (
+                            Yii::app()->user->checkAccess('masterEquipmentCreate') || 
+                            Yii::app()->user->checkAccess('masterEquipmentEdit') || 
+                            Yii::app()->user->checkAccess('masterEquipmentApproval') || 
+                            Yii::app()->user->checkAccess('masterEquipmentTypeCreate') || 
+                            Yii::app()->user->checkAccess('masterEquipmentTypeEdit') || 
+                            Yii::app()->user->checkAccess('masterEquipmentTypeApproval') || 
+                            Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate') || 
+                            Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit') || 
+                            Yii::app()->user->checkAccess('masterEquipmentSubTypeApproval')
+                        ): ?>
+                            <h2>Equipments</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Equipments', 
+                                        'url' => array('/master/equipments/admin'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
+                                        'visible' => Yii::app()->user->checkAccess('masterEquipmentCreate') || Yii::app()->user->checkAccess('masterEquipmentEdit') || Yii::app()->user->checkAccess('masterEquipmentApproval')
+                                    ),
+                                    array(
+                                        'label' => 'Equipment Types', 
+                                        'url' => array('/master/equipmentType/admin'), 
+                                        'visible' => Yii::app()->user->checkAccess('masterEquipmentTypeCreate') || Yii::app()->user->checkAccess('masterEquipmentTypeEdit') || Yii::app()->user->checkAccess('masterEquipmentTypeApproval')
+                                    ),
+                                    array(
+                                        'label' => 'Equipment Sub-types', 
+                                        'url' => array('/master/equipmentSubType/admin'), 
+                                        'visible' => Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate') || Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit') || Yii::app()->user->checkAccess('masterEquipmentSubTypeApproval')
+                                    ),
+                                    array(
+                                        'label' => 'Permintaan Maintenance', 
+                                        'url' => array('/frontDesk/maintenanceRequest/admin'), 
+                //                        'visible' => (Yii::app()->user->checkAccess('maintenanceRequestCreate') || Yii::app()->user->checkAccess('maintenanceRequestEdit'))
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="small-3 columns">
+                        <img src="<?php echo Yii::app()->baseUrl . '/images/price-list.png'; ?>" width="100"/> <br/><br/>
+                        <?php if (
+                            Yii::app()->user->checkAccess('masterServiceCreate') || 
+                            Yii::app()->user->checkAccess('masterServiceEdit') || 
+                            Yii::app()->user->checkAccess('masterServiceApproval') || 
+                            Yii::app()->user->checkAccess('masterServiceCategoryCreate') || 
+                            Yii::app()->user->checkAccess('masterServiceCategoryEdit') || 
+                            Yii::app()->user->checkAccess('masterServiceCategoryApproval') || 
+                            Yii::app()->user->checkAccess('masterServiceTypeCreate') || 
+                            Yii::app()->user->checkAccess('masterServiceTypeEdit') || 
+                            Yii::app()->user->checkAccess('masterServiceTypeApproval') || 
+                            Yii::app()->user->checkAccess('masterPricelistStandardCreate') || 
+                            Yii::app()->user->checkAccess('masterPricelistStandardEdit') || 
+                            Yii::app()->user->checkAccess('masterPricelistStandardApproval') || 
+                            Yii::app()->user->checkAccess('masterPricelistGroupCreate') || 
+                            Yii::app()->user->checkAccess('masterPricelistGroupEdit') || 
+                            Yii::app()->user->checkAccess('masterPricelistGroupApproval') || 
+                            Yii::app()->user->checkAccess('masterPricelistSetCreate') || 
+                            Yii::app()->user->checkAccess('masterPricelistSetEdit') || 
+                            Yii::app()->user->checkAccess('masterPricelistSetApproval') || 
+                            Yii::app()->user->checkAccess('masterStandardFlatrateCreate') || 
+                            Yii::app()->user->checkAccess('masterStandardFlatrateEdit') || 
+                            Yii::app()->user->checkAccess('masterStandardFlatrateApproval') || 
+                            Yii::app()->user->checkAccess('masterStandardValueCreate') || 
+                            Yii::app()->user->checkAccess('masterStandardValueEdit') || 
+                            Yii::app()->user->checkAccess('masterStandardValueApproval') || 
+                            Yii::app()->user->checkAccess('masterQuickServiceCreate') || 
+                            Yii::app()->user->checkAccess('masterQuickServiceEdit') || 
+                            Yii::app()->user->checkAccess('masterQuickServiceApproval') || 
+                            Yii::app()->user->checkAccess('masterInspectionCreate') || 
+                            Yii::app()->user->checkAccess('masterInspectionEdit') || 
+                            Yii::app()->user->checkAccess('masterInspectionApproval') || 
+                            Yii::app()->user->checkAccess('masterInspectionSectionCreate') || 
+                            Yii::app()->user->checkAccess('masterInspectionSectionEdit') || 
+                            Yii::app()->user->checkAccess('masterInspectionSectionApproval') || 
+                            Yii::app()->user->checkAccess('masterInspectionModuleCreate') || 
+                            Yii::app()->user->checkAccess('masterInspectionModuleEdit') || 
+                            Yii::app()->user->checkAccess('masterInspectionModuleApproval')
+                        ): ?>
+                        <h2>Price List</h2>
+                        <?php $this->widget('zii.widgets.CMenu', array(
+                            'items' => array(
+                                array(
+                                    'label' => 'Pricelist Standard', 
+                                    'url' => array('/master/serviceStandardPricelist/admin'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterPricelistStandardCreate') || Yii::app()->user->checkAccess('masterPricelistStandardEdit') || Yii::app()->user->checkAccess('masterPricelistStandardApproval')
+                                ),
+                                array(
+                                    'label' => 'Pricelist Group', 
+                                    'url' => array('/master/serviceGroup/admin'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterPricelistGroupCreate') || Yii::app()->user->checkAccess('masterPricelistGroupEdit') || Yii::app()->user->checkAccess('masterPricelistGroupApproval')
+                                ),
+                                array(
+                                    'label' => 'Pricelist Set', 
+                                    'url' => array('/master/servicePricelist/admin'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterPricelistSetCreate') || Yii::app()->user->checkAccess('masterPricelistSetEdit') || Yii::app()->user->checkAccess('masterPricelistSetApproval')
+                                ),
+                                array(
+                                    'label' => 'Standard Flat Rate', 
+                                    'url' => array('/master/generalStandardFr/admin'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterStandardFlatrateCreate') || Yii::app()->user->checkAccess('masterStandardFlatrateEdit') || Yii::app()->user->checkAccess('masterStandardFlatrateApproval')
+                                ),
+                                array(
+                                    'label' => 'Standard Value', 
+                                    'url' => array('/master/generalStandardValue/admin'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterStandardValueCreate') || Yii::app()->user->checkAccess('masterStandardValueEdit') || Yii::app()->user->checkAccess('masterStandardValueApproval')
+                                ),
+                            ),
+                        )); ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="small-32 columns" >
+            <div id="maincontent">
+                <div class="row" style="margin-top:20px" id="noliststyle">
+                    <div class="small-3 columns">
+                        <img src="<?php echo Yii::app()->baseUrl . '/images/in-stock.png'; ?>"  width="100" /> <br/><br/>
                         <?php if (
                             Yii::app()->user->checkAccess('masterProductCreate') || 
                             Yii::app()->user->checkAccess('masterProductEdit') || 
@@ -208,16 +320,7 @@
                             Yii::app()->user->checkAccess('masterSubBrandApproval') || 
                             Yii::app()->user->checkAccess('masterSubBrandSeriesCreate') || 
                             Yii::app()->user->checkAccess('masterSubBrandSeriesEdit') || 
-                            Yii::app()->user->checkAccess('masterSubBrandSeriesApproval') || 
-                            Yii::app()->user->checkAccess('masterEquipmentCreate') || 
-                            Yii::app()->user->checkAccess('masterEquipmentEdit') || 
-                            Yii::app()->user->checkAccess('masterEquipmentApproval') || 
-                            Yii::app()->user->checkAccess('masterEquipmentTypeCreate') || 
-                            Yii::app()->user->checkAccess('masterEquipmentTypeEdit') || 
-                            Yii::app()->user->checkAccess('masterEquipmentTypeApproval') || 
-                            Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate') || 
-                            Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit') || 
-                            Yii::app()->user->checkAccess('masterEquipmentSubTypeApproval')
+                            Yii::app()->user->checkAccess('masterSubBrandSeriesApproval')
                         ): ?>
                             <h2>Product</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -258,33 +361,12 @@
                                         'url' => array('/master/subBrandSeries/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterSubBrandSeriesCreate') || Yii::app()->user->checkAccess('masterSubBrandSeriesEdit') || Yii::app()->user->checkAccess('masterSubBrandSeriesApproval')
                                     ),
-                                    array(
-                                        'label' => 'Equipments', 
-                                        'url' => array('/master/equipments/admin'), 
-//                                        'linkOptions' => array('class' => 'titleNav'), 
-                                        'visible' => Yii::app()->user->checkAccess('masterEquipmentCreate') || Yii::app()->user->checkAccess('masterEquipmentEdit') || Yii::app()->user->checkAccess('masterEquipmentApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Equipment Types', 
-                                        'url' => array('/master/equipmentType/admin'), 
-                                        'visible' => Yii::app()->user->checkAccess('masterEquipmentTypeCreate') || Yii::app()->user->checkAccess('masterEquipmentTypeEdit') || Yii::app()->user->checkAccess('masterEquipmentTypeApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Equipment Sub-types', 
-                                        'url' => array('/master/equipmentSubType/admin'), 
-                                        'visible' => Yii::app()->user->checkAccess('masterEquipmentSubTypeCreate') || Yii::app()->user->checkAccess('masterEquipmentSubTypeEdit') || Yii::app()->user->checkAccess('masterEquipmentSubTypeApproval')
-                                    ),
-                                    array(
-                                        'label' => 'Permintaan Maintenance', 
-                                        'url' => array('/frontDesk/maintenanceRequest/admin'), 
-                //                        'visible' => (Yii::app()->user->checkAccess('maintenanceRequestCreate') || Yii::app()->user->checkAccess('maintenanceRequestEdit'))
-                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
                     </div>
 
-                    <div class="small-2 columns">
+                    <div class="small-3 columns">
                         <img src="<?php echo Yii::app()->baseUrl . '/images/service.png' ?>" /> <br/><br/>
                         <?php if (
                             Yii::app()->user->checkAccess('masterServiceCreate') || 
@@ -344,31 +426,6 @@
                                     'visible' => Yii::app()->user->checkAccess('masterServiceTypeCreate') || Yii::app()->user->checkAccess('masterServiceTypeEdit') || Yii::app()->user->checkAccess('masterServiceTypeApproval')
                                 ),
                                 array(
-                                    'label' => 'Pricelist Standard', 
-                                    'url' => array('/master/serviceStandardPricelist/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterPricelistStandardCreate') || Yii::app()->user->checkAccess('masterPricelistStandardEdit') || Yii::app()->user->checkAccess('masterPricelistStandardApproval')
-                                ),
-                                array(
-                                    'label' => 'Pricelist Group', 
-                                    'url' => array('/master/serviceGroup/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterPricelistGroupCreate') || Yii::app()->user->checkAccess('masterPricelistGroupEdit') || Yii::app()->user->checkAccess('masterPricelistGroupApproval')
-                                ),
-                                array(
-                                    'label' => 'Pricelist Set', 
-                                    'url' => array('/master/servicePricelist/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterPricelistSetCreate') || Yii::app()->user->checkAccess('masterPricelistSetEdit') || Yii::app()->user->checkAccess('masterPricelistSetApproval')
-                                ),
-                                array(
-                                    'label' => 'Standard Flat Rate', 
-                                    'url' => array('/master/generalStandardFr/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterStandardFlatrateCreate') || Yii::app()->user->checkAccess('masterStandardFlatrateEdit') || Yii::app()->user->checkAccess('masterStandardFlatrateApproval')
-                                ),
-                                array(
-                                    'label' => 'Standard Value', 
-                                    'url' => array('/master/generalStandardValue/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterStandardValueCreate') || Yii::app()->user->checkAccess('masterStandardValueEdit') || Yii::app()->user->checkAccess('masterStandardValueApproval')
-                                ),
-                                array(
                                     'label' => 'Quick Service', 
                                     'url' => array('/master/quickService/admin'), 
                                     'visible' => Yii::app()->user->checkAccess('masterQuickServiceCreate') || Yii::app()->user->checkAccess('masterQuickServiceEdit') || Yii::app()->user->checkAccess('masterQuickServiceApproval')
@@ -389,17 +446,12 @@
                                     'url' => array('/master/inspectionModule/admin'), 
                                     'visible' => Yii::app()->user->checkAccess('masterInspectionModuleCreate') || Yii::app()->user->checkAccess('masterInspectionModuleEdit') || Yii::app()->user->checkAccess('masterInspectionModuleApproval')
                                 ),
-//                                array(
-//                                    'label' => 'Employee Branch Division Position Level', 
-//                                    'url' => array('/master/employeeBranchDivisionPositionLevel/admin'), 
-//                                    'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || Yii::app()->user->checkAccess('masterEmployeeApproval')
-//                                ),
                             ),
                         )); ?>
                         <?php endif; ?>
                     </div>
 
-                    <div class="small-2 columns">
+                    <div class="small-3 columns">
                         <img src="<?php echo Yii::app()->baseUrl . '/images/vehicle.png' ?>" /> <br/><br/>
                         <?php if (
                             Yii::app()->user->checkAccess('masterVehicleCreate') || 
@@ -477,7 +529,7 @@
                         <?php endif; ?>
                     </div>
 
-                    <div class="small-2 columns">
+                    <div class="small-3 columns">
                         <img src="<?php echo Yii::app()->baseUrl . '/images/warehouse.png' ?>" /> <br/><br/>
                         <?php if (
                             Yii::app()->user->checkAccess('masterWarehouseCreate') || 

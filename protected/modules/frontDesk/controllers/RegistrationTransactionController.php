@@ -1100,7 +1100,6 @@ class RegistrationTransactionController extends Controller {
     public function instantiate($id) {
         if (empty($id)) {
             $registrationTransaction = new RegistrationTransactions(new RegistrationTransaction(), array(), array(), array(), array(), array());
-            //print_r("test");
         } else {
             $registrationTransactionModel = $this->loadModel($id);
             $registrationTransaction = new RegistrationTransactions($registrationTransactionModel, $registrationTransactionModel->registrationQuickServices, $registrationTransactionModel->registrationServices, $registrationTransactionModel->registrationProducts, $registrationTransactionModel->registrationDamages, $registrationTransactionModel->registrationInsuranceDatas);
@@ -1623,7 +1622,6 @@ class RegistrationTransactionController extends Controller {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeProductDetailAt($index);
@@ -1696,7 +1694,6 @@ class RegistrationTransactionController extends Controller {
 
             $registrationTransaction = $this->instantiate($id);
             $this->loadState($registrationTransaction);
-            //print_r(CJSON::encode($salesOrder->details));
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             $registrationTransaction->removeDamageDetailAt($index);
@@ -1984,22 +1981,11 @@ class RegistrationTransactionController extends Controller {
                 $real->detail = 'Add When Generate Work Order. WorkOrder#' . $model->work_order_number;
                 $real->save();
             }
-
-            //$this->redirect(array('view', 'id' => $model->id));
-            // $modelDetails = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id'=>$id));
-            // print_r($modelDetails);
-            // foreach ($modelDetails as $i => $modelDetail) {
-            // 	$woDetail = new WorkOrderDetail();
-            // 	$woDetail->work_order_id = $wo->id;
-            // 	$woDetail->service_id = $modelDetail->service_id;
-            // 	$woDetail->save();
-            // }
         }
     }
 
     public function actionAjaxHtmlUpdate($id) {
 
-        //$head = RegistrationTransaction::model()->findByPk($id);
         $model = RegistrationRealizationProcess::model()->findByPk($id);
 
         $realizationImages = RegistrationRealizationImages::model()->findAllByAttributes(array(
@@ -2136,7 +2122,6 @@ class RegistrationTransactionController extends Controller {
 
 
         $images = $model->images = CUploadedFile::getInstances($model, 'images');
-        //print_r($images);
         if (isset($images) && !empty($images)) {
             foreach ($model->images as $i => $image) {
                 $insuranceImage = new RegistrationInsuranceImages;
@@ -2166,16 +2151,12 @@ class RegistrationTransactionController extends Controller {
                 }
                 echo $image->extensionName;
             }
-            //print_r($images);
         }
 
         $this->render('updateImages', array(
             'model' => $model,
             'insuranceImages' => $insuranceImages,
             'allowedImages' => $allowedImages,
-                //'head' => $head,
-                //'jenisPersediaan'=>$jenisPersediaan,
-                //'jenisPersediaanDataProvider'=>$jenisPersediaanDataProvider,
         ));
     }
 
@@ -2998,7 +2979,6 @@ class RegistrationTransactionController extends Controller {
                 $receiveItemDetails = TransactionReceiveItemDetail::model()->findAll($criteria);
 
                 $quantity = 0;
-                //print_r($receiveItemDetails);
                 foreach ($receiveItemDetails as $receiveItemDetail) {
                     $quantity += $receiveItemDetail->qty_received;
                 }
@@ -3020,7 +3000,6 @@ class RegistrationTransactionController extends Controller {
                     $moDetails = MovementOutDetail::model()->findAll($mcriteria);
 
                     $mquantity = 0;
-                    //print_r($receiveItemDetails);
                     foreach ($moDetails as $moDetail) {
                         $mquantity += $moDetail->quantity_receive;
                     }
@@ -3171,22 +3150,12 @@ class RegistrationTransactionController extends Controller {
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
         ));
-        //print_r($jurnals);
 
         if (isset($_GET['SaveExcel'])) {
             $this->getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai);
         }
 
-
-        //$dataProvider=new CActiveDataProvider('JurnalUmum');
-        // $model=new JurnalUmum('search');
-        // $model->unsetAttributes();  // clear any default values
-        // if(isset($_GET['JurnalUmum']))
-        // 	$model->attributes=$_GET['JurnalUmum'];
-
         $this->render('laporanPenjualan', array(
-            // 'dataProvider'=>$dataProvider,
-            //'jurnals'=>$jurnals,
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_sampai' => $tanggal_sampai,
             'transactions' => $transactions,
@@ -3263,16 +3232,11 @@ class RegistrationTransactionController extends Controller {
             )
         );
 
-        // style color red
         $styleColorRED = array(
             'font' => array(
                 'color' => array('rgb' => 'FF0000'),
                 'bold' => true,
             ),
-                // 'fill' => array(
-                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                //     'color' => array('rgb' => 'FF0000')
-                // )
         );
         $styleBorder = array(
             'borders' => array(

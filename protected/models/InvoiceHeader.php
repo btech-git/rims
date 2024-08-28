@@ -39,6 +39,7 @@
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
  * @property integer $insurance_company_id
+ * @property integer $number_of_print
  *
  * The followings are the available model relations:
  * @property InvoiceDetail[] $invoiceDetails
@@ -85,8 +86,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_price, tax_percentage', 'required'),
-            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id', 'numerical', 'integerOnly' => true),
+            array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_price, tax_percentage, number_of_print', 'required'),
+            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print', 'numerical', 'integerOnly' => true),
             array('invoice_number', 'length', 'max' => 50),
             array('status', 'length', 'max' => 30),
             array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_price, payment_amount, payment_left', 'length', 'max' => 18),
@@ -94,7 +95,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 
@@ -200,6 +201,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.note', $this->note, true);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
         $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('t.number_of_print', $this->number_of_print);
 
         if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
             $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
