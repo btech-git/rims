@@ -170,28 +170,14 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionUpdate($id) {
         $generalRepairRegistration = $this->instantiate($id);
-//        $employeeId = isset($_POST['EmployeeId']) ? $_POST['EmployeeId'] : '';
-//        
-//        if (!empty($employeeId)) {
-//            $user = Users::model()->findByAttributes(array('employee_id' => $employeeId));
-//            $generalRepairRegistration->header->employee_id_assign_mechanic = $user->id;
-//        } else {
-//            $user = null;
-//            $generalRepairRegistration->header->employee_id_assign_mechanic = null;
-//        }
-        
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
+        $generalRepairRegistration->header->edited_datetime = date('Y-m-d H:i:s');
+        $generalRepairRegistration->header->user_id_edited = Yii::app()->user->id;
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($generalRepairRegistration);
             
-//            JurnalUmum::model()->deleteAllByAttributes(array(
-//                'kode_transaksi' => $generalRepairRegistration->header->transaction_number,
-//            ));
-            
-//            $generalRepairRegistration->header->setCodeNumberByRevision('transaction_number');
-        
             if ($generalRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
             }
@@ -201,7 +187,6 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
-//            'employeeId' => $employeeId,
         ));
     }
 

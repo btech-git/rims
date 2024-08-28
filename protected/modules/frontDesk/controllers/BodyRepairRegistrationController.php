@@ -211,6 +211,9 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration = $this->instantiate($id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
+        $bodyRepairRegistration->header->edited_datetime = date('Y-m-d H:i:s');
+        $bodyRepairRegistration->header->user_id_edited = Yii::app()->user->id;
+
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($bodyRepairRegistration);
             
