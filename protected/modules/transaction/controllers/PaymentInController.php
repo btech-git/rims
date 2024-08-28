@@ -34,35 +34,7 @@ class PaymentInController extends Controller {
                 $this->redirect(array('/site/login'));
             }
         }
-
-//        if (
-//            $filterChain->action->id === 'create' ||
-//            $filterChain->action->id === 'invoiceList'
-//        ) {
-//            if (!(Yii::app()->user->checkAccess('paymentInCreate')) || !(Yii::app()->user->checkAccess('cashierApproval'))) {
-//                $this->redirect(array('/site/login'));
-//            }
-//        }
-//
-//        if (
-//            $filterChain->action->id === 'delete' ||
-//            $filterChain->action->id === 'update'
-//        ) {
-//            if (!(Yii::app()->user->checkAccess('paymentInEdit'))) {
-//                $this->redirect(array('/site/login'));
-//            }
-//        }
-
-//        if (
-//            $filterChain->action->id === 'admin' ||
-//            $filterChain->action->id === 'index' ||
-//            $filterChain->action->id === 'view'
-//        ) {
-//            if (!(Yii::app()->user->checkAccess('paymentInCreate')) || !(Yii::app()->user->checkAccess('cashierApproval')) || !(Yii::app()->user->checkAccess('paymentInEdit')) || !(Yii::app()->user->checkAccess('paymentInApproval'))) {
-//                $this->redirect(array('/site/login'));
-//            }
-//        }
-
+        
         $filterChain->run();
     }
 
@@ -400,6 +372,9 @@ class PaymentInController extends Controller {
             $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
             $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $paymentIn->header->customer_id;
         }
+        
+        $paymentIn->header->edited_datetime = date('Y-m-d H:i:s');
+        $paymentIn->header->user_id_edited = Yii::app()->user->id;
         
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));

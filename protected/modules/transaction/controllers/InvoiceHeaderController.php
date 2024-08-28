@@ -317,14 +317,15 @@ class InvoiceHeaderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
         $invoice = $this->instantiate($id);
         $this->performAjaxValidation($invoice->header);
         
-        if (isset($_POST['Cancel']))
+        $invoice->header->edited_datetime = date('Y-m-d H:i:s');
+        $invoice->header->user_id_edited = Yii::app()->user->id;
+        
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
             $this->loadState($invoice);
@@ -340,7 +341,6 @@ class InvoiceHeaderController extends Controller {
         }
 
         $this->render('update', array(
-            //'model'=>$model,
             'invoice' => $invoice,
         ));
     }
