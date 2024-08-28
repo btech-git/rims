@@ -24,6 +24,8 @@
  * @property string $created_datetime
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property string $edited_datetime
+ * @property integer $user_id_edited
  * @property string $downpayment_amount
  * @property integer $insurance_company_id
  *
@@ -33,6 +35,7 @@
  * @property Vehicle $vehicle
  * @property Users $user
  * @property UserIdCancelled $userIdCancelled
+ * @property UserIdEdited $userIdEdited
  * @property Branch $branch
  * @property CompanyBank $companyBank
  * @property PaymentInImages[] $paymentInImages
@@ -76,7 +79,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('notes, payment_time, payment_date, payment_amount, downpayment_amount, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
-            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled, insurance_company_id', 'numerical', 'integerOnly' => true),
+            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled, insurance_company_id, user_id_edited', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount, tax_service_amount, downpayment_amount', 'length', 'max' => 18),
             array('payment_type, status', 'length', 'max' => 30),
@@ -84,7 +87,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
         );
     }
 
@@ -100,6 +103,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
+            'userIdEdited' => array(self::BELONGS_TO, 'User', 'user_id_edited'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
             'paymentInImages' => array(self::HAS_MANY, 'PaymentInImages', 'payment_in_id'),

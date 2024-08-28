@@ -38,6 +38,8 @@
  * @property string $created_datetime
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property string $edited_datetime
+ * @property integer $user_id_edited
  * @property integer $insurance_company_id
  * @property integer $number_of_print
  *
@@ -52,6 +54,7 @@
  * @property PaymentIn[] $invoiceHeaders
  * @property InsuranceCompany $insuranceCompany
  * @property UserIdCancelled $userIdCancelled
+ * @property UserIdEdited $userIdEdited
  */
 class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
@@ -87,7 +90,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_price, tax_percentage, number_of_print', 'required'),
-            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print', 'numerical', 'integerOnly' => true),
+            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print, user_id_edited', 'numerical', 'integerOnly' => true),
             array('invoice_number', 'length', 'max' => 50),
             array('status', 'length', 'max' => 30),
             array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_price, payment_amount, payment_left', 'length', 'max' => 18),
@@ -95,7 +98,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
         );
     }
 
@@ -114,6 +117,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
+            'userIdEdited' => array(self::BELONGS_TO, 'User', 'user_id_edited'),
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'CompanyBank', 'coa_bank_id_estimate'),
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'invoice_id'),
             'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
