@@ -54,29 +54,32 @@ $this->menu = array(
             <tr>
                 <td>Customer</td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
-                <td width="10%">Repair Type</td>
-                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.repair_type')); ?></td>
-            </tr>
-            
-            <tr>
-                <td>Invoice Date</td>
-                <td><?php echo $model->invoice_date; ?></td>
                 <td>Reference Type</td>
                 <td><?php echo $model->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></td>
             </tr>
             
             <tr>
+                <td>Invoice Date</td>
+                <td><?php echo $model->invoice_date; ?></td>
+                <td width="10%">SO #</td>
+                <td width="30%">
+                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
+                </td>
+            </tr>
+            
+            <tr>
                 <td>Due Date</td>
                 <td><?php echo $model->due_date; ?></td>
-                <td>Branch</td>
-                <td><?php echo $model->branch->name; ?></td>
+                <td width="10%">Registration #</td>
+                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$registration->id), array('target' => 'blank')); ?></td>
             </tr>
             
             <tr>
                 <td width="10%">Payment Est Date</td>
                 <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
-                <td width="10%">Registration #</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$registration->id), array('target' => 'blank')); ?></td>
+                <td width="10%">Plate #</td>
+                <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.plate_number')); ?>
+                </td>
             </tr>
             
             <tr>
@@ -84,18 +87,17 @@ $this->menu = array(
                 <td width="30%">
                     <?php echo CHtml::encode(CHtml::value($registration, 'insuranceCompany.name')); ?>
                 </td>
-                <td width="10%">Plate #</td>
-                <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.plate_number')); ?>
-                </td>
+                <td width="10%">Car Make</td>
+                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carMake.name')); ?></td>
             </tr>
             
             <tr>
-                <td width="10%">SO #</td>
+                <td width="10%">Repair Type</td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.repair_type')); ?></td>
+                <td width="10%">Car Model</td>
                 <td width="30%">
-                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
+                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.carModel.name')); ?>
                 </td>
-                <td width="10%">Car Make</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carMake.name')); ?></td>
             </tr>
             
             <tr>
@@ -106,18 +108,32 @@ $this->menu = array(
                         <?php echo $model->registration_transaction_id; ?>
                     <?php endif ?>
                 </td>
-                <td width="10%">Car Model</td>
-                <td width="30%">
-                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.carModel.name')); ?>
-                </td>
-            </tr>
-            
-            <tr>
-                <td width="10%">User_id</td>
-                <td width="30%"><?php echo $model->user->username; ?></td>
                 <td width="10%">Car Detail</td>
                 <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carSubModel.name')); ?></td>
             </tr>
+                
+            <?php if (Yii::app()->user->checkAccess("director")): ?>
+                <tr>
+                    <td width="10%">User Created</td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?></td>
+                    <td width="10%">Date Created</td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'created_datetime')); ?></td>
+                </tr>
+
+                <tr>
+                    <td width="10%">User Edited</td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'userIdEdited.username')); ?></td>
+                    <td width="10%">Date Edited</td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'edited_datetime')); ?></td>
+                </tr>
+
+                <tr>
+                    <td width="10%">User Cancelled</td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'userIdCancelled->username')); ?></td>
+                    <td width="10%">Date Cancelled</td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'cancelled_datetime')); ?></td>
+                </tr>
+            <?php endif; ?>
         </table>
         
         <?php

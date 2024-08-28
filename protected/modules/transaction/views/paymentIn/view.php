@@ -111,6 +111,18 @@ $this->menu = array(
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Notes</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <textarea name="" id="" cols="30" rows="4" readonly="true"><?php echo $model->notes; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="large-6 columns">
@@ -141,26 +153,76 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">User</span>
+                                    <span class="prefix">User Created</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->user->username; ?>"> 
+                                    <?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Notes</span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <textarea name="" id="" cols="30" rows="4" readonly="true"><?php echo $model->notes; ?></textarea>
+                        <?php if (Yii::app()->user->checkAccess("director")): ?>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Date Created</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($model, 'created_datetime')); ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">User Edited</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($model, 'userIdEdited.username')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Date Edited</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($model, 'edited_datetime')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">User Cancelled</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($model, 'userIdCancelled->username')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Date Cancelled</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($model, 'cancelled_datetime')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>                        
                     </div>
                 </div>
             </fieldset>
