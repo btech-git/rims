@@ -83,6 +83,39 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <span class="prefix">Sales</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_sales_person) ? $model->employeeIdSalesPerson->name : ''; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Branch</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->branch != null ? $model->branch->name : ''; ?>">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Assigned Mechanic</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_assign_mechanic) ? $model->employeeIdAssignMechanic->name : ''; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <span class="prefix">Problem</span>
                         </div>
                         <div class="small-8 columns">
@@ -156,57 +189,8 @@
                             <span class="prefix">Invoice #</span>
                         </div>
                         <div class="small-8 columns">
-                            <?php /*
-                            $invoiceCriteria = new CDbCriteria;
-                            $invoiceCriteria->addCondition("status != 'CANCELLED'");
-                            $invoiceCriteria->addCondition("registration_transaction_id = " . $model->id);*/
-                            ?>
                             <?php $invoice = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $model->id)) ?>
                             <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'invoice_number')); ?>"> 
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">User Admin</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->user != null ? $model->user->username : ''; ?>"> 
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">Branch</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->branch != null ? $model->branch->name : ''; ?>">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">Assigned Mechanic</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_assign_mechanic) ? $model->employeeIdAssignMechanic->name : ''; ?>"> 
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">Sales</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_sales_person) ? $model->employeeIdSalesPerson->name : ''; ?>"> 
                         </div>
                     </div>
                 </div>
@@ -233,6 +217,74 @@
                     </div>
                 </div>
                 
+                <?php if (Yii::app()->user->checkAccess("director")): ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">User Created</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->user != null ? $model->user->username : ''; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Date Created</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->created_datetime; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">User Edited</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->userIdEdited != null ? $model->userIdEdited->username : ''; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Date Edited</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->edited_datetime; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">User Cancelled</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->userIdCancelled != null ? $model->userIdCancelled->username : ''; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Date Cancelled</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->cancelled_datetime; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
             </div><!-- end div large -->
         </div>
     </div>
