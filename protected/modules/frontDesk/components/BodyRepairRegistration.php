@@ -476,6 +476,7 @@ class BodyRepairRegistration extends CComponent {
         //save request detail
         foreach ($this->serviceDetails as $serviceDetail) {
             $serviceDetail->registration_transaction_id = $this->header->id;
+            $serviceDetail->service_type_id = $serviceDetail->service->service_type_id;
             $serviceDetail->total_price = $serviceDetail->totalAmount;
             $serviceDetail->start = null;
             $serviceDetail->end = null;
