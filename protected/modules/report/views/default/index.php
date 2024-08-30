@@ -287,6 +287,11 @@
                                         'url' => array('/report/saleVehicleProduct/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
                                     ),
+                                    array(
+                                        'label' => 'Penjualan Jasa + Kategori Produk', 
+                                        'url' => array('/report/saleByProductCategoryServiceType/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

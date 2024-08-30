@@ -35,7 +35,8 @@
         <?php $grandTotalPayment = 0.00; ?>
         <?php $grandTotalReceivable = 0.00; ?>
         <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
-            <?php $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId, $plateNumber); ?>
+            <?php $startDate = AppParam::BEGINNING_TRANSACTION_DATE; ?>
+            <?php $receivableData = $header->getReceivableReport($startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber); ?>
             <?php $totalRevenue = 0.00; ?>
             <?php $totalPayment = 0.00; ?>
             <?php $totalReceivable = 0.00; ?>
