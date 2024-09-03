@@ -952,6 +952,21 @@ class RegistrationTransactionController extends Controller {
         }
     }
 
+    public function actionMemo($id) {
+        $model = $this->loadModel($id);
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+
+        $this->render('memo', array(
+            'model' => $model,
+            'services' => $services,
+            'products' => $products,
+        ));
+    }
+
     public function actionAjaxJsonTotalService($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationTransaction = $this->instantiate($id);
