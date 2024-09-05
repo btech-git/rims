@@ -206,7 +206,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
         $worksheet->mergeCells("A{$rowCounter}:E{$rowCounter}");
         $worksheet->getStyle("A{$rowCounter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle("A{$rowCounter}")->getFont()->setBold(true);
-        $worksheet->setCellValue("A{$rowCounter}", 'Penjualan Wholesale');
+        $worksheet->setCellValue("A{$rowCounter}", 'Penjualan PT');
         $rowCounter++;
         
         $worksheet->setCellValue("A{$rowCounter}", 'Tanggal');
