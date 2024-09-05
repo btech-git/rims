@@ -979,7 +979,7 @@ class TransactionPurchaseOrderController extends Controller {
         $paymentOut = PaymentOut::model()->findByAttributes(array('purchase_order_id' => $id, 'user_id_cancelled' => null));
         $receiveItem = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id' => $id, 'user_id_cancelled' => null));
         
-        if (!empty($receiveItem && $paymentOut)) {
+        if (empty($receiveItem) && empty($paymentOut)) {
             $model->status_document = 'CANCELLED!!!';
             $model->total_quantity = 0; 
             $model->subtotal = 0;
