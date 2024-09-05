@@ -87,9 +87,11 @@ class AdjustmentController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $adjustment = $this->instantiate($id);
             $this->loadState($adjustment);
+            $branchId = Yii::app()->user->branch_id;
 
-            if (isset($_POST['ProductId']))
-                $adjustment->addDetail($_POST['ProductId'], $_POST['StockAdjustmentHeader']['branch_id']);
+            if (isset($_POST['ProductId'])) {
+                $adjustment->addDetail($_POST['ProductId'], $branchId);
+            }
 
             $this->renderPartial('_detail', array(
                 'adjustment' => $adjustment,
