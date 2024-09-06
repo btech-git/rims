@@ -411,7 +411,7 @@ class TransactionReceiveItemController extends Controller {
         $paymentOutDetail = PayOutDetail::model()->findByAttributes(array('receive_item_id' => $id));
         $movementin = MovementInHeader::model()->findByAttributes(array('receive_item_id' => $id, 'user_id_cancelled' => null));
         
-        if (empty($movementin) && $paymentOutDetail->paymentOut->user_id_cancelled !== null) {
+        if (empty($movementin) && empty($paymentOutDetail)) {
             $model->note = 'CANCELLED!!!';
             $model->invoice_number = 'CANCELLED!!!';
             $model->invoice_sub_total = 0; 
