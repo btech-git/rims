@@ -35,8 +35,9 @@ class SaleByProductCategoryServiceTypeController extends Controller {
         $startDate = $year . '-' . $month . '-1';
         $endDate = $year . '-' . $month . '-' . $numberOfDays;
         
-        $saleReportByProductCategory = RegistrationTransaction::getSaleReportByProductCategory($startDate, $endDate, $branchId);
-        $saleReportByServiceType = RegistrationTransaction::getSaleReportByServiceType($startDate, $endDate, $branchId);
+        $saleReportByProductCategory = InvoiceHeader::getSaleReportByProductCategory($startDate, $endDate, $branchId);
+        $saleReportByServiceType = InvoiceHeader::getSaleReportByServiceType($startDate, $endDate, $branchId);
+        $saleReportSummary = InvoiceHeader::getSaleReportSummary($startDate, $endDate, $branchId);
         
         $saleReportData = array();
         foreach ($saleReportByProductCategory as $saleReportItem) {
@@ -44,12 +45,21 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             $saleReportData[$key] = $saleReportItem['total_price'];
         }
         foreach ($saleReportByServiceType as $saleReportItem) {
-            $key = $saleReportItem['customer_type'] . '|' . $saleReportItem['transaction_date'] . '|s|' . $saleReportItem['service_type_id'];
+            $key = $saleReportItem['customer_type'] . '|' . $saleReportItem['transaction_date'] . '|s|' . $saleReportItem['service_category_id'];
             $saleReportData[$key] = $saleReportItem['total_price'];
+        }
+        $saleReportSummaryData = array();
+        foreach ($saleReportSummary as $saleReportItem) {
+            $key = $saleReportItem['customer_type'] . '|' . $saleReportItem['transaction_date'];
+            $saleReportSummaryData[$key]['ppn_total'] = $saleReportItem['ppn_total'];
+            $saleReportSummaryData[$key]['pph_total'] = $saleReportItem['pph_total'];
+            $saleReportSummaryData[$key]['total_price'] = $saleReportItem['total_price'];
+            $saleReportSummaryData[$key]['total_product'] = $saleReportItem['total_product'];
+            $saleReportSummaryData[$key]['total_service'] = $saleReportItem['total_service'];
         }
         
         $productMasterCategoryList = ProductMasterCategory::model()->findAllByAttributes(array('status' => 'Active'));
-        $serviceTypeList = ServiceType::model()->findAllByAttributes(array('status' => 'ACtive'));
+        $serviceCategoryList = ServiceCategory::model()->findAllByAttributes(array('status' => 'Active'));
         
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
@@ -84,7 +94,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             'numberOfDays' => $numberOfDays,
             'saleReportData' => $saleReportData,
             'productMasterCategoryList' => $productMasterCategoryList,
-            'serviceTypeList' => $serviceTypeList,
+            'serviceCategoryList' => $serviceCategoryList,
             'monthList' => $monthList,
             ));
         }
@@ -97,7 +107,8 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             'numberOfDays' => $numberOfDays,
             'saleReportData' => $saleReportData,
             'productMasterCategoryList' => $productMasterCategoryList,
-            'serviceTypeList' => $serviceTypeList,
+            'serviceCategoryList' => $serviceCategoryList,
+            'saleReportSummaryData' => $saleReportSummaryData,
             'monthList' => $monthList,
         ));
     }

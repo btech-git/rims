@@ -70,8 +70,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'numberOfDays' => $numberOfDays,
                         'saleReportData' => $saleReportData,
                         'productMasterCategoryList' => $productMasterCategoryList,
-                        'serviceTypeList' => $serviceTypeList,
+                        'serviceCategoryList' => $serviceCategoryList,
                         'monthList' => $monthList,
+                        'saleReportSummaryData' => $saleReportSummaryData,
                     )); ?>
                 </div>
                 <div class="clear"></div>
