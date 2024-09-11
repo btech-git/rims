@@ -58,12 +58,11 @@ Yii::app()->clientScript->registerCss('memo', '
         </table>
     </div>
 </div>
-
     
-    <br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br />
 
 <div id="memonote">
-    <table>
+    <table style="width: 95%">
         <?php if (count($services) > 0): ?>
             <?php foreach ($services as $i => $detailService): ?>
                 <tr class="titems">
