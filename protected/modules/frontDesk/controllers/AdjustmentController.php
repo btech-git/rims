@@ -29,7 +29,7 @@ class AdjustmentController extends Controller {
         $adjustment->header->status = 'Draft';
         $adjustment->header->date_posting = date('Y-m-d');
         $adjustment->header->created_datetime = date('Y-m-d H:i:s');
-        $adjustment->header->branch_id = Yii::app()->user->branch_id;
+//        $adjustment->header->branch_id = Yii::app()->user->branch_id;
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
@@ -74,12 +74,47 @@ class AdjustmentController extends Controller {
         }
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+//        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+//        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+        ));
+    }
+
+    public function actionUpdateApproval($headerId) {
+//        $dbTransaction = Yii::app()->db->beginTransaction();
+//        try {
+            $stockAdjustmentHeader = StockAdjustmentHeader::model()->findByPk($headerId);
+            $historis = StockAdjustmentApproval::model()->findAllByAttributes(array('stock_adjustment_header_id' => $headerId));
+            $model = new StockAdjustmentApproval;
+            $model->date = date('Y-m-d H:i:s');
+
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $stockAdjustmentHeader->stock_adjustment_number,
+            ));
+
+            if (isset($_POST['StockAdjustmentApproval'])) {
+                $model->attributes = $_POST['StockAdjustmentApproval'];
+                if ($model->save()) {
+                    $stockAdjustmentHeader->status = $model->approval_type;
+                    if ($model->approval_type == 'Approved') {
+                        $stockAdjustmentHeader->supervisor_id = $model->supervisor_id;
+                    }
+                    $stockAdjustmentHeader->save(false);
+                    $this->redirect(array('view', 'id' => $headerId));
+                }
+            }
+//        } catch (Exception $e) {
+//            $dbTransaction->rollback();
+//            $this->header->addError('error', $e->getMessage());
+//        }
+
+        $this->render('updateApproval', array(
+            'model' => $model,
+            'historis' => $historis,
+            'stockAdjustmentHeader' => $stockAdjustmentHeader,
         ));
     }
 
@@ -191,9 +226,9 @@ class AdjustmentController extends Controller {
     }
 
     public function instantiate($id) {
-        if (empty($id))
+        if (empty($id)) {
             $adjustment = new Adjustment(new StockAdjustmentHeader(), array());
-        else {
+        } else {
             $adjustmentHeader = $this->loadModel($id);
             $adjustment = new Adjustment($adjustmentHeader, $adjustmentHeader->stockAdjustmentDetails);
         }
@@ -203,14 +238,17 @@ class AdjustmentController extends Controller {
 
     public function loadModel($id) {
         $model = StockAdjustmentHeader::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
     protected function loadState(&$adjustment) {
-        if (isset($_POST['StockAdjustmentHeader']))
+        if (isset($_POST['StockAdjustmentHeader'])) {
             $adjustment->header->attributes = $_POST['StockAdjustmentHeader'];
+        }
 
         if (isset($_POST['StockAdjustmentDetail'])) {
             foreach ($_POST['StockAdjustmentDetail'] as $item) {
@@ -220,8 +258,9 @@ class AdjustmentController extends Controller {
             }
             if (count($_POST['StockAdjustmentDetail']) < count($adjustment->details))
                 array_splice($adjustment->details, $i + 1);
-        } else
+        } else {
             $adjustment->details = array();
+        }
     }
 
 }

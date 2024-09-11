@@ -27,7 +27,7 @@ Yii::app()->clientScript->registerCss('memo', '
     .memo-title
     {
         margin-left:15%;
-        font-size:12px;
+        font-size:10px;
     }
 ');
 ?>
@@ -60,44 +60,44 @@ Yii::app()->clientScript->registerCss('memo', '
 </div>
 
     
-    <br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br />
 
-    <div id="memonote">
-        <table>
-            <?php if (count($services) > 0): ?>
-                <?php foreach ($services as $i => $detailService): ?>
-                    <tr class="titems">
-                        <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailService, 'service.code')); ?></td>
-                        <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailService, 'service.name')); ?></td>
-                        <td style="text-align: center; line-height: 0rem">1</td>
-                        <td style="text-align: right; line-height: 0rem">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailService, 'price'))); ?>
-                        </td>
+<div id="memonote">
+    <table>
+        <?php if (count($services) > 0): ?>
+            <?php foreach ($services as $i => $detailService): ?>
+                <tr class="titems">
+                    <td style="text-align: left; line-height: 0rem; width: 10%"><?php echo CHtml::encode(CHtml::value($detailService, 'service.code')); ?></td>
+                    <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailService, 'service.name')); ?></td>
+                    <td style="text-align: center; line-height: 0rem; width: 10%">1</td>
+                    <td style="text-align: right; line-height: 0rem; width: 15%">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailService, 'price'))); ?>
+                    </td>
 
-                        <td style="text-align: right; line-height: 0rem">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailService, 'total_price'))); ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                    <td style="text-align: right; line-height: 0rem; width: 15%">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailService, 'total_price'))); ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
-            <?php if (count($products) > 0): ?>
-                <?php foreach ($products as $i => $detailProduct): ?>
-                    <tr class="titems">
-                        <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailProduct, 'product.manufacturer_code')); ?></td>
-                        <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailProduct, 'product.name')); ?></td>
-                        <td style="text-align: center; line-height: 0rem">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailProduct, 'quantity'))); ?>
-                        </td>
-                        <td style="text-align: right; line-height: 0rem">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailProduct, 'sale_price'))); ?>
-                        </td>
+        <?php if (count($products) > 0): ?>
+            <?php foreach ($products as $i => $detailProduct): ?>
+                <tr class="titems">
+                    <td style="text-align: left; line-height: 0rem; width: 10%"><?php echo CHtml::encode(CHtml::value($detailProduct, 'product.manufacturer_code')); ?></td>
+                    <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailProduct, 'product.name')); ?></td>
+                    <td style="text-align: center; line-height: 0rem; width: 10%">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailProduct, 'quantity'))); ?>
+                    </td>
+                    <td style="text-align: right; line-height: 0rem; width: 15%">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailProduct, 'sale_price'))); ?>
+                    </td>
 
-                        <td style="text-align: right; line-height: 0rem">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailProduct, 'total_price'))); ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </table> 
-    </div>
+                    <td style="text-align: right; line-height: 0rem; width: 15%">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailProduct, 'total_price'))); ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </table> 
+</div>

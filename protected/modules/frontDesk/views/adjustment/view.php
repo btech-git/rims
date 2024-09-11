@@ -22,10 +22,12 @@ $this->menu = array(
         $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Stock Adjustment', Yii::app()->baseUrl . '/frontDesk/adjustment/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.stockAdjustment.admin"))) ?>
 
-        <?php /* if ($model->status!='Approved') : ?>
-          <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/frontDesk/adjustment/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.stockAdjustment.update"))) ?>
-          <?php endif; */ ?>
-
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("stockAdjustmentApproval") && $model->status != 'CANCELLED!!!'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/frontDesk/adjustment/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("stockAdjustmentSupervisor") && $model->status != 'CANCELLED!!!'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/frontDesk/adjustment/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+        <?php endif; ?>
+        
         <h1>View Stock Adjustment #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
@@ -53,12 +55,7 @@ $this->menu = array(
                 array(
                     'name' => 'supervisor_id',
                     'header' => 'SPV',
-                    'value' => empty($model->supervisor_id) ? 'N/A' : $model->supervisor->name,
-                ),
-                array(
-                    'name' => 'branch_id',
-                    'header' => 'Branch',
-                    'value' => $model->branch->name,
+                    'value' => empty($model->supervisor_id) ? 'N/A' : $model->supervisor->username,
                 ),
                 'status',
                 'note',
@@ -71,12 +68,13 @@ $this->menu = array(
         
         <div class="row">
             <div class="small-12 columns">
-                <div style="max-width: 90em; width: 100%;">
+                <div style="max-width: 120em; width: 100%;">
                     <div style="overflow-y: hidden; margin-bottom: 1.25rem;">
                         <?php $this->widget('zii.widgets.grid.CGridView', array(
                             'id' => 'adjustment-detail-grid',
                             'dataProvider' => new CArrayDataProvider($model->stockAdjustmentDetails),
                             'columns' => array(
+                                'product.id: ID',
                                 'product.name: Nama Barang',
                                 'product.manufacturer_code: Kode',
                                 'product.masterSubCategoryCode: Kategori',
@@ -117,12 +115,6 @@ $this->menu = array(
 
         <hr />
 
-        <div class="row">
-            <div class="small-12 columns">
-                <?php $this->renderPartial('_approval', array('listApproval' => $listApproval)); ?>
-            </div>
-        </div>
-        
         <div class="row">
             <table class="report">
                 <thead>

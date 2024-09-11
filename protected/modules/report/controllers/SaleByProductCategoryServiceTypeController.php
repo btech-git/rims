@@ -176,7 +176,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($productMasterCategoryList as $productMasterCategoryItem) {
                 $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
                 $totalPrice = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPrice);
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPrice));
                 $totalPriceSum += $totalPrice;
                 if (!isset($totalPriceSums[$productMasterCategoryItem->id])) {
                     $totalPriceSums[$productMasterCategoryItem->id] = '0.00';
@@ -187,7 +187,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($serviceTypeList as $serviceTypeItem) {
                 $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|s|' . $serviceTypeItem->id;
                 $totalPrice = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPrice);
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPrice));
                 $totalPriceSum += $totalPrice;
                 if (!isset($totalPriceSums[$serviceTypeItem->id])) {
                     $totalPriceSums[$serviceTypeItem->id] = '0.00';
@@ -195,23 +195,23 @@ class SaleByProductCategoryServiceTypeController extends Controller {
                 $totalPriceSums[$serviceTypeItem->id] += $totalPrice;
                 $columnCounter++;
             }
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSum);
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum));
             $rowCounter++;
         }
         
         $grandTotalPrice = '0.00';
         $columnCounter = 'B';
         foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSums[$productMasterCategoryItem->id]);
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSums[$productMasterCategoryItem->id]));
             $grandTotalPrice += $totalPriceSums[$productMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceTypeList as $serviceTypeItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSums[$serviceTypeItem->id]);
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSums[$serviceTypeItem->id]));
             $grandTotalPrice += $totalPriceSums[$serviceTypeItem->id]; 
             $columnCounter++;           
         }
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $grandTotalPrice);
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $grandTotalPrice));
         $rowCounter++;$rowCounter++;$rowCounter++;
         
         $worksheet->mergeCells("A{$rowCounter}:E{$rowCounter}");
@@ -246,7 +246,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($productMasterCategoryList as $productMasterCategoryItem) {
                 $key = 'Company|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
                 $totalPrice = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPrice);
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPrice));
                 $totalPriceSum += $totalPrice;
                 if (!isset($totalPriceSums[$productMasterCategoryItem->id])) {
                     $totalPriceSums[$productMasterCategoryItem->id] = '0.00';
@@ -257,7 +257,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($serviceTypeList as $serviceTypeItem) {
                 $key = 'Company|' . $year . '-' . $month . '-' . $day . '|s|' . $serviceTypeItem->id;
                 $totalPrice = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPrice);
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPrice));
                 $totalPriceSum += $totalPrice;
                 if (!isset($totalPriceSums[$serviceTypeItem->id])) {
                     $totalPriceSums[$serviceTypeItem->id] = '0.00';
@@ -265,28 +265,28 @@ class SaleByProductCategoryServiceTypeController extends Controller {
                 $totalPriceSums[$serviceTypeItem->id] += $totalPrice;
                 $columnCounter++;
             }
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSum);
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum));
             $rowCounter++;
         }
         
         $grandTotalPrice = '0.00';
         $columnCounter = 'B';
         foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSums[$productMasterCategoryItem->id]);
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSums[$productMasterCategoryItem->id]));
             $grandTotalPrice += $totalPriceSums[$productMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceTypeList as $serviceTypeItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSums[$serviceTypeItem->id]);
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSums[$serviceTypeItem->id]));
             $grandTotalPrice += $totalPriceSums[$serviceTypeItem->id]; 
             $columnCounter++;           
         }
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $grandTotalPrice);
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $grandTotalPrice));
             
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
-            ->setAutoSize(true);
+            ->setWidth(30);;
         }
 
         ob_end_clean();

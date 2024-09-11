@@ -51,9 +51,9 @@ class Adjustment extends CComponent {
                 $fields = array('quantity_current', 'quantity_adjustment', 'product_id');
                 $valid = $detail->validate($fields) && $valid;
             }
-        }
-        else
+        } else {
             $valid = false;
+        }
 
         return $valid;
     }
@@ -62,11 +62,10 @@ class Adjustment extends CComponent {
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {
-            if ($detail->quantity_adjustment <= 0)
-                continue;
 
-            if ($detail->isNewRecord)
+            if ($this->header->isNewRecord) {
                 $detail->stock_adjustment_header_id = $this->header->id;
+            }
 
             $valid = $detail->save(false) && $valid;
         }
@@ -78,10 +77,11 @@ class Adjustment extends CComponent {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
             $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
-            if ($valid)
+            if ($valid) {
                 $dbTransaction->commit();
-            else
+            } else {
                 $dbTransaction->rollback();
+            }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;

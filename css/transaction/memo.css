@@ -97,13 +97,13 @@ table.memo tr#theader th
 
 .memo-logo
 {
-    width: 65%;
+    width: 75%;
     float: left;
 }
 
 .memo-title
 {
-    width: 35%;
+    width: 25%;
     float: right;
     margin-top: 0px;
 }
