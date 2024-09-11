@@ -62,14 +62,14 @@ Yii::app()->clientScript->registerCss('memo', '
 <br /><br /><br /><br /><br /><br /><br />
 
 <div id="memonote">
-    <table style="width: 95%">
+    <table style="width: 98%">
         <?php if (count($services) > 0): ?>
             <?php foreach ($services as $i => $detailService): ?>
                 <tr class="titems">
                     <td style="text-align: left; line-height: 0rem; width: 15%"><?php echo CHtml::encode(CHtml::value($detailService, 'service.code')); ?></td>
                     <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailService, 'service.name')); ?></td>
                     <td style="text-align: center; line-height: 0rem; width: 10%">1</td>
-                    <td style="text-align: right; line-height: 0rem; width: 13%">
+                    <td style="text-align: right; line-height: 0rem; width: 15%">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailService, 'price'))); ?>
                     </td>
 
@@ -88,7 +88,7 @@ Yii::app()->clientScript->registerCss('memo', '
                     <td style="text-align: center; line-height: 0rem; width: 10%">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailProduct, 'quantity'))); ?>
                     </td>
-                    <td style="text-align: right; line-height: 0rem; width: 13%">
+                    <td style="text-align: right; line-height: 0rem; width: 15%">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailProduct, 'sale_price'))); ?>
                     </td>
 
