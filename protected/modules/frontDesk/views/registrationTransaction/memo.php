@@ -74,7 +74,7 @@ Yii::app()->clientScript->registerCss('memo', '
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailService, 'price'))); ?>
                     </td>
 
-                    <td style="text-align: right; line-height: 0rem; width: 20%">
+                    <td style="text-align: right; line-height: 0rem; width: 17%">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailService, 'total_price'))); ?>
                     </td>
                 </tr>
@@ -93,7 +93,7 @@ Yii::app()->clientScript->registerCss('memo', '
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailProduct, 'sale_price'))); ?>
                     </td>
 
-                    <td style="text-align: right; line-height: 0rem; width: 20%">
+                    <td style="text-align: right; line-height: 0rem; width: 17%">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailProduct, 'total_price'))); ?>
                     </td>
                 </tr>
