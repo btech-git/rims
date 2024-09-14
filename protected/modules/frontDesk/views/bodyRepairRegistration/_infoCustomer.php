@@ -11,11 +11,7 @@
     </thead>
     <tbody>
         <tr>
-            <td>
-                <?php echo CHtml::activeHiddenField($bodyRepairRegistration->header, 'customer_id'); ?>
-                <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
-                <?php echo CHtml::error($bodyRepairRegistration->header,'customer_id'); ?>
-            </td>
+            <td><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($customer, 'address')); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($customer, 'email')); ?></td>
