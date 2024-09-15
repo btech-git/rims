@@ -198,11 +198,12 @@ class BodyRepairRegistration extends CComponent {
                         } else {
                             if ($service->difficulty_value == "" && $service->luxury_value == "" && $service->flat_rate_hour == "" && $service->standard_rate_per_hour == "") {
                                 $bodyVal = BodyStandardValue::model()->findByPk(1);
-                                $bodyFR = BodyStandardFr::model()->findByPk(1);
+//                                $bodyFR = BodyStandardFr::model()->findByPk(1);
                                 $diff = $bodyVal->difficulty_value;
                                 $lux = $bodyVal->luxury_value;
                                 $hour = $bodyVal->flat_rate_hour;
-                                $rate = $bodyFR->flat_rate;
+//                                $rate = $bodyFR->flat_rate;
+                                $rate = $service->standard_rate_per_hour;
                             } else {
                                 $diff = $service->difficulty_value;
                                 $lux = $service->luxury_value;
@@ -249,7 +250,7 @@ class BodyRepairRegistration extends CComponent {
                         if (!empty($customerData->flat_rate)) {
                             $priceTotal = $diff * $lux * $hour * $customerData->flat_rate;
                         } else {
-                            $bodyFR = BodyStandardFr::model()->findByPk(1);
+                            $bodyFR = GeneralStandardFr::model()->findByPk(1);
                             $priceTotal = $diff * $lux * $hour * $bodyFR->flat_rate;
                         }
 
