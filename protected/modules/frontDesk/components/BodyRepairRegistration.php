@@ -246,7 +246,7 @@ class BodyRepairRegistration extends CComponent {
                             $hour = $service->flat_rate_hour;
                         }
 
-                        if ($customerData->flat_rate != null) {
+                        if (!empty($customerData->flat_rate)) {
                             $priceTotal = $diff * $lux * $hour * $customerData->flat_rate;
                         } else {
                             $bodyFR = BodyStandardFr::model()->findByPk(1);
