@@ -206,7 +206,7 @@ $this->menu = array(
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($model, 'userIdCancelled->username')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($model, 'userIdCancelled.username')); ?>
                                     </div>
                                 </div>
                             </div>
