@@ -360,8 +360,9 @@ class CustomerController extends Controller {
     public function actionAdmin() {
         $model = new Customer('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Customer']))
+        if (isset($_GET['Customer'])) {
             $model->attributes = $_GET['Customer'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -1027,7 +1028,7 @@ class CustomerController extends Controller {
 
     public function actionExportExcel($id = NULL) {
         if ($id == NULL) {
-            $dataCustomer = Customer::model()->findAll();
+            $dataCustomer = Customer::model()->findAllByAttributes(array('customer_type' => 'Company'));
             $this->getXlsCustomer($dataCustomer);
         } else {
             $dataCustomer = Customer::model()->findByAttributes(array('id' => $id));
