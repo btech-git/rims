@@ -1051,35 +1051,29 @@ class CustomerController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Customer Data');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
-        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
 
-        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Customer Data');
 
-        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Customer');
         $worksheet->setCellValue('C5', 'Alamat');
         $worksheet->setCellValue('D5', 'Phone');
-        $worksheet->setCellValue('E5', 'Province');
-        $worksheet->setCellValue('F5', 'City');
-        $worksheet->setCellValue('G5', 'Kode Pos');
-        $worksheet->setCellValue('H5', 'Email');
-        $worksheet->setCellValue('I5', 'Note');
-        $worksheet->setCellValue('J5', 'Payment Type');
-        $worksheet->setCellValue('K5', 'Type');
-        $worksheet->setCellValue('L5', 'Birthdate');
-        $worksheet->setCellValue('M5', 'Flat Rate');
-        $worksheet->setCellValue('N5', 'COA');
-        $worksheet->setCellValue('O5', 'User');
-        $worksheet->setCellValue('P5', 'Approval Date');
+        $worksheet->setCellValue('E5', 'Email');
+        $worksheet->setCellValue('F5', 'Note');
+        $worksheet->setCellValue('G5', 'Type');
+        $worksheet->setCellValue('H5', 'COA');
+        $worksheet->setCellValue('I5', 'User');
+        $worksheet->setCellValue('J5', 'Approval Date');
 
-        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         foreach ($customer as $key => $value) {
@@ -1088,18 +1082,12 @@ class CustomerController extends Controller {
             $worksheet->setCellValue("B{$counter}", CHtml::encode($value->name));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($value, 'address')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($value, 'phone')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($value, 'province.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($value, 'city.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($value, 'zipcode')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($value, 'email')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($value, 'note')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($value, 'default_payment_type')));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($value, 'customer_type')));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($value, 'birthdate')));
-            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($value, 'flat_rate')));
-            $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($value, 'coa.name')));
-            $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($value, 'user.username')));
-            $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($value, 'date_approval')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($value, 'email')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($value, 'note')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($value, 'customer_type')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($value, 'coa.name')));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($value, 'user.username')));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($value, 'date_approval')));
 
             $counter++;
         }
