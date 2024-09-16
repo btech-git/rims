@@ -1037,6 +1037,8 @@ class CustomerController extends Controller {
     }
 
     public function getXlsCustomer($customer) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
