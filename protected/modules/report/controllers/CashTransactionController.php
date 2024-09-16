@@ -72,20 +72,6 @@ class CashTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Cash Transaction');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-        $worksheet->getColumnDimension('H')->setAutoSize(true);
-        $worksheet->getColumnDimension('I')->setAutoSize(true);
-        $worksheet->getColumnDimension('J')->setAutoSize(true);
-        $worksheet->getColumnDimension('K')->setAutoSize(true);
-        $worksheet->getColumnDimension('L')->setAutoSize(true);
-        $worksheet->getColumnDimension('M')->setAutoSize(true);
-
         $worksheet->mergeCells('A1:M1');
         $worksheet->mergeCells('A2:M2');
         $worksheet->mergeCells('A3:M3');
@@ -139,6 +125,12 @@ class CashTransactionController extends Controller {
             }
         }
 
+        for ($col = 'A'; $col !== 'P'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');

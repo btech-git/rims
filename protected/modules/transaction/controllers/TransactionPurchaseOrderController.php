@@ -865,13 +865,14 @@ class TransactionPurchaseOrderController extends Controller {
             $model = new TransactionPurchaseOrderApproval;
             $model->date = date('Y-m-d H:i:s');
 
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $purchaseOrder->purchase_order_no,
-                'branch_id' => $purchaseOrder->main_branch_id,
-            ));
-
             if (isset($_POST['TransactionPurchaseOrderApproval'])) {
                 $model->attributes = $_POST['TransactionPurchaseOrderApproval'];
+                
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $purchaseOrder->purchase_order_no,
+                    'branch_id' => $purchaseOrder->main_branch_id,
+                ));
+
 //                if ($purchaseOrder->status_document != $model->approval_type) {
                 
                     if ($model->save()) {

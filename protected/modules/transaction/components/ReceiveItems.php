@@ -295,6 +295,7 @@ class ReceiveItems extends CComponent {
             $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
             $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
             $jurnalUmumPersediaan->transaction_type = $transactionType;
+            $jurnalUmumPersediaan->remark = $this->header->request_type;
             $jurnalUmumPersediaan->save();
             
             $totalJournal += array_sum($journalReference['values']);
@@ -313,6 +314,7 @@ class ReceiveItems extends CComponent {
             $jurnalUmumOutstanding->transaction_subject = $transactionSubject;
             $jurnalUmumOutstanding->is_coa_category = 0;
             $jurnalUmumOutstanding->transaction_type = 'RCI';
+            $jurnalUmumOutstanding->remark = $this->header->request_type;
             $jurnalUmumOutstanding->save();
         }
 

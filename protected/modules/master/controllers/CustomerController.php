@@ -249,7 +249,7 @@ class CustomerController extends Controller {
                 
                 $this->redirect(array('view', 'id' => $customer->header->id));
             } else {
-                foreach ($customer->phoneDetails as $key => $detail) {
+                foreach ($customer->phoneDetails as $key => $value) {
                 }
             }
         }
@@ -271,8 +271,8 @@ class CustomerController extends Controller {
         // 	if ($customer->save(Yii::app()->db)){
         // 		$this->redirect(array('view', 'id' => $customer->header->id));
         // 	} else {
-        // 		foreach ($customer->phoneDetails as $key => $detail) {
-        // 			//print_r(CJSON::encode($detail->jenis_persediaan_id));
+        // 		foreach ($customer->phoneDetails as $key => $value) {
+        // 			//print_r(CJSON::encode($value->jenis_persediaan_id));
         // 		}
         // 	}
         // }
@@ -906,9 +906,9 @@ class CustomerController extends Controller {
                 if (isset($customer->phoneDetails[$i]))
                     $customer->phoneDetails[$i]->attributes = $item;
                 else {
-                    $detail = new CustomerPhone();
-                    $detail->attributes = $item;
-                    $customer->phoneDetails[] = $detail;
+                    $value = new CustomerPhone();
+                    $value->attributes = $item;
+                    $customer->phoneDetails[] = $value;
                 }
             }
             if (count($_POST['CustomerPhone']) < count($customer->phoneDetails))
@@ -922,9 +922,9 @@ class CustomerController extends Controller {
                 if (isset($customer->mobileDetails[$i]))
                     $customer->mobileDetails[$i]->attributes = $item;
                 else {
-                    $detail = new CustomerMobile();
-                    $detail->attributes = $item;
-                    $customer->mobileDetails[] = $detail;
+                    $value = new CustomerMobile();
+                    $value->attributes = $item;
+                    $customer->mobileDetails[] = $value;
                 }
             }
             if (count($_POST['CustomerMobile']) < count($customer->mobileDetails))
@@ -938,9 +938,9 @@ class CustomerController extends Controller {
                 if (isset($customer->picDetails[$i]))
                     $customer->picDetails[$i]->attributes = $item;
                 else {
-                    $detail = new CustomerPic();
-                    $detail->attributes = $item;
-                    $customer->picDetails[] = $detail;
+                    $value = new CustomerPic();
+                    $value->attributes = $item;
+                    $customer->picDetails[] = $value;
                 }
             }
             if (count($_POST['CustomerPic']) < count($customer->picDetails))
@@ -953,9 +953,9 @@ class CustomerController extends Controller {
                 if (isset($customer->vehicleDetails[$i]))
                     $customer->vehicleDetails[$i]->attributes = $item;
                 else {
-                    $detail = new Vehicle();
-                    $detail->attributes = $item;
-                    $customer->vehicleDetails[] = $detail;
+                    $value = new Vehicle();
+                    $value->attributes = $item;
+                    $customer->vehicleDetails[] = $value;
                 }
             }
             if (count($_POST['Vehicle']) < count($customer->vehicleDetails))
@@ -968,9 +968,9 @@ class CustomerController extends Controller {
                 if (isset($customer->serviceDetails[$i]))
                     $customer->serviceDetails[$i]->attributes = $item;
                 else {
-                    $detail = new CustomerServiceRate();
-                    $detail->attributes = $item;
-                    $customer->serviceDetails[] = $detail;
+                    $value = new CustomerServiceRate();
+                    $value->attributes = $item;
+                    $customer->serviceDetails[] = $value;
                 }
             }
             if (count($_POST['CustomerServiceRate']) < count($customer->serviceDetails))
@@ -1038,170 +1038,88 @@ class CustomerController extends Controller {
 
     public function getXlsCustomer($customer) {
 
-        // var_dump($customer); die();
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
         $objPHPExcel = new PHPExcel();
 
-        // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-                ->setLastModifiedBy("Apri Pebriana")
-                ->setTitle("Customer Data " . date('d-m-Y'))
-                ->setSubject("Customer")
-                ->setDescription("Export Data Customer, generated using PHP classes.")
-                ->setKeywords("Customer Data")
-                ->setCategory("Export Customer");
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Customer Data');
 
-        // style for horizontal vertical center
-        $styleHorizontalVertivalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleHorizontalVertivalCenterBold = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleLeftVertivalCenterBold = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleHorizontalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            )
-        );
-        $styleVerticalCenter = array(
-            'alignment' => array(
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Customer Data');
 
-        $styleBold = array(
-            'font' => array(
-                'bold' => true,
-            )
-        );
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
 
-        // style color red
-        $styleColorRED = array(
-            'font' => array(
-                'color' => array('rgb' => 'FF0000'),
-                'bold' => true,
-            ),
-                // 'fill' => array(
-                //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                //     'color' => array('rgb' => 'FF0000')
-                // )
-        );
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
 
-        // Add some data
-        $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A1', 'DATA CUSTOMER')
-                ->setCellValue('A2', 'Data Customer')
-                ->setCellValue('E2', 'Data Kendaraan')
-                ->setCellValue('H2', 'P/K')
-                ->setCellValue('I2', 'Update By')
-                ->setCellValue('L2', 'Historical')
-                ->setCellValue('A3', 'Nama Customer')
-                ->setCellValue('B3', 'Alamat')
-                ->setCellValue('C3', 'No Phone')
-                ->setCellValue('D3', 'Email')
-                ->setCellValue('E3', 'No Polisi')
-                ->setCellValue('F3', 'Merk Mobil')
-                ->setCellValue('G3', 'Extensi')
-                ->setCellValue('I3', 'User ID')
-                ->setCellValue('J3', 'Date')
-                ->setCellValue('K3', 'Time');
-        // ->setCellValue('L2', 'Historical');
+        $worksheet->setCellValue('A2', 'Customer Data');
 
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:L1');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:D2');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E2:G2');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H2:H3');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I2:K2');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('L2:L3');
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->getStyle('A1:L1')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('A2:D2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('E2:G2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('I2:K2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('L2:L3')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('H2:H3')->applyFromArray($styleVerticalCenter);
-        $sheet->getStyle('A2:K3')->applyFromArray($styleBold);
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Customer');
+        $worksheet->setCellValue('C5', 'Alamat');
+        $worksheet->setCellValue('D5', 'Phone');
+        $worksheet->setCellValue('E5', 'Province');
+        $worksheet->setCellValue('F5', 'City');
+        $worksheet->setCellValue('G5', 'Kode Pos');
+        $worksheet->setCellValue('H5', 'Email');
+        $worksheet->setCellValue('I5', 'Note');
+        $worksheet->setCellValue('J5', 'Payment Type');
+        $worksheet->setCellValue('K5', 'Type');
+        $worksheet->setCellValue('L5', 'Birthdate');
+        $worksheet->setCellValue('M5', 'Flat Rate');
+        $worksheet->setCellValue('N5', 'COA');
+        $worksheet->setCellValue('O5', 'User');
+        $worksheet->setCellValue('P5', 'Approval Date');
 
-        $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-        $objPHPExcel->getActiveSheet()->freezePane('E4');
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $startrow = 4;
+        $counter = 7;
         foreach ($customer as $key => $value) {
 
-            $phone = ($value->customerPhones != NULL) ? $this->phoneNumber($value->customerPhones) : '';
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($value->id));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($value->name));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($value, 'address')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($value, 'phone')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($value, 'province.name')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($value, 'city.name')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($value, 'zipcode')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($value, 'email')));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($value, 'note')));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($value, 'default_payment_type')));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($value, 'customer_type')));
+            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($value, 'birthdate')));
+            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($value, 'flat_rate')));
+            $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($value, 'coa.name')));
+            $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($value, 'user.username')));
+            $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($value, 'date_approval')));
 
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $value->name);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $value->address);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $phone);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $value->email);
-            $customertype = (($value->customer_type == 'Individual') ? "P" : (($value->customer_type == 'Company') ? "K" : ""));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, $customertype);
-
-            // $objPHPExcel->getActiveSheet()->setCellValue('L'.$startrow,'see details');
-            // $objPHPExcel->getActiveSheet()->getCell('L'.$startrow)->getHyperlink()->setUrl("sheet://'Historical'!A1");
-
-            $kendaraan = $value->vehicles;
-            foreach ($kendaraan as $key => $vehicle) {
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $vehicle->plate_number);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, $vehicle->carMake->name . ' - ' . $vehicle->carModel->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, $vehicle->machine_number);
-                $startrow++;
-            }
-
-            $objPHPExcel->getActiveSheet()
-                    ->getStyle('C' . $startrow)
-                    ->getNumberFormat()
-                    ->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
-
-            $startrow++;
+            $counter++;
         }
-        // die();
-        $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
-        // Miscellaneous glyphs, UTF-8
-        // Rename worksheet
-        $objPHPExcel->getActiveSheet()->setTitle('DataCustomer');
 
-        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        // $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->setActiveSheetIndex(0);
-
-        // Save a xls file
-        $filename = 'Customer_data_' . date("Y-m-d");
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Data Customer.xls"');
         header('Cache-Control: max-age=0');
-
+        
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-
         $objWriter->save('php://output');
-        unset($this->objWriter);
-        unset($this->objWorksheet);
-        unset($this->objReader);
-        unset($this->objPHPExcel);
-        exit();
+
+        Yii::app()->end();
     }
 
     public function getXlsHistory($customer) {

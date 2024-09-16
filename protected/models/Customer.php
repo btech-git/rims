@@ -167,7 +167,7 @@ class Customer extends CActiveRecord {
         $criteria->compare('t.default_payment_type', $this->default_payment_type);
         $criteria->compare('t.customer_type', $this->customer_type, true);
         $criteria->compare('tenor', $this->tenor);
-        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('LOWER(t.status)', strtolower($this->status), FALSE);
         $criteria->compare('birthdate', $this->birthdate, true);
         $criteria->compare('flat_rate', $this->flat_rate, true);
         $criteria->compare('mobile_phone', $this->mobile_phone, true);
@@ -228,7 +228,7 @@ class Customer extends CActiveRecord {
         $criteria->compare('t.default_payment_type', $this->default_payment_type);
         $criteria->compare('t.customer_type', $this->customer_type, true);
         $criteria->compare('tenor', $this->tenor);
-        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('LOWER(t.status)', strtolower($this->status), FALSE);
         $criteria->compare('birthdate', $this->birthdate, true);
         $criteria->compare('flat_rate', $this->flat_rate, true);
         $criteria->compare('mobile_phone', $this->mobile_phone, true);
