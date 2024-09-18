@@ -75,6 +75,7 @@ class WarehouseController extends Controller {
     public function actionCreate() {
         $warehouse = $this->instantiate(null);
         $warehouse->header->user_id = Yii::app()->user->id;
+        $warehouse->header->created_datetime = date('Y-m-d H:i:s');
 
         $branch = new Warehouse('search');
         $branch->unsetAttributes();  // clear any default values

@@ -51,7 +51,7 @@ class Warehouse extends CActiveRecord {
             array('name', 'length', 'max' => 50),
             array('description', 'length', 'max' => 100),
             array('status', 'length', 'max' => 10),
-            array('date_approval', 'safe'),
+            array('date_approval, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, code, name, description, row, column, status, warehouses, created_datetime, branch_id, user_id', 'safe', 'on' => 'search'),
@@ -194,6 +194,5 @@ class Warehouse extends CActiveRecord {
         ));
         
         return $resultSet;
-    }
-    
+    }   
 }
