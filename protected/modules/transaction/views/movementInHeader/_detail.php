@@ -6,7 +6,7 @@
                 <th class="required">Code</th>
                 <th class="required">Product</th>
                 <th class="required">Transaction Quantity</th>
-                <th class="required">Warehouses</th>
+                <!--<th class="required">Warehouses</th>-->
                 <th class="required">Warehouse</th>
                 <th class="required">Quantity</th>
                 <th>Action</th>
@@ -28,21 +28,21 @@
                     
                     <td><?php echo CHtml::activeTextField($detail, "[$i]quantity_transaction", array('readonly' => true)); ?></td>
                     
-                    <td>
+<!--                    <td>
                         <table>
                             <tr>
                                 <?php //foreach ($warehouses as $key => $warehouse) : ?>
-                                <?php 
+                                <?php /*
                                     $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
                                     $stock = !empty($inventory) != 0 ? $inventory->total_stock : 0;
                                 ?>
                                     <?php if ($stock < 0): ?>
                                         <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
-                                    <?php endif; ?>
+                                    <?php endif;*/ ?>
                                 <?php //endforeach; ?>
                             </tr>
                         </table>
-                    </td>
+                    </td>-->
                     
                     <td>
                         <?php echo CHtml::encode(CHtml::value($detail, "warehouse.name")); ?>
