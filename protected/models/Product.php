@@ -882,7 +882,7 @@ class Product extends CActiveRecord {
             FROM " . TransactionPurchaseOrder::model()->tableName() . " h
             INNER JOIN " . TransactionPurchaseOrderDetail::model()->tableName() . " d ON h.id = d.purchase_order_id
             INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = h.supplier_id
-            WHERE d.product_id = :product_id AND h.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            WHERE d.product_id = :product_id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
             ORDER BY h.purchase_order_date, h.purchase_order_no
         ";
 
