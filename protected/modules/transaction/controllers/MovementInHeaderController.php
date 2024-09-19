@@ -148,7 +148,7 @@ class MovementInHeaderController extends Controller {
         }
         
         $movementIn->header->movement_type = $movementType;
-        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
+//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
         $movementIn->addDetails($transactionId, $movementType);
         
         if (isset($_POST['Cancel'])) {
@@ -166,7 +166,7 @@ class MovementInHeaderController extends Controller {
 
         $this->render('create', array(
             'movementIn' => $movementIn,
-            'warehouses' => $warehouses,
+//            'warehouses' => $warehouses,
         ));
     }
 
@@ -177,7 +177,7 @@ class MovementInHeaderController extends Controller {
      */
     public function actionUpdate($id) {
         $movementIn = $this->instantiate($id);
-        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
+//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementIn->header);
@@ -202,7 +202,7 @@ class MovementInHeaderController extends Controller {
 
         $this->render('update', array(
             'movementIn' => $movementIn,
-            'warehouses' => $warehouses,
+//            'warehouses' => $warehouses,
         ));
     }
 

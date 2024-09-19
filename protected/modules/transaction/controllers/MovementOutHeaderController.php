@@ -133,6 +133,7 @@ class MovementOutHeaderController extends Controller {
         $movementOut->header->date_posting = date('Y-m-d H:i:s');
         $movementOut->header->registration_service_id = null;
         $movementOut->header->movement_type = $movementType;
+        $movementOut->header->status = 'Draft';
         $movementOut->header->branch_id = Yii::app()->user->branch_id;
         $this->performAjaxValidation($movementOut->header);
 
@@ -170,7 +171,7 @@ class MovementOutHeaderController extends Controller {
             $this->redirect(array('admin'));
         }
             
-        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
+//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id, 'status' => 'Active'));
 
         $movementOut->addDetails($transactionId, $movementType);
         
@@ -189,7 +190,7 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('create', array(
             'movementOut' => $movementOut,
-            'warehouses' => $warehouses,
+//            'warehouses' => $warehouses,
         ));
     }
 
@@ -203,7 +204,7 @@ class MovementOutHeaderController extends Controller {
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementOut->header);
-        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
+//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
 
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
@@ -225,7 +226,7 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('update', array(
             'movementOut' => $movementOut,
-            'warehouses' => $warehouses,
+//            'warehouses' => $warehouses,
         ));
     }
 

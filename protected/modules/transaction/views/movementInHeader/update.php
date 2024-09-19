@@ -21,14 +21,5 @@ $this->breadcrumbs=array(
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'movementIn'=>$movementIn,
-        'warehouses' => $warehouses,
-//		'receiveItemDetail'=>$receiveItemDetail,
-//		'receiveItemDetailDataProvider'=>$receiveItemDetailDataProvider,
-//		'receiveItem'=>$receiveItem,
-//		'receiveItemDataProvider'=>$receiveItemDataProvider,
-//		'returnItem'=>$returnItem,
-//		'returnItemDataProvider'=>$returnItemDataProvider,
-//		'returnItemDetail'=>$returnItemDetail,
-//		'returnItemDetailDataProvider'=>$returnItemDetailDataProvider,
 	)); ?>
 </div>

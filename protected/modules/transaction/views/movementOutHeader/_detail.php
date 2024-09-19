@@ -35,7 +35,10 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
-                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]', 'readonly' => 'readonly')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($detail, "warehouse.name")); ?>
+                        <?php //echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]', 'readonly' => 'readonly')); ?>
+                    </td>
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]quantity_transaction"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?>
@@ -79,14 +82,16 @@
                 </tr>	
                 <tr>
                     <td colspan="12">
-                        <?php foreach ($warehouses as $key => $warehouse):
-                            $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
+                        <?php //foreach ($warehouses as $key => $warehouse):
+                        ?>
+                        <?php 
+                            $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
                             $stock = !empty($inventory) ? $inventory->total_stock : 0;
                         ?>
                             <?php if ($stock < 0): ?>
                                 <?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?>
                             <?php endif; ?>
-                        <?php endforeach; ?>
+                        <?php //endforeach; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

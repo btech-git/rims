@@ -206,7 +206,7 @@
                     <div class="detail" id="detail_div">
                         <?php $this->renderPartial('_detail', array(
                             'movementIn' => $movementIn,
-                            'warehouses' => $warehouses,
+//                            'warehouses' => $warehouses,
                         )); ?>
                     </div>
                 </div>	

@@ -31,19 +31,23 @@
                     <td>
                         <table>
                             <tr>
-                                <?php foreach ($warehouses as $key => $warehouse) :
-                                    $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $warehouse->id));
+                                <?php //foreach ($warehouses as $key => $warehouse) : ?>
+                                <?php 
+                                    $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
                                     $stock = !empty($inventory) != 0 ? $inventory->total_stock : 0;
                                 ?>
                                     <?php if ($stock < 0): ?>
                                         <td><?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?></td>
                                     <?php endif; ?>
-                                <?php endforeach; ?>
+                                <?php //endforeach; ?>
                             </tr>
                         </table>
                     </td>
                     
-                    <td><?php echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($detail, "warehouse.name")); ?>
+                        <?php //echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]')); ?>
+                    </td>
                     <td>
                         <?php if ($movementIn->header->isNewRecord): ?>
                             <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(

@@ -84,7 +84,7 @@
                             <?php echo $form->labelEx($movementOut->header, 'status', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($movementOut->header, 'status', array('value' => $movementOut->header->isNewRecord ? 'Draft' : $movementOut->header->status, 'readonly' => true)); ?>
+                            <?php echo CHtml::encode(CHtml::value($movementOut->header, 'status')); ?>
                             <?php echo $form->error($movementOut->header, 'status'); ?>
                         </div>
                     </div>
@@ -237,7 +237,7 @@
                     <div class="detail" id="detail_div">
                         <?php $this->renderPartial('_detail', array(
                             'movementOut' => $movementOut,
-                            'warehouses' => $warehouses,
+//                            'warehouses' => $warehouses,
                         )); ?>
                     </div>
                 </div>	
