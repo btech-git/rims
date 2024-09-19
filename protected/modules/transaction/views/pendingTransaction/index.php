@@ -39,6 +39,8 @@ Yii::app()->clientScript->registerScript('report', '
                                     'name'=>'tanggal_mulai',
                                     'options'=>array(
                                         'dateFormat'=>'yy-mm-dd',
+                                        'changeMonth'=>true,
+                                        'changeYear'=>true,
                                     ),
                                     'htmlOptions'=>array(
                                         'readonly'=>true,
@@ -52,6 +54,8 @@ Yii::app()->clientScript->registerScript('report', '
                                     'name'=>'tanggal_sampai',
                                     'options'=>array(
                                         'dateFormat'=>'yy-mm-dd',
+                                        'changeMonth'=>true,
+                                        'changeYear'=>true,
                                     ),
                                     'htmlOptions'=>array(
                                         'readonly'=>true,
@@ -162,6 +166,13 @@ Yii::app()->clientScript->registerScript('report', '
                             'content' => $this->renderPartial(
                                 '_viewMovementOut',
                                 array('movementDataProvider' => $movementDataProvider, 'movement' => $movement),
+                                true
+                            )
+                        ),
+                        'Adjustment Stock' => array(
+                            'content' => $this->renderPartial(
+                                '_viewStockAdjustment',
+                                array('stockAdjustmentDataProvider' => $stockAdjustmentDataProvider, 'stockAdjustmentHeader' => $stockAdjustmentHeader),
                                 true
                             )
                         ),

@@ -184,70 +184,6 @@ class MovementInHeaderController extends Controller {
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
         
-//        if (isset($_GET['TransactionReceiveItem']))
-//            $receiveItem->attributes = $_GET['TransactionReceiveItem'];
-//        
-//        $receiveItemCriteria = new CDbCriteria;
-//        $receiveItemCriteria->compare('recipient_branch_id', $movementIn->header->branch_id);
-//        $receiveItemCriteria->together = 'true';
-//        $receiveItemCriteria->with = array('recipientBranch');
-//        $receiveItemCriteria->compare('recipientBranch.name', $receiveItem->branch_name, true);
-//        $receiveItemCriteria->compare('receive_item_no', $receiveItem->receive_item_no, true);
-//
-//        $receiveItemDataProvider = new CActiveDataProvider('TransactionReceiveItem', array('criteria' => $receiveItemCriteria));
-//
-//        $receiveItemDetail = new TransactionReceiveItemDetail('search');
-//        $receiveItemDetail->unsetAttributes();  // clear any default values
-//        
-//        if (isset($_GET['TransactionReceiveItemDetail']))
-//            $receiveItemDetail->attributes = $_GET['TransactionReceiveItemDetail'];
-//        
-//        $receiveItemDetailCriteria = new CDbCriteria;
-//        $receiveItemDetailCriteria->compare('receive_item_id', $movementIn->header->receive_item_id);
-//        $receiveItemDetailCriteria->together = 'true';
-//        $receiveItemDetailCriteria->with = array('product', 'receiveItem');
-//
-//        $receiveItemDetailCriteria->compare('receive_item_id', $receiveItemDetail->receive_item_id, true);
-//        $receiveItemDetailCriteria->compare('receiveItem.receive_item_no', $receiveItemDetail->receive_item_no, true);
-//        $receiveItemDetailCriteria->compare('product.name', $receiveItemDetail->product_name, true);
-//        $receiveItemDetailDataProvider = new CActiveDataProvider('TransactionReceiveItemDetail', array(
-//            'criteria' => $receiveItemDetailCriteria,
-//        ));
-//
-//        /* Return Item */
-//        $returnItem = new TransactionReturnItem('search');
-//        $returnItem->unsetAttributes();
-//        
-//        if (isset($_GET['TransactionReturnItem']))
-//            $returnItem->attributes = $_GET['TransactionReturnItem'];
-//        
-//        $returnItemCriteria = new CDbCriteria;
-//        $receiveItemCriteria->compare('recipient_branch_id', $movementIn->header->branch_id);
-//        $returnItemCriteria->together = 'true';
-//        $returnItemCriteria->with = array('recipientBranch');
-//        
-//        $returnItemCriteria->compare('recipientBranch.name', $returnItem->branch_name, true);
-//        $returnItemCriteria->compare('return_item_no', $returnItem->return_item_no, true);
-//        $returnItemDataProvider = new CActiveDataProvider('TransactionReturnItem', array('criteria' => $returnItemCriteria));
-//
-//        $returnItemDetail = new TransactionReturnItemDetail('search');
-//        $returnItemDetail->unsetAttributes();  // clear any default values
-//        
-//        if (isset($_GET['TransactionReturnItemDetail']))
-//            $returnItemDetail->attributes = $_GET['TransactionReturnItemDetail'];
-//        
-//        $returnItemDetailCriteria = new CDbCriteria;
-//        $returnItemDetailCriteria->compare('return_item_id', $movementIn->header->return_item_id);
-//        $returnItemDetailCriteria->together = 'true';
-//        $returnItemDetailCriteria->with = array('product', 'returnItem');
-//
-//        $returnItemDetailCriteria->compare('return_item_id', $returnItemDetail->return_item_id, true);
-//        $returnItemDetailCriteria->compare('returnItem.return_item_no', $returnItemDetail->return_item_no, true);
-//        $returnItemDetailCriteria->compare('product.name', $returnItemDetail->product_name, true);
-//        $returnItemDetailDataProvider = new CActiveDataProvider('TransactionReturnItemDetail', array(
-//            'criteria' => $returnItemDetailCriteria,
-//        ));
-
         if (isset($_POST['Cancel']))
             $this->redirect(array('admin'));
 
@@ -267,14 +203,6 @@ class MovementInHeaderController extends Controller {
         $this->render('update', array(
             'movementIn' => $movementIn,
             'warehouses' => $warehouses,
-//            'receiveItemDetail' => $receiveItemDetail,
-//            'receiveItemDetailDataProvider' => $receiveItemDetailDataProvider,
-//            'receiveItem' => $receiveItem,
-//            'receiveItemDataProvider' => $receiveItemDataProvider,
-//            'returnItem' => $returnItem,
-//            'returnItemDataProvider' => $returnItemDataProvider,
-//            'returnItemDetail' => $returnItemDetail,
-//            'returnItemDetailDataProvider' => $returnItemDetailDataProvider,
         ));
     }
 
@@ -324,8 +252,6 @@ class MovementInHeaderController extends Controller {
         }
 
         $receiveItemDataProvider = $receiveItem->searchByMovementIn();
-//        $receiveItemDataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
-//        $receiveItemDataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
     
         $returnItem = new TransactionReturnItem('search');
         $returnItem->unsetAttributes();
@@ -335,8 +261,6 @@ class MovementInHeaderController extends Controller {
         }
 
         $returnItemDataProvider = $returnItem->search();
-//        $returnItemDataProvider->criteria->addCondition("t.return_item_date > '2021-12-31' AND t.recipient_branch_id = :recipient_branch_id");
-//        $returnItemDataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'model' => $model,
@@ -475,18 +399,6 @@ class MovementInHeaderController extends Controller {
             $this->renderPartial('_detail', array('movementIn' => $movementIn), false, true);
         }
     }
-
-//    public function actionAjaxHtmlRemoveDetailAll($id) {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $movementIn = $this->instantiate($id);
-//            $this->loadState($movementIn);
-//
-//            $movementIn->removeDetailAll();
-//            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-//            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-//            $this->renderPartial('_detail', array('movementIn' => $movementIn), false, true);
-//        }
-//    }
 
     public function actionAjaxHtmlUpdateAllWarehouse($id) {
         if (Yii::app()->request->isAjaxRequest) {
@@ -650,109 +562,56 @@ class MovementInHeaderController extends Controller {
         $movementInShipping->date = date('Y-m-d');
         $movementInShipping->supervisor_id = Yii::app()->user->getId();
 
-//        JurnalUmum::model()->deleteAllByAttributes(array(
-//            'kode_transaksi' => $movementIn->header->movement_in_number,
-//            'branch_id' => $movementIn->header->branch_id,
-//        ));
+        if ($movementInShipping->save() && IdempotentManager::check() && IdempotentManager::build()->save()) {
 
-//        $transactionType = 'MI';
-//        $postingDate = date('Y-m-d');
-//        $transactionCode = $movementIn->header->movement_in_number;
-//        $transactionDate = $movementIn->header->date_posting;
-//        $branchId = $movementIn->header->branch_id;
-//        $transactionSubject = $movementIn->header->getMovementType($movementIn->header->movement_type);
-//        
-//        $journalReferences = array();
-        
-            if ($movementInShipping->save() && IdempotentManager::check() && IdempotentManager::build()->save()) {
+            InventoryDetail::model()->deleteAllByAttributes(array(
+                'transaction_number' => $movementIn->header->movement_in_number,
+            ));
 
-                InventoryDetail::model()->deleteAllByAttributes(array(
-                    'transaction_number' => $movementIn->header->movement_in_number,
+            foreach ($movementIn->details as $movementDetail) {
+                $inventory = Inventory::model()->findByAttributes(array(
+                    'product_id' => $movementDetail->product_id, 
+                    'warehouse_id' => $movementDetail->warehouse_id
                 ));
 
-                foreach ($movementIn->details as $movementDetail) {
-                    $inventory = Inventory::model()->findByAttributes(array(
-                        'product_id' => $movementDetail->product_id, 
-                        'warehouse_id' => $movementDetail->warehouse_id
-                    ));
+                if (empty($inventory)) {
+                    $insertInventory = new Inventory();
+                    $insertInventory->product_id = $movementDetail->product_id;
+                    $insertInventory->warehouse_id = $movementDetail->warehouse_id;
+                    $insertInventory->minimal_stock = 0;
+                    $insertInventory->total_stock = $movementDetail->quantity;
+                    $insertInventory->status = 'Active';
+                    $insertInventory->save();
 
-                    if (empty($inventory)) {
-                        $insertInventory = new Inventory();
-                        $insertInventory->product_id = $movementDetail->product_id;
-                        $insertInventory->warehouse_id = $movementDetail->warehouse_id;
-                        $insertInventory->minimal_stock = 0;
-                        $insertInventory->total_stock = $movementDetail->quantity;
-                        $insertInventory->status = 'Active';
-                        $insertInventory->save();
+                    $inventoryId = $insertInventory->id;
+                } else {
+                    $inventory->total_stock += $movementDetail->quantity;
+                    $inventory->update(array('total_stock'));
 
-                        $inventoryId = $insertInventory->id;
-                    } else {
-                        $inventory->total_stock += $movementDetail->quantity;
-                        $inventory->update(array('total_stock'));
+                    $inventoryId = $inventory->id;
 
-                        $inventoryId = $inventory->id;
+                }
 
-                    }
+                if ($movementDetail->quantity > 0) {
+                    $inventoryDetail = new InventoryDetail();
+                    $inventoryDetail->inventory_id = $inventoryId;
+                    $inventoryDetail->product_id = $movementDetail->product_id;
+                    $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
+                    $inventoryDetail->transaction_type = 'MVI';
+                    $inventoryDetail->transaction_number = $movementIn->header->movement_in_number;
+                    $inventoryDetail->transaction_date = $movementIn->header->date_posting;
+                    $inventoryDetail->stock_in = $movementDetail->quantity;
+                    $inventoryDetail->stock_out = 0;
+                    $inventoryDetail->notes = "Data from Movement In";
+                    $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
+                    $inventoryDetail->transaction_time = date('H:i:s');
 
-                    if ($movementDetail->quantity > 0) {
-                        $inventoryDetail = new InventoryDetail();
-                        $inventoryDetail->inventory_id = $inventoryId;
-                        $inventoryDetail->product_id = $movementDetail->product_id;
-                        $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
-                        $inventoryDetail->transaction_type = 'MVI';
-                        $inventoryDetail->transaction_number = $movementIn->header->movement_in_number;
-                        $inventoryDetail->transaction_date = $movementIn->header->date_posting;
-                        $inventoryDetail->stock_in = $movementDetail->quantity;
-                        $inventoryDetail->stock_out = 0;
-                        $inventoryDetail->notes = "Data from Movement In";
-                        $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
-                        $inventoryDetail->transaction_time = date('H:i:s');
-
-                        $inventoryDetail->save(false);
-
-    //                    $unitPrice = empty($movementDetail->receiveItemDetail->purchase_order_detail_id) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
-    //                    $jumlah = $movementDetail->quantity * $unitPrice;
-    //
-    //                    $value = $jumlah;
-    //                    $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-    //                    $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
-    //                    $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
-    //                    $journalReferences[$coaMasterTransitId]['values'][] = $value;
-    //                    
-    //                    $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
-    //                    $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
-    //                    $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
-    //                    $journalReferences[$coaSubTransitId]['values'][] = $value;
-    //                    
-    //                    $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-    //                    $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
-    //                    $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
-    //                    $journalReferences[$coaMasterInventoryId]['values'][] = $value;
-    //                    
-    //                    $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
-    //                    $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';
-    //                    $journalReferences[$coaSubInventoryId]['is_coa_category'] = 0;
-    //                    $journalReferences[$coaSubInventoryId]['values'][] = $value;
-                    }
+                    $inventoryDetail->save(false);
                 }
             }
+        }
 
-            $movementIn->header->status = "Finished";
-            $movementIn->header->save(false);
-
-//            foreach ($journalReferences as $coaId => $journalReference) {
-//                $jurnalUmumPersediaan = new JurnalUmum();
-//                $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
-//                $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
-//                $jurnalUmumPersediaan->coa_id = $coaId;
-//                $jurnalUmumPersediaan->branch_id = $branchId;
-//                $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
-//                $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
-//                $jurnalUmumPersediaan->tanggal_posting = $postingDate;
-//                $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
-//                $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
-//                $jurnalUmumPersediaan->transaction_type = $transactionType;
-//                $jurnalUmumPersediaan->save();
-//            }
+        $movementIn->header->status = "Finished";
+        $movementIn->header->save(false);
     }
 }

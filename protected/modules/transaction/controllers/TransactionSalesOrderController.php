@@ -83,7 +83,7 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumKas->tanggal_transaksi = $model->sale_order_date;
                 $jurnalUmumKas->coa_id = $coaKasWithCode->id;
                 $jurnalUmumKas->branch_id = $model->requester_branch_id;
-                $jurnalUmumKas->total = $model->total_price;
+                $jurnalUmumKas->total = round($model->total_price, 0);
                 $jurnalUmumKas->debet_kredit = 'D';
                 $jurnalUmumKas->tanggal_posting = date('Y-m-d');
                 $jurnalUmumKas->transaction_subject = $transactionSubject;
@@ -99,7 +99,7 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumPiutang->tanggal_transaksi = $model->sale_order_date;
                 $jurnalUmumPiutang->coa_id = $coaPiutangWithCode->id;
                 $jurnalUmumPiutang->branch_id = $model->requester_branch_id;
-                $jurnalUmumPiutang->total = $model->total_price;
+                $jurnalUmumPiutang->total = round($model->total_price, 0);
                 $jurnalUmumPiutang->debet_kredit = 'D';
                 $jurnalUmumPiutang->tanggal_posting = date('Y-m-d');
                 $jurnalUmumPiutang->transaction_subject = $transactionSubject;

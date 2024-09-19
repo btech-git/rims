@@ -122,7 +122,7 @@ class TransferRequestController extends Controller {
             $jurnalUmumInterbranchRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
             $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
             $jurnalUmumInterbranchRequester->branch_id = $transferRequest->requester_branch_id;
-            $jurnalUmumInterbranchRequester->total = $transferRequest->total_price;
+            $jurnalUmumInterbranchRequester->total = round($transferRequest->total_price, 0);
             $jurnalUmumInterbranchRequester->debet_kredit = 'D';
             $jurnalUmumInterbranchRequester->tanggal_posting = date('Y-m-d');
             $jurnalUmumInterbranchRequester->transaction_subject = 'Transfer Request Main';
@@ -132,20 +132,6 @@ class TransferRequestController extends Controller {
 
             foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
                 $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
-
-                //save coa persediaan product master
-//                $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
-//                $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $transferRequest->transfer_request_no;
-//                $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
-//                $jurnalUmumMasterOutstandingPartRequester->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
-//                $jurnalUmumMasterOutstandingPartRequester->branch_id = $transferRequest->requester_branch_id;
-//                $jurnalUmumMasterOutstandingPartRequester->total = $hppPrice;
-//                $jurnalUmumMasterOutstandingPartRequester->debet_kredit = 'K';
-//                $jurnalUmumMasterOutstandingPartRequester->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumMasterOutstandingPartRequester->transaction_subject = 'Transfer Request Main';
-//                $jurnalUmumMasterOutstandingPartRequester->is_coa_category = 1;
-//                $jurnalUmumMasterOutstandingPartRequester->transaction_type = 'TR';
-//                $jurnalUmumMasterOutstandingPartRequester->save();
 
                 //save coa persedian product sub master
                 $jurnalUmumOutstandingPartRequester = new JurnalUmum;
@@ -174,7 +160,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
                 $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
                 $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
-                $jurnalUmumInterbranchDestination->total = $transferRequest->total_price;
+                $jurnalUmumInterbranchDestination->total = round($transferRequest->total_price, 0);
                 $jurnalUmumInterbranchDestination->debet_kredit = 'K';
                 $jurnalUmumInterbranchDestination->tanggal_posting = date('Y-m-d');
                 $jurnalUmumInterbranchDestination->transaction_subject = 'Transfer Request Destination';
@@ -184,20 +170,6 @@ class TransferRequestController extends Controller {
 
                 foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
                     $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
-
-                    //save coa persediaan product master
-    //                $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
-    //                $jurnalUmumMasterOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
-    //                $jurnalUmumMasterOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-    //                $jurnalUmumMasterOutstandingPartDestination->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
-    //                $jurnalUmumMasterOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
-    //                $jurnalUmumMasterOutstandingPartDestination->total = $hppPrice;
-    //                $jurnalUmumMasterOutstandingPartDestination->debet_kredit = 'D';
-    //                $jurnalUmumMasterOutstandingPartDestination->tanggal_posting = date('Y-m-d');
-    //                $jurnalUmumMasterOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
-    //                $jurnalUmumMasterOutstandingPartDestination->is_coa_category = 1;
-    //                $jurnalUmumMasterOutstandingPartDestination->transaction_type = 'TR';
-    //                $jurnalUmumMasterOutstandingPartDestination->save();
 
                     //save coa persedian product sub master
                     $jurnalUmumOutstandingPartDestination = new JurnalUmum;
@@ -255,7 +227,7 @@ class TransferRequestController extends Controller {
                     $jurnalUmumInterbranchRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
                     $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
                     $jurnalUmumInterbranchRequester->branch_id = $transferRequest->requester_branch_id;
-                    $jurnalUmumInterbranchRequester->total = $transferRequest->total_price;
+                    $jurnalUmumInterbranchRequester->total = round($transferRequest->total_price, 0);
                     $jurnalUmumInterbranchRequester->debet_kredit = 'D';
                     $jurnalUmumInterbranchRequester->tanggal_posting = date('Y-m-d');
                     $jurnalUmumInterbranchRequester->transaction_subject = 'Transfer Request Main';
@@ -270,20 +242,6 @@ class TransferRequestController extends Controller {
                         $transferRequestDetail->save(false);
 
                         $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
-
-                        //save coa persediaan product master
-                        $jurnalUmumMasterOutstandingPartRequester = new JurnalUmum;
-                        $jurnalUmumMasterOutstandingPartRequester->kode_transaksi = $transferRequest->transfer_request_no;
-                        $jurnalUmumMasterOutstandingPartRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
-                        $jurnalUmumMasterOutstandingPartRequester->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
-                        $jurnalUmumMasterOutstandingPartRequester->branch_id = $transferRequest->requester_branch_id;
-                        $jurnalUmumMasterOutstandingPartRequester->total = $hppPrice;
-                        $jurnalUmumMasterOutstandingPartRequester->debet_kredit = 'K';
-                        $jurnalUmumMasterOutstandingPartRequester->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumMasterOutstandingPartRequester->transaction_subject = 'Transfer Request Main';
-                        $jurnalUmumMasterOutstandingPartRequester->is_coa_category = 1;
-                        $jurnalUmumMasterOutstandingPartRequester->transaction_type = 'TR';
-                        $jurnalUmumMasterOutstandingPartRequester->save();
 
                         //save coa persedian product sub master
                         $jurnalUmumOutstandingPartRequester = new JurnalUmum;
@@ -342,7 +300,7 @@ class TransferRequestController extends Controller {
         $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
         $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
         $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
-        $jurnalUmumInterbranchDestination->total = $transferRequest->total_price;
+        $jurnalUmumInterbranchDestination->total = round($transferRequest->total_price, 0);
         $jurnalUmumInterbranchDestination->debet_kredit = 'K';
         $jurnalUmumInterbranchDestination->tanggal_posting = date('Y-m-d');
         $jurnalUmumInterbranchDestination->transaction_subject = 'Transfer Request Destination';

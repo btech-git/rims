@@ -99,6 +99,12 @@ class PendingTransactionController extends Controller {
         $movementInDataProvider->criteria->order = 't.date_posting DESC';
         $movementInDataProvider->criteria->addBetweenCondition('t.date_posting', $tanggal_mulai, $tanggal_sampai);
 
+        $stockAdjustmentHeader = Search::bind(new StockAdjustmentHeader('search'), isset($_GET['StockAdjustmentHeader']) ? $_GET['StockAdjustmentHeader'] : '');
+        $stockAdjustmentDataProvider = $stockAdjustmentHeader->search();
+        $stockAdjustmentDataProvider->criteria->with = array('branch');
+        $stockAdjustmentDataProvider->criteria->order = 't.date_posting DESC';
+        $stockAdjustmentDataProvider->criteria->addBetweenCondition('t.date_posting', $tanggal_mulai, $tanggal_sampai);
+
         if (!empty($mainBranch)) {
             $requestDataProvider->criteria->addCondition('main_branch_id = :main_branch_id');
             $requestDataProvider->criteria->params[':main_branch_id'] = $mainBranch;
@@ -112,8 +118,8 @@ class PendingTransactionController extends Controller {
             $sentDataProvider->criteria->addCondition('destination_branch_id = :destination_branch_id');
             $sentDataProvider->criteria->params[':destination_branch_id'] = $mainBranch;
 
-            $consignmentInDataProvider->criteria->addCondition('receive_branch = :receive_branch');
-            $consignmentInDataProvider->criteria->params[':receive_branch'] = $requesterBranch;
+            $stockAdjustmentDataProvider->criteria->addCondition('branch_id = :branch_id');
+            $stockAdjustmentDataProvider->criteria->params[':branch_id'] = $mainBranch;
         }
 
         if (!empty($requesterBranch)) {
@@ -132,6 +138,9 @@ class PendingTransactionController extends Controller {
             $consignmentDataProvider->criteria->addCondition('branch_id = :branch_id');
             $consignmentDataProvider->criteria->params[':branch_id'] = $requesterBranch;
 
+            $consignmentInDataProvider->criteria->addCondition('receive_branch = :receive_branch');
+            $consignmentInDataProvider->criteria->params[':receive_branch'] = $requesterBranch;
+            
             $movementDataProvider->criteria->addCondition('branch_id = :branch_id');
             $movementDataProvider->criteria->params[':branch_id'] = $requesterBranch;
 
@@ -166,6 +175,9 @@ class PendingTransactionController extends Controller {
 
             $movementInDataProvider->criteria->addCondition('t.status = :status');
             $movementInDataProvider->criteria->params[':status'] = $status_document;
+            
+            $stockAdjustmentDataProvider->criteria->addCondition('t.status = :status');
+            $stockAdjustmentDataProvider->criteria->params[':status'] = $status_document;
         }
 
         $this->render('index', array(
@@ -194,6 +206,8 @@ class PendingTransactionController extends Controller {
             'branch' => $branch,
             'mainBranch' => $mainBranch,
             'requesterBranch' => $requesterBranch,
+            'stockAdjustmentDataProvider' => $stockAdjustmentDataProvider,
+            'stockAdjustmentHeader' => $stockAdjustmentHeader,
         ));
     }
 
