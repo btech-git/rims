@@ -45,7 +45,7 @@
                     </td>-->
                     
                     <td>
-                        <?php echo CHtml::activeTextField($detail, "[$i]warehouse_id"); ?>
+                        <?php echo CHtml::activeHiddenField($detail, "[$i]warehouse_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, "warehouse.name")); ?>
                         <?php //echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]')); ?>
                     </td>
