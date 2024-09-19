@@ -36,7 +36,7 @@ class PurchasePerProductSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT d.id FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d 
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
-            WHERE d.product_id = t.id AND h.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
+            WHERE d.product_id = t.id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
