@@ -90,7 +90,7 @@
                             $stock = !empty($inventory) ? $inventory->total_stock : 0;
                         ?>
                             <?php if ($stock < 0): ?>
-                                <?php echo $warehouse->name . '- ( ' . $stock . ' )'; ?>
+                                <?php echo $detail->warehouse->name . '- ( ' . $stock . ' )'; ?>
                             <?php endif; ?>
                         <?php //endforeach; ?>
                     </td>
