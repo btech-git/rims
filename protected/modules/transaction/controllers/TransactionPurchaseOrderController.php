@@ -239,6 +239,7 @@ class TransactionPurchaseOrderController extends Controller {
         // $this->performAjaxValidation($model);
         $purchaseOrder = $this->instantiate($id);
         $this->performAjaxValidation($purchaseOrder->header);
+        $purchaseOrder->header->status_document = 'Draft';
 
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values

@@ -201,6 +201,7 @@ class MovementOutHeaderController extends Controller {
      */
     public function actionUpdate($id) {
         $movementOut = $this->instantiate($id);
+        $movementOut->header->status = 'Draft';
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementOut->header);

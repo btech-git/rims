@@ -30,12 +30,17 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::submitButton('Finish Service', array('name' => 'SubmitService', 'confirm' => 'Are you sure you want to finish this services?', 'class' => 'button info right', 'style' => 'margin-right:10px')); ?>
                         <?php endif; ?>
                         
-                        <?php if (Yii::app()->user->checkAccess("generalRepairEdit")): ?>
-                            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
-                        <?php endif; ?>
-                    
                         <?php if (count($invoices) == 0): ?>
+                            <?php if (Yii::app()->user->checkAccess("generalRepairEdit")): ?>
+                                <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
+                            <?php endif; ?>
+
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Product & Service', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/addProductService?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
+                        <?php endif; ?>
+
+                        <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor") && count($invoices) > 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi Customer Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px')) ?>
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Revisi Product & Service', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/addProductService?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')) ?>
                         <?php endif; ?>
 
                         <?php if (empty($model->sales_order_number)): ?>
@@ -211,8 +216,8 @@ $this->breadcrumbs = array(
     <div>
         <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor") && $model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
-                'class' => 'button alert', 
-                'style' => 'margin-right:10px', 
+                'class' => 'button alert left', 
+                'style' => 'margin-left:10px', 
             )); ?>
         <?php endif; ?>
 

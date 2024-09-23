@@ -24,18 +24,28 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Movement In', Yii::app()->baseUrl . '/transaction/movementInHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.admin"))) ?>
 
-        <?php if ($model->status != 'CANCELLED!!!'): // (($model->status != 'Approved') && ($model->status != 'Delivered') && ($model->status != 'Finished') && $model->status != 'Rejected'): ?>
+        <?php if ($model->status == "Draft" && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/movementInHeader/update?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("movementInEdit")
             )); ?>
-        
-            <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("movementInApproval")): ?>
-                <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-            <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("movementInSupervisor")): ?>
-                <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-            <?php endif; ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("movementInApproval")
+            )) ?>
+        <?php elseif ($model->status != "Draft" && $model->status !== 'CANCELLED!!!'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl . '/transaction/movementInHeader/update?id=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("movementInSupervisor")
+            )); ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("movementInSupervisor")
+            )) ?>
         <?php endif; ?>
         <?php /* echo CHtml::button('Update Delivered', array(
           'id' => 'detail-button',

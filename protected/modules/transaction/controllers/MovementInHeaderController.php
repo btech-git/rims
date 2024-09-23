@@ -60,7 +60,6 @@ class MovementInHeaderController extends Controller {
         if (isset($_POST['Process']) && IdempotentManager::check() && IdempotentManager::build()->save()) {
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $model->movement_in_number,
-                'branch_id' => $model->branch_id,
             ));
 
             $transactionType = 'MI';
@@ -177,6 +176,7 @@ class MovementInHeaderController extends Controller {
      */
     public function actionUpdate($id) {
         $movementIn = $this->instantiate($id);
+        $movementIn->header->status = 'Draft';
 //        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
 
         // Uncomment the following line if AJAX validation is needed
