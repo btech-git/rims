@@ -38,12 +38,18 @@ class AdjustmentController extends Controller {
             $this->loadState($adjustment);
             $adjustment->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($adjustment->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($adjustment->header->date_posting)), $adjustment->header->branch_id);
 
-            if ($adjustment->save(Yii::app()->db))
+            $branch = Branch::model()->findByPk($adjustment->header->branch_id);
+            $warehouse = Warehouse::model()->findByAttributes(array('code' => $branch->code));
+            $adjustment->header->warehouse_id = $warehouse->id;
+            
+            if ($adjustment->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $adjustment->header->id));
+            }
         }
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         $this->render('create', array(
             'adjustment' => $adjustment,
@@ -101,6 +107,47 @@ class AdjustmentController extends Controller {
                     $stockAdjustmentHeader->status = $model->approval_type;
                     if ($model->approval_type == 'Approved') {
                         $stockAdjustmentHeader->supervisor_id = $model->supervisor_id;
+
+                        $transactionType = StockAdjustmentHeader::CONSTANT;
+                        $postingDate = date('Y-m-d');
+                        $transactionCode = $stockAdjustmentHeader->stock_adjustment_number;
+                        $transactionDate = $stockAdjustmentHeader->date_posting;
+                        $branchId = $stockAdjustmentHeader->branch_id;
+                        $transactionSubject = $stockAdjustmentHeader->transaction_type;
+
+                        $journalReferences = array();
+
+                        foreach ($stockAdjustmentHeader->stockAdjustmentDetails as $key => $detail) {
+                            if (!empty($detail->product_id)) {
+                                $quantityDifference = ($detail->quantity_current > $detail->quantity_adjustment) ? $detail->quantityDifference * -1 : $detail->quantityDifference;
+                                $total = $detail->product->hpp * $quantityDifference;
+
+                                $jurnalUmumHpp = $detail->product->productSubMasterCategory->coa_hpp;
+                                $journalReferences[$jurnalUmumHpp]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'D' : 'K';
+                                $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
+                                $journalReferences[$jurnalUmumHpp]['values'][] = $total;
+
+                                $jurnalUmumPersediaan = $detail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                                $journalReferences[$jurnalUmumPersediaan]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'K' : 'D';
+                                $journalReferences[$jurnalUmumPersediaan]['is_coa_category'] = 0;
+                                $journalReferences[$jurnalUmumPersediaan]['values'][] = $total;
+                            }
+                        }
+
+                        foreach ($journalReferences as $coaId => $journalReference) {
+                            $jurnalUmumPersediaan = new JurnalUmum();
+                            $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                            $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                            $jurnalUmumPersediaan->coa_id = $coaId;
+                            $jurnalUmumPersediaan->branch_id = $branchId;
+                            $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+                            $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+                            $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                            $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                            $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+                            $jurnalUmumPersediaan->transaction_type = $transactionType;
+                            $jurnalUmumPersediaan->save();
+                        }
                     }
                     $stockAdjustmentHeader->save(false);
                     $this->redirect(array('view', 'id' => $headerId));

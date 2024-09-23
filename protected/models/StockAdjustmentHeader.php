@@ -146,6 +146,38 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByPendingJournal() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.stock_adjustment_number', $this->stock_adjustment_number, true);
+        $criteria->compare('t.date_posting', $this->date_posting, true);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.warehouse_id', $this->warehouse_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.transaction_type', $this->transaction_type, true);
+
+        $criteria->addCondition("substring(t.stock_adjustment_number, 1, (length(t.stock_adjustment_number) - 2)) NOT IN (
+            SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
+            FROM " . JurnalUmum::model()->tableName() . "
+        )");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'date_posting DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+
     protected function afterSave() {
         if ($this->isNewRecord) {
             $stockApproval = new StockAdjustmentApproval();

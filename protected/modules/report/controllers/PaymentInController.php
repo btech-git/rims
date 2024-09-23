@@ -39,7 +39,7 @@ class PaymentInController extends Controller {
         $paymentInSummary->setupLoading();
         $paymentInSummary->setupPaging($pageSize, $currentPage);
         $paymentInSummary->setupSorting();
-        $paymentInSummary->setupFilter($startDate, $endDate, $branchId, $customerType, $customerId, $plateNumber);
+        $paymentInSummary->setupFilter($startDate, $endDate, $branchId, $customerType, $plateNumber);
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values

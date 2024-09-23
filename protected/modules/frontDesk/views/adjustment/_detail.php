@@ -29,9 +29,9 @@
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'quantity_current'))); ?>
                 <?php echo CHtml::error($detail, 'quantity_current'); ?>
             </td>
-            <td style="text-align: center; width: 15%">
+            <td style="text-align: center; width: 10%">
                 <?php echo CHtml::activeTextField($detail, "[$i]quantity_adjustment", array(
-                    'size' => 3, 
+                    'size' => 2, 
                     'maxLength' => 20,
                     'onchange' => CHtml::ajax(array(
                         'type' => 'POST',

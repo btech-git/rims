@@ -80,6 +80,11 @@
                         'url' => array('/accounting/pendingJournal/indexSale'), 
                         'visible' => Yii::app()->user->checkAccess('pendingJournalView')
                     ),
+                    array(
+                        'label' => 'Pending Journal Stock Adjustment', 
+                        'url' => array('/accounting/pendingJournal/indexAdjustmentStock'), 
+                        'visible' => Yii::app()->user->checkAccess('pendingJournalView')
+                    ),
                 ),
             )); ?>
         </li>

@@ -137,18 +137,27 @@ class StockAdjustmentDetail extends CActiveRecord {
         }
     }
 
-    public function getCurrentStock($productId, $branchId = null) {
+    public function getCurrentStock($productId, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $productId,
+        );
+        
+        if (!empty($branchId)) {
+            $branch = Branch::model()->findByPk($branchId);
+            $warehouse = Warehouse::model()->findByAttributes(array('code' => $branch->code));
+            $branchConditionSql = ' AND i.warehouse_id = :warehouse_id';
+            $params[':warehouse_id'] = $warehouse->id;
+        }
+
         $sql = "
             SELECT COALESCE(i.total_stock, 0)
             FROM " . Inventory::model()->tableName() . " i
-            INNER JOIN " . Warehouse::model()->tableName() . " w
-            WHERE i.product_id = :product_id AND w.branch_id = :branch_id
-        ";
+            WHERE i.product_id = :product_id AND i.warehouse_id = :warehouse_id" . $branchConditionSql
+        ;
 
-        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-            ':product_id' => $productId,
-            ':branch_id' => $branchId,
-        ));
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
         return ($value === false) ? 0 : $value;
     }

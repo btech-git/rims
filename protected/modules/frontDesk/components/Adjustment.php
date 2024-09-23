@@ -39,7 +39,7 @@ class Adjustment extends CComponent {
 
     public function updateProducts() {
         foreach ($this->details as $detail) {
-            $detail->quantity_current = $detail->getCurrentStock($detail->product_id, $this->header->warehouse_id);
+            $detail->quantity_current = $detail->getCurrentStock($detail->product_id, $this->header->branch_id);
         }
     }
 
@@ -63,9 +63,7 @@ class Adjustment extends CComponent {
 
         foreach ($this->details as $detail) {
 
-            if ($this->header->isNewRecord) {
-                $detail->stock_adjustment_header_id = $this->header->id;
-            }
+            $detail->stock_adjustment_header_id = $this->header->id;
 
             $valid = $detail->save(false) && $valid;
         }

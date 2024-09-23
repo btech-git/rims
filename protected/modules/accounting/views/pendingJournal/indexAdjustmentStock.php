@@ -7,10 +7,11 @@ Yii::app()->clientScript->registerScript('report', '
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 <div style="text-align: center; text-decoration: underline">
-    <h2><?php echo 'Pending Journal Purchase'; ?></h2>
-    <br />
+    <h2><?php echo 'Pending Journal Stock Adjustment'; ?></h2>
 </div>
 
+<br />
+    
 <div style="text-align: right">
     <?php echo CHtml::beginForm(array(''), 'get'); ?>
     <div class="row">
@@ -18,10 +19,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div class="field">
                 <div class="row collapse">
                     <div class="small-6 columns">
-                        <span class="prefix">PO # </span>
+                        <span class="prefix">Adjustment # </span>
                     </div>
                     <div class="small-6 columns">
-                        <?php echo CHtml::activeTextField($model, 'purchase_order_no'); ?>
+                        <?php echo CHtml::activeTextField($model, 'stock_adjustment_number'); ?>
                     </div>
                 </div>
             </div>
@@ -31,11 +32,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div class="field">
                 <div class="row collapse">
                     <div class="small-6 columns">
-                        <span class="prefix">Branch </span>
+                        <span class="prefix">Branch</span>
                     </div>
                     
                     <div class="small-6 columns">
-                        <?php echo CHtml::activeDropDownList($model, 'main_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
                             'empty' => '-- All --',
                         )); ?>
                     </div>
@@ -99,14 +100,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     
     <br />
     
-    <?php echo ReportHelper::summaryText($purchaseOrderDataProvider); ?>
+    <?php echo ReportHelper::summaryText($stockAdjustmentDataProvider); ?>
 </div>
 
 <div>
     <?php echo CHtml::beginForm('', 'post'); ?>
     <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'purchase-grid',
-        'dataProvider' => $purchaseOrderDataProvider,
+        'id' => 'adjustment-grid',
+        'dataProvider' => $stockAdjustmentDataProvider,
         'filter' => null,
         // 'summaryText'=>'',
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -121,26 +122,26 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 'selectableRows' => '50',
             ),
             array( 
-                'name' => 'purchase_order_no', 
-                'value' => 'CHtml::link($data->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->id), array("target" => "blank"))', 
+                'name' => 'stock_adjustment_number', 
+                'value' => 'CHtml::link($data->stock_adjustment_number, array("/frontDesk/adjustment/view", "id"=>$data->id), array("target" => "blank"))', 
                 'type' => 'raw'
             ),
-            'purchase_order_date',
+            'date_posting',
             array(
-                'header' => 'Supplier',
-                'name' => 'supplier_id', 
-                'value' => '$data->supplier_id != "" ? $data->supplier->name : "" '
+                'header' => 'Type',
+                'name' => 'transaction_type', 
+                'value' => '$data->transaction_type '
             ),
             array(
                 'header' => 'Branch',
-                'name' => 'main_branch_id', 
-                'value' => '$data->main_branch_id != "" ? $data->mainBranch->name : "" '
+                'name' => 'branch_id', 
+                'value' => '$data->branch_id != "" ? $data->branch->name : "" '
             ),
-            'payment_status', 
+            'status', 
         )
     )); ?>
     
-    <?php echo CHtml::ajaxSubmitButton('Posting All', CController::createUrl('ajaxHtmlPostingJournalPurchase'), array(
+    <?php echo CHtml::ajaxSubmitButton('Posting All', CController::createUrl('ajaxHtmlPostingJournalStockAdjustment'), array(
         'type' => 'POST',
         'data' => 'js:$("form").serialize()',
     )); ?>

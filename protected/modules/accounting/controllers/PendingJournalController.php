@@ -803,6 +803,91 @@ class PendingJournalController extends Controller {
         }
     }
 
+    public function actionIndexAdjustmentStock() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2023-01-01';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $model = new StockAdjustmentHeader('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['StockAdjustmentHeader'])) {
+            $model->attributes = $_GET['StockAdjustmentHeader'];
+        }
+        
+        $stockAdjustmentDataProvider = $model->searchByPendingJournal();
+        $stockAdjustmentDataProvider->criteria->addBetweenCondition('t.date_posting', $startDate, $endDate);
+
+        $this->render('indexAdjustmentStock', array(
+            'model'=> $model,
+            'stockAdjustmentDataProvider' => $stockAdjustmentDataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ));
+    }
+    
+    public function actionAjaxHtmlPostingJournalStockAdjustment() {
+        if (Yii::app()->request->isAjaxRequest) {
+
+            if (isset($_POST['selectedIds'])) {
+                $datas = array();
+                $datas = $_POST['selectedIds'];
+
+                foreach ($datas as $data) {
+                    $stockAdjustmentHeader = StockAdjustmentHeader::model()->findByPk($data);
+                    JurnalUmum::model()->deleteAllByAttributes(array(
+                        'kode_transaksi' => $stockAdjustmentHeader->stock_adjustment_number,
+                    ));
+
+                    $transactionType = StockAdjustmentHeader::CONSTANT;
+                    $postingDate = date('Y-m-d');
+                    $transactionCode = $stockAdjustmentHeader->stock_adjustment_number;
+                    $transactionDate = $stockAdjustmentHeader->date_posting;
+                    $branchId = $stockAdjustmentHeader->branch_id;
+                    $transactionSubject = $stockAdjustmentHeader->transaction_type;
+
+                    $journalReferences = array();
+
+                    foreach ($stockAdjustmentHeader->stockAdjustmentDetails as $key => $detail) {
+                        if (!empty($detail->product_id)) {
+                            $quantityDifference = ($detail->quantity_current > $detail->quantity_adjustment) ? $detail->quantityDifference * -1 : $detail->quantityDifference;
+                            $total = $detail->product->hpp * $quantityDifference;
+
+                            $jurnalUmumHpp = $detail->product->productSubMasterCategory->coa_hpp;
+                            $journalReferences[$jurnalUmumHpp]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'D' : 'K';
+                            $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
+                            $journalReferences[$jurnalUmumHpp]['values'][] = $total;
+
+                            $jurnalUmumPersediaan = $detail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                            $journalReferences[$jurnalUmumPersediaan]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'K' : 'D';
+                            $journalReferences[$jurnalUmumPersediaan]['is_coa_category'] = 0;
+                            $journalReferences[$jurnalUmumPersediaan]['values'][] = $total;
+                        }
+                    }
+
+                    foreach ($journalReferences as $coaId => $journalReference) {
+                        $jurnalUmumPersediaan = new JurnalUmum();
+                        $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                        $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                        $jurnalUmumPersediaan->coa_id = $coaId;
+                        $jurnalUmumPersediaan->branch_id = $branchId;
+                        $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+                        $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+                        $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                        $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                        $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+                        $jurnalUmumPersediaan->transaction_type = $transactionType;
+                        $jurnalUmumPersediaan->save();
+                    }
+                }
+
+                $this->redirect(array('indexAdjustmentStock'));
+            }
+
+        }
+    }
+
     public function actionIndexSale() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
