@@ -69,11 +69,11 @@ $('.search-form form').submit(function(){
                         ),
                         'date_posting',
                         'status',
-                        array(
-                            'name' => 'branch_id',
-                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                            'value' => '$data->branch->name'
-                        ),
+//                        array(
+//                            'name' => 'branch_id',
+//                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                            'value' => '$data->branch->name'
+//                        ),
                         array(
                             'name' => 'registration_transaction_number',
                             'value' => '(!empty($data->registrationTransaction->transaction_number) ? $data->registrationTransaction->transaction_number : "")'

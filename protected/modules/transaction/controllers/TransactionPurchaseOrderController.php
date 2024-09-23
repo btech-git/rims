@@ -88,7 +88,7 @@ class TransactionPurchaseOrderController extends Controller {
                 $jurnalUmumPpn->tanggal_transaksi = $purchaseOrder->purchase_order_date;
                 $jurnalUmumPpn->coa_id = $coaPpn->id;
                 $jurnalUmumPpn->branch_id = $purchaseOrder->main_branch_id;
-                $jurnalUmumPpn->total = $purchaseOrder->ppn_price;
+                $jurnalUmumPpn->total = round($purchaseOrder->ppn_price, 0);
                 $jurnalUmumPpn->debet_kredit = 'D';
                 $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
                 $jurnalUmumPpn->transaction_subject = $purchaseOrder->supplier->name;
@@ -102,7 +102,7 @@ class TransactionPurchaseOrderController extends Controller {
             $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
             $jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coa_outstanding_order;
             $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
-            $jurnalUmumOutstanding->total = $purchaseOrder->subtotal;
+            $jurnalUmumOutstanding->total = round($purchaseOrder->subtotal, 0);
             $jurnalUmumOutstanding->debet_kredit = 'D';
             $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
             $jurnalUmumOutstanding->transaction_subject = $purchaseOrder->supplier->name;

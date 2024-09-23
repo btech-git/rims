@@ -70,11 +70,11 @@ $('.search-form form').submit(function(){
                             'type' => 'raw'
                         ),
                         'date_posting',
-                        array(
-                            'name' => 'branch_id',
-                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                            'value' => '$data->branch->name'
-                        ),
+//                        array(
+//                            'name' => 'branch_id',
+//                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                            'value' => '$data->branch->name'
+//                        ),
                         array(
                             'name' => 'receive_item_number',
                             'value' => '(!empty($data->receiveItem->receive_item_no)?$data->receiveItem->receive_item_no:"")'
