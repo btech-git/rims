@@ -373,7 +373,7 @@ class Product extends CActiveRecord {
         $criteria->compare('margin_type', $this->margin_type);
         $criteria->compare('margin_amount', $this->margin_amount);
         $criteria->compare('is_usable', $this->is_usable, true);
-        $criteria->compare('LOWER(t.status)', strtolower($this->status), FALSE);
+        $criteria->compare('t.status', 'Active');
         $criteria->compare('ppn', $this->ppn);
         $criteria->compare('t.unit_id', $this->unit_id);
         $criteria->compare('t.user_id', $this->user_id);
@@ -498,6 +498,7 @@ class Product extends CActiveRecord {
         $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
         $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
         $criteria->compare('t.unit_id', $this->unit_id);
+        $criteria->compare('t.status', 'Active');
 
         $criteria->addCondition("EXISTS (
             SELECT SUM(stock_in + stock_out) AS total_stock
@@ -531,6 +532,7 @@ class Product extends CActiveRecord {
         $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
         $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
         $criteria->compare('t.unit_id', $this->unit_id);
+        $criteria->compare('t.status', 'Active');
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -544,7 +546,7 @@ class Product extends CActiveRecord {
         $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
                 FROM " . Inventory::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-                WHERE i.product_id = :product_id 
+                WHERE i.product_id = :product_id AND w.status = 'Active'
                 GROUP BY w.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));
@@ -556,7 +558,7 @@ class Product extends CActiveRecord {
         $sql = "SELECT w.branch_id, COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock, COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS stock_amount
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-                WHERE i.product_id = :product_id and i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY w.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -572,7 +574,7 @@ class Product extends CActiveRecord {
                 FROM " . Inventory::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
-                WHERE i.product_id = :product_id 
+                WHERE i.product_id = :product_id AND w.status = 'Active'
                 GROUP BY w.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_id' => $this->id));

@@ -41,6 +41,7 @@ class PurchaseController extends Controller {
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
+        $productDataProvider->criteria->compare('t.status', 'Active');
 
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();

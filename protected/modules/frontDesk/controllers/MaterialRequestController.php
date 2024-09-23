@@ -55,6 +55,7 @@ class MaterialRequestController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
         $productDataProvider->criteria->compare('t.product_master_category_id', 7);
+        $productDataProvider->criteria->compare('t.status', 'Active');
 
         $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';

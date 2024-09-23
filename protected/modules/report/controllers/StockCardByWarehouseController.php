@@ -51,6 +51,7 @@ class StockCardByWarehouseController extends Controller {
         }
 
         $productDataProvider = $product->search();
+        $productDataProvider->criteria->compare('t.status', 'Active');
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));

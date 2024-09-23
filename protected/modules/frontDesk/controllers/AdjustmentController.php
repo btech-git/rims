@@ -33,6 +33,7 @@ class AdjustmentController extends Controller {
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
+        $productDataProvider->criteria->compare('t.status', 'Active');
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($adjustment);

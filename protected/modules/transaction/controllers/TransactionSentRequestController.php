@@ -175,6 +175,7 @@ class TransactionSentRequestController extends Controller {
         $productCriteria->compare('t.product_master_category_id', $product->product_master_category_id);
         $productCriteria->compare('t.product_sub_master_category_id', $product->product_sub_master_category_id);
         $productCriteria->compare('t.product_sub_category_id', $product->product_sub_category_id);
+        $productCriteria->compare('t.status', 'Active');
         $productDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $productCriteria,
         ));

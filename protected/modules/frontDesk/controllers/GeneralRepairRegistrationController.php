@@ -139,9 +139,11 @@ class GeneralRepairRegistrationController extends Controller {
         }
 
         $productDataProvider = $product->search();
+        $productDataProvider->criteria->compare('t.status', 'Active');
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+        }
 
 //        if (isset($_POST['_FormSubmit_'])) {
         if (isset($_POST['Submit']) && IdempotentManager::check()) {

@@ -26,6 +26,7 @@ class SaleRetailProductDetailController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
         $productDataProvider->pagination->pageVar = 'page_dialog';
+        $productDataProvider->criteria->compare('t.status', 'Active');
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
