@@ -82,7 +82,7 @@ class PaymentInController extends Controller {
             }
 
             $remark = $model->customer->name;
-            $totalKas = $model->payment_amount + $model->tax_service_amount + $model->downpayment_amount;
+            $totalKas = $model->totalPayment;
             $jurnalPiutang = new JurnalUmum;
             $jurnalPiutang->kode_transaksi = $model->payment_number;
             $jurnalPiutang->tanggal_transaksi = $model->payment_date;
@@ -96,7 +96,7 @@ class PaymentInController extends Controller {
             $jurnalPiutang->is_coa_category = 0;
             $jurnalPiutang->transaction_type = 'Pin';
             $jurnalPiutang->save();
-                
+
             if (!empty($model->paymentType->coa_id)) {
                 $coaId = $model->paymentType->coa_id;
             } else {
@@ -112,13 +112,13 @@ class PaymentInController extends Controller {
                 $jurnalUmumKas->total = $detail->amount;
                 $jurnalUmumKas->debet_kredit = 'D';
                 $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $detail->memo;
+                $jurnalUmumKas->transaction_subject = $model->notes;
                 $jurnalUmumKas->remark = $remark;
                 $jurnalUmumKas->is_coa_category = 0;
                 $jurnalUmumKas->transaction_type = 'Pin';
                 $jurnalUmumKas->save();
 
-                if ($detail->tax_service_amount > 0) {
+                if ($model->tax_service_amount > 0) {
                     $jurnalPph = new JurnalUmum;
                     $jurnalPph->kode_transaksi = $model->payment_number;
                     $jurnalPph->tanggal_transaksi = $model->payment_date;
@@ -127,7 +127,7 @@ class PaymentInController extends Controller {
                     $jurnalPph->total = $detail->tax_service_amount;
                     $jurnalPph->debet_kredit = 'D';
                     $jurnalPph->tanggal_posting = date('Y-m-d');
-                    $jurnalPph->transaction_subject = $detail->memo;
+                    $jurnalPph->transaction_subject = $model->notes;
                     $jurnalPph->remark = $remark;
                     $jurnalPph->is_coa_category = 0;
                     $jurnalPph->transaction_type = 'Pin';
@@ -149,6 +149,70 @@ class PaymentInController extends Controller {
                 $jurnalDownpayment->is_coa_category = 0;
                 $jurnalDownpayment->transaction_type = 'Pin';
                 $jurnalDownpayment->save();
+            }
+
+            if ($model->discount_product_amount > 0) {
+                $jurnalDiscountProduct = new JurnalUmum;
+                $jurnalDiscountProduct->kode_transaksi = $model->payment_number;
+                $jurnalDiscountProduct->tanggal_transaksi = $model->payment_date;
+                $jurnalDiscountProduct->coa_id = 1013;
+                $jurnalDiscountProduct->branch_id = $model->branch_id;
+                $jurnalDiscountProduct->total = $model->discount_product_amount;
+                $jurnalDiscountProduct->debet_kredit = 'D';
+                $jurnalDiscountProduct->tanggal_posting = date('Y-m-d');
+                $jurnalDiscountProduct->transaction_subject = $model->notes;
+                $jurnalDiscountProduct->remark = $remark;
+                $jurnalDiscountProduct->is_coa_category = 0;
+                $jurnalDiscountProduct->transaction_type = 'Pin';
+                $jurnalDiscountProduct->save();
+            }
+
+            if ($model->discount_service_amount > 0) {
+                $jurnalDiscountService = new JurnalUmum;
+                $jurnalDiscountService->kode_transaksi = $model->payment_number;
+                $jurnalDiscountService->tanggal_transaksi = $model->payment_date;
+                $jurnalDiscountService->coa_id = 799;
+                $jurnalDiscountService->branch_id = $model->branch_id;
+                $jurnalDiscountService->total = $model->discount_service_amount;
+                $jurnalDiscountService->debet_kredit = 'D';
+                $jurnalDiscountService->tanggal_posting = date('Y-m-d');
+                $jurnalDiscountService->transaction_subject = $model->notes;
+                $jurnalDiscountService->remark = $remark;
+                $jurnalDiscountService->is_coa_category = 0;
+                $jurnalDiscountService->transaction_type = 'Pin';
+                $jurnalDiscountService->save();
+            }
+
+            if ($model->bank_administration_fee > 0) {
+                $jurnalBankAdministration = new JurnalUmum;
+                $jurnalBankAdministration->kode_transaksi = $model->payment_number;
+                $jurnalBankAdministration->tanggal_transaksi = $model->payment_date;
+                $jurnalBankAdministration->coa_id = 1111;
+                $jurnalBankAdministration->branch_id = $model->branch_id;
+                $jurnalBankAdministration->total = $model->bank_administration_fee;
+                $jurnalBankAdministration->debet_kredit = 'D';
+                $jurnalBankAdministration->tanggal_posting = date('Y-m-d');
+                $jurnalBankAdministration->transaction_subject = $model->notes;
+                $jurnalBankAdministration->remark = $remark;
+                $jurnalBankAdministration->is_coa_category = 0;
+                $jurnalBankAdministration->transaction_type = 'Pin';
+                $jurnalBankAdministration->save();
+            }
+
+            if ($model->merimen_fee > 0) {
+                $jurnalMerimenFee = new JurnalUmum;
+                $jurnalMerimenFee->kode_transaksi = $model->payment_number;
+                $jurnalMerimenFee->tanggal_transaksi = $model->payment_date;
+                $jurnalMerimenFee->coa_id = 2921;
+                $jurnalMerimenFee->branch_id = $model->branch_id;
+                $jurnalMerimenFee->total = $model->merimen_fee;
+                $jurnalMerimenFee->debet_kredit = 'D';
+                $jurnalMerimenFee->tanggal_posting = date('Y-m-d');
+                $jurnalMerimenFee->transaction_subject = $model->notes;
+                $jurnalMerimenFee->remark = $remark;
+                $jurnalMerimenFee->is_coa_category = 0;
+                $jurnalMerimenFee->transaction_type = 'Pin';
+                $jurnalMerimenFee->save();
             }
         }
         
@@ -693,7 +757,7 @@ class PaymentInController extends Controller {
                         }
                         
                         $remark = $paymentIn->customer->name;
-                        $totalKas = $paymentIn->payment_amount + $paymentIn->tax_service_amount + $paymentIn->downpayment_amount;
+                        $totalKas = $paymentIn->totalPayment;
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
                         $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
@@ -748,14 +812,14 @@ class PaymentInController extends Controller {
                         
                         if ($paymentIn->downpayment_amount > 0) {
                             $jurnalDownpayment = new JurnalUmum;
-                            $jurnalDownpayment->kode_transaksi = $model->payment_number;
-                            $jurnalDownpayment->tanggal_transaksi = $model->payment_date;
+                            $jurnalDownpayment->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalDownpayment->tanggal_transaksi = $paymentIn->payment_date;
                             $jurnalDownpayment->coa_id = 751;
-                            $jurnalDownpayment->branch_id = $model->branch_id;
-                            $jurnalDownpayment->total = $model->downpayment_amount;
+                            $jurnalDownpayment->branch_id = $paymentIn->branch_id;
+                            $jurnalDownpayment->total = $paymentIn->downpayment_amount;
                             $jurnalDownpayment->debet_kredit = 'D';
                             $jurnalDownpayment->tanggal_posting = date('Y-m-d');
-                            $jurnalDownpayment->transaction_subject = $model->notes;
+                            $jurnalDownpayment->transaction_subject = $paymentIn->notes;
                             $jurnalDownpayment->remark = $remark;
                             $jurnalDownpayment->is_coa_category = 0;
                             $jurnalDownpayment->transaction_type = 'Pin';
@@ -764,14 +828,14 @@ class PaymentInController extends Controller {
                         
                         if ($paymentIn->discount_product_amount > 0) {
                             $jurnalDiscountProduct = new JurnalUmum;
-                            $jurnalDiscountProduct->kode_transaksi = $model->payment_number;
-                            $jurnalDiscountProduct->tanggal_transaksi = $model->payment_date;
-                            $jurnalDiscountProduct->coa_id = 751;
-                            $jurnalDiscountProduct->branch_id = $model->branch_id;
-                            $jurnalDiscountProduct->total = $model->discount_product_amount;
+                            $jurnalDiscountProduct->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalDiscountProduct->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalDiscountProduct->coa_id = 1013;
+                            $jurnalDiscountProduct->branch_id = $paymentIn->branch_id;
+                            $jurnalDiscountProduct->total = $paymentIn->discount_product_amount;
                             $jurnalDiscountProduct->debet_kredit = 'D';
                             $jurnalDiscountProduct->tanggal_posting = date('Y-m-d');
-                            $jurnalDiscountProduct->transaction_subject = $model->notes;
+                            $jurnalDiscountProduct->transaction_subject = $paymentIn->notes;
                             $jurnalDiscountProduct->remark = $remark;
                             $jurnalDiscountProduct->is_coa_category = 0;
                             $jurnalDiscountProduct->transaction_type = 'Pin';
@@ -780,14 +844,14 @@ class PaymentInController extends Controller {
                         
                         if ($paymentIn->discount_service_amount > 0) {
                             $jurnalDiscountService = new JurnalUmum;
-                            $jurnalDiscountService->kode_transaksi = $model->payment_number;
-                            $jurnalDiscountService->tanggal_transaksi = $model->payment_date;
-                            $jurnalDiscountService->coa_id = 751;
-                            $jurnalDiscountService->branch_id = $model->branch_id;
-                            $jurnalDiscountService->total = $model->discount_service_amount;
+                            $jurnalDiscountService->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalDiscountService->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalDiscountService->coa_id = 799;
+                            $jurnalDiscountService->branch_id = $paymentIn->branch_id;
+                            $jurnalDiscountService->total = $paymentIn->discount_service_amount;
                             $jurnalDiscountService->debet_kredit = 'D';
                             $jurnalDiscountService->tanggal_posting = date('Y-m-d');
-                            $jurnalDiscountService->transaction_subject = $model->notes;
+                            $jurnalDiscountService->transaction_subject = $paymentIn->notes;
                             $jurnalDiscountService->remark = $remark;
                             $jurnalDiscountService->is_coa_category = 0;
                             $jurnalDiscountService->transaction_type = 'Pin';
@@ -796,14 +860,14 @@ class PaymentInController extends Controller {
                         
                         if ($paymentIn->bank_administration_fee > 0) {
                             $jurnalBankAdministration = new JurnalUmum;
-                            $jurnalBankAdministration->kode_transaksi = $model->payment_number;
-                            $jurnalBankAdministration->tanggal_transaksi = $model->payment_date;
-                            $jurnalBankAdministration->coa_id = 751;
-                            $jurnalBankAdministration->branch_id = $model->branch_id;
-                            $jurnalBankAdministration->total = $model->bank_administration_fee;
+                            $jurnalBankAdministration->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalBankAdministration->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalBankAdministration->coa_id = 1111;
+                            $jurnalBankAdministration->branch_id = $paymentIn->branch_id;
+                            $jurnalBankAdministration->total = $paymentIn->bank_administration_fee;
                             $jurnalBankAdministration->debet_kredit = 'D';
                             $jurnalBankAdministration->tanggal_posting = date('Y-m-d');
-                            $jurnalBankAdministration->transaction_subject = $model->notes;
+                            $jurnalBankAdministration->transaction_subject = $paymentIn->notes;
                             $jurnalBankAdministration->remark = $remark;
                             $jurnalBankAdministration->is_coa_category = 0;
                             $jurnalBankAdministration->transaction_type = 'Pin';
@@ -812,14 +876,14 @@ class PaymentInController extends Controller {
                         
                         if ($paymentIn->merimen_fee > 0) {
                             $jurnalMerimenFee = new JurnalUmum;
-                            $jurnalMerimenFee->kode_transaksi = $model->payment_number;
-                            $jurnalMerimenFee->tanggal_transaksi = $model->payment_date;
-                            $jurnalMerimenFee->coa_id = 751;
-                            $jurnalMerimenFee->branch_id = $model->branch_id;
-                            $jurnalMerimenFee->total = $model->merimen_fee;
+                            $jurnalMerimenFee->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalMerimenFee->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalMerimenFee->coa_id = 2921;
+                            $jurnalMerimenFee->branch_id = $paymentIn->branch_id;
+                            $jurnalMerimenFee->total = $paymentIn->merimen_fee;
                             $jurnalMerimenFee->debet_kredit = 'D';
                             $jurnalMerimenFee->tanggal_posting = date('Y-m-d');
-                            $jurnalMerimenFee->transaction_subject = $model->notes;
+                            $jurnalMerimenFee->transaction_subject = $paymentIn->notes;
                             $jurnalMerimenFee->remark = $remark;
                             $jurnalMerimenFee->is_coa_category = 0;
                             $jurnalMerimenFee->transaction_type = 'Pin';
@@ -900,7 +964,20 @@ class PaymentInController extends Controller {
                 'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
                 'totalPayment' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))),
                 'totalInvoice' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))),
-                'totalServiceTax' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalServiceTax'))),
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxJsonGrandTotal($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $paymentIn = $this->instantiate($id);
+            $this->loadState($paymentIn);
+
+            $object = array(
+                'totalPayment' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))),
+                'totalInvoice' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))),
             );
 
             echo CJSON::encode($object);

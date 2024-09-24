@@ -37,7 +37,6 @@
                                 $("#tax_service_amount_' . $i . '").html(data.taxServiceAmountFormatted);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
-                                $("#total_service_tax").html(data.totalServiceTax);
                             },
                         });',
                         'class' => "form-control is-valid",
@@ -55,7 +54,6 @@
                                 $("#payment_amount_' . $i . '").html(data.paymentAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
-                                $("#total_service_tax").html(data.totalServiceTax);
                             },
                         });',                        
                     )); ?>
@@ -72,7 +70,6 @@
                                 $("#payment_amount_' . $i . '").html(data.paymentAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
-                                $("#total_service_tax").html(data.totalServiceTax);
                             },
                         });',                        
                     )); ?>
@@ -94,27 +91,92 @@
     <tfoot>
         <tr>
             <td colspan="4">Downpayment</td>
-            <td><?php echo CHtml::activeTextField($paymentIn->header, 'downpayment_amount'); ?></td>
+            <td>
+                <?php echo CHtml::activeTextField($paymentIn->header, 'downpayment_amount', array(
+                    'onchange' => '$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
+                        data: $("form").serialize(),
+                        success: function(data) {
+                            $("#total_invoice").html(data.totalInvoice);
+                            $("#total_payment").html(data.totalPayment);
+                        },
+                    });',                        
+                )); ?>
+            </td>
             <td colspan="2"></td>
         </tr>
         <tr>
             <td colspan="4">Disc Penjualan Parts</td>
-            <td><?php echo CHtml::activeTextField($paymentIn->header, 'discount_product_amount'); ?></td>
+            <td>
+                <?php echo CHtml::activeTextField($paymentIn->header, 'discount_product_amount', array(
+                    'onchange' => '$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
+                        data: $("form").serialize(),
+                        success: function(data) {
+                            $("#total_invoice").html(data.totalInvoice);
+                            $("#total_payment").html(data.totalPayment);
+                        },
+                    });',                        
+                )); ?>
+            </td>
             <td colspan="2"></td>
         </tr>
         <tr>
             <td colspan="4">Disc Pendapatan Jasa/Service</td>
-            <td><?php echo CHtml::activeTextField($paymentIn->header, 'discount_service_amount'); ?></td>
+            <td>
+                <?php echo CHtml::activeTextField($paymentIn->header, 'discount_service_amount', array(
+                    'onchange' => '$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
+                        data: $("form").serialize(),
+                        success: function(data) {
+                            $("#total_invoice").html(data.totalInvoice);
+                            $("#total_payment").html(data.totalPayment);
+                        },
+                    });',                        
+                )); ?>
+            </td>
             <td colspan="2"></td>
         </tr>
         <tr>
             <td colspan="4">Beban Administrasi Bank</td>
-            <td><?php echo CHtml::activeTextField($paymentIn->header, 'bank_administration_fee'); ?></td>
+            <td>
+                <?php echo CHtml::activeTextField($paymentIn->header, 'bank_administration_fee', array(
+                    'onchange' => '$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
+                        data: $("form").serialize(),
+                        success: function(data) {
+                            $("#total_invoice").html(data.totalInvoice);
+                            $("#total_payment").html(data.totalPayment);
+                        },
+                    });',                        
+                )); ?>
+            </td>
             <td colspan="2"></td>
         </tr>
         <tr>
             <td colspan="4">Beban Merimen</td>
-            <td><?php echo CHtml::activeTextField($paymentIn->header, 'merimen_fee'); ?></td>
+            <td>
+                <?php echo CHtml::activeTextField($paymentIn->header, 'merimen_fee', array(
+                    'onchange' => '$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
+                        data: $("form").serialize(),
+                        success: function(data) {
+                            $("#total_invoice").html(data.totalInvoice);
+                            $("#total_payment").html(data.totalPayment);
+                        },
+                    });',                        
+                )); ?>
+            </td>
             <td colspan="2"></td>
         </tr>
         <tr>

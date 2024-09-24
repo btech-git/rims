@@ -363,7 +363,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
     
     public function getTotalPayment() {
         
-        return $this->totalDetail + $this->downpayment_amount;
+        return $this->payment_amount + $this->tax_service_amount + $this->downpayment_amount + $this->discount_product_amount + $this->discount_service_amount + $this->bank_administration_fee + $this->merimen_fee;
     }
     
     public function getTotalInvoice() {
