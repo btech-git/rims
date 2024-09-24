@@ -351,7 +351,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         ));
     }
     
-    public function getTotalPayment() {
+    public function getTotalDetail() {
         $total = '0.00';
         
         foreach ($this->paymentInDetails as $detail) {
@@ -359,6 +359,11 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         }
         
         return $total;
+    }
+    
+    public function getTotalPayment() {
+        
+        return $this->totalDetail + $this->downpayment_amount;
     }
     
     public function getTotalInvoice() {
