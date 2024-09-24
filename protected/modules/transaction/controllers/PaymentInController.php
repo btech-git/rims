@@ -761,6 +761,70 @@ class PaymentInController extends Controller {
                             $jurnalDownpayment->transaction_type = 'Pin';
                             $jurnalDownpayment->save();
                         }
+                        
+                        if ($paymentIn->discount_product_amount > 0) {
+                            $jurnalDiscountProduct = new JurnalUmum;
+                            $jurnalDiscountProduct->kode_transaksi = $model->payment_number;
+                            $jurnalDiscountProduct->tanggal_transaksi = $model->payment_date;
+                            $jurnalDiscountProduct->coa_id = 751;
+                            $jurnalDiscountProduct->branch_id = $model->branch_id;
+                            $jurnalDiscountProduct->total = $model->discount_product_amount;
+                            $jurnalDiscountProduct->debet_kredit = 'D';
+                            $jurnalDiscountProduct->tanggal_posting = date('Y-m-d');
+                            $jurnalDiscountProduct->transaction_subject = $model->notes;
+                            $jurnalDiscountProduct->remark = $remark;
+                            $jurnalDiscountProduct->is_coa_category = 0;
+                            $jurnalDiscountProduct->transaction_type = 'Pin';
+                            $jurnalDiscountProduct->save();
+                        }
+                        
+                        if ($paymentIn->discount_service_amount > 0) {
+                            $jurnalDiscountService = new JurnalUmum;
+                            $jurnalDiscountService->kode_transaksi = $model->payment_number;
+                            $jurnalDiscountService->tanggal_transaksi = $model->payment_date;
+                            $jurnalDiscountService->coa_id = 751;
+                            $jurnalDiscountService->branch_id = $model->branch_id;
+                            $jurnalDiscountService->total = $model->discount_service_amount;
+                            $jurnalDiscountService->debet_kredit = 'D';
+                            $jurnalDiscountService->tanggal_posting = date('Y-m-d');
+                            $jurnalDiscountService->transaction_subject = $model->notes;
+                            $jurnalDiscountService->remark = $remark;
+                            $jurnalDiscountService->is_coa_category = 0;
+                            $jurnalDiscountService->transaction_type = 'Pin';
+                            $jurnalDiscountService->save();
+                        }
+                        
+                        if ($paymentIn->bank_administration_fee > 0) {
+                            $jurnalBankAdministration = new JurnalUmum;
+                            $jurnalBankAdministration->kode_transaksi = $model->payment_number;
+                            $jurnalBankAdministration->tanggal_transaksi = $model->payment_date;
+                            $jurnalBankAdministration->coa_id = 751;
+                            $jurnalBankAdministration->branch_id = $model->branch_id;
+                            $jurnalBankAdministration->total = $model->bank_administration_fee;
+                            $jurnalBankAdministration->debet_kredit = 'D';
+                            $jurnalBankAdministration->tanggal_posting = date('Y-m-d');
+                            $jurnalBankAdministration->transaction_subject = $model->notes;
+                            $jurnalBankAdministration->remark = $remark;
+                            $jurnalBankAdministration->is_coa_category = 0;
+                            $jurnalBankAdministration->transaction_type = 'Pin';
+                            $jurnalBankAdministration->save();
+                        }
+                        
+                        if ($paymentIn->merimen_fee > 0) {
+                            $jurnalMerimenFee = new JurnalUmum;
+                            $jurnalMerimenFee->kode_transaksi = $model->payment_number;
+                            $jurnalMerimenFee->tanggal_transaksi = $model->payment_date;
+                            $jurnalMerimenFee->coa_id = 751;
+                            $jurnalMerimenFee->branch_id = $model->branch_id;
+                            $jurnalMerimenFee->total = $model->merimen_fee;
+                            $jurnalMerimenFee->debet_kredit = 'D';
+                            $jurnalMerimenFee->tanggal_posting = date('Y-m-d');
+                            $jurnalMerimenFee->transaction_subject = $model->notes;
+                            $jurnalMerimenFee->remark = $remark;
+                            $jurnalMerimenFee->is_coa_category = 0;
+                            $jurnalMerimenFee->transaction_type = 'Pin';
+                            $jurnalMerimenFee->save();
+                        }
                     }// end if approved
                 }
                 $this->redirect(array('view', 'id' => $headerId));

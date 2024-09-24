@@ -95,7 +95,7 @@ class PaymentInComponent extends CComponent {
 
     public function validatePaymentAmount() {
         $valid = true;
-        if ($this->header->payment_amount > round($this->totalInvoice)) {
+        if ($this->totalPayment > round($this->totalInvoice)) {
             $valid = false;
             $this->header->addError('error', 'Pelunasan tidak dapat melebihi total invoice.');
         }
@@ -138,7 +138,7 @@ class PaymentInComponent extends CComponent {
 
     public function flush() {
         $this->header->payment_type = $this->header->paymentType->name;
-        $this->header->payment_amount = $this->totalPayment;
+        $this->header->payment_amount = $this->totalDetail;
         $this->header->tax_service_amount = $this->totalServiceTax;
         $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
@@ -189,14 +189,14 @@ class PaymentInComponent extends CComponent {
         return $total;
     }
     
-    public function getTotalPayment() {
+    public function getTotalDetail() {
         $total = 0.00;
         
         foreach ($this->details as $detail) {
             $total += $detail->amount;
         }
         
-        return $total + $this->header->downpayment_amount;
+        return $total;
     }
     
     public function getTotalServiceTax() {
@@ -208,4 +208,10 @@ class PaymentInComponent extends CComponent {
         
         return $total;
     }
+    
+    public function getTotalPayment() {
+        
+        return $this->totalDetail + $this->totalServiceTax + $this->header->downpayment_amount;
+    }
+    
 }

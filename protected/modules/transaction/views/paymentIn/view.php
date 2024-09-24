@@ -493,7 +493,7 @@ $this->menu = array(
                         <tfoot>
                             <tr>
                                 <td style="text-align: right" colspan="3">Total Payment</td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPayment'))); ?></td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))); ?></td>
                                 <td></td>
                             </tr>
                             <tr>

@@ -14,6 +14,10 @@
  * @property string $memo
  * @property integer $sale_estimation_header_id
  * @property integer $product_id
+ *
+ * The followings are the available model relations:
+ * @property Product $product
+ * @property SaleEstimationHeader $saleEstimationHeader
  */
 class SaleEstimationProductDetail extends CActiveRecord {
 
@@ -50,6 +54,8 @@ class SaleEstimationProductDetail extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
+            'saleEstimationHeader' => array(self::BELONGS_TO, 'SaleEstimationHeader', 'sale_estimation_header_id'),
         );
     }
 

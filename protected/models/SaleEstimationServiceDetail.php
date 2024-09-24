@@ -14,9 +14,9 @@
  * @property integer $service_type_id
  *
  * The followings are the available model relations:
- * @property ServiceType $serviceType
- * @property Service $service
  * @property SaleEstimationHeader $saleEstimationHeader
+ * @property Service $service
+ * @property ServiceType $serviceType
  */
 class SaleEstimationServiceDetail extends CActiveRecord {
 
@@ -53,9 +53,9 @@ class SaleEstimationServiceDetail extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'serviceType' => array(self::BELONGS_TO, 'ServiceType', 'service_type_id'),
-            'service' => array(self::BELONGS_TO, 'Service', 'service_id'),
             'saleEstimationHeader' => array(self::BELONGS_TO, 'SaleEstimationHeader', 'sale_estimation_header_id'),
+            'service' => array(self::BELONGS_TO, 'Service', 'service_id'),
+            'serviceType' => array(self::BELONGS_TO, 'ServiceType', 'service_type_id'),
         );
     }
 

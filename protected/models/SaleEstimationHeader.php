@@ -14,7 +14,7 @@
  * @property string $sub_total_service
  * @property string $discount_price_service
  * @property string $total_price_service
- * @property string $total_quantity_product
+ * @property integer $total_quantity_product
  * @property string $sub_total_product
  * @property string $discount_price_product
  * @property string $total_price_product
@@ -32,12 +32,13 @@
  * @property integer $employee_id_sale_person
  *
  * The followings are the available model relations:
- * @property Branch $branch
  * @property Customer $customer
+ * @property Branch $branch
  * @property Vehicle $vehicle
+ * @property Employee $employeeIdSalePerson
  * @property Users $userIdCreated
  * @property Users $userIdEdited
- * @property Employee $employeeIdSalePerson
+ * @property SaleEstimationProductDetail[] $saleEstimationProductDetails
  * @property SaleEstimationServiceDetail[] $saleEstimationServiceDetails
  */
 class SaleEstimationHeader extends CActiveRecord {
@@ -56,11 +57,11 @@ class SaleEstimationHeader extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, repair_type, created_datetime, edited_datetime, customer_id, vehicle_id, branch_id, user_id_created', 'required'),
-            array('total_quantity_service, vehicle_mileage, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, repair_type, status, created_datetime, customer_id, vehicle_id, branch_id, user_id_created, employee_id_sale_person', 'required'),
+            array('total_quantity_service, total_quantity_product, vehicle_mileage, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'numerical', 'integerOnly' => true),
             array('transaction_number, repair_type, status', 'length', 'max' => 20),
-            array('sub_total_service, discount_price_service, total_price_service, total_quantity_product, sub_total_product, discount_price_product, total_price_product, grand_total', 'length', 'max' => 18),
-            array('problem, note', 'safe'),
+            array('sub_total_service, discount_price_service, total_price_service, sub_total_product, discount_price_product, total_price_product, grand_total', 'length', 'max' => 18),
+            array('problem, note, edited_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, transaction_number, transaction_date, transaction_time, repair_type, problem, total_quantity_service, sub_total_service, discount_price_service, total_price_service, total_quantity_product, sub_total_product, discount_price_product, total_price_product, grand_total, status, vehicle_mileage, note, created_datetime, edited_datetime, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'safe', 'on' => 'search'),
@@ -74,12 +75,13 @@ class SaleEstimationHeader extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
+            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
+            'employeeIdSalePerson' => array(self::BELONGS_TO, 'Employee', 'employee_id_sale_person'),
             'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
             'userIdEdited' => array(self::BELONGS_TO, 'Users', 'user_id_edited'),
-            'employeeIdSalePerson' => array(self::BELONGS_TO, 'Employee', 'employee_id_sale_person'),
+            'saleEstimationProductDetails' => array(self::HAS_MANY, 'SaleEstimationProductDetail', 'sale_estimation_header_id'),
             'saleEstimationServiceDetails' => array(self::HAS_MANY, 'SaleEstimationServiceDetail', 'sale_estimation_header_id'),
         );
     }
@@ -145,7 +147,7 @@ class SaleEstimationHeader extends CActiveRecord {
         $criteria->compare('sub_total_service', $this->sub_total_service, true);
         $criteria->compare('discount_price_service', $this->discount_price_service, true);
         $criteria->compare('total_price_service', $this->total_price_service, true);
-        $criteria->compare('total_quantity_product', $this->total_quantity_product, true);
+        $criteria->compare('total_quantity_product', $this->total_quantity_product);
         $criteria->compare('sub_total_product', $this->sub_total_product, true);
         $criteria->compare('discount_price_product', $this->discount_price_product, true);
         $criteria->compare('total_price_product', $this->total_price_product, true);

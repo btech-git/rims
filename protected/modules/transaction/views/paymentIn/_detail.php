@@ -98,6 +98,26 @@
             <td colspan="2"></td>
         </tr>
         <tr>
+            <td colspan="4">Disc Penjualan Parts</td>
+            <td><?php echo CHtml::activeTextField($paymentIn->header, 'discount_product_amount'); ?></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="4">Disc Pendapatan Jasa/Service</td>
+            <td><?php echo CHtml::activeTextField($paymentIn->header, 'discount_service_amount'); ?></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="4">Beban Administrasi Bank</td>
+            <td><?php echo CHtml::activeTextField($paymentIn->header, 'bank_administration_fee'); ?></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="4">Beban Merimen</td>
+            <td><?php echo CHtml::activeTextField($paymentIn->header, 'merimen_fee'); ?></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
             <td colspan="4">Total Payment</td>
             <td style="text-align: right">
                 <span id="total_payment">

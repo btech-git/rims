@@ -27,6 +27,10 @@
  * @property string $edited_datetime
  * @property integer $user_id_edited
  * @property string $downpayment_amount
+ * @property string $discount_product_amount
+ * @property string $discount_service_amount
+ * @property string $bank_administration_fee
+ * @property string $merimen_fee
  * @property integer $insurance_company_id
  *
  * The followings are the available model relations:
@@ -81,13 +85,13 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             array('notes, payment_time, payment_date, payment_amount, downpayment_amount, customer_id, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
             array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled, insurance_company_id, user_id_edited', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
-            array('payment_amount, tax_service_amount, downpayment_amount', 'length', 'max' => 18),
+            array('payment_amount, tax_service_amount, downpayment_amount, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee', 'length', 'max' => 18),
             array('payment_type, status', 'length', 'max' => 30),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee', 'safe', 'on' => 'search'),
         );
     }
 
@@ -182,6 +186,10 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
         $criteria->compare('downpayment_amount', $this->downpayment_amount);
+        $criteria->compare('discount_product_amount', $this->discount_product_amount);
+        $criteria->compare('discount_service_amount', $this->discount_service_amount);
+        $criteria->compare('bank_administration_fee', $this->bank_administration_fee);
+        $criteria->compare('merimen_fee', $this->merimen_fee);
         $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
 
         $criteria->together = 'true';
@@ -208,23 +216,30 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('t.invoice_id', $this->invoice_id);
-        $criteria->compare('payment_number', $this->payment_number, true);
-        $criteria->compare('payment_date', $this->payment_date, true);
-        $criteria->compare('payment_time', $this->payment_time, true);
-        $criteria->compare('payment_amount', $this->payment_amount, true);
+        $criteria->compare('t.payment_number', $this->payment_number, true);
+        $criteria->compare('t.payment_date', $this->payment_date, true);
+        $criteria->compare('t.payment_time', $this->payment_time, true);
+        $criteria->compare('t.payment_amount', $this->payment_amount, true);
         $criteria->compare('t.notes', $this->notes, true);
         $criteria->compare('t.customer_id', $this->customer_id);
         $criteria->compare('t.vehicle_id', $this->vehicle_id);
         $criteria->compare('t.payment_type', $this->payment_type, true);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.status', $this->status, true);
         $criteria->compare('t.company_bank_id', $this->company_bank_id);
         $criteria->compare('nomor_giro', $this->nomor_giro, true);
         $criteria->compare('cash_payment_type', $this->cash_payment_type);
-        $criteria->compare('bank_id', $this->bank_id);
-        $criteria->compare('payment_type_id', $this->payment_type_id);
+        $criteria->compare('t.bank_id', $this->bank_id);
+        $criteria->compare('t.payment_type_id', $this->payment_type_id);
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount);
-        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('downpayment_amount', $this->downpayment_amount);
+        $criteria->compare('discount_product_amount', $this->discount_product_amount);
+        $criteria->compare('discount_service_amount', $this->discount_service_amount);
+        $criteria->compare('bank_administration_fee', $this->bank_administration_fee);
+        $criteria->compare('merimen_fee', $this->merimen_fee);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
 
 //        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
 //        $criteria->params = array(':userId' => Yii::app()->user->id);
@@ -343,7 +358,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             $total += $detail->amount + $detail->tax_service_amount;
         }
         
-        return $total + $this->downpayment_amount;
+        return $total;
     }
     
     public function getTotalInvoice() {
