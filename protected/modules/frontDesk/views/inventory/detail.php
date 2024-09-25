@@ -70,7 +70,7 @@ $this->breadcrumbs=array(
                                 <td>
                                     <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
                                     <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
-                                    <?php $cogs = empty(CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs')) ? 0 : CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
+                                    <?php $cogs = empty(CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs')) ? '0.00' : CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
                                     <?php $totalCogs += $cogs; ?>
                                 </td>
                             <?php else: ?>
