@@ -68,9 +68,10 @@ $this->breadcrumbs=array(
                             <?php endforeach; ?>
                             <?php if ($index >= 0): ?>
                                 <td>
-                                    <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'cogs')); ?>
+                                    <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
                                     <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
-                                    <?php //$totalCogs += CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
+                                    <?php $cogs = empty(CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs')) ? 0 : CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
+                                    <?php $totalCogs += $cogs; ?>
                                 </td>
                             <?php else: ?>
                                 <td>0</td>
