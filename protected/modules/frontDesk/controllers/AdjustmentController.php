@@ -151,8 +151,8 @@ class AdjustmentController extends Controller {
                                 $inventoryDetail->product_id = $detail->product_id;
                                 $inventoryDetail->warehouse_id = $stockAdjustmentHeader->warehouse_id;
                                 $inventoryDetail->transaction_type = StockAdjustmentHeader::CONSTANT;
-                                $inventoryDetail->transaction_number = $stockAdjustmentHeader->header->stock_adjustment_number;
-                                $inventoryDetail->transaction_date = $stockAdjustmentHeader->header->date_posting;
+                                $inventoryDetail->transaction_number = $stockAdjustmentHeader->stock_adjustment_number;
+                                $inventoryDetail->transaction_date = $stockAdjustmentHeader->date_posting;
                                 $inventoryDetail->stock_in = $detail->quantityDifference > 0 ? $detail->quantityDifference : 0;
                                 $inventoryDetail->stock_out = $detail->quantityDifference < 0 ? $detail->quantityDifference : 0;
                                 $inventoryDetail->notes = "Data from Adjustment Stock";
