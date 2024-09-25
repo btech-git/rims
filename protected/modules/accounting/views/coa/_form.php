@@ -65,7 +65,7 @@
                         <?php echo $form->labelEx($model,'coa_sub_category_id'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model,'coa_sub_category_id',CHtml::listData(CoaSubCategory::model()->findAll(),'id','name')); ?>
+                        <?php echo $form->dropDownlist($model,'coa_sub_category_id',CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name ASC')),'id','name')); ?>
                         <?php echo $form->error($model,'coa_sub_category_id'); ?>
                     </div>
                 </div>
