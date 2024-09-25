@@ -55,7 +55,7 @@ $this->breadcrumbs=array(
                 <tbody>
                     <tr>
                         <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantitiesByPeriodic($endDate); ?>
-                        <?php $inventoryCostOfGoodsSold = $product->getInventoryCostOfGoodsSold(); ?>
+                        <?php //$inventoryCostOfGoodsSold = $product->getInventoryCostOfGoodsSold(); ?>
                         <?php $totalStock = 0; ?>
                         <?php $totalCogs = 0; ?>
                         <?php foreach ($branches as $branch): ?>
@@ -70,8 +70,7 @@ $this->breadcrumbs=array(
                                 <td>
                                     <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
                                     <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
-                                    <?php $cogs = empty(CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs')) ? '0.00' : CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
-                                    <?php $totalCogs += $cogs; ?>
+                                    <?php //$totalCogs += CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
                                 </td>
                             <?php else: ?>
                                 <td>0</td>
