@@ -103,7 +103,7 @@ class AdjustmentController extends Controller {
             ));
 
             InventoryDetail::model()->deleteAllByAttributes(array(
-                'transaction_number' => $stockAdjustmentHeader->header->stock_adjustment_number,
+                'transaction_number' => $stockAdjustmentHeader->stock_adjustment_number,
             ));
 
             if (isset($_POST['StockAdjustmentApproval'])) {
