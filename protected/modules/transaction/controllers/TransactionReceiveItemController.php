@@ -361,33 +361,33 @@ class TransactionReceiveItemController extends Controller {
         
         $purchaseDataProvider = $purchase->searchByReceive();
 
-        $consignment = new ConsignmentInHeader('search');
-        $consignment->unsetAttributes();  // clear any default values
-        if (isset($_GET['ConsignmentInHeader'])) {
-            $consignment->attributes = $_GET['ConsignmentInHeader'];
-        }
-
-        $consignmentCriteria = new CDbCriteria;
-        $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
-            'criteria' => $consignmentCriteria,
-        ));
+//        $consignment = new ConsignmentInHeader('search');
+//        $consignment->unsetAttributes();  // clear any default values
+//        if (isset($_GET['ConsignmentInHeader'])) {
+//            $consignment->attributes = $_GET['ConsignmentInHeader'];
+//        }
+//
+//        $consignmentCriteria = new CDbCriteria;
+//        $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
+//            'criteria' => $consignmentCriteria,
+//        ));
 //        $consignmentDataProvider->criteria->addCondition('t.receive_branch = :receive_branch');
 //        $consignmentDataProvider->criteria->params[':receive_branch'] = Yii::app()->user->branch_id;
 
-        $movement = new MovementOutHeader('search');
-        $movement->unsetAttributes();  // clear any default values
-        if (isset($_GET['MovementOutHeader'])) {
-            $movement->attributes = $_GET['MovementOutHeader'];
-        }
-
-        $movementCriteria = new CDbCriteria;
-        $movementCriteria->compare('movement_out_no', $movement->movement_out_no, true);
-        $movementCriteria->addCondition("status = 'Approved' AND t.date_posting > '2022-12-31' AND t.cancelled_datetime is null");
-        $movementCriteria->order = 't.date_posting DESC';
+//        $movement = new MovementOutHeader('search');
+//        $movement->unsetAttributes();  // clear any default values
+//        if (isset($_GET['MovementOutHeader'])) {
+//            $movement->attributes = $_GET['MovementOutHeader'];
+//        }
+//
+//        $movementCriteria = new CDbCriteria;
+//        $movementCriteria->compare('movement_out_no', $movement->movement_out_no, true);
+//        $movementCriteria->addCondition("status = 'Approved' AND t.date_posting > '2024-12-31' AND t.cancelled_datetime is null");
+//        $movementCriteria->order = 't.date_posting DESC';
 //        $movementCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
-        $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
-            'criteria' => $movementCriteria,
-        ));
+//        $movementDataProvider = new CActiveDataProvider('MovementOutHeader', array(
+//            'criteria' => $movementCriteria,
+//        ));
 
         $this->render('admin', array(
             'model' => $model,
@@ -396,12 +396,12 @@ class TransactionReceiveItemController extends Controller {
             'endDate' => $endDate,
             'purchase' => $purchase,
             'purchaseDataProvider' => $purchaseDataProvider,
-            'consignment' => $consignment,
-            'consignmentDataProvider' => $consignmentDataProvider,
+//            'consignment' => $consignment,
+//            'consignmentDataProvider' => $consignmentDataProvider,
             'delivery' => $delivery,
             'deliveryDataProvider' => $deliveryDataProvider,
-            'movement' => $movement,
-            'movementDataProvider' => $movementDataProvider,
+//            'movement' => $movement,
+//            'movementDataProvider' => $movementDataProvider,
         ));
     }
 

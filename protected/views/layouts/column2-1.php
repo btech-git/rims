@@ -15,6 +15,20 @@
                     <div class="mb-sm-auto mb-0 overflow-auto" style="max-height: 512px">
                         <ul class="nav nav-pills flex-column align-items-center align-items-sm-start" id="menu">
                             <?php if (true): ?>
+                                <?php $isActive = Yii::app()->controller->id === 'saleEstimation' && (
+                                        Yii::app()->controller->action->id === 'admin' ||
+                                        Yii::app()->controller->action->id === 'create'
+                                ); ?>
+                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/saleEstimation/create'); ?>" class="nav-link px-0 align-middle">
+                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
+                                            Estimasi
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                                
+                            <?php if (true): ?>
                                 <?php $isActive = Yii::app()->controller->id === 'customerRegistration' && (
                                         Yii::app()->controller->action->id === 'vehicleList' ||
                                         Yii::app()->controller->action->id === 'create'
@@ -27,15 +41,98 @@
                                     </a>
                                 </li>
                             <?php endif; ?>
+                                
+                            <?php if (true): ?>
+                                <?php $isActive = Yii::app()->controller->id === 'generalRepair' && (
+                                    Yii::app()->controller->action->id === 'admin' || 
+                                    Yii::app()->controller->action->id === 'view'
+                                ); ?>
+                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/generalRepair/admin'); ?>" class="nav-link px-0 align-middle">
+                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
+                                            General Repair
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                                
+                            <?php if (true): ?>
+                                <?php $isActive = Yii::app()->controller->id === 'bodyRepair' && (
+                                    Yii::app()->controller->action->id === 'admin' || 
+                                    Yii::app()->controller->action->id === 'view'
+                                ); ?>
+                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/bodyRepair/admin'); ?>" class="nav-link px-0 align-middle">
+                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
+                                            Body Repair
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                                
+                            <?php if (true): ?>
+                                <?php $isActive = Yii::app()->controller->id === 'vehicleInspection' && (
+                                    Yii::app()->controller->action->id === 'admin' || 
+                                    Yii::app()->controller->action->id === 'create'
+                                ); ?>
+                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/vehicleInspection/admin'); ?>" class="nav-link px-0 align-middle">
+                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
+                                            Inspeksi Kendaraan
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                                
+                            <?php if (true): ?>
+                                <?php $isActive = Yii::app()->controller->id === 'customerWaitlist' && (
+                                    Yii::app()->controller->action->id === 'admin' || 
+                                    Yii::app()->controller->action->id === 'create'
+                                ); ?>
+                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/customerWaitlist/admin'); ?>" class="nav-link px-0 align-middle">
+                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
+                                            Antrian Customer
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                                
+                            <?php if (true): ?>
+                                <?php $isActive = Yii::app()->controller->id === 'cashier' && (
+                                    Yii::app()->controller->action->id === 'admin' || 
+                                    Yii::app()->controller->action->id === 'memo'
+                                ); ?>
+                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/cashier/admin'); ?>" class="nav-link px-0 align-middle">
+                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
+                                            Kasir
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                                
                             <?php if (true): ?>
                                 <?php $isActive = Yii::app()->controller->id === 'followUp' && (
-                                        Yii::app()->controller->action->id === 'adminService' ||
                                         Yii::app()->controller->action->id === 'adminSales'
+                                ); ?>
+                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/followUp/adminSales'); ?>" class="nav-link px-0 align-middle">
+                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
+                                            Follow Up Customer
+                                        </span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                                
+                            <?php if (true): ?>
+                                <?php $isActive = Yii::app()->controller->id === 'followUp' && (
+                                        Yii::app()->controller->action->id === 'adminService'
                                 ); ?>
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
                                     <a href="<?php echo Yii::app()->createUrl('frontEnd/followUp/adminService'); ?>" class="nav-link px-0 align-middle">
                                         <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
-                                            Follow Up
+                                            Follow Up Service
                                         </span>
                                     </a>
                                 </li>

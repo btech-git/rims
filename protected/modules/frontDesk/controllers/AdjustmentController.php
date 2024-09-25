@@ -102,6 +102,10 @@ class AdjustmentController extends Controller {
                 'kode_transaksi' => $stockAdjustmentHeader->stock_adjustment_number,
             ));
 
+            InventoryDetail::model()->deleteAllByAttributes(array(
+                'transaction_number' => $stockAdjustmentHeader->header->stock_adjustment_number,
+            ));
+
             if (isset($_POST['StockAdjustmentApproval'])) {
                 $model->attributes = $_POST['StockAdjustmentApproval'];
                 if ($model->save()) {
@@ -120,6 +124,43 @@ class AdjustmentController extends Controller {
 
                         foreach ($stockAdjustmentHeader->stockAdjustmentDetails as $key => $detail) {
                             if (!empty($detail->product_id)) {
+                                $inventory = Inventory::model()->findByAttributes(array(
+                                    'product_id' => $detail->product_id, 
+                                    'warehouse_id' => $stockAdjustmentHeader->warehouse_id
+                                ));
+
+                                if (empty($inventory)) {
+                                    $insertInventory = new Inventory();
+                                    $insertInventory->product_id = $detail->product_id;
+                                    $insertInventory->warehouse_id = $stockAdjustmentHeader->warehouse_id;
+                                    $insertInventory->minimal_stock = 0;
+                                    $insertInventory->total_stock = $detail->quantity_adjustment;
+                                    $insertInventory->status = 'Active';
+                                    $insertInventory->save();
+
+                                    $inventoryId = $insertInventory->id;
+                                } else {
+                                    $inventory->total_stock = $detail->quantity_adjustment;
+                                    $inventory->update(array('total_stock'));
+
+                                    $inventoryId = $inventory->id;
+                                }
+
+                                $inventoryDetail = new InventoryDetail();
+                                $inventoryDetail->inventory_id = $inventoryId;
+                                $inventoryDetail->product_id = $detail->product_id;
+                                $inventoryDetail->warehouse_id = $stockAdjustmentHeader->warehouse_id;
+                                $inventoryDetail->transaction_type = StockAdjustmentHeader::CONSTANT;
+                                $inventoryDetail->transaction_number = $stockAdjustmentHeader->header->stock_adjustment_number;
+                                $inventoryDetail->transaction_date = $stockAdjustmentHeader->header->date_posting;
+                                $inventoryDetail->stock_in = $detail->quantityDifference > 0 ? $detail->quantityDifference : 0;
+                                $inventoryDetail->stock_out = $detail->quantityDifference < 0 ? $detail->quantityDifference : 0;
+                                $inventoryDetail->notes = "Data from Adjustment Stock";
+                                $inventoryDetail->purchase_price = $detail->product->hpp;
+                                $inventoryDetail->transaction_time = date('H:i:s');
+
+                                $inventoryDetail->save(false);
+                
                                 $quantityDifference = ($detail->quantity_current > $detail->quantity_adjustment) ? $detail->quantityDifference * -1 : $detail->quantityDifference;
                                 $total = $detail->product->hpp * $quantityDifference;
 

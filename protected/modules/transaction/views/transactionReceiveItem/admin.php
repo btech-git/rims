@@ -123,18 +123,18 @@ Yii::app()->clientScript->registerScript('search', "
                                 'deliveryDataProvider'=>$deliveryDataProvider,
                             ), true),
                         ),
-                        'Movement Out' => array(
-                            'content' => $this->renderPartial('_viewRetailSales', array(
-                                'movement'=>$movement,
-                                'movementDataProvider'=>$movementDataProvider,
-                            ), true),
-                        ),
-                        'Consignment In' => array(
-                            'content' => $this->renderPartial('_viewConsignment', array(
-                                'consignment'=>$consignment,
-                                'consignmentDataProvider'=>$consignmentDataProvider,
-                            ), true),
-                        ),
+//                        'Movement Out' => array(
+//                            'content' => $this->renderPartial('_viewRetailSales', array(
+//                                'movement'=>$movement,
+//                                'movementDataProvider'=>$movementDataProvider,
+//                            ), true),
+//                        ),
+//                        'Consignment In' => array(
+//                            'content' => $this->renderPartial('_viewConsignment', array(
+//                                'consignment'=>$consignment,
+//                                'consignmentDataProvider'=>$consignmentDataProvider,
+//                            ), true),
+//                        ),
                     ),
                     // additional javascript options for the tabs plugin
                     'options' => array(

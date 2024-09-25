@@ -7,10 +7,10 @@
             </a>
         </td>
         <td style="border: 0px solid">
-            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage GR', array('/frontDesk/generalRepairRegistration/admin'), array('class'=>'button success right')); ?>
+            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage GR', array('/frontDesk/general/admin'), array('class'=>'button success right')); ?>
         </td>
         <td style="border: 0px solid" colspan="2">
-            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage BR', array('/frontDesk/bodyRepairRegistration/admin'), array('class'=>'button success left')); ?>
+            <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage BR', array('/frontDesk/bodyRepair/admin'), array('class'=>'button success left')); ?>
         </td>
     </tr>
     <tr>
