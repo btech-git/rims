@@ -164,10 +164,17 @@ class AdjustmentController extends Controller {
                                 $quantityDifference = ($detail->quantity_current > $detail->quantity_adjustment) ? $detail->quantityDifference * -1 : $detail->quantityDifference;
                                 $total = $detail->product->hpp * $quantityDifference;
 
-                                $jurnalUmumHpp = $detail->product->productSubMasterCategory->coa_hpp;
-                                $journalReferences[$jurnalUmumHpp]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'D' : 'K';
-                                $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
-                                $journalReferences[$jurnalUmumHpp]['values'][] = $total;
+                                if ($stockAdjustmentHeader->transaction_type === 'Hilang') {
+                                    $jurnalUmumHpp = $detail->product->productSubMasterCategory->coa_hpp;
+                                    $journalReferences[$jurnalUmumHpp]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'D' : 'K';
+                                    $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
+                                    $journalReferences[$jurnalUmumHpp]['values'][] = $total;
+                                } else {
+                                    $jurnalUmumInTransit = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                                    $journalReferences[$jurnalUmumInTransit]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'D' : 'K';
+                                    $journalReferences[$jurnalUmumInTransit]['is_coa_category'] = 0;
+                                    $journalReferences[$jurnalUmumInTransit]['values'][] = $total;                                    
+                                }
 
                                 $jurnalUmumPersediaan = $detail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
                                 $journalReferences[$jurnalUmumPersediaan]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'K' : 'D';
