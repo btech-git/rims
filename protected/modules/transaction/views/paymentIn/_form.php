@@ -80,31 +80,6 @@
                         )); ?>
                         <?php echo $form->error($model, 'payment_type_id'); ?>
                     </div>
-                    
-<!--                    <div class="small-8 columns">
-                        <?php /*echo $form->dropDownlist($model, 'payment_type', array(
-                            'Cash' => 'Cash', 'Direct Bank Transfer' => 'Direct Bank Transfer', 'Giro' => 'Giro'
-                        ), array('prompt' => '[--Select Payment Type--]',
-                            'onchange' => '
-                            clearAll();
-                            if ($(this).val() == "Giro") {
-                                $(".giro").show();
-                                $(".cash").hide();
-                                $(".bank").hide();
-                            }
-                            elseif ($(this).val() == "Cash"){
-                                $(".giro").hide();
-                                $(".cash").show();
-                                $(".bank").hide();
-                            } else {
-                                $(".giro").hide();
-                                $(".cash").hide();
-                                $(".bank").hide();
-                            }
-									
-						')); ?>
-                        <?php echo $form->error($model, 'payment_type');*/ ?>
-                    </div>-->
                 </div>
             </div>
 
@@ -150,20 +125,6 @@
                     </div>
                 </div>
             </div>
-
-<!--            <div class="bank">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php /*echo $form->labelEx($model, 'bank_id'); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::activeDropDownlist($model, 'bank_id', CHtml::listData(Bank::model()->findAll(), 'id', 'name'), array('prompt' => '[--Select Bank--]')); ?>
-                            <?php echo $form->error($model, 'bank_id');*/ ?>
-                        </div>
-                    </div>
-                </div>
-            </div>	-->
 
             <div class="field">
                 <div class="row collapse">

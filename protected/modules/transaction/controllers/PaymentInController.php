@@ -171,7 +171,7 @@ class PaymentInController extends Controller {
                 $jurnalDiscountService = new JurnalUmum;
                 $jurnalDiscountService->kode_transaksi = $model->payment_number;
                 $jurnalDiscountService->tanggal_transaksi = $model->payment_date;
-                $jurnalDiscountService->coa_id = 799;
+                $jurnalDiscountService->coa_id = 2935;
                 $jurnalDiscountService->branch_id = $model->branch_id;
                 $jurnalDiscountService->total = $model->discount_service_amount;
                 $jurnalDiscountService->debet_kredit = 'D';
@@ -846,7 +846,7 @@ class PaymentInController extends Controller {
                             $jurnalDiscountService = new JurnalUmum;
                             $jurnalDiscountService->kode_transaksi = $paymentIn->payment_number;
                             $jurnalDiscountService->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalDiscountService->coa_id = 799;
+                            $jurnalDiscountService->coa_id = 2935;
                             $jurnalDiscountService->branch_id = $paymentIn->branch_id;
                             $jurnalDiscountService->total = $paymentIn->discount_service_amount;
                             $jurnalDiscountService->debet_kredit = 'D';
