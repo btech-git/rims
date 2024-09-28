@@ -191,15 +191,15 @@ class JurnalUmum extends CActiveRecord {
     }
 
     public function getBranchAccountCode() {
-        $branch = empty($this->branch) ? '' : $this->branch;
-        $coa = empty($this->coa) ? '' : $this->coa;
+        $branch = empty($this->branch_id) ? '' : $this->branch;
+        $coa = empty($this->coa_id) ? '' : $this->coa;
 
         return $branch->coa_prefix . '.' . $coa->code;
     }
 
     public function getBranchAccountName() {
-        $branch = empty($this->branch) ? '' : $this->branch;
-        $coa = empty($this->coa) ? '' : $this->coa;
+        $branch = empty($this->branch_id) ? '' : $this->branch;
+        $coa = empty($this->coa_id) ? '' : $this->coa;
 
         return $branch->code . '.' . $coa->name;
     }

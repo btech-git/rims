@@ -542,6 +542,36 @@ class Product extends CActiveRecord {
         ));
     }
 
+    public function searchBySaleEstimation($endDate) {
+        
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.brand_id', $this->brand_id);
+        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
+        $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
+        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
+        $criteria->compare('t.unit_id', $this->unit_id);
+        $criteria->compare('t.status', 'Active');
+
+        $criteria->addCondition("EXISTS (
+            SELECT SUM(stock_in + stock_out) AS total_stock
+            FROM " . InventoryDetail::model()->tableName() . " i
+            WHERE t.id = i.product_id AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+            HAVING SUM(stock_in + stock_out) > 0
+        )");
+        $criteria->params[':end_date'] = $endDate;
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     public function getInventoryTotalQuantities() {
         $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
                 FROM " . Inventory::model()->tableName() . " i

@@ -497,15 +497,15 @@ $this->menu = array(
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="3">Disc Penjualan Parts</td>
+                                <td style="text-align: right" colspan="3">Diskon</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?></td>
                                 <td></td>
                             </tr>
-                            <tr>
+<!--                            <tr>
                                 <td style="text-align: right" colspan="3">Disc Pendapatan Jasa/Service</td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_service_amount'))); ?></td>
+                                <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_service_amount'))); ?></td>
                                 <td></td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td style="text-align: right" colspan="3">Beban Administrasi Bank</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_administration_fee'))); ?></td>

@@ -8,6 +8,7 @@ $this->breadcrumbs=array(
 );
 ?>
 <div id="maincontent">
+    <?php echo CHtml::beginForm(); ?>
     <?php echo $this->renderPartial('_listProduct', array(
         'product' => $product, 
         'productDataProvider' => $productDataProvider, 
@@ -23,4 +24,5 @@ $this->breadcrumbs=array(
     <?php echo $this->renderPartial('_form', array(
         'saleEstimation' => $saleEstimation,
     )); ?>
+    <?php echo CHtml::endForm(); ?>
 </div>

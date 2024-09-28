@@ -34,10 +34,10 @@ class SaleEstimation extends CComponent {
 
     public function addServiceDetail($serviceId) {
 
-        $serviceArrays = $this->serviceDetails;
-        $checkService = array();
+//        $serviceArrays = $this->serviceDetails;
+//        $checkService = array();
         
-//        $service = Service::model()->findByPk($serviceId);
+        $service = Service::model()->findByPk($serviceId);
 //        $vehicle = Vehicle::model()->findByPk($vehicleId);
 //        $vehicleCarModel = VehicleCarModel::model()->findByPk($vehicle->car_model_id);
 //        $servicePricelist = ServicePricelist::model()->findByAttributes(array('service_id' => $serviceId, 'service_group_id' => $vehicleCarModel->service_group_id));
@@ -46,9 +46,10 @@ class SaleEstimation extends CComponent {
 //        foreach ($serviceArrays as $serviceArray) {
 //            $checkService[] = $serviceArray->service_id;
 //        }
-        if (in_array($serviceId, $checkService)) {
-            echo "Please select other Service, this is already added";
-        } else {
+//        if (in_array($serviceId, $checkService)) {
+//            echo "Please select other Service, this is already added";
+//        } else {
+        if ($service !== null) {
             $serviceDetail = new SaleEstimationServiceDetail();
             $serviceDetail->service_id = $serviceId;
             $serviceDetail->price = '0.00';

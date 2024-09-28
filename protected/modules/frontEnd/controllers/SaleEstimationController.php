@@ -50,21 +50,30 @@ class SaleEstimationController extends Controller {
         $saleEstimation->header->branch_id = Yii::app()->user->branch_id;
 
         $endDate = date('Y-m-d');
-        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+                
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
-        $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, '<>');
-        $serviceDataProvider = $service->searchByDashboard();
+        $productDataProvider = $product->searchBySaleEstimation($endDate);
+        $serviceDataProvider = $service->searchBySaleEstimation();
+        
+        $productPageNumber = isset($_GET['product_page']) ? $_GET['product_page'] : 1;
+        $servicePageNumber = isset($_GET['service_page']) ? $_GET['service_page'] : 1;
+        $productDataProvider->pagination->pageVar = 'product_page';
+        $productDataProvider->pagination->pageSize = 50;
+        $productDataProvider->pagination->currentPage = $productPageNumber - 1;
+        $serviceDataProvider->pagination->pageVar = 'service_page';
+        $serviceDataProvider->pagination->pageSize = 50;
+        $serviceDataProvider->pagination->currentPage = $servicePageNumber - 1;
         
         $branches = Branch::model()->findAll();
 
-        if (isset($_GET['Product'])) {
-            $product->attributes = $_GET['Product'];
-        }
-        
-        if (isset($_GET['Service'])) {
-            $service->attributes = $_GET['Service'];
-        }
+//        if (isset($_GET['Product'])) {
+//            $product->attributes = $_GET['Product'];
+//        }
+//        
+//        if (isset($_GET['Service'])) {
+//            $service->attributes = $_GET['Service'];
+//        }
         
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($saleEstimation);
@@ -414,43 +423,79 @@ class SaleEstimationController extends Controller {
             ));
         }
     }
+  
+    public function actionAjaxHtmlUpdateProductStockTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $endDate = date('Y-m-d');
+            
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $productPageNumber = isset($_GET['product_page']) ? $_GET['product_page'] : 1;
+            $productDataProvider = $product->searchBySaleEstimation($endDate);
+            $productDataProvider->pagination->pageVar = 'product_page';
+            $productDataProvider->pagination->pageSize = 50;
+            $productDataProvider->pagination->currentPage = $productPageNumber - 1;
+
+            $branches = Branch::model()->findAll();
+            
+            $this->renderPartial('_productDataTable', array(
+                'productDataProvider' => $productDataProvider,
+                'branches' => $branches,
+                'endDate' => $endDate,
+            ));
+        }
+    }
 
     public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubBrandSelect', array(
-                'productBrandId' => $productBrandId,
+                'product' => $product,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubBrandSeriesSelect', array(
-                'productSubBrandId' => $productSubBrandId,
+                'product' => $product,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubMasterCategorySelect', array(
-                'productMasterCategoryId' => $productMasterCategoryId,
+                'product' => $product,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubCategorySelect', array(
-                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+                'product' => $product,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateServiceDataTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
+            $servicePageNumber = isset($_GET['service_page']) ? $_GET['service_page'] : 1;
+            $serviceDataProvider = $service->searchBySaleEstimation();
+            $serviceDataProvider->pagination->pageVar = 'service_page';
+            $serviceDataProvider->pagination->pageSize = 50;
+            $serviceDataProvider->pagination->currentPage = $servicePageNumber - 1;
+
+            $this->renderPartial('_serviceDataTable', array(
+                'serviceDataProvider' => $serviceDataProvider,
             ));
         }
     }

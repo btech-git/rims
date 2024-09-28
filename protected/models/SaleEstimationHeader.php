@@ -18,6 +18,10 @@
  * @property string $sub_total_product
  * @property string $discount_price_product
  * @property string $total_price_product
+ * @property string $tax_product_percentage
+ * @property string $tax_product_amount
+ * @property string $tax_service_percentage
+ * @property string $tax_service_amount
  * @property string $grand_total
  * @property string $status
  * @property integer $vehicle_mileage
@@ -60,11 +64,12 @@ class SaleEstimationHeader extends CActiveRecord {
             array('transaction_number, transaction_date, transaction_time, repair_type, status, created_datetime, customer_id, vehicle_id, branch_id, user_id_created, employee_id_sale_person', 'required'),
             array('total_quantity_service, total_quantity_product, vehicle_mileage, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'numerical', 'integerOnly' => true),
             array('transaction_number, repair_type, status', 'length', 'max' => 20),
-            array('sub_total_service, discount_price_service, total_price_service, sub_total_product, discount_price_product, total_price_product, grand_total', 'length', 'max' => 18),
+            array('sub_total_service, discount_price_service, total_price_service, sub_total_product, discount_price_product, total_price_product, grand_total, tax_product_amount, tax_service_amount', 'length', 'max' => 18),
+            array('tax_product_percentage, tax_service_percentage', 'length', 'max' => 10),
             array('problem, note, edited_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, repair_type, problem, total_quantity_service, sub_total_service, discount_price_service, total_price_service, total_quantity_product, sub_total_product, discount_price_product, total_price_product, grand_total, status, vehicle_mileage, note, created_datetime, edited_datetime, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, repair_type, problem, total_quantity_service, sub_total_service, discount_price_service, total_price_service, total_quantity_product, sub_total_product, discount_price_product, total_price_product, grand_total, status, vehicle_mileage, note, created_datetime, edited_datetime, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person, tax_product_percentage, tax_service_percentage, tax_product_amount, tax_service_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -163,6 +168,10 @@ class SaleEstimationHeader extends CActiveRecord {
         $criteria->compare('user_id_created', $this->user_id_created);
         $criteria->compare('user_id_edited', $this->user_id_edited);
         $criteria->compare('employee_id_sale_person', $this->employee_id_sale_person);
+        $criteria->compare('tax_product_percentage', $this->tax_product_percentage);
+        $criteria->compare('tax_service_percentage', $this->tax_service_percentage);
+        $criteria->compare('tax_product_amount', $this->tax_product_amount);
+        $criteria->compare('tax_service_amount', $this->tax_service_amount);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

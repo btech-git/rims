@@ -368,6 +368,52 @@ class Service extends CActiveRecord {
         ));
     }
 
+    public function searchBySaleEstimation() {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('description', $this->description, true);
+        $criteria->compare('t.service_category_id', $this->service_category_id);
+        $criteria->compare('t.service_type_id', $this->service_type_id);
+        $criteria->compare('t.status', $this->status, FALSE);
+        $criteria->compare('difficulty_level', $this->difficulty_level);
+        $criteria->compare('difficulty', $this->difficulty, true);
+        $criteria->compare('difficulty_value', $this->difficulty_value, true);
+        $criteria->compare('regular', $this->regular, true);
+        $criteria->compare('luxury', $this->luxury, true);
+        $criteria->compare('luxury_value', $this->luxury_value, true);
+        $criteria->compare('luxury_calc', $this->luxury_calc, true);
+        $criteria->compare('standard_rate_per_hour', $this->standard_rate_per_hour, true);
+        $criteria->compare('flat_rate_hour', $this->flat_rate_hour, true);
+        $criteria->compare('price', $this->price, true);
+        $criteria->compare('common_price', $this->common_price, true);
+        $criteria->compare('deleted_at', $this->deleted_at, true);
+        $criteria->compare('deleted_by', $this->deleted_by);
+        $criteria->compare('bongkar', $this->bongkar, true);
+        $criteria->compare('sparepart', $this->sparepart, true);
+        $criteria->compare('ketok_las', $this->ketok_las, true);
+        $criteria->compare('dempul', $this->dempul, true);
+        $criteria->compare('epoxy', $this->epoxy, true);
+        $criteria->compare('cat', $this->cat, true);
+        $criteria->compare('pasang', $this->pasang, true);
+        $criteria->compare('poles', $this->poles, true);
+        $criteria->compare('cuci', $this->cuci, true);
+        $criteria->compare('finishing', $this->finishing, true);
+        $criteria->compare('price_easy', $this->price_easy, true);
+        $criteria->compare('price_medium', $this->price_medium, true);
+        $criteria->compare('price_hard', $this->price_hard, true);
+        $criteria->compare('price_luxury', $this->price_luxury, true);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+    
     function getLevel($data) {
         $level = "";
         if ($data->difficulty_level == 0) {
