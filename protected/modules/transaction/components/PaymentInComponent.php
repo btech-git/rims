@@ -95,7 +95,7 @@ class PaymentInComponent extends CComponent {
 
     public function validatePaymentAmount() {
         $valid = true;
-        if ($this->totalPayment > round($this->totalInvoice)) {
+        if (round($this->totalPayment) > round($this->totalInvoice)) {
             $valid = false;
             $this->header->addError('error', 'Pelunasan tidak dapat melebihi total invoice.');
         }
