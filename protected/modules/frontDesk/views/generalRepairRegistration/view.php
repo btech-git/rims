@@ -67,12 +67,12 @@ $this->breadcrumbs = array(
                         $quickServicesReg = RegistrationQuickService::model()->findByAttributes(array('registration_transaction_id' => $model->id));
                         ?>
                     
-                        <?php //if (count($model->registrationServices) > 0 && empty($model->work_order_number)): ?>
+                        <?php if (count($model->registrationServices) > 0 && empty($model->work_order_number)): ?>
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/generateWorkOrder?id=' . $model->id, array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px'
                             )); ?>
-                        <?php //endif; ?>
+                        <?php endif; ?>
                     
                         <?php if (empty($invoices)): ?>
                             <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
