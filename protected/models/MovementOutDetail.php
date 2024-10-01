@@ -17,6 +17,7 @@
  * @property string $quantity
  * @property string $quantity_receive
  * @property string $quantity_receive_left
+ * @property string $quantity_stock
  * @property integer $unit_id
  *
  * The followings are the available model relations:
@@ -52,10 +53,10 @@ class MovementOutDetail extends CActiveRecord {
         return array(
             array('movement_out_header_id, product_id, unit_id, quantity_transaction, warehouse_id, quantity', 'required'),
             array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
-            array('quantity_transaction, quantity, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
+            array('quantity_transaction, quantity, quantity_stock, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left', 'safe', 'on' => 'search'),
+            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left, quantity_stock', 'safe', 'on' => 'search'),
         );
     }
 

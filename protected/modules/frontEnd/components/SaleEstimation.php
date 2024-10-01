@@ -53,6 +53,7 @@ class SaleEstimation extends CComponent {
             $serviceDetail = new SaleEstimationServiceDetail();
             $serviceDetail->service_id = $serviceId;
             $serviceDetail->price = '0.00';
+            $serviceDetail->service_type_id = $service->service_type_id;
 
             $this->serviceDetails[] = $serviceDetail;
         }
@@ -203,10 +204,11 @@ class SaleEstimation extends CComponent {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
             $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
-            if ($valid)
+            if ($valid) {
                 $dbTransaction->commit();
-            else
+            } else {
                 $dbTransaction->rollback();
+            }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
@@ -228,10 +230,8 @@ class SaleEstimation extends CComponent {
 
         //save request detail
         if (count($this->serviceDetails) > 0) {
-            $serviceTypeIds = array();
             foreach ($this->serviceDetails as $serviceDetail) {
                 $serviceDetail->sale_estimation_header_id = $this->header->id;
-                $serviceDetail->service_type_id = $serviceDetail->service->service_type_id;
                 $valid = $serviceDetail->save(false) && $valid;
             }
         }
@@ -240,7 +240,6 @@ class SaleEstimation extends CComponent {
         if (count($this->productDetails) > 0) {
             foreach ($this->productDetails as $productDetail) {
                 $productDetail->sale_estimation_header_id = $this->header->id;
-//                $productDetail->total_price = $productDetail->totalAmountProduct;
 
                 $valid = $productDetail->save(false) && $valid;
             }

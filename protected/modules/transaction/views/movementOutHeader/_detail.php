@@ -11,6 +11,7 @@
                 <th>Sub Brand Series</th>
                 <th class="required">Warehouse</th>
                 <th class="required">Qty Req</th>
+                <th class="required">Qty Stock</th>
                 <th class="required">Qty Out</th>
                 <th class="required">Satuan</th>
                 <th>Action</th>
@@ -45,6 +46,11 @@
                         <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?>
                     </td>
                     <td>
+                        <?php echo CHtml::activeHiddenField($detail, "[$i]quantity_stock"); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'quantity_stock')); ?>
+                        <?php echo CHtml::error($detail, 'quantity_stock'); ?>
+                    </td>
+                    <td>
                         <?php if ($movementOut->header->isNewRecord): ?>
                         <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
                             'class' => 'qtyleft_input productID_' . $detail->product_id, 
@@ -65,6 +71,7 @@
                         <?php else: ?>
                             <?php echo CHtml::activeTextField($detail, "[$i]quantity"); ?> 
                         <?php endif; ?>
+                        <?php echo CHtml::error($detail, 'quantity'); ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::activeHiddenField($detail, "[$i]unit_id"); ?>
@@ -81,20 +88,18 @@
                         )); ?>
                     </td>
                 </tr>	
-                <tr>
+<!--                <tr>
                     <td colspan="12">
-                        <?php //foreach ($warehouses as $key => $warehouse):
-                        ?>
-                        <?php 
+                        <?php /*
                             $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
                             $stock = !empty($inventory) ? $inventory->total_stock : 0;
                         ?>
                             <?php if ($stock < 0): ?>
                                 <?php echo $detail->warehouse->name . '- ( ' . $stock . ' )'; ?>
-                            <?php endif; ?>
+                            <?php endif;*/ ?>
                         <?php //endforeach; ?>
                     </td>
-                </tr>
+                </tr>-->
             <?php endforeach; ?>
         </tbody>
     </table>

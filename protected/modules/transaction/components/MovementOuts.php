@@ -39,7 +39,15 @@ class MovementOuts extends CComponent {
             if ($deliveryOrder !== null) {
                 foreach ($deliveryOrder->transactionDeliveryOrderDetails as $deliveryDetail) {
                     if ($deliveryDetail->quantity_movement_left > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $deliveryDetail->product->product_master_category_id));
+                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
+                            'branch_id' => $this->header->branch_id, 
+                            'product_master_category_id' => $deliveryDetail->product->product_master_category_id
+                        ));
+                        $inventory = Inventory::model()->findByAttributes(array(
+                            'product_id' => $deliveryDetail->product_id, 
+                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
+                        ));
+                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -52,6 +60,7 @@ class MovementOuts extends CComponent {
                         $detail->unit_id = $deliveryDetail->product->unit_id;
                         $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $deliveryDetail->quantity_movement_left;
+                        $detail->quantity_stock = $stock;
                         $this->details[] = $detail;
                     }
                 }
@@ -62,7 +71,15 @@ class MovementOuts extends CComponent {
             if ($returnOrder !== null) {
                 foreach ($returnOrder->transactionReturnOrderDetails as $returnDetail) {
                     if ($returnDetail->quantity_movement_left > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $returnDetail->product->product_master_category_id));
+                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
+                            'branch_id' => $this->header->branch_id, 
+                            'product_master_category_id' => $returnDetail->product->product_master_category_id
+                        ));
+                        $inventory = Inventory::model()->findByAttributes(array(
+                            'product_id' => $returnDetail->product_id, 
+                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
+                        ));
+                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -75,6 +92,7 @@ class MovementOuts extends CComponent {
                         $detail->unit_id = $returnDetail->product->unit_id;
                         $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $returnDetail->quantity_movement_left;
+                        $detail->quantity_stock = $stock;
                         $this->details[] = $detail;
                     }
                 }
@@ -85,7 +103,15 @@ class MovementOuts extends CComponent {
             if ($registrationTransaction !== null) {
                 foreach ($registrationTransaction->registrationProducts as $registrationDetail) {
                     if ($registrationDetail->quantity_movement_left > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $registrationDetail->product->product_master_category_id));
+                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
+                            'branch_id' => $this->header->branch_id, 
+                            'product_master_category_id' => $registrationDetail->product->product_master_category_id
+                        ));
+                        $inventory = Inventory::model()->findByAttributes(array(
+                            'product_id' => $registrationDetail->product_id, 
+                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
+                        ));
+                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -98,6 +124,7 @@ class MovementOuts extends CComponent {
                         $detail->unit_id = $registrationDetail->product->unit_id;
                         $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $registrationDetail->quantity_movement_left;
+                        $detail->quantity_stock = $stock;
                         $this->details[] = $detail;
                     }
                 }
@@ -108,7 +135,15 @@ class MovementOuts extends CComponent {
             if ($materialRequest !== null) {
                 foreach ($materialRequest->materialRequestDetails as $materialRequestDetail) {
                     if ($materialRequestDetail->quantity_remaining > 0) {
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $materialRequestDetail->product->product_master_category_id));
+                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
+                            'branch_id' => $this->header->branch_id, 
+                            'product_master_category_id' => $materialRequestDetail->product->product_master_category_id
+                        ));
+                        $inventory = Inventory::model()->findByAttributes(array(
+                            'product_id' => $materialRequestDetail->product_id, 
+                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
+                        ));
+                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -121,6 +156,7 @@ class MovementOuts extends CComponent {
                         $detail->unit_id = $materialRequestDetail->unit_id;
                         $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $materialRequestDetail->quantity_remaining;
+                        $detail->quantity_stock = $stock;
                         $this->details[] = $detail;
                     }
                 }
@@ -159,14 +195,30 @@ class MovementOuts extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
+        if ($this->header->isNewRecord) {
+            $valid = $this->validateDetailsQuantityStock() && $valid;
+        }
+
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
-
                 $fields = array('quantity');
                 $valid = $detail->validate($fields) && $valid;
             }
         } else {
             $valid = true;
+        }
+
+        return $valid;
+    }
+
+    public function validateDetailsQuantityStock() {
+        $valid = true;
+        
+        foreach ($this->details as $detail) {
+            if ($detail->quantity_stock < $detail->quantity) {
+                $valid = false;
+                $this->header->addError('error', 'Quantity movement melebihi stok yang ada!');
+            }
         }
 
         return $valid;

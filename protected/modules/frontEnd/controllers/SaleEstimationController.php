@@ -53,8 +53,10 @@ class SaleEstimationController extends Controller {
                 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
+        $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
         $productDataProvider = $product->searchBySaleEstimation($endDate);
         $serviceDataProvider = $service->searchBySaleEstimation();
+        $vehicleDataProvider = $vehicle->search();
         
         $productPageNumber = isset($_GET['product_page']) ? $_GET['product_page'] : 1;
         $servicePageNumber = isset($_GET['service_page']) ? $_GET['service_page'] : 1;
@@ -66,14 +68,6 @@ class SaleEstimationController extends Controller {
         $serviceDataProvider->pagination->currentPage = $servicePageNumber - 1;
         
         $branches = Branch::model()->findAll();
-
-//        if (isset($_GET['Product'])) {
-//            $product->attributes = $_GET['Product'];
-//        }
-//        
-//        if (isset($_GET['Service'])) {
-//            $service->attributes = $_GET['Service'];
-//        }
         
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($saleEstimation);
@@ -90,8 +84,11 @@ class SaleEstimationController extends Controller {
             'productDataProvider' => $productDataProvider, 
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
+            'vehicle' => $vehicle,
+            'vehicleDataProvider' => $vehicleDataProvider,
             'branches' => $branches,
             'endDate' => $endDate,
+            'isSubmitted' => isset($_POST['Submit']),
         ));
     }
 
@@ -290,7 +287,7 @@ class SaleEstimationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'saleEstimation' => $saleEstimation,
-            ), false, true);
+            ));
         }
     }
 
@@ -305,11 +302,11 @@ class SaleEstimationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'saleEstimation' => $saleEstimation,
-            ), false, true);
+            ));
         }
     }
 
-//Add Product
+    //Add Product
     public function actionAjaxHtmlAddProductDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
             $saleEstimation = $this->instantiate($id);
@@ -321,7 +318,7 @@ class SaleEstimationController extends Controller {
             $this->renderPartial('_detailProduct', array(
                 'saleEstimation' => $saleEstimation,
                 'branches' => $branches,
-            ), false, true);
+            ));
         }
     }
 
@@ -339,7 +336,7 @@ class SaleEstimationController extends Controller {
             $this->renderPartial('_detailProduct', array(
                 'saleEstimation' => $saleEstimation,
                 'branches' => $branches,
-            ), false, true);
+            ));
         }
     }
 
@@ -497,6 +494,26 @@ class SaleEstimationController extends Controller {
             $this->renderPartial('_serviceDataTable', array(
                 'serviceDataProvider' => $serviceDataProvider,
             ));
+        }
+    }
+
+    public function actionAjaxJsonVehicle($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+
+            $saleEstimation = $this->instantiate($id);
+            $this->loadState($saleEstimation);
+
+            $vehicle = $saleEstimation->header->vehicle(array('scopes' => 'resetScope', 'with' => 'customer:resetScope'));
+
+            $object = array(
+                'vehicle_name' => CHtml::value($vehicle, 'carMakeModelSubCombination'),
+                'customer_name' => CHtml::value($vehicle, 'customer.name'),
+                'customer_id' => CHtml::value($vehicle, 'customer_id'),
+                'vehicle_plate_number' => CHtml::value($vehicle, 'plate_number'),
+                'vehicle_frame_number' => CHtml::value($vehicle, 'frame_number'),
+            );
+
+            echo CJSON::encode($object);
         }
     }
 

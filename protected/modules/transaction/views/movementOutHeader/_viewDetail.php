@@ -13,9 +13,9 @@
                 <th>Sub Brand Series</th>
                 <th>Warehouse</th>
                 <th>Quantity Transaction</th>
+                <th>Quantity Stock</th>
                 <th>Quantity</th>
-                <th>Quantity On warehouse</th>
-                <th>Status</th>
+                <!--<th>Status</th>-->
             </tr>
         </thead>
         <tbody>
@@ -31,10 +31,10 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
                     <td><?php echo $detail->warehouse == "" ? "" : $detail->warehouse->name ?></td>
                     <td><?php echo $detail->quantity_transaction; ?></td>
+                    <td><?php echo $detail->quantity_stock; ?></td>
                     <td><?php echo $detail->quantity; ?></td>
-                    <?php $stockInventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id)); ?>
-                    <td><?php echo !empty($stockInventory) ? $stockInventory->total_stock : ''; ?></td>
-                    <td><?php echo empty($stockInventory) ? 'N/A' : $stockInventory->total_stock > $detail->quantity ? 'V' : 'X'; ?></td>
+                    <?php //$stockInventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id)); ?>
+                    <!--<td><?php //echo empty($stockInventory) ? 'N/A' : $stockInventory->total_stock > $detail->quantity ? 'V' : 'X'; ?></td>-->
                 </tr>
             <?php endforeach; ?>
         </tbody>

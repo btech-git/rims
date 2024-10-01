@@ -45,8 +45,9 @@
  * @property SaleEstimationProductDetail[] $saleEstimationProductDetails
  * @property SaleEstimationServiceDetail[] $saleEstimationServiceDetails
  */
-class SaleEstimationHeader extends CActiveRecord {
+class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
 
+    const CONSTANT = 'EST';
     /**
      * @return string the associated database table name
      */

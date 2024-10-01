@@ -2,7 +2,7 @@
     <?php echo ReportHelper::summaryText($productDataProvider); ?>
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive" id="product-data-grid">
     <table class="table table-sm table-bordered table-hover" id="product-data-table">
         <thead>
             <tr class="table-primary">
@@ -11,9 +11,7 @@
                 <th>Name</th>
                 <th>Brand</th>
                 <th>Sub Brand</th>
-                <th>Series</th>
                 <th>Category</th>
-                <th>Unit</th>
                 <?php foreach ($branches as $branch): ?>
                     <th><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
                 <?php endforeach; ?>
@@ -31,9 +29,7 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
 
                     <?php foreach ($branches as $branch): ?>
                         <?php $stockValue = 0; ?>
@@ -56,6 +52,12 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <div class="text-end">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'pages' => $productDataProvider->pagination,
+        )); ?>
+    </div>
 </div>
 
 <script>
@@ -69,6 +71,18 @@
                 data: $("form").serialize(),
                 success: function(data) {
                     $("#detail-product").html(data);
+                }
+            });
+        });
+        $('#product-data-grid ul.yiiPager > li > a').on('click', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                dataType: "HTML",
+                url: "<?php echo CController::createUrl('ajaxHtmlUpdateProductStockTable'); ?>?product_page=" + $(this).attr('href').match(/[?&]product_page=([0-9]+)/)[1],
+                data: $("form").serialize(),
+                success: function(data) {
+                    $("#product_data_container").html(data);
                 }
             });
         });

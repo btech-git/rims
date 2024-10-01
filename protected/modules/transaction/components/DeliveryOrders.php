@@ -113,8 +113,9 @@ class DeliveryOrders extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-        if ($this->header->isNewRecord)
+        if ($this->header->isNewRecord) {
             $valid = $this->validateDetailsQuantityDifference() && $valid;
+        }
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {

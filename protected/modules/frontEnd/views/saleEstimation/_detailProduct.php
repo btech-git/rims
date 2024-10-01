@@ -2,14 +2,14 @@
     <table class="table table-bordered">
         <thead class="table-secondary">
             <tr>
-                <th>Product name</th>
+                <th>Deskripsi</th>
                 <th>Quantity</th>
-                <th>Unit</th>
-                <th>Retail Price</th>
-                <th>Sale Price</th>
-                <th>Discount Type</th>
-                <th>Discount</th>
-                <th>Total Price</th>
+                <th>Satuan</th>
+                <th>Harga Retail</th>
+                <th>Harga Satuan</th>
+                <th>Jumlah</th>
+                <th>PPN</th>
+                <th>Total</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -20,7 +20,7 @@
                 <tr>
                     <td>
                         <?php echo CHtml::activeHiddenField($productDetail, "[$i]product_id"); ?>
-                        <?php echo CHtml::activeTextField($productDetail, "[$i]product_name", array('class' => 'form-control', 'readonly' => true, 'value' => $productDetail->product_id != "" ? $productDetail->product->name : '')); ?>
+                        <?php echo CHtml::encode(CHtml::value($productDetail, "product.name")); ?>
                     </td>
                     <td>
                         <?php echo CHtml::activeTextField($productDetail, "[$i]quantity", array(
@@ -45,7 +45,10 @@
                         ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($productInfo, "unit.name")); ?></td>
-                    <td><?php echo CHtml::activeTextField($productDetail, "[$i]retail_price", array('readonly' => true,)); ?></td>
+                    <td class="text-end">
+                        <?php echo CHtml::activeHiddenField($productDetail, "[$i]retail_price", array('readonly' => true,)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($productDetail, 'retail_price'))); ?>
+                    </td>
                     <td>
                         <?php
                         echo CHtml::activeTextField($productDetail, "[$i]sale_price", array(
@@ -65,21 +68,18 @@
                                     $("#grand_total_transaction").html(data.grandTotalTransaction);
                                 }',
                             )),
-                            'class' => "form-control is-valid",
+                            'class' => "form-control",
                         ));
                         ?>
                     </td>
                     <td>
-                        <?php
-                        echo CHtml::activeDropDownList($productDetail, "[$i]discount_type", array(
+                        <?php /*echo CHtml::activeDropDownList($productDetail, "[$i]discount_type", array(
                             'Nominal' => 'Nominal',
                             'Percent' => '%'
-                                ), array('prompt' => '[--Select Discount Type --]'));
-                        ?>
+                        ), array('prompt' => '[--Select Discount Type --]'));*/ ?>
                     </td>
                     <td>
-                        <?php
-                        echo CHtml::activeTextField($productDetail, "[$i]discount_value", array(
+                        <?php /*echo CHtml::activeTextField($productDetail, "[$i]discount_value", array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'POST',
                                 'dataType' => 'JSON',
@@ -97,8 +97,7 @@
                                 }',
                             )),
                             'class' => "form-control is-valid",
-                        ));
-                        ?>
+                        ));*/ ?>
                     </td>
                     <td style="width: 10%">
                         <?php echo CHtml::activeHiddenField($productDetail, "[$i]total_price", array('readonly' => true,)); ?>
@@ -123,63 +122,7 @@
                         Brand: <?php echo CHtml::encode(CHtml::value($productInfo, "brand.name")); ?> ||
                         Sub Brand: <?php echo CHtml::encode(CHtml::value($productInfo, "subBrand.name")); ?> ||
                         Sub Brand Series: <?php echo CHtml::encode(CHtml::value($productInfo, "subBrandSeries.name")); ?> 
-                    </td>			
-                    <td>
-                        <?php echo CHtml::button('Stock', array(
-                            'onclick' => '$("#stock-check-dialog_' . $i . '").dialog("open"); return false;'
-                        )); ?>
-
-                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                            'id' => "stock-check-dialog_" . $i,
-                            'options' => array(
-                                'title' => 'Stock',
-                                'autoOpen' => false,
-                                'width' => 'auto',
-                                'modal' => true,
-                            ),
-                        )); ?>
-
-                        <div class="row">
-                            <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <?php foreach ($branches as $branch): ?>
-                                                <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
-                                            <?php endforeach; ?>
-                                            <th style="text-align: center">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <?php $inventoryTotalQuantities = $productInfo->getInventoryTotalQuantities(); ?>
-                                            <?php $totalStock = 0; ?>
-                                            <?php foreach ($branches as $branch): ?>
-                                                <?php $index = -1; ?>
-                                                <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
-                                                    <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
-                                                        <?php $index = $i; ?>
-                                                        <?php break; ?>
-                                                    <?php endif; ?>
-                                                <?php endforeach; ?>
-                                                <?php if ($index >= 0): ?>
-                                                    <td>
-                                                        <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
-                                                        <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
-                                                    </td>
-                                                <?php else: ?>
-                                                    <td>0</td>
-                                                <?php endif; ?>
-                                            <?php endforeach; ?>
-                                            <td><?php echo CHtml::encode($totalStock); ?></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
                     </td>
-                    <td colspan="2"><?php //echo CHtml::activeTextField($productDetail,"[$i]note");      ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

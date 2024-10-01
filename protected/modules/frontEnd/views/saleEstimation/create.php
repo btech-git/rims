@@ -8,21 +8,21 @@ $this->breadcrumbs=array(
 );
 ?>
 <div id="maincontent">
-    <?php echo CHtml::beginForm(); ?>
-    <?php echo $this->renderPartial('_listProduct', array(
+    <?php echo $this->renderPartial('_list', array(
         'product' => $product, 
         'productDataProvider' => $productDataProvider, 
-            'branches' => $branches,
-            'endDate' => $endDate,
-    )); ?>
-    <?php echo $this->renderPartial('_listService', array(
         'service' => $service,
         'serviceDataProvider' => $serviceDataProvider,
-            'branches' => $branches,
-            'endDate' => $endDate,
+        'branches' => $branches,
+        'endDate' => $endDate,
+        'isSubmitted' => $isSubmitted,
     )); ?>
+    
     <?php echo $this->renderPartial('_form', array(
         'saleEstimation' => $saleEstimation,
+        'branches' => $branches,
+        'isSubmitted' => $isSubmitted,
+        'vehicle' => $vehicle,
+        'vehicleDataProvider' => $vehicleDataProvider,
     )); ?>
-    <?php echo CHtml::endForm(); ?>
 </div>
