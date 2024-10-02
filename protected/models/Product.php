@@ -472,7 +472,7 @@ class Product extends CActiveRecord {
 
     public function getLocalStock($warehouseId) {
         $sql = "SELECT COALESCE(total_stock, 0) 
-                FROM " . Inventory::model()->tableName() . " 
+                FROM " . Inventory::model()->tableName() . " i
                 WHERE product_id = :product_id AND warehouse_id = :warehouse_id";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
@@ -503,7 +503,8 @@ class Product extends CActiveRecord {
         $criteria->addCondition("EXISTS (
             SELECT SUM(stock_in + stock_out) AS total_stock
             FROM " . InventoryDetail::model()->tableName() . " i
-            WHERE t.id = i.product_id AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE t.id = i.product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
             HAVING SUM(stock_in + stock_out) {$stockOperator} 0
         )");
         $criteria->params[':end_date'] = $endDate;
@@ -562,7 +563,8 @@ class Product extends CActiveRecord {
         $criteria->addCondition("EXISTS (
             SELECT SUM(stock_in + stock_out) AS total_stock
             FROM " . InventoryDetail::model()->tableName() . " i
-            WHERE t.id = i.product_id AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE t.id = i.product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
             HAVING SUM(stock_in + stock_out) > 0
         )");
         $criteria->params[':end_date'] = $endDate;
