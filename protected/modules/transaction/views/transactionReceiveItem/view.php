@@ -416,12 +416,12 @@ $this->menu = array(
                     <?php $movementInDetails = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $movementIn->id)); ?>
                     <?php foreach ($movementInDetails as $movementInDetail): ?>
                         <tr>
-                            <td><?php echo CHTml::link($movementIn->movement_in_number, array("/transaction/movementInHeader/view", "id"=>$movementIn->id)); ?></td>
-                            <td><?php echo $movementIn->date_posting; ?></td>
-                            <td><?php echo $movementIn->branch->name; ?></td>
-                            <td><?php echo $movementInDetail->product->name; ?></td>
-                            <td><?php echo $movementInDetail->quantity; ?></td>
-                            <td><?php echo $movementInDetail->warehouse->name; ?></td>
+                            <td><?php echo CHtml::link($movementIn->movement_in_number, array("/transaction/movementInHeader/view", "id"=>$movementIn->id)); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($movementIn, 'date_posting')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($movementIn, 'branch.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($movementInDetail, 'product.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($movementInDetail, 'quantity')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($movementInDetail, 'warehouse.name')); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
