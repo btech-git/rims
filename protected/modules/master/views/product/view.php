@@ -190,7 +190,7 @@ $this->menu=array(
                     ),
                     array(
                         'header' => 'Sales #',
-                        'value' => 'empty($data->registration_transaction_id) ? "" : CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/generalRepair/view", "id" => $data->registration_transaction_id), array("target" => "blank"))',
+                        'value' => 'empty($data->registration_transaction_id) ? "" : CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/generalRepairRegistration/view", "id" => $data->registration_transaction_id), array("target" => "blank"))',
                         'type'=>'raw'
                     ),
                     array(
