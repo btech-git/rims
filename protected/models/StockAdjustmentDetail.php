@@ -154,7 +154,7 @@ class StockAdjustmentDetail extends CActiveRecord {
         $sql = "
             SELECT COALESCE(total_stock, 0)
             FROM " . Inventory::model()->tableName() . "
-            WHERE i.product_id = :product_id" . $branchConditionSql
+            WHERE product_id = :product_id" . $branchConditionSql
         ;
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
