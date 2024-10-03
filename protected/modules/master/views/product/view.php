@@ -136,6 +136,7 @@ $this->menu=array(
                         array(
                             'header' => 'PO #',
                             'value' => 'empty($data->purchase_order_id) ? "" : CHtml::link($data->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id" => $data->purchase_order_id), array("target" => "blank"))',
+                            'type'=>'raw',
                         ),
                         array(
                             'header' => 'Tanggal',
@@ -190,6 +191,7 @@ $this->menu=array(
                     array(
                         'header' => 'Sales #',
                         'value' => 'empty($data->registration_transaction_id) ? "" : CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/generalRepair/view", "id" => $data->registration_transaction_id), array("target" => "blank"))',
+                        'type'=>'raw'
                     ),
                     array(
                         'header' => 'Tanggal',
