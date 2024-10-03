@@ -18,7 +18,13 @@
         <tbody>
             <tr>
                 <?php $product = Product::model()->findByPK($purchaseOrderDetail->product_id); ?>
-                <td><?php echo $product->id; ?></td>
+                <td>
+                    <?php if (!Yii::app()->user->checkAccess("director")): ?>
+                        <?php echo $product->id; ?>
+                    <?php else: ?>
+                        <?php echo CHtml::link($product->id, array("/master/product/view", "id"=>$product->id), array('target' => 'blank')); ?>
+                    <?php endif; ?>
+                </td>
                 <td><?php echo $product->name; ?></td>
                 <td style="text-align: center"><?php echo $purchaseOrderDetail->quantity; ?></td>
                 <td><?php echo $product->unit->name; ?></td>

@@ -126,12 +126,16 @@ $this->menu=array(
                     ),
                     'columns' => array(
                         array(
+                            'header' => 'ID',
+                            'value' => 'empty($data->purchase_order_id) ? "" : $data->purchase_order_id',
+                        ),
+                        array(
                             'header' => 'Supplier',
                             'value' => 'empty($data->purchase_order_id) ? "" : $data->purchaseOrder->supplier->name',
                         ),
                         array(
                             'header' => 'PO #',
-                            'value' => 'empty($data->purchase_order_id) ? "" : $data->purchaseOrder->purchase_order_no',
+                            'value' => 'empty($data->purchase_order_id) ? "" : CHtml::link($data->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id" => $data->purchase_order_id), array("target" => "blank"))',
                         ),
                         array(
                             'header' => 'Tanggal',
@@ -176,12 +180,16 @@ $this->menu=array(
                 ),
                 'columns' => array(
                     array(
+                        'header' => 'ID',
+                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registration_transaction_id',
+                    ),
+                    array(
                         'header' => 'Customer',
                         'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->customer->name',
                     ),
                     array(
                         'header' => 'Sales #',
-                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->transaction_number',
+                        'value' => 'empty($data->registration_transaction_id) ? "" : CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/generalRepair/view", "id" => $data->registration_transaction_id), array("target" => "blank"))',
                     ),
                     array(
                         'header' => 'Tanggal',
