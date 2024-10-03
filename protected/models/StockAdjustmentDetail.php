@@ -146,15 +146,15 @@ class StockAdjustmentDetail extends CActiveRecord {
         
         if (!empty($branchId)) {
             $branch = Branch::model()->findByPk($branchId);
-            $warehouse = Warehouse::model()->findByAttributes(array('code' => $branch->code));
-            $branchConditionSql = ' AND i.warehouse_id = :warehouse_id';
+            $warehouse = Warehouse::model()->findByAttributes(array('branch_id' => $branchId, 'status' => 'Active', 'code' => $branch->code));
+            $branchConditionSql = ' AND warehouse_id = :warehouse_id';
             $params[':warehouse_id'] = $warehouse->id;
         }
 
         $sql = "
-            SELECT COALESCE(i.total_stock, 0)
-            FROM " . Inventory::model()->tableName() . " i
-            WHERE i.product_id = :product_id AND i.warehouse_id = :warehouse_id" . $branchConditionSql
+            SELECT COALESCE(total_stock, 0)
+            FROM " . Inventory::model()->tableName() . "
+            WHERE i.product_id = :product_id" . $branchConditionSql
         ;
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);

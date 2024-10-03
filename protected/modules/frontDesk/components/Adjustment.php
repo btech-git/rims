@@ -24,9 +24,11 @@ class Adjustment extends CComponent {
             }
 
             if (!$exist) {
+                $branch = Branch::model()->findByPk($branchId);
+                $warehouse = Warehouse::model()->model()->findByAttributes(array('branch_id' => $branchId, 'status' => 'Active', 'code' => $branch->code));
                 $detail = new StockAdjustmentDetail();
                 $detail->product_id = $product->id;
-                $detail->warehouse_id = $detail->getWarehouseId($branchId);
+                $detail->warehouse_id = $warehouse->id;
                 $detail->quantity_current = $detail->getCurrentStock($productId, $branchId);
                 $this->details[] = $detail;
             }
