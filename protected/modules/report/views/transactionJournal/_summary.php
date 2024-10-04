@@ -51,8 +51,8 @@
                             <td class="width1-1">&nbsp;</td>
                             <td class="width1-2"><?php echo CHtml::encode($journalRef['code']); ?></td>
                             <td class="width1-3"><?php echo CHtml::encode($journalRef['name']); ?></td>
-                            <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalRef['debit'])); ?></td>
-                            <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalRef['credit'])); ?></td>
+                            <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalRef['debit'])); ?></td>
+                            <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalRef['credit'])); ?></td>
                         </tr>
                     <?php endforeach; ?>
                         
@@ -60,17 +60,17 @@
                         <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
                         <?php if (floor($totalDebit) != floor($totalCredit)): ?>
                             <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
                             </td>
                             <td class="width1-5" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?> -zzz
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?> -zzz
                             </td>
                         <?php else: ?>
                             <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
                             </td>
                             <td class="width1-5" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
                             </td>
                         <?php endif; ?>
                     </tr>
@@ -110,8 +110,8 @@
                 <td class="width1-1">&nbsp;</td>
                 <td class="width1-2"><?php echo CHtml::encode($journalRef['code']); ?></td>
                 <td class="width1-3"><?php echo CHtml::encode($journalRef['name']); ?></td>
-                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalRef['debit'])); ?></td>
-                <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalRef['credit'])); ?></td>
+                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalRef['debit'])); ?></td>
+                <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalRef['credit'])); ?></td>
             </tr>
         <?php endforeach; ?>
             
@@ -119,17 +119,17 @@
             <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
             <?php if (floor($totalDebit) != floor($totalCredit)): ?>
                 <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
                 </td>
                 <td class="width1-5" style="text-align: right; font-weight: bold; border-top: 1px solid; color: red">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?> -zzz
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?> -zzz
                 </td>
             <?php else: ?>
                 <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
                 </td>
                 <td class="width1-5" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
                 </td>
             <?php endif; ?>
         </tr>
