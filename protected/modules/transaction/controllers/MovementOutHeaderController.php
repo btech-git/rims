@@ -673,7 +673,10 @@ class MovementOutHeaderController extends Controller {
 
             if ($delivered->save()) {
                 foreach ($movementOut->details as $movementDetail) {
-                    $inventory = Inventory::model()->findByAttributes(array('product_id' => $movementDetail->product_id, 'warehouse_id' => $movementDetail->warehouse_id));
+                    $inventory = Inventory::model()->findByAttributes(array(
+                        'product_id' => $movementDetail->product_id, 
+                        'warehouse_id' => $movementDetail->warehouse_id
+                    ));
 
                     if (empty($inventory)) {
                         $insertInventory = new Inventory();

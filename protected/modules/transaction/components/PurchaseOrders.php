@@ -144,11 +144,7 @@ class PurchaseOrders extends CComponent {
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
         
-//        $this->header->total_quantity = $this->totalQuantity;
-//        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
-//        $this->header->discount = $this->subTotalDiscount;
         $this->header->ppn_price = $this->taxAmount;
-//        $this->header->subtotal = $this->subTotal;
         $this->header->total_price = $this->grandTotal;
         $this->header->payment_amount = 0;
         $this->header->payment_left = $this->grandTotal;
@@ -232,7 +228,7 @@ class PurchaseOrders extends CComponent {
         }
         
         if (!$isNewRecord) {
-            $subTotal = $this->header->total_price;
+            $subTotal = round($this->header->total_price, 0);
             
             $jurnalUmumPayable = new JurnalUmum;
             $jurnalUmumPayable->kode_transaksi = $this->header->purchase_order_no;
@@ -254,7 +250,7 @@ class PurchaseOrders extends CComponent {
                 $jurnalUmumPpn->tanggal_transaksi = $this->header->purchase_order_date;
                 $jurnalUmumPpn->coa_id = $coaPpn->id;
                 $jurnalUmumPpn->branch_id = $this->header->main_branch_id;
-                $jurnalUmumPpn->total = $this->header->ppn_price;
+                $jurnalUmumPpn->total = round($this->header->ppn_price, 0);
                 $jurnalUmumPpn->debet_kredit = 'D';
                 $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
                 $jurnalUmumPpn->transaction_subject = $this->header->supplier->name;
@@ -268,7 +264,7 @@ class PurchaseOrders extends CComponent {
             $jurnalUmumOutstanding->tanggal_transaksi = $this->header->purchase_order_date;
             $jurnalUmumOutstanding->coa_id = $this->header->supplier->coa_outstanding_order;
             $jurnalUmumOutstanding->branch_id = $this->header->main_branch_id;
-            $jurnalUmumOutstanding->total = $this->header->subtotal;
+            $jurnalUmumOutstanding->total = round($this->header->subtotal, 0);
             $jurnalUmumOutstanding->debet_kredit = 'D';
             $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
             $jurnalUmumOutstanding->transaction_subject = $this->header->supplier->name;
@@ -290,7 +286,7 @@ class PurchaseOrders extends CComponent {
                         $detail->qty_request = $detail->purchaseOrderDetail->quantity;
                         $detail->update(array('qty_request'));
                         
-                        $jumlah = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
+                        $jumlah = round($detail->qty_received * $detail->purchaseOrderDetail->unit_price, 0);
 
                         //save coa product sub master category
                         $coaInventory = Coa::model()->findByPk($detail->purchaseOrderDetail->product->productSubMasterCategory->coa_inventory_in_transit);

@@ -34,12 +34,12 @@
                         </td>
                         <td style="text-align: right;">
                             <?php if (empty($coa->coaIds)): ?> 
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalDebitBalance)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalDebitBalance)); ?>
                             <?php endif; ?>
                         </td>
                         <td style="text-align: right;">
                             <?php if (empty($coa->coaIds)): ?> 
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalCreditBalance)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalCreditBalance)); ?>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -62,10 +62,10 @@
                                         )), array('target' => '_blank')); ?>
                                     </td>
                                     <td style="text-align: right; font-size: 10px">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalDebitBalance)); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalDebitBalance)); ?>
                                     </td>
                                     <td style="text-align: right; font-size: 10px">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $journalCreditBalance)); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $journalCreditBalance)); ?>
                                     </td>
                                 </tr>
                                 <?php $groupDebitBalance += $journalDebitBalance; ?>
@@ -85,11 +85,11 @@
             </td>
 
             <td style="text-align: right; font-weight: bold; border-top: 2px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryDebitBalance)); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryDebitBalance)); ?>
             </td>
 
             <td style="text-align: right; font-weight: bold; border-top: 2px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryCreditBalance)); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryCreditBalance)); ?>
             </td>
         </tr>
     </table>
