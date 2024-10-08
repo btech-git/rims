@@ -433,14 +433,23 @@ class PaymentOutController extends Controller {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
         $model->payment_amount = 0; 
-//        $model->purchase_order_id = null;
-//        $model->supplier_id = null;
         $model->ppn = 0;
         $model->notes = '';
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
         $model->update(array('status', 'purchase_order_id', 'payment_amount', 'supplier_id', 'ppn', 'notes', 'cancelled_datetime', 'user_id_cancelled'));
 
+        foreach ($model->payOutDetails as $detail) {
+            $detail->total_invoice = '0.00';
+            $detail->amount = '0.00';
+            $detail->update(array('total_invoice', 'amount'));
+            
+            $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($detail->receiveItem->purchase_order_id);
+            $purchaseOrderHeader->payment_amount = $purchaseOrderHeader->totalPayment;
+            $purchaseOrderHeader->payment_left = $purchaseOrderHeader->totalRemaining;
+            $purchaseOrderHeader->update(array('payment_amount', 'payment_left'));
+        }
+        
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->payment_number,
         ));
