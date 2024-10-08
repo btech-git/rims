@@ -6,22 +6,22 @@
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px')); ?>
 
-    <?php if (Yii::app()->user->checkAccess("paymentOutEdit")): //!($paymentOut->status == 'Approved' || $paymentOut->status == 'Rejected')): ?>
+    <?php if (Yii::app()->user->checkAccess("paymentOutEdit") && !($paymentOut->status == 'CANCELLED!!!')): // || $paymentOut->status == 'Rejected')): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/paymentOut/update?id=' . $paymentOut->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
     <?php endif; ?>
 
-    <?php if ($paymentOut->status == "Draft" && Yii::app()->user->checkAccess("paymentOutApproval")): ?>
+    <?php if ($paymentOut->status == "Draft" && Yii::app()->user->checkAccess("paymentOutApproval") && !($paymentOut->status == 'CANCELLED!!!')): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-    <?php elseif ($paymentOut->status != "Draft" && Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
+    <?php elseif ($paymentOut->status != "Draft" && Yii::app()->user->checkAccess("paymentOutSupervisor") && !($paymentOut->status == 'CANCELLED!!!')): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
     <?php endif; ?>
     
-    <?php //if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
+    <?php if (!($paymentOut->status == 'CANCELLED!!!')): ?>
         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/accounting/paymentOut/cancel", "id" => $paymentOut->id), array(
             'class' => 'button alert right', 
             'style' => 'margin-right:10px', 
         )); ?>
-    <?php //endif; ?>
+    <?php endif; ?>
 </div>
 
 <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>
