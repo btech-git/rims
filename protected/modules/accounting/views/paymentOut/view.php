@@ -78,6 +78,10 @@
             'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOut->created_datetime),
         ),
         array(
+            'label' => 'Status',
+            'value' => $paymentOut->status,
+        ),
+        array(
             'label' => 'Catatan',
             'value' => $paymentOut->notes,
         ),
