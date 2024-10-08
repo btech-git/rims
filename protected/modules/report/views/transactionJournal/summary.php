@@ -3,9 +3,6 @@ Yii::app()->clientScript->registerScript('report', '
 	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
             
-	$("#PageSize").val("' . $jurnalUmumSummary->dataProvider->pagination->pageSize . '");
-	$("#CurrentPage").val("' . ($jurnalUmumSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
-	$("#CurrentSort").val("' . $currentSort . '");
 ');
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
@@ -52,7 +49,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownlist($jurnalUmum, 'transaction_type', array(
+                                    <?php echo CHtml::dropDownlist('TransactionType', $transactionType, array(
                                         'Invoice' => 'Sales',
                                         'CASH' => 'Cash',
                                         'JP' => 'Penyesuaian',
@@ -126,14 +123,17 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>-->
-                        
-                        <div id="branch">
-                            <?php $this->renderPartial('_branchSelect', array(
-                                'companyId' => $companyId,
-                                'branchId' => $branchId,
-                            )); ?>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch </span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                </div>
+                            </div>
                         </div>
-                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -141,13 +141,13 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeTextField($jurnalUmum, 'coa_id', array(
+                                    <?php echo CHtml::textField('CoaId', $coaId, array(
                                         'readonly' => true,
                                         'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
                                         'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
                                     )); ?>
                                     <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
-                                    <?php $coa = Coa::model()->findByPk($jurnalUmum->coa_id); ?>
+                                    <?php $coa = Coa::model()->findByPk($coaId); ?>
                                     <?php echo CHtml::encode(CHtml::value($coa, 'combinationName')); ?>
                                     <?php echo CHtml::closeTag('span'); ?> 
                                 </div>
@@ -173,16 +173,17 @@ Yii::app()->clientScript->registerScript('report', '
 
             <div class="relative">
                 <div class="reportDisplay">
-                    <?php echo ReportHelper::summaryText($jurnalUmumSummary->dataProvider); ?>
+                    <?php echo $transactionJournalCount; ?>
+                    <?php //echo ReportHelper::summaryText($jurnalUmumSummary->dataProvider); ?>
                     <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                 </div>
 
                 <?php $this->renderPartial('_summary', array(
-                    'jurnalUmum' => $jurnalUmum,
-                    'jurnalUmumSummary' => $jurnalUmumSummary,
+                    'transactionJournalReport' => $transactionJournalReport,
+                    'transactionJournalReportData' => $transactionJournalReportData,
                     'startDate' => $startDate,
                     'endDate' => $endDate,
-                    'companyId' => $companyId,
+                    'branchId' => $branchId,
                 )); ?>
             </div>
             <div class="clear"></div>
@@ -285,7 +286,7 @@ Yii::app()->clientScript->registerScript('report', '
                    'header'=>'',
                 ),
                 'selectionChanged'=>'js:function(id){
-                    $("#' . CHtml::activeId($jurnalUmum, 'coa_id') . '").val($.fn.yiiGridView.getSelection(id));
+                    $("#CoaId").val($.fn.yiiGridView.getSelection(id));
                     $("#coa-dialog").dialog("close");
                     if ($.fn.yiiGridView.getSelection(id) == "") {
                         $("#coa_id").html("");

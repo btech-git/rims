@@ -21,24 +21,30 @@ class TransactionJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
+//        $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $companyId = (isset($_GET['CompanyId'])) ? $_GET['CompanyId'] : '';
+        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-//        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
-//        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
-        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-
-        $jurnalUmumSummary = new TransactionJournalSummary($jurnalUmum->search());
-        $jurnalUmumSummary->setupLoading();
-        $jurnalUmumSummary->setupPaging($pageSize, $currentPage);
-        $jurnalUmumSummary->setupSorting();
-        $jurnalUmumSummary->setupFilter($startDate, $endDate, $branchId);
-
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 1;
+//        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        
+        $transactionJournalReport = JurnalUmum::getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage);
+        $transactionJournalCount = JurnalUmum::getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId);
+        
+        $transactionJournalReportTransactionCodes = array_map(function($transactionJournalReportItem) { return $transactionJournalReportItem['kode_transaksi']; }, $transactionJournalReport);
+        $transactionJournalItems = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $transactionJournalReportTransactionCodes, 'is_coa_category' => 0));
+        $transactionJournalReportData = array();
+        foreach ($transactionJournalItems as $transactionJournalItem) {
+            if (!isset($transactionJournalReportData[$transactionJournalItem->kode_transaksi])) {
+                $transactionJournalReportData[$transactionJournalItem->kode_transaksi] = array();
+            }
+            $transactionJournalReportData[$transactionJournalItem->kode_transaksi][] = $transactionJournalItem;
+        }
+        
         $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $accountDataProvider = $account->search();
         $accountDataProvider->criteria->compare('t.is_approved', 1);
@@ -48,20 +54,30 @@ class TransactionJournalController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-          $this->saveToExcel($jurnalUmumSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($transactionJournalReport, $transactionJournalReportData, array(
+                'transactionJournalCount' => $transactionJournalCount,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'transactionType' => $transactionType,
+                'branchId' => $branchId,
+                'coaId' => $coaId,
+                'account' => $account,
+                'accountDataProvider' => $accountDataProvider,
+                'currentPage' => $currentPage,
+            ));
         }
         
         $this->render('summary', array(
-            'jurnalUmum' => $jurnalUmum,
-            'jurnalUmumSummary' => $jurnalUmumSummary,
+            'transactionJournalReport' => $transactionJournalReport,
+            'transactionJournalReportData' => $transactionJournalReportData,
+            'transactionJournalCount' => $transactionJournalCount,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'companyId' => $companyId,
+            'transactionType' => $transactionType,
             'branchId' => $branchId,
+            'coaId' => $coaId,
             'account' => $account,
             'accountDataProvider' => $accountDataProvider,
-            'currentSort' => $currentSort,
-            'pageSize' => $pageSize,
             'currentPage' => $currentPage,
         ));
     }
@@ -102,7 +118,7 @@ class TransactionJournalController extends Controller {
         }
     }
 
-    protected function saveToExcel($dataProvider, array $options = array()) {
+    protected function saveToExcel($transactionJournalReport, $transactionJournalReportData, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -136,90 +152,48 @@ class TransactionJournalController extends Controller {
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'Kode Transaksi');
-        $worksheet->setCellValue('D5', 'Kode COA');
-        $worksheet->setCellValue('E5', 'Nama COA');
-        $worksheet->setCellValue('F5', 'Debit');
-        $worksheet->setCellValue('G5', 'Kredit');
+        $worksheet->setCellValue('D5', 'Keterangan');
+        $worksheet->setCellValue('E5', 'Kode COA');
+        $worksheet->setCellValue('F5', 'Nama COA');
+        $worksheet->setCellValue('G5', 'Debit');
+        $worksheet->setCellValue('H5', 'Kredit');
 
         $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7; 
-        $lastId = ''; 
-        $totalDebit = 0; 
-        $totalCredit = 0; 
-        $index = 0; 
-        $journalRefs = array();
         
-        foreach ($dataProvider->data as $header) {
-            if ($lastId !== $header->kode_transaksi) {
-                if ($index > 0) {
-                    foreach ($journalRefs as $journalRef) {
-                        
-                        $worksheet->mergeCells("A{$counter}:B{$counter}");
-                        $worksheet->mergeCells("C{$counter}:E{$counter}");
-                        $worksheet->setCellValue("A{$counter}", CHtml::encode($journalRef['code']));
-                        $worksheet->setCellValue("C{$counter}", $journalRef['name']);
-                        $worksheet->setCellValue("F{$counter}", CHtml::encode($journalRef['debit']));
-                        $worksheet->setCellValue("G{$counter}", CHtml::encode($journalRef['credit']));
-                        $counter++;
-                    }
-
-                    $worksheet->mergeCells("A{$counter}:E{$counter}");
-                    $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-                    $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
-                    $worksheet->setCellValue("A{$counter}", 'TOTAL');
-                    $worksheet->setCellValue("F{$counter}", $totalDebit);
-                    $worksheet->setCellValue("G{$counter}", $totalCredit);
-                    $counter++;$counter++;
-                }
+        foreach ($transactionJournalReport as $i => $header) {
+            $totalDebit = 0; 
+            $totalCredit = 0; 
+            foreach ($transactionJournalReportData[$header['kode_transaksi']] as $transactionJournalItemData) {
+                $debitAmount = $transactionJournalItemData->debet_kredit == 'D' ? $transactionJournalItemData->total : 0;
+                $creditAmount = $transactionJournalItemData->debet_kredit == 'K' ? $transactionJournalItemData->total : 0;
                 
-                $journalRefs = array(); $totalDebit = 0; $totalCredit = 0;
-                $worksheet->mergeCells("D{$counter}:G{$counter}");
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(++$index));
-                $worksheet->setCellValue("B{$counter}", $header->tanggal_transaksi);
-                $worksheet->setCellValue("C{$counter}", $header->kode_transaksi);
-                $worksheet->setCellValue("D{$counter}", $header->transaction_subject);
-
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($header['transaction_date']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($header['kode_transaksi']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($header['transaction_subject']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($transactionJournalItemData, 'coa.code')));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($transactionJournalItemData, 'coa.name')));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($debitAmount));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($creditAmount));
+                
+                $totalDebit += $debitAmount;
+                $totalCredit += $creditAmount;
+                
                 $counter++;
             }
+            $worksheet->mergeCells("A{$counter}:F{$counter}");
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+            $worksheet->setCellValue("A{$counter}", 'TOTAL');
+            $worksheet->setCellValue("G{$counter}", $totalDebit);
+            $worksheet->setCellValue("H{$counter}", $totalCredit);
+            $counter++;$counter++;
 
-            $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0;
-            $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0;
-            
-            if (!isset($journalRefs[$header->branchAccountId])) {
-                $journalRefs[$header->branchAccountId] = array('debit' => 0, 'credit' => 0);
-            }
-            
-            $journalRefs[$header->branchAccountId]['code'] = $header->branchAccountCode;
-            $journalRefs[$header->branchAccountId]['name'] = htmlspecialchars_decode($header->branchAccountName);
-            $journalRefs[$header->branchAccountId]['debit'] += $amountDebit;
-            $journalRefs[$header->branchAccountId]['credit'] += $amountCredit;
-            
-            $totalDebit += $amountDebit;
-            $totalCredit += $amountCredit;
-            $lastId = $header->kode_transaksi;
-        }
-        
-        foreach ($journalRefs as $journalRef) {
-            
-            $worksheet->mergeCells("A{$counter}:B{$counter}");
-            $worksheet->mergeCells("C{$counter}:E{$counter}");
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($journalRef['code']));
-            $worksheet->setCellValue("C{$counter}", $journalRef['name']);
-            $worksheet->setCellValue("F{$counter}", CHtml::encode($journalRef['debit']));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode($journalRef['credit']));
-            $counter++;
         }
 
-        $worksheet->mergeCells("A{$counter}:E{$counter}");
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
-        $worksheet->setCellValue("A{$counter}", 'TOTAL');
-        $worksheet->setCellValue("F{$counter}", $totalDebit);
-        $worksheet->setCellValue("G{$counter}", $totalCredit);
-        $counter++;$counter++;
-
-        for ($col = 'A'; $col !== 'G'; $col++) {
+        for ($col = 'A'; $col !== 'J'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

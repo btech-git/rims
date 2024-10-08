@@ -459,6 +459,80 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
     
+    public static function getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage) {
+        
+        $pageOffset = $currentPage - 1;
+        $transactionTypeConditionSql = '';
+        $branchConditionSql = '';
+        $coaConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($transactionType)) {
+            $transactionTypeConditionSql = ' AND transaction_type = :transaction_type';
+            $params[':transaction_type'] = $transactionType;
+        }
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($coaId)) {
+            $coaConditionSql = ' AND coa_id = :coa_id';
+            $params[':coa_id'] = $coaId;
+        }
+        
+        $sql = "SELECT kode_transaksi, MiN(tanggal_transaksi) AS transaction_date, MIN(transaction_subject) AS transaction_subject
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE tanggal_transaksi BETWEEN :start_date AND :end_date" . $transactionTypeConditionSql . $branchConditionSql . $coaConditionSql ."
+                GROUP BY kode_transaksi
+                ORDER BY transaction_date ASC
+                LIMIT {$pageOffset}, 200";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId) {
+        
+        $transactionTypeConditionSql = '';
+        $branchConditionSql = '';
+        $coaConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($transactionType)) {
+            $transactionTypeConditionSql = ' AND transaction_type = :transaction_type';
+            $params[':transaction_type'] = $transactionType;
+        }
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($coaId)) {
+            $coaConditionSql = ' AND coa_id = :coa_id';
+            $params[':coa_id'] = $coaId;
+        }
+        
+        $sql = "SELECT COUNT(DISTINCT kode_transaksi) AS transaction_item_count
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE tanggal_transaksi BETWEEN :start_date AND :end_date" . $transactionTypeConditionSql . $branchConditionSql . $coaConditionSql;
+        
+        $count = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return $count;
+    }
+    
     public static function graphSalePerBranch() {
         
         $sql = "SELECT b.name AS branch_name, SUM(j.total) AS total
