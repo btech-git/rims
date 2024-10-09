@@ -15,7 +15,7 @@ $this->breadcrumbs = array(
             
             <?php $ccontroller = Yii::app()->controller->id; ?>
             <?php $ccaction = Yii::app()->controller->action->id; ?>
-            <?php $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $model->id)); ?>
+            <?php $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'user_id_cancelled' => null)); ?>
             <div class="row">
                 <div class="large-12 columns">
                     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px')) ?>

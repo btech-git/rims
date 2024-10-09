@@ -189,7 +189,7 @@
                             <span class="prefix">Invoice #</span>
                         </div>
                         <div class="small-8 columns">
-                            <?php $invoice = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $model->id)) ?>
+                            <?php $invoice = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $model->id, 'user_id_cancelled' => null)) ?>
                             <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'invoice_number')); ?>"> 
                         </div>
                     </div>
