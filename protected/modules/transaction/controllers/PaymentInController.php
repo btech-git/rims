@@ -314,11 +314,21 @@ class PaymentInController extends Controller {
         ));
     }
 
-    public function actionCreateMultiple($customerId) {
-        $customer = Customer::model()->findByPk($customerId);
+    public function actionInsuranceList() {
+
+        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
+        $insuranceCompanyDataProvider = $insuranceCompany->search();
+        $insuranceCompanyDataProvider->criteria->order = 't.name ASC';
+
+        $this->render('insuranceList', array(
+            'insuranceCompany' => $insuranceCompany,
+            'insuranceCompanyDataProvider' => $insuranceCompanyDataProvider,
+        ));
+    }
+
+    public function actionCreateMultiple($customerId, $insuranceId) {
         $paymentIn = $this->instantiate(null);
         
-        $paymentIn->header->customer_id = $customerId;
         $paymentIn->header->payment_date = date('Y-m-d');
         $paymentIn->header->payment_time = date('H:i:s');
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
@@ -330,8 +340,18 @@ class PaymentInController extends Controller {
         $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
 
         if (!empty($customerId)) {
+            $paymentIn->header->customer_id = $customerId;
             $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
             $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $customerId;
+            $paymentIn->header->insurance_company_id = null;
+        }
+        
+        if (!empty($insuranceId)) {
+            
+            $paymentIn->header->insurance_company_id = $insuranceId;
+            $invoiceHeaderDataProvider->criteria->addCondition("t.insurance_company_id = :insurance_company_id");
+            $invoiceHeaderDataProvider->criteria->params[':insurance_company_id'] = $insuranceId;
+            $paymentIn->header->customer_id = null;
         }
         
         if (isset($_POST['Cancel'])) {
@@ -349,7 +369,6 @@ class PaymentInController extends Controller {
 
         $this->render('createMultiple', array(
             'paymentIn' => $paymentIn,
-            'customer' => $customer,
             'invoiceHeader' => $invoiceHeader,
             'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
          ));

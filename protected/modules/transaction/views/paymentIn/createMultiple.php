@@ -7,7 +7,6 @@
 
 <?php echo $this->renderPartial('_formMultiple', array(
     'paymentIn' => $paymentIn,
-    'customer' => $customer,
     'invoiceHeader' => $invoiceHeader,
     'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
 )); ?>

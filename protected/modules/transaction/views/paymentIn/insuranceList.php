@@ -1,4 +1,4 @@
-<h1>List Customer</h1>
+<h1>List Asuransi</h1>
    
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment In', Yii::app()->baseUrl.'/transaction/paymentIn/admin' , array(
@@ -7,9 +7,9 @@
 </div>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'customer-grid',
-    'dataProvider' => $customerDataProvider,
-    'filter' => $customer,
+    'id' => 'insurance-company-grid',
+    'dataProvider' => $insuranceCompanyDataProvider,
+    'filter' => $insuranceCompany,
     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
     'pager' => array(
         'cssFile' => false,
@@ -21,18 +21,15 @@
             'value' => '$data->name',
         ),
         array(
-            'name' => 'customer_type',
-            'value' => '$data->customer_type',
+            'name' => 'coa_id',
+            'header' => 'COA Piutang',
+            'value' => '$data->coa->name',
         ),
-        array(
-            'name' => 'address',
-            'value' => '$data->address',
-        ),
-        'tenor',
+        'email',
         array(
             'header' => '',
             'type' => 'raw',
-            'value' => 'CHtml::link("create", array("createMultiple", "customerId" => $data->id, "insuranceId" => ""))',
+            'value' => 'CHtml::link("create", array("createMultiple", "customerId" => "", "insuranceId" => $data->id))',
             'htmlOptions' => array(
                 'style' => 'text-align: center;'
             ),

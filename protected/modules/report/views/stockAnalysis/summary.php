@@ -15,7 +15,7 @@ Yii::app()->clientScript->registerScript('report', '
                 <?php echo CHtml::beginForm(array(''), 'get'); ?>
 
                 <div class="row">
-                    <div class="medium-6 columns">
+                    <div class="medium-4 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -35,6 +35,41 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Master Category</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownList('ProductMasterCategoryId', $productMasterCategoryId, CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                            'order' => 'name',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
+                                            'update' => '#product_sub_master_category',
+                                        )),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">ID</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('ProductId', $productId); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="medium-4 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -54,6 +89,41 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Sub Master Category</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_master_category">
+                                    <?php echo CHtml::dropDownList('ProductSubMasterCategoryId', $productSubMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
+                                            'update' => '#product_sub_category',
+                                        )),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Name</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('ProductName', $productName); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="medium-4 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -68,6 +138,42 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Sub Category</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_category">
+                                    <?php echo CHtml::dropDownList('ProductSubCategoryId', $productSubCategoryId, CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_category">
+                                    <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="medium-12 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-2 columns">
@@ -106,75 +212,6 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
-
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Master Category</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownList('ProductMasterCategoryId', $productMasterCategoryId, CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                        'empty' => '-- All --',
-                                            'order' => 'name',
-                                        'onchange' => CHtml::ajax(array(
-                                            'type' => 'GET',
-                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
-                                            'update' => '#product_sub_master_category',
-                                        )),
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Sub Master Category</span>
-                                </div>
-
-                                <div class="small-8 columns" id="product_sub_master_category">
-                                    <?php echo CHtml::dropDownList('ProductSubMasterCategoryId', $productSubMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                        'empty' => '-- All --',
-                                        'order' => 'name',
-                                        'onchange' => CHtml::ajax(array(
-                                            'type' => 'GET',
-                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
-                                            'update' => '#product_sub_category',
-                                        )),
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Sub Category</span>
-                                </div>
-
-                                <div class="small-8 columns" id="product_sub_category">
-                                    <?php echo CHtml::dropDownList('ProductSubCategoryId', $productSubCategoryId, CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                        'empty' => '-- All --',
-                                        'order' => 'name',
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
-                                </div>
-
-                                <div class="small-8 columns" id="product_sub_category">
-                                    <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                        'empty' => '-- All --',
-                                        'order' => 'name',
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="clear"></div>
@@ -203,6 +240,8 @@ Yii::app()->clientScript->registerScript('report', '
                 'productMasterCategoryId' => $productMasterCategoryId,
                 'productSubMasterCategoryId' => $productSubMasterCategoryId,
                 'productSubCategoryId' => $productSubCategoryId,
+                'productId' => $productId,
+                'productName' => $productName,
             )); ?>
         </div>
     </div>

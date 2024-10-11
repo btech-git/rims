@@ -28,7 +28,6 @@ class StockAnalysisController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
         $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
@@ -36,6 +35,8 @@ class StockAnalysisController extends Controller {
         $productMasterCategoryId = (isset($_GET['ProductMasterCategoryId'])) ? $_GET['ProductMasterCategoryId'] : '';
         $productSubMasterCategoryId = (isset($_GET['ProductSubMasterCategoryId'])) ? $_GET['ProductSubMasterCategoryId'] : '';
         $productSubCategoryId = (isset($_GET['ProductSubCategoryId'])) ? $_GET['ProductSubCategoryId'] : '';
+        $productId = (isset($_GET['ProductId'])) ? $_GET['ProductId'] : '';
+        $productName = (isset($_GET['ProductName'])) ? $_GET['ProductName'] : '';
         
         $dataProvider = $inventoryDetail->search();
         
@@ -59,7 +60,8 @@ class StockAnalysisController extends Controller {
         
         $this->render('summary', array(
             'inventoryDetail' => $inventoryDetail,
-            'product' => $product,
+            'productId' => $productId,
+            'productName' => $productName,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,

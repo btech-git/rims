@@ -17,42 +17,53 @@
 </div>
 
 <?php echo CHtml::endForm(); ?>
+
 <br />
 
-<div class="grid-view">
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id'=>'receive-item-grid',
-        'dataProvider'=>$jurnalUmumDataProvider,
-        'filter'=>null,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager'=>array(
-           'cssFile'=>false,
-           'header'=>'',
-        ),
-        'columns'=>array(
-            array(
-                'name'=>'kode_transaksi', 
-                'value'=>'CHtml::link($data->kode_transaksi, array("generalLedger/redirectTransaction", "codeNumber"=>$data->kode_transaksi), array("target" => "_blank"))', 
-                'type'=>'raw'
-            ),
-            array(
-                'name'=>'tanggal_transaksi', 
-                'value'=>'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->tanggal_transaksi))', 
-            ),
-            'transaction_subject',
-            'transaction_type',
-            array(
-                'header' => 'Debit',
-                'name'=>'total', 
-                'value'=>'$data->debet_kredit == "D" ? AppHelper::formatMoney($data->total) : 0', 
-                'htmlOptions' => array('style' => 'text-align: right'),
-            ),
-            array(
-                'header' => 'Kredit',
-                'name'=>'total', 
-                'value'=>'$data->debet_kredit == "K" ? AppHelper::formatMoney($data->total) : 0', 
-                'htmlOptions' => array('style' => 'text-align: right'),
-            ),
-        ),
-    )); ?>
-</div>
+<table class="report">
+    <tr>
+        <th class="width2-1">No.</th>
+        <th class="width2-2">Transaksi</th>
+        <th class="width2-3">Tanggal</th>
+        <th class="width2-4">Description</th>
+        <th class="width2-5">Memo</th>
+        <th class="width2-6">Debet</th>
+        <th class="width2-7">Kredit</th>
+    </tr>
+    <?php $totalDebet = '0.00'; ?>
+    <?php $totalCredit = '0.00'; ?>
+    <?php foreach ($jurnalUmumDataProvider->data as $i => $header): ?>
+        <tr>
+            <td class="width2-1" style="text-align: center">
+                <?php echo $i+1; ?>
+            </td>
+            <td class="width2-2">
+                <?php echo CHtml::link($header->kode_transaksi, Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $header->kode_transaksi)), array('target' => '_blank')); ?>
+            </td>
+            <td class="width2-3">
+                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?>
+            </td>
+            <td class="width2-4">
+                <?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?>
+            </td>
+            <td class="width2-5">
+                <?php echo CHtml::encode(CHtml::value($header, 'transaction_type')); ?>
+            </td>
+            <td class="width2-6" style="text-align: right">
+                <?php $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0 ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?>
+            </td>
+            <td class="width2-7" style="text-align: right">
+                <?php $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0 ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
+            </td>
+        </tr>
+        <?php $totalDebet += $debitAmount; ?>
+        <?php $totalCredit += $creditAmount; ?>
+    <?php endforeach; ?>
+    <tr>
+        <td colspan='5' style="text-align: right">Total</td>
+        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebet)); ?></td>
+        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?></td>
+    </tr>
+</table>

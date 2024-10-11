@@ -258,84 +258,85 @@ $this->menu = array(
                         </div>
                     </fieldset>-->
 
-            <fieldset>
-                <legend>Customer</legend>
-                <div class="large-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Name</span>
-                            </div>
+            <?php if (!empty($model->customer_id)): ?>
+                <fieldset>
+                    <legend>Customer</legend>
+                    <div class="large-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Name</span>
+                                </div>
 
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?>"> 
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Type</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Address</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <textarea name="" id="Customer_customer_address" cols="30" rows="5" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end div large -->
+
+                    <div class="large-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Phone</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Mobile</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')) ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Email</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Customer_email" value="<?php echo $model->customer_id != "" ? $model->customer->email : ''; ?>"> 
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Type</span>
-                            </div>
-
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"> 
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Address</span>
-                            </div>
-
-                            <div class="small-8 columns">
-                                <textarea name="" id="Customer_customer_address" cols="30" rows="5" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- end div large -->
-
-                <div class="large-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Phone</span>
-                            </div>
-
-                            <div class="small-8 columns">
-                                <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Mobile</span>
-                            </div>
-
-                            <div class="small-8 columns">
-                                <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')) ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Email</span>
-                            </div>
-                            <div class="small-8 columns">
-                                <input type="text" readonly="true" id="Customer_email" value="<?php echo $model->customer_id != "" ? $model->customer->email : ''; ?>"> 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-
+                </fieldset>
+            <?php endif; ?>
             <?php if ($model->vehicle_id != ""): ?>
                 <fieldset>
                     <legend>Vehicle</legend>
@@ -473,6 +474,8 @@ $this->menu = array(
                         <thead>
                             <tr>
                                 <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Asuransi</th>
                                 <th>Total Invoice</th>
                                 <th>Pph</th>
                                 <th>Payment Amount</th>
@@ -483,6 +486,8 @@ $this->menu = array(
                             <?php foreach ($model->paymentInDetails as $detail): ?>
                             <tr>
                                 <td><?php echo CHTml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/view", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.customer.name')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.insuranceCompany.name')); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'tax_service_amount'))); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?></td>
@@ -492,12 +497,12 @@ $this->menu = array(
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td style="text-align: right" colspan="3">Downpayment</td>
+                                <td style="text-align: right" colspan="5">Downpayment</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'downpayment_amount'))); ?></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="3">Diskon</td>
+                                <td style="text-align: right" colspan="5">Diskon</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?></td>
                                 <td></td>
                             </tr>
@@ -507,22 +512,22 @@ $this->menu = array(
                                 <td></td>
                             </tr>-->
                             <tr>
-                                <td style="text-align: right" colspan="3">Beban Administrasi Bank</td>
+                                <td style="text-align: right" colspan="5">Beban Administrasi Bank</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_administration_fee'))); ?></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="3">Beban Merimen</td>
+                                <td style="text-align: right" colspan="5">Beban Merimen</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'merimen_fee'))); ?></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="3">Total Payment</td>
+                                <td style="text-align: right" colspan="5">Total Payment</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPayment'))); ?></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="3">Total Invoice</td>
+                                <td style="text-align: right" colspan="5">Total Invoice</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?></td>
                                 <td></td>
                             </tr>

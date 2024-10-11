@@ -34,17 +34,31 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Customer', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+            <?php if (empty($paymentIn->header->insurance_company_id)): ?>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Customer', ''); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php $customer = Customer::model()->findByPk($paymentIn->header->customer_id); ?>
+                            <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php else: ?>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Asuransi', ''); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php $insuranceCompany = InsuranceCompany::model()->findByPk($paymentIn->header->insurance_company_id); ?>
+                            <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
             
             <div class="field">
                 <div class="row collapse">
@@ -227,6 +241,16 @@
                 'header' => 'Tanggal',
                 'name' => 'invoice_date',
                 'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
+            ),
+            array(
+                'name' => 'customer_id',
+                'header' => 'Customer',
+                'value' => 'empty($data->customer_id) ? "" : $data->customer->name',
+            ),
+            array(
+                'name' => 'insurance_company_id',
+                'header' => 'Asuransi',
+                'value' => 'empty($data->insurance_company_id) ? "" : $data->insuranceCompany->name',
             ),
             array(
                 'name' => 'total_price',

@@ -73,6 +73,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
             </td>
         </tr>
+        <?php $totalDebet += $debitAmount; ?>
+        <?php $totalCredit += $creditAmount; ?>
     <?php endforeach; ?>
     <tr>
         <td colspan='5' style="text-align: right">Total</td>
