@@ -771,11 +771,12 @@ class PaymentInController extends Controller {
 
                         if (!empty($paymentIn->insurance_company_id)) {
                             $coaId = $paymentIn->insuranceCompany->coa_id;
+                            $remark = $paymentIn->insuranceCompany->name;
                         } else {
                             $coaId = $paymentIn->customer->coa_id;
+                            $remark = $paymentIn->customer->name;
                         }
                         
-                        $remark = $paymentIn->customer->name;
                         $totalKas = $paymentIn->totalPayment;
                         $jurnalPiutang = new JurnalUmum;
                         $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
