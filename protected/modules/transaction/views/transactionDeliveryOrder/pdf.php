@@ -19,7 +19,7 @@ if ($model->customer->customerPhones == NULL) {
 
 ?>
 <div class="container">
-    <div class="header" style="font-size: 10px">
+    <div class="header">
         <div class="left">
             <img src="images/logo.png" alt="">
             <table>
@@ -36,7 +36,7 @@ if ($model->customer->customerPhones == NULL) {
         </div>
         <div class="right">
             <h3>Surat Jalan</h3>
-            <table>
+            <table style="font-size: 10px">
                 <tr>
                     <td>Date</td>
                     <td>:</td>
@@ -67,7 +67,7 @@ if ($model->customer->customerPhones == NULL) {
     </div>
     <div class="supplier" style="font-size: 10px">
         <div class="left">
-            <table>
+            <table style="font-size: 10px">
                 <tr>
                     <td colspan="3">Kepada Yth,</td>
                 </tr>
