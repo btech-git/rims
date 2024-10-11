@@ -201,8 +201,8 @@ if ($model->customer->customerPhones == NULL) {
             <?php endif; ?>
             <table>
                 <tr>
-                    <td width="30%">Notes :</td>
-                    <td width="70%">
+                    <td width="30%" style="font-size: 10px">Notes :</td>
+                    <td width="70%" style="font-size: 10px">
                         <ol>
                             <li>surat jalan ini merupakan bukti resmi penerimaan barang</li>
                             <li>surat jalan ini bukan bukti penjualan</li>
