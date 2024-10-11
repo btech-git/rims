@@ -39,17 +39,27 @@ if ($model->customer->customerPhones == NULL) {
         <tr>
             <td>Date</td>
             <td>:</td>
-            <td><?php echo tanggal($model->delivery_date) ?></td>
+            <td><?php echo tanggal($model->delivery_date); ?></td>
         </tr>
         <tr>
             <td>No DO#</td>
             <td>:</td>
-            <td><?php echo $model->delivery_order_no ?></td>
+            <td><?php echo $model->delivery_order_no; ?></td>
         </tr>
         <tr>
-            <td>Invoice#</td>
+            <td>Cabang asal</td>
             <td>:</td>
-            <td><?php //echo $model->delivery_order_no ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($model, 'senderBranch.name')); ?></td>
+        </tr>
+        <tr>
+            <td>Cabang tujuan</td>
+            <td>:</td>
+            <td><?php echo CHtml::encode(CHtml::value($model, 'destinationBranch.name')); ?></td>
+        </tr>
+        <tr>
+            <td>Pembuat</td>
+            <td>:</td>
+            <td><?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?></td>
         </tr>
     </table>
 </div>
@@ -62,9 +72,9 @@ if ($model->customer->customerPhones == NULL) {
                 <td colspan="3">Kepada Yth,</td>
             </tr>
             <tr>
-                <td>Name</td>
+                <td>Customer</td>
                 <td>:</td>
-                <td><?php echo $model->customer->name; ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
             </tr>
             <tr>
                 <td>Phone</td>
