@@ -82,7 +82,6 @@ class PaymentInController extends Controller {
                 $remark = $model->customer->name;
             }
 
-            $remark = $model->customer->name;
             $totalKas = $model->totalPayment;
             $jurnalPiutang = new JurnalUmum;
             $jurnalPiutang->kode_transaksi = $model->payment_number;
