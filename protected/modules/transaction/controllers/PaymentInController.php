@@ -65,13 +65,6 @@ class PaymentInController extends Controller {
 
             foreach ($model->paymentInDetails as $detail) {
                 $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                if (!empty($invoiceHeader->registration_transaction_id)) {
-                    $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
-                    $coaId = !empty($registrationTransaction->insurance_company_id) ? $registrationTransaction->insuranceCompany->coa_id : $model->customer->coa_id;
-                } else {
-                    $coaId = $model->customer->coa_id;
-                }
-
                 if ($invoiceHeader->payment_left > 0.00) {
                     $invoiceHeader->status = 'PARTIALLY PAID';
                 } else {
@@ -79,6 +72,14 @@ class PaymentInController extends Controller {
                 }
 
                 $invoiceHeader->update(array('status'));
+            }
+
+            if (!empty($model->insurance_company_id)) {
+                $coaId = $model->insuranceCompany->coa_id;
+                $remark = $model->insuranceCompany->name;
+            } else {
+                $coaId = $model->customer->coa_id;
+                $remark = $model->customer->name;
             }
 
             $remark = $model->customer->name;
