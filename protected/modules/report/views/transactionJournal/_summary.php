@@ -63,10 +63,10 @@
                 <?php $textColor = $totalDebit != $totalCredit ? 'red' : 'black'; ?>
                 <?php $textError = $totalDebit != $totalCredit ? 'err' : ''; ?>
                 <td class="width1-4" style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $textColor; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?><?php echo $textError; ?>
                 </td>
                 <td class="width1-5" style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $textColor; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?><?php echo $textError; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
