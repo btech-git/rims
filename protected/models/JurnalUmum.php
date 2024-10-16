@@ -459,7 +459,7 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage) {
+    public static function getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage, $pageSize) {
         
         $pageOffset = $currentPage - 1;
         $transactionTypeConditionSql = '';
@@ -491,7 +491,7 @@ class JurnalUmum extends CActiveRecord {
                 WHERE tanggal_transaksi BETWEEN :start_date AND :end_date" . $transactionTypeConditionSql . $branchConditionSql . $coaConditionSql ."
                 GROUP BY kode_transaksi
                 ORDER BY transaction_date ASC
-                LIMIT {$pageOffset}, 200";
+                LIMIT {$pageOffset}, {$pageSize}";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

@@ -64,7 +64,8 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
         return array(
             array('transaction_number, transaction_date, transaction_time, repair_type, status, created_datetime, customer_id, vehicle_id, branch_id, user_id_created, employee_id_sale_person', 'required'),
             array('total_quantity_service, total_quantity_product, vehicle_mileage, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'numerical', 'integerOnly' => true),
-            array('transaction_number, repair_type, status', 'length', 'max' => 20),
+            array('repair_type, status', 'length', 'max' => 20),
+            array('transaction_number', 'length', 'max' => 30),
             array('sub_total_service, discount_price_service, total_price_service, sub_total_product, discount_price_product, total_price_product, grand_total, tax_product_amount, tax_service_amount', 'length', 'max' => 18),
             array('tax_product_percentage, tax_service_percentage', 'length', 'max' => 10),
             array('problem, note, edited_datetime', 'safe'),
@@ -85,8 +86,8 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'employeeIdSalePerson' => array(self::BELONGS_TO, 'Employee', 'employee_id_sale_person'),
-            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
-            'userIdEdited' => array(self::BELONGS_TO, 'Users', 'user_id_edited'),
+            'userIdCreated' => array(self::BELONGS_TO, 'User', 'user_id_created'),
+            'userIdEdited' => array(self::BELONGS_TO, 'User', 'user_id_edited'),
             'saleEstimationProductDetails' => array(self::HAS_MANY, 'SaleEstimationProductDetail', 'sale_estimation_header_id'),
             'saleEstimationServiceDetails' => array(self::HAS_MANY, 'SaleEstimationServiceDetail', 'sale_estimation_header_id'),
         );
@@ -189,4 +190,7 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
         return parent::model($className);
     }
 
+    public function getSubTotalProductService() {
+        return $this->sub_total_product + $this->sub_total_service;
+    }
 }

@@ -45,9 +45,12 @@ class SaleEstimationController extends Controller {
         $saleEstimation = $this->instantiate(null);
 
         $saleEstimation->header->transaction_date = date('Y-m-d');
+        $saleEstimation->header->transaction_time = date('H:i:s');
         $saleEstimation->header->created_datetime = date('Y-m-d H:i:s');
         $saleEstimation->header->user_id_created = Yii::app()->user->id;
         $saleEstimation->header->branch_id = Yii::app()->user->branch_id;
+        $saleEstimation->header->status = 'Draft';
+        $saleEstimation->header->repair_type = 'GR/BR';
 
         $endDate = date('Y-m-d');
                 
@@ -197,12 +200,30 @@ class SaleEstimationController extends Controller {
 
     public function actionUpdate($id) {
         $saleEstimation = $this->instantiate($id);
-        $vehicle = Vehicle::model()->findByPk($saleEstimation->header->vehicle_id);
-        $customer = Customer::model()->findByPk($vehicle->customer_id);
         $saleEstimation->header->edited_datetime = date('Y-m-d H:i:s');
         $saleEstimation->header->user_id_edited = Yii::app()->user->id;
 
-        if (isset($_POST['RegistrationTransaction'])) {
+        $endDate = date('Y-m-d');
+                
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+        $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
+        $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
+        $productDataProvider = $product->searchBySaleEstimation($endDate);
+        $serviceDataProvider = $service->searchBySaleEstimation();
+        $vehicleDataProvider = $vehicle->search();
+        
+        $productPageNumber = isset($_GET['product_page']) ? $_GET['product_page'] : 1;
+        $servicePageNumber = isset($_GET['service_page']) ? $_GET['service_page'] : 1;
+        $productDataProvider->pagination->pageVar = 'product_page';
+        $productDataProvider->pagination->pageSize = 50;
+        $productDataProvider->pagination->currentPage = $productPageNumber - 1;
+        $serviceDataProvider->pagination->pageVar = 'service_page';
+        $serviceDataProvider->pagination->pageSize = 50;
+        $serviceDataProvider->pagination->currentPage = $servicePageNumber - 1;
+        
+        $branches = Branch::model()->findAll();
+        
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($saleEstimation);
             
             if ($saleEstimation->save(Yii::app()->db)) {
@@ -212,61 +233,41 @@ class SaleEstimationController extends Controller {
 
         $this->render('update', array(
             'saleEstimation' => $saleEstimation,
+            'product' => $product, 
+            'productDataProvider' => $productDataProvider, 
+            'service' => $service,
+            'serviceDataProvider' => $serviceDataProvider,
             'vehicle' => $vehicle,
-            'customer' => $customer,
+            'vehicleDataProvider' => $vehicleDataProvider,
+            'branches' => $branches,
+            'endDate' => $endDate,
+            'isSubmitted' => isset($_POST['Submit']),
         ));
     }
 
     public function actionView($id) {
         
         $model = $this->loadModel($id);
-        $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
-        $services = SaleEstimationServiceDetail::model()->findAllByAttributes(array(
-            'registration_transaction_id' => $id,
-            'is_body_repair' => 0
-        ));
-        $products = SaleEstimationProductDetail::model()->findAllByAttributes(array('registration_transaction_id' => $id));
-        $damages = RegistrationDamage::model()->findAllByAttributes(array('registration_transaction_id' => $id));
-        $insurances = RegistrationInsuranceData::model()->findAllByAttributes(array('registration_transaction_id' => $id));
-        $registrationMemos = RegistrationMemo::model()->findAllByAttributes(array('registration_transaction_id' => $id));
-        $registrationBodyRepairDetails = RegistrationBodyRepairDetail::model()->findAllByAttributes(array('registration_transaction_id' => $id));
-
-        if (isset($_POST['SubmitMemo']) && !empty($_POST['Memo'])) {
-            $registrationMemo = new RegistrationMemo();
-            $registrationMemo->registration_transaction_id = $id;
-            $registrationMemo->memo = $_POST['Memo'];
-            $registrationMemo->date_time = date('Y-m-d H:i:s');
-            $registrationMemo->user_id = Yii::app()->user->id;
-            $registrationMemo->save();
-        }
 
         $this->render('view', array(
             'model' => $model,
-            'services' => $services,
-            'products' => $products,
-            'damages' => $damages,
-            'insurances' => $insurances,
-            'registrationMemos' => $registrationMemos,
-            'registrationBodyRepairDetails' => $registrationBodyRepairDetails,
-            'memo' => $memo,
         ));
     }
 
     public function actionAdmin() {
-        $model = new RegistrationTransaction('search');
+        $model = new SaleEstimationHeader('search');
         $model->unsetAttributes();  // clear any default values
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
-        if (isset($_GET['RegistrationTransaction'])) {
-            $model->attributes = $_GET['RegistrationTransaction'];
+        if (isset($_GET['SaleEstimationHeader'])) {
+            $model->attributes = $_GET['SaleEstimationHeader'];
         }
 
-        $dataProvider = $model->searchAdmin();
+        $dataProvider = $model->search();
         $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
         $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
-        $dataProvider->criteria->addCondition("repair_type = 'BR'");
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('admin', array(

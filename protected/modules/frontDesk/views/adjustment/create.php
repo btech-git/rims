@@ -42,7 +42,7 @@
                                 <div class="small-8 columns">
                                     <?php echo CHtml::activeDropDownList($adjustment->header, 'transaction_type', array(
                                         'Selisih Cabang' => 'Selisih Cabang',
-                                        'Hilang' => 'Hilang',
+                                        'Hilang' => 'Hilang / Lebih',
                                     ), array('empty' => '-- Pilih Tipe --')); ?>
                                     <?php echo CHtml::error($adjustment->header, 'transaction_type'); ?>
                                 </div>

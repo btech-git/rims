@@ -37,6 +37,7 @@
     var addServiceAjaxUrl = "<?php echo CController::createUrl('ajaxHtmlAddServiceDetail', array('id' => '__id__', 'serviceId' => '__serviceId__')); ?>"
     $(document).ready(function() {
         $('#service-data-table > tbody > tr').on('click', function() {
+            $(this).addClass('table-active');
             $.ajax({
                 type: "POST",
                 dataType: "HTML",

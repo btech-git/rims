@@ -1,6 +1,6 @@
 <?php
 
-class BodyRepairController extends Controller {
+class RegistrationTransactionController extends Controller {
 
     public $layout = '//layouts/column2-1';
 
@@ -265,8 +265,8 @@ class BodyRepairController extends Controller {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
 
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
@@ -275,8 +275,7 @@ class BodyRepairController extends Controller {
         $dataProvider = $model->searchAdmin();
         $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
         $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
-        $dataProvider->criteria->addCondition("repair_type = 'BR'");
-        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+//        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,

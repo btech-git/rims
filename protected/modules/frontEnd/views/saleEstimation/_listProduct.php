@@ -1,5 +1,6 @@
 <?php echo CHtml::beginForm(); ?>
     <div class="row">
+        <h2>List Produk</h2>
         <div class="col">
             <div class="my-2 row">
                 <label class="col col-form-label">Brand</label>
@@ -112,6 +113,8 @@
     <div class="text-center">
         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter', 'class' => 'btn btn-outline-dark'));  ?>
     </div>
+
+    <hr />
 
     <div id="product_data_container">
         <?php $this->renderPartial('_productDataTable', array(

@@ -3,25 +3,29 @@
 /* @var $generalRepairRegistration->header RegistrationTransaction */
 
 $this->breadcrumbs=array(
-	'Registration Transactions'=>array('admin'),
-	$generalRepairRegistration->header->id=>array('view','id'=>$generalRepairRegistration->header->id),
+	'Estimasi Penjualan'=>array('admin'),
+	$saleEstimation->header->id=>array('view','id'=>$saleEstimation->header->id),
 	'Update',
-);
-
-$this->menu=array(
-	array('label'=>'List RegistrationTransaction', 'url'=>array('index')),
-	array('label'=>'Create RegistrationTransaction', 'url'=>array('create')),
-	array('label'=>'View RegistrationTransaction', 'url'=>array('view', 'id'=>$generalRepairRegistration->header->id)),
-	array('label'=>'Manage RegistrationTransaction', 'url'=>array('admin')),
 );
 ?>
 
-
 <div id="maincontent">
+    <?php echo $this->renderPartial('_list', array(
+        'product' => $product, 
+        'productDataProvider' => $productDataProvider, 
+        'service' => $service,
+        'serviceDataProvider' => $serviceDataProvider,
+        'branches' => $branches,
+        'endDate' => $endDate,
+        'isSubmitted' => $isSubmitted,
+    )); ?>
+    
     <?php echo $this->renderPartial('_form', array(
-        'generalRepairRegistration' => $generalRepairRegistration,
+        'saleEstimation' => $saleEstimation,
+        'branches' => $branches,
+        'isSubmitted' => $isSubmitted,
         'vehicle' => $vehicle,
-        'customer' => $customer,
+        'vehicleDataProvider' => $vehicleDataProvider,
     )); ?>
 </div>
 	

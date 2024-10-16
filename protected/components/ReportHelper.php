@@ -24,6 +24,17 @@ class ReportHelper extends CComponent
 		return $dataProvider;
 	}
 
+	public static function summaryInfo($currentPage, $pageSize, $totalItemCount)
+	{
+                $pageOffset = $currentPage - 1;
+		$start = $pageOffset * $pageSize + 1;
+		$end = ($pageOffset + 1) * $pageSize;
+
+		$info = ($totalItemCount > 0) ? "Displaying {$start}-{$end} of {$totalItemCount} result(s)." : '';
+
+		return $info;
+	}
+
 	public static function summaryText($dataProvider)
 	{
 		$start = $dataProvider->pagination->getCurrentPage(false) * $dataProvider->pagination->pageSize + 1;

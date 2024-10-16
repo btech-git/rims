@@ -172,10 +172,8 @@ Yii::app()->clientScript->registerScript('report', '
             <hr />
 
             <div class="relative">
-                <div class="reportDisplay">
-                    <?php echo $transactionJournalCount; ?>
-                    <?php //echo ReportHelper::summaryText($jurnalUmumSummary->dataProvider); ?>
-                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                <div class="reportDisplay" style="text-align: right">
+                    <?php echo ReportHelper::summaryInfo($currentPage, $pageSize, $transactionJournalCount); ?>
                 </div>
 
                 <?php $this->renderPartial('_summary', array(

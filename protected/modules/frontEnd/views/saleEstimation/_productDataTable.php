@@ -64,6 +64,7 @@
     var addProductAjaxUrl = "<?php echo CController::createUrl('ajaxHtmlAddProductDetail', array('id' => '__id__', 'productId' => '__productId__')); ?>"
     $(document).ready(function() {
         $('#product-data-table > tbody > tr').on('click', function() {
+            $(this).addClass('table-active');
             $.ajax({
                 type: "POST",
                 dataType: "HTML",

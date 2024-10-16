@@ -63,6 +63,8 @@
         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter', 'class' => 'btn btn-outline-dark'));  ?>
     </div>
 
+    <hr />
+
     <div id="service_data_container">
         <?php $this->renderPartial('_serviceDataTable', array(
             'serviceDataProvider' => $serviceDataProvider,

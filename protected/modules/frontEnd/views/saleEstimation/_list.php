@@ -1,17 +1,17 @@
 <div class="<?php echo !$isSubmitted ? '' : 'd-none'; ?>" id="master-list">
-    <?php echo $this->renderPartial('_listProduct', array(
-        'product' => $product, 
-        'productDataProvider' => $productDataProvider, 
-        'branches' => $branches,
-        'endDate' => $endDate,
-    )); ?>
-
-    <?php echo $this->renderPartial('_listService', array(
-        'service' => $service,
-        'serviceDataProvider' => $serviceDataProvider,
-        'branches' => $branches,
-        'endDate' => $endDate,
-    )); ?>
+    
+            <?php echo $this->renderPartial('_listProduct', array(
+                'product' => $product, 
+                'productDataProvider' => $productDataProvider, 
+                'branches' => $branches,
+                'endDate' => $endDate,
+            )); ?>
+            <?php echo $this->renderPartial('_listService', array(
+                'service' => $service,
+                'serviceDataProvider' => $serviceDataProvider,
+                'branches' => $branches,
+                'endDate' => $endDate,
+            )); ?>
     
     <div class="d-grid">
         <div class="row">

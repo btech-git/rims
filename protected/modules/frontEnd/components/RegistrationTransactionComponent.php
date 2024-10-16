@@ -1,6 +1,6 @@
 <?php
 
-class BodyRepair extends CComponent {
+class RegistrationTransactionComponent extends CComponent {
 
     public $header;
     public $damageDetails;

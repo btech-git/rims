@@ -120,4 +120,7 @@ class SaleEstimationProductDetail extends CActiveRecord {
         return parent::model($className);
     }
 
+    public function getTotalPrice() {
+        return $this->quantity * $this->sale_price; 
+    }
 }

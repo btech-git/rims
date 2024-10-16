@@ -17,10 +17,11 @@
                             <?php if (true): ?>
                                 <?php $isActive = Yii::app()->controller->id === 'saleEstimation' && (
                                         Yii::app()->controller->action->id === 'admin' ||
+                                        Yii::app()->controller->action->id === 'view' ||
                                         Yii::app()->controller->action->id === 'create'
                                 ); ?>
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
-                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/saleEstimation/create'); ?>" class="nav-link px-0 align-middle">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/saleEstimation/admin'); ?>" class="nav-link px-0 align-middle">
                                         <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
                                             Estimasi
                                         </span>
@@ -36,35 +37,21 @@
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
                                     <a href="<?php echo Yii::app()->createUrl('frontEnd/customerRegistration/vehicleList'); ?>" class="nav-link px-0 align-middle">
                                         <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
-                                            BR/GR Registration
+                                            Registration
                                         </span>
                                     </a>
                                 </li>
                             <?php endif; ?>
                                 
                             <?php if (true): ?>
-                                <?php $isActive = Yii::app()->controller->id === 'generalRepair' && (
+                                <?php $isActive = Yii::app()->controller->id === 'registrationTransaction' && (
                                     Yii::app()->controller->action->id === 'admin' || 
                                     Yii::app()->controller->action->id === 'view'
                                 ); ?>
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
-                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/generalRepair/admin'); ?>" class="nav-link px-0 align-middle">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/registrationTransaction/admin'); ?>" class="nav-link px-0 align-middle">
                                         <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
-                                            General Repair
-                                        </span>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                                
-                            <?php if (true): ?>
-                                <?php $isActive = Yii::app()->controller->id === 'bodyRepair' && (
-                                    Yii::app()->controller->action->id === 'admin' || 
-                                    Yii::app()->controller->action->id === 'view'
-                                ); ?>
-                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
-                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/bodyRepair/admin'); ?>" class="nav-link px-0 align-middle">
-                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
-                                            Body Repair
+                                            GR/BR
                                         </span>
                                     </a>
                                 </li>
@@ -143,12 +130,6 @@
             </div>
             <div class="col-auto col-md-9 col-xl-10 py-3">
                 <div class="container-fluid">
-                    <div class="row d-print-none">
-                        <div class="col d-flex justify-content-start">
-                        </div>
-                        <div class="col d-flex justify-content-end">
-                        </div>
-                    </div>
                     <?php echo $content; ?>
                 </div>
             </div>

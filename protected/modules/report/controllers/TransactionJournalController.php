@@ -21,18 +21,15 @@ class TransactionJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-//        $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
-
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
-//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 1;
-//        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $pageSize = 500;
         
-        $transactionJournalReport = JurnalUmum::getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage);
+        $transactionJournalReport = JurnalUmum::getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage, $pageSize);
         $transactionJournalCount = JurnalUmum::getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId);
         
         $transactionJournalReportTransactionCodes = array_map(function($transactionJournalReportItem) { return $transactionJournalReportItem['kode_transaksi']; }, $transactionJournalReport);
@@ -64,6 +61,7 @@ class TransactionJournalController extends Controller {
                 'account' => $account,
                 'accountDataProvider' => $accountDataProvider,
                 'currentPage' => $currentPage,
+                'pageSize' => $pageSize,
             ));
         }
         
@@ -79,6 +77,7 @@ class TransactionJournalController extends Controller {
             'account' => $account,
             'accountDataProvider' => $accountDataProvider,
             'currentPage' => $currentPage,
+            'pageSize' => $pageSize,
         ));
     }
 
