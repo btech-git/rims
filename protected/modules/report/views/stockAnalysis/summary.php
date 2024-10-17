@@ -113,11 +113,11 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Name</span>
+                                    <span class="prefix">Code</span>
                                 </div>
 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::textField('ProductName', $productName); ?>
+                                    <?php echo CHtml::textField('ProductCode', $productCode); ?>
                                 </div>
                             </div>
                         </div>
@@ -157,14 +157,11 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
+                                    <span class="prefix">Name</span>
                                 </div>
 
-                                <div class="small-8 columns" id="product_sub_category">
-                                    <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                        'empty' => '-- All --',
-                                        'order' => 'name',
-                                    )); ?>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('ProductName', $productName); ?>
                                 </div>
                             </div>
                         </div>
@@ -172,8 +169,7 @@ Yii::app()->clientScript->registerScript('report', '
                 </div>
                 
                 <div class="row">
-                    <div class="medium-12 columns">
-                        
+                    <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-2 columns">
@@ -212,6 +208,23 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch</span>
+                                </div>
+
+                                <div class="small-8 columns" id="product_sub_category">
+                                    <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'order' => 'name',
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="clear"></div>
@@ -241,6 +254,7 @@ Yii::app()->clientScript->registerScript('report', '
                 'productSubMasterCategoryId' => $productSubMasterCategoryId,
                 'productSubCategoryId' => $productSubCategoryId,
                 'productId' => $productId,
+                'productCode' => $productCode,
                 'productName' => $productName,
             )); ?>
         </div>

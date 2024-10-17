@@ -17,12 +17,12 @@
                         <td>Sub Brand</td>
                         <td>Sub Brand Series</td>
                         <td>Qty Sales</td>
-                        <td>Total</td>
+                        <!--<td>Total</td>-->
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productName); ?>
+                    <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName); ?>
                     <?php foreach ($fastMovingItems as $fastMovingItem): ?>
                         <tr>
                             <td><?php echo CHtml::encode($fastMovingItem['id']); ?></td>
@@ -33,7 +33,7 @@
                             <td><?php echo CHtml::encode($fastMovingItem['sub_brand']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['sub_brand_series']); ?></td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'])); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['sale_price'])); ?></td>
+                            <!--<td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['sale_price'])); ?></td>-->
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -58,12 +58,12 @@
                         <td>Sub Brand</td>
                         <td>Sub Brand Series</td>
                         <td>Qty Sales</td>
-                        <td>Total</td>
+                        <!--<td>Total</td>-->
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $productId, $productName); ?>
+                    <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $productId, $productCode, $productName); ?>
                     <?php foreach ($slowMovingItems as $slowMovingItem): ?>
                         <tr>
                             <td><?php echo CHtml::encode($slowMovingItem['id']); ?></td>
@@ -74,7 +74,7 @@
                             <td><?php echo CHtml::encode($slowMovingItem['sub_brand']); ?></td>
                             <td><?php echo CHtml::encode($slowMovingItem['sub_brand_series']); ?></td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['total_sale'])); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['sale_price'])); ?></td>
+                            <!--<td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['sale_price'])); ?></td>-->
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
