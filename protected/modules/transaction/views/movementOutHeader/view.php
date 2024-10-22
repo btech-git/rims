@@ -35,7 +35,7 @@ $this->menu = array(
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("movementOutApproval")
             )) ?>
-        <?php elseif ($model->status != "Draft" && $model->status !== 'CANCELLED!!!'): ?>
+        <?php elseif ($model->status == "Approved" && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px', 
@@ -48,7 +48,7 @@ $this->menu = array(
             )) ?>
         <?php endif; ?>
         
-        <?php if ($model->status != 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+        <?php if ($model->status == 'Approved' && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::button('Update Delivered', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',

@@ -48,8 +48,8 @@ class FollowUpController extends Controller {
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
-        $dataProvider = $model->searchByFollowUp();
-        $dataProvider->criteria->addCondition("t.status <> 'Finished' AND t.branch_id = :branch_id");
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addCondition("t.status = 'Finished' AND t.branch_id = :branch_id");
         $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         if (!empty($plateNumber)) {
@@ -85,6 +85,7 @@ class FollowUpController extends Controller {
             'customerName' => $customerName,
         ));
     }
+    
     public function actionAdminService() {
 
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
@@ -130,6 +131,7 @@ class FollowUpController extends Controller {
             'customerName' => $customerName,
         ));
     }
+    
     public function actionUpdateFeedback($id) {
         $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
         

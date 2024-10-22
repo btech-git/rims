@@ -1,253 +1,164 @@
-<?php
-/* @var $this RegistrationTransactionController */
-/* @var $bodyRepair->header RegistrationTransaction */
-/* @var $form CActiveForm */
-?>
+<div id="transaction-form">
+    <?php echo CHtml::beginForm(array(), 'POST'); ?>
+    
+    <div class="form">
+        <?php echo CHtml::errorSummary($registrationTransaction->header); ?>
 
-<div id="maincontent">
-    <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/bodyRepair/admin';?>"><span class="fa fa-th-list"></span>Manage Body Repair Registration</a>
-        <h1><?php if($bodyRepair->header->isNewRecord){ echo "New Body Repair Registration"; }else{ echo "Update Body Repair Registration";}?></h1>
-        <div class="form">
-            <?php $form=$this->beginWidget('CActiveForm', array(
-                'id'=>'registration-transaction-form',
-                'htmlOptions' => array('enctype' => 'multipart/form-data'),
-                'enableAjaxValidation'=>false,
-            )); ?>
-
-            <p class="note">Fields with <span class="required">*</span> are required.</p>
-
-            <?php echo $form->errorSummary($bodyRepair->header); ?>
-            <?php Yii::app()->clientScript->registerCoreScript('jquery'); ?>
-            <?php Yii::app()->clientScript->registerCoreScript('jquery.ui'); ?>
-
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Customer Vehicle Data</legend>
             <div class="row">
-                <div class="medium-12 columns">
-                    <div class="row">
-                        <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
-                            'tabs' => array(
-                                'Customer Info' => array(
-                                    'id' => 'info1',
-                                    'content' => $this->renderPartial('_infoCustomer', array(
-                                        'bodyRepair' => $bodyRepair, 
-                                        'customer' => $customer,
-                                    ), true)
-                                ),
-                                'Vehicle Info' => array(
-                                    'id' => 'info2',
-                                    'content' => $this->renderPartial('_infoVehicle', array(
-                                        'bodyRepair' => $bodyRepair,
-                                        'vehicle' => $vehicle,
-                                    ), true)
-                                ),
-                                'Service Exception Rate' => array(
-                                    'id' => 'info3',
-                                    'content' => $this->renderPartial('_serviceException', array(
-                                        'bodyRepair' => $bodyRepair,
-                                        'customer' => $customer,
-                                    ), true)
-                                ),
-                                'History' => array(
-                                    'id' => 'info4',
-                                    'content' => $this->renderPartial('_historyTransaction', array(
-                                        'bodyRepair' => $bodyRepair,
-                                        'vehicle' => $vehicle,
-                                    ), true)
-                                ),
+                <div class="col">
+                    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                        'tabs' => array(
+                            'Customer Info' => array(
+                                'id' => 'info1',
+                                'content' => $this->renderPartial('_infoCustomerVehicle', array(
+                                    'registrationTransaction' => $registrationTransaction, 
+                                    'customer' => $customer,
+                                    'vehicle' => $vehicle,
+                                ), true)
                             ),
-                            // additional javascript options for the tabs plugin
-                            'options' => array(
-                                'collapsible' => true,
+                            'History' => array(
+                                'id' => 'info2',
+                                'content' => $this->renderPartial('_infoHistory', array(
+                                    'registrationTransaction' => $registrationTransaction,
+                                    'vehicle' => $vehicle,
+                                ), true)
                             ),
-                            // set id for this widgets
-                            'id' => 'view_tab',
-                        )); ?>  
-                    </div>
-                    <!-- END ROW -->
-                    <br />
-
-                    <div class="row">
-                        <div class="medium-12 columns">
-                            <h2>Transaction</h2>
-                            <hr />
-
-                            <div class="row">
-                                <div class="medium-6 columns">
-                                    <?php if(!$bodyRepair->header->isNewRecord): ?>
-                                        <?php if($bodyRepair->header->work_order_number != ""): ?>
-                                            <div class="field">
-                                                <div class="row collapse">
-                                                    <div class="small-4 columns">
-                                                        <label class="prefix"><?php echo $form->labelEx($bodyRepair->header,'work_order_number'); ?></label>
-                                                    </div>
-                                                    <div class="small-8 columns">
-                                                        <?php echo $form->textField($bodyRepair->header,'work_order_number'); ?>
-                                                        <?php echo $form->error($bodyRepair->header,'work_order_number'); ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($bodyRepair->header,'transaction_date'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                                    'model' => $bodyRepair->header,
-                                                    'attribute' => "transaction_date",
-                                                    'options' => array(
-                                                        'dateFormat' => 'yy-mm-dd',
-                                                        'changeMonth' => true,
-                                                        'changeYear' => true,
-                                                    ),
-                                                    'htmlOptions' => array(
-                                                        'readonly' => true,
-                                                    ),
-                                                )); ?>
-                                                <?php echo $form->error($bodyRepair->header,'transaction_date'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($bodyRepair->header,'repair_type'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepair->header, 'repair_type', array('value'=>'BR','readonly'=>true)); ?>
-                                                <?php echo $form->error($bodyRepair->header,'repair_type'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">Car Mileage (KM)</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepair->header, 'vehicle_mileage'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- END COLUMN 6-->
-                                <div class="medium-6 columns">
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($bodyRepair->header,'branch_id'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepair->header,'branch_name',array('value'=>$bodyRepair->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $bodyRepair->header->branch->name,'readonly'=>true)); ?>
-                                                <?php echo $form->error($bodyRepair->header,'branch_id'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($bodyRepair->header,'employee_id_assign_mechanic'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::activeDropDownlist($bodyRepair->header, 'employee_id_assign_mechanic', CHtml::listData(Employee::model()->findAllByAttributes(array(
-                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
-//                                                    "division_id" => array(2),
-                                                    "position_id" => 1,
-//                                                    "level_id" => array(1, 2, 3, 4),
-                                                )), "id", "name"), array("empty" => "--Assign Mechanic--")); ?>
-                                                <?php echo $form->error($bodyRepair->header,'employee_id_assign_mechanic'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($bodyRepair->header,'employee_id_sales_person'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::activeDropDownlist($bodyRepair->header, 'employee_id_sales_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
-//                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
-//                                                    "division_id" => array(2),
-                                                    "position_id" => 2,
-//                                                    "level_id" => array(1, 2, 3, 4),
-                                                )), "id", "name"), array("empty" => "--Assign Sales--")); ?>
-                                                <?php echo $form->error($bodyRepair->header,'employee_id_sales_person'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">Insurance Company</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->dropDownlist($bodyRepair->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAll(),'id','name'),array(
-                                                    'prompt'=>'-- Tanpa Asuransi --',
-                                                )); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <?php if ($customer->customer_type === 'Company'): ?>
-                                        <div class="field">
-                                            <div class="row collapse">
-                                                <div class="small-4 columns">
-                                                    <label class="prefix"><?php echo $form->labelEx($bodyRepair->header, 'customer_work_order_number'); ?></label>
-                                                </div>
-                                                <div class="small-8 columns">
-                                                    <?php echo $form->textField($bodyRepair->header, 'customer_work_order_number'); ?>
-                                                    <?php echo $form->error($bodyRepair->header,'customer_work_order_number'); ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- end row -->
-                    <div class="row">
-                        <div class="medium-12 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <label class="prefix"><?php echo $form->labelEx($bodyRepair->header,'problem'); ?></label>
-                                    </div>
-                                    <div class="small-10 columns">
-                                        <?php echo $form->textArea($bodyRepair->header,'problem',array('rows'=>5, 'cols'=>50)); ?>
-                                        <?php echo $form->error($bodyRepair->header,'problem'); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <hr />
-                            
-                            <div class="field buttons text-center">
-                                <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>
-                                <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton')); ?>
-                            </div>
-                            <?php echo IdempotentManager::generate(); ?>
-
-                        </div>
-                    </div>
+                        ),
+                        // additional javascript options for the tabs plugin
+                        'options' => array(
+                            'collapsible' => true,
+                        ),
+                        // set id for this widgets
+                        'id' => 'view_tab',
+                    )); ?>  
                 </div>
             </div>
-            <?php $this->endWidget(); ?>
-        </div><!-- form -->
-    </div>
-</div>
+        </fieldset>
+        
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">FORM REGISTRASI</legend>
+            <div class="row">
+                <div class="col">
+                    <?php echo CHtml::activeLabelEx($registrationTransaction->header, 'transaction_date', array('class' => 'form-label', 'label' => 'Tanggal')); ?>
+                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        'model' => $registrationTransaction->header,
+                        'attribute' => "transaction_date",
+                        'options' => array(
+                            'dateFormat' => 'yy-mm-dd',
+                            'changeMonth' => true,
+                            'changeYear' => true,
+                        ),
+                        'htmlOptions' => array(
+                            'readonly' => true,
+                            'class' => 'form-control readonly-form-input',
+                        ),
+                    )); ?>
+                    <?php echo CHtml::error($registrationTransaction->header,'transaction_date'); ?>
+                </div>
+                <div class="col">
+                    <?php echo CHtml::label('BR/GR', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeDropDownList($registrationTransaction->header, 'repair_type', array(
+                        'GR' => 'GR',
+                        'BR' => 'BR',
+                    ), array('class' => 'form-control')); ?>
+                    <?php echo CHtml::error($registrationTransaction->header,'repair_type'); ?>
+                </div>
+            </div>
 
-<?php
-    Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl . '/js/vendor/jquery.number.min.js', CClientScript::POS_HEAD);
-    Yii::app()->clientScript->registerScript('myjavascript', '
-            $(".numbers").number( true,2, ".", ",");
-    ', CClientScript::POS_END);
-?>
+            <div class="row">
+                <div class="col">
+                    <?php echo CHtml::label('Branch', false, array('class' => 'form-label')); ?>
+                    <?php $branch = Branch::model()->findByPk($registrationTransaction->header->branch_id); ?>
+                    <?php echo CHtml::textField('BranchName', $branch->name, array(
+                        'class' => 'form-control', 
+                        'readonly'=>true
+                    )); ?>
+                    <?php echo CHtml::error($registrationTransaction->header,'branch_id'); ?>
+                </div>
+                <div class="col">
+                    <?php echo CHtml::label('Mekanik', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeDropDownlist($registrationTransaction->header, 'employee_id_assign_mechanic', CHtml::listData(Employee::model()->findAllByAttributes(array(
+                        "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
+                        "position_id" => 1,
+                    )), "id", "name"), array(
+                        'class' => 'form-control', 
+                        "empty" => "--Assign Mechanic--"
+                    )); ?>
+                    <?php echo CHtml::error($registrationTransaction->header,'employee_id_assign_mechanic'); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <?php echo CHtml::label('Salesman', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeDropDownlist($registrationTransaction->header, 'employee_id_sales_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
+                        "position_id" => 2,
+                    )), "id", "name"), array(
+                        'class' => 'form-control', 
+                        "empty" => "--Assign Sales--"
+                    )); ?>
+                    <?php echo CHtml::error($registrationTransaction->header,'employee_id_sales_person'); ?>
+                </div>
+                <div class="col">
+                    <?php echo CHtml::label('Asuransi', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeDropDownlist($registrationTransaction->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAll(),'id','name'),array(
+                        'prompt'=>'-- Tanpa Asuransi --',
+                        'class' => 'form-control'
+                    )); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <?php echo CHtml::activeLabelEx($registrationTransaction->header, 'problem', array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeTextArea($registrationTransaction->header,'problem',array(
+                        'rows' => 3, 
+                        'cols' => 30, 
+                        'class' => 'form-control'
+                    )); ?>
+                    <?php echo CHtml::error($registrationTransaction->header,'problem'); ?>
+                </div>
+                <div class="col">
+                    <?php echo CHtml::activeLabelEx($registrationTransaction->header, 'note', array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeTextArea($registrationTransaction->header,'note',array('rows'=>3, 'cols'=>30, 'class' => 'form-control')); ?>
+                    <?php echo CHtml::error($registrationTransaction->header,'note'); ?>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">SUKU CADANG - SPAREPARTS</legend>
+            <div class="detail" id="detail-product">
+                <?php $this->renderPartial('_detailProduct', array(
+                    'registrationTransaction' => $registrationTransaction,
+                )); ?>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">JASA PERBAIKAN - SERVICE</legend>
+            <div class="detail" id="detail-service">
+                <?php $this->renderPartial('_detailService', array('registrationTransaction' => $registrationTransaction,)); ?>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">TOTAL TRANSAKSI</legend>
+            <div class="detail" id="detail-total">
+                <?php $this->renderPartial('_detailTotal', array('registrationTransaction' => $registrationTransaction,)); ?>
+            </div>
+        </fieldset>
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class'=>'btn btn-danger')); ?>
+                    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'btn btn-success')); ?>
+                </div>
+            </div>
+            <?php echo IdempotentManager::generate(); ?>
+        </div>
+    </div>
+    
+    <?php echo CHtml::endForm(); ?>
+</div>

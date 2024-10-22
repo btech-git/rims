@@ -3,349 +3,189 @@
     'Create',
 ); ?>
 
-<h1>Feedback Customer</h1>
-
-            <fieldset>
-                <!--<legend>Information</legend>-->
-                <div class="row">
-                    <table>
-                        <tr>
-                            <td>Transaction #</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'transaction_number')); ?></td>
-                            <td>Customer</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Date</td>
-                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy H:m:s", CHtml::value($model, 'transaction_date'))); ?></td>
-                            <td>Type</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'customer.customer_type')); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Repair Type</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'repair_type')); ?></td>
-                            <td>Address</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'customer.address')); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Document Status</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'status')); ?></td>
-                            <td>Mobile Phone</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Payment Status</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'payment_status')); ?></td>
-                            <td>Email</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'customer.email')); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Vehicle Status</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'vehicle_status')); ?></td>
-                            <td>Plate #</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Problem</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'problem')); ?></td>
-                            <td>Car Model</td>
-                            <td>
-                                <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Sales Person</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'employeeIdSalesPerson.name')); ?></td>
-                            <td>Mileage (KM)</td>
-                            <td><?php echo CHtml::encode(CHtml::value($model, 'vehicle_mileage')); ?></td>
-                        </tr>
-                    </table>
-                </div>
-            </fieldset>
-<div id="maincontent">
-    <div class="clearfix page-action">
-        <div class="form">
-            <?php echo CHtml::beginForm(); ?>
-            <div class="row">
-                <div class="medium-12 columns">
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Transaction #</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->transaction_number; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Transaction Date</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->transaction_date; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Repair Type</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->repair_type; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Document Status</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->status; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Service Status</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->service_status; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Payment Status</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->payment_status; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Vehicle Status</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->vehicle_status; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Problem</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <textarea name="" id="" cols="30" rows="5" readonly="true"><?php echo $registrationTransaction->problem; ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Sales Order #</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->sales_order_number; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Sales Order Date</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->sales_order_date; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Work Order #</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->work_order_number; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Work Order date</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->work_order_date; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Invoice #</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php /*
-                                    $invoiceCriteria = new CDbCriteria;
-                                    $invoiceCriteria->addCondition("status != 'CANCELLED'");
-                                    $invoiceCriteria->addCondition("registration_transaction_id = " . $registrationTransaction->id);*/
-                                    ?>
-                                    <?php $invoice = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $registrationTransaction->id)) ?>
-                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'invoice_number')); ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">User Admin</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->user != null ? $registrationTransaction->user->username : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $registrationTransaction->branch != null ? $registrationTransaction->branch->name : ''; ?>">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Assigned Mechanic</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo !empty($registrationTransaction->employee_id_assign_mechanic) ? $registrationTransaction->employeeIdAssignMechanic->name : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Sales</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo !empty($registrationTransaction->employee_id_sales_person) ? $registrationTransaction->employeeIdSalesPerson->name : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr />
-                
-                <div>
-                    <?php if (count($services) > 0): ?>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Service name</th>
-                                    <th>Claim</th>
-                                    <th>Price</th>
-                                    <th>Discount Type</th>
-                                    <th>Discount Price</th>
-                                    <th>Total Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($services as $i => $service): ?>
-                                    <tr>
-                                        <td><?php echo $service->service->name; ?></td>
-                                        <td><?php echo $service->claim; ?></td>
-                                        <td><?php echo number_format($service->price,2); ?></td>
-                                        <td><?php echo $service->discount_type; ?></td>
-                                        <td><?php echo $service->discount_type == 'Percent' ? $service->discount_price : number_format($service->discount_price,2);; ?></td>
-                                        <td><?php echo number_format($service->total_price,2); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-                
-                <hr />
-
-                <div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Product name</th>
-                                <th>Quantity</th>
-                                <th>Retail Price</th>
-                                <th>Sale Price</th>
-                                <th>Discount Type</th>
-                                <th>Discount</th>
-                                <th>Total Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (count($products) > 0): ?>
-                                <?php foreach ($products as $i => $product): ?>
-                                    <tr>
-                                        <td><?php echo $product->product->name; ?></td>
-                                        <td><?php echo $product->quantity; ?></td>
-                                        <td><?php echo number_format($product->retail_price,2); ?></td>
-                                        <td><?php echo number_format($product->sale_price,2); ?></td>
-                                        <td><?php echo $product->discount_type; ?></td>
-                                        <td><?php echo $product->discount_type == 'Percent' ? $product->discount : number_format($product->discount,0); ?></td>
-                                        <td><?php echo number_format($product->total_price,2); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <hr />
-
-                <div>
-                    Feedback: 
-                    <?php echo CHtml::activeTextArea($registrationTransaction, 'feedback', array('rows' => 5)); ?>
-                </div>
-                <br /><br />
-
-                <div class="row buttons">
-                    <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
-                </div>
-                <?php echo IdempotentManager::generate(); ?>
-                <?php echo CHtml::endForm(); ?>
-            </div>
+<div class="row d-print-none">
+    <div class="col d-flex justify-content-start">
+        <h4>Feedback Customer</h4>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <div class="d-gap">
+            <?php echo CHtml::link('Manage', array("adminSales"), array('class' => 'btn btn-info btn-sm')); ?>
         </div>
     </div>
-</div><!-- form -->
+</div>
+
+<hr />
+
+<?php echo CHtml::beginForm(); ?>
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Transaction #</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?></td>
+                <th>Plat #</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?></td>
+            </tr>
+            <tr>
+                <th>Tanggal</th>
+                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($registrationTransaction, 'transaction_date'))); ?></td>
+                <th>Mobil Tipe</th>
+                <td>
+                    <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carMake.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carModel.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?>
+                </td>
+            </tr>
+            <tr>
+                <th>Customer</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer.name')); ?></td>
+                <th>Mileage (km)</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?></td>
+            </tr>
+            <tr>
+                <th>Customer Type</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer.customer_type')); ?></td>
+                <th>Problem</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?></td>
+            </tr>
+            <tr>
+                <th>Sales Person</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'employeeIdSalesPerson.name')); ?></td>
+                <th>Status</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'status')); ?></td>
+            </tr>
+            <tr>
+                <th>Repair Type</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'repair_type')); ?></td>
+                <th>Service Status</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'service_status')); ?></td>
+            </tr>
+            <tr>
+                <th>Payment Status</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'payment_status')); ?></td>
+                <th>Vehicle Status</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_status')); ?></td>
+            </tr>
+            <tr>
+                <th>Sales Order #</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'sales_order_number')); ?></td>
+                <th>Sales Order Date</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'sales_order_date')); ?></td>
+            </tr>
+            <tr>
+                <th>Work Order #</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'work_order_number')); ?></td>
+                <th>Work Order date</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'work_order_date')); ?></td>
+            </tr>
+            <tr>
+                <th>Invoice #</th>
+                <td>
+                    <?php $invoice = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $registrationTransaction->id)) ?>
+                    <?php echo CHtml::encode(CHtml::value($invoice, 'invoice_number')); ?>
+                </td>
+                <th>Assigned Mechanic</th>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'employeeIdAssignMechanic.name')); ?></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <?php if (!empty($registrationTransaction->registrationProducts)): ?>
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Produk</legend>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-info">
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Retail Price</th>
+                        <th>Sale Price</th>
+                        <th>Discount Type</th>
+                        <th>Discount</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($registrationTransaction->registrationProducts as $i => $product): ?>
+                        <tr>
+                            <td><?php echo $product->product->manufacturer_code; ?></td>
+                            <td><?php echo $product->product->name; ?></td>
+                            <td class="text-center"><?php echo $product->quantity; ?></td>
+                            <td class="text-end"><?php echo number_format($product->retail_price,2); ?></td>
+                            <td class="text-end"><?php echo number_format($product->sale_price,2); ?></td>
+                            <td><?php echo $product->discount_type; ?></td>
+                            <td><?php echo $product->discount_type == 'Percent' ? $product->discount : number_format($product->discount,0); ?></td>
+                            <td class="text-end"><?php echo number_format($product->total_price,2); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-end" colspan="2">Total Qty</td>
+                        <td class="text-center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($registrationTransaction, "total_product"))); ?></td>
+                        <td class="text-end" colspan="4">Sub Total Produk</td>
+                        <td class="text-end"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction, "total_product_price"))); ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+    <?php endif; ?>
+
+    <?php if (!empty($registrationTransaction->registrationServices)): ?>
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">Jasa</legend>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="bg-info">
+                        <th>Name</th>
+                        <th>Claim</th>
+                        <th>Price</th>
+                        <th>Discount Type</th>
+                        <th>Discount Price</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($registrationTransaction->registrationServices as $i => $serviceDetail): ?>
+                        <tr>
+                            <td><?php echo $service->service->name; ?></td>
+                            <td><?php echo $service->claim; ?></td>
+                            <td class="text-end"><?php echo number_format($service->price,2); ?></td>
+                            <td><?php echo $service->discount_type; ?></td>
+                            <td><?php echo $service->discount_type == 'Percent' ? $service->discount_price : number_format($service->discount_price,2);; ?></td>
+                            <td class="text-end"><?php echo number_format($service->total_price,2); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-end" colspan="5">Sub Total Jasa</td>
+                        <td class="text-end"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationTransaction, "total_service_price"))); ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+    <?php endif; ?>
+
+    <fieldset class="border border-secondary rounded mb-3 p-3">
+        <legend class="float-none w-auto text-dark px-1">Customer Feedback</legend>
+        <div>
+            <?php echo CHtml::activeTextArea($registrationTransaction, 'feedback', array(
+                'class' => 'form-control',
+                'rows' => 5
+            )); ?>
+        </div>
+
+        <br /><br />
+
+        <div class="d-grid">
+            <div class="row">
+                <div class="col text-center">
+                    <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class'=>'btn btn-danger')); ?>
+                    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'btn btn-success')); ?>
+                </div>
+            </div>
+            <?php echo IdempotentManager::generate(); ?>
+        </div>
+    </fieldset>
+<?php echo CHtml::endForm(); ?>

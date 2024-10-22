@@ -10,7 +10,7 @@ class CashierController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
@@ -30,7 +30,7 @@ class CashierController extends Controller {
         $filterChain->run();
     }
 
-    public function actionAdmin() {
+    public function actionInvoiceList() {
         $invoice = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
         $invoice->unsetAttributes();
         
@@ -45,7 +45,7 @@ class CashierController extends Controller {
         $invoiceCriteria->compare('t.insurance_company_id', $invoice->insurance_company_id);
         $invoiceCriteria->addCondition('t.branch_id = :branch_id');
         $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
-        $invoiceCriteria->addCondition("t.status != 'CANCELLED' AND t.registration_transaction_id IS NOT NULL AND invoice_date > '2021-01-01'");
+        $invoiceCriteria->addCondition("t.status != 'CANCELLED' AND t.registration_transaction_id IS NOT NULL AND invoice_date > '2021-01-01' AND t.payment_left > 0");
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array(
             'customer', 
@@ -85,11 +85,80 @@ class CashierController extends Controller {
             'criteria' => $customerCriteria,
         ));
 
-        $this->render('admin', array(
+        $this->render('invoiceList', array(
             'invoice' => $invoice,
             'invoiceDataProvider' => $invoiceDataProvider,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
+        ));
+    }
+
+    public function actionCreate($invoiceId) {
+        $paymentIn = $this->instantiate(null);
+        $invoice = InvoiceHeader::model()->findByPk($invoiceId);
+        $customer = Customer::model()->findByPk($invoice->customer_id);
+        
+        $paymentIn->header->customer_id = $customer->id;
+        $paymentIn->header->payment_date = date('Y-m-d');
+        $paymentIn->header->payment_time = date('H:i:s');
+        $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
+        $paymentIn->header->branch_id = Yii::app()->user->branch_id;
+        $paymentIn->header->status = 'Draft';
+        $paymentIn->header->user_id = Yii::app()->user->id;
+        $paymentIn->addInvoice($invoiceId);
+
+        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
+        $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
+
+        if (!empty($customer->id)) {
+            $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
+            $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $customer->id;
+        }
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($paymentIn);
+            $paymentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentIn->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentIn->header->payment_date)), $paymentIn->header->branch_id);
+            
+            if ($paymentIn->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $paymentIn->header->id));
+            }
+        }
+
+        $this->render('create', array(
+            'paymentIn' => $paymentIn,
+            'customer' => $customer,
+            'invoiceHeader' => $invoiceHeader,
+            'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
+        ));
+    }
+
+    public function actionAdmin() {
+        $model = new PaymentIn('search');
+        $model->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['PaymentIn'])) {
+            $model->attributes = $_GET['PaymentIn'];
+        }
+        
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        $this->render('admin', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    public function actionView($id) {
+        
+        $model = $this->loadModel($id);
+
+        $this->render('view', array(
+            'model' => $model,
         ));
     }
 
@@ -109,11 +178,46 @@ class CashierController extends Controller {
     }
     
     public function loadModel($id) {
-        $model = RegistrationTransaction::model()->findByPk($id);
+        $model = PaymentIn::model()->findByPk($id);
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
         }
         return $model;
+    }
+
+    public function instantiate($id) {
+        
+        if (empty($id)) {
+            $paymentIn = new Cashier(new PaymentIn(), array());
+        } else {
+            $paymentInModel = $this->loadModel($id);
+            $paymentIn = new Cashier($paymentInModel, $paymentInModel->paymentInDetails);
+        }
+        
+        return $paymentIn;
+    }
+
+    public function loadState($paymentIn) {
+        if (isset($_POST['PaymentIn'])) {
+            $paymentIn->header->attributes = $_POST['PaymentIn'];
+        }
+        
+        if (isset($_POST['PaymentInDetail'])) {
+            foreach ($_POST['PaymentInDetail'] as $i => $item) {
+                if (isset($paymentIn->details[$i])) {
+                    $paymentIn->details[$i]->attributes = $item;
+                } else {
+                    $detail = new PaymentInDetail();
+                    $detail->attributes = $item;
+                    $paymentIn->details[] = $detail;
+                }
+            }
+            if (count($_POST['PaymentInDetail']) < count($paymentIn->details)) {
+                array_splice($paymentIn->details, $i + 1);
+            }
+        } else {
+            $paymentIn->details = array();
+        }
     }
 
 }

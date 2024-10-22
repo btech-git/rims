@@ -422,6 +422,21 @@ class SaleEstimationController extends Controller {
         }
     }
   
+    public function actionAjaxHtmlUpdateSaleEstimationTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            
+            $model = Search::bind(new SaleEstimationHeader('search'), isset($_POST['SaleEstimationHeader']) ? $_POST['SaleEstimationHeader'] : '');
+            $dataProvider = $model->search();
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+
+            $this->renderPartial('_saleEstimationDataTable', array(
+                'model' => $model,
+                'dataProvider' => $dataProvider,
+            ));
+        }
+    }
+
     public function actionAjaxHtmlUpdateProductStockTable() {
         if (Yii::app()->request->isAjaxRequest) {
             $endDate = date('Y-m-d');

@@ -1,6 +1,6 @@
-<?php echo CHtml::activeDropDownList(Product::model(), 'sub_brand_id', CHtml::listData(SubBrand::model()->findAllByAttributes(array('brand_id' => $productBrandId)), 'id', 'name'), array(
+<?php echo CHtml::activeDropDownList(Product::model(), 'sub_brand_id', CHtml::listData(SubBrand::model()->findAllByAttributes(array('brand_id' => $product->brand_id), array('order' => 'name ASC')), 'id', 'name'), array(
     'empty' => '-- Pilih Sub Brand --',
-    'order' => 'name',
+    'class' => 'form-select',
     'onchange' => CHtml::ajax(array(
         'type' => 'GET',
         'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
@@ -9,7 +9,7 @@
     CHtml::ajax(array(
         'type' => 'GET',
         'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-        'update' => '#product_stock_table',
+        'update' => '#product_data_container',
     )),
 )); ?>
 <?php echo CHtml::hiddenField('SubCategory', ''); ?>

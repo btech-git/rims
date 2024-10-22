@@ -461,7 +461,7 @@ class JurnalUmum extends CActiveRecord {
     
     public static function getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage, $pageSize) {
         
-        $pageOffset = $currentPage - 1;
+        $pageOffset = ($currentPage - 1) * $pageSize;
         $transactionTypeConditionSql = '';
         $branchConditionSql = '';
         $coaConditionSql = '';
@@ -486,7 +486,7 @@ class JurnalUmum extends CActiveRecord {
             $params[':coa_id'] = $coaId;
         }
         
-        $sql = "SELECT kode_transaksi, MiN(tanggal_transaksi) AS transaction_date, MIN(transaction_subject) AS transaction_subject
+        $sql = "SELECT kode_transaksi, MIN(tanggal_transaksi) AS transaction_date, MIN(transaction_subject) AS transaction_subject
                 FROM " . JurnalUmum::model()->tableName() . "
                 WHERE tanggal_transaksi BETWEEN :start_date AND :end_date" . $transactionTypeConditionSql . $branchConditionSql . $coaConditionSql ."
                 GROUP BY kode_transaksi

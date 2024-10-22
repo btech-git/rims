@@ -8,18 +8,21 @@ $this->breadcrumbs = array(
 );
 ?>
 
-<h2>Show Estimasi #<?php echo CHtml::encode(CHtml::value($model, 'id')); ?></h2>
+<div class="row d-print-none">
+    <div class="col d-flex justify-content-start">
+        <h4>Show Estimasi #<?php echo CHtml::encode(CHtml::value($model, 'id')); ?></h4>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <div class="d-gap">
+            <?php echo CHtml::link('Manage', array("admin"), array('class' => 'btn btn-info btn-sm')); ?>
+            <?php echo CHtml::link('Edit', array("update", 'id' => $model->id), array('class' => 'btn btn-warning btn-sm')); ?>
+        </div>
+    </div>
+</div>
+
+<hr />
 
 <?php echo CHtml::beginForm(); ?>
-<div>
-    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontEnd/saleEstimation/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
-
-    <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
-        <?php if (Yii::app()->user->checkAccess("generalRepairEdit")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Data', Yii::app()->baseUrl . '/frontEnd/saleEstimation/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
-        <?php endif; ?>
-    <?php endif; ?>
-</div>
     <table class="table table-bordered table-striped">
         <tbody>
             <tr>
@@ -76,7 +79,7 @@ $this->breadcrumbs = array(
             <legend class="float-none w-auto text-dark px-1">Produk</legend>
             <table class="table table-bordered table-striped">
                 <thead>
-                    <tr class="bg-info">
+                    <tr class="table-info">
                         <th>Deskripsi</th>
                         <th>Quantity</th>
                         <th>Satuan</th>
@@ -114,7 +117,7 @@ $this->breadcrumbs = array(
             <legend class="float-none w-auto text-dark px-1">Jasa</legend>
             <table class="table table-bordered table-striped">
                 <thead>
-                    <tr class="bg-info">
+                    <tr class="table-info">
                         <th>Deskripsi</th>
                         <th>Harga Satuan</th>
                     </tr>
@@ -141,19 +144,19 @@ $this->breadcrumbs = array(
         <legend class="float-none w-auto text-dark px-1">Total</legend>
         <table class="table table-bordered table-striped">
             <thead>
-                <tr class="bg-info">
+                <tr class="table-info">
                     <th class="text-end">Sub Total</th>
                     <th class="text-end"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, "subTotalProductService"))); ?></th>
                 </tr>
-                <tr class="bg-info">
+                <tr class="table-info">
                     <th class="text-end">PPn</th>
                     <th class="text-end"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, "tax_product_amount"))); ?></th>
                 </tr>
-                <tr class="bg-info">
+                <tr class="table-info">
                     <th class="text-end">PPh</th>
                     <th class="text-end"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, "tax_service_amount"))); ?></th>
                 </tr>
-                <tr class="bg-info">
+                <tr class="table-info">
                     <th class="text-end">Grand Total</th>
                     <th class="text-end"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, "grand_total"))); ?></th>
                 </tr>
@@ -161,9 +164,7 @@ $this->breadcrumbs = array(
         </table>
     </fieldset>
 
-    <?php if ($model->status !== 'Finished'): ?>
-        <?php echo CHtml::link('<span class="fa fa-print"></span>Print Estimasi', Yii::app()->baseUrl.'/frontEnd/saleEstimation/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' =>'_blank')) ?>
-    <?php endif; ?>
+    <?php echo CHtml::link('<i class="bi-printer"></i> Print Estimasi', array("memo", 'id' => $model->id), array('class' => 'btn btn-secondary btn-sm')); ?>
     
 <?php echo CHtml::endForm(); ?>
 

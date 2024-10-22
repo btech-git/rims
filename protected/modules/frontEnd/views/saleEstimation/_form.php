@@ -25,9 +25,9 @@
                     <?php echo CHtml::error($saleEstimation->header,'transaction_date'); ?>
                 </div>
                 <div class="col">
-                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-label', 'label' => 'KM')); ?>
-                    <?php echo CHtml::activeTextField($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-control')); ?>
-                    <?php echo CHtml::error($saleEstimation->header,'vehicle_mileage'); ?>
+                    <?php echo CHtml::label('Customer', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeHiddenField($saleEstimation->header, 'customer_id', array('value' => $saleEstimation->header->customer_id)); ?>
+                    <?php echo CHtml::textField('CustomerName', '', array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
             </div>
 
@@ -43,9 +43,8 @@
                     )); ?>
                 </div>
                 <div class="col">
-                    <?php echo CHtml::label('Customer', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::activeHiddenField($saleEstimation->header, 'customer_id', array('value' => $saleEstimation->header->customer_id)); ?>
-                    <?php echo CHtml::textField('CustomerName', '', array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::label('Phone', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::textField('Phone', '', array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
             </div>
             <div class="row">
@@ -54,8 +53,8 @@
                     <?php echo CHtml::textField('PlateNumber', '', array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
                 <div class="col">
-                    <?php echo CHtml::label('Phone', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Phone', '', array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::label('Alamat', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::textField('Address', '', array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
             </div>
             <div class="row">
@@ -64,11 +63,16 @@
                     <?php echo CHtml::textField('FrameNumber', '', array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
                 <div class="col">
-                    <?php echo CHtml::label('Alamat', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Address', '', array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::label('Branch', false, array('class' => 'form-label')); ?>
+                    <?php echo CHtml::textField('Branch', '', array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
             </div>
             <div class="row">
+                <div class="col">
+                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-label', 'label' => 'KM')); ?>
+                    <?php echo CHtml::activeTextField($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-control')); ?>
+                    <?php echo CHtml::error($saleEstimation->header,'vehicle_mileage'); ?>
+                </div>
                 <div class="col">
                     <?php echo CHtml::activeLabelEx($saleEstimation->header, 'employee_id_sale_person', array('class' => 'form-label', 'label' => 'Salesman')); ?>
                     <?php echo CHtml::activeDropDownlist($saleEstimation->header, 'employee_id_sale_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
@@ -76,16 +80,17 @@
                     )), "id", "name"), array("empty" => "--Assign Sales--", 'class' => 'form-select' . ($saleEstimation->header->hasErrors('employee_id_sale_person') ? ' is-invalid' : ''))); ?>
                     <?php echo CHtml::error($saleEstimation->header, 'employee_id_sale_person', array('class' => 'invalid-feedback d-block')); ?>
                 </div>
-                <div class="col">
-                    <?php echo CHtml::label('Branch', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Branch', '', array('class' => 'form-control', 'readonly' => true)); ?>
-                </div>
             </div>
             <div class="row">
                 <div class="col">
                     <?php echo CHtml::activeLabelEx($saleEstimation->header, 'problem', array('class' => 'form-label')); ?>
                     <?php echo CHtml::activeTextArea($saleEstimation->header,'problem',array('rows'=>3, 'cols'=>30, 'class' => 'form-control')); ?>
                     <?php echo CHtml::error($saleEstimation->header,'problem'); ?>
+                </div>
+                <div class="col">
+                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'note', array('class' => 'form-label')); ?>
+                    <?php echo CHtml::activeTextArea($saleEstimation->header,'note',array('rows'=>3, 'cols'=>30, 'class' => 'form-control')); ?>
+                    <?php echo CHtml::error($saleEstimation->header,'note'); ?>
                 </div>
             </div>
         </fieldset>
@@ -107,10 +112,17 @@
             </div>
         </fieldset>
 
+        <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">TOTAL TRANSAKSI</legend>
+            <div class="detail" id="detail-total">
+                <?php $this->renderPartial('_detailTotal', array('saleEstimation' => $saleEstimation)); ?>
+            </div>
+        </fieldset>
+
         <div class="d-grid">
             <div class="row">
                 <div class="col text-center">
-                    <?php echo CHtml::htmlButton('Back', array('id' => 'back-button', 'class'=>'btn btn-success')); ?>
+                    <?php echo CHtml::htmlButton('Back', array('id' => 'back-button', 'class'=>'btn btn-warning')); ?>
                     <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class'=>'btn btn-danger')); ?>
                     <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'btn btn-success')); ?>
                 </div>

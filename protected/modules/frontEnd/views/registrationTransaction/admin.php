@@ -1,65 +1,25 @@
 <?php
 /* @var $this RegistrationTransactionController */
-/* @var $model RegistrationTransaction */
+/* @var $data RegistrationTransaction */
 
 $this->breadcrumbs = array(
-    'Body Repair Transactions' => array('admin'),
+    'Registration Transactions' => array('admin'),
     'Manage',
 );
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-    $('.search-form').toggle();
-    return false;
-});
-$('.search-form form').submit(function(){
-    $('#registration-transaction-grid').yiiGridView('update', {
-        data: $(this).serialize()
-    });
-    return false;
-});
-");
 ?>
 
-    <?php echo CHtml::beginForm(); ?>
-<div id="maincontent">
-    <div class="clearfix page-action">
-        <a class="btn btn-success btn-sm" href="">Add</a>
-        <h1>Manage BR/GR Transaction</h1>
+<div class="row d-print-none">
+    <div class="col d-flex justify-content-start">
+        <h4>Manage BR/GR</h4>
     </div>
-    <div class="clearfix"></div>
-    <div>
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-            'name' => 'StartDate',
-            'attribute' => $startDate,
-            'options'=>array(
-                'dateFormat'=>'yy-mm-dd',
-            ),
-            'htmlOptions'=>array(
-                'readonly' => true,
-            ),
-        )); ?>
+    <div class="col d-flex justify-content-end">
+        <div class="d-gap">
+            <?php echo CHtml::link('Add', array("saleEstimationList"), array('class' => 'btn btn-success btn-sm')); ?>
+        </div>
     </div>
-    <div>
-        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-            'name' => 'EndDate',
-            'attribute' => $endDate,
-            'options'=>array(
-                'dateFormat'=>'yy-mm-dd',
-            ),
-            'htmlOptions'=>array(
-                'readonly' => true,
-            ),
-        )); ?>
-    </div>
-    <div class="row buttons">
-        <?php echo CHtml::submitButton('Search'); ?>
-    </div>
-
 </div>
-    <?php echo CHtml::endForm(); ?>
 
-<br />
+<hr />
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -107,7 +67,16 @@ $('.search-form form').submit(function(){
                 <th style="min-width: 90px"></th>
             </tr>
             <tr class="table-light">
-                <th></th>
+                <th>
+                    <?php echo CHtml::activeTextField($model, 'transaction_number', array(
+                        'class' => 'form-control',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateSaleEstimationTable'),
+                            'update' => '#sale_estimation_data_container',
+                        )),
+                    )); ?>
+                </th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -150,8 +119,7 @@ $('.search-form form').submit(function(){
                     <td><?php echo CHtml::encode(CHtml::value($data, 'employeeIdSalesPerson.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'status')); ?></td>
                     <td>
-                        <a class="btn btn-info btn-sm" href=""><i class="bi-search"></i></a>
-                        <a class="btn btn-warning btn-sm" href=""><i class="bi-pencil"></i></a>
+                        <?php echo CHtml::link('<i class="bi-search"></i>', array("view", "id" => $data->id), array('class' => 'btn btn-info btn-sm')); ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

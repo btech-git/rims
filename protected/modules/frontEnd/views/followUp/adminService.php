@@ -6,75 +6,83 @@ $this->breadcrumbs = array(
     'General Repair Transactions' => array('admin'),
     'Manage',
 );
-
-$this->menu = array(
-    array('label' => 'List RegistrationTransaction', 'url' => array('admin')),
-    array('label' => 'Create RegistrationTransaction', 'url' => array('index')),
-);
-
-Yii::app()->clientScript->registerScript('search', "
-    $('.search-button').click(function(){
-        $('.search-form').toggle();
-        return false;
-    });
-
-    $('.search-form form').submit(function(){
-        $('#registration-transaction-grid').yiiGridView('update', {
-            data: $(this).serialize()
-        });
-        return false;
-    });
-");
 ?>
 
-<div id="maincontent">
-    <div class="clearfix page-action">
-        <h1>Follow Up Service</h1>
+<div class="row d-print-none">
+    <div class="col d-flex justify-content-start">
+        <h4>Follow Up Service</h4>
     </div>
-    <div class="clearfix"></div>
 </div>
 
-<br />
+<hr />
 
-<div class="grid-view">
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'registration-transaction-grid',
-        'dataProvider' => $dataProvider,
-        'filter' => null,
-        'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
-        'rowCssClassExpression' => '(($data->status == "Finished")?"hijau":"merah")',
-        'columns' => array(
-            array(
-                'header' => 'Registration #',
-                'value' => 'CHtml::link($data->transaction_number, array($data->repair_type == "GR" ? "/frontEnd/generalRepairRegistration/view" : "/frontEnd/bodyRepairRegistration/view", "id"=>$data->id), array("target" => "blank"))', 
-                'type' => 'raw'
-            ),
-            'work_order_date',
-            array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
-            array(
-                'header' => 'Car Make',
-                'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
-            ),
-            array(
-                'header' => 'Car Model',
-                'value' => '$data->vehicle->carModel->name'
-            ),
-            array(
-                'header' => 'Repair Type',
-                'name' => 'repair_type',
-                'value' => '$data->repair_type',
-                'type' => 'raw',
-                'filter' => false,
-            ),
-            array(
-                'header' => 'Customer Name',
-                'value' => '$data->customer->name',
-            ),
-            'problem',
-        ),
-    )); ?>
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr class="table-primary">
+                <th style="min-width: 200px">
+                    Transaction #
+                </th>
+                <th style="min-width: 150px">
+                    Tanggal
+                </th>
+                <th style="min-width: 250px">
+                    Customer
+                </th>
+                <th style="min-width: 150px" >
+                    Plat #
+                </th>
+                <th style="min-width: 250px">
+                    Mobil Tipe
+                </th>
+                <th style="min-width: 100px">
+                    GR/BR
+                </th>
+                <th style="min-width: 150px">
+                    Problem
+                </th>
+            </tr>
+            <tr class="table-light">
+                <th>
+                    <?php echo CHtml::activeTextField($model, 'transaction_number', array(
+                        'class' => 'form-control',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateSaleEstimationTable'),
+                            'update' => '#sale_estimation_data_container',
+                        )),
+                    )); ?>
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($dataProvider->data as $data): ?>
+                <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'transaction_number')); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($data, 'transaction_date'))); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'customer.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'vehicle.plate_number')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($data, 'vehicle.carMake.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($data, 'vehicle.carModel.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($data, 'vehicle.carSubModel.name')); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'repair_type')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'problem')); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'pages' => $dataProvider->pagination,
+        )); ?>
+    </div>
 </div>

@@ -2,10 +2,8 @@
     <table class="table table-bordered">
         <thead class="table-secondary">
             <tr>
-                <th>Deskripsi</th>
-                <th>Jumlah</th>
-                <th>PPH</th>
-                <th>Total</th>
+                <th>Service</th>
+                <th>Price</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -17,8 +15,8 @@
                         <?php echo CHtml::activeHiddenField($serviceDetail, "[$i]service_type_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($serviceDetail, 'service.name')); ?>
                     </td>
-                    <td><?php
-                        echo CHtml::activeTextField($serviceDetail, "[$i]price", array(
+                    <td>
+                        <?php echo CHtml::activeTextField($serviceDetail, "[$i]price", array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'POST',
                                 'dataType' => 'JSON',
@@ -36,31 +34,38 @@
                                     }',
                             )),
                             'class' => "form-control",
-                        ));
-                        ?>
-                    </td>
-                    <td>
-                        <?php /*echo CHtml::activeDropDownList($serviceDetail, "[$i]discount_type", array(
-                            'Nominal' => 'Nominal',
-                            'Percent' => '%'
-                        ), array('prompt' => '[--Select Discount Type--]'));*/ ?>
-                    </td>
-                    <td>
-                        <span id="total_amount_<?php echo $i; ?>">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($serviceDetail, 'totalAmount'))); ?>
-                        </span>
-                    </td>
-                    <td>
-                        <?php echo CHtml::button('X', array(
-                            'onclick' => CHtml::ajax(array(
-                                'type' => 'POST',
-                                'url' => CController::createUrl('ajaxHtmlRemoveServiceDetail', array('id' => $saleEstimation->header->id, 'index' => $i)),
-                                'update' => '#detail-service',
-                            ))
                         )); ?>
+                    </td>
+                    <td>
+                        <?php if ($saleEstimation->header->isNewRecord): ?>
+                            <?php echo CHtml::button('X', array(
+                                'class' => "btn btn-outline-dark",
+                                'onclick' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array('id' => $saleEstimation->header->id, 'index' => $i)),
+                                    'update' => '#detail-product',
+                                )),
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::button('X', array(
+                                'class' => "btn btn-danger",
+                                'onclick' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array('id' => $saleEstimation->header->id, 'index' => $i)),
+                                    'update' => '#detail-product',
+                                )),
+                            )); ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-end fw-bold">Total Jasa</td>
+                <td class="text-end fw-bold"></td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>
 </div>

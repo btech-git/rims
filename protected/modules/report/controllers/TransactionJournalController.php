@@ -10,8 +10,9 @@ class TransactionJournalController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('transactionJournalReport')))
+            if (!(Yii::app()->user->checkAccess('transactionJournalReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -27,7 +28,7 @@ class TransactionJournalController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 1;
-        $pageSize = 5000;
+        $pageSize = 300;
         
         $transactionJournalReport = JurnalUmum::getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage, $pageSize);
         $transactionJournalCount = JurnalUmum::getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId);

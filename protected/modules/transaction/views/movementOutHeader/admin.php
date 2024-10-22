@@ -69,11 +69,6 @@ $('.search-form form').submit(function(){
                         ),
                         'date_posting',
                         'status',
-//                        array(
-//                            'name' => 'branch_id',
-//                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-//                            'value' => '$data->branch->name'
-//                        ),
                         array(
                             'name' => 'registration_transaction_number',
                             'value' => '(!empty($data->registrationTransaction->transaction_number) ? $data->registrationTransaction->transaction_number : "")'
@@ -96,17 +91,17 @@ $('.search-form form').submit(function(){
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
-                        array(
-                            'class' => 'CButtonColumn',
-                            'template' => '{edit}',
-                            'buttons' => array(
-                                'edit' => array(
-                                    'label' => 'edit',
-                                    'url' => 'Yii::app()->createUrl("transaction/movementOutHeader/update", array("id"=>$data->id))',
-                                    'visible' => 'Yii::app()->user->checkAccess("movementOutEdit")', //($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && ',
-                                ),
-                            ),
-                        ),
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                            'template' => '{edit}',
+//                            'buttons' => array(
+//                                'edit' => array(
+//                                    'label' => 'edit',
+//                                    'url' => 'Yii::app()->createUrl("transaction/movementOutHeader/update", array("id"=>$data->id))',
+//                                    'visible' => 'Yii::app()->user->checkAccess("movementOutEdit")', //($data->status != "Approved") && $data->status != "Rejected" && ($data->status != "Delivered") && ($data->status != "Finished" ) && ',
+//                                ),
+//                            ),
+//                        ),
                     ),
                 )); ?>
             </div>

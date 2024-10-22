@@ -1,35 +1,27 @@
-<?php if (count($bodyRepair->serviceDetails) > 0): ?>
-    <table>
-        <thead>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-secondary">
             <tr>
-                <th>Service name</th>
-                <th>Claim</th>
+                <th>Service</th>
                 <th>Price</th>
-                <th>Discount Type</th>
-                <th>Discount Price</th>
-                <th>Total Price</th>
-                <th>Hour</th>
-                <th>Note</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($bodyRepair->serviceDetails as $i => $serviceDetail): ?>
-                <?php if ($serviceDetail->is_body_repair == 0) : ?>
-                    <tr>
-                        <td><?php echo CHtml::activeHiddenField($serviceDetail, "[$i]service_id"); ?>
-                            <?php echo CHtml::activeTextField($serviceDetail, "[$i]service_name", array('readonly' => true, 'value' => $serviceDetail->service_id != "" ? $serviceDetail->service->name : '')); ?>
-                            <?php echo CHtml::activeHiddenField($serviceDetail, "[$i]is_quick_service"); ?>
-                        </td>
-                        <td><?php echo CHtml::activeTextField($serviceDetail, "[$i]claim", array('readonly' => true)); ?>
-                        </td>
-                        <td><?php
-                            echo CHtml::activeTextField($serviceDetail, "[$i]price", array(
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'POST',
-                                    'dataType' => 'JSON',
-                                    'url' => CController::createUrl('ajaxJsonTotalService', array('id' => $bodyRepair->header->id, 'index' => $i)),
-                                    'success' => 'function(data) {
+            <?php foreach ($registrationTransaction->serviceDetails as $i => $serviceDetail): ?>
+                <tr>
+                    <td>
+                        <?php echo CHtml::activeHiddenField($serviceDetail, "[$i]service_id"); ?>
+                        <?php echo CHtml::activeHiddenField($serviceDetail, "[$i]service_type_id"); ?>
+                        <?php echo CHtml::encode(CHtml::value($serviceDetail, 'service.name')); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::activeTextField($serviceDetail, "[$i]price", array(
+                            'onchange' => CHtml::ajax(array(
+                                'type' => 'POST',
+                                'dataType' => 'JSON',
+                                'url' => CController::createUrl('ajaxJsonTotalService', array('id' => $registrationTransaction->header->id, 'index' => $i)),
+                                'success' => 'function(data) {
                                         $("#total_amount_' . $i . '").html(data.totalAmount);
                                         $("#total_quantity_service").html(data.totalQuantityService);
                                         $("#sub_total_service").html(data.subTotalService);
@@ -40,95 +32,40 @@
                                         $("#tax_service_amount").html(data.taxServiceAmount);
                                         $("#grand_total_transaction").html(data.grandTotalTransaction);
                                     }',
-                                )),
-                                'class' => "form-control is-valid",
-                            ));
-                            ?>
-                            <?php
-                            echo CHtml::button('!', array(
-                                'onclick' => '
-                                var serviceId = $("#RegistrationService_' . $i . '_service_id").val();
-                                var customerId = $("#RegistrationTransaction_customer_id").val();
-                                var vehicleId = $("#RegistrationTransaction_vehicle_id").val();
-                                var insuranceId = $("#RegistrationTransaction_insurance_company_id").val();
-                                 $.ajax({
-                                    type: "POST",
-                                    //dataType: "JSON",
-                                    url: "' . CController::createUrl('ajaxShowPricelist', array('index' => $i)) . '&serviceId="+serviceId+"&customerId="+customerId+"&vehicleId="+vehicleId+"&insuranceId="+insuranceId,
-                                    data:$("form").serialize(),
-                                    success: function(html) {
-                                        $("#price_' . $i . '_div").html(html);
-                                        $("#service_price' . $i . '-dialog").dialog("open"); return false;
-
-                                    },
-                                });',
-                            ));
-                            ?>
-                            <?php
-                            $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                                'id' => 'service_price' . $i . '-dialog',
-                                // additional javascript options for the dialog plugin
-                                'options' => array(
-                                    'title' => 'Price',
-                                    'autoOpen' => false,
-                                    'width' => 'auto',
-                                    'modal' => true,
-                                ),));
-                            //echo $this->renderPartial('_price-dialog',array('serviceId'=>$serviceDetail->service_id));
-                            ?>
-                            <div id="price_<?php echo $i ?>_div"></div>
-                            <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-
-                        </td>
-                        <td><?php echo CHtml::activeDropDownList($serviceDetail, "[$i]discount_type", array('Nominal' => 'Nominal',
-                    'Percent' => '%'), array('prompt' => '[--Select Discount Type--]'));
-                            ?></td>
-                        <td>
-                            <?php
-                            echo CHtml::activeTextField($serviceDetail, "[$i]discount_price", array('readonly' => $serviceDetail->is_quick_service == 1 ? true : false,
-                                'onchange' => CHtml::ajax(array(
+                            )),
+                            'class' => "form-control",
+                        )); ?>
+                    </td>
+                    <td>
+                        <?php if ($registrationTransaction->header->isNewRecord): ?>
+                            <?php echo CHtml::button('X', array(
+                                'class' => "btn btn-outline-dark",
+                                'onclick' => CHtml::ajax(array(
                                     'type' => 'POST',
-                                    'dataType' => 'JSON',
-                                    'url' => CController::createUrl('ajaxJsonTotalService', array('id' => $bodyRepair->header->id, 'index' => $i)),
-                                    'success' => 'function(data) {
-                                        $("#total_amount_' . $i . '").html(data.totalAmount);
-                                        $("#total_quantity_service").html(data.totalQuantityService);
-                                        $("#sub_total_service").html(data.subTotalService);
-                                        $("#total_discount_service").html(data.totalDiscountService);
-                                        $("#grand_total_service").html(data.grandTotalService);
-                                        $("#sub_total_transaction").html(data.subTotalTransaction);
-                                        $("#tax_item_amount").html(data.taxItemAmount);
-                                        $("#tax_service_amount").html(data.taxServiceAmount);
-                                        $("#grand_total_transaction").html(data.grandTotalTransaction);
-                                    }',
+                                    'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array('id' => $registrationTransaction->header->id, 'index' => $i)),
+                                    'update' => '#detail-product',
                                 )),
-                                'class' => "form-control is-valid",
-                            ));
-                            ?>
-                        </td>
-                        <td>
-            <?php echo CHtml::activeHiddenField($serviceDetail, "[$i]total_price", array('readonly' => true)); ?>
-                            <span id="total_amount_<?php echo $i; ?>">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($serviceDetail, 'totalAmount'))); ?>
-                            </span>
-                        </td>
-                            <?php $service = Service::model()->findByPk($serviceDetail->service_id); ?>
-                        <td><?php echo CHtml::activeTextField($serviceDetail, "[$i]hour", array('readonly' => true, 'value' => $serviceDetail->service_id != "" ? $service->flat_rate_hour : '')); ?></td>
-                        <td><?php echo CHtml::activeTextField($serviceDetail, "[$i]note", array('size' => 20, 'maxLength' => 100)); ?></td>
-                        <td>
-            <?php
-            echo CHtml::button('X', array(
-                'onclick' => CHtml::ajax(array(
-                    'type' => 'POST',
-                    'url' => CController::createUrl('ajaxHtmlRemoveServiceDetail', array('id' => $bodyRepair->header->id, 'index' => $i)),
-                    'update' => '#service',
-                )),
-            ));
-            ?>
-                        </td>
-                    </tr>
-        <?php endif; ?>
-    <?php endforeach; ?>
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::button('X', array(
+                                'class' => "btn btn-danger",
+                                'onclick' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array('id' => $registrationTransaction->header->id, 'index' => $i)),
+                                    'update' => '#detail-product',
+                                )),
+                            )); ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-end fw-bold">Total Jasa</td>
+                <td class="text-end fw-bold"></td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>
-<?php endif; ?>
+</div>

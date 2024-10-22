@@ -4,9 +4,11 @@
 <div id="maincontent">
     <?php echo CHtml::beginForm(); ?>
 	<div class="clearfix page-action">
+            <h3>Welcome to RAPERIND</h3>
+            <hr />
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(
-                    'Vehicle' => array(
+                    'Kendaraan' => array(
                         'content' => $this->renderPartial('_viewVehicle', array(
                             'vehicleDataProvider' => $vehicleDataProvider, 
                             'vehicle' => $vehicle, 
@@ -18,7 +20,7 @@
                             'customerDataProvider' => $customerDataProvider,
                         ), true),
                     ),
-                    'Product' => array(
+                    'Produk' => array(
                         'content' => $this->renderPartial('_viewProduct', array(
                             'productDataProvider' => $productDataProvider, 
                             'product' => $product, 

@@ -111,7 +111,7 @@
     </div>
 
     <div class="text-center">
-        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter', 'class' => 'btn btn-outline-dark'));  ?>
+        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter', 'class' => 'btn btn-danger'));  ?>
     </div>
 
     <hr />

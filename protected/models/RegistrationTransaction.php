@@ -46,6 +46,7 @@
  * @property string $vehicle_mileage
  * @property string $note
  * @property string $is_passed
+ * @property string $product_status
  * @property string $service_status
  * @property string $vehicle_status
  * @property integer $total_time
@@ -125,17 +126,18 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('customer_id, vehicle_id, service_status, vehicle_status, tax_percentage', 'required'),
+            array('customer_id, vehicle_id, product_status, service_status, vehicle_status, tax_percentage', 'required'),
             array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited', 'numerical', 'integerOnly' => true),
             array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, vehicle_status', 'length', 'max' => 30),
             array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, down_payment_amount', 'length', 'max' => 18),
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
             array('status', 'length', 'max' => 50),
+            array('product_status, service_status', 'length', 'max' => 100),
             array('transaction_number', 'unique'),
             array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out, feedback', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
         );
     }
 
@@ -578,6 +580,52 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);
         $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+
+        $criteria->order = 't.transaction_date DESC';
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    public function searchByInvoice() {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'vehicle' => array(
+                'with' => array(
+                    'carMake',
+                    'carModel',
+                ),
+            ),
+            'branch',
+            'customer',
+        );
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('t.work_order_number', $this->work_order_number, true);
+        $criteria->compare('t.work_order_date', $this->work_order_date, true);
+        $criteria->compare('t.payment_status', $this->payment_status);
+        $criteria->compare('note', $this->note, true);
+
+        if (!empty($this->transaction_date_from) || !empty($this->transaction_date_to)) {
+            $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
+        }
+        
+        $criteria->addCondition("t.status <> 'Finished' AND t.payment_status = 'INVOICING'");
+        $criteria->compare('carMake.id', $this->car_make_code, true);
+        $criteria->compare('carModel.id', $this->car_model_code, true);
+        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
+        $criteria->compare('customer.name', $this->customer_name, true);
+        $criteria->compare('customer.customer_type', $this->customer_type, true);
 
         $criteria->order = 't.transaction_date DESC';
 

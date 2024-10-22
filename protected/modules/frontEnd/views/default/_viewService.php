@@ -1,109 +1,70 @@
-<table style="border: 0px solid">
-    <tr>
-        <td style="border: 0px solid" colspan="4"><h1>List Jasa</h1></td>
-    </tr>
-    <tr>
-        <td>Jasa</td>
-        <td>
-            <?php echo CHtml::activeTextField($service, 'name', array(
-                'onchange' => '
-                    $.fn.yiiGridView.update("service-grid", {data: {
-                        Service: {
-                            name: $(this).val(),
-                            code: $("#' . CHtml::activeId($service, 'code') . '").val(),
-                            service_category_id: $("#' . CHtml::activeId($service, 'service_category_id') . '").val(),
-                            service_type_id: $("#' . CHtml::activeId($service, 'service_type_id') . '").val(),
-                        }
-                    }});
-                ',
-            )); ?>
-        </td>
-        <td>Kode</td>
-        <td>
-            <?php echo CHtml::activeTextField($service, 'code', array(
-                'onchange' => '
-                    $.fn.yiiGridView.update("service-grid", {data: {
-                        Service: {
-                            name: $("#' . CHtml::activeId($service, 'name') . '").val(),
-                            service_category_id: $("#' . CHtml::activeId($service, 'service_category_id') . '").val(),
-                            service_type_id: $("#' . CHtml::activeId($service, 'service_type_id') . '").val(),
-                            code: $(this).val(),
-                        }
-                    }});
-                ',
-            )); ?>
-        </td>
-    </tr>
-    <tr>
-        <td>Category</td>
-        <td>
-            <?php echo CHtml::activeDropDownList($service, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(), 'id', 'name'), array(
-                'empty' => '-- All --',
-                'onchange' => '
-                    $.fn.yiiGridView.update("service-grid", {data: {
-                        Service: {
-                            name: $("#' . CHtml::activeId($service, 'name') . '").val(),
-                            code: $("#' . CHtml::activeId($service, 'code') . '").val(),
-                            service_type_id: $("#' . CHtml::activeId($service, 'service_type_id') . '").val(),
-                            service_category_id: $(this).val(),
-                        }
-                    }});
-                ',
-            )); ?>
-        </td>
-        <td>Type</td>
-        <td>
-            <?php echo CHtml::activeDropDownList($service, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(), 'id', 'name'), array(
-                'empty' => '-- All --',
-                'onchange' => '
-                    $.fn.yiiGridView.update("service-grid", {data: {
-                        Service: {
-                            name: $("#' . CHtml::activeId($service, 'name') . '").val(),
-                            code: $("#' . CHtml::activeId($service, 'code') . '").val(),
-                            service_category_id: $("#' . CHtml::activeId($service, 'service_category_id') . '").val(),
-                            service_type_id: $(this).val(),
-                        }
-                    }});
-                ',
-            )); ?>
-        </td>
-    </tr>
-</table>
+<?php echo CHtml::beginForm(); ?>
+    <div class="row">
+        <h2>Data Jasa</h2>
+        <div class="col">
+            <div class="my-2 row">
+                <label class="col col-form-label">Nama</label>
+                <div class="col">
+                    <?php echo CHtml::activeTextField($service, 'name', array(
+                        'class' => 'form-select',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateServiceDataTable'),
+                            'update' => '#service_data_container',
+                        )),
+                    )); ?>
+                </div>
+                <label class="col col-form-label">Kode</label>
+                <div class="col">
+                    <?php echo CHtml::activeTextField($service, 'code', array(
+                        'class' => 'form-select',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateServiceDataTable'),
+                            'update' => '#service_data_container',
+                        )),
+                    )); ?>
+                </div>
+            </div>
+            <div class="my-2 row">
+                <label class="col col-form-label">Kategori</label>
+                <div class="col">
+                    <?php echo CHtml::activeDropDownList($service, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(), 'id', 'name'), array(
+                        'empty' => '-- All --',
+                        'class' => 'form-select',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateServiceDataTable'),
+                            'update' => '#service_data_container',
+                        )),
+                    )); ?>
+                </div>
+                <label class="col col-form-label">Tipe</label>
+                <div class="col">
+                    <?php echo CHtml::activeDropDownList($service, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(), 'id', 'name'), array(
+                        'empty' => '-- All --',
+                        'class' => 'form-select',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateServiceDataTable'),
+                            'update' => '#service_data_container',
+                        )),
+                    )); ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="clear"></div>
+    <div class="text-center">
+        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter', 'class' => 'btn btn-danger'));  ?>
+    </div>
 
-<div class="row buttons" style="text-align: center">
-    <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-</div>
+    <hr />
 
-<hr />
-
-<div class="grid-view">
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'service-grid',
-        'dataProvider' => $serviceDataProvider,
-        'filter' => null,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
-        'columns' => array(
-            'id',
-            'code',
-            array(
-                'name' => 'name',
-                'value' => 'CHtml::link($data->name, array("/master/service/view", "id"=>$data->id), array("target" => "_blank"))',
-                'type'=>'raw',
-            ),
-            array(
-                'name' => 'service_category_id',
-                'value' => 'CHtml::value($data, "serviceCategory.name")',
-            ),
-            array(
-                'name' => 'service_type_id',
-                'value' => 'CHtml::value($data, "serviceType.name")',
-            ),
-        ),
-    )); ?>
-</div>
+    <div id="service_data_container">
+        <?php $this->renderPartial('_serviceDataTable', array(
+            'serviceDataProvider' => $serviceDataProvider,
+        )); ?>
+    </div>
+<?php echo CHtml::endForm(); ?>
+    

@@ -29,6 +29,12 @@ class ReportHelper extends CComponent
                 $pageOffset = $currentPage - 1;
 		$start = $pageOffset * $pageSize + 1;
 		$end = ($pageOffset + 1) * $pageSize;
+                if ($start > $totalItemCount) {
+                    $start =  $totalItemCount;
+                }
+                if ($end > $totalItemCount) {
+                    $end =  $totalItemCount;
+                }
 
 		$info = ($totalItemCount > 0) ? "Displaying {$start}-{$end} of {$totalItemCount} result(s)." : '';
 

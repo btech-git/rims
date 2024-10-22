@@ -6,7 +6,7 @@
                 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                     <a href="<?php echo Yii::app()->createUrl('frontEnd/default/index'); ?>" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                         <span class="fs-5 d-none d-sm-inline">
-                            <strong>RAPERIND MOTOR</strong>
+                            <img src="<?php echo Yii::app()->baseUrl . '/images/logo.jpg' ?>" width="250px" />
                         </span>
                     </a>
                     <?php $activeClass = 'bg-light border border-3 border-primary rounded'; ?>
@@ -18,6 +18,7 @@
                                 <?php $isActive = Yii::app()->controller->id === 'saleEstimation' && (
                                         Yii::app()->controller->action->id === 'admin' ||
                                         Yii::app()->controller->action->id === 'view' ||
+                                        Yii::app()->controller->action->id === 'update' ||
                                         Yii::app()->controller->action->id === 'create'
                                 ); ?>
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
@@ -30,28 +31,17 @@
                             <?php endif; ?>
                                 
                             <?php if (true): ?>
-                                <?php $isActive = Yii::app()->controller->id === 'customerRegistration' && (
-                                        Yii::app()->controller->action->id === 'vehicleList' ||
-                                        Yii::app()->controller->action->id === 'create'
-                                ); ?>
-                                <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
-                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/customerRegistration/vehicleList'); ?>" class="nav-link px-0 align-middle">
-                                        <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
-                                            Registration
-                                        </span>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                                
-                            <?php if (true): ?>
                                 <?php $isActive = Yii::app()->controller->id === 'registrationTransaction' && (
                                     Yii::app()->controller->action->id === 'admin' || 
-                                    Yii::app()->controller->action->id === 'view'
+                                    Yii::app()->controller->action->id === 'view' || 
+                                    Yii::app()->controller->action->id === 'saleEstimationList' || 
+                                    Yii::app()->controller->action->id === 'create' || 
+                                    Yii::app()->controller->action->id === 'update'
                                 ); ?>
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
-                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/registrationTransaction/admin'); ?>" class="nav-link px-0 align-middle">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/registrationTransaction/saleEstimationList'); ?>" class="nav-link px-0 align-middle">
                                         <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
-                                            GR/BR
+                                            GR/BR Registration
                                         </span>
                                     </a>
                                 </li>
@@ -72,14 +62,17 @@
                             <?php endif; ?>
                                 
                             <?php if (true): ?>
-                                <?php $isActive = Yii::app()->controller->id === 'customerWaitlist' && (
+                                <?php $isActive = Yii::app()->controller->id === 'invoice' && (
                                     Yii::app()->controller->action->id === 'admin' || 
+                                    Yii::app()->controller->action->id === 'registrationList' || 
+                                    Yii::app()->controller->action->id === 'view' || 
+                                    Yii::app()->controller->action->id === 'update' || 
                                     Yii::app()->controller->action->id === 'create'
                                 ); ?>
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
-                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/customerWaitlist/admin'); ?>" class="nav-link px-0 align-middle">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/invoice/registrationList'); ?>" class="nav-link px-0 align-middle">
                                         <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
-                                            Antrian Customer
+                                            Invoice
                                         </span>
                                     </a>
                                 </li>
@@ -88,10 +81,13 @@
                             <?php if (true): ?>
                                 <?php $isActive = Yii::app()->controller->id === 'cashier' && (
                                     Yii::app()->controller->action->id === 'admin' || 
-                                    Yii::app()->controller->action->id === 'memo'
+                                    Yii::app()->controller->action->id === 'memo' || 
+                                    Yii::app()->controller->action->id === 'invoiceList' || 
+                                    Yii::app()->controller->action->id === 'create' || 
+                                    Yii::app()->controller->action->id === 'view'
                                 ); ?>
                                 <li class="w-100 <?php if ($isActive): ?><?php echo $activeClass; ?><?php endif ;?>">
-                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/cashier/admin'); ?>" class="nav-link px-0 align-middle">
+                                    <a href="<?php echo Yii::app()->createUrl('frontEnd/cashier/invoiceList'); ?>" class="nav-link px-0 align-middle">
                                         <span class="ps-1 d-none d-sm-inline <?php if ($isActive): ?><?php echo $activeTextClass; ?><?php else: ?><?php echo $inactiveTextClass; ?><?php endif ;?>">
                                             Kasir
                                         </span>

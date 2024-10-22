@@ -321,4 +321,15 @@ Yii::app()->clientScript->registerScript('report', '
     </div>
     <?php echo CHtml::endForm(); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+</div> 
+
+<br/>
+
+<div class="right">
+    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        'itemCount' => $transactionJournalCount,
+        'pageSize' => $pageSize,
+        'currentPage' => $currentPage - 1,
+    )); ?>
 </div>
+<div class="clear"></div>

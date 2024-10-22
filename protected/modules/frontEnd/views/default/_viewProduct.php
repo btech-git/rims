@@ -1,177 +1,126 @@
-<div class="row">
-    <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-        <table>
-            <thead>
-                <tr>
-                    <td>Brand</td>
-                    <td>Sub Brand</td>
-                    <td>Sub Brand Series</td>
-                    <td>Master Kategori</td>
-                    <td>Sub Master Kategori</td>
-                    <td>Sub Kategori</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                            'empty' => '-- All --',
-                            'order' => 'name',
-                            'onchange' => CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSelect'),
-                                'update' => '#product_sub_brand',
-                            )) . 
-                            CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                'update' => '#product_stock_table',
-                            )),
+<?php echo CHtml::beginForm(); ?>
+    <div class="row">
+        <h2>List Produk</h2>
+        <div class="col">
+            <div class="my-2 row">
+                <label class="col col-form-label">Brand</label>
+                <div class="col">
+                    <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        'class' => 'form-select',
+                        'empty' => '-- All --',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSelect'),
+                            'update' => '#product_sub_brand',
+                        )) . 
+                        CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_data_container',
+                        )),
+                    )); ?>
+                </div>
+                <label class="col col-form-label">Sub Brand</label>
+                <div class="col">
+                    <div id="product_sub_brand">
+                        <?php $this->renderPartial('_productSubBrandSelect', array(
+                            'product' => $product,
                         )); ?>
-                    </td>
-
-                    <td>
-                        <div id="product_sub_brand">
-                            <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                'empty' => '-- All --',
-                                'order' => 'name',
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
-                                    'update' => '#product_sub_brand_series',
-                                )) . 
-                                CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                    'update' => '#product_stock_table',
-                                )),
-                            )); ?>
-                        </div>
-                    </td>
-
-                    <td>
-                        <div id="product_sub_brand_series">
-                            <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                'empty' => '-- All --',
-                                'order' => 'name',
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                    'update' => '#product_stock_table',
-                                )),
-                            )); ?>
-                        </div>
-                    </td>
-
-                    <td>
-                        <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                            'empty' => '-- All --',
-                                'order' => 'name',
-                            'onchange' => CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
-                                'update' => '#product_sub_master_category',
-                            )) .
-                            CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                'update' => '#product_stock_table',
-                            )),
+                    </div>
+                </div>
+                <label class="col col-form-label">Sub Brand Series</label>
+                <div class="col">
+                    <div id="product_sub_brand_series">
+                        <?php $this->renderPartial('_productSubBrandSeriesSelect', array(
+                            'product' => $product,
                         )); ?>
-                    </td>
-
-                    <td>
-                        <div id="product_sub_master_category">
-                            <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                'empty' => '-- All --',
-                                'order' => 'name',
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
-                                    'update' => '#product_sub_category',
-                                )) .
-                                CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                    'update' => '#product_stock_table',
-                                )),
-                            )); ?>
-                        </div>
-                    </td>
-
-                    <td>
-                        <div id="product_sub_category">
-                            <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                'empty' => '-- All --',
-                                'order' => 'name',
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                    'update' => '#product_stock_table',
-                                )),
-                            )); ?>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <table>
-            <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>Code</td>
-                    <td>Name</td>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td>
-                        <?php echo CHtml::activeTextField($product, 'id', array(
-                            'onchange' => CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                'update' => '#product_stock_table',
-                            )),
+                    </div>
+                </div>
+            </div>
+            <div class="my-2 row">
+                <label class="col col-form-label">Master Kategori</label>
+                <div class="col">
+                    <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        'empty' => '-- All --',
+                        'class' => 'form-select',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
+                            'update' => '#product_sub_master_category',
+                        )) .
+                        CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_data_container',
+                        )),
+                    )); ?>
+                </div>
+                <label class="col col-form-label">Sub Master Kategori</label>
+                <div class="col">
+                    <div id="product_sub_master_category">
+                        <?php $this->renderPartial('_productSubMasterCategorySelect', array(
+                            'product' => $product,
                         )); ?>
-                    </td>
-
-                    <td>
-                        <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
-                            'onchange' => CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                'update' => '#product_stock_table',
-                            )),
+                    </div>
+                </div>
+                <label class="col col-form-label">Sub Kategori</label>
+                <div class="col">
+                    <div id="product_sub_category">
+                        <?php $this->renderPartial('_productSubCategorySelect', array(
+                            'product' => $product,
                         )); ?>
-                    </td>
-
-                    <td>
-                        <?php echo CHtml::activeTextField($product, 'name', array(
-                            'onchange' => CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
-                                'update' => '#product_stock_table',
-                            )),
-                        )); ?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="clear"></div>
-
-        <div class="row buttons" style="text-align: center">
-            <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-        </div>
-
-        <div id="product_stock_table">
-            <?php $this->renderPartial('_productStockTable', array(
-                'productDataProvider' => $productDataProvider,
-                'branches' => $branches,
-                'endDate' => $endDate,
-            )); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="my-2 row">
+                <label class="col col-form-label">ID</label>
+                <div class="col">
+                    <?php echo CHtml::activeTextField($product, 'id', array(
+                        'class' => 'form-control',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_data_container',
+                        )),
+                    )); ?>
+                </div>
+                <label class="col col-form-label">Code</label>
+                <div class="col">
+                    <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
+                        'class' => 'form-control',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_data_container',
+                        )),
+                    )); ?>
+                </div>
+                <label class="col col-form-label">Name</label>
+                <div class="col">
+                    <?php echo CHtml::activeTextField($product, 'name', array(
+                        'class' => 'form-control',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_data_container',
+                        )),
+                    )); ?>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="text-center">
+        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter', 'class' => 'btn btn-danger'));  ?>
+    </div>
+
+    <hr />
+
+    <div id="product_data_container">
+        <?php $this->renderPartial('_productDataTable', array(
+            'productDataProvider' => $productDataProvider,
+            'branches' => $branches,
+            'endDate' => $endDate,
+        )); ?>
+    </div>
+<?php echo CHtml::endForm(); ?>

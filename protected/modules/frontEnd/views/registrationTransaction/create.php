@@ -8,9 +8,9 @@ $this->breadcrumbs=array(
 );
 ?>
 <div id="maincontent">
-	<?php echo $this->renderPartial('_form', array(
-        'bodyRepair' => $bodyRepair,
-        'vehicle' => $vehicle,
+    <?php echo $this->renderPartial('_form', array(
+        'registrationTransaction' => $registrationTransaction,
         'customer' => $customer,
-	)); ?>
+        'vehicle' => $vehicle,
+    )); ?>
 </div>
