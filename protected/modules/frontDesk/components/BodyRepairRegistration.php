@@ -350,6 +350,7 @@ class BodyRepairRegistration extends CComponent {
             $this->header->status = 'Registration';
             $this->header->vehicle_status = 'DI BENGKEL';
             $this->header->service_status = 'Bongkar - Pending';
+            $this->header->product_status = 'Draft';
             $this->header->total_quickservice = 0;
             $this->header->total_quickservice_price = 0;
             $this->header->repair_type = 'BR';

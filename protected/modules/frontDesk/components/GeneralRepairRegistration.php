@@ -363,6 +363,7 @@ class GeneralRepairRegistration extends CComponent {
             $this->header->vehicle_status = 'DI BENGKEL';
             $this->header->repair_type = 'GR';
             $this->header->service_status = 'Pending';
+            $this->header->product_status = 'Draft';
             $this->header->priority_level = 2;
         } else {
             $this->header->status = 'Update Registration';
