@@ -62,6 +62,7 @@
  * @property integer $user_id_cancelled
  * @property string $edited_datetime
  * @property integer $user_id_edited
+ * @property integer $sale_estimation_header_id
  * @property string $feedback
  *
  * The followings are the available model relations:
@@ -77,6 +78,7 @@
  * @property RegistrationService[] $registrationServices
  * @property CustomerPic $pic
  * @property Branch $branch
+ * @property SaleEstimationHeader $saleEstimationHeader
  * @property InsuranceCompany $insuranceCompany
  * @property User $user
  * @property UserIdCancelled $userIdCancelled
@@ -127,7 +129,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('customer_id, vehicle_id, product_status, service_status, vehicle_status, tax_percentage', 'required'),
-            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited', 'numerical', 'integerOnly' => true),
+            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited, sale_estimation_header_id', 'numerical', 'integerOnly' => true),
             array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, vehicle_status', 'length', 'max' => 30),
             array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, down_payment_amount', 'length', 'max' => 18),
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
@@ -137,7 +139,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out, feedback', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, sale_estimation_header_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -169,6 +171,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'employeeIdSalesPerson' => array(self::BELONGS_TO, 'Employee', 'employee_id_sales_person'),
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
+            'saleEstimationHeader' => array(self::BELONGS_TO, 'SaleEstimationHeader', 'sale_estimation_header_id'),
             'registrationServiceManagements' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'registration_transaction_id'),
         );
     }
@@ -310,6 +313,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('employee_id_assign_mechanic', $this->employee_id_assign_mechanic);
         $criteria->compare('employee_id_sales_person', $this->employee_id_sales_person);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
+        $criteria->compare('t.sale_estimation_header_id', $this->sale_estimation_header_id);
 
         $arrayTransactionDate = array($this->transaction_date_from, $this->transaction_date_to);
         $criteria->mergeWith($this->dateRangeSearchCriteria('transaction_date', $arrayTransactionDate));

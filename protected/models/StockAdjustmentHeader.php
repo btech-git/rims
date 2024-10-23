@@ -8,6 +8,7 @@
  * @property string $stock_adjustment_number
  * @property string $date_posting
  * @property integer $branch_id
+ * @property integer $branch_id_destination
  * @property integer $warehouse_id
  * @property integer $user_id
  * @property integer $supervisor_id
@@ -17,6 +18,11 @@
  * @property string $created_datetime
  * 
  * @property StockAdjustmentDetail[] $stockAdjustmentDetails
+ * @property Warehouse $warehouse
+ * @property Branch $branch
+ * @property BranchIdDestination $branchIdDestination
+ * @property User $user
+ * @property Supervisor $supervisor
  */
 class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
 
@@ -43,13 +49,13 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('stock_adjustment_number, date_posting, branch_id, warehouse_id, user_id, status', 'required'),
-            array('branch_id, warehouse_id, user_id, supervisor_id', 'numerical', 'integerOnly' => true),
+            array('branch_id, warehouse_id, user_id, supervisor_id, branch_id_destination', 'numerical', 'integerOnly' => true),
             array('stock_adjustment_number, status, transaction_type', 'length', 'max' => 30),
             array('stock_adjustment_number', 'unique'),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, stock_adjustment_number, date_posting, created_datetime, branch_id, warehouse_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note, transaction_type', 'safe', 'on' => 'search'),
+            array('id, stock_adjustment_number, date_posting, created_datetime, branch_id, branch_id_destination, warehouse_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note, transaction_type', 'safe', 'on' => 'search'),
         );
     }
 
@@ -63,6 +69,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
             'stockAdjustmentDetails' => array(self::HAS_MANY, 'StockAdjustmentDetail', 'stock_adjustment_header_id'),
             'supervisor' => array(self::BELONGS_TO, 'User', 'supervisor_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'branchIdDestination' => array(self::BELONGS_TO, 'Branch', 'branch_id_destination'),
             'warehouse' => array(self::BELONGS_TO, 'Warehouse', 'warehouse_id'),
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
         );

@@ -10,7 +10,15 @@
  * @property integer $warehouse_id
  * @property string $quantity_current
  * @property string $quantity_adjustment
+ * @property integer $warehouse_id_destination
+ * @property string $quantity_current_destination
+ * @property string $quantity_adjustment_destination
  * @property string $memo
+ * 
+ * @property Warehouse $warehouse
+ * @property WarehouseIdDestination $warehouseIdDestination
+ * @property Product $product
+ * @property StockAdjustmentHeader $stockAdjustmentHeader
  */
 class StockAdjustmentDetail extends CActiveRecord {
 
@@ -30,12 +38,12 @@ class StockAdjustmentDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('stock_adjustment_header_id, product_id, quantity_current, quantity_adjustment', 'required'),
-            array('stock_adjustment_header_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
+            array('stock_adjustment_header_id, product_id, warehouse_id, warehouse_id_destination', 'numerical', 'integerOnly' => true),
             array('memo', 'length', 'max'=>100),
             array('quantity_current, quantity_adjustment', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, stock_adjustment_header_id, product_id, warehouse_id, quantity_current, quantity_adjustment, memo', 'safe', 'on' => 'search'),
+            array('id, stock_adjustment_header_id, product_id, warehouse_id, warehouse_id_destination, quantity_current, quantity_adjustment, quantity_current_destination, quantity_adjustment_destination, memo', 'safe', 'on' => 'search'),
         );
     }
 
@@ -48,6 +56,7 @@ class StockAdjustmentDetail extends CActiveRecord {
         return array(
             'stockAdjustmentHeader' => array(self::BELONGS_TO, 'StockAdjustmentHeader', 'stock_adjustment_header_id'),
             'warehouse' => array(self::BELONGS_TO, 'Warehouse', 'warehouse_id'),
+            'warehouseIdDestination' => array(self::BELONGS_TO, 'WarehouseIdDestination', 'warehouse_id_destination'),
             'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
         );
     }
