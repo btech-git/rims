@@ -182,7 +182,7 @@ function tanggal($date) {
                 <td style="height: 80px">&nbsp;</td>
             </tr>
             <tr>
-                <td>(Sausan)</td>
+                <td>(<?php echo CHtml::encode(CHtml::value($po, 'user.username')); ?>)</td>
                 <td>(Grace)</td>
                 <td>(Newira)</td>
             </tr>
