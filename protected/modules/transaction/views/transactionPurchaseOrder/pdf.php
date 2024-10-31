@@ -104,8 +104,8 @@ function tanggal($date) {
                 <th style="width:10%">After Disc</th>
                 <th style="width:10%">Qty</th>
                 <th style="width:5%">Unit</th>
-                <th style="width:15%">Sub Total</th>
-                <th style="width:10%">Notes</th>
+                <th style="width:15%">Total</th>
+                <!--<th style="width:10%">Notes</th>-->
             </tr>
             <?php
             $no = 1;
@@ -128,7 +128,7 @@ function tanggal($date) {
                     <td style="text-align:center"><?php echo $x->quantity ?></td>
                     <td style="text-align:center"><?php echo $x->unit->name ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
-                    <td style="text-align:center"><?php echo $x->memo ?></td>
+                    <!--<td style="text-align:center"><?php // echo $x->memo ?></td>-->
                 </tr>
                 <?php $no++;
             } ?>
@@ -145,24 +145,21 @@ function tanggal($date) {
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <!--<td>&nbsp;</td>-->
                 </tr>
             <?php endfor; ?>
                 
             <tr class="r">
                 <td colspan="9" style="text-align:right; font-size: 11px" class="result">Sub Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
-                <td></td>
             </tr>
             <tr class="r">
                 <td colspan="9" style="text-align:right; font-size: 11px" class="result">PPN</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
-                <td></td>
             </tr>
             <tr class="r">
                 <td colspan="9" style="text-align:right; font-size: 11px" class="result">Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
-                <td></td>
             </tr>
         </table>
         
