@@ -124,7 +124,7 @@ function tanggal($date) {
                     <?php endif; ?>
                     <td style="text-align:right">Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
-                    <td style="text-align:right">Rp. <?php echo number_format($x->price_before_tax, 2, ',', '.') ?></td>
+                    <td style="text-align:right">Rp. <?php echo number_format($x->unit_price, 2, ',', '.') ?></td>
                     <td style="text-align:center"><?php echo $x->quantity ?></td>
                     <td style="text-align:center"><?php echo $x->unit->name ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
