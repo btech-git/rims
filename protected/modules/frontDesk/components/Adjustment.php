@@ -10,7 +10,7 @@ class Adjustment extends CComponent {
         $this->details = $details;
     }
 
-    public function addDetail($productId, $branchId) {
+    public function addDetail($productId, $branchId, $branchIdDestination) {
         $product = Product::model()->findByPk($productId);
         
         if ($product !== null) {
@@ -30,6 +30,9 @@ class Adjustment extends CComponent {
                 $detail->product_id = $product->id;
                 $detail->warehouse_id = $warehouse->id;
                 $detail->quantity_current = $detail->getCurrentStock($productId, $branchId);
+                if (!empty($branchIdDestination)) {
+                    $detail->quantity_current_destination = $detail->getCurrentStock($productId, $branchIdDestination);
+                }
                 $this->details[] = $detail;
             }
         }
@@ -42,6 +45,9 @@ class Adjustment extends CComponent {
     public function updateProducts() {
         foreach ($this->details as $detail) {
             $detail->quantity_current = $detail->getCurrentStock($detail->product_id, $this->header->branch_id);
+            if (!empty($this->header->branch_id_destination)) {
+                $detail->quantity_current_destination = $detail->getCurrentStock($detail->product_id, $this->header->branch_id_destination);
+            }
         }
     }
 

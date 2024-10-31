@@ -219,9 +219,10 @@ class AdjustmentController extends Controller {
             $adjustment = $this->instantiate($id);
             $this->loadState($adjustment);
             $branchId = $adjustment->header->branch_id;
+            $branchIdDestination = $adjustment->header->branch_id_destination;
 
             if (isset($_POST['ProductId'])) {
-                $adjustment->addDetail($_POST['ProductId'], $branchId);
+                $adjustment->addDetail($_POST['ProductId'], $branchId, $branchIdDestination);
             }
 
             $this->renderPartial('_detail', array(
@@ -261,10 +262,12 @@ class AdjustmentController extends Controller {
             $adjustment = $this->instantiate($id);
             $this->loadState($adjustment);
 
-            $quantityDifference = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustment->details[$index]->getQuantityDifference($_POST['StockAdjustmentHeader']['warehouse_id'])));
+            $quantityDifference = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustment->details[$index]->getQuantityDifference()));
+            $quantityDifferenceDestination = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $adjustment->details[$index]->getQuantityDifferenceDestination()));
 
             echo CJSON::encode(array(
                 'quantityDifference' => $quantityDifference,
+                'quantityDifferenceDestination' => $quantityDifferenceDestination,
             ));
         }
     }

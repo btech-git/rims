@@ -191,6 +191,10 @@ class StockAdjustmentDetail extends CActiveRecord {
         return $this->quantity_adjustment - $this->quantity_current;
     }
 
+    public function getQuantityDifferenceDestination() {
+        return $this->quantity_adjustment_destination - $this->quantity_current_destination;
+    }
+
 //	public function getCurrentStock($header_id, $product_id, $warehouse_id, $posisi)
 //	{
 //		$model = self::model()->findByAttributes(array('stock_adjustment_header_id'=>$header_id,'product_id'=>$product_id, 'warehouse_id'=>$warehouse_id)); 

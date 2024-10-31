@@ -43,7 +43,23 @@
                                     <?php echo CHtml::activeDropDownList($adjustment->header, 'transaction_type', array(
                                         'Selisih Cabang' => 'Selisih Cabang',
                                         'Hilang' => 'Hilang / Lebih',
-                                    ), array('empty' => '-- Pilih Tipe --')); ?>
+                                    ), array(
+                                        'empty' => '-- Pilih Tipe --',
+                                        'onchange' => '
+                                            $("#' . CHtml::activeId($adjustment->header, 'branch_id') . '").val("");
+                                            $("#' . CHtml::activeId($adjustment->header, 'branch_id_destination') . '").val("");
+                                            $("#adjustment-detail-table tbody").empty();
+                                            if ($(this).val() === "Selisih Cabang") {
+                                                $("#branch-id-destination-div").show();
+                                                $(".adjustment-detail-table-branch-destination-header").show();
+                                                $(".adjustment-detail-table-branch-destination-body").show();
+                                            } else {
+                                                $("#branch-id-destination-div").hide();
+                                                $(".adjustment-detail-table-branch-destination-header").hide();
+                                                $(".adjustment-detail-table-branch-destination-body").hide();
+                                            }
+                                        ',
+                                    )); ?>
                                     <?php echo CHtml::error($adjustment->header, 'transaction_type'); ?>
                                 </div>
                             </div>
@@ -64,6 +80,25 @@
                                         )),
                                     )); ?>
                                     <?php echo CHtml::error($adjustment->header, 'branch_id'); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field" id="branch-id-destination-div" style="display: none">
+                            <div class="row collapse">
+                                <div class="small-4 columns">		
+                                    <?php echo CHtml::label('Cabang Tujuan', ''); ?>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownList($adjustment->header, 'branch_id_destination', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
+                                        'empty' => '-- Pilih Branch Tujuan --',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'POST',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateAllProduct', array('id' => $adjustment->header->id)),
+                                            'update' => '#detail_div',
+                                        )),
+                                    )); ?>
+                                    <?php echo CHtml::error($adjustment->header, 'branch_id_destination'); ?>
                                 </div>
                             </div>
                         </div>

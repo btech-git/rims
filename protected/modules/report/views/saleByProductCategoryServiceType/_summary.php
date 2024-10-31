@@ -18,6 +18,8 @@
             <?php foreach ($serviceCategoryList as $serviceCategoryItem): ?>
                 <th><?php echo CHtml::encode(CHtml::value($serviceCategoryItem, 'name')); ?></th>
             <?php endforeach; ?>
+            <th>DPP Product</th>
+            <th>DPP Service</th>
             <th>DPP</th>
             <th>PPn</th>
             <th>PPh</th>
@@ -35,11 +37,14 @@
             <?php $day = str_pad($n, 2, '0', STR_PAD_LEFT); ?>
             <tr>
                 <td style="text-align: center"><?php echo $n; ?></td>
+                <?php $dppProductSum = '0.00'; ?>
+                <?php $dppServiceSum = '0.00'; ?>
                 <?php $dppSum = '0.00'; ?>
                 <?php foreach ($productMasterCategoryList as $productMasterCategoryItem): ?>
                     <?php $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id; ?>
                     <?php $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : ''; ?>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dpp)); ?></td>
+                    <?php $dppProductSum += $dpp; ?>
                     <?php $dppSum += $dpp; ?>
                     <?php if (!isset($dppSums['p' . $productMasterCategoryItem->id])): ?>
                         <?php $dppSums['p' . $productMasterCategoryItem->id] = '0.00'; ?>
@@ -50,12 +55,15 @@
                     <?php $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|s|' . $serviceCategoryItem->id; ?>
                     <?php $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : ''; ?>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dpp)); ?></td>
+                    <?php $dppServiceSum += $dpp; ?>
                     <?php $dppSum += $dpp; ?>
                     <?php if (!isset($dppSums['s' . $serviceCategoryItem->id])): ?>
                         <?php $dppSums['s' . $serviceCategoryItem->id] = '0.00'; ?>
                     <?php endif; ?>
                     <?php $dppSums['s' . $serviceCategoryItem->id] += $dpp; ?>
                 <?php endforeach; ?>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppProductSum)); ?></td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSum)); ?></td>
                 <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSum)); ?></td>
                 <?php $key = 'Individual|' . $year . '-' . $month . '-' . $day; ?>
                 <?php $ppnTotal = isset($saleReportSummaryData[$key]['ppn_total']) ? $saleReportSummaryData[$key]['ppn_total'] : ''; ?>
@@ -77,15 +85,21 @@
         <?php endfor; ?>
         <tr>
             <td></td>
+            <?php $dppProductSumTotal = '0.00'; ?>
+            <?php $dppServiceSumTotal = '0.00'; ?>
             <?php $dppSumTotal = '0.00'; ?>
             <?php foreach ($productMasterCategoryList as $productMasterCategoryItem): ?>
                 <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSums['p' . $productMasterCategoryItem->id])); ?></td>
+                <?php $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id]; ?>
                 <?php $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id]; ?>
             <?php endforeach; ?>
             <?php foreach ($serviceCategoryList as $serviceCategoryItem): ?>
                 <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSums['s' . $serviceCategoryItem->id])); ?></td>
+                <?php $dppServiceSumTotal += $dppSums['s' . $serviceCategoryItem->id]; ?>
                 <?php $dppSumTotal += $dppSums['s' . $serviceCategoryItem->id]; ?>
             <?php endforeach; ?>
+            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppProductSumTotal)); ?></td>
+            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSumTotal)); ?></td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSumTotal)); ?></td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $ppnTotalSum)); ?></td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $pphTotalSum)); ?></td>
@@ -108,6 +122,8 @@
             <?php foreach ($serviceCategoryList as $serviceCategoryItem): ?>
                 <th><?php echo CHtml::encode(CHtml::value($serviceCategoryItem, 'name')); ?></th>
             <?php endforeach; ?>
+            <th>DPP Product</th>
+            <th>DPP Service</th>
             <th>DPP</th>
             <th>PPn</th>
             <th>PPh</th>
@@ -125,11 +141,14 @@
             <?php $day = str_pad($n, 2, '0', STR_PAD_LEFT); ?>
             <tr>
                 <td style="text-align: center"><?php echo $n; ?></td>
+                <?php $dppProductSum = '0.00'; ?>
+                <?php $dppServiceSum = '0.00'; ?>
                 <?php $dppSum = '0.00'; ?>
                 <?php foreach ($productMasterCategoryList as $productMasterCategoryItem): ?>
                     <?php $key = 'Company|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id; ?>
                     <?php $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : ''; ?>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dpp)); ?></td>
+                    <?php $dppProductSum += $dpp; ?>
                     <?php $dppSum += $dpp; ?>
                     <?php if (!isset($dppSums['p' . $productMasterCategoryItem->id])): ?>
                         <?php $dppSums['p' . $productMasterCategoryItem->id] = '0.00'; ?>
@@ -140,12 +159,15 @@
                     <?php $key = 'Company|' . $year . '-' . $month . '-' . $day . '|s|' . $serviceCategoryItem->id; ?>
                     <?php $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : ''; ?>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dpp)); ?></td>
+                    <?php $dppServiceSum += $dpp; ?>
                     <?php $dppSum += $dpp; ?>
                     <?php if (!isset($dppSums['s' . $serviceCategoryItem->id])): ?>
                         <?php $dppSums['s' . $serviceCategoryItem->id] = '0.00'; ?>
                     <?php endif; ?>
                     <?php $dppSums['s' . $serviceCategoryItem->id] += $dpp; ?>
                 <?php endforeach; ?>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppProductSum)); ?></td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSum)); ?></td>
                 <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSum)); ?></td>
                 <?php $key = 'Company|' . $year . '-' . $month . '-' . $day; ?>
                 <?php $ppnTotal = isset($saleReportSummaryData[$key]['ppn_total']) ? $saleReportSummaryData[$key]['ppn_total'] : ''; ?>
@@ -167,15 +189,21 @@
         <?php endfor; ?>
         <tr>
             <td></td>
+            <?php $dppProductSumTotal = '0.00'; ?>
+            <?php $dppServiceSumTotal = '0.00'; ?>
             <?php $dppSumTotal = '0.00'; ?>
             <?php foreach ($productMasterCategoryList as $productMasterCategoryItem): ?>
                 <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSums['p' . $productMasterCategoryItem->id])); ?></td>
+                <?php $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id]; ?>
                 <?php $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id]; ?>
             <?php endforeach; ?>
             <?php foreach ($serviceCategoryList as $serviceCategoryItem): ?>
                 <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSums['s' . $serviceCategoryItem->id])); ?></td>
+                <?php $dppServiceSumTotal += $dppSums['s' . $serviceCategoryItem->id]; ?>
                 <?php $dppSumTotal += $dppSums['s' . $serviceCategoryItem->id]; ?>
             <?php endforeach; ?>
+            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppProductSumTotal)); ?></td>
+            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSumTotal)); ?></td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSumTotal)); ?></td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $ppnTotalSum)); ?></td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $pphTotalSum)); ?></td>

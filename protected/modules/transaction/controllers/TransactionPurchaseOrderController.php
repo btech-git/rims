@@ -125,6 +125,7 @@ class TransactionPurchaseOrderController extends Controller {
      */
     public function actionCreate() {
         $purchaseOrder = $this->instantiate(null);
+        $purchaseOrder->header->user_id_created = Yii::app()->user->id;
         $purchaseOrder->header->main_branch_id = Yii::app()->user->branch_id;
 ;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
