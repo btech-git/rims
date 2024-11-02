@@ -350,8 +350,8 @@ class TransactionReceiveItemController extends Controller {
         }
         
         $deliveryDataProvider = $delivery->searchByReceive();
-//        $branchIdsString = Yii::app()->user->branch_id;
-//        $deliveryDataProvider->criteria->addCondition("sender_branch_id = {$branchIdsString} OR destination_branch = {$branchIdsString}");
+        $branchIdsString = Yii::app()->user->branch_id;
+        $deliveryDataProvider->criteria->addCondition("t.destination_branch = {$branchIdsString}");
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values
@@ -441,9 +441,9 @@ class TransactionReceiveItemController extends Controller {
                     $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id));
                     $deliveryOrderDetail->quantity_receive = $deliveryOrderDetail->getQuantityReceive();
                     $deliveryOrderDetail->quantity_receive_left = $deliveryOrderDetail->getQuantityReceiveLeft();
-                    $deliveryOrderDetail->quantity_movement = $deliveryOrderDetail->getQuantityMovement();
-                    $deliveryOrderDetail->quantity_movement_left = $deliveryOrderDetail->getQuantityMovementLeft();
-                    $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left, quantity_movement, quantity_movement_left'));
+                    $deliveryOrderDetail->quantity_movement = 0;
+                    $deliveryOrderDetail->quantity_movement_left = 0;
+                    $deliveryOrderDetail->update(array('quantity_receive', 'quantity_receive_left', 'quantity_movement', 'quantity_movement_left'));
                 } elseif (!empty($detail->movement_out_detail_id)) {
                     $movementOutDetail = MovementOutDetail::model()->findByAttributes(array('id' => $detail->movement_out_detail_id));
                     $movementOutDetail->quantity_receive = $movementOutDetail->getQuantityReceive();
