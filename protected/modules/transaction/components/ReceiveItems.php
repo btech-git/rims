@@ -203,7 +203,7 @@ class ReceiveItems extends CComponent {
             if ($this->header->request_type == 'Purchase Order') {
                 $left_quantity = $detail->qty_request_left - $detail->qty_received;
             } elseif ($this->header->request_type == 'Internal Delivery Order') {
-                $left_quantity = $detail->qty_request - $detail->qty_received - $detail->deliveryOrderDetail->getQuantityReceived();
+                $left_quantity = $detail->qty_request - $detail->qty_received - $detail->deliveryOrderDetail->getQuantityReceive();
                 $detail->quantity_delivered_left = $left_quantity;
             } elseif ($this->header->request_type == 'Consignment In') {
                 $left_quantity = $detail->consignmentInDetail->qty_request_left;
