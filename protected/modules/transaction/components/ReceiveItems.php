@@ -271,7 +271,7 @@ class ReceiveItems extends CComponent {
 
                 $deliveryOrderDetail = $detail->deliveryOrderDetail; //TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
                 $deliveryOrderDetail->quantity_receive_left = $detail->qty_request - $detail->qty_received; // - $deliveryOrderDetail->getTotalQuantityReceived();
-                $deliveryOrderDetail->quantity_receive = $detail->qty_received + $deliveryOrderDetail->getTotalQuantityReceived();
+                $deliveryOrderDetail->quantity_receive = $detail->qty_received + $deliveryOrderDetail->getQuantityReceive();
                 $deliveryOrderDetail->save(false);
 
             } else if ($this->header->request_type == 'Consignment In') {
