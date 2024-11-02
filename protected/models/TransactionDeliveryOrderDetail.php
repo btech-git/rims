@@ -149,14 +149,14 @@ class TransactionDeliveryOrderDetail extends CActiveRecord {
         ));
     }
 
-    public function getTotalQuantityReceived() {
-        $total = 0;
-
-        foreach ($this->transactionReceiveItemDetails as $detail)
-            $total += $detail->qty_received;
-
-        return $total;
-    }
+    //    public function getTotalQuantityReceived() {
+    //        $total = 0;
+    //
+    //        foreach ($this->transactionReceiveItemDetails as $detail)
+    //            $total += $detail->qty_received;
+    //
+    //        return $total;
+    //    }
     
     public function getUnitPrice() {
         $unitPrice = 0;

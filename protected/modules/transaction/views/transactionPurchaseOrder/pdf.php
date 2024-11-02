@@ -133,7 +133,7 @@ function tanggal($date) {
                 <?php $no++;
             } ?>
                 
-            <?php for ($j = 4, $i = $i % $j + 1; $j > $i; $j--): ?>
+            <?php for ($j = 3, $i = $i % $j + 1; $j > $i; $j--): ?>
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>

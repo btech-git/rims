@@ -12,11 +12,13 @@
  * @property string $work_order_number
  * @property string $status
  * @property integer $service_advisor_id
+ * @property integer $registration_transaction_id
  *
  * The followings are the available model relations:
  * @property Vehicle $vehicle
  * @property Inspection $inspection
  * @property VehicleInspectionDetail[] $vehicleInspectionDetails
+ * @property RegistrationTransaction $registrationTransaction
  */
 class VehicleInspection extends CActiveRecord {
 
@@ -36,13 +38,13 @@ class VehicleInspection extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('vehicle_id, inspection_id, inspection_date, work_order_number, status, service_advisor_id', 'required'),
-            array('vehicle_id, inspection_id, service_advisor_id', 'numerical', 'integerOnly' => true),
+            array('vehicle_id, inspection_id, inspection_date, work_order_number, status, service_advisor_id, registration_transaction_id', 'required'),
+            array('vehicle_id, inspection_id, service_advisor_id, registration_transaction_id', 'numerical', 'integerOnly' => true),
             array('work_order_number', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, vehicle_id, inspection_id, inspection_date, inspection_date_after_service, work_order_number, status, plate_number, service_advisor_id', 'safe', 'on' => 'search'),
+            array('id, vehicle_id, inspection_id, inspection_date, inspection_date_after_service, work_order_number, status, plate_number, service_advisor_id, registration_transaction_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -56,6 +58,7 @@ class VehicleInspection extends CActiveRecord {
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'serviceAdvisor' => array(self::BELONGS_TO, 'Users', 'service_advisor_id'),
             'inspection' => array(self::BELONGS_TO, 'Inspection', 'inspection_id'),
+            'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'vehicleInspectionDetails' => array(self::HAS_MANY, 'VehicleInspectionDetail', 'vehicle_inspection_id'),
         );
     }

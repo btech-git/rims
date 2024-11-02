@@ -441,7 +441,9 @@ class TransactionReceiveItemController extends Controller {
                     $deliveryOrderDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id));
                     $deliveryOrderDetail->quantity_receive = $deliveryOrderDetail->getQuantityReceive();
                     $deliveryOrderDetail->quantity_receive_left = $deliveryOrderDetail->getQuantityReceiveLeft();
-                    $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));
+                    $deliveryOrderDetail->quantity_movement = $deliveryOrderDetail->getQuantityMovement();
+                    $deliveryOrderDetail->quantity_movement_left = $deliveryOrderDetail->getQuantityMovementLeft();
+                    $deliveryOrderDetail->update(array('quantity_movement', 'quantity_movement_left, quantity_movement, quantity_movement_left'));
                 } elseif (!empty($detail->movement_out_detail_id)) {
                     $movementOutDetail = MovementOutDetail::model()->findByAttributes(array('id' => $detail->movement_out_detail_id));
                     $movementOutDetail->quantity_receive = $movementOutDetail->getQuantityReceive();
