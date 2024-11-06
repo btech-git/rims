@@ -129,10 +129,12 @@ class SaleRetailController extends Controller {
         $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
+        $grandTotalSale = '0.00';
+        
         foreach ($dataProvider->data as $header) {
-            $totalSale = 0.00;
             $registrationTransactionData = $header->getRegistrationTransactionReport($startDate, $endDate, $branchId);
             if (!empty($registrationTransactionData)) {
+                $totalSale = 0.00;
                 foreach ($registrationTransactionData as $registrationTransactionRow) {
                     $grandTotal = $registrationTransactionRow['grand_total'];
                     $worksheet->getStyle("G{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -154,9 +156,12 @@ class SaleRetailController extends Controller {
                 }
                 $worksheet->setCellValue("J{$counter}", 'TOTAL');
                 $worksheet->setCellValue("K{$counter}", CHtml::encode($totalSale));
+                $grandTotalSale += $totalSale;
                 $counter++;$counter++;
             }
         }
+        $worksheet->setCellValue("J{$counter}", 'TOTAL PENJUALAN');
+        $worksheet->setCellValue("K{$counter}", CHtml::encode($grandTotalSale));
 
         for ($col = 'A'; $col !== 'M'; $col++) {
             $objPHPExcel->getActiveSheet()
