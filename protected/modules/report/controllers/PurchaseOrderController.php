@@ -154,7 +154,7 @@ class PurchaseOrderController extends Controller {
                 $grandTotalPurchase += $totalPurchase;
                 $counter++;$counter++;
             }
-            $worksheet->setCellValue("G{$counter}", 'TOTAL');
+            $worksheet->setCellValue("G{$counter}", 'TOTAL PEMBELIAN');
             $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotalPurchase));
         }
         

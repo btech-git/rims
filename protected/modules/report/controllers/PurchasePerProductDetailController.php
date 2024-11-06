@@ -157,7 +157,7 @@ class PurchasePerProductDetailController extends Controller {
             }
         }
             
-        $worksheet->setCellValue("N{$counter}", 'Total Pembelian');
+        $worksheet->setCellValue("N{$counter}", 'TOTAL PEMBELIAN');
         $worksheet->setCellValue("O{$counter}", CHtml::encode($grandTotalPurchase));
         $counter++;$counter++;
         
