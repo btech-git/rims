@@ -118,7 +118,7 @@ class PurchaseOrderController extends Controller {
         foreach ($purchaseReport as $purchaseItem) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $totalPurchase = '0.00';
+            $grandTotalPurchase = '0.00';
             $purchaseOrders = TransactionPurchaseOrder::model()->findAll(array(
                 'condition' => 'supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date', 
                 'params' => array(
@@ -129,6 +129,7 @@ class PurchaseOrderController extends Controller {
             ));
             
             if (!empty($purchaseOrders)) {
+                $totalPurchase = '0.00';
                 foreach ($purchaseOrders as $detail) {
                     $grandTotal = CHtml::value($detail, 'total_price'); 
 
@@ -140,11 +141,9 @@ class PurchaseOrderController extends Controller {
                     $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($detail, 'payment_type')));
                     $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($detail, 'payment_status')));
                     $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotal));
+                    $totalPurchase += $grandTotal;
 
                     $counter++;
-                    
-                    $totalPurchase += $grandTotal;
-                    
                 }
                 
                 $worksheet->getStyle("G{$counter}:H{$counter}")->getFont()->setBold(true);
@@ -152,8 +151,11 @@ class PurchaseOrderController extends Controller {
 
                 $worksheet->setCellValue("G{$counter}", 'TOTAL');
                 $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPurchase));
+                $grandTotalPurchase += $totalPurchase;
                 $counter++;$counter++;
             }
+            $worksheet->setCellValue("G{$counter}", 'TOTAL');
+            $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotalPurchase));
         }
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
