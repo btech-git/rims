@@ -111,8 +111,8 @@ class PurchasePerProductDetailController extends Controller {
 
         $counter = 6;
         
+        $grandTotalPurchase = 0.00;
         foreach ($dataProvider->data as $header) {
-            $grandTotalPurchase = 0.00;
             
             $purchaseOrderDetailCriteria = new CDbCriteria;
             $purchaseOrderDetailCriteria->join = 'INNER JOIN rims_transaction_purchase_order po ON po.id = t.purchase_order_id';

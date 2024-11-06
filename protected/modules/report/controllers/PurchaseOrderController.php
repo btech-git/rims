@@ -115,10 +115,10 @@ class PurchaseOrderController extends Controller {
         $worksheet->getStyle('A5:H5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $grandTotalPurchase = '0.00';
         foreach ($purchaseReport as $purchaseItem) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $grandTotalPurchase = '0.00';
             $purchaseOrders = TransactionPurchaseOrder::model()->findAll(array(
                 'condition' => 'supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date', 
                 'params' => array(
