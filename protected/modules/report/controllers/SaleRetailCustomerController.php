@@ -147,7 +147,7 @@ class SaleRetailCustomerController extends Controller {
         $worksheet->getStyle("A{$counter}:D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $worksheet->setCellValue("B{$counter}", 'Total');
         $worksheet->setCellValue("C{$counter}", 'Rp');
-        $worksheet->setCellValue("D{$counter}", $totalSale);
+        $worksheet->setCellValue("D{$counter}", $totalSale + $totalIndividual);
 
         $counter++;
 
