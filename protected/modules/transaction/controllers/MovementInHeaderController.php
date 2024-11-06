@@ -177,7 +177,6 @@ class MovementInHeaderController extends Controller {
     public function actionUpdate($id) {
         $movementIn = $this->instantiate($id);
         $movementIn->header->status = 'Draft';
-//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementIn->header);
@@ -191,6 +190,10 @@ class MovementInHeaderController extends Controller {
             $this->loadState($movementIn);
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $movementIn->header->movement_in_number,
+            ));
+
+            InventoryDetail::model()->deleteAllByAttributes(array(
+                'transaction_number' => $movementIn->header->movement_in_number,
             ));
 
             $movementIn->header->setCodeNumberByRevision('movement_in_number');
