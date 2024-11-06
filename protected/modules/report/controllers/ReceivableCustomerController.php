@@ -32,6 +32,7 @@ class ReceivablecustomerController extends Controller {
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
+        $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
         
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
@@ -51,7 +52,7 @@ class ReceivablecustomerController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId, $plateNumber);
+            $this->saveToExcel($receivableSummary, $startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber);
         }
 
         $this->render('summary', array(
@@ -63,6 +64,7 @@ class ReceivablecustomerController extends Controller {
             'insuranceCompany'=>$insuranceCompany,
             'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
             'insuranceCompanyId' => $insuranceCompanyId,
+            'startDate' => $startDate,
             'endDate' => $endDate,
             'customerType' => $customerType,
             'receivableSummary' => $receivableSummary,
@@ -98,7 +100,7 @@ class ReceivablecustomerController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId, $plateNumber) {
+    protected function saveToExcel($receivableSummary, $startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -148,7 +150,7 @@ class ReceivablecustomerController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId, $plateNumber);
+            $receivableData = $header->getReceivableReport($startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
