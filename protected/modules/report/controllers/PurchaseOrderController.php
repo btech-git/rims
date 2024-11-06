@@ -120,7 +120,7 @@ class PurchaseOrderController extends Controller {
 
             $totalPurchase = '0.00';
             $purchaseOrders = TransactionPurchaseOrder::model()->findAll(array(
-                'condition' => 'supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date', 
+                'condition' => 'supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date', 
                 'params' => array(
                     ':supplier_id' => $purchaseItem['id'],
                     ':start_date' => $startDate,

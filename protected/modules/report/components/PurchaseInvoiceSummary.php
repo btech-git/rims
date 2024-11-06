@@ -32,8 +32,8 @@ class PurchaseInvoiceSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('t.status_document <> "CANCELLED"');
-        $this->dataProvider->criteria->addBetweenCondition('t.purchase_order_date', $startDate, $endDate);
+        $this->dataProvider->criteria->addCondition('t.status_document NOT LIKE "%CANCELLED%"');
+        $this->dataProvider->criteria->addBetweenCondition('substr(t.purchase_order_date, 1, 10)', $startDate, $endDate);
         $this->dataProvider->criteria->compare('supplier.name', $filters['supplierName'], TRUE);
     }
 }

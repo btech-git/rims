@@ -462,7 +462,7 @@ class Supplier extends CActiveRecord {
             INNER JOIN (
                 SELECT p.supplier_id, SUM(p.total_price) AS purchase_total
                 FROM " . TransactionPurchaseOrder::model()->tableName() . " p
-                WHERE p.purchase_order_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+                WHERE substr(p.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
                 GROUP BY p.supplier_id
             ) po ON s.id = po.supplier_id
             " . $supplierIdConditionSql . " 
