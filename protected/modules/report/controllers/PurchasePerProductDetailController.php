@@ -116,7 +116,7 @@ class PurchasePerProductDetailController extends Controller {
             
             $purchaseOrderDetailCriteria = new CDbCriteria;
             $purchaseOrderDetailCriteria->join = 'INNER JOIN rims_transaction_purchase_order po ON po.id = t.purchase_order_id';
-            $purchaseOrderDetailCriteria->addCondition("substr(po.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND t.product_id = :product_id");
+            $purchaseOrderDetailCriteria->addCondition("substr(po.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND t.product_id = :product_id AND po.status_document NOT LIKE '%CANCEL%'");
             $purchaseOrderDetailCriteria->params = array(
                 ':start_date' => $options['startDate'],
                 ':end_date' => $options['endDate'],

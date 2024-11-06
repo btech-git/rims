@@ -286,8 +286,10 @@ class BodyRepairRegistrationController extends Controller {
         }
 
         $dataProvider = $model->searchAdmin();
-        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
         $dataProvider->criteria->addCondition("repair_type = 'BR'");
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 

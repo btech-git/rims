@@ -20,7 +20,7 @@ class UserLogin extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('username, password, branchId', 'required'),
+            array('username, password', 'required'),
             array('branchId', 'assigned'),
             // rememberMe needs to be a boolean
             array('rememberMe', 'boolean'),
@@ -43,11 +43,13 @@ class UserLogin extends CFormModel {
     
     public function assigned($attribute, $params) {
         if (!$this->hasErrors()) {
-            $user = Users::model()->findByAttributes(array('username' => $this->username));
-            $userBranches = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
-            $userBranchIds = array_map(function($userBranch) { return $userBranch->branch_id; }, $userBranches);
-            if (!in_array($this->branchId, $userBranchIds)) {
-                $this->addError("branchId", UserModule::t("Branch is not assigned to user."));
+            $user = User::model()->findByAttributes(array('username' => $this->username));
+            if (!in_array('director', $user->roles)) {
+                $userBranches = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
+                $userBranchIds = array_map(function($userBranch) { return $userBranch->branch_id; }, $userBranches);
+                if (empty($this->branchId) || !in_array($this->branchId, $userBranchIds)) {
+                    $this->addError("branchId", UserModule::t("Branch is not assigned to user."));
+                }
             }
         }
     }

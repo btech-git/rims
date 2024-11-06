@@ -40,7 +40,7 @@ class StockAdjustmentDetail extends CActiveRecord {
             array('stock_adjustment_header_id, product_id, quantity_current, quantity_adjustment', 'required'),
             array('stock_adjustment_header_id, product_id, warehouse_id, warehouse_id_destination', 'numerical', 'integerOnly' => true),
             array('memo', 'length', 'max'=>100),
-            array('quantity_current, quantity_adjustment', 'length', 'max' => 10),
+            array('quantity_current, quantity_adjustment, quantity_current_destination, quantity_adjustment_destination', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, stock_adjustment_header_id, product_id, warehouse_id, warehouse_id_destination, quantity_current, quantity_adjustment, quantity_current_destination, quantity_adjustment_destination, memo', 'safe', 'on' => 'search'),
