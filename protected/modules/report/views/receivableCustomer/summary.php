@@ -100,21 +100,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </div>
                         </div>
                         
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Type</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
+                                        <?php /*echo CHtml::dropDownlist('CustomerType', $customerType, array(
                                             'Company' => 'Company',
                                             'Individual' => 'Individual',
-                                        ), array('empty' => '-- All --')); ?>
+                                        ), array('empty' => '-- All --'));*/ ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
 
                     <div class="row">

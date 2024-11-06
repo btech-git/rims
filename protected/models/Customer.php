@@ -265,10 +265,10 @@ class Customer extends CActiveRecord {
         ));
     }
 
-    public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber) {
+    public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $plateNumber) {
         $branchConditionSql = '';
         $insuranceConditionSql = '';
-        $typeConditionSql = '';
+//        $typeConditionSql = '';
         $plateNumberConditionSql = '';
         
         $criteria = new CDbCriteria;
@@ -283,14 +283,14 @@ class Customer extends CActiveRecord {
         }
         
         if (!empty($insuranceCompanyId)) {
-            $insuranceConditionSql = ' AND r.insurance_company_id = :insurance_company_id';
+            $insuranceConditionSql = ' AND p.insurance_company_id = :insurance_company_id';
             $criteria->params[':insurance_company_id'] = $insuranceCompanyId;
         }
 
-        if (!empty($customerType)) {
-            $typeConditionSql = ' AND t.customer_type = :customer_type';
-            $criteria->params[':customer_type'] = $customerType;
-        }
+//        if (!empty($customerType)) {
+//            $typeConditionSql = ' AND t.customer_type = :customer_type';
+//            $criteria->params[':customer_type'] = $customerType;
+//        }
 
         if (!empty($plateNumber)) {
             $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
@@ -300,9 +300,8 @@ class Customer extends CActiveRecord {
         $criteria->addCondition("EXISTS (
             SELECT p.customer_id
             FROM " . InvoiceHeader::model()->tableName() . " p 
-            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
-            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
-            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = p.insurance_company_id
+            LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
             WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . " 
         ) AND t.customer_type = 'Company'");
 
