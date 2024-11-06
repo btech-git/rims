@@ -32,6 +32,7 @@ class ReceivableSummary extends CComponent {
     public function setupFilter($customerId) {
         if (!empty($customerId)) {
             $this->dataProvider->criteria->compare('t.id', $customerId);
+            $this->dataProvider->criteria->compare('t.customer_type', 'Company');
         }
     }
 }

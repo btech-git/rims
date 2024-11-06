@@ -303,7 +303,7 @@ class Customer extends CActiveRecord {
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-            WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date " . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . " 
+            WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . " 
         )" . $typeConditionSql);
 
         return new CActiveDataProvider($this, array(
@@ -512,7 +512,7 @@ class Customer extends CActiveRecord {
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
-            WHERE p.customer_id = :customer_id AND p.payment_left > 100.00 AND p.invoice_date BETWEEN :start_date AND :end_date " . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
+            WHERE p.customer_id = :customer_id AND p.payment_left > 100.00 AND p.invoice_date BETWEEN :start_date AND :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
