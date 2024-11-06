@@ -51,7 +51,7 @@ class ReceivablecustomerController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId);
+            $this->saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId, $plateNumber);
         }
 
         $this->render('summary', array(
@@ -98,7 +98,7 @@ class ReceivablecustomerController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId) {
+    protected function saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId, $plateNumber) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -148,7 +148,7 @@ class ReceivablecustomerController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId);
+            $receivableData = $header->getReceivableReport($endDate, $branchId, $insuranceCompanyId, $plateNumber);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
