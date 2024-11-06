@@ -304,7 +304,7 @@ class Customer extends CActiveRecord {
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
             WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . " 
-        )" . $typeConditionSql);
+        ) AND t.customer_type = 'Company'");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
