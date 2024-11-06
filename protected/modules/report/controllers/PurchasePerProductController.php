@@ -161,8 +161,10 @@ class PurchasePerProductController extends Controller {
         $worksheet->getStyle('A5:T5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $total = '0.00';
         foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $purchasePrice = $header->getPurchasePriceReport($options['startDate'], $options['endDate'], $options['branchId']);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->name));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($header->manufacturer_code));
@@ -172,10 +174,13 @@ class PurchasePerProductController extends Controller {
             $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'productMasterCategory.name')));
             $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
             $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'productSubCategory.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode($header->getPurchasePriceReport($options['startDate'], $options['endDate'], $options['branchId'])));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode($purchasePrice));
+            $total += $purchasePrice;
 
             $counter++;
         }
+        $worksheet->setCellValue("H{$counter}", 'TOTAL PEMBELIAN');
+        $worksheet->setCellValue("I{$counter}", CHtml::encode($purchasePrice));
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
